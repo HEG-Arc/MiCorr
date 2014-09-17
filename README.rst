@@ -9,7 +9,8 @@ A short description of the project.
 .. image:: https://coveralls.io/repos/HEG-Arc/MiCorr/badge.png
   :target: https://coveralls.io/r/HEG-Arc/MiCorr
 
-
+.. image:: https://travis-ci.org/HEG-Arc/MiCorr.svg?branch=master
+  :target: https://travis-ci.org/HEG-Arc/MiCorr
 
 
 LICENSE: GPLv3
