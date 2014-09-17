@@ -1,0 +1,1 @@
+web: gunicorn --pythonpath="$PWD/micorr" wsgi:application
