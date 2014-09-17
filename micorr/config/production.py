@@ -84,14 +84,11 @@ class Production(Common):
     # END STORAGE CONFIGURATION
 
     # EMAIL
-    DEFAULT_FROM_EMAIL = values.Value('MiCorr <noreply@example.com>')
-    EMAIL_HOST = values.Value('smtp.sendgrid.com')
-    EMAIL_HOST_PASSWORD = values.SecretValue(environ_prefix="", environ_name="SENDGRID_PASSWORD")
-    EMAIL_HOST_USER = values.SecretValue(environ_prefix="", environ_name="SENDGRID_USERNAME")
-    EMAIL_PORT = values.IntegerValue(587, environ_prefix="", environ_name="EMAIL_PORT")
+    DEFAULT_FROM_EMAIL = values.Value('MiCorr <micorr@he-arc.ch>')
+    EMAIL_HOST = values.Value('smtprel.he-arc.ch')
     EMAIL_SUBJECT_PREFIX = values.Value('[MiCorr] ', environ_name="EMAIL_SUBJECT_PREFIX")
     EMAIL_USE_TLS = True
-    SERVER_EMAIL = EMAIL_HOST_USER
+    # SERVER_EMAIL = EMAIL_HOST_USER
     # END EMAIL
 
     # TEMPLATE CONFIGURATION

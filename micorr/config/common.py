@@ -101,7 +101,7 @@ class Common(Configuration):
     # MANAGER CONFIGURATION
     # See: https://docs.djangoproject.com/en/dev/ref/settings/#admins
     ADMINS = (
-        ('Antoine Rosselet and Cédric Gaspoz', 'micorr@he-arc.ch'),
+        ('micorr@he-arc.ch',),
     )
 
     # See: https://docs.djangoproject.com/en/dev/ref/settings/#managers
@@ -110,7 +110,7 @@ class Common(Configuration):
 
     # DATABASE CONFIGURATION
     # See: https://docs.djangoproject.com/en/dev/ref/settings/#databases
-    DATABASES = values.DatabaseURLValue('postgres://localhost/micorr')
+    DATABASES = values.DatabaseURLValue('postgres://micorr:micorr@localhost/micorr')
     # END DATABASE CONFIGURATION
 
     # CACHING
