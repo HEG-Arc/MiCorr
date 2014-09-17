@@ -9,7 +9,8 @@ Production Configurations
 '''
 from configurations import values
 
-# See: http://django-storages.readthedocs.org/en/latest/backends/amazon-S3.html#settings
+# See:
+# http://django-storages.readthedocs.org/en/latest/backends/amazon-S3.html#settings
 try:
     from S3 import CallingFormat
     AWS_CALLING_FORMAT = CallingFormat.SUBDOMAIN
@@ -58,10 +59,12 @@ class Production(Common):
         'storages',
     )
 
-    # See: http://django-storages.readthedocs.org/en/latest/backends/amazon-S3.html#settings
+    # See:
+    # http://django-storages.readthedocs.org/en/latest/backends/amazon-S3.html#settings
     STATICFILES_STORAGE = DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 
-    # See: http://django-storages.readthedocs.org/en/latest/backends/amazon-S3.html#settings
+    # See:
+    # http://django-storages.readthedocs.org/en/latest/backends/amazon-S3.html#settings
     AWS_ACCESS_KEY_ID = values.SecretValue()
     AWS_SECRET_ACCESS_KEY = values.SecretValue()
     AWS_STORAGE_BUCKET_NAME = values.SecretValue()
@@ -86,7 +89,9 @@ class Production(Common):
     # EMAIL
     DEFAULT_FROM_EMAIL = values.Value('MiCorr <micorr@he-arc.ch>')
     EMAIL_HOST = values.Value('smtprel.he-arc.ch')
-    EMAIL_SUBJECT_PREFIX = values.Value('[MiCorr] ', environ_name="EMAIL_SUBJECT_PREFIX")
+    EMAIL_SUBJECT_PREFIX = values.Value(
+        '[MiCorr] ',
+        environ_name="EMAIL_SUBJECT_PREFIX")
     EMAIL_USE_TLS = True
     # SERVER_EMAIL = EMAIL_HOST_USER
     # END EMAIL

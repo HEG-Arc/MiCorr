@@ -71,7 +71,6 @@ class Common(Configuration):
     }
     # END MIGRATIONS CONFIGURATION
 
-
     # DEBUG
     # See: https://docs.djangoproject.com/en/dev/ref/settings/#debug
     DEBUG = values.BooleanValue(False)
@@ -88,7 +87,8 @@ class Common(Configuration):
     # END SECRET CONFIGURATION
 
     # FIXTURE CONFIGURATION
-    # See: https://docs.djangoproject.com/en/dev/ref/settings/#std:setting-FIXTURE_DIRS
+    # See:
+    # https://docs.djangoproject.com/en/dev/ref/settings/#std:setting-FIXTURE_DIRS
     FIXTURE_DIRS = (
         join(BASE_DIR, 'fixtures'),
     )
@@ -110,7 +110,8 @@ class Common(Configuration):
 
     # DATABASE CONFIGURATION
     # See: https://docs.djangoproject.com/en/dev/ref/settings/#databases
-    DATABASES = values.DatabaseURLValue('postgres://micorr:micorr@localhost/micorr')
+    DATABASES = values.DatabaseURLValue(
+        'postgres://micorr:micorr@localhost/micorr')
     # END DATABASE CONFIGURATION
 
     # CACHING
@@ -145,7 +146,8 @@ class Common(Configuration):
     # END GENERAL CONFIGURATION
 
     # TEMPLATE CONFIGURATION
-    # See: https://docs.djangoproject.com/en/dev/ref/settings/#template-context-processors
+    # See:
+    # https://docs.djangoproject.com/en/dev/ref/settings/#template-context-processors
     TEMPLATE_CONTEXT_PROCESSORS = (
         'django.contrib.auth.context_processors.auth',
         "allauth.account.context_processors.account",
@@ -170,7 +172,8 @@ class Common(Configuration):
         'django.template.loaders.app_directories.Loader',
     )
 
-    # See: http://django-crispy-forms.readthedocs.org/en/latest/install.html#template-packs
+    # See:
+    # http://django-crispy-forms.readthedocs.org/en/latest/install.html#template-packs
     CRISPY_TEMPLATE_PACK = 'bootstrap3'
     # END TEMPLATE CONFIGURATION
 
@@ -181,12 +184,14 @@ class Common(Configuration):
     # See: https://docs.djangoproject.com/en/dev/ref/settings/#static-url
     STATIC_URL = '/static/'
 
-    # See: https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#std:setting-STATICFILES_DIRS
+    # See:
+    # https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#std:setting-STATICFILES_DIRS
     STATICFILES_DIRS = (
         join(BASE_DIR, 'static'),
     )
 
-    # See: https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#staticfiles-finders
+    # See:
+    # https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#staticfiles-finders
     STATICFILES_FINDERS = (
         'django.contrib.staticfiles.finders.FileSystemFinder',
         'django.contrib.staticfiles.finders.AppDirectoriesFinder',
