@@ -269,3 +269,10 @@ class Common(Configuration):
     # END LOGGING CONFIGURATION
 
     # Your common stuff: Below this line define 3rd party libary settings
+
+    # Dealer Config
+    DEALER_TYPE = "git"
+    DEALER_PATH = BASE_DIR
+    DEALER_SILENT = True
+    DEALER_BACKENDS = "git"
+    TEMPLATE_CONTEXT_PROCESSORS += 'dealer.contrib.django.context_processor',

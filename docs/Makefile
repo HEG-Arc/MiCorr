@@ -177,6 +177,6 @@ docs:
 	@echo
 	@echo "Commiting the documentation to GitHub"
 	@echo
-	#cd $(BUILDDIR)/html; git add . ; git commit -m "rebuilt docs"; git push origin gh-pages
+	cd $(BUILDDIR)/html; git add . ; git commit -m "rebuilt docs"; git push origin gh-pages
 	@echo
 	@echo "All done! Thank you for contributing documentation ;-)"
