@@ -1,11 +1,12 @@
 # Makefile for Sphinx documentation
 #
-
-# You can set these variables from the command line.
 SPHINXOPTS    =
 SPHINXBUILD   = sphinx-build
-PAPER         =
-BUILDDIR      = _build
+PAPER         = a4
+BUILDDIR      = ../../MiCorr-docs
+PDFBUILDDIR   = /tmp
+PDF           = ../MiCorr-manual.pdf
+
 
 # Internal variables.
 PAPEROPT_a4     = -D latex_paper_size=a4
@@ -14,7 +15,7 @@ ALLSPHINXOPTS   = -d $(BUILDDIR)/doctrees $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) .
 # the i18n builder cannot share the environment and doctrees with the others
 I18NSPHINXOPTS  = $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) .
 
-.PHONY: help clean html dirhtml singlehtml pickle json htmlhelp qthelp devhelp epub latex latexpdf text man changes linkcheck doctest gettext
+.PHONY: help clean html dirhtml singlehtml pickle json htmlhelp qthelp devhelp epub latex latexpdf text man changes linkcheck doctest gettext docs
 
 help:
 	@echo "Please use \`make <target>' where <target> is one of"
@@ -37,6 +38,7 @@ help:
 	@echo "  changes    to make an overview of all changed/added/deprecated items"
 	@echo "  linkcheck  to check all external links for integrity"
 	@echo "  doctest    to run all doctests embedded in the documentation (if enabled)"
+	@echo "  docs       to make the HTML and PDF doc and push it to GitHub"
 
 clean:
 	-rm -rf $(BUILDDIR)/*
@@ -151,3 +153,30 @@ doctest:
 	$(SPHINXBUILD) -b doctest $(ALLSPHINXOPTS) $(BUILDDIR)/doctest
 	@echo "Testing of doctests in the sources finished, look at the " \
 	      "results in $(BUILDDIR)/doctest/output.txt."
+
+docs:
+	@echo "Building MiCorr's documentation..."
+	@echo
+	@echo "Generating the global database model graph"
+	../micorr/manage.py graph_models -a -g -o ./medias/micorr_model.png
+	@echo
+	@echo "Done"
+	@echo
+	@echo "Building the HTML pages"
+	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
+	@echo
+	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
+	@echo
+	@echo "Building the PDF document"
+	$(SPHINXBUILD) -b latex $(ALLSPHINXOPTS) $(PDFBUILDDIR)/latex
+	@echo "Running LaTeX files through pdflatex..."
+	$(MAKE) -C $(PDFBUILDDIR)/latex all-pdf
+	cp $(PDFBUILDDIR)/latex/*.pdf $(PDF)
+	@echo
+	@echo "pdflatex finished; the PDF file is $(PDF)."
+	@echo
+	@echo "Commiting the documentation to GitHub"
+	@echo
+	#cd $(BUILDDIR)/html; git add . ; git commit -m "rebuilt docs"; git push origin gh-pages
+	@echo
+	@echo "All done! Thank you for contributing documentation ;-)"

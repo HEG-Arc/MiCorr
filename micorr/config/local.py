@@ -31,7 +31,7 @@ class Local(Common):
     # django-debug-toolbar
     MIDDLEWARE_CLASSES = Common.MIDDLEWARE_CLASSES + \
         ('debug_toolbar.middleware.DebugToolbarMiddleware',)
-    INSTALLED_APPS += ('debug_toolbar',)
+    INSTALLED_APPS += ('debug_toolbar', 'django_nose', 'django_extensions')
 
     INTERNAL_IPS = ('127.0.0.1',)
 
@@ -44,3 +44,11 @@ class Local(Common):
     # end django-debug-toolbar
 
     # Your local stuff: Below this line define 3rd party libary settings
+    # Use nose to run all tests
+    TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+
+    # Tell nose to measure coverage on the 'foo' and 'bar' apps
+    NOSE_ARGS = [
+        '--with-coverage',
+        '--cover-package=users',
+    ]

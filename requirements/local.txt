@@ -3,6 +3,9 @@
 coverage==3.7.1
 Sphinx
 flake8==2.2.3
+django-extensions==1.4.0
+pydot2==1.0.33
+
 
 # django-debug-toolbar that works with Django 1.5+
 django-debug-toolbar==1.2.1
