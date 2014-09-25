@@ -5,6 +5,7 @@ Sphinx
 flake8==2.2.3
 django-extensions==1.4.0
 pydot2==1.0.33
+django-nose
 
 
 # django-debug-toolbar that works with Django 1.5+
