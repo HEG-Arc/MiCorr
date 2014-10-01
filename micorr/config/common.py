@@ -111,7 +111,7 @@ class Common(Configuration):
     # DATABASE CONFIGURATION
     # See: https://docs.djangoproject.com/en/dev/ref/settings/#databases
     DATABASES = values.DatabaseURLValue(
-        'postgres://micorr:micorr@localhost/micorr')
+        'postgres://micorr:micorr@localhost/micorr', environ_prefix='MICORR')
     # END DATABASE CONFIGURATION
 
     # CACHING
