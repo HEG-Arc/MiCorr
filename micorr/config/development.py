@@ -22,7 +22,7 @@ from .common import Common
 
 
 class Development(Common):
-
+    DEBUG = values.BooleanValue(True)
     # INSTALLED_APPS
     INSTALLED_APPS = Common.INSTALLED_APPS
     # END INSTALLED_APPS
