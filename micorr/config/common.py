@@ -249,26 +249,41 @@ class Common(Configuration):
         'filters': {
             'require_debug_false': {
                 '()': 'django.utils.log.RequireDebugFalse'
-            }
+            },
+            'require_debug_true': {
+                '()': 'django.utils.log.RequireDebugTrue'
+            },
+        },
+        'formatters': {
+            'verbose': {
+                'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+            },
         },
         'handlers': {
             'mail_admins': {
                 'level': 'ERROR',
                 'filters': ['require_debug_false'],
                 'class': 'django.utils.log.AdminEmailHandler'
-            }
+            },
+            'file_debug': {
+                'level': 'DEBUG',
+                'filters': ['require_debug_true'],
+                'class': 'logging.FileHandler',
+                'filename': '/var/log/micorr/django-debug.log',
+                'formatter': 'verbose',
+            },
         },
         'loggers': {
             'django.request': {
-                'handlers': ['mail_admins'],
-                'level': 'ERROR',
+                'handlers': ['file_debug', 'mail_admins'],
+                'level': 'DEBUG',
                 'propagate': True,
             },
         }
     }
     # END LOGGING CONFIGURATION
 
-    # Your common stuff: Below this line define 3rd party libary settings
+    # Your common stuff: Below this line define 3rd party library settings
 
     # Dealer Config
     DEALER_TYPE = "git"

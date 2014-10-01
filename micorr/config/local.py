@@ -52,3 +52,5 @@ class Local(Common):
         '--with-coverage',
         '--cover-package=users',
     ]
+
+    TRAVIS_TOKEN = values.SecretValue(environ_prefix='MICORR')

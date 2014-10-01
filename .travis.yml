@@ -8,3 +8,9 @@ script:
   - coverage run --source micorr setup.py test
 after_success:
   - coveralls
+notifications:
+  webhooks:
+    urls:
+      - http://micorr-dev.ig.he-arc.ch/dev/pull
+    on_success: always
+    on_failure: never

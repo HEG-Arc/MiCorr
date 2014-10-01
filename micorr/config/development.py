@@ -20,6 +20,7 @@ from configurations import values
 
 from .common import Common
 
+
 class Development(Common):
 
     # INSTALLED_APPS
@@ -119,3 +120,5 @@ class Development(Common):
     # END CACHING
 
     # Your production stuff: Below this line define 3rd party libary settings
+    INSTALLED_APPS += ("deployment", )
+    TRAVIS_TOKEN = values.SecretValue(environ_prefix='MICORR')
