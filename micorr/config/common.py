@@ -258,6 +258,9 @@ class Common(Configuration):
             'verbose': {
                 'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
             },
+            'simple': {
+                'format': '%(levelname)s %(message)s'
+            },
         },
         'handlers': {
             'mail_admins': {
@@ -272,10 +275,16 @@ class Common(Configuration):
                 'filename': '/var/log/micorr/django-debug.log',
                 'formatter': 'verbose',
             },
+            'console': {
+                'level': 'DEBUG',
+                'filters': ['require_debug_true'],
+                'class': 'logging.StreamHandler',
+                'formatter': 'simple',
+            },
         },
         'loggers': {
-            'django.request': {
-                'handlers': ['file_debug', 'mail_admins'],
+            '': {
+                'handlers': ['file_debug', 'mail_admins', 'console'],
                 'level': 'DEBUG',
                 'propagate': True,
             },

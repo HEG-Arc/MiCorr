@@ -36,7 +36,7 @@ from configurations import Configuration
 
 # MiCorr imports
 
-
+logger = logging.getLogger(__name__)
 #sha256('username/repository' + Configuration.TRAVIS_TOKEN).hexdigest()
 
 
@@ -44,8 +44,8 @@ from configurations import Configuration
 def pull(request):
     if request.POST:
         travis = json.loads(request.body)
-        logging.debug("PAYLOAD\n%s" % travis)
+        logger.debug("PAYLOAD\n%s" % travis)
     else:
-        logging.debug("ERROR 404!")
+        logger.debug("Called outside a POST request")
         raise Http404
     return HttpResponse("OK - Thanks!", content_type="text/plain")
