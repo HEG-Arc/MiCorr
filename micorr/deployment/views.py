@@ -48,11 +48,11 @@ def pull(request):
         logger.debug("Authorization: %s" % request.META.get('HTTP_AUTHORIZATION'))
         logger.debug("Travis-Repo-Slug: %s" % request.META.get('HTTP_TRAVIS_REPO_SLUG'))
         logger.debug("Result: %s" % payload)
-        # logger.debug("ID: %s" % payload['id'])
-        # logger.debug("Type: %s" % payload['type'])
-        # logger.debug("Commit: %s" % payload['commit'])
-        # logger.debug("Branch: %s" % payload['branch'])
-        # logger.debug("Message: %s" % payload['message'])
+        logger.debug("ID: %s" % payload['id'])
+        logger.debug("Type: %s" % payload['type'])
+        logger.debug("Commit: %s" % payload['commit'])
+        logger.debug("Branch: %s" % payload['branch'])
+        logger.debug("Message: %s" % payload['message'])
     else:
         logger.debug("Called outside a POST request")
         raise Http404
