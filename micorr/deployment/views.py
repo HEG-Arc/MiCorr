@@ -45,7 +45,8 @@ def pull(request):
     if request.POST:
         #travis = json.loads(request.body)
         logger.debug("PAYLOAD\n%s" % request.POST['payload'])
-        logger.debug("HEADER\n%s" % request.META)
+        logger.debug("Authorization: %s" % request.META['HTTP_AUTHORIZATION'])
+        logger.debug("Travis-Repo-Slug: %s" % request.META['HTTP_TRAVIS_REPO_SLUG'])
     else:
         logger.debug("Called outside a POST request")
         raise Http404
