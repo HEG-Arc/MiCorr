@@ -20,6 +20,7 @@ from configurations import values
 
 from .common import Common
 
+
 class Production(Common):
 
     # INSTALLED_APPS
@@ -94,7 +95,7 @@ class Production(Common):
         '[MiCorr] ',
         environ_name="EMAIL_SUBJECT_PREFIX")
     EMAIL_USE_TLS = True
-    # SERVER_EMAIL = EMAIL_HOST_USER
+    SERVER_EMAIL = DEFAULT_FROM_EMAIL
     # END EMAIL
 
     # TEMPLATE CONFIGURATION
