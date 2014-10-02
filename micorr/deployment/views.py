@@ -43,8 +43,8 @@ logger = logging.getLogger(__name__)
 @csrf_exempt
 def pull(request):
     if request.POST:
-        travis = json.loads(request.body)
-        logger.debug("PAYLOAD\n%s" % travis)
+        #travis = json.loads(request.body)
+        logger.debug("PAYLOAD\n%s" % request.POST)
     else:
         logger.debug("Called outside a POST request")
         raise Http404

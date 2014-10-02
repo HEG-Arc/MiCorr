@@ -101,7 +101,7 @@ class Common(Configuration):
     # MANAGER CONFIGURATION
     # See: https://docs.djangoproject.com/en/dev/ref/settings/#admins
     ADMINS = (
-        ('micorr@he-arc.ch',),
+        ('MiCorr', 'micorr@he-arc.ch'),
     )
 
     # See: https://docs.djangoproject.com/en/dev/ref/settings/#managers

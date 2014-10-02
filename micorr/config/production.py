@@ -22,7 +22,7 @@ from .common import Common
 
 
 class Production(Common):
-
+    DEBUG = True
     # INSTALLED_APPS
     INSTALLED_APPS = Common.INSTALLED_APPS
     # END INSTALLED_APPS
@@ -95,7 +95,7 @@ class Production(Common):
         '[MiCorr] ',
         environ_name="EMAIL_SUBJECT_PREFIX")
     EMAIL_USE_TLS = True
-    SERVER_EMAIL = DEFAULT_FROM_EMAIL
+    SERVER_EMAIL = 'micorr@he-arc.ch'
     # END EMAIL
 
     # TEMPLATE CONFIGURATION
