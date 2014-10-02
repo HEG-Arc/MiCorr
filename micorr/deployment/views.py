@@ -44,9 +44,14 @@ logger = logging.getLogger(__name__)
 def pull(request):
     if request.POST:
         #travis = json.loads(request.body)
-        logger.debug("PAYLOAD\n%s" % request.POST['payload'])
-        logger.debug("Authorization: %s" % request.META.get('Authorization'))
-        logger.debug("Travis-Repo-Slug: %s" % request.META['HTTP_TRAVIS_REPO_SLUG'])
+        payload = request.POST['payload']
+        logger.debug("Authorization: %s" % request.META.get('HTTP_AUTHORIZATION'))
+        logger.debug("Travis-Repo-Slug: %s" % request.META.get('HTTP_TRAVIS_REPO_SLUG'))
+        logger.debug("ID: %s" % payload['id'])
+        logger.debug("Type: %s" % payload['type'])
+        logger.debug("Commit: %s" % payload['commit'])
+        logger.debug("Branch: %s" % payload['branch'])
+        logger.debug("Message: %s" % payload['message'])
     else:
         logger.debug("Called outside a POST request")
         raise Http404
