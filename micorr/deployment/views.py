@@ -44,7 +44,8 @@ logger = logging.getLogger(__name__)
 def pull(request):
     if request.POST:
         #travis = json.loads(request.body)
-        logger.debug("PAYLOAD\n%s" % request.POST)
+        logger.debug("PAYLOAD\n%s" % request.POST['payload'])
+        logger.debug("HEADER\n%s" % request.META)
     else:
         logger.debug("Called outside a POST request")
         raise Http404
