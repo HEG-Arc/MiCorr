@@ -45,7 +45,7 @@ def pull(request):
     if request.POST:
         #travis = json.loads(request.body)
         logger.debug("PAYLOAD\n%s" % request.POST['payload'])
-        logger.debug("Authorization: %s" % request.META['HTTP_AUTHORIZATION'])
+        logger.debug("Authorization: %s" % request.META.get('Authorization'))
         logger.debug("Travis-Repo-Slug: %s" % request.META['HTTP_TRAVIS_REPO_SLUG'])
     else:
         logger.debug("Called outside a POST request")
