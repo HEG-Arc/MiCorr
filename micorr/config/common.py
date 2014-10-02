@@ -270,7 +270,6 @@ class Common(Configuration):
             },
             'file_debug': {
                 'level': 'DEBUG',
-                'filters': ['require_debug_true'],
                 'class': 'logging.FileHandler',
                 'filename': '/var/log/micorr/django-debug.log',
                 'formatter': 'verbose',

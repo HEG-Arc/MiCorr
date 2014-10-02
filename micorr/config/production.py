@@ -119,3 +119,4 @@ class Production(Common):
     # END CACHING
 
     # Your production stuff: Below this line define 3rd party libary settings
+    INSTALLED_APPS += ("deployment", )
