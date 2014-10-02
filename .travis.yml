@@ -11,12 +11,11 @@ after_success:
 notifications:
   webhooks:
     urls:
-      - http://micorr.ig.he-arc.ch/dev/pull/
+      - http://travis.micorr.ultrahook.com
     on_success: always
     on_failure: never
   email:
     recipients:
-      - micorr@he-arc.ch
       - cedric@gaspoz-fleiner.com
     on_success: always
     on_failure: always
