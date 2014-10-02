@@ -44,7 +44,7 @@ logger = logging.getLogger(__name__)
 def pull(request):
     if request.POST:
         #travis = json.loads(request.body)
-        payload = request.POST['payload']
+        payload = request.body
         if request.META.get('HTTP_AUTHORIZATION') == sha256('HEG-Arc/MiCorr' + Configuration.TRAVIS_TOKEN).hexdigest():
             logger.debug("Authorization match!")
         logger.debug("Travis-Repo-Slug: %s" % request.META.get('HTTP_TRAVIS_REPO_SLUG'))
