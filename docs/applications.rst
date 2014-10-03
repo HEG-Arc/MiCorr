@@ -11,7 +11,6 @@ Core applications
 
    Complete database model of MiCorr
 
-
 Users
 -----
 
@@ -19,4 +18,13 @@ Users
     :members:
 
 .. automodule:: users.models
+    :members:
+
+Deployment
+----------
+
+.. automodule:: deployment
+    :members:
+
+.. automodule:: deployment.models
     :members:

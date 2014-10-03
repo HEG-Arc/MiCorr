@@ -35,6 +35,7 @@ from django.views.decorators.csrf import csrf_exempt
 from configurations import Configuration
 
 # MiCorr imports
+from .models import TravisBuild
 
 logger = logging.getLogger(__name__)
 #sha256('username/repository' + Configuration.TRAVIS_TOKEN).hexdigest()
@@ -45,15 +46,19 @@ def pull(request):
     if request.POST:
         #travis = json.loads(request.body)
         payload = request.body
-        if request.META.get('HTTP_AUTHORIZATION') == sha256('HEG-Arc/MiCorr' + Configuration.TRAVIS_TOKEN).hexdigest():
+        if request.META.get('HTTP_AUTHORIZATION') == sha256(Configuration.TRAVIS_REPO_SLUG + Configuration.TRAVIS_TOKEN).hexdigest():
             logger.debug("Authorization match!")
-        logger.debug("Travis-Repo-Slug: %s" % request.META.get('HTTP_TRAVIS_REPO_SLUG'))
+            # We store the build in the database
+            travis = TravisBuild()
+            travis.branch = payload
+            travis.commit =payload
+            travis.committer_name = payload
+            travis.number = payload
+            travis.type = payload
+            travis.message = payload
+            travis.save()
+            # TODO: Use a worker to start the update process and update the status when done
         logger.debug("Result: %s" % payload)
-        # logger.debug("ID: %s" % payload['id'])
-        # logger.debug("Type: %s" % payload['type'])
-        # logger.debug("Commit: %s" % payload['commit'])
-        # logger.debug("Branch: %s" % payload['branch'])
-        # logger.debug("Message: %s" % payload['message'])
     else:
         logger.debug("Called outside a POST request")
         raise Http404

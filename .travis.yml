@@ -11,6 +11,7 @@ after_success:
 notifications:
   webhooks:
     urls:
+      - http://requestb.in/x6amm3x6
       - http://travis.micorr.ultrahook.com
     on_success: always
     on_failure: never
