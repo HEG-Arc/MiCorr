@@ -299,3 +299,4 @@ class Common(Configuration):
     DEALER_SILENT = True
     DEALER_BACKENDS = "git"
     TEMPLATE_CONTEXT_PROCESSORS += 'dealer.contrib.django.context_processor',
+    TRAVIS_REPO_SLUG = values.SecretValue(environ_prefix='MICORR')
