@@ -298,5 +298,6 @@ class Common(Configuration):
     DEALER_PATH = BASE_DIR
     DEALER_SILENT = True
     DEALER_BACKENDS = "git"
-    TEMPLATE_CONTEXT_PROCESSORS += 'dealer.contrib.django.context_processor',
-    TRAVIS_REPO_SLUG = values.SecretValue(environ_prefix='MICORR')
+    TEMPLATE_CONTEXT_PROCESSORS += ('dealer.contrib.django.context_processor',)
+    TRAVIS_REPO_SLUG = 'HEG-Arc/MiCorr'
+    TRAVIS_TOKEN = 'Change Me!'

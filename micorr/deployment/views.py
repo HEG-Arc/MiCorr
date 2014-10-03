@@ -30,15 +30,14 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.template.context import RequestContext
 from django.http import Http404, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.conf import settings
 
 # Third-party app imports
-from configurations import Configuration
 
 # MiCorr imports
 from .models import TravisBuild
 
 logger = logging.getLogger(__name__)
-#sha256('username/repository' + Configuration.TRAVIS_TOKEN).hexdigest()
 
 
 @csrf_exempt
@@ -46,7 +45,7 @@ def pull(request):
     if request.POST:
         #travis = json.loads(request.body)
         payload = request.body
-        if request.META.get('HTTP_AUTHORIZATION') == sha256(Configuration.TRAVIS_REPO_SLUG + Configuration.TRAVIS_TOKEN).hexdigest():
+        if request.META.get('HTTP_AUTHORIZATION') == sha256(settings.TRAVIS_REPO_SLUG + settings.TRAVIS_TOKEN).hexdigest():
             logger.debug("Authorization match!")
             # We store the build in the database
             travis = TravisBuild()
