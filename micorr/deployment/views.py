@@ -51,7 +51,7 @@ def pull(request):
             # We store the build in the database
             travis = TravisBuild()
             travis.branch = payload
-            travis.commit =payload
+            travis.commit = payload
             travis.committer_name = payload
             travis.number = payload
             travis.type = payload
