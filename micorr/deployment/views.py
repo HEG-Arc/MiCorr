@@ -24,6 +24,7 @@
 from hashlib import sha256
 import json
 import logging
+import urllib2
 
 # Core Django imports
 from django.shortcuts import render_to_response, get_object_or_404
@@ -43,21 +44,23 @@ logger = logging.getLogger(__name__)
 @csrf_exempt
 def pull(request):
     if request.POST:
-        #travis = json.loads(request.body)
-        payload = request.body
+        payload = request.POST
+        travis = payload #json.loads(urllib2.unquote(payload['payload']))
+        logger.debug("Travis: %s" % travis)
+        raise KeyError(request.POST)
         if request.META.get('HTTP_AUTHORIZATION') == sha256(settings.TRAVIS_REPO_SLUG + settings.TRAVIS_TOKEN).hexdigest():
             logger.debug("Authorization match!")
             # We store the build in the database
-            travis = TravisBuild()
-            travis.branch = payload
-            travis.commit = payload
-            travis.committer_name = payload
-            travis.number = payload
-            travis.type = payload
-            travis.message = payload
-            travis.save()
+            # travis = TravisBuild()
+            # travis.branch = payload['payload'][]
+            # travis.commit = payload
+            # travis.committer_name = payload
+            # travis.number = payload
+            # travis.type = payload
+            # travis.message = payload
+            # travis.save()
             # TODO: Use a worker to start the update process and update the status when done
-        logger.debug("Result: %s" % payload)
+        #logger.debug("Result: %s" % payload)
     else:
         logger.debug("Called outside a POST request")
         raise Http404
