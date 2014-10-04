@@ -57,6 +57,7 @@ def pull(request):
             travis.type = travis['type']
             travis.message = travis['message']
             travis.save()
+            #
             # TODO: Use a worker to start the update process and update the status when done
         #logger.debug("Result: %s" % payload)
     else:
