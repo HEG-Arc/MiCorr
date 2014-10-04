@@ -50,6 +50,7 @@ def pull(request):
             logger.debug("Authorization match!")
             # We store the build in the database
             travis = TravisBuild()
+            logger.debug("branch: %s" % travis['branch'])
             travis.branch = travis['branch']
             travis.commit = travis['commit']
             travis.committer_name = travis['committer_name']
