@@ -41,7 +41,9 @@ class TravisBuild(models.Model):
     branch = models.CharField(verbose_name=_("branch"), max_length=50, help_text=_("Git branch"))
     message = models.CharField(verbose_name=_("message"), max_length=250, help_text=_("Git commit message"))
     committer_name = models.CharField(verbose_name=_("committer name"), max_length=50, help_text=_("Name of the committer"))
-    update_status = models.CharField(verbose_name=_("update status"), max_length=50, blank=True, help_text=_("Current update status"))
+    out = models.TextField(verbose_name=_("Stdout output"), blank=True, help_text=_("Output of the deploy script"))
+    error = models.TextField(verbose_name=_("Stdout errors"), blank=True, help_text=_("Errors of the deploy script"))
+    update_status = models.CharField(verbose_name=_("update status"), default="Started", max_length=50, blank=True, help_text=_("Current update status"))
     created = models.DateTimeField(verbose_name=_("created"), auto_now_add=True, help_text=_("Creation date"))
 
     class Meta:

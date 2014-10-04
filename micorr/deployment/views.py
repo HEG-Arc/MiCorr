@@ -58,6 +58,23 @@ def pull(request):
             pull.message = travis['message']
             pull.save()
             # TODO: Use a worker to start the update process and update the status when done
+            import subprocess
+            r = subprocess.call("/home/micorr/deploy.sh %s 1>/tmp/deploy.out 2>/tmp/deploy.error" % pull.id, shell=True)
+            logger.debug("UPDATE result: %s" % r)
+    else:
+        logger.debug("Called outside a POST request")
+        raise Http404
+    return HttpResponse("OK - Thanks!", content_type="text/plain")
+
+
+@csrf_exempt
+def pull_update(request, pull_id):
+    if request.POST:
+        pull = get_object_or_404(TravisBuild, pk=pull_id)
+        pull.out = request.POST['out']
+        pull.error = request.POST['out']
+        pull.update_status = "Done"
+        pull.save()
     else:
         logger.debug("Called outside a POST request")
         raise Http404

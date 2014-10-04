@@ -28,8 +28,9 @@ from django.conf.urls import patterns, url
 # Third-party app imports
 
 # MiCorr imports
-from .views import pull
+from .views import pull, pull_update
 
 urlpatterns = patterns('',
+    url(r'^pull/(?P<pull_id>\d+)/$', pull_update, name='dev-pull-update'),
     url(r'^pull/$', pull, name='dev-pull'),
 )
