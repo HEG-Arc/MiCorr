@@ -46,8 +46,10 @@ def pull(request):
     if request.POST:
         payload = request.POST
         travis = payload #json.loads(urllib2.unquote(payload['payload']))
-        logger.debug("Travis: %s" % travis)
-        logger.debug("Message: %s" % travis['payload'][0]['message'])
+        logger.debug("Travis: %s" % travis['payload'])
+        travis_json = json.loads(travis['payload'])
+        logger.debug("JSON: %s" % travis_json)
+        logger.debug("Message: %s" % travis_json['message'])
         if request.META.get('HTTP_AUTHORIZATION') == sha256(settings.TRAVIS_REPO_SLUG + settings.TRAVIS_TOKEN).hexdigest():
             logger.debug("Authorization match!")
             # We store the build in the database
