@@ -70,6 +70,7 @@ def pull(request):
 @csrf_exempt
 def pull_update(request, pull_id):
     if request.POST:
+        logger.debug("Request to update deployment: %s" % pull_id)
         pull = get_object_or_404(TravisBuild, pk=pull_id)
         pull.out = request.POST['out']
         pull.error = request.POST['out']

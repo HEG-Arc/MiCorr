@@ -52,3 +52,4 @@ class Local(Common):
         '--with-coverage',
         '--cover-package=users',
     ]
+    INSTALLED_APPS += ('deployment',)
