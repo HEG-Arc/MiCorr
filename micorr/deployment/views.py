@@ -60,7 +60,7 @@ def pull(request):
             # travis.message = payload
             # travis.save()
             # TODO: Use a worker to start the update process and update the status when done
-        #logger.debug("Result: %s" % payload)
+        logger.debug("Result: %s" % payload)
     else:
         logger.debug("Called outside a POST request")
         raise Http404
