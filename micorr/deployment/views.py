@@ -71,7 +71,8 @@ def pull(request):
 def pull_update(request, pull_id):
     if request.POST:
         logger.debug("Request to update deployment: %s" % pull_id)
-        pull = get_object_or_404(TravisBuild, pk=pull_id)
+        pull = get_object_or_404(TravisBuild, pk=int(pull_id))
+        logger.debug("We have the build: %s" % pull.number)
         pull.out = request.POST['out']
         pull.error = request.POST['out']
         pull.update_status = "Done"
