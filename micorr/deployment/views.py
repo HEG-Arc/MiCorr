@@ -47,7 +47,7 @@ def pull(request):
         payload = request.POST
         travis = payload #json.loads(urllib2.unquote(payload['payload']))
         logger.debug("Travis: %s" % travis)
-        raise KeyError(request.POST)
+        logger.debug("Message: %s" % travis['payload'][0]['message'])
         if request.META.get('HTTP_AUTHORIZATION') == sha256(settings.TRAVIS_REPO_SLUG + settings.TRAVIS_TOKEN).hexdigest():
             logger.debug("Authorization match!")
             # We store the build in the database
@@ -60,7 +60,7 @@ def pull(request):
             # travis.message = payload
             # travis.save()
             # TODO: Use a worker to start the update process and update the status when done
-        logger.debug("Result: %s" % payload)
+        #logger.debug("Result: %s" % payload)
     else:
         logger.debug("Called outside a POST request")
         raise Http404
