@@ -49,18 +49,15 @@ def pull(request):
         if request.META.get('HTTP_AUTHORIZATION') == sha256(settings.TRAVIS_REPO_SLUG + settings.TRAVIS_TOKEN).hexdigest():
             logger.debug("Authorization match!")
             # We store the build in the database
-            travis = TravisBuild()
-            logger.debug("branch: %s" % travis['branch'])
-            travis.branch = travis['branch']
-            travis.commit = travis['commit']
-            travis.committer_name = travis['committer_name']
-            travis.number = travis['number']
-            travis.type = travis['type']
-            travis.message = travis['message']
-            travis.save()
-            #
+            pull = TravisBuild()
+            pull.branch = travis['branch']
+            pull.commit = travis['commit']
+            pull.committer_name = travis['committer_name']
+            pull.number = travis['number']
+            pull.type = travis['type']
+            pull.message = travis['message']
+            pull.save()
             # TODO: Use a worker to start the update process and update the status when done
-        #logger.debug("Result: %s" % payload)
     else:
         logger.debug("Called outside a POST request")
         raise Http404
