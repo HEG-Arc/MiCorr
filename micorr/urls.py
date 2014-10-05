@@ -32,6 +32,9 @@ urlpatterns = patterns('',
     url(r'^newsletter/', include('newsletter.urls')),
     url(r'^tinymce/', include('tinymce.urls')),
 
+    # Envelope (contact form)
+    url(r'^contact/', include('envelope.urls')),
+
     # Your stuff: custom urls go here
     url(r'^dev/', include('deployment.urls')),
 

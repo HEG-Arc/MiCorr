@@ -45,6 +45,7 @@ class Common(Configuration):
         'tinymce',
         'sorl.thumbnail',
         'newsletter',
+        'envelope',
     )
 
     # Apps specific for this project go here.
