@@ -12,7 +12,7 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     url(r'^$',  # noqa
-        TemplateView.as_view(template_name='pages/home.html'),
+        TemplateView.as_view(template_name='landing.html'),
         name="home"),
     url(r'^about/$',
         TemplateView.as_view(template_name='pages/about.html'),
@@ -27,6 +27,10 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable avatars
     url(r'^avatar/', include('avatar.urls')),
+
+    # Newsletter
+    url(r'^newsletter/', include('newsletter.urls')),
+    url(r'^tinymce/', include('tinymce.urls')),
 
     # Your stuff: custom urls go here
     url(r'^dev/', include('deployment.urls')),

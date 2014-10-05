@@ -42,6 +42,9 @@ class Common(Configuration):
         'allauth',  # registration
         'allauth.account',  # registration
         'allauth.socialaccount',  # registration
+        'tinymce',
+        'sorl.thumbnail',
+        'newsletter',
     )
 
     # Apps specific for this project go here.
@@ -301,3 +304,4 @@ class Common(Configuration):
     TEMPLATE_CONTEXT_PROCESSORS += ('dealer.contrib.django.context_processor',)
     TRAVIS_REPO_SLUG = 'HEG-Arc/MiCorr'
     TRAVIS_TOKEN = 'Change Me!'
+    NEWSLETTER_RICHTEXT_WIDGET = "tinymce.widgets.TinyMCE"
