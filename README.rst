@@ -12,6 +12,10 @@ A short description of the project.
 .. image:: https://travis-ci.org/HEG-Arc/MiCorr.svg?branch=master
   :target: https://travis-ci.org/HEG-Arc/MiCorr
 
+.. image:: https://requires.io/github/HEG-Arc/MiCorr/requirements.svg?branch=master
+  :target: https://requires.io/github/HEG-Arc/MiCorr/requirements/?branch=master
+  :alt: Requirements Status
+
 
 LICENSE: GPLv3
 
