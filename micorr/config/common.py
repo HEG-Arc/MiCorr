@@ -32,6 +32,7 @@ class Common(Configuration):
 
         # Useful template tags:
         # 'django.contrib.humanize',
+        'django.contrib.webdesign',
 
         # Admin
         'django.contrib.admin',
