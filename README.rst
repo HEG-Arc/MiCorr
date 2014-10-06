@@ -16,8 +16,10 @@ A short description of the project.
   :target: https://requires.io/github/HEG-Arc/MiCorr/requirements/?branch=master
   :alt: Requirements Status
 
+.. image:: http://img.shields.io/badge/licence-GPLv3-red.svg
+  :target: http://www.gnu.org/licenses/gpl-3.0.html
+  
 
-LICENSE: GPLv3
 
 Settings
 ------------
