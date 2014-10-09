@@ -6,6 +6,7 @@ flake8==2.2.3 #contrôle la grammaire du code
 django-extensions==1.4.0
 pydot2==1.0.33 #génère des graphiques
 django-nose #fait tourner les tests
+factory-boy==2.4.1 #generate data to test models
 
 
 # django-debug-toolbar that works with Django 1.5+
