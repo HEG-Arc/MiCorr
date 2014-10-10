@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Objects{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    
+  <div class="row">
+    <div class="col-xs-12">
+      <h2>{{ subject.name }}</h2>
+      <br/>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-12">
+        <img src="{{ subject.image.url }}" />
+    </div>
+  </div>
+
+</div>
+
+{% endblock content %}
