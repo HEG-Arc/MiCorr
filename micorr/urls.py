@@ -38,7 +38,7 @@ urlpatterns = patterns('',
     # Your stuff: custom urls go here
     url(r'^dev/', include('deployment.urls')),
 
-    # Objects management
-    url(r'^objects/', include('subjects.urls', namespace="subjects")),
+    # Artefacts management
+    url(r'^artefacts/', include('artefacts.urls', namespace="artefacts")),
 
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
