@@ -99,12 +99,11 @@ class Artefact(models.Model):
         if self.metal.description:
             artefact.append(self.metal.description)
         if self.origin.country:
-            artefact.append(self.metal.country)
+            artefact.append(self.origin.country)
         if self.origin.site:
             artefact.append(self.origin.site)
         if self.chronology.name:
             artefact.append(self.chronology.name)
-
         return " - ".join(artefact)
 
 
