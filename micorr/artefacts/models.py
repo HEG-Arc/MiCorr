@@ -27,8 +27,15 @@ class Origin(models.Model):
     region = models.CharField(max_length=100, blank=True)
     country = models.CharField(max_length=100, blank=True)
 
-    def __str__(self):
-        return self.site
+    def __unicode__(self):
+        origin = []
+        if self.site:
+            origin.append(self.site)
+        if self.city:
+            origin.append(self.city)
+        if self.region:
+            origin.append(self.region)
+        return " ".join(origin)
 
 
 class Chronology(models.Model):
@@ -93,6 +100,12 @@ class Artefact(models.Model):
     microstructuretype = models.ForeignKey(MicrostructureType, verbose_name="microstructure type", blank=True, null=True)
     corrosion = models.ForeignKey(Corrosion, blank=True, null=True)
     #owner = models.CharField(max_length=100, blank=True)
+
+    def get_environments(self):
+        environments_list = []
+        for env in self.environment.all():
+            environments_list.append(env)
+        return environments_list
 
     def __str__(self):
         artefact = []
