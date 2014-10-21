@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}MiCorr | Artefacts{% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+  <div class="row">
+    <div class="col-xs-12">
+      <h2>Artefacts</h2>
+      <br/>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped table-hover">
+        <tr>
+            <th>Metal Description</th>
+            <th>Country</th>
+            <th>Site</th>
+            <th>Chronology</th>
+        </tr>
+        {% for artefact in artefact_list %}
+
+                <tr onmouseover="this.style.cursor='pointer'" onclick="document.location = '{% url 'artefacts:artefact-detail' artefact.id %}'">
+                    <td>{{ artefact.metal.description }}</td>
+                    <td>{{ artefact.origin.country }}</td>
+                    <td>{{ artefact.origin.site }}</td>
+                    <td>{{ artefact.chronology.name }}</td>
+                </tr>
+
+        {% endfor %}
+      </table>
+    </div>
+  </div>
+
+</div>
+
+{% endblock content %}
