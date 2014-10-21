@@ -5,10 +5,10 @@ from .models import Metal, Type, Origin, Chronology, Environment, Technology, Mi
 
 class ArtefactAdmin(admin.ModelAdmin):
     fieldsets = [
-        ('Own fields', {'fields': ['inventory_number', 'description', 'pub_date', 'additional_information']}),
+        ('Own fields', {'fields': ['inventory_number', 'description', 'initial_pub_date', 'additional_information']}),
         ('Foreign keys', {
-            'fields': ['metal', 'type', 'origin', 'chronology', 'environment', 'technology', 'microstructuretype',
-                       'microstructure', 'corrosion']})
+            'fields': ['user', 'metal', 'type', 'origin', 'chronology', 'environment', 'technology',
+                       'microstructuretype', 'corrosion']})
     ]
     list_display = ('id', 'metal', 'type')
 

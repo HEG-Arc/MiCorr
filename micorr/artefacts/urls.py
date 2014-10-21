@@ -1,8 +1,8 @@
 from django.conf.urls import patterns, url
 
-from artefacts import views
+from .views import ArtefactsListView, ArtefactsDetailView
 
 urlpatterns = patterns('',
-    url(r'^$', views.index, name='index'),
-    url(r'^(?P<artefact_id>\d+)/$', views.detail, name='detail'),
+    url(r'^$', ArtefactsListView.as_view(), name='artefact-list'),
+    url(r'^(?P<pk>\d+)/$', ArtefactsDetailView.as_view(), name='artefact-detail'),
 )
