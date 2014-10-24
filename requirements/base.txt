@@ -41,3 +41,4 @@ django-tinymce==1.5.3
 sorl-thumbnail==11.12.1b
 django-envelope==0.7
 django-cities-light==2.4.3
+django-easyfilters==0.5
