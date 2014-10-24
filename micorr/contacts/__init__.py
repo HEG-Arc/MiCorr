@@ -21,7 +21,7 @@
 # along with MiCorr. If not, see <http://www.gnu.org/licenses/>.
 
 """
-The contact application is designed to display, edit, create and delete information regarding
+The contacts application is designed to display, edit, create and delete information regarding
 people or organisation that have a link to MiCorr (owner or artefacts, redactors, users, ...).
 A contact can be a user (able to log in MiCorr) but it is not mandatory.
 """
