@@ -47,12 +47,14 @@ class Common(Configuration):
         'sorl.thumbnail',
         'newsletter',
         'envelope',
+        'cities_light',
     )
 
     # Apps specific for this project go here.
     LOCAL_APPS = (
         'users',  # custom users app
         'artefacts',  # custom artefacts app
+        'contacts',
         # Your stuff: custom apps go here
     )
 
