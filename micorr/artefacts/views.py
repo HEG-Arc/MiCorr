@@ -1,19 +1,29 @@
 from django.shortcuts import get_object_or_404, render
 from django.views import generic
+from django_easyfilters import FilterSet
 
 from .models import Artefact
 
 
-def detail(request, artefact_id):
-    artefact = get_object_or_404(Artefact, pk=artefact_id)
-    return render(request, 'artefacts/detail.html', {'artefact': artefact})
-
-
 class ArtefactsListView(generic.ListView):
+    queryset = Artefact.objects.select_related('metal', 'origin', 'chronology')
 
-    model = Artefact
+    def get(self, request, *args, **kwargs):
+        artefacts = Artefact.objects.all()
+        artefactsfilter = ArtefactFilterSet(artefacts, request.GET)
+        data = {
+            'artefacts': artefactsfilter.qs,
+            'artefactsfilter': artefactsfilter,
+        }
+        return render(request, "artefacts/artefact_list.html", data)
 
 
 class ArtefactsDetailView(generic.DetailView):
+    queryset = Artefact.objects.select_related('metal', 'type', 'origin', 'chronology', 'technology')
 
-    model = Artefact
+
+class ArtefactFilterSet(FilterSet):
+    fields = [
+        'inventory_number',
+        'metal',
+    ]
