@@ -18,41 +18,72 @@
     </div>
   </div>
 
+
+{% for section in artefact.section_set.all %}
+    {% if section.title == 'Artefact' %}
+        {% for image in section.image_set.all %}
+            <div class="row">
+                <div class="col-xs-12" style="text-align: center">
+                    <img src="{{ image.image.url }}" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12" style="text-align: center">
+                    <i>{{ image }}</i>
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endfor %}
+
+<br/>
+
   <div class="row">
     <div class="col-xs-4 column1">Description of artefact</div>
     <div class="col-xs-8 column2">{{ artefact.description }}</div>
   </div>
+
+<br/>
 
   <div class="row">
     <div class="col-xs-4 column1">Type of artefact</div>
     <div class="col-xs-8 column2">{{ artefact.type }}</div>
   </div>
 
+<br/>
+
   <div class="row">
     <div class="col-xs-4 column1">Origin and date of recovering</div>
     <div class="col-xs-8 column2">{{ artefact.origin }}</div>
   </div>
+
+<br/>
 
   <div class="row">
     <div class="col-xs-4 column1">Dating of artefact</div>
     <div class="col-xs-8 column2">{{ artefact.chronology.period }}</div>
   </div>
 
+<br/>
+
   <div class="row">
     <div class="col-xs-4 column1">Chronology</div>
     <div class="col-xs-8 column2">{{ artefact.chronology.name }}</div>
   </div>
+
+<br/>
 
   <div class="row">
     <div class="col-xs-4 column1">Burial conditions / environment</div>
     <div class="col-xs-8 column2">{{ artefact.get_environments|join:" / " }}</div>
   </div>
 
+<br/>
+
   <div class="row">
     <div class="col-xs-4 column1">Inv. Number</div>
     <div class="col-xs-8 column2">{{ artefact.inventory_number }}</div>
   </div>
-
 </div>
 
 {% endblock content %}
