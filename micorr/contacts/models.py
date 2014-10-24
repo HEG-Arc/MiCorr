@@ -24,6 +24,7 @@
 
 # Core Django imports
 from django.db import models
+from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 
 # Third-party app imports
@@ -31,6 +32,7 @@ from django_extensions.db.models import TimeStampedModel
 from cities_light.models import Country, Region, City
 
 # MiCorr imports
+from users.models import User
 
 
 class Contact(TimeStampedModel):
@@ -39,6 +41,7 @@ class Contact(TimeStampedModel):
     a user of MiCorr (somebody with an account to log in) but can be one. A contact may also be the child of another
     contact (for example, students can be children of their school contact).
     """
+    user = models.OneToOneField(User, verbose_name=_('user'), related_name=_('contact'), blank=True, null=True, help_text=_("If this contact is also a user, it's user account."))
     parent = models.ForeignKey('Contact', verbose_name=_("parent"), related_name=_('members'), blank=True, null=True, help_text=_("Specify one parent to create dependencies between contacts."))
     organization_name = models.CharField(verbose_name=_("organization name"), max_length=250, blank=True, default='', help_text=_("Name of the organization (leave empty if this is an individual contact."))
     organization_complement = models.CharField(verbose_name=_("organization complement"), max_length=250, blank=True, default='', help_text=_("Complement of the organization name (could be a department, ... Leave empty if this is an individual contact."))
