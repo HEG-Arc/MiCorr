@@ -126,8 +126,14 @@ class Section(models.Model):
     description = models.TextField(blank=True)
     order = models.IntegerField(blank=True, null=True)
 
+    def __str__(self):
+        return self.title
+
 
 class Image(models.Model):
-    attached = models.ForeignKey(Section, blank=True, null=True)
+    section = models.ForeignKey(Section, blank=True, null=True)
     image = models.ImageField(blank=True, null=True)
-    legend = models.CharField(max_length=100, blank=True)
+    legend = models.CharField(max_length=200, blank=True)
+
+    def __str__(self):
+        return self.legend
