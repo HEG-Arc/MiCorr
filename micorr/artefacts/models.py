@@ -1,10 +1,16 @@
 # coding=utf-8
 from django.db import models
 from django.conf import settings
+from django_extensions.db.models import TimeStampedModel
+from contacts.models import Contact
 #from cities_light.models import City
 
 
-class Metal(models.Model):
+class Metal(TimeStampedModel):
+    """
+    With a primary and a secondary element
+    Can be composed of another Metal object
+    """
     primary_element = models.CharField(max_length=2, blank=True)
     secondary_element = models.CharField(max_length=2, blank=True)
     description = models.CharField(max_length=100, blank=True)
@@ -14,14 +20,20 @@ class Metal(models.Model):
         return "%s / %s --> %s" % (self.primary_element, self.secondary_element, self.description)
 
 
-class Type(models.Model):
+class Type(TimeStampedModel):
+    """
+    What the artefact was used for
+    """
     name = models.CharField(max_length=200, blank=True)
 
     def __str__(self):
         return self.name
 
 
-class Origin(models.Model):
+class Origin(TimeStampedModel):
+    """
+    Where the artefact was
+    """
     site = models.CharField(max_length=100, blank=True)
     city = models.CharField(max_length=100, blank=True)
     region = models.CharField(max_length=100, blank=True)
@@ -38,36 +50,58 @@ class Origin(models.Model):
         return " ".join(origin)
 
 
-class Chronology(models.Model):
+class Chronology(TimeStampedModel):
+    """
+    How old the artefact is
+    """
     name = models.CharField(max_length=100, blank=True)
     period = models.CharField(max_length=100, blank=True)
 
     def __str__(self):
-        return "%s - %s" % (self.name, self.period)
+        chronology = []
+        if self.name:
+            chronology.append(self.name)
+        if self.period:
+            chronology.append(self.period)
+        return " - ".join(chronology)
 
 
-class Environment(models.Model):
+class Environment(TimeStampedModel):
+    """
+    What the burial conditions of the artefact were
+    An artefact may have several environments
+    """
     name = models.CharField(max_length=100, blank=True)
 
     def __str__(self):
         return self.name
 
 
-class Technology(models.Model):
+class Technology(TimeStampedModel):
+    """
+    How the artefact was conserved
+    """
     name = models.CharField(max_length=100, blank=True)
 
     def __str__(self):
         return self.name
 
 
-class MicrostructureType(models.Model):
+class MicrostructureType(TimeStampedModel):
+    """
+    What the artefact is made of
+    """
     type = models.CharField(max_length=100, blank=True)
 
     def __str__(self):
         return self.type
 
 
-class Microstructure(models.Model):
+class Microstructure(TimeStampedModel):
+    """
+    For a single microstructure type, many different microstructures are available
+    An artefact can be made of several microstructures
+    """
     microstructuretype = models.ForeignKey(MicrostructureType, blank=True, null=True)
     name = models.CharField(max_length=100, blank=True)
 
@@ -75,31 +109,43 @@ class Microstructure(models.Model):
         return self.name
 
 
-class Corrosion(models.Model):
+class Corrosion(TimeStampedModel):
+    """
+    The corrosion form and the corrosion type observed
+    """
     form = models.CharField(max_length=100, blank=True)
     type = models.CharField(max_length=100, blank=True)
 
     def __str__(self):
-        return "%s - %s" % (self.form, self.type)
+        corrosion = []
+        if self.form:
+            corrosion.append(self.form)
+        if self.type:
+            corrosion.append(self.type)
+        return " - ".join(corrosion)
 
 
-# For each artefact stored in the database
-class Artefact(models.Model):
+class Artefact(TimeStampedModel):
+    """
+    An artefact with has many foreign keys, corresponding to its caracteristics
+    """
+    # Own fields
     inventory_number = models.CharField(max_length=100, blank=True)
     description = models.TextField(blank=True)
     initial_pub_date = models.DateTimeField('date published', blank=True, null=True)
     additional_information = models.TextField(blank=True)
 
+    # Foreign Keys
     user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name="user's object", blank=True, null=True)
     metal = models.ForeignKey(Metal, verbose_name="metal type", blank=True, null=True)
     type = models.ForeignKey(Type, verbose_name="object type", blank=True, null=True)
     origin = models.ForeignKey(Origin, blank=True, null=True)
     chronology = models.ForeignKey(Chronology, blank=True, null=True)
     environment = models.ManyToManyField(Environment, blank=True, null=True)
+    owner = models.ForeignKey(Contact, blank=True, null=True)
     technology = models.ForeignKey(Technology, verbose_name="technology used", blank=True, null=True)
-    microstructuretype = models.ForeignKey(MicrostructureType, verbose_name="microstructure type", blank=True, null=True)
+    microstructure = models.ForeignKey(Microstructure, blank=True, null=True)
     corrosion = models.ForeignKey(Corrosion, blank=True, null=True)
-    #owner = models.CharField(max_length=100, blank=True)
 
     def get_environments(self):
         environments_list = []
@@ -107,30 +153,48 @@ class Artefact(models.Model):
             environments_list.append(env)
         return environments_list
 
-    def __str__(self):
+    def __unicode__(self):
+        origin = []
+        if self.origin.site:
+            origin.append(self.origin.site)
+        if self.origin.city:
+            origin.append(self.origin.city)
+        if self.origin.region:
+            origin.append(self.origin.region)
+        origin_text = " ".join(origin)
+
         artefact = []
         if self.metal.description:
             artefact.append(self.metal.description)
         if self.origin.country:
             artefact.append(self.origin.country)
-        if self.origin.site:
-            artefact.append(self.origin.site)
+        if origin_text:
+            artefact.append(origin_text)
         if self.chronology.name:
             artefact.append(self.chronology.name)
         return " - ".join(artefact)
 
 
-class Section(models.Model):
+class Section(TimeStampedModel):
+    """
+    An artefact may have many sections with images inside
+    """
     artefact = models.ForeignKey(Artefact, blank=True, null=True)
     title = models.CharField(max_length=100, blank=True)
     description = models.TextField(blank=True)
     order = models.IntegerField(blank=True, null=True)
 
+    class Meta:
+        ordering = ['order']
+
     def __str__(self):
         return self.title
 
 
-class Image(models.Model):
+class Image(TimeStampedModel):
+    """
+    An image refers to a section
+    """
     section = models.ForeignKey(Section, blank=True, null=True)
     image = models.ImageField(blank=True, null=True)
     legend = models.CharField(max_length=200, blank=True)
