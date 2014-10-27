@@ -7,11 +7,15 @@
 <div class="container">
 
   <div class="row">
-    <div class="col-xs-12">
+    <div class="col-xs-6">
       <h2>Artefacts</h2>
-      <br/>
+    </div>
+    <div class="col-xs-6">
+      {{ artefactsfilter }}
     </div>
   </div>
+
+<br/>
 
   <div class="row">
     <div class="table-responsive">
@@ -23,7 +27,7 @@
             <th>Chronology</th>
         </tr>
         {% for artefact in artefacts %}
-                <tr onmouseover="this.style.cursor='pointer'" onclick="document.location = '{% url 'artefacts:artefact-detail' artefact.id %}'">
+                <tr onmouseover="this.style.cursor='pointer'" onclick="document.location = '{% url 'artefacts:artefact-detail' artefact.pk %}'">
                     <td>{{ artefact.metal.description }}</td>
                     <td>{{ artefact.origin.country }}</td>
                     <td>{{ artefact.origin.site }}</td>
@@ -33,8 +37,6 @@
       </table>
     </div>
   </div>
-
-{{ artefactsfilter }}
 
 </div>
 

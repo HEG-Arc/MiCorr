@@ -18,9 +18,8 @@
     </div>
   </div>
 
-
-{% for section in artefact.section_set.all %}
-    {% if section.title == 'Artefact' %}
+{% for section in sections %}
+    {% if forloop.first %}
         {% for image in section.image_set.all %}
             <div class="row">
                 <div class="col-xs-12" style="text-align: center">
@@ -84,6 +83,38 @@
     <div class="col-xs-4 column1">Inv. Number</div>
     <div class="col-xs-8 column2">{{ artefact.inventory_number }}</div>
   </div>
-</div>
 
+<br/>
+
+  <div class="row">
+    <div class="col-xs-4 column1">Alloy</div>
+    <div class="col-xs-8 column2">{{ artefact.metal.description }}</div>
+  </div>
+
+<br/>
+
+  <div class="row">
+    <div class="col-xs-4 column1">Technology</div>
+    <div class="col-xs-8 column2">{{ artefact.technology }}</div>
+  </div>
+
+<br/>
+
+{% for section in sections %}
+    {% if forloop.counter0 > 0 %}
+        {% for image in section.image_set.all %}
+            <div class="row">
+                <div class="col-xs-12" style="text-align: center">
+                    <img src="{{ image.image.url }}" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12" style="text-align: center">
+                    <i>{{ image }}</i>
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endfor %}
+</div>
 {% endblock content %}

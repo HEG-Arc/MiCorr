@@ -21,6 +21,14 @@ class ArtefactsListView(generic.ListView):
 class ArtefactsDetailView(generic.DetailView):
     queryset = Artefact.objects.select_related('metal', 'type', 'origin', 'chronology', 'technology')
 
+    def get_context_data(self, **kwargs):
+        context = super(ArtefactsDetailView, self).get_context_data(**kwargs)
+        artefact = get_object_or_404(Artefact, pk=self.kwargs['pk'])
+        sections = artefact.section_set.all()
+        context['artefact'] = artefact
+        context['sections'] = sections
+        return context
+
 
 class ArtefactFilterSet(FilterSet):
     fields = [
