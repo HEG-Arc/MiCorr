@@ -2,7 +2,7 @@
 from django.db import models
 from django.conf import settings
 from django_extensions.db.models import TimeStampedModel
-from contacts.models import Contact
+#from contacts.models import Contact
 #from cities_light.models import City
 
 
@@ -50,21 +50,19 @@ class Origin(TimeStampedModel):
         return " ".join(origin)
 
 
-class Chronology(TimeStampedModel):
-    """
-    How old the artefact is
-    """
+class ChronologyCategory(TimeStampedModel):
     name = models.CharField(max_length=100, blank=True)
-    period = models.CharField(max_length=100, blank=True)
 
     def __str__(self):
-        chronology = []
-        if self.name:
-            chronology.append(self.name)
-        if self.period:
-            chronology.append(self.period)
-        return " - ".join(chronology)
+        return self.name
 
+
+class ChronologyPeriod(TimeStampedModel):
+    chronologycategory = models.ForeignKey(ChronologyCategory, blank=True, null=True)
+    name = models.CharField(max_length=100, blank=True)
+
+    def __str__(self):
+        return self.name
 
 class Environment(TimeStampedModel):
     """
@@ -140,9 +138,9 @@ class Artefact(TimeStampedModel):
     metal = models.ForeignKey(Metal, verbose_name="metal type", blank=True, null=True)
     type = models.ForeignKey(Type, verbose_name="object type", blank=True, null=True)
     origin = models.ForeignKey(Origin, blank=True, null=True)
-    chronology = models.ForeignKey(Chronology, blank=True, null=True)
+    chronology_period = models.ForeignKey(ChronologyPeriod, blank=True, null=True)
     environment = models.ManyToManyField(Environment, blank=True, null=True)
-    owner = models.ForeignKey(Contact, blank=True, null=True)
+    #owner = models.ForeignKey(Contact, blank=True, null=True)
     technology = models.ForeignKey(Technology, verbose_name="technology used", blank=True, null=True)
     microstructure = models.ForeignKey(Microstructure, blank=True, null=True)
     corrosion = models.ForeignKey(Corrosion, blank=True, null=True)
@@ -170,8 +168,8 @@ class Artefact(TimeStampedModel):
             artefact.append(self.origin.country)
         if origin_text:
             artefact.append(origin_text)
-        if self.chronology.name:
-            artefact.append(self.chronology.name)
+        if self.chronology_period.chronologycategory.name:
+            artefact.append(self.chronology_period.chronologycategory.name)
         return " - ".join(artefact)
 
 
@@ -188,7 +186,7 @@ class Section(TimeStampedModel):
         ordering = ['order']
 
     def __str__(self):
-        return self.title
+        return self.artefact.inventory_number
 
 
 class Image(TimeStampedModel):
@@ -197,7 +195,7 @@ class Image(TimeStampedModel):
     """
     section = models.ForeignKey(Section, blank=True, null=True)
     image = models.ImageField(blank=True, null=True)
-    legend = models.CharField(max_length=200, blank=True)
+    legend = models.TextField(blank=True)
 
     def __str__(self):
         return self.legend

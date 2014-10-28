@@ -6,7 +6,7 @@ from .models import Artefact
 
 
 class ArtefactsListView(generic.ListView):
-    queryset = Artefact.objects.select_related('metal', 'origin', 'chronology')
+    queryset = Artefact.objects.select_related('metal', 'origin', 'chronology_period')
 
     def get(self, request, *args, **kwargs):
         artefacts = Artefact.objects.all()
@@ -19,7 +19,7 @@ class ArtefactsListView(generic.ListView):
 
 
 class ArtefactsDetailView(generic.DetailView):
-    queryset = Artefact.objects.select_related('metal', 'type', 'origin', 'chronology', 'technology')
+    queryset = Artefact.objects.select_related('metal', 'type', 'origin', 'chronology_period', 'technology')
 
     def get_context_data(self, **kwargs):
         context = super(ArtefactsDetailView, self).get_context_data(**kwargs)
