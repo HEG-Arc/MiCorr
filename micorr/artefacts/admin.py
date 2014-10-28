@@ -18,6 +18,10 @@ class SectionAdmin(admin.ModelAdmin):
     list_display = ('artefact', 'title', 'order')
 
 
+class CorrosionAdmin(admin.ModelAdmin):
+    list_display = ('form', 'type')
+
+
 admin.site.register(Metal)
 admin.site.register(Type)
 admin.site.register(Origin)
@@ -27,7 +31,7 @@ admin.site.register(Environment)
 admin.site.register(Technology)
 admin.site.register(MicrostructureType)
 admin.site.register(Microstructure)
-admin.site.register(Corrosion)
+admin.site.register(Corrosion, CorrosionAdmin)
 admin.site.register(Artefact, ArtefactAdmin)
 admin.site.register(Section, SectionAdmin)
 admin.site.register(Image)
