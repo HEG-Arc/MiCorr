@@ -16,7 +16,7 @@ class Metal(TimeStampedModel):
     description = models.CharField(max_length=100, blank=True)
     parent_metal = models.ForeignKey('self', blank=True, null=True)
 
-    def __str__(self):
+    def __unicode__(self):
         return "%s / %s --> %s" % (self.primary_element, self.secondary_element, self.description)
 
 
@@ -26,7 +26,7 @@ class Type(TimeStampedModel):
     """
     name = models.CharField(max_length=200, blank=True)
 
-    def __str__(self):
+    def __unicode__(self):
         return self.name
 
 
@@ -53,7 +53,7 @@ class Origin(TimeStampedModel):
 class ChronologyCategory(TimeStampedModel):
     name = models.CharField(max_length=100, blank=True)
 
-    def __str__(self):
+    def __unicode__(self):
         return self.name
 
 
@@ -61,8 +61,9 @@ class ChronologyPeriod(TimeStampedModel):
     chronologycategory = models.ForeignKey(ChronologyCategory, blank=True, null=True)
     name = models.CharField(max_length=100, blank=True)
 
-    def __str__(self):
+    def __unicode__(self):
         return self.name
+
 
 class Environment(TimeStampedModel):
     """
@@ -71,7 +72,7 @@ class Environment(TimeStampedModel):
     """
     name = models.CharField(max_length=100, blank=True)
 
-    def __str__(self):
+    def __unicode__(self):
         return self.name
 
 
@@ -81,7 +82,7 @@ class Technology(TimeStampedModel):
     """
     name = models.CharField(max_length=100, blank=True)
 
-    def __str__(self):
+    def __unicode__(self):
         return self.name
 
 
@@ -91,7 +92,7 @@ class MicrostructureType(TimeStampedModel):
     """
     type = models.CharField(max_length=100, blank=True)
 
-    def __str__(self):
+    def __unicode__(self):
         return self.type
 
 
@@ -103,7 +104,7 @@ class Microstructure(TimeStampedModel):
     microstructuretype = models.ForeignKey(MicrostructureType, blank=True, null=True)
     name = models.CharField(max_length=100, blank=True)
 
-    def __str__(self):
+    def __unicode__(self):
         return self.name
 
 
@@ -114,7 +115,7 @@ class Corrosion(TimeStampedModel):
     form = models.CharField(max_length=100, blank=True)
     type = models.CharField(max_length=100, blank=True)
 
-    def __str__(self):
+    def __unicode__(self):
         corrosion = []
         if self.form:
             corrosion.append(self.form)
@@ -185,8 +186,8 @@ class Section(TimeStampedModel):
     class Meta:
         ordering = ['order']
 
-    def __str__(self):
-        return self.artefact.inventory_number
+    def __unicode__(self):
+        return "%s, %s" % (self.artefact.inventory_number, self.order)
 
 
 class Image(TimeStampedModel):
@@ -197,5 +198,5 @@ class Image(TimeStampedModel):
     image = models.ImageField(blank=True, null=True)
     legend = models.TextField(blank=True)
 
-    def __str__(self):
+    def __unicode__(self):
         return self.legend
