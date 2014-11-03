@@ -1,3 +1,4 @@
+from django.core.urlresolvers import reverse, reverse_lazy
 from django.shortcuts import get_object_or_404, render
 from django.views import generic
 from django_easyfilters import FilterSet
@@ -28,6 +29,22 @@ class ArtefactsDetailView(generic.DetailView):
         context['artefact'] = artefact
         context['sections'] = sections
         return context
+
+
+class ArtefactsUpdateView(generic.UpdateView):
+    model = Artefact
+    fields = ['inventory_number', 'environment']
+    template_name_suffix = '_update_form'
+
+    def get_success_url(self):
+        return reverse('artefacts:artefact-detail', args=[8])
+
+
+
+class ArtefactsDeleteView(generic.DeleteView):
+    model = Artefact
+    template_name_suffix = '_delete_artefact'
+    success_url = reverse_lazy('artefacts:artefact-list')
 
 
 class ArtefactFilterSet(FilterSet):

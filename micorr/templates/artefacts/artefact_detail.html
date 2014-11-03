@@ -116,5 +116,15 @@
         {% endfor %}
     {% endif %}
 {% endfor %}
+
+  <div class="row">
+      {% if request.user.is_authenticated %}
+          <div class="col-xs-3 col-xs-offset-9">
+              <a href="{% url 'artefacts:artefact-update' artefact.pk %}"><button type="button" class="btn btn-primary">Edit</button></a>
+              <a href="{% url 'artefacts:artefact-delete' artefact.pk %}"><button type="button" class="btn btn-danger">Delete</button></a>
+          </div>
+      {% endif %}
+  </div>
+
 </div>
 {% endblock content %}
