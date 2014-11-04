@@ -11,7 +11,19 @@ class ArtefactAdmin(admin.ModelAdmin):
             'fields': ['user', 'metal', 'type', 'origin', 'chronology_period', 'environment', 'technology',
                        'microstructure', 'corrosion']})
     ]
-    list_display = ('id', 'metal', 'type')
+    list_display = ('id', 'metal_description', 'origin_country', 'origin', 'chronology_period')
+
+    def metal_description(self, obj):
+        metal = ""
+        if obj.metal:
+            metal = obj.metal.description
+        return metal
+
+    def origin_country(self, obj):
+        country = ""
+        if obj.origin:
+            country = obj.origin.city.country.name
+        return country
 
 
 class SectionAdmin(admin.ModelAdmin):
