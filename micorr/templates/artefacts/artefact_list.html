@@ -23,14 +23,14 @@
         <tr>
             <th>Metal Description</th>
             <th>Country</th>
-            <th>Site</th>
+            <th>City</th>
             <th>Chronology</th>
         </tr>
         {% for artefact in artefacts %}
                 <tr onmouseover="this.style.cursor='pointer'" onclick="document.location = '{% url 'artefacts:artefact-detail' artefact.pk %}'">
                     <td>{{ artefact.metal.description }}</td>
-                    <td>{{ artefact.origin.country }}</td>
-                    <td>{{ artefact.origin.city }}</td>
+                    <td>{{ artefact.origin.city.country.name }}</td>
+                    <td>{{ artefact.origin.city.name }}</td>
                     <td>{{ artefact.chronology_period.chronologycategory.name }}</td>
                 </tr>
         {% endfor %}

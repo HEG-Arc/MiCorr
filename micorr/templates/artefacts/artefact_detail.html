@@ -10,13 +10,14 @@
 </style>
 
 <div class="container">
-    
+
   <div class="row">
     <div class="col-xs-12">
       <h2>{{ artefact }}</h2>
-      <br/>
     </div>
   </div>
+
+<br/>
 
 {% for section in sections %}
     {% if forloop.first %}
@@ -60,14 +61,14 @@
 
   <div class="row">
     <div class="col-xs-4 column1">Dating of artefact</div>
-    <div class="col-xs-8 column2">{{ artefact.chronology_period.name }}</div>
+    <div class="col-xs-8 column2">{{ artefact.chronology_period }}</div>
   </div>
 
 <br/>
 
   <div class="row">
     <div class="col-xs-4 column1">Chronology</div>
-    <div class="col-xs-8 column2">{{ artefact.chronology_period.chronologycategory.name }}</div>
+    <div class="col-xs-8 column2">{{ artefact.chronology_period.chronologycategory }}</div>
   </div>
 
 <br/>

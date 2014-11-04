@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}MiCorr | {{ artefact.metal.description }} - delete{% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+    <div class="row">
+        <h2>Delete {{ artefact }}</h2>
+        <br/>
+        <p>Are you sure you want to delete the artefact <b>{{ artefact }}</b>?</p>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-3 col-xs-offset-9">
+            <form action="{% url "artefacts:artefact-delete" artefact.pk %}" method="POST">
+            {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Delete</button>
+                <a href="{% url "artefacts:artefact-detail" artefact.pk %}"><button type="button" class="btn btn-link">Cancel</button></a>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
