@@ -4,6 +4,7 @@ from django.views import generic
 from django_easyfilters import FilterSet
 
 from .models import Artefact
+from .forms import UpdateForm
 
 
 class ArtefactsListView(generic.ListView):
@@ -33,17 +34,22 @@ class ArtefactsDetailView(generic.DetailView):
 
 class ArtefactsUpdateView(generic.UpdateView):
     model = Artefact
-    fields = ['inventory_number', 'environment']
     template_name_suffix = '_update_form'
+    form_class = UpdateForm
 
     def get_success_url(self):
-        return reverse('artefacts:artefact-detail', args=[8])
-
+        return reverse('artefacts:artefact-detail', kwargs={'pk': self.kwargs.get('pk', None)},)
 
 
 class ArtefactsDeleteView(generic.DeleteView):
     model = Artefact
-    template_name_suffix = '_delete_artefact'
+    template_name_suffix = '_confirm_delete'
+    success_url = reverse_lazy('artefacts:artefact-list')
+
+
+class ArtefactsCreateView(generic.CreateView):
+    model = Artefact
+    template_name_suffix = '_create_form'
     success_url = reverse_lazy('artefacts:artefact-list')
 
 
