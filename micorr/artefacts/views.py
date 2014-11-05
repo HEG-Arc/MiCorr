@@ -4,7 +4,7 @@ from django.views import generic
 from django_easyfilters import FilterSet
 
 from .models import Artefact
-from .forms import UpdateForm
+from .forms import UpdateForm, CreateForm
 
 
 class ArtefactsListView(generic.ListView):
@@ -50,6 +50,7 @@ class ArtefactsDeleteView(generic.DeleteView):
 class ArtefactsCreateView(generic.CreateView):
     model = Artefact
     template_name_suffix = '_create_form'
+    form_class = CreateForm
     success_url = reverse_lazy('artefacts:artefact-list')
 
 

@@ -38,6 +38,14 @@
     </div>
   </div>
 
+  <div class="row">
+      {% if request.user.is_authenticated %}
+          <div class="col-xs-2 col-xs-offset-10">
+              <a href="{% url 'artefacts:artefact-create' %}"><button type="button" class="btn btn-primary">New Artefact</button></a>
+          </div>
+      {% endif %}
+  </div>
+
 </div>
 
 {% endblock content %}

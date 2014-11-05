@@ -6,4 +6,11 @@ class UpdateForm(forms.ModelForm):
 
     class Meta:
         model = Artefact
-        fields = ('inventory_number', 'description', 'metal')
+        fields = '__all__'
+
+
+class CreateForm(forms.ModelForm):
+
+    class Meta:
+        model = Artefact
+        fields = '__all__'
