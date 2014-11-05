@@ -1,4 +1,5 @@
 # coding=utf-8
+from datetime import datetime
 from django.db import models
 from django.conf import settings
 from django_extensions.db.models import TimeStampedModel
@@ -139,7 +140,7 @@ class Artefact(TimeStampedModel):
     inventory_number = models.CharField(max_length=100, blank=True, help_text='The reference number of the artefact')
     description = models.TextField(blank=True,
                                    help_text='A short description of the artefact. Can also include its dimensions')
-    initial_pub_date = models.DateTimeField('date published', blank=True, null=True,
+    initial_pub_date = models.DateTimeField('date published', blank=True, null=True, default=datetime.now,
                                             help_text='The date and time when the artefact was first entered into the database')
     additional_information = models.TextField(blank=True, help_text='A field to add more information')
 
