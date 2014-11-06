@@ -68,7 +68,7 @@
 
   <div class="row">
     <div class="col-xs-4 column1">Chronology</div>
-    <div class="col-xs-8 column2">{{ artefact.chronology_period.chronologycategory }}</div>
+    <div class="col-xs-8 column2">{{ artefact.chronology_period.chronology_category }}</div>
   </div>
 
 <br/>
@@ -118,14 +118,14 @@
     {% endif %}
 {% endfor %}
 
-  <div class="row">
-      {% if request.user.is_authenticated %}
-          <div class="col-xs-3 col-xs-offset-9">
-              <a href="{% url 'artefacts:artefact-update' artefact.pk %}"><button type="button" class="btn btn-primary">Edit</button></a>
-              <a href="{% url 'artefacts:artefact-delete' artefact.pk %}"><button type="button" class="btn btn-danger">Delete</button></a>
-          </div>
-      {% endif %}
-  </div>
+{% if request.user.is_authenticated %}
+    <div class="row">
+      <div class="col-xs-3 col-xs-offset-9">
+          <a href="{% url 'artefacts:artefact-update' artefact.pk %}"><button type="button" class="btn btn-primary">Edit</button></a>
+          <a href="{% url 'artefacts:artefact-delete' artefact.pk %}"><button type="button" class="btn btn-danger">Delete</button></a>
+      </div>
+    </div>
+{% endif %}
 
 </div>
 {% endblock content %}
