@@ -65,7 +65,7 @@ class ChronologyPeriod(TimeStampedModel):
     """
     A more precise dating of the artefact
     """
-    chronologycategory = models.ForeignKey(ChronologyCategory, blank=True, null=True,
+    chronology_category = models.ForeignKey(ChronologyCategory, blank=True, null=True,
                                            help_text='A more precise dating of the artefact')
     name = models.CharField(max_length=100, blank=True)
 
@@ -109,7 +109,7 @@ class Microstructure(TimeStampedModel):
     For a single microstructure type, many different microstructures are available
     An artefact can be made of several microstructures
     """
-    microstructuretype = models.ForeignKey(MicrostructureType, blank=True, null=True)
+    microstructure_type = models.ForeignKey(MicrostructureType, blank=True, null=True)
     name = models.CharField(max_length=100, blank=True)
 
     def __unicode__(self):
@@ -182,7 +182,7 @@ class Artefact(TimeStampedModel):
             artefact.append(self.origin.city.country.name)
             artefact.append(origin_text)
         if self.chronology_period:
-            artefact.append(self.chronology_period.chronologycategory.name)
+            artefact.append(self.chronology_period.chronology_category.name)
         return " - ".join(artefact)
 
     def __unicode__(self):
