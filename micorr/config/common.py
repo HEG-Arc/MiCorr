@@ -48,6 +48,7 @@ class Common(Configuration):
         'newsletter',
         'envelope',
         'cities_light',
+        'django_filters',
     )
 
     # Apps specific for this project go here.

@@ -4,14 +4,34 @@
 
 {% block content %}
 
+  <div class="row">
+    <div class="col-xs-6">
+      <h2>Search</h2>
+    </div>
+  </div>
+
+<br/>
+
 <div class="container">
+
+    <div class="row">
+        <form action="{% url 'artefacts:artefact-list' %}" method="get">
+            {% for field in filter.form %}
+                <p>{{ field.label_tag }}</p>
+                <p>{{ field }}</p>
+                <br/>
+            {% endfor %}
+            <div class="col-xs-1 col-xs-offset-10">
+                <button type="submit" class="btn btn-default">Submit query</button>
+            </div>
+        </form>
+    </div>
+
+<br/>
 
   <div class="row">
     <div class="col-xs-6">
-      <h2>Artefacts</h2>
-    </div>
-    <div class="col-xs-6">
-      {{ artefactsfilter }}
+      <h2>Search results</h2>
     </div>
   </div>
 
@@ -26,25 +46,25 @@
             <th>City</th>
             <th>Chronology</th>
         </tr>
-        {% for artefact in artefacts %}
-                <tr onmouseover="this.style.cursor='pointer'" onclick="document.location = '{% url 'artefacts:artefact-detail' artefact.pk %}'">
-                    <td>{{ artefact.metal.description }}</td>
-                    <td>{{ artefact.origin.city.country.name }}</td>
-                    <td>{{ artefact.origin.city.name }}</td>
-                    <td>{{ artefact.chronology_period.chronologycategory.name }}</td>
-                </tr>
+        {% for artefact in filter %}
+            <tr onmouseover="this.style.cursor='pointer'" onclick="document.location = '{% url 'artefacts:artefact-detail' artefact.pk %}'">
+                <td>{{ artefact.metal.description }}</td>
+                <td>{{ artefact.origin.city.country.name }}</td>
+                <td>{{ artefact.origin.city.name }}</td>
+                <td>{{ artefact.chronology_period.chronology_category.name }}</td>
+            </tr>
         {% endfor %}
       </table>
     </div>
   </div>
 
-  <div class="row">
-      {% if request.user.is_authenticated %}
+  {% if request.user.is_authenticated %}
+      <div class="row">
           <div class="col-xs-2 col-xs-offset-10">
               <a href="{% url 'artefacts:artefact-create' %}"><button type="button" class="btn btn-primary">New Artefact</button></a>
           </div>
-      {% endif %}
-  </div>
+      </div>
+  {% endif %}
 
 </div>
 
