@@ -1,7 +1,6 @@
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.shortcuts import get_object_or_404, render
 from django.views import generic
-from django_easyfilters import FilterSet
 import django_filters
 
 from .models import Artefact
@@ -11,18 +10,6 @@ from .forms import UpdateForm, CreateForm
 class ArtefactsListView(generic.ListView):
     queryset = Artefact.objects.select_related('metal', 'origin', 'chronology_period')
 
-    """
-    With django-easyfilters
-
-    def get(self, request, *args, **kwargs):
-        artefacts = Artefact.objects.all()
-        artefactsfilter = ArtefactFilterSet(artefacts, request.GET)
-        data = {
-            'artefacts': artefactsfilter.qs,
-            'artefactsfilter': artefactsfilter,
-        }
-        return render(request, "artefacts/artefact_list.html", data)
-    """
     def get(self, request, *args, **kwargs):
         artefactsfilter = ArtefactFilter(request.GET)
         return render(request, "artefacts/artefact_list.html", {'filter': artefactsfilter})
@@ -60,13 +47,6 @@ class ArtefactsCreateView(generic.CreateView):
     template_name_suffix = '_create_form'
     form_class = CreateForm
     success_url = reverse_lazy('artefacts:artefact-list')
-
-
-class ArtefactFilterSet(FilterSet):
-    fields = [
-        'inventory_number',
-        'metal',
-    ]
 
 
 class ArtefactFilter(django_filters.FilterSet):
