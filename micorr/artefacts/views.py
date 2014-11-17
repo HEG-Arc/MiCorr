@@ -8,6 +8,9 @@ from .forms import UpdateForm, CreateForm
 
 
 class ArtefactsListView(generic.ListView):
+    """
+    A list of all the artefacts in the filter
+    """
     queryset = Artefact.objects.select_related('metal', 'origin', 'chronology_period')
 
     def get(self, request, *args, **kwargs):
@@ -16,6 +19,9 @@ class ArtefactsListView(generic.ListView):
 
 
 class ArtefactsDetailView(generic.DetailView):
+    """
+    A detail view of an artefact
+    """
     queryset = Artefact.objects.select_related('metal', 'type', 'origin', 'chronology_period', 'technology')
 
     def get_context_data(self, **kwargs):
@@ -28,6 +34,10 @@ class ArtefactsDetailView(generic.DetailView):
 
 
 class ArtefactsUpdateView(generic.UpdateView):
+    """
+    A view which allows the user to edit an artefact
+    When the editing is finished, it redirects the user to the artefact detail page
+    """
     model = Artefact
     template_name_suffix = '_update_form'
     form_class = UpdateForm
@@ -37,12 +47,20 @@ class ArtefactsUpdateView(generic.UpdateView):
 
 
 class ArtefactsDeleteView(generic.DeleteView):
+    """
+    A view which allows the user to delete an artefact
+    When the artefact is deleted, it redirects the user to the artefact list
+    """
     model = Artefact
     template_name_suffix = '_confirm_delete'
     success_url = reverse_lazy('artefacts:artefact-list')
 
 
 class ArtefactsCreateView(generic.CreateView):
+    """
+    A view which allows the user to create an artefact
+    When the artefact is created, it redirects the user to the artefact list
+    """
     model = Artefact
     template_name_suffix = '_create_form'
     form_class = CreateForm
@@ -50,6 +68,11 @@ class ArtefactsCreateView(generic.CreateView):
 
 
 class ArtefactFilter(django_filters.FilterSet):
+    """
+    A filter which appears on top of the artefacts list template and allows the user to search for artefacts using
+    keywords and foreign keys
+    """
+
     class Meta:
         model = Artefact
         fields = ['type', 'origin__city__country', 'chronology_period__chronology_category']
