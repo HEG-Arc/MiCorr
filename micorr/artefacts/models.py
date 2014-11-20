@@ -1,5 +1,6 @@
 # coding=utf-8
 from datetime import datetime
+import os
 from django.db import models
 from django.conf import settings
 from django_extensions.db.models import TimeStampedModel
@@ -211,7 +212,37 @@ class Image(TimeStampedModel):
     """
     section = models.ForeignKey(Section, blank=True, null=True, help_text='The corresponding section')
     image = models.ImageField(blank=True, null=True, help_text='The image file')
-    legend = models.TextField(blank=True, help_text='The legend for a given image')
+    legend = models.TextField(blank=True, help_text='The image description')
 
     def __unicode__(self):
         return self.legend
+
+
+class Document(TimeStampedModel):
+    """
+    A document (PDF, Word, ...) can be attached to an artefact to add information
+    """
+    artefact = models.ForeignKey(Artefact, blank=True, null=True, help_text='The corresponding artefact')
+    document = models.FileField(upload_to='.', help_text='The attached document')
+    name = models.CharField(max_length=100, blank=True, help_text='The document name')
+
+    def extension(self):
+        name, extension = os.path.splitext(self.document.name)
+        if 'pdf' in extension:
+            return 'pdf'
+        if 'doc' in extension:
+            return 'word'
+        if 'xls' in extension:
+            return 'excel'
+        if 'ppt' in extension:
+            return 'powerpoint'
+        if ('zip' or 'rar') in extension:
+            return 'archive'
+        if ('jpg' or 'jpeg' or 'gif' or 'bmp' or 'png') in extension:
+            return 'image'
+        if 'txt' in extension:
+            return 'text'
+        return ''
+
+    def __unicode__(self):
+        return self.name

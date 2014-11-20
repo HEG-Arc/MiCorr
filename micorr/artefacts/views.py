@@ -3,8 +3,8 @@ from django.shortcuts import get_object_or_404, render
 from django.views import generic
 import django_filters
 
-from .models import Artefact
-from .forms import UpdateForm, CreateForm
+from .models import Artefact, Document
+from .forms import ArtefactsUpdateForm, ArtefactsCreateForm, DocumentUpdateForm, DocumentCreateForm
 
 
 class ArtefactsListView(generic.ListView):
@@ -28,8 +28,10 @@ class ArtefactsDetailView(generic.DetailView):
         context = super(ArtefactsDetailView, self).get_context_data(**kwargs)
         artefact = get_object_or_404(Artefact, pk=self.kwargs['pk'])
         sections = artefact.section_set.all()
+        documents = artefact.document_set.all()
         context['artefact'] = artefact
         context['sections'] = sections
+        context['documents'] = documents
         return context
 
 
@@ -40,7 +42,7 @@ class ArtefactsUpdateView(generic.UpdateView):
     """
     model = Artefact
     template_name_suffix = '_update_form'
-    form_class = UpdateForm
+    form_class = ArtefactsUpdateForm
 
     def get_success_url(self):
         return reverse('artefacts:artefact-detail', kwargs={'pk': self.kwargs.get('pk', None)},)
@@ -63,7 +65,7 @@ class ArtefactsCreateView(generic.CreateView):
     """
     model = Artefact
     template_name_suffix = '_create_form'
-    form_class = CreateForm
+    form_class = ArtefactsCreateForm
     success_url = reverse_lazy('artefacts:artefact-list')
 
 
@@ -76,3 +78,32 @@ class ArtefactFilter(django_filters.FilterSet):
     class Meta:
         model = Artefact
         fields = ['type', 'origin__city__country', 'chronology_period__chronology_category']
+
+
+class DocumentUpdateView(generic.UpdateView):
+    """
+
+    """
+    model = Document
+    template_name_suffix = '_update_form'
+    form_class = DocumentUpdateForm
+    success_url = reverse_lazy('artefacts:artefact-list')
+
+
+class DocumentDeleteView(generic.DeleteView):
+    """
+
+    """
+    model = Document
+    template_name_suffix = '_confirm_delete'
+    success_url = reverse_lazy('artefacts:artefact-list')
+
+
+class DocumentCreateView(generic.CreateView):
+    """
+
+    """
+    model = Document
+    template_name_suffix = '_create_form'
+    form_class = DocumentCreateForm
+    success_url = reverse_lazy('artefacts:artefact-list')

@@ -118,6 +118,34 @@
     {% endif %}
 {% endfor %}
 
+{% if documents %}
+    <div class="row">
+        <div class="col-xs-4 column1">Documents</div>
+    </div>
+    <br/>
+    <div class="row">
+        <ul>
+            {% for document in documents %}
+                {% if document.extension %}
+                    <li>{{ document.name }} <a href="{{ document.document.url }}"><i class="fa fa-file-{{ document.extension }}-o fa-lg"></i></a> - <a href="{% url 'artefacts:document-update' document.pk %}"><i>edit</i></a> - <a href="{% url 'artefacts:document-delete' document.pk %}"><i>delete</i></a></li>
+                {% else %}
+                    <li>{{ document.name }} <a href="{{ document.document.url }}"><i class="fa fa-file-o fa-lg"></i></a> - <a href="{% url 'artefacts:document-update' document.pk %}"><i>edit</i></a> - <a href="{% url 'artefacts:document-update' document.pk %}"><i>delete</i></a></li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}
+
+<br/>
+
+{% if request.user.is_authenticated %}
+    <div class="row">
+        <div class="col-xs-1">
+            <a href="{% url 'artefacts:document-create' %}"><button type="button" class="btn btn-primary">Add a document</button></a>
+        </div>
+    </div>
+{% endif %}
+
 {% if request.user.is_authenticated %}
     <div class="row">
       <div class="col-xs-3 col-xs-offset-9">

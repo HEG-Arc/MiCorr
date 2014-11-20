@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import Metal, Type, Origin, ChronologyCategory, ChronologyPeriod, Environment, Technology, \
     MicrostructureType, Microstructure, \
-    Corrosion, Artefact, Section, Image
+    Corrosion, Artefact, Section, Image, Document
 
 
 class ArtefactAdmin(admin.ModelAdmin):
@@ -34,6 +34,10 @@ class CorrosionAdmin(admin.ModelAdmin):
     list_display = ('form', 'type')
 
 
+class DocumentAdmin(admin.ModelAdmin):
+    list_display = ('id', 'artefact', 'name')
+
+
 admin.site.register(Metal)
 admin.site.register(Type)
 admin.site.register(Origin)
@@ -47,3 +51,4 @@ admin.site.register(Corrosion, CorrosionAdmin)
 admin.site.register(Artefact, ArtefactAdmin)
 admin.site.register(Section, SectionAdmin)
 admin.site.register(Image)
+admin.site.register(Document, DocumentAdmin)

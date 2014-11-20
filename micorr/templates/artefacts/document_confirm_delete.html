@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}MiCorr | {{ document.name }} - delete{% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+    <div class="row">
+        <h2>Delete {{ document }}</h2>
+        <br/>
+        <p>Are you sure you want to delete the document <b>{{ document }}</b>?</p>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-3 col-xs-offset-9">
+            <form action="{% url "artefacts:document-delete" document.pk %}" method="POST">
+            {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Delete</button>
+                <a href="{% url "artefacts:artefact-list" %}"><button type="button" class="btn btn-link">Cancel</button></a>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

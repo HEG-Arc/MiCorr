@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}MiCorr | Add Document{% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+    <div class="row">
+        <h2>Add Document</h2>
+        <br/>
+        <p>You can attach a document to an artefact from here</p>
+        <br/>
+    </div>
+
+    <div class="row">
+        <form action="{% url 'artefacts:document-create' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+                {% for field in form %}
+                    <p>{{ field.label_tag }}</p>
+                    <p>{{ field }}</p>
+                    <p><i>{{ field.help_text }}</i></p>
+                    <br/>
+                {% endfor %}
+            <div class="col-xs-1 col-xs-offset-10">
+                <button type="submit" class="btn btn-primary btn-lg"><span class="glyphicon glyphicon-floppy-disk"></span></button>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+{% endblock %}
