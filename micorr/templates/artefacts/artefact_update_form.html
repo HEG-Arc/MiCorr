@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}MiCorr | Update{% endblock %}
+{% block title %}MiCorr | {{ artefact.metal.description }} - update{% endblock %}
 
 {% block content %}
 
@@ -15,7 +15,7 @@
     <br/>
 
     <div class="row">
-        <form action="{% url "artefacts:artefact-update" artefact.pk %}" method="post">
+        <form action="{% url 'artefacts:artefact-update' artefact.pk %}" method="post">
             {% csrf_token %}
                 {% for field in form %}
                     <p>{{ field.label_tag }}</p>

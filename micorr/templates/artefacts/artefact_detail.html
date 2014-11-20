@@ -127,9 +127,9 @@
         <ul>
             {% for document in documents %}
                 {% if document.extension %}
-                    <li>{{ document.name }} <a href="{{ document.document.url }}"><i class="fa fa-file-{{ document.extension }}-o fa-lg"></i></a> - <a href="{% url 'artefacts:document-update' document.pk %}"><i>edit</i></a> - <a href="{% url 'artefacts:document-delete' document.pk %}"><i>delete</i></a></li>
+                    <li>{{ document.name }} <a href="{{ document.document.url }}"><i class="fa fa-file-{{ document.extension }}-o fa-lg"></i></a> - <a href="{% url 'artefacts:document-update' artefact_id=document.artefact.pk pk=document.pk %}"><i>edit</i></a> - <a href="{% url 'artefacts:document-delete' artefact_id=document.artefact.pk pk=document.pk %}"><i>delete</i></a></li>
                 {% else %}
-                    <li>{{ document.name }} <a href="{{ document.document.url }}"><i class="fa fa-file-o fa-lg"></i></a> - <a href="{% url 'artefacts:document-update' document.pk %}"><i>edit</i></a> - <a href="{% url 'artefacts:document-update' document.pk %}"><i>delete</i></a></li>
+                    <li>{{ document.name }} <a href="{{ document.document.url }}"><i class="fa fa-file-o fa-lg"></i></a> - <a href="{% url 'artefacts:document-update' artefact_id=document.artefact.pk pk=document.pk %}"><i>edit</i></a> - <a href="{% url 'artefacts:document-delete' artefact_id=document.artefact.pk pk=document.pk %}"><i>delete</i></a></li>
                 {% endif %}
             {% endfor %}
         </ul>

@@ -14,10 +14,10 @@
 
     <div class="row">
         <div class="col-xs-3 col-xs-offset-9">
-            <form action="{% url "artefacts:artefact-delete" artefact.pk %}" method="POST">
-            {% csrf_token %}
-                <button type="submit" class="btn btn-danger">Delete</button>
-                <a href="{% url "artefacts:artefact-detail" artefact.pk %}"><button type="button" class="btn btn-link">Cancel</button></a>
+            <form action="{% url 'artefacts:artefact-delete' artefact.pk %}" method="POST">
+                {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                    <a href="{% url 'artefacts:artefact-detail' artefact.pk %}"><button type="button" class="btn btn-link">Cancel</button></a>
             </form>
         </div>
     </div>

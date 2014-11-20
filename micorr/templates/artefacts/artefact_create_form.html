@@ -14,13 +14,14 @@
     </div>
 
     <div class="row">
-        <form action="{% url "artefacts:artefact-create" %}" method="post">{% csrf_token %}
-            {% for field in form %}
-                <p>{{ field.label_tag }}</p>
-                <p>{{ field }} {% if forloop.counter0 > 3 %}<a href=""><span class="glyphicon glyphicon-plus"></span></a></p>{% endif %}
-                <p><i>{{ field.help_text }}</i></p>
-                <br/>
-            {% endfor %}
+        <form action="{% url 'artefacts:artefact-create' %}" method="post">
+            {% csrf_token %}
+                {% for field in form %}
+                    <p>{{ field.label_tag }}</p>
+                    <p>{{ field }} {% if forloop.counter0 > 3 %}<a href=""><span class="glyphicon glyphicon-plus"></span></a></p>{% endif %}
+                    <p><i>{{ field.help_text }}</i></p>
+                    <br/>
+                {% endfor %}
             <div class="col-xs-1 col-xs-offset-10">
                 <button type="submit" class="btn btn-primary btn-lg"><span class="glyphicon glyphicon-floppy-disk"></span></button>
             </div>

@@ -82,26 +82,33 @@ class ArtefactFilter(django_filters.FilterSet):
 
 class DocumentUpdateView(generic.UpdateView):
     """
-
+    A view which allows the user to edit a document
+    When the editing is finished, it redirects the user to the related artefact detail page
     """
     model = Document
     template_name_suffix = '_update_form'
     form_class = DocumentUpdateForm
-    success_url = reverse_lazy('artefacts:artefact-list')
+
+    def get_success_url(self):
+        return reverse('artefacts:artefact-detail', kwargs={'pk': self.kwargs.get('artefact_id', None)},)
 
 
 class DocumentDeleteView(generic.DeleteView):
     """
-
+    A view which allows the user to delete a document
+    When the document is deleted, it redirects the user to the related artefact detail page
     """
     model = Document
     template_name_suffix = '_confirm_delete'
-    success_url = reverse_lazy('artefacts:artefact-list')
+
+    def get_success_url(self):
+        return reverse('artefacts:artefact-detail', kwargs={'pk': self.kwargs.get('artefact_id', None)},)
 
 
 class DocumentCreateView(generic.CreateView):
     """
-
+    A view which allows the user to create a document
+    When the document is created, it redirects the user to the artefacts list
     """
     model = Document
     template_name_suffix = '_create_form'

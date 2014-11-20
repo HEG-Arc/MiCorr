@@ -14,10 +14,10 @@ urlpatterns = patterns('',
        name='artefact-delete'),
     url(r'^create/$', login_required(ArtefactsCreateView.as_view()), name='artefact-create'),
 
-    url(r'^(?P<pk>\d+)/document/update$', login_required(DocumentUpdateView.as_view()),
+    url(r'^(?P<artefact_id>\d+)/document/(?P<pk>\d+)/update/$', login_required(DocumentUpdateView.as_view()),
        name='document-update'),
-    url(r'^(?P<pk>\d+)/document/delete/$',
+    url(r'^(?P<artefact_id>\d+)/document/(?P<pk>\d+)/delete/$',
        login_required(DocumentDeleteView.as_view()), name='document-delete'),
-    url(r'^create/document/$', login_required(DocumentCreateView.as_view()),
+    url(r'^document/create/$', login_required(DocumentCreateView.as_view()),
        name='document-create'),
 )
