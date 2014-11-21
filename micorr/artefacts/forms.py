@@ -22,7 +22,7 @@ class DocumentUpdateForm(forms.ModelForm):
     """
     class Meta:
         model = Document
-        fields = '__all__'
+        exclude = ['artefact']
 
 
 class DocumentCreateForm(forms.ModelForm):
@@ -31,4 +31,4 @@ class DocumentCreateForm(forms.ModelForm):
     """
     class Meta:
         model = Document
-        fields = '__all__'
+        exclude = ['artefact']

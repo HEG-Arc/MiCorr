@@ -223,7 +223,7 @@ class Document(TimeStampedModel):
     A document (PDF, Word, ...) can be attached to an artefact to add information
     """
     artefact = models.ForeignKey(Artefact, blank=True, null=True, help_text='The corresponding artefact')
-    document = models.FileField(upload_to='.', help_text='The attached document')
+    document = models.FileField(upload_to='%Y/%m/%d', help_text='The attached document')
     name = models.CharField(max_length=100, blank=True, help_text='The document name')
 
     def extension(self):

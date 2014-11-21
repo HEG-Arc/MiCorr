@@ -9,12 +9,12 @@
     <div class="row">
         <h2>Add Document</h2>
         <br/>
-        <p>You can attach a document to an artefact from here</p>
+        <p>You can attach a document to the artefact <b>{{ artefact }}</b> from here.</p>
         <br/>
     </div>
 
     <div class="row">
-        <form action="{% url 'artefacts:document-create' %}" method="post" enctype="multipart/form-data">
+        <form action="{% url 'artefacts:document-create' artefact.pk %}" method="post" enctype="multipart/form-data">
             {% csrf_token %}
                 {% for field in form %}
                     <p>{{ field.label_tag }}</p>

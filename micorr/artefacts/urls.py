@@ -18,6 +18,6 @@ urlpatterns = patterns('',
        name='document-update'),
     url(r'^(?P<artefact_id>\d+)/document/(?P<pk>\d+)/delete/$',
        login_required(DocumentDeleteView.as_view()), name='document-delete'),
-    url(r'^document/create/$', login_required(DocumentCreateView.as_view()),
+    url(r'^(?P<artefact_id>\d+)/document/create/$', login_required(DocumentCreateView.as_view()),
        name='document-create'),
 )

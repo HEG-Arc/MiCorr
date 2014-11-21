@@ -20,11 +20,14 @@ class ArtefactsListView(generic.ListView):
 
 class ArtefactsDetailView(generic.DetailView):
     """
-    A detail view of an artefact
+    A detail view of a selected artefact
     """
     queryset = Artefact.objects.select_related('metal', 'type', 'origin', 'chronology_period', 'technology')
 
     def get_context_data(self, **kwargs):
+        """
+        Allows the template to use the selected artefact
+        """
         context = super(ArtefactsDetailView, self).get_context_data(**kwargs)
         artefact = get_object_or_404(Artefact, pk=self.kwargs['pk'])
         sections = artefact.section_set.all()
@@ -108,9 +111,28 @@ class DocumentDeleteView(generic.DeleteView):
 class DocumentCreateView(generic.CreateView):
     """
     A view which allows the user to create a document
-    When the document is created, it redirects the user to the artefacts list
+    When the document is created, it redirects the user to the related artefact detail page
     """
     model = Document
     template_name_suffix = '_create_form'
     form_class = DocumentCreateForm
-    success_url = reverse_lazy('artefacts:artefact-list')
+
+    def get_context_data(self, **kwargs):
+        """
+        Allows the template to use the selected artefact
+        """
+        context = super(DocumentCreateView, self).get_context_data(**kwargs)
+        artefact = get_object_or_404(Artefact, pk=self.kwargs['artefact_id'])
+        context['artefact'] = artefact
+        return context
+
+    def form_valid(self, form):
+        """
+        Add the selected artefact as the document foreign key
+        """
+        artefact = get_object_or_404(Artefact, pk=self.kwargs['artefact_id'])
+        form.instance.artefact = artefact
+        return super(DocumentCreateView, self).form_valid(form)
+
+    def get_success_url(self):
+        return reverse('artefacts:artefact-detail', kwargs={'pk': self.kwargs.get('artefact_id', None)},)
