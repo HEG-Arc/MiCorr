@@ -53,6 +53,8 @@
                 <td>{{ artefact.origin.city.name }}</td>
                 <td>{{ artefact.chronology_period.chronology_category.name }}</td>
             </tr>
+        {% empty %}
+            <tr><td colspan="4">No results found</td></tr>
         {% endfor %}
       </table>
     </div>

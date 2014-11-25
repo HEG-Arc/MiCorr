@@ -1,5 +1,5 @@
 # Bleeding edge Django
-django==1.7
+Django==1.7.1
 
 # Configuration
 django-configurations==0.8
@@ -42,3 +42,4 @@ sorl-thumbnail==12.1c
 django-envelope==0.7
 django-cities-light==3.0.1
 django-filter==0.8
+django-haystack

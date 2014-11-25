@@ -49,6 +49,7 @@ class Common(Configuration):
         'envelope',
         'cities_light',
         'django_filters',
+        'haystack',
     )
 
     # Apps specific for this project go here.
@@ -91,7 +92,7 @@ class Common(Configuration):
     # SECRET CONFIGURATION
     # See: https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
     # Note: This key only used for development and testing.
-    #       In production, this is changed to a values.SecretValue() setting
+    # In production, this is changed to a values.SecretValue() setting
     SECRET_KEY = "CHANGEME!!!"
     # END SECRET CONFIGURATION
 
@@ -311,3 +312,10 @@ class Common(Configuration):
     TRAVIS_REPO_SLUG = 'HEG-Arc/MiCorr'
     TRAVIS_TOKEN = 'Change Me!'
     NEWSLETTER_RICHTEXT_WIDGET = "tinymce.widgets.TinyMCE"
+
+    #Haystack Config
+    HAYSTACK_CONNECTIONS = {
+        'default': {
+            'ENGINE': 'haystack.backends.simple_backend.SimpleEngine',
+        },
+    }

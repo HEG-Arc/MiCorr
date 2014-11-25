@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-xs-6">
+            <h2>Search</h2>
+        </div>
+    </div>
+
+    <br/>
+
+    <div class="row">
+        <form action="." method="get">
+            {% for field in form %}
+                <p>{{ field }}</p>
+                <br/>
+            {% endfor %}
+            <div class="col-xs-1 col-xs-offset-10">
+                <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search"></span></button>
+            </div>
+
+
+            {% if query %}
+                <h2>Results</h2>
+
+                {% for result in page.object_list %}
+                    <p>
+                        {{ result.object }}
+                    </p>
+                {% empty %}
+                    <p>No results found.</p>
+                {% endfor %}
+
+            {% else %}
+
+            {% endif %}
+        </form>
+    </div>
+{% endblock content %}
