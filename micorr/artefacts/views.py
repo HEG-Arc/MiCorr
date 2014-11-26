@@ -15,11 +15,23 @@ class ArtefactsListView(generic.ListView):
     queryset = Artefact.objects.select_related('metal', 'origin', 'chronology_period')
 
     def get(self, request, *args, **kwargs):
+        """
+        Applies a filter to the artefacts list
+        The user can make a full text search and/or a filter-based search
+        """
         artefactssearch = SearchForm(request.GET)
         artefactsfilter = ArtefactFilter(request.GET)
         searchresults = artefactssearch.search()
+        filtered_artefacts_list = []
+        if request.GET.get('q'):
+            for artefact in searchresults:
+                if artefact.object in artefactsfilter:
+                    filtered_artefacts_list.append(artefact.object)
+        else:
+            for artefact in artefactsfilter:
+                filtered_artefacts_list.append(artefact)
         return render(request, "artefacts/artefact_list.html",
-                      {'search': artefactssearch, 'results': searchresults, 'filter': artefactsfilter})
+                      {'search': artefactssearch, 'results': filtered_artefacts_list, 'filter': artefactsfilter})
 
 
 class ArtefactsDetailView(generic.DetailView):
@@ -30,7 +42,7 @@ class ArtefactsDetailView(generic.DetailView):
 
     def get_context_data(self, **kwargs):
         """
-        Allows the template to use the selected artefact
+        Allows the template to use the selected artefact as well as its foreign keys pointers
         """
         context = super(ArtefactsDetailView, self).get_context_data(**kwargs)
         artefact = get_object_or_404(Artefact, pk=self.kwargs['pk'])

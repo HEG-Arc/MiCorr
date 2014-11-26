@@ -48,29 +48,16 @@
                   <th>City</th>
                   <th>Chronology</th>
               </tr>
-              {% if search.q.value %}
-                  {% for artefact in results %}
-                      {% if artefact.object in filter %}
-                          <tr onmouseover="this.style.cursor='pointer'" onclick="document.location = '{% url 'artefacts:artefact-detail' artefact.pk %}'">
-                              <td>{{ artefact.object.metal.description }}</td>
-                              <td>{{ artefact.object.origin.city.country.name }}</td>
-                              <td>{{ artefact.object.origin.city.name }}</td>
-                              <td>{{ artefact.object.chronology_period.chronology_category.name }}</td>
-                          </tr>
-                      {% endif %}
-                  {% endfor %}
-              {% else %}
-                  {% for artefact in filter %}
-                      <tr onmouseover="this.style.cursor='pointer'" onclick="document.location = '{% url 'artefacts:artefact-detail' artefact.pk %}'">
-                          <td>{{ artefact.metal.description }}</td>
-                          <td>{{ artefact.origin.city.country.name }}</td>
-                          <td>{{ artefact.origin.city.name }}</td>
-                          <td>{{ artefact.chronology_period.chronology_category.name }}</td>
-                      </tr>
-                  {% empty %}
-                      <tr><td colspan="4">No results found</td></tr>
-                  {% endfor %}
-              {% endif %}
+              {% for artefact in results %}
+                  <tr onmouseover="this.style.cursor='pointer'" onclick="document.location = '{% url 'artefacts:artefact-detail' artefact.pk %}'">
+                      <td>{{ artefact.metal.description }}</td>
+                      <td>{{ artefact.origin.city.country.name }}</td>
+                      <td>{{ artefact.origin.city.name }}</td>
+                      <td>{{ artefact.chronology_period.chronology_category.name }}</td>
+                  </tr>
+              {% empty %}
+                  <tr><td colspan="4">No results found</td></tr>
+              {% endfor %}
           </table>
       </div>
   </div>
