@@ -4,18 +4,20 @@
 
 {% block content %}
 
-  <div class="row">
-    <div class="col-xs-6">
-      <h2>Filters</h2>
-    </div>
-  </div>
-
-<br/>
-
 <div class="container">
 
     <div class="row">
-        <form action="{% url 'artefacts:artefact-list' %}" method="get">
+        <div class="col-xs-6">
+            <h2>Search</h2>
+        </div>
+    </div>
+
+<br/>
+
+    <div class="row">
+        <form action="." method="get">
+            <p>{{ search.q }}</p>
+            <br/>
             {% for field in filter.form %}
                 <p>{{ field.label_tag }}</p>
                 <p>{{ field }}</p>
@@ -38,26 +40,39 @@
 <br/>
 
   <div class="row">
-    <div class="table-responsive">
-      <table class="table table-bordered table-striped table-hover">
-        <tr>
-            <th>Metal Description</th>
-            <th>Country</th>
-            <th>City</th>
-            <th>Chronology</th>
-        </tr>
-        {% for artefact in filter %}
-            <tr onmouseover="this.style.cursor='pointer'" onclick="document.location = '{% url 'artefacts:artefact-detail' artefact.pk %}'">
-                <td>{{ artefact.metal.description }}</td>
-                <td>{{ artefact.origin.city.country.name }}</td>
-                <td>{{ artefact.origin.city.name }}</td>
-                <td>{{ artefact.chronology_period.chronology_category.name }}</td>
-            </tr>
-        {% empty %}
-            <tr><td colspan="4">No results found</td></tr>
-        {% endfor %}
-      </table>
-    </div>
+      <div class="table-responsive">
+          <table class="table table-bordered table-striped table-hover">
+              <tr>
+                  <th>Metal Description</th>
+                  <th>Country</th>
+                  <th>City</th>
+                  <th>Chronology</th>
+              </tr>
+              {% if search.q.value %}
+                  {% for artefact in results %}
+                      {% if artefact.object in filter %}
+                          <tr onmouseover="this.style.cursor='pointer'" onclick="document.location = '{% url 'artefacts:artefact-detail' artefact.pk %}'">
+                              <td>{{ artefact.object.metal.description }}</td>
+                              <td>{{ artefact.object.origin.city.country.name }}</td>
+                              <td>{{ artefact.object.origin.city.name }}</td>
+                              <td>{{ artefact.object.chronology_period.chronology_category.name }}</td>
+                          </tr>
+                      {% endif %}
+                  {% endfor %}
+              {% else %}
+                  {% for artefact in filter %}
+                      <tr onmouseover="this.style.cursor='pointer'" onclick="document.location = '{% url 'artefacts:artefact-detail' artefact.pk %}'">
+                          <td>{{ artefact.metal.description }}</td>
+                          <td>{{ artefact.origin.city.country.name }}</td>
+                          <td>{{ artefact.origin.city.name }}</td>
+                          <td>{{ artefact.chronology_period.chronology_category.name }}</td>
+                      </tr>
+                  {% empty %}
+                      <tr><td colspan="4">No results found</td></tr>
+                  {% endfor %}
+              {% endif %}
+          </table>
+      </div>
   </div>
 
   {% if request.user.is_authenticated %}

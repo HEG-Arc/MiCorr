@@ -2,6 +2,7 @@ from django.core.urlresolvers import reverse, reverse_lazy
 from django.shortcuts import get_object_or_404, render
 from django.views import generic
 import django_filters
+from haystack.forms import SearchForm
 
 from .models import Artefact, Document
 from .forms import ArtefactsUpdateForm, ArtefactsCreateForm, DocumentUpdateForm, DocumentCreateForm
@@ -14,8 +15,11 @@ class ArtefactsListView(generic.ListView):
     queryset = Artefact.objects.select_related('metal', 'origin', 'chronology_period')
 
     def get(self, request, *args, **kwargs):
+        artefactssearch = SearchForm(request.GET)
         artefactsfilter = ArtefactFilter(request.GET)
-        return render(request, "artefacts/artefact_list.html", {'filter': artefactsfilter})
+        searchresults = artefactssearch.search()
+        return render(request, "artefacts/artefact_list.html",
+                      {'search': artefactssearch, 'results': searchresults, 'filter': artefactsfilter})
 
 
 class ArtefactsDetailView(generic.DetailView):

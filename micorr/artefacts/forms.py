@@ -37,15 +37,3 @@ class DocumentCreateForm(forms.ModelForm):
     class Meta:
         model = Document
         exclude = ['artefact']
-
-
-class ArtefactSearchForm(SearchForm):
-
-    def search(self):
-        # First, store the SearchQuerySet received from other processing.
-        sqs = super(ArtefactSearchForm, self).search()
-
-        if not self.is_valid():
-            return self.no_query_found()
-
-        return sqs

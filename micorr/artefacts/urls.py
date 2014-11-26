@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from .views import ArtefactsListView, ArtefactsDetailView, ArtefactsUpdateView, ArtefactsDeleteView, \
     ArtefactsCreateView, DocumentUpdateView, DocumentDeleteView, DocumentCreateView
 
-from .forms import ArtefactSearchForm
+from haystack.forms import SearchForm
 from haystack.views import SearchView
 
 urlpatterns = patterns('',
@@ -24,5 +24,5 @@ urlpatterns = patterns('',
     url(r'^(?P<artefact_id>\d+)/document/create/$', login_required(DocumentCreateView.as_view()),
        name='document-create'),
     url(r'^search/$',
-        SearchView(template='search/search.html', form_class=ArtefactSearchForm), name='haystack_search'),
+        SearchView(template='search/search.html', form_class=SearchForm), name='haystack_search'),
 )
