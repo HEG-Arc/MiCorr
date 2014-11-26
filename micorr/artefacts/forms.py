@@ -1,6 +1,5 @@
 from django import forms
 from .models import Artefact, Document
-from haystack.forms import SearchForm
 
 
 class ArtefactsUpdateForm(forms.ModelForm):
