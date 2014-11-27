@@ -1,5 +1,17 @@
 {% extends "base.html" %}
+{% load terms %}
 {% load webdesign %}
 {% block content %}
-    {% lorem 3 p %}
+    {% lorem p %}
+    {% filter replace_terms %}
+    <p>This project would not have been possible without the financial support received from the HES-SO
+(University of Applied Sciences, Western Switzerland), which the authors wish to sincerely thank.
+Thanks are also due to the AR&D (Applied Research and Development) team of the Haute Ecole
+Arc de Conservation-restauration (HE Arc CR) for their administrative and technical assistance, as
+well as the conservators that were involved in the project: Aurélie von Bieberstein, who collected
+the samples from the institutions mentioned below and developed the standardized recording
+sheet, and Anouk Jaggi who made the drawings of the cross-sections and assisted in the collection
+of the samples. Special thanks go to Valentin Boissonnas who revised the metallography and
+corrosion studies, and also the contents of this report.</p>
+    {% endfilter %}
 {% endblock content %}

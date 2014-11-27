@@ -41,4 +41,7 @@ urlpatterns = patterns('',
     # Artefacts management
     url(r'^artefacts/', include('artefacts.urls', namespace="artefacts")),
 
+    # Django-terms app
+    url(r'^terms/', include('terms.urls')),
+
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

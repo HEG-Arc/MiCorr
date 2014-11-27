@@ -50,6 +50,7 @@ class Common(Configuration):
         'cities_light',
         'django_filters',
         'haystack',
+        'terms',
     )
 
     # Apps specific for this project go here.
@@ -313,9 +314,12 @@ class Common(Configuration):
     TRAVIS_TOKEN = 'Change Me!'
     NEWSLETTER_RICHTEXT_WIDGET = "tinymce.widgets.TinyMCE"
 
-    #Haystack Config
+    # Haystack Config
     HAYSTACK_CONNECTIONS = {
         'default': {
             'ENGINE': 'haystack.backends.simple_backend.SimpleEngine',
         },
     }
+
+    # Django-terms Config
+    TERMS_DEFINITION_WIDGET = 'tinymce'

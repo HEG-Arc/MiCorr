@@ -42,4 +42,6 @@ sorl-thumbnail==12.1c
 django-envelope==0.7
 django-cities-light==3.0.1
 django-filter==0.8
-django-haystack
+django-haystack==2.3.1
+lxml==3.4.1
+django-terms==1.1.0
