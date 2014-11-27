@@ -206,12 +206,16 @@ class Section(TimeStampedModel):
         return "%s, %s" % (self.artefact.inventory_number, self.order)
 
 
+def get_img_storage_path(instance, filename):
+    return '/'.join(['artefacts', str(instance.section.artefact.id), 'images', filename])
+
+
 class Image(TimeStampedModel):
     """
     An image refers to a section
     """
     section = models.ForeignKey(Section, blank=True, null=True, help_text='The corresponding section')
-    image = models.ImageField(blank=True, null=True, help_text='The image file')
+    image = models.ImageField(upload_to=get_img_storage_path, blank=True, null=True, help_text='The image file')
     legend = models.TextField(blank=True, help_text='The image description')
 
     def __unicode__(self):
