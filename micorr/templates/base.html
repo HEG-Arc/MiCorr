@@ -41,7 +41,7 @@
           <li class="active"><a href="{% url 'home' %}">Home</a></li>
           <li><a href="{% url 'about' %}">About</a></li>
 
-          <li><a href="/artefacts">Artefacts</a></li>
+          <li><a href="/artefacts">Search tool</a></li>
 
           {% if request.user.is_authenticated %}
             <li><a href="{% url 'users:detail' request.user.username %}">{% trans "My Profile" %}</a></li>
