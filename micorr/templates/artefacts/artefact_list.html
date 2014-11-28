@@ -43,17 +43,19 @@
       <div class="table-responsive">
           <table class="table table-bordered table-striped table-hover">
               <tr>
-                  <th>Metal Description</th>
-                  <th>Country</th>
-                  <th>City</th>
+                  <th>Metal Alloy</th>
+                  <th>Object</th>
                   <th>Chronology</th>
+                  <th>Technology</th>
+                  <th>Microstructure</th>
               </tr>
               {% for artefact in results %}
                   <tr onmouseover="this.style.cursor='pointer'" onclick="document.location = '{% url 'artefacts:artefact-detail' artefact.pk %}'">
-                      <td>{{ artefact.metal.description }}</td>
-                      <td>{{ artefact.origin.city.country.name }}</td>
-                      <td>{{ artefact.origin.city.name }}</td>
+                      <td>{{ artefact.metal1 }}</td>
+                      <td>{{ artefact.type }}</td>
                       <td>{{ artefact.chronology_period.chronology_category.name }}</td>
+                      <td>{{ artefact.technology }}</td>
+                      <td>{{ artefact.microstructure }}</td>
                   </tr>
               {% empty %}
                   <tr><td colspan="4">No results found</td></tr>

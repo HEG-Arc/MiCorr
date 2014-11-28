@@ -1,11 +1,10 @@
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.shortcuts import get_object_or_404, render
 from django.views import generic
-import django_filters
 from haystack.forms import SearchForm
 
 from .models import Artefact, Document
-from .forms import ArtefactsUpdateForm, ArtefactsCreateForm, DocumentUpdateForm, DocumentCreateForm
+from .forms import ArtefactsUpdateForm, ArtefactsCreateForm, DocumentUpdateForm, DocumentCreateForm, ArtefactFilter
 
 
 class ArtefactsListView(generic.ListView):
@@ -86,17 +85,6 @@ class ArtefactsCreateView(generic.CreateView):
     template_name_suffix = '_create_form'
     form_class = ArtefactsCreateForm
     success_url = reverse_lazy('artefacts:artefact-list')
-
-
-class ArtefactFilter(django_filters.FilterSet):
-    """
-    A filter which appears on top of the artefacts list template and allows the user to search for artefacts using
-    keywords and foreign keys
-    """
-
-    class Meta:
-        model = Artefact
-        fields = ['type', 'origin__city__country', 'chronology_period__chronology_category']
 
 
 class DocumentUpdateView(generic.UpdateView):

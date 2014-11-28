@@ -10,16 +10,12 @@ from cities_light.models import City
 
 class Metal(TimeStampedModel):
     """
-    With a primary and a secondary element
-    Can be composed of another Metal object
+    A metal is made of one element
     """
-    primary_element = models.CharField(max_length=2, blank=True)
-    secondary_element = models.CharField(max_length=2, blank=True)
-    description = models.CharField(max_length=100, blank=True)
-    parent_metal = models.ForeignKey('self', blank=True, null=True)
+    element = models.CharField(max_length=2, blank=True)
 
     def __unicode__(self):
-        return "%s / %s --> %s" % (self.primary_element, self.secondary_element, self.description)
+        return self.element
 
 
 class Type(TimeStampedModel):
@@ -148,7 +144,8 @@ class Artefact(TimeStampedModel):
     # Foreign Keys
     user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name="user's object", blank=True, null=True,
                              help_text='The user who entered the artefact into the database')
-    metal = models.ForeignKey(Metal, verbose_name='metal type', blank=True, null=True)
+    metal1 = models.ForeignKey(Metal, verbose_name='1st metal element', blank=True, null=True, related_name='1st metal element', help_text='The primary metal element of the artefact')
+    metalx = models.ManyToManyField(Metal, verbose_name='other metal elements', blank=True, null=True, related_name='other metal elements', help_text='The other metal elements of the artefact')
     type = models.ForeignKey(Type, verbose_name='object type', blank=True, null=True,
                              help_text='The artefact usage')
     origin = models.ForeignKey(Origin, blank=True, null=True,
@@ -173,15 +170,11 @@ class Artefact(TimeStampedModel):
         return environments_list
 
     def artefact_verbose_description(self):
-        if self.origin:
-            origin_text = self.origin.origin_verbose_description()
         artefact = []
-        if self.metal:
-            if self.metal.description:
-                artefact.append(self.metal.description)
+        if self.metal1:
+            artefact.append(self.metal1)
         if self.origin:
             artefact.append(self.origin.city.country.name)
-            artefact.append(origin_text)
         if self.chronology_period:
             artefact.append(self.chronology_period.chronology_category.name)
         return " - ".join(artefact)
