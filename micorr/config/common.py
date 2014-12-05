@@ -51,6 +51,20 @@ class Common(Configuration):
         'django_filters',
         'haystack',
         'terms',
+        # wagtail apps
+        'compressor',
+        'taggit',
+        'modelcluster',
+        'wagtail.wagtailcore',
+        'wagtail.wagtailadmin',
+        'wagtail.wagtaildocs',
+        'wagtail.wagtailsnippets',
+        'wagtail.wagtailusers',
+        'wagtail.wagtailimages',
+        'wagtail.wagtailembeds',
+        'wagtail.wagtailsearch',
+        'wagtail.wagtailredirects',
+        # end wagtail apps
     )
 
     # Apps specific for this project go here.
@@ -58,7 +72,7 @@ class Common(Configuration):
         'users',  # custom users app
         'artefacts',  # custom artefacts app
         'contacts',
-        # Your stuff: custom apps go here
+        'documents',
     )
 
     # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -72,7 +86,10 @@ class Common(Configuration):
         'django.middleware.csrf.CsrfViewMiddleware',
         'django.contrib.auth.middleware.AuthenticationMiddleware',
         'django.contrib.messages.middleware.MessageMiddleware',
+        'django.contrib.sites.middleware.CurrentSiteMiddleware',
         'django.middleware.clickjacking.XFrameOptionsMiddleware',
+        'wagtail.wagtailcore.middleware.SiteMiddleware',
+        'wagtail.wagtailredirects.middleware.RedirectMiddleware',
     )
     # END MIDDLEWARE CONFIGURATION
 
@@ -206,6 +223,7 @@ class Common(Configuration):
     STATICFILES_FINDERS = (
         'django.contrib.staticfiles.finders.FileSystemFinder',
         'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+        'compressor.finders.CompressorFinder',
     )
     # END STATIC FILE CONFIGURATION
 
@@ -323,3 +341,17 @@ class Common(Configuration):
 
     # Django-terms Config
     TERMS_DEFINITION_WIDGET = 'tinymce'
+
+    # Compressor (used by wagtail)
+    COMPRESS_PRECOMPILERS = (
+        ('text/x-scss', 'django_libsass.SassCompiler'),
+    )
+
+    # WAGTAIL SETTINGS
+    WAGTAIL_SITE_NAME = 'micorr'
+
+    # Override the search results template for wagtailsearch
+    WAGTAILSEARCH_RESULTS_TEMPLATE = 'w/search_results.html'
+    WAGTAILSEARCH_RESULTS_TEMPLATE_AJAX = 'w/includes/search_listing.html'
+
+    WAGTAILSEARCH_ES_INDEX = 'micorr'

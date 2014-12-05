@@ -30,7 +30,7 @@ class ArtefactsListView(generic.ListView):
             for artefact in artefactsfilter:
                 filtered_artefacts_list.append(artefact)
         return render(request, "artefacts/artefact_list.html",
-                      {'search': artefactssearch, 'results': filtered_artefacts_list, 'filter': artefactsfilter})
+                      {'search': artefactssearch, 'results': filtered_artefacts_list, 'filter': artefactsfilter, 'self': self})
 
 
 class ArtefactsDetailView(generic.DetailView):

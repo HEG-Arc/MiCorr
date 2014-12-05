@@ -35,6 +35,13 @@ django-avatar==2.0
 # Git revision
 dealer==1.1.1
 
+# Wagtail
+django-compressor==1.4
+django-modelcluster==0.3
+django-taggit==0.11.2
+django-libsass==0.2
+wagtail==0.8.3
+
 # Your custom requirements go here
 django-newsletter==0.5.2
 django-tinymce==1.5.3

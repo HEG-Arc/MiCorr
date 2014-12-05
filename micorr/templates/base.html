@@ -1,15 +1,40 @@
-{% load staticfiles i18n %}<!DOCTYPE html>
+{% load staticfiles documents_tags cache compress static i18n %}<!DOCTYPE html>
 <html lang="en" ng-app>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
   <head>
     <meta charset="utf-8">
-    <title>{% block title %}MiCorr{% endblock title %}</title>
+    <title>{% block title %}{% if self.seo_title %}{{ self.seo_title }}{% else %}{{ self.title }}{% endif %}{% endblock %}{% block title_postfix %} | MiCorr{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
+    <meta name="description" content="{% if self.search_description %}{{ self.search_description }}{% endif %}">
     <meta name="author" content="">
 
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
       <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    {# Local static assets such as css, images and javascrpt should be stored at [yourapp]/static/[yourapp]/... #}
+    {% compress css %}
+        {# Vendor stylesheets stored locally #}
+        <link rel="stylesheet" href="{% static "css/vendor/jquery.bxslider.css" %}" />
+
+        {# Custom stylesheets #}
+        {# SCSS compilation relies on django compressor #}
+        <link rel="stylesheet" type="text/x-scss" href="{% static "css/main.scss" %}" />
+
+    {% endcompress %}
+
+    {% block extra_css %}{% endblock %} {# Override this block in individual templates in order to add stylesheets on a template by template basis #}
+
+    {# Javascript that needs to be called from head e.g. google analytics snippet and bootstrap shivs #}
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
     <![endif]-->
 
     {% block css %}
@@ -32,27 +57,13 @@
 
   </head>
 
-  <body>
 
-    <div class="header navbar">
-      <div class="container">
-        <a class="navbar-brand" href="/">MiCorr</a>
-        <ul class="nav navbar-nav">
-          <li class="active"><a href="{% url 'home' %}">Home</a></li>
-          <li><a href="{% url 'about' %}">About</a></li>
+  <body class="{% block body_class %}{% endblock %}"> {# Override this block to set custom body classes on a template by template basis #}
 
-          <li><a href="/artefacts">Search tool</a></li>
-
-          {% if request.user.is_authenticated %}
-            <li><a href="{% url 'users:detail' request.user.username %}">{% trans "My Profile" %}</a></li>
-            <li><a href="{% url 'account_logout' %}">{% trans "Logout" %}</a></li>
-          {% else %}
-            <li><a href="{% url 'account_signup' %}">{% trans "Sign Up" %}</a></li>
-            <li><a href="{% url 'account_login' %}">{% trans "Log In" %}</a></li>
-          {% endif %}
-        </ul>
-      </div>
-    </div>
+    {% block menu %}
+        {% get_site_root as site_root %}
+        {% top_menu parent=site_root calling_page=self %}
+    {% endblock %}
 
     <div class="container">
         
@@ -61,6 +72,12 @@
               <div class="alert {% if message.tags %}alert-{{ message.tags }}"{% endif %}>{{ message }}</div>
           {% endfor %}
       {% endif %}
+
+      {% block heading %}
+          <div class="page-header">
+              <h2>{{ self.title }}</h2>
+          </div>
+      {% endblock %}
 
       {% block content %}
         <p>Use this document as a way to quick start any new project.</p>
@@ -89,6 +106,19 @@
       <!-- place project specific Javascript in this file -->
       <script src="{% static 'js/project.js' %}"></script>
     {% endblock javascript %}
+
+    {# External javascript #}
+    <script src="https://code.jquery.com/jquery-2.0.3.min.js"></script>
+
+    {% compress js %}
+        <script src="{% static "js/vendor/jquery.bxslider.min.js" %}"></script>
+        <script src="{% static "js/vendor/fluidvids.js" %}"></script>
+        {# Custom javascript #}
+        {# Local static assets such as css, images and javascrpt should be stored at [yourapp]/static/[yourapp]/... #}
+        <script src="{% static "js/main.js" %}"></script>
+    {% endcompress %}
+
+    {% block extra_js %}{% endblock %} {# Override this block in individual templates in order to add javascript on a template by template basis #}
   </body>
 </html>
  

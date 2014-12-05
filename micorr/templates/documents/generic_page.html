@@ -1,0 +1,9 @@
+{% extends "documents/base.html" %}
+
+{% block content %}
+    {% include "documents/includes/intro.html" with intro=self.intro only %}
+
+    {% include "documents/includes/body.html" with body=self.body only %}
+
+    {% include "documents/includes/related_links.html" with related_links=self.related_links.all only %}
+{% endblock %}
