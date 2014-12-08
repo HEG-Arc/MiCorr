@@ -1,5 +1,6 @@
 from django import forms
 from .models import Artefact, Document, Metal, Corrosion, Environment
+from tinymce.widgets import TinyMCE
 #from django.forms import ModelChoiceField
 import django_filters
 
@@ -8,9 +9,11 @@ class ArtefactsUpdateForm(forms.ModelForm):
     """
     Update an existing artefact
     """
+    description = forms.CharField(widget=TinyMCE(attrs={'cols': 20, 'rows': 30}))
+
     class Meta:
         model = Artefact
-        fields = '__all__'
+        exclude = ['user']
 
 
 class ArtefactsCreateForm(forms.ModelForm):
@@ -19,7 +22,7 @@ class ArtefactsCreateForm(forms.ModelForm):
     """
     class Meta:
         model = Artefact
-        fields = '__all__'
+        exclude = ['user']
 
     """
     Works with the previous version of the metal class
@@ -28,6 +31,7 @@ class ArtefactsCreateForm(forms.ModelForm):
         super(ArtefactsCreateForm, self).__init__(*args, **kwargs)
         self.fields['metal'].label_from_instance = lambda obj: "%s" % obj.primary_element
     """
+
 
 class DocumentUpdateForm(forms.ModelForm):
     """
@@ -46,24 +50,22 @@ class DocumentCreateForm(forms.ModelForm):
         model = Document
         exclude = ['artefact']
 
-"""
-In order to display only part of the foreign key
 
-class MetalChoiceField(forms.ModelChoiceField):
+class CorrosionChoiceField(forms.ModelChoiceField):
     def label_from_instance(self, obj):
-            return obj.primary_element
+            return obj.form
 
 
-class MetalChoiceFilter(django_filters.Filter):
-    field_class = MetalChoiceField
-"""
+class CorrosionChoiceFilter(django_filters.Filter):
+    field_class = CorrosionChoiceField
+
 
 class ArtefactFilter(django_filters.FilterSet):
     """
     A filter which appears on top of the artefacts list template
     """
     metal = django_filters.ModelChoiceFilter(label='Metal Family', queryset=Metal.objects.all(), empty_label='All Metal Families')
-    corrosion = django_filters.ModelChoiceFilter(label='Corrosion Forms', queryset=Corrosion.objects.all(), empty_label='All Corrosion Forms')
+    corrosion = CorrosionChoiceFilter(label='Corrosion Forms', queryset=Corrosion.objects.all(), empty_label='All Corrosion Forms')
     environment = django_filters.ModelMultipleChoiceFilter(label='Environments', queryset=Environment.objects.all())
 
     class Meta:
