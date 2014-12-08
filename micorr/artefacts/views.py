@@ -140,3 +140,18 @@ class DocumentCreateView(generic.CreateView):
 
     def get_success_url(self):
         return reverse('artefacts:artefact-detail', kwargs={'pk': self.kwargs.get('artefact_id', None)},)
+
+"""
+class GenericCreateView(generic.CreateView):
+
+    Allows the user to add an instance of an artefact foreign key model when adding an artefact
+
+    template_name = 'foreignkeys_update_form'
+
+    all_models_dict = {
+        "role_list" : Metal.objects.all(),
+        "venue_list": Venue.objects.all(),
+                           #and so on for all the desired models...
+
+    }
+"""

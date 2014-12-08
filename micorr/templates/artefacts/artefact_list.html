@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}MiCorr | Artefacts{% endblock %}
+{% block title %}MiCorr | Search tool{% endblock %}
 
 {% block heading %}
       <div class="page-header">
@@ -64,7 +64,7 @@
                       <td>{{ artefact.microstructure }}</td>
                   </tr>
               {% empty %}
-                  <tr><td colspan="4">No results found</td></tr>
+                  <tr><td colspan="5">No results found</td></tr>
               {% endfor %}
           </table>
       </div>
@@ -73,7 +73,7 @@
   {% if request.user.is_authenticated %}
       <div class="row">
           <div class="col-xs-2 col-xs-offset-10">
-              <a href="{% url 'artefacts:artefact-create' %}"><button type="button" class="btn btn-primary">New Artefact</button></a>
+              <a href="{% url 'artefacts:artefact-create' %}"><button type="button" class="btn btn-primary">New Model</button></a>
           </div>
       </div>
   {% endif %}

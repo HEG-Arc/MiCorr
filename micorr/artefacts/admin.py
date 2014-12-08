@@ -1,29 +1,28 @@
 from django.contrib import admin
-from .models import Metal, Type, Origin, ChronologyCategory, ChronologyPeriod, Environment, Technology, \
-    MicrostructureType, Microstructure, \
-    Corrosion, Artefact, Section, Image, Document
+from .models import Metal, Alloy, Type, Origin, ChronologyCategory, ChronologyPeriod, Environment, Technology, \
+    Microstructure, Corrosion, Artefact, SectionCategory, Section, Image, Document
 
 
 class ArtefactAdmin(admin.ModelAdmin):
     fieldsets = [
-        ('Own fields', {'fields': ['inventory_number', 'description', 'initial_pub_date', 'additional_information']}),
+        ('Own fields', {'fields': ['description', 'complementary_information']}),
         ('Foreign keys', {
-            'fields': ['user', 'metal', 'type', 'origin', 'chronology_period', 'environment', 'technology',
-                       'microstructure', 'corrosion']})
+            'fields': ['user', 'metal1', 'metalx', 'alloy', 'type', 'origin', 'recovering_date', 'chronology_period',
+                       'environment', 'location', 'technology', 'microstructure', 'corrosion']})
     ]
-    list_display = ('id', 'metal_description', 'origin_country', 'origin', 'chronology_period')
-
-    def metal_description(self, obj):
-        metal = ""
-        if obj.metal:
-            metal = obj.metal.description
-        return metal
+    list_display = ('id', 'metal1', 'chronology_category', 'origin_country')
 
     def origin_country(self, obj):
         country = ""
         if obj.origin:
             country = obj.origin.city.country.name
         return country
+
+    def chronology_category(self, obj):
+        chronology = ""
+        if obj.chronology_period:
+            chronology = obj.chronology_period.chronology_category
+        return chronology
 
 
 class SectionAdmin(admin.ModelAdmin):
@@ -39,16 +38,17 @@ class DocumentAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Metal)
+admin.site.register(Alloy)
 admin.site.register(Type)
 admin.site.register(Origin)
 admin.site.register(ChronologyCategory)
 admin.site.register(ChronologyPeriod)
 admin.site.register(Environment)
 admin.site.register(Technology)
-admin.site.register(MicrostructureType)
 admin.site.register(Microstructure)
 admin.site.register(Corrosion, CorrosionAdmin)
 admin.site.register(Artefact, ArtefactAdmin)
+admin.site.register(SectionCategory)
 admin.site.register(Section, SectionAdmin)
 admin.site.register(Image)
 admin.site.register(Document, DocumentAdmin)
