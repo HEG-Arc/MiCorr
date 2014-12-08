@@ -222,15 +222,14 @@ class HelpPage(Page):
         #description = "A page that can be used to display generic TITLE > ABSTRACT > BODY content."
         verbose_name = "Help page"
 
-GenericPage.content_panels = [
+HelpPage.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
     FieldPanel('body', classname="full"),
-    FieldPanel('tooltip', classname="full"),
     InlinePanel(HelpPage, 'related_links', label="Related links"),
 ]
 
-GenericPage.promote_panels = [
+HelpPage.promote_panels = [
     MultiFieldPanel(Page.promote_panels, "Common page configuration"),
     ImageChooserPanel('feed_image'),
 ]
