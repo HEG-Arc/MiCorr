@@ -47,7 +47,7 @@ django-newsletter==0.5.2
 django-tinymce==1.5.3
 sorl-thumbnail==12.1c
 django-envelope==0.7
-django-cities-light==3.0.1
+django-cities-light==3.0.2
 django-filter==0.8
 django-haystack==2.3.1
 lxml==3.4.1
