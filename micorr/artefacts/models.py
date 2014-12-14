@@ -1,7 +1,7 @@
 # coding=utf-8
-from datetime import datetime
 import os
 from django.db import models
+from contacts.models import Contact
 from django.conf import settings
 from django_extensions.db.models import TimeStampedModel
 from tinymce import models as tinymce_models
@@ -52,7 +52,7 @@ class Origin(TimeStampedModel):
         if self.city:
             origin.append(self.city.name)
             origin.append(self.city.region.name)
-        return " ".join(origin)
+        return ", ".join(origin)
 
     def __unicode__(self):
         return self.origin_verbose_description()
@@ -102,16 +102,6 @@ class Environment(TimeStampedModel):
         return self.name
 
 
-class Location(TimeStampedModel):
-    """
-    The actual location of the artefact
-    """
-    location = models.ForeignKey(City, blank=True, null=True, help_text='The city where the artefact is located')
-
-    def __unicode__(self):
-        return self.location
-
-
 class Technology(TimeStampedModel):
     """
     The manufacturing techniques used
@@ -154,26 +144,33 @@ class Artefact(TimeStampedModel):
     """
     # Own fields
     description = tinymce_models.HTMLField(blank=True, help_text='A short description of the artefact. Can also include its aspect (color), dimensions and weight')
-    complementary_information = models.TextField(blank=True, null=True, help_text='A field to add more information, like the owner of the artefact, the inventory number or the recorded conservation data')
+    inventory_number = models.CharField(max_length=100, blank=True, default='', help_text='The serial number of the artefact')
+    recorded_conservation_data = models.CharField(max_length=100, blank=True, default='')
+    sample_description = tinymce_models.HTMLField(blank=True, default='', help_text='A field to add more information about the artefact')
+    sample_number = models.CharField(max_length=100, blank=True, default='', help_text='The serial number of the artefact sample')
+    date_aim_sampling = models.CharField(max_length=200, blank=True, default='', help_text='The date and aim of sampling')
 
     # Foreign Keys
     user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name="user's object", blank=True, null=True,
                              help_text='The user who entered the artefact into the database')
     metal1 = models.ForeignKey(Metal, verbose_name='1st metal element', blank=True, null=True, related_name='1st metal element', help_text='The primary metal element of the artefact')
-    metalx = models.ManyToManyField(Metal, verbose_name='other metal elements', blank=True, null=True, related_name='Other metal elements', help_text='The other metal elements of the artefact')
+    metalx = models.ManyToManyField(Metal, verbose_name='other metal elements', blank=True, null=True, related_name='other metal elements', help_text='The other metal elements of the artefact')
     alloy = models.ForeignKey(Alloy, blank=True, null=True, help_text='The alloy the artefact is made of')
     type = models.ForeignKey(Type, verbose_name='object type', blank=True, null=True,
                              help_text='The artefact usage')
-    origin = models.ForeignKey(Origin, blank=True, null=True,
+    origin = models.ForeignKey(Origin, blank=True, null=True, related_name='origin',
                                help_text='The place and city where the artefact comes from')
     recovering_date = models.ForeignKey(RecoveringDate, blank=True, null=True, help_text='The date of excavation')
     chronology_period = models.ForeignKey(ChronologyPeriod, blank=True, null=True,
                                           help_text='The approximate dating of the artefact')
     environment = models.ManyToManyField(Environment, blank=True, null=True,
                                          help_text='The environment where the artefact was buried. Can be multiple')
-    location = models.ForeignKey(Location, blank=True, null=True, help_text='The actual location of the artefact')
+    location = models.ForeignKey(Contact, blank=True, null=True, related_name='artefact location', help_text='The actual location of the artefact')
+    owner = models.ForeignKey(Contact, blank=True, null=True, related_name='artefact owner', help_text='The owner of the artefact')
     technology = models.ForeignKey(Technology, verbose_name='technology used', blank=True, null=True,
                                    help_text='The manufacturing techniques used')
+    sample_location = models.ForeignKey(Contact, blank=True, null=True, related_name='sample location', help_text='The actual location of the artefact sample')
+    responsible_institution = models.ForeignKey(Contact, blank=True, null=True, related_name='responsible institution', help_text='The responsible institution for the artefact sample')
     microstructure = models.ForeignKey(Microstructure, blank=True, null=True)
     corrosion = models.ForeignKey(Corrosion, blank=True, null=True)
 
@@ -183,17 +180,19 @@ class Artefact(TimeStampedModel):
     def get_environments(self):
         environments_list = []
         for env in self.environment.all():
-            environments_list.append(env)
-        return environments_list
+            environments_list.append(env.name)
+        return ", ".join(environments_list)
 
     def artefact_verbose_description(self):
         artefact = []
-        if self.metal1:
-            artefact.append(self.metal1)
-        if self.origin:
-            artefact.append(self.origin.city.country.name)
+        if self.inventory_number:
+            artefact.append(self.inventory_number)
+        if self.alloy:
+            artefact.append(self.alloy.name)
         if self.chronology_period:
             artefact.append(self.chronology_period.chronology_category.name)
+        if self.origin:
+            artefact.append(self.origin.city.country.name)
         return " - ".join(artefact)
 
     def __unicode__(self):
@@ -202,13 +201,15 @@ class Artefact(TimeStampedModel):
 
 class SectionCategory(TimeStampedModel):
     """
-    A section belongs to a section category, which can be i.e. "Sample" or "Conclusion"
+    A section belongs to a section category, which can be i.e. "Sample" or "References"
     """
+    ARTEFACT = 'AR'
     SAMPLE = 'SA'
-    ANALYSIS_AND_RESULTS = 'AR'
+    ANALYSIS_AND_RESULTS = 'AN'
     CONCLUSION = 'CO'
     REFERENCES = 'RE'
     SECTION_CATEGORY_CHOICES = (
+        (ARTEFACT, 'Artefact'),
         (SAMPLE, 'Sample'),
         (ANALYSIS_AND_RESULTS, 'Analysis and Results'),
         (CONCLUSION, 'Conclusion'),
@@ -216,6 +217,9 @@ class SectionCategory(TimeStampedModel):
     )
     name = models.CharField(max_length=2, choices=SECTION_CATEGORY_CHOICES)
     order = models.IntegerField(blank=True, null=True, help_text='The order of a section category for a given artefact')
+
+    class Meta:
+        ordering = ['order']
 
     def __unicode__(self):
         return self.name
@@ -227,15 +231,16 @@ class Section(TimeStampedModel):
     """
     artefact = models.ForeignKey(Artefact, blank=True, null=True, help_text='The corresponding artefact')
     section_category = models.ForeignKey(SectionCategory, blank=True, null=True, help_text='The corresponding section category')
-    title = models.CharField(max_length=100, blank=True, help_text='The section title')
-    content = models.TextField(blank=True, help_text='The description of the section')
-    order = models.IntegerField(blank=True, null=True, help_text='The section order for a given artefact')
+    title = models.CharField(max_length=100, blank=True, default='', help_text='The section title')
+    content = tinymce_models.HTMLField(blank=True, help_text='The content of the section')
+    order = models.IntegerField(blank=True, null=True, help_text='The order of a section for a given artefact')
+    complementary_information = tinymce_models.HTMLField(blank=True, default='', help_text='Complementary information')
 
     class Meta:
         ordering = ['order']
 
     def __unicode__(self):
-        return "%s, %s" % (self.artefact.inventory_number, self.order)
+        return "%s, %s, %s" % (self.order, self.artefact, self.section_category)
 
 
 def get_img_storage_path(instance, filename):
@@ -248,7 +253,11 @@ class Image(TimeStampedModel):
     """
     section = models.ForeignKey(Section, blank=True, null=True, help_text='The corresponding section')
     image = models.ImageField(upload_to=get_img_storage_path, blank=True, null=True, help_text='The image file')
-    legend = models.TextField(blank=True, help_text='The image description')
+    legend = models.CharField(max_length=500, blank=True, help_text='The image description')
+    order = models.IntegerField(blank=True, null=True, help_text='The order of an image for a given section')
+
+    class Meta:
+        ordering = ['order']
 
     def __unicode__(self):
         return self.legend

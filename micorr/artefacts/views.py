@@ -11,7 +11,8 @@ class ArtefactsListView(generic.ListView):
     """
     A list of all the artefacts in the filter
     """
-    queryset = Artefact.objects.select_related('metal', 'origin', 'chronology_period')
+    queryset = Artefact.objects.select_related('metal1', 'type' 'origin', 'chronology_period', 'technology',
+                                               'microstructure')
 
     def get(self, request, *args, **kwargs):
         """
@@ -30,14 +31,17 @@ class ArtefactsListView(generic.ListView):
             for artefact in artefactsfilter:
                 filtered_artefacts_list.append(artefact)
         return render(request, "artefacts/artefact_list.html",
-                      {'search': artefactssearch, 'results': filtered_artefacts_list, 'filter': artefactsfilter, 'self': self})
+                      {'search': artefactssearch, 'results': filtered_artefacts_list, 'filter': artefactsfilter,
+                       'self': self})
 
 
 class ArtefactsDetailView(generic.DetailView):
     """
     A detail view of a selected artefact
     """
-    queryset = Artefact.objects.select_related('metal', 'type', 'origin', 'chronology_period', 'technology')
+    queryset = Artefact.objects.select_related('type', 'origin', 'recovering_date', 'chronology_period', 'location',
+                                               'owner', 'alloy', 'technology', 'sample_location',
+                                               'responsible_institution', 'microstructure', 'corrosion')
 
     def get_context_data(self, **kwargs):
         """
@@ -63,7 +67,7 @@ class ArtefactsUpdateView(generic.UpdateView):
     form_class = ArtefactsUpdateForm
 
     def get_success_url(self):
-        return reverse('artefacts:artefact-detail', kwargs={'pk': self.kwargs.get('pk', None)},)
+        return reverse('artefacts:artefact-detail', kwargs={'pk': self.kwargs.get('pk', None)}, )
 
 
 class ArtefactsDeleteView(generic.DeleteView):
@@ -97,7 +101,7 @@ class DocumentUpdateView(generic.UpdateView):
     form_class = DocumentUpdateForm
 
     def get_success_url(self):
-        return reverse('artefacts:artefact-detail', kwargs={'pk': self.kwargs.get('artefact_id', None)},)
+        return reverse('artefacts:artefact-detail', kwargs={'pk': self.kwargs.get('artefact_id', None)}, )
 
 
 class DocumentDeleteView(generic.DeleteView):
@@ -109,7 +113,7 @@ class DocumentDeleteView(generic.DeleteView):
     template_name_suffix = '_confirm_delete'
 
     def get_success_url(self):
-        return reverse('artefacts:artefact-detail', kwargs={'pk': self.kwargs.get('artefact_id', None)},)
+        return reverse('artefacts:artefact-detail', kwargs={'pk': self.kwargs.get('artefact_id', None)}, )
 
 
 class DocumentCreateView(generic.CreateView):
@@ -139,7 +143,8 @@ class DocumentCreateView(generic.CreateView):
         return super(DocumentCreateView, self).form_valid(form)
 
     def get_success_url(self):
-        return reverse('artefacts:artefact-detail', kwargs={'pk': self.kwargs.get('artefact_id', None)},)
+        return reverse('artefacts:artefact-detail', kwargs={'pk': self.kwargs.get('artefact_id', None)}, )
+
 
 """
 class GenericCreateView(generic.CreateView):
