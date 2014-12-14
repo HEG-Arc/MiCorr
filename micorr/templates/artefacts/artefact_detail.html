@@ -40,7 +40,7 @@
 
   <div class="row">
     <div class="col-xs-4 column1">Description of artefact</div>
-    <div class="col-xs-8 column2">{{ artefact.description }}</div>
+    <div class="col-xs-8 column2">{{ artefact.description|safe }}</div>
   </div>
 
 <br/>
@@ -54,7 +54,7 @@
 
   <div class="row">
     <div class="col-xs-4 column1">Origin and date of recovering</div>
-    <div class="col-xs-8 column2">{{ artefact.origin }}</div>
+    <div class="col-xs-8 column2">{{ artefact.origin }}. {{ artefact.recovering_date }}</div>
   </div>
 
 <br/>
@@ -75,7 +75,21 @@
 
   <div class="row">
     <div class="col-xs-4 column1">Burial conditions / environment</div>
-    <div class="col-xs-8 column2">{{ artefact.get_environments|join:" / " }}</div>
+    <div class="col-xs-8 column2">{{ artefact.get_environments }}</div>
+  </div>
+
+<br/>
+
+  <div class="row">
+    <div class="col-xs-4 column1">Artefact location</div>
+    <div class="col-xs-8 column2">{{ artefact.location }}</div>
+  </div>
+
+<br/>
+
+  <div class="row">
+    <div class="col-xs-4 column1">Owner</div>
+    <div class="col-xs-8 column2">{{ artefact.owner }}</div>
   </div>
 
 <br/>
@@ -88,21 +102,14 @@
 <br/>
 
   <div class="row">
-    <div class="col-xs-4 column1">Alloy</div>
-    <div class="col-xs-8 column2">{{ artefact.metal1 }}</div>
+    <div class="col-xs-4 column1">Recorded conservation data</div>
+    <div class="col-xs-8 column2">{{ artefact.recorded_conservation_data }}</div>
   </div>
 
 <br/>
 
-  <div class="row">
-    <div class="col-xs-4 column1">Technology</div>
-    <div class="col-xs-8 column2">{{ artefact.technology }}</div>
-  </div>
-
-<br/>
-
-{% for section in sections %}
-    {% if forloop.counter0 > 0 %}
+ {% for section in sections %}
+    {% if forloop.counter0 == 1 %}
         {% for image in section.image_set.all %}
             <div class="row">
                 <div class="col-xs-12" style="text-align: center">
@@ -116,6 +123,77 @@
             </div>
         {% endfor %}
     {% endif %}
+{% endfor %}
+
+<br/>
+
+  <div class="row">
+    <div class="col-xs-4 column1">Description of sample</div>
+    <div class="col-xs-8 column2">{{ artefact.sample_description|safe }}</div>
+  </div>
+
+<br/>
+
+  <div class="row">
+    <div class="col-xs-4 column1">Alloy</div>
+    <div class="col-xs-8 column2">{{ artefact.alloy }}</div>
+  </div>
+
+<br/>
+
+  <div class="row">
+    <div class="col-xs-4 column1">Technology</div>
+    <div class="col-xs-8 column2">{{ artefact.technology }}</div>
+  </div>
+
+<br/>
+
+  <div class="row">
+    <div class="col-xs-4 column1">Lab number of sample</div>
+    <div class="col-xs-8 column2">{{ artefact.sample_number }}</div>
+  </div>
+
+<br/>
+
+  <div class="row">
+    <div class="col-xs-4 column1">Sample location</div>
+    <div class="col-xs-8 column2">{{ artefact.sample_location }}</div>
+  </div>
+
+<br/>
+
+  <div class="row">
+    <div class="col-xs-4 column1">Responsible institution</div>
+    <div class="col-xs-8 column2">{{ artefact.responsible_institution }}</div>
+  </div>
+
+<br/>
+
+  <div class="row">
+    <div class="col-xs-4 column1">Date and aim of sampling</div>
+    <div class="col-xs-8 column2">{{ artefact.date_aim_sampling }}</div>
+  </div>
+
+<br/>
+
+{% for section in sections %}
+    {% if section.section_category.order > 2 %}
+        <b>{{ section.title }}</b>
+        {{ section.content|safe }}
+        {% for image in section.image_set.all %}
+            <div class="row">
+                <div class="col-xs-12" style="text-align: center">
+                    <img src="{{ image.image.url }}" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12" style="text-align: center">
+                    <i>{{ image }}</i>
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+    <br/>
 {% endfor %}
 
 {% if documents %}
