@@ -80,5 +80,9 @@ class Contact(TimeStampedModel):
                 formatted += " (%s)" % ' '.join(contact)
             else:
                 formatted = ' '.join(contact)
+        if self.city:
+            formatted += ", %s" % self.city.name
+        if self.region:
+            formatted += ", %s" % self.region.name
         return formatted
 
