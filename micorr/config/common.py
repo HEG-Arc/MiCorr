@@ -355,3 +355,6 @@ class Common(Configuration):
     WAGTAILSEARCH_RESULTS_TEMPLATE_AJAX = 'w/includes/search_listing.html'
 
     WAGTAILSEARCH_ES_INDEX = 'micorr'
+
+    # Cities-light settings: overriding cities15000 import with cities1000
+    CITIES_LIGHT_CITY_SOURCES = ['http://download.geonames.org/export/dump/cities1000.zip']
