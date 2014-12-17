@@ -358,3 +358,13 @@ class Common(Configuration):
 
     # Cities-light settings: overriding cities15000 import with cities1000
     CITIES_LIGHT_CITY_SOURCES = ['http://download.geonames.org/export/dump/cities1000.zip']
+
+    TINYMCE_DEFAULT_CONFIG = {
+        'plugins': "table,spellchecker,paste,searchreplace",
+        'theme': "advanced",
+        'cleanup_on_startup': True,
+        'custom_undo_redo_levels': 10,
+        'theme_advanced_buttons3_add': "tablecontrols",
+    }
+    TINYMCE_SPELLCHECKER = True
+    TINYMCE_COMPRESSOR = True
