@@ -1,124 +1,270 @@
-{% load staticfiles documents_tags cache compress static i18n %}<!DOCTYPE html>
-<html lang="en" ng-app>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
-  <head>
-    <meta charset="utf-8">
-    <title>{% block title %}{% if self.seo_title %}{{ self.seo_title }}{% else %}{{ self.title }}{% endif %}{% endblock %}{% block title_postfix %} | MiCorr{% endblock %}</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="{% if self.search_description %}{{ self.search_description }}{% endif %}">
-    <meta name="author" content="">
+{% load static documents_tags %}
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]> <html class="lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en"> <!--<![endif]-->
 
-    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
-    <!--[if lt IE 9]>
-      <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
+<head>
+  <meta charset="utf-8">
+  <!-- Set the viewport width to device width for mobile -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MiCorr | Model {{ artefact.pk }}</title>
 
-    {# Local static assets such as css, images and javascrpt should be stored at [yourapp]/static/[yourapp]/... #}
-    {% compress css %}
-        {# Vendor stylesheets stored locally #}
-        <link rel="stylesheet" href="{% static "css/vendor/jquery.bxslider.css" %}" />
+<script type="text/javascript">
+    (function() {
+        var path = '//easy.myfonts.net/v2/js?sid=211388(font-family=DIN+Next+Pro+Medium)&sid=217470(font-family=DIN+Next+Pro+Medium)&sid=217469(font-family=DIN+Next+Pro+Regular)&sid=217467(font-family=DIN+Next+Pro+Light)&key=tNHbXuRhxc',
+            protocol = ('https:' == document.location.protocol ? 'https:' : 'http:'),
+            trial = document.createElement('script');
+        trial.type = 'text/javascript';
+        trial.async = true;
+        trial.src = protocol + path;
+        var head = document.getElementsByTagName("head")[0];
+        head.appendChild(trial);
+    })();
 
-        {# Custom stylesheets #}
-        {# SCSS compilation relies on django compressor #}
-        <link rel="stylesheet" type="text/x-scss" href="{% static "css/main.scss" %}" />
-
-    {% endcompress %}
-
-    {% block extra_css %}{% endblock %} {# Override this block in individual templates in order to add stylesheets on a template by template basis #}
-
-    {# Javascript that needs to be called from head e.g. google analytics snippet and bootstrap shivs #}
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
-    <![endif]-->
-
-    {% block css %}
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
-
-    <!-- Optional theme -->
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
-
-    <!-- Your stuff: Third-party css libraries go here -->
-    <link href="{% static 'landing/css/font-awesome.min.css' %}" rel="stylesheet">
-
-    <!-- This file store project specific CSS -->
-    <link href="{% static 'css/project.css' %}" rel="stylesheet">
-    {% endblock %}
-
-    {% block angular %}
-      <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script>
-    {% endblock %}
-
-  </head>
+    (function() {
+        var path = '//easy.myfonts.net/v2/js?sid=209492(font-family=Miso+Bold)&sid=209490(font-family=Miso)&sid=209494(font-family=Miso+Light)&key=gwmkEJHaRD',
+            protocol = ('https:' == document.location.protocol ? 'https:' : 'http:'),
+            trial = document.createElement('script');
+        trial.type = 'text/javascript';
+        trial.async = true;
+        trial.src = protocol + path;
+        var head = document.getElementsByTagName("head")[0];
+        head.appendChild(trial);
+    })();
 
 
-  <body class="{% block body_class %}{% endblock %}"> {# Override this block to set custom body classes on a template by template basis #}
+    (function() {
+        var path = '//easy.myfonts.net/v2/js?sid=259686(font-family=Compasse+Bold)&sid=259693(font-family=Compasse+Light)&sid=259695(font-family=Compasse+Regular)&sid=259690(font-family=Compasse+Extra+Light)&key=sPc7yFZ8fS',
+            protocol = ('https:' == document.location.protocol ? 'https:' : 'http:'),
+            trial = document.createElement('script');
+        trial.type = 'text/javascript';
+        trial.async = true;
+        trial.src = protocol + path;
+        var head = document.getElementsByTagName("head")[0];
+        head.appendChild(trial);
+    })();    
 
-    {% block menu %}
-        {% get_site_root as site_root %}
-        {% top_menu parent=site_root calling_page=self %}
-    {% endblock %}
-
-    <div class="container">
-        
-      {% if messages %}
-          {% for message in messages %}
-              <div class="alert {% if message.tags %}alert-{{ message.tags }}"{% endif %}>{{ message }}</div>
-          {% endfor %}
-      {% endif %}
-
-      {% block heading %}
-          <div class="page-header">
-              <h2>{{ self.title }}</h2>
-          </div>
-      {% endblock %}
-
-      {% block content %}
-        <p>Use this document as a way to quick start any new project.</p>
-      {% endblock content %}
-
-       <div class="footer">
-        <hr />
-        <p>&copy; MiCorr 2014 - Version <a href="https://github.com/HEG-Arc/MiCorr/commit/{{ REVISION }}">{{ REVISION }}</a></p>
-      </div>
-    </div> <!-- /container -->
-
-    {% block modal %}{% endblock modal %}
-
-    <!-- Le javascript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    {% block javascript %}
-      <!-- Latest JQuery -->
-      <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-
-      <!-- Latest compiled and minified JavaScript -->
-      <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
-
-      <!-- Your stuff: Third-party javascript libraries go here -->
-
-      <!-- place project specific Javascript in this file -->
-      <script src="{% static 'js/project.js' %}"></script>
-    {% endblock javascript %}
-
-    {# External javascript #}
-    <script src="https://code.jquery.com/jquery-2.0.3.min.js"></script>
-
-    {% compress js %}
-        <script src="{% static "js/vendor/jquery.bxslider.min.js" %}"></script>
-        <script src="{% static "js/vendor/fluidvids.js" %}"></script>
-        {# Custom javascript #}
-        {# Local static assets such as css, images and javascrpt should be stored at [yourapp]/static/[yourapp]/... #}
-        <script src="{% static "js/main.js" %}"></script>
-    {% endcompress %}
-
-    {% block extra_js %}{% endblock %} {# Override this block in individual templates in order to add javascript on a template by template basis #}
-  </body>
-</html>
  
+ 
+</script>
+
+<style type="text/css">#mfPreviewBar{display:none!important;}</style>
+
+  
+  <!-- IE Fix for HTML5 Tags -->
+  <!--[if lte IE 8]>
+    <link rel="stylesheet" href="{% static 'stylesheets/mystyle.css' %}" media="all">
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+
+  <![endif]-->
+<!--[if gt IE 8]><!-->
+
+    <link rel="stylesheet" href="{% static 'stylesheets/mystyle.css' %}" media="all"><!---responsive-->
+
+<!--<![endif]-->
+
+<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+
+
+</head>
+<!-- body class="intro" -->
+
+<body data-spy="scroll" data-target="#sidemenu" class="sticky-footer">
+
+  <div id="banner">
+    <div class="container">
+        {% block menu %}
+            {% get_site_root as site_root %}
+            {% top_menu parent=site_root calling_page=self %}
+        {% endblock %}
+    </div>
+  </div>
+  <div class="container">
+    <div class="row">
+      {% block sidemenu %}
+      {% endblock sidemenu %}
+      <div class="c9">
+
+
+          {% block content %}
+          {% endblock content %}
+        
+
+
+
+
+
+         <!-- accordion test -->
+
+<!--
+
+        <h1>Demonstration</h1>
+        <h2 >Section Three - demo</h2>
+        <h1>Folded content - Title 1</h1>
+        <h2>Title 2 AVMI</h2>
+        <h3>Title 3 AVMI</h3>
+        <h4>Title 4 AVMI</h4>
+        <h4 class="underline">Title 4 AVMI</h4>
+        <p>Follow this <a href="#">link</a></p>
+        <p>
+          <ul class="bullets">
+            <li>Lorempisum</li>
+            <li>Lorem ipsum dolor sit amet.</li>
+            <li>Haec oremor siet.</li>
+          </ul>
+        </p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quae, repellendus!</p>
+        -->
+
+
+
+
+
+      </div>
+    </div>
+  </div> <!-- container for content-->
+
+  
+
+
+
+
+
+
+
+
+
+  <div id="footer">
+    <div class="container">
+      <div class="row">
+        <div class="c8 pre2 center">
+          <a href="#">Conditions d’utilisation</a> | <a href="#">Privacy</a> | <a href="#">Impressum</a>
+
+        </div>
+        <div class="c2">
+          <img src="{% static 'stylesheets/logo-arc.png' %}" alt="" class="img-responsive">
+        </div>
+      
+      </div>
+    </div>
+  </div>
+  <!-- script src="http://code.jquery.com/jquery-1.9.1.min.js"></script -->
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <!-- Include all compiled plugins (below), or include individual files as needed -->
+  <script src="{% static 'js/bootstrap.js' %}"></script>
+  <script src="{% static 'js/jquery.sidr.min.js' %}"></script>
+
+  <script>
+   /*jQuery time*/
+   $(document).ready(function(){
+ 
+
+    $(".toggle").click(function(){
+      if ($(this).hasClass("toggle-active")) {
+        $(this).removeClass("toggle-active");
+        $(this).addClass("toggle-inactive");
+        $(this).text($(this).data('off'));
+      } else {
+        $(this).addClass("toggle-active");
+        $(this).removeClass("toggle-inactive");
+        $(this).text($(this).data('on'));
+
+      }
+
+      
+    });
+
+
+      //
+      // jQuery SmoothScroll | Version 18-04-2013
+      //
+
+      $('.smooth-scroll a[href*=#]').click(function() {
+
+         // skip SmoothScroll on links inside accordion titles or scroll boxes also using anchors or if there is a javascript call
+         //if($(this).parent().hasClass('accordion-title1')  || $(this).parent().hasClass('accordion-title2') || $(this).attr('href').indexOf('javascript')>-1) return;
+
+          // Make sure to unfold the node if it's collapsed
+          // Note that uncollapsing is done the "rude" way by adding the "in" class
+          // Using .collapse('show') would trigger the opening animation, preventing the correct
+          // page scrolling effect.
+         if($(this).parent().parent().hasClass('nav')) { // test the UL
+          // Unfold the node
+          var unfold = $(this).attr('href'); //id of the "title" node          
+          $(unfold).next().addClass('in'); //collapse('show'); //next node is the content to unfold
+         }
+         // A menu / nav element of level 2 has been clicked, unfold its parent
+         if($(this).parent().parent().hasClass('subnav')) { // test the UL
+          // Unfold the parent to make sure that we can jump to this section
+          var unfold = $(this).parent().parent().prev().attr('href'); //id of the "title" node          
+          $(unfold).next().addClass('in');//.collapse('show'); //next node is the content to unfold
+         }
+
+         // duration in ms
+         //var duration=500;
+
+         // easing values: swing | linear
+         var easing='swing';
+
+         // get / set parameters
+         var newHash=this.hash;
+         var oldLocation=window.location.href.replace(window.location.hash, '');
+         var newLocation=this;
+
+         // make sure it's the same location      
+         if(oldLocation+newHash==newLocation)
+         {
+            // get target
+            var target=$(this.hash+', a[name='+this.hash.slice(1)+']').offset().top;
+
+            // adjust target for anchors near the bottom of the page
+            if(target > $(document).height()-$(window).height()) target=$(document).height()-$(window).height();
+
+            // duration (in ms) is distance-dependent., with a max of 1 sec
+            var duration = Math.min(.8 * Math.abs(target-$(document).scrollTop()),1000);
+
+            // animate to target and set the hash to the window.location after the animation
+            $('html, body').animate({ scrollTop: target }, duration, easing, function() {
+
+               // add new hash to the browser location
+               window.location.href=newLocation;
+            });
+
+            // cancel default click action
+            return false;
+         }
+      });
+
+   });
+
+
+
+   </script>
+
+  <!-- script src="javascripts/jquery.fitvids.min.js"></script -->
+  <!--script src="javascripts/MagnificPopup.min.js"></script-->
+  
+  <!--script type="text/javascript">
+    $(document).ready(function(){
+     // $(".has-video").fitVids();
+      $('.popup-youtube, .popup-vimeo, .popup-gmaps').magnificPopup({
+        disableOn: 700,
+        type: 'iframe',
+        mainClass: 'mfp-fade',
+        removalDelay: 160,
+        preloader: false,
+
+        fixedContentPos: false
+      });
+
+     
+    });
+
+  </script-->
+
+
+</body>
+</html>

@@ -1,39 +1,26 @@
-{% load documents_tags wagtailcore_tags i18n %}
+{% load static documents_tags wagtailcore_tags i18n %}
 {% get_site_root as site_root %}
 
-{# Implementation of bootstrap theme dropdown menu - shows top level links and their children #}
-<div role="navigation" class="navbar navbar-inverse navbar-fixed-top">
-    <div class="container">
-        <div class="navbar-header">
-            <button data-target=".navbar-collapse" data-toggle="collapse" class="navbar-toggle" type="button">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            {# Link to home page #}
-            <a href="{% pageurl site_root %}" class="navbar-brand">{{ site_root.title }}</a>
-        </div>
-        <div class="navbar-collapse collapse">
-            <ul class="nav navbar-nav">
-                {% for menuitem in menuitems %}
-                    <li class="{% if menuitem.show_dropdown %}dropdown{% endif %}{% if calling_page.url == menuitem.url %} active{% endif %}">
-                        {% if menuitem.show_dropdown %}
-                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">{{ menuitem.title }} <b class="caret"></b></a>
-                            {% top_menu_children parent=menuitem %}
-                        {% else %}
-                            <a href="{% pageurl menuitem %}">{{ menuitem.title }}</a>
-                        {% endif %}
-                    </li>       
-                {% endfor %}
-                {% if request.user.is_authenticated %}
-                    <li><a href="{% url 'users:detail' request.user.username %}">{% trans "My Profile" %}</a></li>
-                    <li><a href="{% url 'account_logout' %}">{% trans "Logout" %}</a></li>
+      <div class="row">
+        {% if not hidetoplogo %}
+        <div class="w3"><a href="{% pageurl site_root %}"><img src="{% static 'stylesheets/logo.png' %}" class="img-responsive"></a></div>
+        {% endif %}
+        <div class="w9 {% if not cssclass %}menu{% else %}{{ cssclass }}{% endif %}">
+            {% for menuitem in menuitems %}
+                {% if menuitem.show_dropdown %}
+                    <a href="{% pageurl menuitem %}" {% if calling_page.url == menuitem.url %} class="current"{% endif %}>{{ menuitem.title }}</a>
                 {% else %}
-                    <li><a href="{% url 'account_signup' %}">{% trans "Sign Up" %}</a></li>
-                    <li><a href="{% url 'account_login' %}">{% trans "Log In" %}</a></li>
+                    <a href="{% pageurl menuitem %}" {% if calling_page.url == menuitem.url %} class="current"{% endif %}>{{ menuitem.title }}</a>
                 {% endif %}
-            </ul>
+            {% endfor %}
+            {% if request.user.is_authenticated %}
+                <a href="{% url 'users:detail' request.user.username %}">{% trans "My Profile" %}</a>
+                <a href="{% url 'account_logout' %}"><i class="fa fa-user"></i>{% trans "Logout" %}</a>
+            {% else %}
+                <a href="{% url 'account_login' %}"><i class="fa fa-user"></i>{% trans "Log In" %}</a>
+            {% endif %}
+          <a href="#"><i class="fa fa-pencil"></i>Contribute</a>
+          <a href="#"><i class="fa fa-video-camera"></i>Tour</a>
+
         </div>
-    </div>
-</div>
+      </div>
