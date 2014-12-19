@@ -1,0 +1,716 @@
+// ------------ colors -----------
+$c_light: #F2F2F2;
+$c_pale: #e0e0e0;
+$c_medium: #B5B5B5;
+$c_dark:#969696;
+$c_text: #4D4D4D;
+$c_main: #E78115;
+$c_mainlight: tint($c_main,40);
+$c_white: #fff;
+
+/*$c_info_light: $c_mainlight;
+$c_info_dark: $c_text;
+$c_danger_light: #F2DEDE;
+$c_danger_dark: #B94A48;
+$c_warning_light: #ffd182;
+$c_warning_dark: #7e3c01;
+$c_success_light: #DFF0D8;
+$c_success_dark: #468847;*/
+
+//--- redfine bootstrap colors
+$brand-primary: $c_main;
+$state-success-text:             #468847;
+$state-success-bg:               #DFF0D8;
+$state-success-border:           darken(adjust-hue($state-success-bg, -10), 5%);
+
+$state-info-text:                $c_text;
+$state-info-bg:                  $c_mainlight;
+$state-info-border:              darken(adjust-hue($state-info-bg, -10), 7%);
+
+$state-warning-text:             #7e3c01;
+$state-warning-bg:               #ffd182;
+$state-warning-border:           darken(adjust-hue($state-warning-bg, -10), 5%);
+
+$state-danger-text:              #468847;
+$state-danger-bg:                #F2DEDE;
+$state-danger-border:            darken(adjust-hue($state-danger-bg, -10), 5%);
+/*------------------------------*/
+
+
+
+
+* {margin: 0;padding: 0;}
+a {outline:none !important;} //no dotted frame when we click
+@import "normalize";
+//li {padding-left: 1em; margin-left: 1em}
+$line-height-base: 1.2;
+@import "compass";
+@import "bootstrap-compass";
+@import "bootstrap";
+@import "font-awesome";
+
+
+body{line-height: 1.2 !important;}
+
+//----------- DEFINITIONS --------------
+ 
+$base-font-size :18px; //for large screens
+$font-size-factor: 1.2em;
+%fontFancy {font-family: 'Miso',sans-serif;font-weight: normal;}
+
+%fontLight {font-family: 'DIN Next Pro Light',Helvetica,Arial,sans-serif;font-weight: normal;}
+%fontNormal {font-family: 'DIN Next Pro Regular',Helvetica,Arial,sans-serif;font-weight: normal;}
+%fontNormalBold {font-family: 'DIN Next Pro Medium',Helvetica,Arial,sans-serif;font-weight: normal;}
+/*
+%fontLight {font-family: 'Compasse Light',Helvetica,Arial,sans-serif;font-weight: normal;}
+%fontNormal {font-family: 'Compasse Regular',Helvetica,Arial,sans-serif;font-weight: normal;}
+%fontNormalBold {font-family: 'Compasse Bold',Helvetica,Arial,sans-serif;font-weight: normal;}
+*/
+
+@mixin weight($w) {
+	@if $w == normal {
+		font-weight: 400;
+	} @else if $w == bold {
+		font-weight: 700;
+	}
+}
+
+
+
+
+//background: adjust-lightness($c_main,30);
+
+
+@mixin fsize($x) {
+	$fsizes: 1em,1.14em,1.5em,2em,3em,4em,5em;
+	$f: 2em;
+	@if $x == small {
+		$f: .78em;
+	} @else if $x == normal {
+		$f: 1em;
+	} @else if $x == medium {
+		$f: 1.14em;
+	} @else if $x == large {
+		$f: 1.5em;
+	} @else if $x == xlarge {
+		$f: 2.5em;
+	} @else {
+		$f: 1em;
+	}
+	font-size: $f; //nth($fsizes, $x); // if(#{$x} == 0, 0.78em, nth($fsizes, $x));
+	line-height: 1.2;
+}
+
+
+
+// ------------ Reset
+a img {
+  border: none;
+}
+p a {text-decoration:underline;}
+img {
+  -ms-interpolation-mode: bicubic;
+}
+
+// ------------ Simple layout elements
+
+@mixin border-top($color:$c_main) {
+	border-top: 1px solid  $color;
+}
+@mixin border-bottom($color:$c_main) {
+	border-bottom: 1px solid $color;
+}
+@mixin padT() {
+	padding-top:1em;
+}
+@mixin padB() {
+	padding-bottom:1em;
+}
+@mixin padTB() {
+	padding-top:1em;
+	padding-bottom:1em;
+}
+@mixin pad() {
+	padding:1em;
+}
+
+@mixin darkbox {
+	background-color: $c_text;
+	color:#fff !important;
+	h1,h2,h3,h4,p {color:#fff !important}
+	@include padTB;
+	margin-bottom: 1em;
+}
+.darkbox { @include darkbox; }
+
+@mixin lightbox {
+	background-color: $c_light;
+	@include padTB;
+	//margin-bottom: 1em;
+}
+@mixin palebox {
+  background-color: $c_pale;
+  @include padTB;
+  //margin-bottom: 1em;
+}
+.lightbox { @include lightbox; }
+.palebox { @include palebox; }
+.lightframe {
+  background-color: $c_light;
+  padding: 1em;  
+}
+.disc {
+  background: $c_main;
+  border-radius:50%;
+  color:#fff;
+  padding: .3em;
+  line-height: 1;
+  width: 1.6em;
+  height: 1.6em;
+}
+// ----------- shortcuts helpers
+.max100 {
+    max-width: 100%;
+}
+.fill {
+	width: 100%;display:block;
+}
+.hideme {
+  display: none;
+}
+.marginB {
+  margin-bottom: 1em !important;
+}
+.marginT {
+  margin-top: 1em !important;
+}
+.marginTB {
+  margin-bottom: 1em !important;
+  margin-top: 1em !important;
+}
+.sidemenu {
+  @include border-top();
+  padding-top: 1em;
+  @include border-bottom();
+  padding-bottom: 1em;
+}
+
+/**
+ * For modern browsers
+ * 1. The space content is one way to avoid an Opera bug when the
+ *    contenteditable attribute is included anywhere else in the document.
+ *    Otherwise it causes space to appear at the top and bottom of elements
+ *    that are clearfixed.
+ * 2. The use of `table` rather than `block` is only necessary if using
+ *    `:before` to contain the top-margins of child elements.
+ */
+.cf:before,
+.cf:after {
+    content: " "; /* 1 */
+    display: table; /* 2 */
+}
+
+.cf:after {
+    clear: both;
+}
+.left {text-align: left;}
+.right {text-align: right;}
+.center {text-align: center;}
+.display-block-center {
+  display: block !important;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+
+// ----- General styles --------
+
+
+
+h1 {
+	@include fsize(xlarge);
+	line-height: 1.1 !important;
+	color: $c_main;
+  text-transform: uppercase;
+}
+h2 {
+	@include fsize(large);
+}
+h3 {
+	@include fsize(medium);
+}
+h4 {
+	@include fsize(normal);
+}
+h1,h2,h3,p {margin-bottom: .3em;} //not h4, since it sticks to P
+h1 {@extend %fontFancy;}
+h2 {@extend %fontLight;}
+
+h2.emphasis {
+  @extend %fontNormalBold;
+  color: $c_main !important;
+}
+h3,h4 {@extend %fontNormalBold;}
+p, body {@extend %fontNormal;}
+.underline {@include border-bottom($c_dark);
+padding-bottom: .3em;margin-bottom: 1em;
+}
+
+:link, :visited {color:$c_text;}
+a:hover {color:$c_main;}
+em {
+  @extend %fontNormalBold;
+  font-style:normal;
+}
+
+ul.bullets {
+  margin-left: 1em;
+  li {padding-left: 1em;}
+}
+
+// ----------------------------------- LAYOUT --------------------------------------
+
+
+body {
+  background:#fff;color: $c_text;
+  line-height: 1.5;
+  font-size: $base-font-size;
+}
+
+html {min-height: 100%;position:relative}
+
+body.sticky-footer {
+  margin-bottom: 5em;
+  #footer {
+    width:100%;
+    position:absolute;
+    bottom:0;
+    left:0;
+  }
+} 
+#footer {
+  background: $c_main;
+  color:#fff;
+  @include padT;
+  line-height: 4;
+  font-size: 0.8em;
+  a {color:#fff}
+
+}
+
+#headintro {
+  z-index:9;
+  position:absolute;
+  top:0; left:0;
+  width: 100%;
+
+}
+#headlogo img {
+  z-index:10;
+  position:absolute;
+  top:0; left:0;
+  width: 100%;
+}
+.menu {
+  line-height: 2.2;
+  font-size: .95em;
+  li {list-style: none outside none;display:inline-block;}
+  a { text-decoration: none; 
+    display:inline-block;
+    margin-right: 1.5em;
+
+    i {margin-right: .3em}
+
+  }
+  a:last-child {margin-right:0;}
+  a.current {border-bottom:1px solid $c_text;}
+
+}
+#topmenu {
+  background: rgba(0,0,0,.8);
+  padding-top: 1.1em;
+  padding-bottom: 1.1em;
+  width: 100%;
+  color:#fff;
+  font-size: .9em;
+  a {
+    display:inline-block;
+    margin-right: 2em;
+    color:#fff;
+    text-decoration: none;
+    i {color:$c_medium; display:inline-block; margin-right: .3em}
+  }
+  a:last-child {margin-right:0;}
+}
+#topsubmenu {
+  background: #000;
+  padding-top: .5em;
+  padding-bottom: .5em;
+  width: 100%;
+  color:#fff;
+  font-size: 1.7em;
+  a {
+    display:inline-block;
+    margin-right: 1em;
+    color:#fff;
+    text-decoration: none;
+    i {color:$c_main; display:inline-block; margin-right: .3em}
+  }
+}
+#topmenu,#topsubmenu {.container {z-index:11;}}
+
+
+
+#search,#learn {margin-top: 2em;margin-bottom: 2em}
+
+
+#banner {
+  /*img[src$=".png"] { //crips logo
+    image-rendering: -moz-crisp-edges;  
+    image-rendering: -webkit-optimize-contrast;
+
+  }  */
+  background:$c_light;
+  @include padT();
+  margin-bottom: 2em;
+  //@include box-shadow(0 0.1em 0.5em rgba(black,0.30));
+  &:after {
+    width: 100%;height: 20px;
+    background: #fff url(#{$root}shadow.png) center bottom no-repeat;
+    margin-top:1em;
+    content:'';
+    display: block;
+  }
+}
+#sidemenu {
+  .nav > li > a:hover, .nav > li > a:focus {
+    background:none;
+  }
+  .active>a {
+    color:$c_main;
+    &:before {
+      content: $fa-var-caret-right;
+      @extend .fa;
+      margin-left: -1.5em;
+      display: inline-block;
+      width: 1.5em;
+    }
+  }
+  .nav > li > a {
+    padding: .3em 0 .3em 1.5em;
+  }
+  li .nav > li > a {
+    padding: .1em 0 .1em 2.5em;
+  }
+
+}
+.no-active-highlight {
+  .active>a {
+    color:$c_text !important;
+    &:before {content: none !important;}
+  }  
+
+}
+
+
+/*----- Slideshow special elements --------*/
+ 
+ html.slideshow {min-height: 100%;height: 100%; }
+ body.slideshow {min-height: 100%;height: 100%; }
+.fullh1 { display: table; width: 100%;height: 100%; }
+.fullh2 { display: table-row; }
+.fullh3 { display: table-cell;   height:100%;  } 
+#slideshow {
+  .carousel-inner,.item {height:100%}
+  .slide {
+    background: url() center center no-repeat;
+    background-size: cover; 
+    height:100%;
+  }
+  .slidetext {
+    background:#fff;
+    margin-top: 12em;
+    padding: 1em;
+    text-align: left; //la class right est ajoutée quand on clique à gauche sinon
+    h1 {font-size:2em}
+    h2 {font-size:1.3em}
+  }
+  .carousel-control {
+    color:#fff !important; opacity:1 !important;
+    &.right,&.left {background:none;}
+  }
+
+  .arrowbottom {
+    background: url(#{$root}slideshow-bottom-arrow.png) no-repeat center bottom;
+    width:100%;
+    position:absolute;
+    bottom:0; left:0;height:70px;width: 100%;
+    z-index:12;
+  }
+}
+#slideshow-replacement {
+  background-image: url(../slideshow/3.jpg); background-position: center center;
+  background-size: cover; 
+  padding-top:8em;padding-bottom:1em;
+  width:100%;
+}
+
+
+/*------------------------------------------------------------------------------*/
+// Helpers and UI elements
+
+
+
+label {@include weight(bold);}
+input[type="checkbox"] {
+	margin-right: 1em;
+}
+input[type="text"],textarea {
+	width: 100%; padding: 0.5em;
+	border:none;
+	border-radius: .3em;
+}
+#subForm hr {
+	margin-bottom: 0.5em;
+	border:none;
+	background: transparent;
+}
+input[type="submit"] {
+	
+	color:#fff;
+	text-shadow: 0 1px 1px rgba(0,0,0,.8);
+	@include fsize(1);
+	@include border-radius(6px);
+	width: 100%;
+	padding:0.5em;
+	border-left: none;border-right: none;
+	border-top: 2px solid #ccc;
+	border-bottom: 2px solid #333;
+	cursor: pointer;
+	//@include single-box-shadow(#999, 0px, 3px, 2px);
+	&:hover{
+		background: url(#{$root}bgmenu-pattern.png) repeat top left;
+		color:$c_light;
+	}
+	&:active{
+		color:$c_light;
+		background: url(#{$root}bgmenu-pattern.png) repeat top left;
+		border-bottom: 2px solid #ccc;
+		border-top: 2px solid #333;
+		//@include single-box-shadow(#999, 0px, -2px, 1px);
+    	position: relative;
+    	top: 4px;
+    }
+
+}
+
+
+
+
+
+.btn {
+	//@include box-sizing(border-box);
+	display:inline-block;
+  //padding: .8em 1em .8em 1em;
+  @include border-radius(0.30em);
+  background: $c_text;
+  color: $c_white;
+  text-decoration: none;
+  text-align: center;
+  border:none;
+  &:hover {
+  	background: $c_medium;
+  	color: $c_white;	
+  }
+  
+  &:active {
+    //padding: .8em 1em .7em 1em;
+    //margin-top: 0.1em;
+    background: $c_main;
+	color: $c_white;
+    @include transition(all 10ms);
+  }
+}
+
+.btn-light {
+ 	@include box-shadow(0 0.1em 0.5em rgba(black,0.10), 0 0.1em 0.2em rgba(black,0.3), 0 -0.1em 0.07em rgba(black,0.3) inset, 0 0.1em 0.07em rgba(white,0.2) inset);
+	background-color: $c_light;
+	@include background-image(linear-gradient($c_light, darken($c_light, 10%)));
+	color:$c_text;
+  font-weight: bold;
+
+}
+button[disabled] {
+  // !important prevents clicking
+	background: $c_medium !important;
+	color: $c_light !important;
+  padding: .8em 1em .8em 1em !important;
+  margin-top: 0 !important;
+}
+
+
+.tab_underline {
+	a {
+		text-decoration:none;
+		display:block;padding-top: 1em;padding-bottom: 1.5em;
+			background: url(#{$root}separator.png) center bottom no-repeat;
+		&:hover,&.active {background: url(#{$root}separator-active.png) center bottom no-repeat;
+		color:$c_main}
+	}
+	.icon,.glyphicon {vertical-align: middle;} 
+}
+.tab_box {
+
+	a {
+		display:block;
+		text-decoration:none;
+		display:block;padding:.5em .5em 2em .5em;
+		background: $c_light url(#{$root}bottom-arrow-none.png) center bottom no-repeat;
+		&:hover,&.active {
+			background: $c_main url(#{$root}bottom-arrow.png) center bottom no-repeat;		
+			color:$c_white;
+			.underline {border-bottom:1px solid $c_white}
+		}
+	}
+
+}
+
+
+
+.separator {
+	height: 1px;
+	//margin-top: 1em;
+	border-top: 1px dotted $c_medium;
+	margin-bottom: 1em;
+}
+
+//for icon fonts
+.huge {font-size: 8em;}
+.big {font-size: 4em}
+
+
+.medium {font-size: 2em;}
+.faded {color: $c_medium;}
+.obvious {color:$c_main;}
+.no-underline a,.no-underline {text-decoration: none !important;}
+
+ 
+
+/*
+
+.text  {
+  table {
+    font-size: .9em;
+    width: 100%;
+  }
+  td,th {padding: .2em;vertical-align:top;}
+
+  tr:nth-child(even) {background: $c_light}
+  tr:nth-child(odd) {background: $c_white}
+  thead tr {background: $c_medium !important;@include weight(bold);}
+}
+*/
+
+.table-simple {
+  margin:1em auto;
+  td,th {padding: .5em 2em;}
+  th {background: $c_medium;color:$c_white;
+    @extend %fontNormalBold;
+  }
+  .highlight {background: $c_mainlight;}
+  border: 1px solid $c_medium;
+}
+ 
+.accordion-title1,.accordion-title2 {
+  a {
+    display:block;
+    @include padTB;
+  }  
+  a:before {
+      content: $fa-var-angle-double-right;
+      @extend .fa;
+      width: 1em;    
+  }
+  a, a:hover {
+    color:#fff !important; text-decoration:none !important;    
+  }
+
+  a[aria-expanded*="true"]:before {
+      content: $fa-var-angle-double-down;
+      @extend .fa;
+      width: 1em;    
+  }
+}
+.accordion-title1 {
+  background: $c_text;  
+  border-bottom: 1px solid tint($c_text,10);
+}
+.accordion-title2 {
+  background: $c_dark;  
+  border-bottom: 1px solid tint($c_dark,10);
+}
+/*.accordion-content1, .accordion-title1>.accordion-title1{
+  margin-bottom: 1em;
+}*/
+.accordion-title1 + .accordion-title1{
+  margin-bottom: 1em;
+}
+ 
+
+
+
+
+
+/*
+inspired from http://codepen.io/Rowno/pen/Afykb 
+*/
+.carousel-fade .carousel-inner .item {
+  opacity: 0;
+  transition-property: opacity;
+}
+
+.carousel-fade .carousel-inner .active {
+  opacity: 1;
+}
+
+.carousel-fade .carousel-inner .active.left,
+.carousel-fade .carousel-inner .active.right {
+  left: 0;
+  opacity: 0;
+  z-index: 1;
+}
+
+.carousel-fade .carousel-inner .next.left,
+.carousel-fade .carousel-inner .prev.right {
+  opacity: 1;
+}
+
+.carousel-fade .carousel-control {
+  z-index: 2;
+}
+
+/*
+WHAT IS NEW IN 3.3: "Added transforms to improve carousel performance in modern browsers."
+now override the 3.3 new styles for modern browsers & apply opacity
+*/
+@media all and (transform-3d), (-webkit-transform-3d) {
+    .carousel-fade .carousel-inner > .item.next,
+    .carousel-fade .carousel-inner > .item.active.right {
+      opacity: 0;
+      -webkit-transform: translate3d(0, 0, 0);
+              transform: translate3d(0, 0, 0);
+    }
+    .carousel-fade .carousel-inner > .item.prev,
+    .carousel-fade .carousel-inner > .item.active.left {
+      opacity: 0;
+      -webkit-transform: translate3d(0, 0, 0);
+              transform: translate3d(0, 0, 0);
+    }
+    .carousel-fade .carousel-inner > .item.next.left,
+    .carousel-fade .carousel-inner > .item.prev.right,
+    .carousel-fade .carousel-inner > .item.active {
+      opacity: 1;
+      -webkit-transform: translate3d(0, 0, 0);
+              transform: translate3d(0, 0, 0);
+    }
+}

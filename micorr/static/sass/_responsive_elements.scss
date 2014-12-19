@@ -1,0 +1,134 @@
+/*@mixin respondto($media...) {
+    @each $mediatype in $media {
+        @media (min-width: $mediatype) { @content}
+    }
+}*/
+
+@mixin for_above($class) {
+  @if $class == xs {
+    @media (max-width: $screen-xs-min) { @content }
+  }
+ 
+  @else if $class == sm {
+    @media (min-width: $screen-sm-min) { @content }
+  }
+ 
+  @else if $class == md {
+    @media (min-width: $screen-md-min) { @content }
+  }
+ 
+  @else if $class == lg {
+    @media (min-width: $screen-lg-min) { @content }
+  }
+ 
+  @else {
+    @warn "Breakpoint mixin supports: xs, sm, md, lg";
+  }
+    
+}
+
+@mixin for_below($class) {
+  @if $class == xs {
+    @media (min-width: $screen-xs-min) { @content }
+  }
+ 
+  @else if $class == sm {
+    @media (max-width: $screen-sm-min) { @content }
+  }
+ 
+  @else if $class == md {
+    @media (max-width: $screen-md-min) { @content }
+  }
+ 
+  @else if $class == lg {
+    @media (max-width: $screen-lg-min) { @content }
+  }
+ 
+  @else {
+    @warn "Breakpoint mixin supports: xs, sm, md, lg";
+  }
+}
+
+@media (min-width: $screen-md-min) and (max-width: $screen-md-max) { 
+
+	body {font-size:14px !important;}
+}
+
+
+@mixin all-responsive {
+
+	body {
+		font-size: $base-font-size;
+	}
+
+
+	#logo {
+		@include make-sm-column(4);  
+	}
+
+
+	// the .w1... .w12 and .c1 .. .c12 classes span accross 1..12 columns 
+	// .c1 .. .c12 a padding at the bottom.
+	@for $i from 1 through 12 {
+		.w#{$i} {
+			@include make-sm-column($i);  
+		}
+		.c#{$i} {
+			@include make-sm-column($i);  
+			@include padB;			
+		}
+		.pre#{$i} {
+			@include make-sm-column-offset($i);
+		}
+
+	}
+
+	input[type="text"]  {width:100%}
+
+	.line { //the line has NO BOTTOM padding by default
+		@include make-sm-column(12);  
+	}
+
+	.tab {
+		@include fsize(medium);
+		a {
+			display:block;
+			width: 100%;
+			text-align: center;
+			@include padTB;
+			@include border-top($c_white);
+			text-decoration: none;
+			color:$c_white;
+			&.active,&:hover {
+				background: $c_white;
+				color:$c_main;
+			}
+		}
+	}
+	// x times in a row / base 12
+	.x6 {
+		@include make-sm-column(2);  
+	}
+	.x4 {
+		@include make-sm-column(3);  
+	}
+	.x3 {
+		@include make-sm-column(4);  
+	}
+	.x2 {
+		@include make-sm-column(6);  
+	}
+
+	@include for_below(md) {
+		body {font-size:13px;}
+/*		#menuside {
+			ul ul li {display:inline-block; margin-right:2em;}
+		}*/
+	}
+	@include for_below(sm) {
+		/*#menuside {display:none;}*/
+	}
+
+}
+
+
