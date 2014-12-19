@@ -56,10 +56,10 @@ class ArtefactFilter(django_filters.FilterSet):
     """
     A filter which appears on top of the artefacts list template
     """
-    metal = django_filters.ModelChoiceFilter(label='Metal Family', queryset=Metal.objects.all(), empty_label='All Metal Families')
+    metal1 = django_filters.ModelChoiceFilter(label='Metal Family', queryset=Metal.objects.all(), empty_label='All Metal Families')
     corrosion = django_filters.ModelChoiceFilter(label='Corrosion Forms', queryset=Corrosion.objects.all(), empty_label='All Corrosion Forms')
     environment = django_filters.ModelMultipleChoiceFilter(label='Environments', queryset=Environment.objects.all())
 
     class Meta:
         model = Artefact
-        fields = ['metal', 'corrosion', 'environment']
+        fields = ['metal1', 'corrosion', 'environment']
