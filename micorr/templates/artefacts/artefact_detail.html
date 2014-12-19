@@ -100,6 +100,18 @@
               <a class="line collapsed"  data-toggle="collapse" data-parent="#accordionN1" href="#content2" aria-expanded="false" aria-controls="content2">Sample</a>
           </div>
           <div class="row accordion-content1 collapse" id="content2"  aria-labelledby="title2">
+            <div class="line palebox">
+                {% for image in sections.1.image_set.all %}
+                  <div class="row">
+                    <div class="c6">
+                      <img src="{{ image.image.url }}" class="img-responsive">
+                    </div>
+                    <div class="c6">
+                      <p><a name="fig1"></a>{{ image.legend }}</p>
+                    </div>
+                  </div>
+                {% endfor %}
+            </div>
             <div class="line lightbox">
               <div class="row">
                 <div class="c3"><em>Description of sample</em></div>
@@ -129,14 +141,14 @@
                 <div class="c3"><em>Date and aim of sampling</em></div>
                 <div class="c9"><p>{{ artefact.date_aim_sampling }}</p></div>
               </div>
-              <div class="line palebox">
+            </div>
+            <div class="line palebox">
                 <h4 class="underline">Complementary information</h4>
                 {% if sections.1.complementary_information != '' %}
                     <p>{{ sections.1.complementary_information|safe }}</p>
                 {% else %}
                     <p>None</p>
                 {% endif %}
-              </div>
             </div>
           </div>
           <div class="row accordion-title1" id="title3">
@@ -155,6 +167,8 @@
                   <div class="row accordion-content2 collapse in" id="content31" aria-labelledby="title31">
                     <div class="line palebox">                        
                         <p>{{ sections.3.content|safe }}</p>
+                    </div>
+                    <div class="line lightbox">
                         {% for image in sections.3.image_set.all %}
                           <div class="row">
                             <div class="c6">
@@ -165,6 +179,8 @@
                             </div>
                           </div>
                         {% endfor %}
+                    </div>
+                    <div class="line palebox">
                         <h4 class="underline">Complementary information</h4>
                         {% if sections.3.complementary_information != '' %}
                             <p>{{ sections.3.complementary_information|safe }}</p>
@@ -180,6 +196,8 @@
                   <div class="row accordion-content2 collapse" id="content32"  aria-labelledby="title32">
                     <div class="line palebox">                        
                         <p>{{ sections.4.content|safe }}</p>
+                    </div>
+                    <div class="line lightbox">
                         {% for image in sections.4.image_set.all %}
                           <div class="row">
                             <div class="c6">
@@ -190,13 +208,15 @@
                             </div>
                           </div>
                         {% endfor %}
+                    </div>
+                    <div class="line palebox">
                         <h4 class="underline">Complementary information</h4>
                         {% if sections.4.complementary_information != '' %}
                             <p>{{ sections.4.complementary_information|safe }}</p>
                         {% else %}
                             <p>None</p>
                         {% endif %}
-                    </div>                    
+                    </div>
                   </div>
                 </div> <!--accordionN2 -->
             </div>                    

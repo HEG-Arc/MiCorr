@@ -1,0 +1,485 @@
+{% load static documents_tags %}
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]> <html class="lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en" class="slideshow"> <!--<![endif]-->
+
+<head>
+  <meta charset="utf-8">
+  <!-- Set the viewport width to device width for mobile -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MIFAC</title>
+
+<script type="text/javascript">
+    (function() {
+        var path = '//easy.myfonts.net/v2/js?sid=211388(font-family=DIN+Next+Pro+Bold)&sid=217470(font-family=DIN+Next+Pro+Medium)&sid=217469(font-family=DIN+Next+Pro+Regular)&sid=217467(font-family=DIN+Next+Pro+Light)&key=tNHbXuRhxc',
+            protocol = ('https:' == document.location.protocol ? 'https:' : 'http:'),
+            trial = document.createElement('script');
+        trial.type = 'text/javascript';
+        trial.async = true;
+        trial.src = protocol + path;
+        var head = document.getElementsByTagName("head")[0];
+        head.appendChild(trial);
+    })();
+
+    (function() {
+        var path = '//easy.myfonts.net/v2/js?sid=209492(font-family=Miso+Bold)&sid=209490(font-family=Miso)&sid=209494(font-family=Miso+Light)&key=gwmkEJHaRD',
+            protocol = ('https:' == document.location.protocol ? 'https:' : 'http:'),
+            trial = document.createElement('script');
+        trial.type = 'text/javascript';
+        trial.async = true;
+        trial.src = protocol + path;
+        var head = document.getElementsByTagName("head")[0];
+        head.appendChild(trial);
+    })();
+
+
+    (function() {
+        var path = '//easy.myfonts.net/v2/js?sid=259686(font-family=Compasse+Bold)&sid=259693(font-family=Compasse+Light)&sid=259695(font-family=Compasse+Regular)&sid=259690(font-family=Compasse+Extra+Light)&key=sPc7yFZ8fS',
+            protocol = ('https:' == document.location.protocol ? 'https:' : 'http:'),
+            trial = document.createElement('script');
+        trial.type = 'text/javascript';
+        trial.async = true;
+        trial.src = protocol + path;
+        var head = document.getElementsByTagName("head")[0];
+        head.appendChild(trial);
+    })();    
+
+ 
+ 
+</script>
+
+<style type="text/css">#mfPreviewBar{display:none!important;}</style>
+
+  
+  <!-- IE Fix for HTML5 Tags -->
+  <!--[if lte IE 8]>
+    <link rel="stylesheet" href="stylesheets/mystyle.css" media="all">
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+
+  <![endif]-->
+<!--[if gt IE 8]><!-->
+
+    <link rel="stylesheet" href="{% static 'stylesheets/mystyle.css' %}" media="all"><!---responsive-->
+
+<!--<![endif]-->
+
+<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+
+
+</head>
+<!-- body class="intro" -->
+
+<body class="slideshow">
+
+  <div id="headlogo">
+    <div class="container">
+      <div class="row">
+        <div class="w3">
+          <img src="{% static 'stylesheets/logo-intro.png' %}" class="img-responsive" alt="logo" />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="headintro">
+    <div id="topmenu" class="smooth-scroll"> <!-- smoothly scroll to internal links # -->
+      <div class="container">
+        {% block menu %}
+            {% get_site_root as site_root %}
+            {% top_menu parent=site_root calling_page=self cssclass="pre3" hidetoplogo=True %}
+        {% endblock %}
+      </div>
+    </div>
+    <div id="topsubmenu"  class="smooth-scroll"> <!-- smoothly scroll to internal links # -->
+      <div class="container">
+        <div class="row">
+          <div class="w9 pre3">
+               <a href="#search"><i class="fa fa-search"></i>Search tool</a>
+               <a href="#learn"><i class="fa fa-book"></i>Learn</a>
+               <a href="#news"><i class="fa fa-calendar-o"></i>News</a>
+               <a href="#"><i class="fa fa-arrow-circle-up"></i>Submit new item</a>
+
+         </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--  carrousel -->
+  <div id="slideshow-container" class="fullh1 hidden-xs">
+    <div class="fullh2">
+
+
+          <div id="slideshow" class="fullh3 carousel slide carousel-fade"  data-ride="carousel"  data-interval="5000"> <!--hidden-xs -->
+            <!-- Indicators -->
+            <ol class="carousel-indicators">
+              <li data-target="#slideshow" data-slide-to="0" class="active"></li>
+              <li data-target="#slideshow" data-slide-to="1"></li>
+              <li data-target="#slideshow" data-slide-to="2"></li>
+              <li data-target="#slideshow" data-slide-to="3"></li>
+            </ol>
+
+              <!-- Wrapper for slides -->
+              <div class="carousel-inner">
+                  <!-- 1st page -->
+
+                  <div class="item active">
+                      <div class="slide" style="background-image: url({% static 'slideshow/1.jpg' %}); background-position: left center">
+                        <div class="container">
+                          <div class="row">
+                              <div class="w5 pre6">
+                                <div class="slidetext">
+                                  <h1>Information can be gained on a metal artefact from the examination of its corrosion layers</h1>
+                                  <h2> MICORR offers search tools based on schematic representation of corrosion stratigraphies and/or key words.</h2>
+                                  <p class="right">
+                                    <button type="button" class="btn btn-default btn-lg">
+                                    Take the tour <i class="fa fa-video-camera faded"></i>
+                                    </button>
+                                  </p>
+                                  <p class="right no-underline"><a href="#" class="hide-slideshow"><i class="fa fa-close faded"></i> hide this presentation</a></p>
+                                </div>
+                              </div>
+                          </div>
+                        </div>
+                      </div>
+                  </div>
+                  <!-- 2nd page -->
+                  <div class="item">
+                      <div class="slide" style="background-image: url({% static 'slideshow/3.jpg' %}); background-position: center center">
+                        <div class="container">
+                          <div class="row">
+                              <div class="w5 pre6">
+                                <div class="slidetext">
+                                  <h1>How characterizing corrosion forms?</h1>
+                                  <h2>Through a methodology to acquire using a learning process</h2>
+                                  <p class="right">
+                                    <button type="button" class="btn btn-default btn-lg">
+                                    Take the tour <i class="fa fa-video-camera faded"></i>
+                                    </button>
+                                  </p>
+                                  <p class="right no-underline"><a href="#"  class="hide-slideshow"><i class="fa fa-close faded"></i> hide this presentation</a></p>
+                                </div>
+                              </div>
+                          </div>
+                        </div>
+                      </div>
+                  </div>
+                  <!-- 3rd page -->
+                  <div class="item">
+                      <div class="slide" style="background-image: url({% static 'slideshow/6.jpg' %}); background-position: center center">
+                        <div class="container">
+                          <div class="row">
+                              <div class="w5 pre6">
+                                <div class="slidetext">
+                                  <h1>A decision support system for the diagnostic on heritage and industrial metals</h1>
+                                  <h2>MICORR provides updated information on corrosion forms.</h2>
+                                  <p class="right">
+                                    <button type="button" class="btn btn-default btn-lg">
+                                    Take the tour <i class="fa fa-video-camera faded"></i>
+                                    </button>
+                                  </p>
+                                  <p class="right no-underline"><a href="#"  class="hide-slideshow"><i class="fa fa-close faded"></i> hide this presentation</a></p>
+                                </div>
+                              </div>
+                          </div>
+                        </div>
+                      </div>
+                  </div>
+                  <!-- 4th page -->
+                  <div class="item">
+                      <div class="slide" style="background-image: url({% static 'slideshow/4.jpg' %}); background-position: center center">
+                        <div class="container">
+                          <div class="row">
+                              <div class="w5 pre6">
+                                <div class="slidetext">
+                                  <h1>Building a knowledge base requires multiple contributions</h1>
+                                  <h2>By enriching the database with new corrosion models, responses from MICORR will be more accurate and adapt more to your needs.</h2>                        
+                                  <p class="right">
+                                    <button type="button" class="btn btn-default btn-lg">
+                                    Take the tour <i class="fa fa-video-camera faded"></i>
+                                    </button>
+                                  </p>
+                                  <p class="right no-underline"><a href="#"  class="hide-slideshow"><i class="fa fa-close faded"></i> hide this presentation</a></p>
+                                </div>
+                              </div>
+                          </div>
+                        </div>
+                      </div>
+                  </div>                  
+                  <!-- end of pages -->
+              </div>
+
+              <!-- Controls -->
+              <a class="left carousel-control" href="#slideshow" role="button" data-slide="prev">
+                <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+              </a>
+              <a class="right carousel-control" href="#slideshow" role="button" data-slide="next">
+                <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+              </a>
+              <div class="arrowbottom"></div>
+
+          </div>
+      
+    </div>
+  </div>
+
+  <!-- End of carrousel -->
+
+  <div id="slideshow-replacement" style="display:none;">
+    <div class="container">
+      <div class="row">
+        <div class="line right">
+          <button type="button" class="btn btn-default btn-lg">
+          Take the tour <i class="fa fa-video-camera faded"></i>
+          </button>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div id="search" class="container">
+    <div class="row">
+      <div class="line center">
+        <h1>Search tool</h1>      
+        <p><a href="#" class="no-underline"><i class="fa fa-book faded"></i> Learn how to efficiently use the search tool</a></p>
+      </div>
+    </div>  
+    <div class="c6">
+      <h3 class="underline">by stratigraphy representation</h3>
+      <img src="{% static 'pics/strati.png' %}" class="img-responsive">
+    </div>
+    <div class="c6">
+      <h3 class="underline">by keywords</h3>
+      <img src="{% static 'pics/strati.png' %}" class="img-responsive">
+      </button>      
+      <p class="marginT">Par la suite, il y aura ici le champ et les filtres de recherche.</p>
+    </div>
+  </div>
+  <div id="learn" class="lightframe">
+    <div class="container">
+      <div class="row center">
+        <div class="line">
+          <h1>Learn</h1>      
+        </div>
+        <div class="c4">
+          <i class="fa fa-compass disc fa-3x"></i>
+          <h3>Contextual help</h3>
+          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Veritatis, velit.</p>
+        </div>
+        <div class="c4">
+          <i class="fa fa-book disc fa-3x"></i>
+          <h3>Manual</h3>
+          <p>A guide to use properly the website</p>
+        </div>
+        <div class="c4">
+          <i class="fa fa-bars disc fa-3x"></i>
+          <h3>Stratigraphy construction</h3>
+          <p>Learn how to construct schematically a stratigraphy</p>
+        </div>
+      </div>
+      <div class="row center">
+        <div class="c4 pre2">
+          <i class="fa fa-video-camera disc fa-3x"></i>
+          <h3>Tour</h3>
+          <p>An animated discovery of MiCor</p>
+        </div>
+        <div class="c4">
+          <i class="fa fa-question disc fa-3x"></i>
+          <h3>FAQ and more information</h3>
+          <p>Help tool and responses to basic questions</p>
+        </div>
+
+      </div>
+
+    </div>  
+  </div>
+
+
+  <div class="container">
+    <div class="c6" id="news">
+      <h1>News <i class="fa fa-calendar-o faded"></i></h1>
+      <div class="lightframe">
+        <div class="row underline">
+          <div class="c4">
+            <h2>15 Nov. 2014</h2>
+          </div>
+          <div class="c8">
+            <h3>MICORR opens a new database</h3>
+            <p class="small">Debis est et et voluptis eatiumsi beatur mostem dolupttem endanda ndiatia soluptae. Ate nonsento cupta cusdand issimol ectatquiae. Empe custior sus utas aboraestis acernam volendra dit, officiis nam accullatur simi, quat.</p>
+            <p><i class="fa fa-chevron-right faded"></i> <a href="#">more</a></p>
+          </div>
+        </div>
+      <div class="row">
+        <div class="c4">
+          <h2>13 Oct. 2014</h2>
+        </div>
+        <div class="c8">
+          <h3>Lascnic hacae</h3>
+          <p class="small">Ectatquiae custior sus utas aboraestis acernam volendra dit, officiis nam accullatur simi, quat. Lisum aheu.</p>
+          <p><i class="fa fa-chevron-right faded"></i> <a href="#">more</a></p>
+        </div>
+      </div>
+      </div>
+
+    </div>
+    <div class="c6" id="network">
+      <h1>MiCorr network <i class="fa fa-random faded"></i></h1>
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Expedita, vero.</p>
+      <div class="row">
+        <div class="c6">
+          <h3><i class="fa fa-users faded"></i> Find specialists</h3>
+          <div class="dropdown">
+            <button class="btn btn-default dropdown-toggle fill" type="button" id="dropdownMenu1" data-toggle="dropdown">
+              Select competence
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+              <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Action</a></li>
+              <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Another action</a></li>
+              <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Something else here</a></li>
+              <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated link</a></li>
+            </ul>
+          </div>
+
+        </div>
+        <div class="c6">
+          <h3><i class="fa fa-university faded"></i> Find institutions</h3>
+          <div class="dropdown">
+            <button class="btn btn-default dropdown-toggle fill" type="button" id="dropdownMenu1" data-toggle="dropdown">
+              Filter by...
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+              <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Action</a></li>
+              <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Another action</a></li>
+              <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Something else here</a></li>
+              <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated link</a></li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+
+
+
+
+
+
+
+  <div id="footer">
+    <div class="container">
+      <div class="row">
+        <div class="c8 pre2 center">
+          <a href="#">Conditions d’utilisation</a> | <a href="#">Privacy</a> | <a href="#">Impressum</a>
+
+        </div>
+        <div class="c2">
+          <img src="{% static 'stylesheets/logo-arc.png' %}" alt="" class="img-responsive">
+        </div>
+      
+      </div>
+    </div>
+  </div>
+
+
+  <!-- script src="http://code.jquery.com/jquery-1.9.1.min.js"></script -->
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <!-- Include all compiled plugins (below), or include individual files as needed -->
+  <script src="{% static 'js/bootstrap.js' %}"></script>
+
+  <script>
+   /*jQuery time*/
+   $(document).ready(function(){
+
+
+    $( ".hide-slideshow" ).click(function(event) {
+      $('#slideshow-container').hide();
+      $('#slideshow-replacement').show();
+      event.preventDefault();
+    });
+
+      //
+      // jQuery SmoothScroll | Version 18-04-2013
+      //
+
+      $('.smooth-scroll a[href*=#]').click(function() {
+
+         // skip SmoothScroll on links inside sliders or scroll boxes also using anchors or if there is a javascript call
+         //if($(this).parent().hasClass('#headintro') || $(this).attr('href').indexOf('javascript')>-1) return;
+
+
+         // duration in ms
+         //var duration=1000;
+
+         // easing values: swing | linear
+         var easing='swing';
+
+         // get / set parameters
+         var newHash=this.hash;
+         var oldLocation=window.location.href.replace(window.location.hash, '');
+         var newLocation=this;
+
+         // make sure it's the same location      
+         if(oldLocation+newHash==newLocation)
+         {
+            // get target
+            var target=$(this.hash+', a[name='+this.hash.slice(1)+']').offset().top;
+
+            // adjust target for anchors near the bottom of the page
+            if(target > $(document).height()-$(window).height()) target=$(document).height()-$(window).height();
+
+            // duration (in ms) is distance-dependent., with a max of 1 sec
+            var duration = Math.min(.8 * Math.abs(target-$(document).scrollTop()),1000);
+         
+
+            // animate to target and set the hash to the window.location after the animation
+            $('html, body').animate({ scrollTop: target }, duration, easing, function() {
+
+               // add new hash to the browser location
+               window.location.href=newLocation;
+            });
+
+            // cancel default click action
+            return false;
+         }
+      });
+
+   });
+
+
+
+   </script>
+
+  <!-- script src="javascripts/jquery.fitvids.min.js"></script -->
+  <!--script src="javascripts/MagnificPopup.min.js"></script-->
+  
+  <!--script type="text/javascript">
+    $(document).ready(function(){
+     // $(".has-video").fitVids();
+      $('.popup-youtube, .popup-vimeo, .popup-gmaps').magnificPopup({
+        disableOn: 700,
+        type: 'iframe',
+        mainClass: 'mfp-fade',
+        removalDelay: 160,
+        preloader: false,
+
+        fixedContentPos: false
+      });
+
+     
+    });
+
+  </script-->
+
+
+</body>
+</html>
