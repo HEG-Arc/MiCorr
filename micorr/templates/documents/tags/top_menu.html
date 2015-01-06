@@ -13,6 +13,7 @@
                     <a href="{% pageurl menuitem %}" {% if calling_page.url == menuitem.url %} class="current"{% endif %}>{{ menuitem.title }}</a>
                 {% endif %}
             {% endfor %}
+          <a href="#"><i class="fa fa-video-camera"></i>Tour</a>
             {% if request.user.is_authenticated %}
                 <a href="{% url 'users:detail' request.user.username %}">{% trans "My Profile" %}</a>
                 <a href="{% url 'account_logout' %}"><i class="fa fa-user"></i>{% trans "Logout" %}</a>
@@ -20,7 +21,6 @@
                 <a href="{% url 'account_login' %}"><i class="fa fa-user"></i>{% trans "Log In" %}</a>
             {% endif %}
           <a href="#"><i class="fa fa-pencil"></i>Contribute</a>
-          <a href="#"><i class="fa fa-video-camera"></i>Tour</a>
 
         </div>
       </div>
