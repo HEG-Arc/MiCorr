@@ -222,9 +222,7 @@
             <a href="{% url 'artefacts:document-create' artefact_id=artefact.pk %}"><button type="button" class="btn btn-primary">Add a document</button></a>
         </div>
     </div>
-{% endif %}
 
-{% if request.user.is_authenticated %}
     <div class="row">
       <div class="col-xs-3 col-xs-offset-9">
           <a href="{% url 'artefacts:artefact-update' artefact.pk %}"><button type="button" class="btn btn-primary">Edit</button></a>

@@ -97,9 +97,9 @@
           </div>
 
           <div class="row accordion-title1" id="title2">
-              <a class="line collapsed"  data-toggle="collapse" data-parent="#accordionN1" href="#content2" aria-expanded="false" aria-controls="content2">Sample</a>
+              <a class="line"  data-toggle="collapse" data-parent="#accordionN1" href="#content2" aria-expanded="true" aria-controls="content2">Sample</a>
           </div>
-          <div class="row accordion-content1 collapse" id="content2"  aria-labelledby="title2">
+          <div class="row accordion-content1 collapse in" id="content2"  aria-labelledby="title2">
             <div class="line palebox">
                 {% for image in sections.1.image_set.all %}
                   <div class="row">
@@ -162,7 +162,6 @@
                 <div  id="accordionN2" aria-multiselectable="true">
                   <div class="row accordion-title2" id="title31">
                       <a class="line" data-toggle="collapse" data-parent="#accordionN2" href="#content31" aria-expanded="true" aria-controls="content31">{{ sections.3.title }}</a>
-
                   </div>
                   <div class="row accordion-content2 collapse in" id="content31" aria-labelledby="title31">
                     <div class="line palebox">                        
@@ -191,9 +190,9 @@
                   </div>
 
                   <div class="row accordion-title2" id="title32">
-                      <a class="line collapsed"  data-toggle="collapse" data-parent="#accordionN2" href="#content32" aria-expanded="false" aria-controls="content32">{{ sections.4.title }}</a>
+                      <a class="line"  data-toggle="collapse" data-parent="#accordionN2" href="#content32" aria-expanded="true" aria-controls="content32">{{ sections.4.title }}</a>
                   </div>
-                  <div class="row accordion-content2 collapse" id="content32"  aria-labelledby="title32">
+                  <div class="row accordion-content2 collapse in" id="content32"  aria-labelledby="title32">
                     <div class="line palebox">                        
                         <p>{{ sections.4.content|safe }}</p>
                     </div>
