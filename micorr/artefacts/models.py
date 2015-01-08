@@ -185,6 +185,8 @@ class Artefact(TimeStampedModel):
 
     def artefact_verbose_description(self):
         artefact = []
+        if self.inventory_number:
+            artefact.append(self.inventory_number)
         if self.alloy:
             artefact.append(self.alloy.name)
         if self.chronology_period:
