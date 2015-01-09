@@ -240,7 +240,7 @@ class Section(TimeStampedModel):
         ordering = ['order']
 
     def __unicode__(self):
-        return "%s, %s, %s" % (self.order, self.artefact, self.section_category)
+        return "%s, %s, %s" % (self.title, self.artefact, self.section_category)
 
 
 def get_img_storage_path(instance, filename):
