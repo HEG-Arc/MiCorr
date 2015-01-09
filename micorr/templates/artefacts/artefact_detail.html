@@ -1,4 +1,9 @@
 {% extends "base.html" %}
+
+    {% block title %}
+        <title>MiCorr | {{ artefact.pk }}</title>
+    {% endblock title %}
+
       {% block sidemenu %}
       <div class="c3 no-active-highlight" id="sidemenu"> <!-- no-active-hilight : do not highlight the "active" node of the menu. It is difficult for the affix to work when elements in the page are close one to the other (i.e. folded elements), therefore, it is less confusing to NOT hilight the .active nodes of the menu -->
 
@@ -17,15 +22,10 @@
         </ul>
       </div>
       {% endblock sidemenu %}
+
       {% block content %}
 
-
-
-        
-        <h1>{{ artefact }}</h1>
-
-
-
+      <h1>{{ artefact }}</h1>
 
         <div  id="accordionN1" aria-multiselectable="true">
 
