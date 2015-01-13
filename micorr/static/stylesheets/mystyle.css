@@ -1,11 +1,4 @@
-/*$c_info_light: $c_mainlight;
-$c_info_dark: $c_text;
-$c_danger_light: #F2DEDE;
-$c_danger_dark: #B94A48;
-$c_warning_light: #ffd182;
-$c_warning_dark: #7e3c01;
-$c_success_light: #DFF0D8;
-$c_success_dark: #468847;*/
+/*--------------Latest update 2015.01.13 ---------*/
 /*------------------------------*/
 * {
   margin: 0;
@@ -9770,6 +9763,9 @@ body.sticky-footer #footer {
   display: block;
 }
 
+#sidemenu ul {
+  position: relative;
+}
 #sidemenu .nav > li > a:hover, #sidemenu .nav > li > a:focus {
   background: none;
 }
