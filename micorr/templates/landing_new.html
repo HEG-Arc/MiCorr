@@ -390,96 +390,12 @@
     </div>
   </div>
 
-
   <!-- script src="http://code.jquery.com/jquery-1.9.1.min.js"></script -->
-  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-  <!-- Include all compiled plugins (below), or include individual files as needed -->
   <script src="{% static 'js/bootstrap.js' %}"></script>
-
-  <script>
-   /*jQuery time*/
-   $(document).ready(function(){
-
-
-    $( ".hide-slideshow" ).click(function(event) {
-      $('#slideshow-container').hide();
-      $('#slideshow-replacement').show();
-      event.preventDefault();
-    });
-
-      //
-      // jQuery SmoothScroll | Version 18-04-2013
-      //
-
-      $('.smooth-scroll a[href*=#]').click(function() {
-
-         // skip SmoothScroll on links inside sliders or scroll boxes also using anchors or if there is a javascript call
-         //if($(this).parent().hasClass('#headintro') || $(this).attr('href').indexOf('javascript')>-1) return;
-
-
-         // duration in ms
-         //var duration=1000;
-
-         // easing values: swing | linear
-         var easing='swing';
-
-         // get / set parameters
-         var newHash=this.hash;
-         var oldLocation=window.location.href.replace(window.location.hash, '');
-         var newLocation=this;
-
-         // make sure it's the same location      
-         if(oldLocation+newHash==newLocation)
-         {
-            // get target
-            var target=$(this.hash+', a[name='+this.hash.slice(1)+']').offset().top;
-
-            // adjust target for anchors near the bottom of the page
-            if(target > $(document).height()-$(window).height()) target=$(document).height()-$(window).height();
-
-            // duration (in ms) is distance-dependent., with a max of 1 sec
-            var duration = Math.min(.8 * Math.abs(target-$(document).scrollTop()),1000);
-         
-
-            // animate to target and set the hash to the window.location after the animation
-            $('html, body').animate({ scrollTop: target }, duration, easing, function() {
-
-               // add new hash to the browser location
-               window.location.href=newLocation;
-            });
-
-            // cancel default click action
-            return false;
-         }
-      });
-
-   });
-
-
-
-   </script>
-
-  <!-- script src="javascripts/jquery.fitvids.min.js"></script -->
-  <!--script src="javascripts/MagnificPopup.min.js"></script-->
-  
-  <!--script type="text/javascript">
-    $(document).ready(function(){
-     // $(".has-video").fitVids();
-      $('.popup-youtube, .popup-vimeo, .popup-gmaps').magnificPopup({
-        disableOn: 700,
-        type: 'iframe',
-        mainClass: 'mfp-fade',
-        removalDelay: 160,
-        preloader: false,
-
-        fixedContentPos: false
-      });
-
-     
-    });
-
-  </script-->
+  <script src="{% static 'js/MagnificPopup.min.js' %}"></script>
+  <!--script src="js/jquery.sidr.min.js"></script-->
+  <script src="{% static 'js/all-init.js' %}"></script>
 
 
 </body>

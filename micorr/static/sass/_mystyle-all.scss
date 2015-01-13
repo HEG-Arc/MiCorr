@@ -428,7 +428,7 @@ body.sticky-footer {
     height:100%;
   }
   .slidetext {
-    background:#fff;
+    background:rgba(255,255,255,.9);
     margin-top: 12em;
     padding: 1em;
     text-align: left; //la class right est ajoutée quand on clique à gauche sinon
@@ -470,6 +470,7 @@ input[type="text"],textarea {
 	border:none;
 	border-radius: .3em;
 }
+input, select {padding:.2em; border:1px solid $c_medium}
 #subForm hr {
 	margin-bottom: 0.5em;
 	border:none;
@@ -613,8 +614,10 @@ button[disabled] {
 
 .table-simple {
   margin:1em auto;
-  td,th {padding: .5em 2em;}
-  th {background: $c_medium;color:$c_white;
+  td,th {padding: .5em 1em;}
+  tr:nth-child(odd) {background:darken($c_light,5%);}
+  tr:nth-child(even) {background:$c_light;}
+  th {background: $c_medium !important;color:$c_white;
     @extend %fontNormalBold;
   }
   .highlight {background: $c_mainlight;}
@@ -714,3 +717,4 @@ now override the 3.3 new styles for modern browsers & apply opacity
               transform: translate3d(0, 0, 0);
     }
 }
+@import "magnific_popup";
