@@ -9994,7 +9994,7 @@ button[disabled] {
   border: 1px solid #b5b5b5;
 }
 .table-simple td, .table-simple th {
-  padding: .5em .8em;
+  padding: .5em .5em;
 }
 .table-simple tr:nth-child(odd) {
   background: #e5e5e5;
