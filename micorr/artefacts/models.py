@@ -176,8 +176,8 @@ class Artefact(TimeStampedModel):
     sample_location = models.ForeignKey(Contact, blank=True, null=True, related_name='sample location', help_text='The actual location of the artefact sample')
     responsible_institution = models.ForeignKey(Contact, blank=True, null=True, related_name='responsible institution', help_text='The responsible institution for the artefact sample')
     microstructure = models.ForeignKey(Microstructure, blank=True, null=True)
-    corrosion_form = models.ForeignKey(CorrosionForm, blank=True, null=True)
-    corrosion_type = models.ForeignKey(CorrosionType, blank=True, null=True)
+    #corrosion_form = models.ForeignKey(CorrosionForm, blank=True, null=True)
+    #corrosion_type = models.ForeignKey(CorrosionType, blank=True, null=True)
 
     class Meta:
         ordering = ['-created']
