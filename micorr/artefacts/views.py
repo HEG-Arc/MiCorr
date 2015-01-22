@@ -39,9 +39,9 @@ class ArtefactsDetailView(generic.DetailView):
     """
     A detail view of a selected artefact
     """
-    queryset = Artefact.objects.select_related('type', 'origin', 'recovering_date', 'chronology_period', 'location',
-                                               'owner', 'alloy', 'technology', 'sample_location',
-                                               'responsible_institution', 'microstructure', 'corrosion')
+    queryset = Artefact.objects.select_related('alloy', 'type', 'origin', 'recovering_date', 'chronology_period',
+                                               'environment', 'location', 'owner', 'technology', 'sample_location',
+                                               'responsible_institution')
 
     def get_context_data(self, **kwargs):
         """

@@ -122,20 +122,24 @@ class Microstructure(TimeStampedModel):
         return self.name
 
 
-class Corrosion(TimeStampedModel):
+class CorrosionForm(TimeStampedModel):
     """
-    The corrosion form and the corrosion type observed
+    The corrosion form observed
     """
     form = models.CharField(max_length=100, blank=True)
+
+    def __unicode__(self):
+        return self.form
+
+
+class CorrosionType(TimeStampedModel):
+    """
+    The corrosion type observed
+    """
     type = models.CharField(max_length=100, blank=True)
 
     def __unicode__(self):
-        corrosion = []
-        if self.form:
-            corrosion.append(self.form)
-        if self.type:
-            corrosion.append(self.type)
-        return " - ".join(corrosion)
+        return self.type
 
 
 class Artefact(TimeStampedModel):
@@ -172,7 +176,8 @@ class Artefact(TimeStampedModel):
     sample_location = models.ForeignKey(Contact, blank=True, null=True, related_name='sample location', help_text='The actual location of the artefact sample')
     responsible_institution = models.ForeignKey(Contact, blank=True, null=True, related_name='responsible institution', help_text='The responsible institution for the artefact sample')
     microstructure = models.ForeignKey(Microstructure, blank=True, null=True)
-    corrosion = models.ForeignKey(Corrosion, blank=True, null=True)
+    corrosion_form = models.ForeignKey(CorrosionForm, blank=True, null=True)
+    corrosion_type = models.ForeignKey(CorrosionType, blank=True, null=True)
 
     class Meta:
         ordering = ['-created']

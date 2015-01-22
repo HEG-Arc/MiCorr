@@ -1,5 +1,5 @@
 from django import forms
-from .models import Artefact, Document, Metal, Corrosion, Environment
+from .models import Artefact, Document, Metal, CorrosionForm, Environment
 from tinymce.widgets import TinyMCE
 import django_filters
 
@@ -57,9 +57,9 @@ class ArtefactFilter(django_filters.FilterSet):
     A filter which appears on top of the artefacts list template
     """
     metal1 = django_filters.ModelChoiceFilter(label='Metal Family', queryset=Metal.objects.filter(id__in=Artefact.objects.values_list("metal1").distinct()), empty_label='All Metal Families')
-    corrosion = django_filters.ModelChoiceFilter(label='Corrosion Forms', queryset=Corrosion.objects.all(), empty_label='All Corrosion Forms')
+    corrosion_form = django_filters.ModelChoiceFilter(label='Corrosion Forms', queryset=CorrosionForm.objects.all(), empty_label='All Corrosion Forms')
     environment = django_filters.ModelMultipleChoiceFilter(label='Environments', queryset=Environment.objects.all())
 
     class Meta:
         model = Artefact
-        fields = ['metal1', 'corrosion', 'environment']
+        fields = ['metal1', 'corrosion_form', 'environment']
