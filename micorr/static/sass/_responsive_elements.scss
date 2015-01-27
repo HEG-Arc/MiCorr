@@ -6,7 +6,7 @@
 
 @mixin for_above($class) {
   @if $class == xs {
-    @media (max-width: $screen-xs-min) { @content }
+    @media (min-width: $screen-xs-min) { @content }
   }
  
   @else if $class == sm {
@@ -29,19 +29,19 @@
 
 @mixin for_below($class) {
   @if $class == xs {
-    @media (min-width: $screen-xs-min) { @content }
+    @media (max-width: $screen-xs-max) { @content }
   }
  
   @else if $class == sm {
-    @media (max-width: $screen-sm-min) { @content }
+    @media (max-width: $screen-sm-max) { @content }
   }
  
   @else if $class == md {
-    @media (max-width: $screen-md-min) { @content }
+    @media (max-width: $screen-md-max) { @content }
   }
  
   @else if $class == lg {
-    @media (max-width: $screen-lg-min) { @content }
+    @media (max-width: $screen-lg-max) { @content }
   }
  
   @else {
