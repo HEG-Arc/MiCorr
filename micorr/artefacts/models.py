@@ -14,6 +14,10 @@ class Metal(TimeStampedModel):
     """
     element = models.CharField(max_length=2, blank=True, help_text='An element which is part of the artefact composition')
 
+    class Meta:
+        verbose_name = 'Metal'
+        verbose_name_plural = 'Metals'
+
     def __unicode__(self):
         return self.element
 
@@ -24,6 +28,10 @@ class Alloy(TimeStampedModel):
     """
     name = models.CharField(max_length=20, blank=True, help_text='The artefact alloy')
 
+    class Meta:
+        verbose_name = 'Alloy'
+        verbose_name_plural = 'Alloys'
+
     def __unicode__(self):
         return self.name
 
@@ -33,6 +41,10 @@ class Type(TimeStampedModel):
     What the artefact was used for
     """
     name = models.CharField(max_length=200, blank=True, help_text='What the artefact was used for')
+
+    class Meta:
+        verbose_name = 'Type'
+        verbose_name_plural = 'Types'
 
     def __unicode__(self):
         return self.name
@@ -54,6 +66,10 @@ class Origin(TimeStampedModel):
             origin.append(self.city.region.name)
         return ", ".join(origin)
 
+    class Meta:
+        verbose_name = 'Origin'
+        verbose_name_plural = 'Origins'
+
     def __unicode__(self):
         return self.origin_verbose_description()
 
@@ -64,6 +80,10 @@ class RecoveringDate(TimeStampedModel):
     """
     date = models.CharField(max_length=100, blank=True, help_text='The date when the artefact was found')
 
+    class Meta:
+        verbose_name = 'Recovering Date'
+        verbose_name_plural = 'Recovering Dates'
+
     def __unicode__(self):
         return self.date
 
@@ -73,6 +93,10 @@ class ChronologyCategory(TimeStampedModel):
     The dating of the artefact
     """
     name = models.CharField(max_length=100, blank=True, help_text='The dating of the artefact')
+
+    class Meta:
+        verbose_name = 'Chronology Category'
+        verbose_name_plural = 'Chronology Categories'
 
     def __unicode__(self):
         return self.name
@@ -87,6 +111,10 @@ class ChronologyPeriod(TimeStampedModel):
                                            help_text='A more precise dating of the artefact')
     name = models.CharField(max_length=100, blank=True)
 
+    class Meta:
+        verbose_name = 'Chronology Period'
+        verbose_name_plural = 'Chronology Periods'
+
     def __unicode__(self):
         return self.name
 
@@ -98,6 +126,10 @@ class Environment(TimeStampedModel):
     """
     name = models.CharField(max_length=100, blank=True, help_text='The burial conditions of the artefact')
 
+    class Meta:
+        verbose_name = 'Environment'
+        verbose_name_plural = 'Environments'
+
     def __unicode__(self):
         return self.name
 
@@ -107,6 +139,10 @@ class Technology(TimeStampedModel):
     The manufacturing techniques used
     """
     name = models.CharField(max_length=100, blank=True, help_text='The manufacturing techniques used')
+
+    class Meta:
+        verbose_name = 'Technology'
+        verbose_name_plural = 'Technologies'
 
     def __unicode__(self):
         return self.name
@@ -118,6 +154,10 @@ class Microstructure(TimeStampedModel):
     """
     name = models.CharField(max_length=100, blank=True)
 
+    class Meta:
+        verbose_name = 'Microstructure'
+        verbose_name_plural = 'Microstructures'
+
     def __unicode__(self):
         return self.name
 
@@ -128,6 +168,10 @@ class CorrosionForm(TimeStampedModel):
     """
     form = models.CharField(max_length=100, blank=True)
 
+    class Meta:
+        verbose_name = 'Corrosion Form'
+        verbose_name_plural = 'Corrosion Forms'
+
     def __unicode__(self):
         return self.form
 
@@ -137,6 +181,10 @@ class CorrosionType(TimeStampedModel):
     The corrosion type observed
     """
     type = models.CharField(max_length=100, blank=True)
+
+    class Meta:
+        verbose_name = 'Corrosion Type'
+        verbose_name_plural = 'Corrosion Types'
 
     def __unicode__(self):
         return self.type
@@ -180,6 +228,8 @@ class Artefact(TimeStampedModel):
     #corrosion_type = models.ForeignKey(CorrosionType, blank=True, null=True)
 
     class Meta:
+        verbose_name = 'Artefact'
+        verbose_name_plural = 'Artefacts'
         ordering = ['-created']
 
     def get_environments(self):
@@ -225,6 +275,8 @@ class SectionCategory(TimeStampedModel):
 
     class Meta:
         ordering = ['order']
+        verbose_name = 'Section Category'
+        verbose_name_plural = 'Section Categories'
 
     def __unicode__(self):
         return self.name
@@ -243,6 +295,8 @@ class Section(TimeStampedModel):
 
     class Meta:
         ordering = ['order']
+        verbose_name = 'Section'
+        verbose_name_plural = 'Sections'
 
     def __unicode__(self):
         return "%s, %s, %s" % (self.title, self.artefact, self.section_category)
@@ -263,6 +317,8 @@ class Image(TimeStampedModel):
 
     class Meta:
         ordering = ['order']
+        verbose_name = 'Image'
+        verbose_name_plural = 'Images'
 
     def __unicode__(self):
         return self.legend
@@ -297,6 +353,10 @@ class Document(TimeStampedModel):
         if 'txt' in extension:
             return 'text'
         return ''
+
+    class Meta:
+        verbose_name = 'Document'
+        verbose_name_plural = 'Documents'
 
     def __unicode__(self):
         return self.name
