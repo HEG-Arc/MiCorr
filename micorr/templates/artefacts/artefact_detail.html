@@ -140,6 +140,18 @@
                     <div class="line palebox">
                         <p>{{ sections.3.content|safe }}</p>
                     </div>
+                    <div class="line lightbox">
+                        {% for image in sections.3.image_set.all %}
+                          <div class="row">
+                            <div class="c6">
+                              <a href="{{ image.image.url }}" class="image-popup"><img src="{{ image.image.url }}" class="img-responsive"></a>
+                            </div>
+                            <div class="c6">
+                              <p><a name="fig1"></a>{{ image.legend }}</p>
+                            </div>
+                          </div>
+                        {% endfor %}
+                    </div>
                   </div>
                 </div>
             </div>
@@ -284,6 +296,18 @@
           <div class="row accordion-content3 collapse in" id="content5"  aria-labelledby="title5">
             <div class="line palebox">
                 <p>{{ sections.8.content|safe }}</p>
+            </div>
+            <div class="line lightbox">
+                {% for image in sections.8.image_set.all %}
+                  <div class="row">
+                    <div class="c6">
+                      <a href="{{ image.image.url }}" class="image-popup"><img src="{{ image.image.url }}" class="img-responsive"></a>
+                    </div>
+                    <div class="c6">
+                      <p><a name="fig1"></a>{{ image.legend }}</p>
+                    </div>
+                  </div>
+                {% endfor %}
             </div>
           </div>
 
