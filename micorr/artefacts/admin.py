@@ -12,7 +12,7 @@ class ArtefactAdmin(admin.ModelAdmin):
         ('Foreign keys', {
             'fields': ['user', 'metal1', 'metalx', 'alloy', 'type', 'origin', 'recovering_date', 'chronology_period',
                        'environment', 'location', 'owner', 'technology', 'sample_location',
-                       'responsible_institution', 'microstructure']})
+                       'responsible_institution', 'microstructure', 'corrosion_form', 'corrosion_type']})
     ]
     list_display = ('id', 'inventory_number', 'alloy', 'chronology_category', 'origin_country')
 

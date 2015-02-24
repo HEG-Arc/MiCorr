@@ -11,7 +11,7 @@ class ArtefactsListView(generic.ListView):
     """
     A list of all the artefacts in the filter
     """
-    queryset = Artefact.objects.select_related('metal1', 'type' 'origin', 'chronology_period', 'technology',
+    queryset = Artefact.objects.select_related('alloy', 'type', 'chronology_period', 'technology',
                                                'microstructure')
 
     def get(self, request, *args, **kwargs):
@@ -41,7 +41,7 @@ class ArtefactsDetailView(generic.DetailView):
     """
     queryset = Artefact.objects.select_related('alloy', 'type', 'origin', 'recovering_date', 'chronology_period',
                                                'environment', 'location', 'owner', 'technology', 'sample_location',
-                                               'responsible_institution')
+                                               'responsible_institution', 'microstructure', 'corrosion_form', 'corrosion_type')
 
     def get_context_data(self, **kwargs):
         """
