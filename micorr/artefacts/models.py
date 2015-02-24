@@ -169,6 +169,7 @@ class CorrosionForm(TimeStampedModel):
     form = models.CharField(max_length=100, blank=True)
 
     class Meta:
+        ordering = ['form']
         verbose_name = 'Corrosion Form'
         verbose_name_plural = 'Corrosion Forms'
 
