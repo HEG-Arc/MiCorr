@@ -26,7 +26,7 @@ class Alloy(TimeStampedModel):
     """
     The artefact alloy
     """
-    name = models.CharField(max_length=20, blank=True, help_text='The artefact alloy')
+    name = models.CharField(max_length=100, blank=True, help_text='The artefact alloy')
 
     class Meta:
         verbose_name = 'Alloy'
@@ -78,7 +78,7 @@ class RecoveringDate(TimeStampedModel):
     """
     The date when the artefact was found
     """
-    date = models.CharField(max_length=100, blank=True, help_text='The date when the artefact was found')
+    date = models.CharField(max_length=200, blank=True, help_text='The date when the artefact was found')
 
     class Meta:
         verbose_name = 'Recovering Date'
@@ -197,7 +197,7 @@ class Artefact(TimeStampedModel):
     # Own fields
     description = tinymce_models.HTMLField(blank=True, help_text='A short description of the artefact. Can also include its aspect (color), dimensions and weight')
     inventory_number = models.CharField(max_length=100, blank=True, default='', help_text='The serial number of the artefact')
-    recorded_conservation_data = models.CharField(max_length=100, blank=True, default='')
+    recorded_conservation_data = models.CharField(max_length=500, blank=True, default='')
     sample_description = tinymce_models.HTMLField(blank=True, default='', help_text='A field to add more information about the artefact')
     sample_number = models.CharField(max_length=100, blank=True, default='', help_text='The serial number of the artefact sample')
     date_aim_sampling = models.CharField(max_length=200, blank=True, default='', help_text='The date and aim of sampling')
@@ -208,18 +208,18 @@ class Artefact(TimeStampedModel):
     metal1 = models.ForeignKey(Metal, verbose_name='1st metal element', blank=True, null=True, related_name='1st metal element', help_text='The primary metal element of the artefact')
     metalx = models.ManyToManyField(Metal, verbose_name='other metal elements', blank=True, null=True, related_name='other metal elements', help_text='The other metal elements of the artefact')
     alloy = models.ForeignKey(Alloy, blank=True, null=True, help_text='The alloy the artefact is made of')
-    type = models.ForeignKey(Type, verbose_name='object type', blank=True, null=True,
+    type = models.ForeignKey(Type, verbose_name='type of artefact', blank=True, null=True,
                              help_text='The artefact usage')
     origin = models.ForeignKey(Origin, blank=True, null=True, related_name='origin',
                                help_text='The place and city where the artefact comes from')
-    recovering_date = models.ForeignKey(RecoveringDate, blank=True, null=True, help_text='The date of excavation')
-    chronology_period = models.ForeignKey(ChronologyPeriod, blank=True, null=True,
+    recovering_date = models.ForeignKey(RecoveringDate, verbose_name='date of recovering', blank=True, null=True, help_text='The date of excavation')
+    chronology_period = models.ForeignKey(ChronologyPeriod, verbose_name='dating of artefact', blank=True, null=True,
                                           help_text='The approximate dating of the artefact')
     environment = models.ManyToManyField(Environment, blank=True, null=True,
                                          help_text='The environment where the artefact was buried. Can be multiple')
     location = models.ForeignKey(Contact, blank=True, null=True, related_name='artefact location', help_text='The actual location of the artefact')
     owner = models.ForeignKey(Contact, blank=True, null=True, related_name='artefact owner', help_text='The owner of the artefact')
-    technology = models.ForeignKey(Technology, verbose_name='technology used', blank=True, null=True,
+    technology = models.ForeignKey(Technology, blank=True, null=True,
                                    help_text='The manufacturing techniques used')
     sample_location = models.ForeignKey(Contact, blank=True, null=True, related_name='sample location', help_text='The actual location of the artefact sample')
     responsible_institution = models.ForeignKey(Contact, blank=True, null=True, related_name='responsible institution', help_text='The responsible institution for the artefact sample')
