@@ -118,6 +118,7 @@
                       <a class="line" data-toggle="collapse" data-parent="#accordionN2" href="#content21" aria-expanded="true" aria-controls="content21">{{ sections.2.title }}</a>
                   </div>
                   <div class="row accordion-content2 collapse in" id="content21" aria-labelledby="title21">
+                    {% if sections.2.image_set.all %}
                     <div class="line lightbox">
                         {% for image in sections.2.image_set.all %}
                           <div class="row">
@@ -130,6 +131,7 @@
                           </div>
                         {% endfor %}
                     </div>
+                    {% endif %}
                   </div>
 
                 <!--MACROSCOPIC-->
@@ -140,6 +142,7 @@
                     <div class="line palebox">
                         <p>{{ sections.3.content|safe }}</p>
                     </div>
+                    {% if sections.3.image_set.all %}
                     <div class="line lightbox">
                         {% for image in sections.3.image_set.all %}
                           <div class="row">
@@ -152,6 +155,7 @@
                           </div>
                         {% endfor %}
                     </div>
+                    {% endif %}
                   </div>
                 </div>
             </div>
@@ -297,6 +301,7 @@
             <div class="line palebox">
                 <p>{{ sections.8.content|safe }}</p>
             </div>
+            {% if sections.8.image_set.all %}
             <div class="line lightbox">
                 {% for image in sections.8.image_set.all %}
                   <div class="row">
@@ -309,6 +314,7 @@
                   </div>
                 {% endfor %}
             </div>
+            {% endif %}
           </div>
 
         <!--CONCLUSION-->
