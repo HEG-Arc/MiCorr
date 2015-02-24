@@ -15,6 +15,7 @@ class Metal(TimeStampedModel):
     element = models.CharField(max_length=2, blank=True, help_text='An element which is part of the artefact composition')
 
     class Meta:
+        ordering = ['element']
         verbose_name = 'Metal'
         verbose_name_plural = 'Metals'
 
@@ -29,6 +30,7 @@ class Alloy(TimeStampedModel):
     name = models.CharField(max_length=100, blank=True, help_text='The artefact alloy')
 
     class Meta:
+        ordering = ['name']
         verbose_name = 'Alloy'
         verbose_name_plural = 'Alloys'
 
@@ -43,6 +45,7 @@ class Type(TimeStampedModel):
     name = models.CharField(max_length=200, blank=True, help_text='What the artefact was used for')
 
     class Meta:
+        ordering = ['name']
         verbose_name = 'Type'
         verbose_name_plural = 'Types'
 
@@ -95,6 +98,7 @@ class ChronologyCategory(TimeStampedModel):
     name = models.CharField(max_length=100, blank=True, help_text='The dating of the artefact')
 
     class Meta:
+        ordering = ['name']
         verbose_name = 'Chronology Category'
         verbose_name_plural = 'Chronology Categories'
 
@@ -112,6 +116,7 @@ class ChronologyPeriod(TimeStampedModel):
     name = models.CharField(max_length=100, blank=True)
 
     class Meta:
+        ordering = ['name']
         verbose_name = 'Chronology Period'
         verbose_name_plural = 'Chronology Periods'
 
@@ -127,6 +132,7 @@ class Environment(TimeStampedModel):
     name = models.CharField(max_length=100, blank=True, help_text='The burial conditions of the artefact')
 
     class Meta:
+        ordering = ['name']
         verbose_name = 'Environment'
         verbose_name_plural = 'Environments'
 
@@ -141,6 +147,7 @@ class Technology(TimeStampedModel):
     name = models.CharField(max_length=100, blank=True, help_text='The manufacturing techniques used')
 
     class Meta:
+        ordering = ['name']
         verbose_name = 'Technology'
         verbose_name_plural = 'Technologies'
 
@@ -155,6 +162,7 @@ class Microstructure(TimeStampedModel):
     name = models.CharField(max_length=100, blank=True)
 
     class Meta:
+        ordering = ['name']
         verbose_name = 'Microstructure'
         verbose_name_plural = 'Microstructures'
 
