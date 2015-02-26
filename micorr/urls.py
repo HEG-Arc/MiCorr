@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 from django.conf import settings
 from django.conf.urls import patterns, include, url
 from django.conf.urls.static import static
-from django.views.generic import TemplateView
+from views import HomePageView
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -12,7 +12,7 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     url(r'^$',  # noqa
-        TemplateView.as_view(template_name='landing_new.html'),
+        HomePageView.as_view(),
         name="home"),
 
     # Uncomment the next line to enable the admin:

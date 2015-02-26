@@ -254,9 +254,16 @@
     </div>
     <div class="c6">
       <h3 class="underline">by keywords</h3>
-      <img src="{% static 'pics/strati.png' %}" class="img-responsive">
-      </button>      
-      <p class="marginT">Par la suite, il y aura ici le champ et les filtres de recherche.</p>
+        <a href="{% url 'artefacts:artefact-list' %}" class="btn btn-default btn-lg" role="button">All</a>
+        {% for metal in metalfamilies %}
+            <a href="{% url 'artefacts:artefact-list' %}?q=&metal1={{ metal.id }}&corrosion_form=" class="btn btn-default" role="button">{{ metal }}</a>
+        {% endfor %}
+        {% for corrosion in corrosionforms %}
+            <a href="{% url 'artefacts:artefact-list' %}?q=&metal1=&corrosion_form={{ corrosion.id }}&environment=" class="btn btn-default" role="button">{{ corrosion }}</a>
+        {% endfor %}
+        {% for environment in environments %}
+            <a href="{% url 'artefacts:artefact-list' %}?q=&metal1=&corrosion_form=&environment={{ environment.id }}" class="btn btn-default" role="button">{{ environment }}</a>
+        {% endfor %}
     </div>
   </div>
   <div id="learn" class="lightframe">
