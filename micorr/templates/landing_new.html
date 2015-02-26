@@ -254,16 +254,27 @@
     </div>
     <div class="c6">
       <h3 class="underline">by keywords</h3>
-        <a href="{% url 'artefacts:artefact-list' %}" class="btn btn-default btn-lg" role="button">All</a>
+        <p>
+        <a href="{% url 'artefacts:artefact-list' %}"><button type="button" class="btn btn-default btn-lg btn-block">Full list</button></a>
+        </p>
+        <p>
+        Metal Family:
         {% for metal in metalfamilies %}
             <a href="{% url 'artefacts:artefact-list' %}?q=&metal1={{ metal.id }}&corrosion_form=" class="btn btn-default" role="button">{{ metal }}</a>
         {% endfor %}
+        </p>
+        <p>
+        Corrosion Form:
         {% for corrosion in corrosionforms %}
-            <a href="{% url 'artefacts:artefact-list' %}?q=&metal1=&corrosion_form={{ corrosion.id }}&environment=" class="btn btn-default" role="button">{{ corrosion }}</a>
+            <a href="{% url 'artefacts:artefact-list' %}?q=&metal1=&corrosion_form={{ corrosion.id }}" class="btn btn-default" role="button">{{ corrosion }}</a>
         {% endfor %}
+        </p>
+        <p>
+        Environments:
         {% for environment in environments %}
             <a href="{% url 'artefacts:artefact-list' %}?q=&metal1=&corrosion_form=&environment={{ environment.id }}" class="btn btn-default" role="button">{{ environment }}</a>
         {% endfor %}
+        </p>
     </div>
   </div>
   <div id="learn" class="lightframe">
