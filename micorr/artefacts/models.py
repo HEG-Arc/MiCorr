@@ -192,6 +192,7 @@ class CorrosionType(TimeStampedModel):
     type = models.CharField(max_length=100, blank=True)
 
     class Meta:
+        ordering = ['type']
         verbose_name = 'Corrosion Type'
         verbose_name_plural = 'Corrosion Types'
 
