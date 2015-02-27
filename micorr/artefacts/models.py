@@ -227,7 +227,7 @@ class Artefact(TimeStampedModel):
                                           help_text='The approximate dating of the artefact')
     environment = models.ManyToManyField(Environment, blank=True, null=True,
                                          help_text='The environment where the artefact was buried. Can be multiple')
-    location = models.ForeignKey(Contact, blank=True, null=True, related_name='artefact location', help_text='The actual location of the artefact')
+    location = models.ForeignKey(Contact, verbose_name='artefact location', blank=True, null=True, related_name='artefact location', help_text='The actual location of the artefact')
     owner = models.ForeignKey(Contact, blank=True, null=True, related_name='artefact owner', help_text='The owner of the artefact')
     technology = models.ForeignKey(Technology, blank=True, null=True,
                                    help_text='The manufacturing techniques used')
