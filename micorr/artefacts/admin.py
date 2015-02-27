@@ -19,7 +19,8 @@ class ArtefactAdmin(admin.ModelAdmin):
     def origin_country(self, obj):
         country = ""
         if obj.origin:
-            country = obj.origin.city.country.name
+            if obj.origin.city:
+                country = obj.origin.city.country.name
         return country
 
     def chronology_category(self, obj):
