@@ -215,6 +215,7 @@ class Artefact(TimeStampedModel):
     # Foreign Keys
     user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name="user's object", blank=True, null=True,
                              help_text='The user who entered the artefact into the database')
+    author = models.ManyToManyField(Contact, verbose_name='authors', blank=True, null=True, related_name='the authors', help_text='The author(s) of this artefact')
     metal1 = models.ForeignKey(Metal, verbose_name='1st metal element', blank=True, null=True, related_name='1st metal element', help_text='The primary metal element of the artefact')
     metalx = models.ManyToManyField(Metal, verbose_name='other metal elements', blank=True, null=True, related_name='other metal elements', help_text='The other metal elements of the artefact')
     alloy = models.ForeignKey(Alloy, blank=True, null=True, help_text='The alloy the artefact is made of')
@@ -226,7 +227,7 @@ class Artefact(TimeStampedModel):
     chronology_period = models.ForeignKey(ChronologyPeriod, verbose_name='dating of artefact', blank=True, null=True,
                                           help_text='The approximate dating of the artefact')
     environment = models.ManyToManyField(Environment, blank=True, null=True,
-                                         help_text='The environment where the artefact was buried. Can be multiple')
+                                         help_text='The environment(s) where the artefact was buried.')
     location = models.ForeignKey(Contact, verbose_name='artefact location', blank=True, null=True, related_name='artefact location', help_text='The actual location of the artefact')
     owner = models.ForeignKey(Contact, blank=True, null=True, related_name='artefact owner', help_text='The owner of the artefact')
     technology = models.ForeignKey(Technology, blank=True, null=True,
@@ -246,7 +247,15 @@ class Artefact(TimeStampedModel):
         environments_list = []
         for env in self.environment.all():
             environments_list.append(env.name)
-        return ", ".join(environments_list)
+        return "/ ".join(environments_list)
+
+    def get_authors(self):
+        authors_list = []
+        for author in self.author.all():
+            authors_list.append("{0}. {1} ({2}, {3}, {4})".format(author.name[0], author.surname,
+                                                                  author.organization_name,
+                                                                  author.city, author.country))
+        return "& ".join(authors_list)
 
     def artefact_verbose_description(self):
         artefact = []
