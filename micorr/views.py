@@ -3,6 +3,9 @@ from artefacts.models import Metal, Artefact, CorrosionForm, Environment
 
 
 class HomePageView(TemplateView):
+    """
+    Displays the filters on the homepage
+    """
 
     template_name = "landing_new.html"
 
