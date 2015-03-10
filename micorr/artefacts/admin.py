@@ -14,6 +14,7 @@ class ArtefactAdmin(admin.ModelAdmin):
                        'environment', 'location', 'owner', 'technology', 'sample_location',
                        'responsible_institution', 'microstructure', 'corrosion_form', 'corrosion_type']})
     ]
+    ordering = ['-id']
     list_display = ('id', 'inventory_number', 'alloy', 'chronology_category', 'origin_country')
 
     def origin_country(self, obj):

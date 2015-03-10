@@ -241,7 +241,7 @@ class Artefact(TimeStampedModel):
     class Meta:
         verbose_name = 'Artefact'
         verbose_name_plural = 'Artefacts'
-        ordering = ['-created']
+        ordering = ['metal1']
 
     def get_environments(self):
         environments_list = []

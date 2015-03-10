@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load crispy_forms_tags %}
 
 {% block title %}
     <title>MiCorr | Search tool</title>
@@ -24,10 +25,7 @@
 
                       <p>{{ search.q }}</p>
 
-                      {% for field in filter.form %}
-                          <p>{{ field.label_tag }}</p>
-                          <p>{{ field }}</p>
-                      {% endfor %}
+                      {% crispy filter.form %}
                       <div class="line">
                           <button type="submit" class="btn btn-primary btn-lg">Search database <span class="glyphicon glyphicon-search faded"></span></button>
                       </div>
@@ -46,6 +44,7 @@
       <div class="table-responsive">
           <table class="table table-bordered table-striped table-hover">
               <tr>
+                  <th>Metal Family</th>
                   <th>Metal Alloy</th>
                   <th>Object</th>
                   <th>Chronology</th>
@@ -54,6 +53,7 @@
               </tr>
               {% for artefact in results %}
                   <tr onmouseover="this.style.cursor='pointer'" onclick="document.location = '{% url 'artefacts:artefact-detail' artefact.pk %}'">
+                      <td>{{ artefact.metal1 }}</td>
                       <td>{{ artefact.alloy }}</td>
                       <td>{{ artefact.type }}</td>
                       <td>{{ artefact.chronology_period.chronology_category.name }}</td>
