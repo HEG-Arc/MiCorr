@@ -2,8 +2,8 @@
 -r base.txt
 coverage==3.7.1 #couverture des tests
 Sphinx #génère doc
-flake8==2.2.5 #contrôle la grammaire du code
-django-extensions==1.4.9
+flake8==2.4.0 #contrôle la grammaire du code
+django-extensions==1.5.1
 pydot2==1.0.33 #génère des graphiques
 django-nose #fait tourner les tests
 factory-boy==2.4.1 #generate data to test models
