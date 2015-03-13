@@ -205,12 +205,12 @@ class Artefact(TimeStampedModel):
     An artefact has many foreign keys, corresponding to its caracteristics
     """
     # Own fields
-    description = tinymce_models.HTMLField(blank=True, help_text='A short description of the artefact. Can also include its aspect (color), dimensions and weight')
-    inventory_number = models.CharField(max_length=100, blank=True, default='', help_text='The serial number of the artefact')
+    description = tinymce_models.HTMLField(verbose_name='description of artefact', blank=True, help_text='A short description of the artefact. Can also include its aspect (color), dimensions and weight')
+    inventory_number = models.CharField(max_length=100, verbose_name='inv. Number', blank=True, default='', help_text='The serial number of the artefact')
     recorded_conservation_data = models.CharField(max_length=500, blank=True, default='')
-    sample_description = tinymce_models.HTMLField(blank=True, default='', help_text='A field to add more information about the artefact')
-    sample_number = models.CharField(max_length=100, blank=True, default='', help_text='The serial number of the artefact sample')
-    date_aim_sampling = models.CharField(max_length=200, blank=True, default='', help_text='The date and aim of sampling')
+    sample_description = tinymce_models.HTMLField(verbose_name='description of sample', blank=True, default='', help_text='A field to add more information about the artefact')
+    sample_number = models.CharField(max_length=100, verbose_name='lab number of sample', blank=True, default='', help_text='The serial number of the artefact sample')
+    date_aim_sampling = models.CharField(max_length=200, verbose_name='date and aim of sampling', blank=True, default='', help_text='The date and aim of sampling')
 
     # Foreign Keys
     user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name="user's object", blank=True, null=True,
@@ -224,9 +224,9 @@ class Artefact(TimeStampedModel):
     origin = models.ForeignKey(Origin, blank=True, null=True, related_name='origin',
                                help_text='The place and city where the artefact comes from')
     recovering_date = models.ForeignKey(RecoveringDate, verbose_name='date of recovering', blank=True, null=True, help_text='The date of excavation')
-    chronology_period = models.ForeignKey(ChronologyPeriod, verbose_name='dating of artefact', blank=True, null=True,
+    chronology_period = models.ForeignKey(ChronologyPeriod, verbose_name='dating of artefact (Tpq _ Taq)', blank=True, null=True,
                                           help_text='The approximate dating of the artefact')
-    environment = models.ManyToManyField(Environment, blank=True, null=True,
+    environment = models.ManyToManyField(Environment, verbose_name='burial conditions / environment', blank=True, null=True,
                                          help_text='The environment(s) where the artefact was buried.')
     location = models.ForeignKey(Contact, verbose_name='artefact location', blank=True, null=True, related_name='artefact location', help_text='The actual location of the artefact')
     owner = models.ForeignKey(Contact, blank=True, null=True, related_name='artefact owner', help_text='The owner of the artefact')
