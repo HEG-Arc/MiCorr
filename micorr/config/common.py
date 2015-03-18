@@ -29,6 +29,7 @@ class Common(Configuration):
         'django.contrib.sites',
         'django.contrib.messages',
         'django.contrib.staticfiles',
+        'django.contrib.sitemaps',
 
         # Useful template tags:
         # 'django.contrib.humanize',
@@ -64,6 +65,7 @@ class Common(Configuration):
         'wagtail.wagtailembeds',
         'wagtail.wagtailsearch',
         'wagtail.wagtailredirects',
+        'wagtail.contrib.wagtailsitemaps',
         # end wagtail apps
     )
 

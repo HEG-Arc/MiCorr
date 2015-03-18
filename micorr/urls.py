@@ -5,10 +5,18 @@ from django.conf import settings
 from django.conf.urls import patterns, include, url
 from django.conf.urls.static import static
 from views import HomePageView
+from django.contrib.sitemaps.views import sitemap
+from sitemaps import ArtefactsSitemap, HomePageSitemap
+from wagtail.contrib.wagtailsitemaps.views import sitemap as sitemap_wagtail
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 admin.autodiscover()
+
+sitemaps = {
+    'artefact': ArtefactsSitemap,
+    'home': HomePageSitemap,
+}
 
 urlpatterns = patterns('',
     url(r'^$',  # noqa
@@ -40,6 +48,11 @@ urlpatterns = patterns('',
 
     # Django-terms app
     url(r'^terms/', include('terms.urls')),
+
+    url(r'^sitemap\.xml$', sitemap, {'sitemaps': sitemaps},
+    name='django.contrib.sitemaps.views.sitemap'),
+
+    url(r'^sitemap-wagtail\.xml$', sitemap_wagtail),
 
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
