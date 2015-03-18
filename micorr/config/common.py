@@ -372,8 +372,6 @@ class Common(Configuration):
     TINYMCE_SPELLCHECKER = True
     TINYMCE_COMPRESSOR = True
 
-    ROBOTS_USE_SITEMAP = False
-
     ROBOTS_SITEMAP_URLS = [
         'http://micorr-dev.ig.he-arc.ch/sitemap.xml',
         'http://micorr-dev.ig.he-arc.ch/sitemap-wagtail.xml',
