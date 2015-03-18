@@ -54,6 +54,8 @@ urlpatterns = patterns('',
 
     url(r'^sitemap-wagtail\.xml$', sitemap_wagtail),
 
+    url(r'^robots\.txt$', include('robots.urls')),
+
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 # Wagtail URLS
