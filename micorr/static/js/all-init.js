@@ -31,21 +31,6 @@ $(document).ready(function(){
      // skip SmoothScroll on links inside accordion titles or scroll boxes also using anchors or if there is a javascript call
      //if($(this).parent().hasClass('accordion-title1')  || $(this).parent().hasClass('accordion-title2') || $(this).attr('href').indexOf('javascript')>-1) return;
 
-      // Make sure to unfold the node if it's collapsed
-      // Note that uncollapsing is done the "rude" way by adding the "in" class
-      // Using .collapse('show') would trigger the opening animation, preventing the correct
-      // page scrolling effect.
-     if($(this).parent().parent().hasClass('nav')) { // test the UL
-      // Unfold the node
-      var unfold = $(this).attr('href'); //id of the "title" node          
-      $(unfold).next().addClass('in'); //collapse('show'); //next node is the content to unfold
-     }
-     // A menu / nav element of level 2 has been clicked, unfold its parent
-     if($(this).parent().parent().hasClass('subnav')) { // test the UL
-      // Unfold the parent to make sure that we can jump to this section
-      var unfold = $(this).parent().parent().prev().attr('href'); //id of the "title" node          
-      $(unfold).next().addClass('in');//.collapse('show'); //next node is the content to unfold
-     }
 
      // duration in ms
      //var duration=500;
@@ -77,6 +62,25 @@ $(document).ready(function(){
            window.location.href=newLocation;
         });
 
+       // --- Unfold sections once scrolling has been properly initiated (required)
+       // Make sure to unfold the node if it's collapsed
+       // Note that uncollapsing is done the "rude" way by adding the "in" class
+       // Using .collapse('show') would trigger the opening animation, preventing the correct
+       // page scrolling effect.
+       if($(this).parent().parent().hasClass('nav')) { // test the UL
+         // Unfold the node
+         var unfold = $(this).attr('href'); //id of the "title" node          
+         $(unfold).next().collapse('show'); // next node is the content to unfold
+         //$(unfold).next().addClass('in'); //collapse('show'); //next node is the content to unfold
+       }
+       // A menu / nav element of level 2 has been clicked, unfold its parent
+       if($(this).parent().parent().hasClass('subnav')) { // test the UL
+         // Unfold the parent to make sure that we can jump to this section
+         var unfold = $(this).parent().parent().prev().attr('href'); //id of the "title" node          
+         $(unfold).next().collapse('show'); // next node is the content to unfold
+         //$(unfold).next().addClass('in');//.collapse('show'); //next node is the content to unfold
+       }
+       
         // cancel default click action
         return false;
      }
