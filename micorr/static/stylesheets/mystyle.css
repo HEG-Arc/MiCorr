@@ -9994,7 +9994,8 @@ button[disabled] {
   border: 1px solid #b5b5b5;
 }
 .table-simple td, .table-simple th {
-  padding: .5em .4em;
+  padding: .5em .8em;
+  border: 1px solid #969696;
 }
 .table-simple tr:nth-child(odd) {
   background: #e5e5e5;
@@ -11066,7 +11067,7 @@ input[type="text"] {
   }
 }
 
-@media (max-width: 992px) {
+@media (max-width: 1199px) {
   body {
     font-size: 13px;
   }
@@ -11075,6 +11076,6 @@ input[type="text"] {
   			ul ul li {display:inline-block; margin-right:2em;}
   		}*/
 }
-@media (max-width: 768px) {
+@media (max-width: 991px) {
   /*#menuside {display:none;}*/
 }
