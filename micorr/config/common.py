@@ -343,6 +343,7 @@ class Common(Configuration):
     }
 
     # Django-terms Config
+    TERMS_REPLACE_FIRST_ONLY = False
     TERMS_DEFINITION_WIDGET = 'tinymce'
 
     # Compressor (used by wagtail)
