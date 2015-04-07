@@ -49,11 +49,13 @@ urlpatterns = patterns('',
     # Django-terms app
     url(r'^terms/', include('terms.urls')),
 
+    # Sitemaps
     url(r'^sitemap\.xml$', sitemap, {'sitemaps': sitemaps},
     name='django.contrib.sitemaps.views.sitemap'),
 
     url(r'^sitemap-wagtail\.xml$', sitemap_wagtail),
 
+    # Robots
     url(r'^robots\.txt$', include('robots.urls')),
 
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
