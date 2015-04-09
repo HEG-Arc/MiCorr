@@ -3,8 +3,7 @@
 {% load terms %}
 
 {% block content %}
-    <div class="text-justify">
-        {% filter replace_terms %}
+    {% filter replace_terms %}
         {% include "documents/includes/intro.html" with intro=self.intro only %}
 
         {# Listing created with a tag - allows filtering by whether the page is live #}
@@ -12,6 +11,5 @@
         {% generic_index_listing calling_page=self %}
 
         {% include "documents/includes/related_links.html" with related_links=self.related_links.all only %}
-        {% endfilter %}
-    </div>
+    {% endfilter %}
 {% endblock %}
