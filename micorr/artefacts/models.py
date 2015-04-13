@@ -95,10 +95,11 @@ class ChronologyCategory(TimeStampedModel):
     """
     The dating of the artefact
     """
+    order = models.IntegerField(blank=True, null=True, help_text='The category chronology')
     name = models.CharField(max_length=100, blank=True, help_text='The dating of the artefact')
 
     class Meta:
-        ordering = ['name']
+        ordering = ['order']
         verbose_name = 'Chronology Category'
         verbose_name_plural = 'Chronology Categories'
 
@@ -241,7 +242,7 @@ class Artefact(TimeStampedModel):
     class Meta:
         verbose_name = 'Artefact'
         verbose_name_plural = 'Artefacts'
-        ordering = ['metal1']
+        ordering = ['metal1', 'chronology_period__chronology_category']
 
     def get_environments(self):
         environments_list = []

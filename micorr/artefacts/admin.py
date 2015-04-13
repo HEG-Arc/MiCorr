@@ -31,6 +31,10 @@ class ArtefactAdmin(admin.ModelAdmin):
         return chronology
 
 
+class ChronologyCategoryAdmin(admin.ModelAdmin):
+    list_display = ('order', 'name')
+
+
 class SectionCategoryAdmin(admin.ModelAdmin):
     list_display = ('order', 'name')
 
@@ -52,7 +56,7 @@ admin.site.register(Alloy)
 admin.site.register(Type)
 admin.site.register(Origin)
 admin.site.register(RecoveringDate)
-admin.site.register(ChronologyCategory)
+admin.site.register(ChronologyCategory, ChronologyCategoryAdmin)
 admin.site.register(ChronologyPeriod)
 admin.site.register(Environment)
 admin.site.register(Technology)
