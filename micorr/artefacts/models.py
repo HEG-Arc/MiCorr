@@ -27,10 +27,11 @@ class Alloy(TimeStampedModel):
     """
     The artefact alloy
     """
+    order = models.IntegerField(blank=True, null=True, help_text='The purity of the metal. The lower, the purer the metal is')
     name = models.CharField(max_length=100, blank=True, help_text='The artefact alloy')
 
     class Meta:
-        ordering = ['name']
+        ordering = ['order']
         verbose_name = 'Alloy'
         verbose_name_plural = 'Alloys'
 
