@@ -30,7 +30,7 @@ class TermManager(Manager):
         for term in qs:
             url = term.get_absolute_url()
             name_variants = term.name_variants()
-            definition = strip_tags(term.definition)
+            definition = term.definition
             context = {'url': url.replace('%', '%%'),
                        'url_is_external': bool(term.url),
                        'definition': definition}
