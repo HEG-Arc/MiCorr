@@ -5,7 +5,6 @@ import django
 from django.core.cache import cache
 from django.db.models import Manager
 from django.template.loader import render_to_string
-from django.utils.html import strip_tags
 
 
 VARIANTS_DICT_CACHE_KEY = 'terms__variants_dict'
@@ -30,8 +29,7 @@ class TermManager(Manager):
         for term in qs:
             url = term.get_absolute_url()
             name_variants = term.name_variants()
-            definition1 = term.definition
-            definition = definition1.encode('utf8')
+            definition = term.definition
             context = {'url': url.replace('%', '%%'),
                        'url_is_external': bool(term.url),
                        'definition': definition}
