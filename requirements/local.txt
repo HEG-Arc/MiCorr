@@ -2,11 +2,11 @@
 -r base.txt
 coverage==3.7.1 #couverture des tests
 Sphinx #génère doc
-flake8==2.4.0 #contrôle la grammaire du code
-django-extensions==1.5.2
+flake8==2.4.1 #contrôle la grammaire du code
+django-extensions==1.5.5
 pydot2==1.0.33 #génère des graphiques
-django-nose==1.3 #fait tourner les tests
-factory-boy==2.4.1 #generate data to test models
+django-nose==1.4 #fait tourner les tests
+factory-boy==2.5.2 #generate data to test models
 
 
 # django-debug-toolbar that works with Django 1.5+
