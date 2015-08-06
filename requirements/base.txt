@@ -10,7 +10,7 @@ dj-database-url==0.3.0
 # Forms
 django-braces==1.8.1
 django-crispy-forms==1.4.0
-django-floppyforms==1.5.1
+django-floppyforms==1.5.2
 
 # Models
 django-model-utils==2.3.1
@@ -44,7 +44,7 @@ wagtail==1.0
 
 # Your custom requirements go here
 django-newsletter==0.5.2
-django-tinymce==2.0.2
+django-tinymce==2.0.3
 sorl-thumbnail==12.3
 django-envelope==1.0
 django-cities-light==3.1.2

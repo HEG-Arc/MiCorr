@@ -46,7 +46,7 @@ class Common(Configuration):
         'allauth.socialaccount',  # registration
         'tinymce',
         'sorl.thumbnail',
-        'newsletter',
+        #'newsletter',
         'envelope',
         'cities_light',
         'django_filters',

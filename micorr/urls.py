@@ -34,7 +34,7 @@ urlpatterns = patterns('',
     url(r'^avatar/', include('avatar.urls')),
 
     # Newsletter
-    url(r'^newsletter/', include('newsletter.urls')),
+    #url(r'^newsletter/', include('newsletter.urls')),
     url(r'^tinymce/', include('tinymce.urls')),
 
     # Envelope (contact form)

@@ -46,7 +46,10 @@
         head.appendChild(trial);
     })();    
 
- 
+    jQuery('.modal').on('hidden.bs.modal', function (e) {
+      // do something...
+      jQuery('modal-body video source').attr("src", jQuery(".modal video source").attr("src"));
+    });
  
 </script>
 
@@ -124,10 +127,10 @@
                   <!-- 1st page -->
 
                   <div class="item active">
-                      <div class="slide" style="background-image: url({% static 'slideshow/1.jpg' %}); background-position: left center">
+                      <div class="slide" style="background-image: url({% static 'slideshow/Image1.jpg' %}); background-position: left center">
                         <div class="container">
                           <div class="row">
-                              <div class="w5 pre6">
+                              <div class="w5 pre8">
                                 <div class="slidetext">
                                   <h1>Information can be gained on a metal artefact from the examination of its corrosion layers</h1>
                                   <h2> MICORR offers search tools based on schematic representation of corrosion stratigraphies and/or key words.</h2>
@@ -145,10 +148,10 @@
                   </div>
                   <!-- 2nd page -->
                   <div class="item">
-                      <div class="slide" style="background-image: url({% static 'slideshow/3.jpg' %}); background-position: center center">
+                      <div class="slide" style="background-image: url({% static 'slideshow/Image4.jpg' %}); background-position: right center">
                         <div class="container">
                           <div class="row">
-                              <div class="w5 pre6">
+                              <div class="w5 pre8">
                                 <div class="slidetext">
                                   <h1>How characterizing corrosion forms?</h1>
                                   <h2>Through a methodology to acquire using a learning process</h2>
@@ -166,10 +169,10 @@
                   </div>
                   <!-- 3rd page -->
                   <div class="item">
-                      <div class="slide" style="background-image: url({% static 'slideshow/6.jpg' %}); background-position: center center">
+                      <div class="slide" style="background-image: url({% static 'slideshow/Image5.jpg' %}); background-position: right center">
                         <div class="container">
                           <div class="row">
-                              <div class="w5 pre6">
+                              <div class="w5 pre8">
                                 <div class="slidetext">
                                   <h1>A decision support system for the diagnostic on heritage and industrial metals</h1>
                                   <h2>MICORR provides updated information on corrosion forms.</h2>
@@ -187,10 +190,10 @@
                   </div>
                   <!-- 4th page -->
                   <div class="item">
-                      <div class="slide" style="background-image: url({% static 'slideshow/4.jpg' %}); background-position: center center">
+                      <div class="slide" style="background-image: url({% static 'slideshow/Image7.jpg' %}); background-position: right center">
                         <div class="container">
                           <div class="row">
-                              <div class="w5 pre6">
+                              <div class="w5 pre8">
                                 <div class="slidetext">
                                   <h1>Building a knowledge base requires multiple contributions</h1>
                                   <h2>By enriching the database with new corrosion models, responses from MICORR will be more accurate and adapt more to your needs.</h2>                        
