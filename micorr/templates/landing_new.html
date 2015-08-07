@@ -44,12 +44,7 @@
         trial.src = protocol + path;
         var head = document.getElementsByTagName("head")[0];
         head.appendChild(trial);
-    })();    
-
-    jQuery('.modal').on('hidden.bs.modal', function (e) {
-      // do something...
-      jQuery('modal-body video source').attr("src", jQuery(".modal video source").attr("src"));
-    });
+    })();
  
 </script>
 
@@ -130,7 +125,7 @@
                       <div class="slide" style="background-image: url({% static 'slideshow/image1.jpg' %}); background-position: left center">
                         <div class="container">
                           <div class="row">
-                              <div class="w5 pre8">
+                              <div class="w5 pre6">
                                 <div class="slidetext">
                                   <h1>Information can be gained on a metal artefact from the examination of its corrosion layers</h1>
                                   <h2> MICORR offers search tools based on schematic representation of corrosion stratigraphies and/or key words.</h2>
@@ -151,7 +146,7 @@
                       <div class="slide" style="background-image: url({% static 'slideshow/image4.jpg' %}); background-position: right center">
                         <div class="container">
                           <div class="row">
-                              <div class="w5 pre8">
+                              <div class="w5 pre6">
                                 <div class="slidetext">
                                   <h1>How characterizing corrosion forms?</h1>
                                   <h2>Through a methodology to acquire using a learning process</h2>
@@ -172,7 +167,7 @@
                       <div class="slide" style="background-image: url({% static 'slideshow/image5.jpg' %}); background-position: right center">
                         <div class="container">
                           <div class="row">
-                              <div class="w5 pre8">
+                              <div class="w5 pre6">
                                 <div class="slidetext">
                                   <h1>A decision support system for the diagnostic on heritage and industrial metals</h1>
                                   <h2>MICORR provides updated information on corrosion forms.</h2>
@@ -193,7 +188,7 @@
                       <div class="slide" style="background-image: url({% static 'slideshow/image7.jpg' %}); background-position: right center">
                         <div class="container">
                           <div class="row">
-                              <div class="w5 pre8">
+                              <div class="w5 pre6">
                                 <div class="slidetext">
                                   <h1>Building a knowledge base requires multiple contributions</h1>
                                   <h2>By enriching the database with new corrosion models, responses from MICORR will be more accurate and adapt more to your needs.</h2>                        
@@ -244,10 +239,10 @@
   </div>
 
 <div class="modal fade animation" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
-  <div class="modal-dialog modal-lg">
+  <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-body">
-        <video controls>
+        <video width="852" height="480" controls>
             <source src="{% static 'tour/animation.mp4' %}" type="video/mp4">
             Your browser does not support HTML5 video.
         </video>
@@ -262,7 +257,7 @@
         <h1>Search tools</h1>
         <p class="smooth-scroll"><a href="#learn" class="no-underline"><i class="fa fa-book faded"></i> Learn how to efficiently use the search tool</a></p>
       </div>
-    </div>  
+    </div>
     <div class="c6">
       <h3 class="underline">by stratigraphy representation</h3>
       <img src="{% static 'pics/strati.png' %}" class="img-responsive">
