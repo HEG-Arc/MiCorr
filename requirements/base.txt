@@ -1,5 +1,5 @@
 # Bleeding edge Django
-Django==1.7.9
+Django==1.7.10
 
 # Configuration
 django-configurations==0.8
@@ -9,14 +9,14 @@ dj-database-url==0.3.0
 
 # Forms
 django-braces==1.8.1
-django-crispy-forms==1.4.0
+django-crispy-forms==1.5.2
 django-floppyforms==1.5.2
 
 # Models
 django-model-utils==2.3.1
 
 # images
-Pillow==2.9.0
+Pillow==3.0.0
 
 # For user registration, either via email or social
 # Well-built with regular release cycles!
@@ -27,7 +27,7 @@ psycopg2==2.6.1
 
 # Unicode slugification
 unicode-slugify==0.1.3
-django-autoslug==1.8.0
+django-autoslug==1.9.3
 
 # Useful things
 django-avatar==2.0
@@ -37,18 +37,18 @@ dealer==1.1.1
 
 # Wagtail
 django-compressor==1.5
-django-modelcluster==0.6.2
-django-taggit==0.16.2
-django-libsass==0.3
-wagtail==1.0
+django-modelcluster==1.0
+django-taggit==0.17.1
+django-libsass==0.4
+wagtail==1.1
 
 # Your custom requirements go here
 django-newsletter==0.5.2
-django-tinymce==2.0.4
+django-tinymce==2.0.5
 sorl-thumbnail==12.3
 django-envelope==1.0
 django-cities-light==3.1.2
-django-filter==0.10.0
+django-filter==0.11.0
 django-haystack==2.4.0
 lxml==3.4.4
 django-terms==1.1.3

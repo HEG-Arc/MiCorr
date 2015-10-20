@@ -1,11 +1,11 @@
 # Local development dependencies go here
 -r base.txt
-coverage==3.7.1 #couverture des tests
+coverage==4.0.1 #couverture des tests
 Sphinx #génère doc
 flake8==2.4.1 #contrôle la grammaire du code
-django-extensions==1.5.5
+django-extensions==1.5.7
 pydot2==1.0.33 #génère des graphiques
-django-nose==1.4.1 #fait tourner les tests
+django-nose==1.4.2 #fait tourner les tests
 factory-boy==2.5.2 #generate data to test models
 
 
