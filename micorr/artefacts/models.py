@@ -204,7 +204,7 @@ class CorrosionType(TimeStampedModel):
 
 class Artefact(TimeStampedModel):
     """
-    An artefact has many foreign keys, corresponding to its caracteristics
+    An artefact has many foreign keys, corresponding to its characteristics
     """
     # Own fields
     description = tinymce_models.HTMLField(verbose_name='description of artefact', blank=True, help_text='A short description of the artefact. Can also include its aspect (color), dimensions and weight')
