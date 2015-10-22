@@ -76,6 +76,7 @@ class Common(Configuration):
         'artefacts',  # custom artefacts app
         'contacts',
         'documents',
+        'stratigraphies',
     )
 
     # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
