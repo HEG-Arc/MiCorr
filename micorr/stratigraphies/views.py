@@ -3,8 +3,8 @@ from django.http import HttpResponse
 from py2neo import Graph
 from py2neo import Node, Relationship
 import simplejson as json
-#from micorr.stratigraphies.ch.hearc.ig.micorr.neo4jDaoImpl.Neo4JDAO import Neo4jDAO
-from micorr.stratigraphies.ch.hearc.ig.micorr.service.MiCorrService import MiCorrService
+from micorr.stratigraphies.ch.hearc.ig.micorr.neo4jDaoImpl.Neo4JDAO import Neo4jDAO
+from .ch.hearc.ig.micorr.service.MiCorrService import MiCorrService
 import time
 
 
