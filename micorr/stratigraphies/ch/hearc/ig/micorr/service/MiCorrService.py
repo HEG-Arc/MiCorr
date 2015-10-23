@@ -1,4 +1,4 @@
-from micorr.stratigraphies.ch.hearc.ig.micorr.neo4jDaoImpl.Neo4JDAO import Neo4jDAO
+from ..neo4jDaoImpl.Neo4JDAO import Neo4jDAO
 
 
 class MiCorrService:
