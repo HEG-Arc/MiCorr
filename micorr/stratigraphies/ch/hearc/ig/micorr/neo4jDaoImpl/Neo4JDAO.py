@@ -39,19 +39,19 @@ class Neo4jDAO:
             print ("***" + strata.uid)
 
             # Chaque strates a des caracteristiques
-            charactList = self.graph.cypher.execute("MATCH (n:Strata)-[r:IS_CONSTITUTED_BY]->(c:Characteristic)-[b:BELONGS_TO]->(f:Family) where n.uid='" + strata.uid + "' RETURN c.uid as uid, f.uid as family")
+            charactList = self.graph.cypher.execute("MATCH (n:Strata)-[r:IS_CONSTITUTED_BY]->(c:Characteristic)-[b:BELONGS_TO]->(f:Family) where n.uid='" + strata.uid + "' RETURN c.uid as uid, f.uid as family, c.name as real_name")
             print ("======Characteristic")
             clist = []
             for charact in charactList:
-                clist.append({'name' : charact.uid, 'family' : charact.family})
+                clist.append({'name' : charact.uid, 'family' : charact.family, 'real_name': charact.real_name})
                 print ("         " + charact.uid)
 
             # Chaque strate a des sous-caracteristiques
             print ("======subCharacteristic")
-            subCharactList = self.graph.cypher.execute("MATCH (s:Strata)-[r:IS_CONSTITUTED_BY]->(c:SubCharacteristic) where s.uid='" + strata.uid + "' RETURN c.uid as uid")
+            subCharactList = self.graph.cypher.execute("MATCH (s:Strata)-[r:IS_CONSTITUTED_BY]->(c:SubCharacteristic) where s.uid='" + strata.uid + "' RETURN c.uid as uid, c.name as real_name")
             slist = []
             for subCharact in subCharactList:
-                slist.append({'name' : subCharact.uid})
+                slist.append({'name' : subCharact.uid, 'real_name': subCharact.real_name})
                 print("         " + subCharact.uid)
 
             # Chaque strates a des interfaces
@@ -87,30 +87,30 @@ class Neo4jDAO:
     def getAllCharacteristic(self):
         chars = []
         # tout d'abord on cherche les famille
-        familyList = self.graph.cypher.execute("MATCH (n:Family) RETURN n.uid as name")
+        familyList = self.graph.cypher.execute("MATCH (n:Family) RETURN n.uid as name, n.name as fam_real_name")
         for family in familyList:
             #pour chaque famille on ajoute les caracteristiques
-            caracList = self.graph.cypher.execute("MATCH (a)-[r:BELONGS_TO]->(b) where b.uid = '" + family.name + "' return a.uid as uid, a.description as description order by a.uid asc")
-            fam = {'family' : family.name, 'characteristics' : []}
+            caracList = self.graph.cypher.execute("MATCH (a)-[r:BELONGS_TO]->(b) where b.uid = '" + family.name + "' return a.uid as uid, a.description as description, a.name as carac_real_name order by a.uid asc")
+            fam = {'family' : family.name, 'characteristics' : [], 'fam_real_name': family.fam_real_name}
             for carac in caracList:
                 # pour chaque caracteristiques on ajoute les sous caracteristiques
-                subcaracList = self.graph.cypher.execute("MATCH (a)-[r:HAS_SPECIALIZATION]->(b) where a.uid='" + carac.uid + "' RETURN b.uid as uid, b.description as description order by a.uid asc")
+                subcaracList = self.graph.cypher.execute("MATCH (a)-[r:HAS_SPECIALIZATION]->(b) where a.uid='" + carac.uid + "' RETURN b.uid as uid, b.description as description, b.name as sub_real_name order by a.uid asc")
 
                 sc = []
                 for subcarac in subcaracList:
                     # pour chaque sous-caracteristique on ajoute les sous-sous caracteristiques
-                    subsubcaractList = self.graph.cypher.execute("MATCH (sub:SubCharacteristic)-[:`HAS_SPECIALIZATION`]->(subsub:SubCharacteristic) where sub.uid='" + subcarac.uid + "' RETURN subsub.uid as uid order by subsub.uid asc")
+                    subsubcaractList = self.graph.cypher.execute("MATCH (sub:SubCharacteristic)-[:`HAS_SPECIALIZATION`]->(subsub:SubCharacteristic) where sub.uid='" + subcarac.uid + "' RETURN subsub.uid as uid, subsub.name as subsub_real_name order by subsub.uid asc")
 
                     subsubcaractItems = []
                     for subsubcarac in subsubcaractList:
-                        subsubcaractItems.append({'name' : subsubcarac.uid})
+                        subsubcaractItems.append({'name' : subsubcarac.uid, 'subsub_real_name': subsubcarac.subsub_real_name})
 
-                    ssc = {'name' : subcarac.uid, 'description' : subcarac.description, 'subcharacteristics' : ''}
+                    ssc = {'name' : subcarac.uid, 'description' : subcarac.description, 'subcharacteristics' : '', 'sub_real_name': subcarac.sub_real_name}
                     ssc['subcharacteristics'] = subsubcaractItems;
                     sc.append(ssc)
 
 
-                fam['characteristics'].append({'name' : carac.uid, 'description' : carac.description, 'subcharacteristics' : sc})
+                fam['characteristics'].append({'name' : carac.uid, 'description' : carac.description, 'real_name': carac.carac_real_name, 'subcharacteristics' : sc})
 
             chars.append(fam)
 
