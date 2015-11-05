@@ -239,7 +239,7 @@ angular.module('MiCorr').directive('strata', function($compile, StrataData){
                 else if (strat.getMmicrostructureFamily() == "grainLargeCharacteristic" ||
                     strat.getMmicrostructureFamily() == "grainSmallCharacteristic" ||
                     strat.getMmicrostructureFamily() == "grainElongatedCharacteristic") {
-                    paper.image("../static/micorr/images/c/grains/grains_" + height + "x" + width + ".png", 0, 0, width, height);
+                    paper.image("../static/micorr/images/c/grains/Grains_" + height + "x" + width + ".png", 0, 0, width, height);
                 }
             }
 
