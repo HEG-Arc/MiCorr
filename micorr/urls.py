@@ -46,6 +46,9 @@ urlpatterns = patterns('',
     # Artefacts management
     url(r'^artefacts/', include('artefacts.urls', namespace="artefacts")),
 
+    # Contacts management
+    url(r'^contacts/', include('contacts.urls', namespace="contacts")),
+
     # Django-terms app
     url(r'^terms/', include('terms.urls')),
 

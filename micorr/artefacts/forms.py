@@ -1,5 +1,6 @@
 from django import forms
-from .models import Artefact, Document, Metal, CorrosionForm, Environment
+from django.forms import TextInput, FileInput
+from .models import Artefact, Document, Metal, CorrosionForm, Environment, Origin, ChronologyPeriod, Alloy, Technology
 from tinymce.widgets import TinyMCE
 import django_filters
 
@@ -22,6 +23,42 @@ class ArtefactsCreateForm(forms.ModelForm):
     class Meta:
         model = Artefact
         exclude = ['user']
+        widgets = {
+            'type': TextInput(),
+            'recovering_date': TextInput(),
+        }
+
+
+class OriginCreateForm(forms.ModelForm):
+    """
+    Create a new origin
+    """
+    class Meta:
+        model = Origin
+
+
+class ChronologyCreateForm(forms.ModelForm):
+    """
+    Create a new chronology
+    """
+    class Meta:
+        model = ChronologyPeriod
+
+
+class AlloyCreateForm(forms.ModelForm):
+    """
+    Create a new alloy
+    """
+    class Meta:
+        model = Alloy
+
+
+class TechnologyCreateForm(forms.ModelForm):
+    """
+    Create a new technology
+    """
+    class Meta:
+        model = Technology
 
 
 class DocumentUpdateForm(forms.ModelForm):
