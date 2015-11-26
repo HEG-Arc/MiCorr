@@ -2,10 +2,60 @@ from django.core.urlresolvers import reverse, reverse_lazy
 from django.shortcuts import get_object_or_404, render
 from django.views import generic
 from haystack.forms import SearchForm
+from django.http import HttpResponse
+
+import rdflib
+from SPARQLWrapper import SPARQLWrapper, JSON
 
 from .models import Artefact, Document
 from .forms import ArtefactsUpdateForm, ArtefactsCreateForm, DocumentUpdateForm, DocumentCreateForm, ArtefactFilter
 
+
+def displayOntology(request):
+
+    sparql = SPARQLWrapper("http://micorr-dev.ig.he-arc.ch:3030/ds/query")
+
+    #-------------------
+    #USING SPARQLWrapper
+    #-----------------
+
+    # Querying the ontology
+    sparql.setQuery("""
+        SELECT ?x ?fname
+        WHERE {?x  <http://micorr.ig.he-arc.ch/vocab#artefacts_alloy_name>  ?fname}
+        """)
+    sparql.setReturnFormat(JSON)
+    results = sparql.query()
+
+    # Convert the results to a dictionary
+    dict = results.convert()
+
+    listResultsWrapper = []
+
+    # Loop through the results
+    for result in dict["results"]["bindings"]:
+        listResultsWrapper.append(result["fname"]["value"])
+
+    #-----------------
+    #USING SPARQLStore
+    #-----------------
+
+    g = rdflib.ConjunctiveGraph('SPARQLStore')
+    g.open("http://micorr-dev.ig.he-arc.ch:3030/ds/query")
+
+    #Querying the ontology
+    qres = g.query("""
+        SELECT ?x ?fname
+        WHERE {?x  <http://micorr.ig.he-arc.ch/vocab#artefacts_alloy_name>  ?fname}
+        """)
+
+    listResultsStore = []
+
+    # Loop through the results
+    for row in qres:
+        listResultsStore.append(row.fname)
+
+    return render(request, "artefacts/artefact_ontology_answer.html", locals())
 
 class ArtefactsListView(generic.ListView):
     """
@@ -33,7 +83,6 @@ class ArtefactsListView(generic.ListView):
         return render(request, "artefacts/artefact_list.html",
                       {'search': artefactssearch, 'results': filtered_artefacts_list, 'filter': artefactsfilter,
                        'self': self})
-
 
 class ArtefactsDetailView(generic.DetailView):
     """
