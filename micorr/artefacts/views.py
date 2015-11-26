@@ -7,8 +7,9 @@ from django.http import HttpResponse
 import rdflib
 from SPARQLWrapper import SPARQLWrapper, JSON
 
-from .models import Artefact, Document
-from .forms import ArtefactsUpdateForm, ArtefactsCreateForm, DocumentUpdateForm, DocumentCreateForm, ArtefactFilter
+from .models import Artefact, Document, Origin, ChronologyPeriod, Alloy, Technology
+from .forms import ArtefactsUpdateForm, ArtefactsCreateForm, DocumentUpdateForm, DocumentCreateForm, ArtefactFilter,\
+    OriginCreateForm, ChronologyCreateForm, AlloyCreateForm, TechnologyCreateForm
 
 
 def displayOntology(request):
@@ -138,6 +139,47 @@ class ArtefactsCreateView(generic.CreateView):
     template_name_suffix = '_create_form'
     form_class = ArtefactsCreateForm
     success_url = reverse_lazy('artefacts:artefact-list')
+
+
+class OriginCreateView(generic.CreateView):
+    """
+    A view which allows the user to create an origin
+    When the chronology is created, it redirects the user to the artefact list
+    """
+    model = Origin
+    template_name_suffix = '_create_form'
+    form_class = OriginCreateForm
+
+
+class ChronologyCreateView(generic.CreateView):
+    """
+    A view which allows the user to create a chronology
+    When the chronology is created, it redirects the user to the artefact list
+    """
+    model = ChronologyPeriod
+    template_name_suffix = '_create_form'
+    form_class = ChronologyCreateForm
+
+
+class AlloyCreateView(generic.CreateView):
+    """
+    A view which allows the user to create an alloy
+    When the chronology is created, it redirects the user to the artefact list
+    """
+    model = Alloy
+    template_name_suffix = '_create_form'
+    form_class = AlloyCreateForm
+    success_url = reverse_lazy('artefacts:artefact-list')
+
+
+class TechnologyCreateView(generic.CreateView):
+    """
+    A view which allows the user to create a technology
+    When the chronology is created, it redirects the user to the artefact list
+    """
+    model = Technology
+    template_name_suffix = '_create_form'
+    form_class = TechnologyCreateForm
 
 
 class DocumentUpdateView(generic.UpdateView):
