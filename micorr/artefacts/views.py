@@ -4,14 +4,14 @@ from django.views import generic
 from haystack.forms import SearchForm
 from django.http import HttpResponse
 
-import rdflib
-from SPARQLWrapper import SPARQLWrapper, JSON
+#import rdflib
+#from SPARQLWrapper import SPARQLWrapper, JSON
 
 from .models import Artefact, Document, Origin, ChronologyPeriod, Alloy, Technology
 from .forms import ArtefactsUpdateForm, ArtefactsCreateForm, DocumentUpdateForm, DocumentCreateForm, ArtefactFilter,\
     OriginCreateForm, ChronologyCreateForm, AlloyCreateForm, TechnologyCreateForm
 
-
+"""
 def displayOntology(request):
 
     sparql = SPARQLWrapper("http://micorr-dev.ig.he-arc.ch:3030/ds/query")
@@ -21,10 +21,10 @@ def displayOntology(request):
     #-----------------
 
     # Querying the ontology
-    sparql.setQuery("""
+    sparql.setQuery(""
         SELECT ?x ?fname
         WHERE {?x  <http://micorr.ig.he-arc.ch/vocab#artefacts_alloy_name>  ?fname}
-        """)
+        "")
     sparql.setReturnFormat(JSON)
     results = sparql.query()
 
@@ -45,10 +45,10 @@ def displayOntology(request):
     g.open("http://micorr-dev.ig.he-arc.ch:3030/ds/query")
 
     #Querying the ontology
-    qres = g.query("""
+    qres = g.query(""
         SELECT ?x ?fname
         WHERE {?x  <http://micorr.ig.he-arc.ch/vocab#artefacts_alloy_name>  ?fname}
-        """)
+        "")
 
     listResultsStore = []
 
@@ -57,6 +57,8 @@ def displayOntology(request):
         listResultsStore.append(row.fname)
 
     return render(request, "artefacts/artefact_ontology_answer.html", locals())
+"""
+
 
 class ArtefactsListView(generic.ListView):
     """
