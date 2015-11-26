@@ -2,12 +2,8 @@ from django.conf.urls import patterns, url
 from django.contrib.auth.decorators import login_required
 
 from .views import ArtefactsListView, ArtefactsDetailView, ArtefactsUpdateView, ArtefactsDeleteView, \
-<<<<<<< HEAD
-    ArtefactsCreateView, DocumentUpdateView, DocumentDeleteView, DocumentCreateView, displayOntology
-=======
     ArtefactsCreateView, DocumentUpdateView, DocumentDeleteView, DocumentCreateView, \
     OriginCreateView, ChronologyCreateView, AlloyCreateView, TechnologyCreateView
->>>>>>> f837b4bfbf445f22a6f1296dd2ce304a57b79af4
 
 urlpatterns = patterns('',
     url(r'^$', ArtefactsListView.as_view(), name='artefact-list'),
@@ -31,5 +27,5 @@ urlpatterns = patterns('',
     url(r'^(?P<artefact_id>\d+)/document/create/$', login_required(DocumentCreateView.as_view()),
        name='document-create'),
 
-    url(r'^test-ontology/$', displayOntology),
+    #url(r'^test-ontology/$', displayOntology),
 )
