@@ -409,9 +409,7 @@ function returnSubCharacteristicsFromParent(data, family, lvl1, lvl2) {
                     //console.log(caract);
                     for (var k = 0; k < caract.subcharacteristics.length; k++){
                         var subcaract = caract.subcharacteristics[k];
-                        //console.log("subcaract");
-                        //console.log(subcaract);
-                        subList.push({'name' : subcaract.name});
+                        subList.push({'name' : subcaract.name, 'sub_real_name' : subcaract.sub_real_name});
 
                         if (subcaract.name == lvl2) {
                             var subsubcaracts = subcaract.subcharacteristics;
