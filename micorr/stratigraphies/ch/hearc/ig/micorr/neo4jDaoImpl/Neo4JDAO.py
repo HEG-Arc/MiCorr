@@ -35,7 +35,9 @@ class Neo4jDAO:
 
         # pour chaque strates on va faire une requete
         for strata in strataList:
+            #si strata.uid == 'CM', heriter des caracteristiques
             st = {'name' : strata.uid, 'characteristics' : '', 'subcharacteristics' : '', 'interfaces' : ''}
+            # rajouter 'child' :''
             print ("***" + strata.uid)
 
             # Chaque strates a des caracteristiques
@@ -74,6 +76,7 @@ class Neo4jDAO:
                 st['interfaces'] = ilist
             else:
                 st['interfaces'] = []
+                #si c'est un enfant, on refait le tout
 
             st['characteristics'] = clist
             st['subcharacteristics'] = slist

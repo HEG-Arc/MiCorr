@@ -1249,6 +1249,7 @@ angular.module('MiCorr').controller('mainController', function ($scope, $route, 
                 subList.push({'name' : sub[j].name});
                 var subsub = sub[j]['subcharacteristics'];
                 for (var k = 0; k < subsub.length; k++) {
+                    //console.log(subsub);
                     subsubList.push({'name' : subsub[k].name});
                 }
             }

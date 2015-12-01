@@ -24,10 +24,12 @@ angular.module('MiCorr').directive('strata', function($compile, StrataData){
             var intLineThick = 5;
             var svgInterface = element.children()[0];   // div interface
             var svgStrata    = element.children()[1];   // div strate
-
             var index = attrs.index;            // index de la strat sélectionnée
             var strat = scope.rstratas[index];  // strate sélectionnée
-
+            //if (strat.natureFamily == "CM"))
+                // masquer formulaire
+                // prendre valeurs couches basse et hautes
+                // remplir la couche actuelle par les couches autres
             var width = getWidths(strat.getWidthFamily());              // largeur de la strate/interface
             var height = getThicknesses(strat.getThicknessFamily());    // hauteur de la strate
             var widthInt = width;
@@ -293,6 +295,7 @@ angular.module('MiCorr').directive('strata', function($compile, StrataData){
             }
 
             //Shape Family
+            /* Christian souhaite que ces caracteristiques ne soient pas visibles
             if (strat.getShapeFamily() == "vainsOrSeamsCharacteristic"){
                 paper.image("../static/micorr/images/c/vains.png", width/2 - 150/2, height/2 - 18/2, 150, 18);
             }
@@ -301,6 +304,7 @@ angular.module('MiCorr').directive('strata', function($compile, StrataData){
                 poisson.push({'min': 8, 'max': 16, 'img': 'droplet2', 'imgw': 15, 'imgh': 15});
                 poisson.push({'min': 11, 'max': 22, 'img': 'droplet3', 'imgw': 25, 'imgh': 25});
             }
+            */
 
             // PDS render
             // On va ici parcourir les différentes images ajoutées à notre variable poisson et afficher sur notre zone de dessin ces images
@@ -316,6 +320,7 @@ angular.module('MiCorr').directive('strata', function($compile, StrataData){
             }
 
             // On met ces caractéristiques au dessus des autres
+            /*
             if (strat.getShapeFamily() == "pitCharacteristic") {
                 paper.image("../static/micorr/images/c/pit.png", width/2-(47/2), 0, 47, 43);
             }
@@ -325,6 +330,7 @@ angular.module('MiCorr').directive('strata', function($compile, StrataData){
             else if (strat.getShapeFamily() == "pustuleCharacteristic"){
                 paper.image("../static/micorr/images/c/pustule.png", width/2-(81/2), height-47, 81, 47);
             }
+            */
 
             // On push les images créé dans notre service pour les réutiliser
             StrataData.pushOneImage(paper);
