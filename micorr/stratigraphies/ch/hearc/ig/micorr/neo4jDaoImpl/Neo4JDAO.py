@@ -37,7 +37,7 @@ class Neo4jDAO:
         for strata in strataList:
             #si strata.uid == 'CM', heriter des caracteristiques
             st = {'name' : strata.uid, 'characteristics' : '', 'subcharacteristics' : '', 'interfaces' : ''}
-            # rajouter 'child' :''
+            # pour la suite, ajouter "'child' : ''" si la strate en question a des enfants
             print ("***" + strata.uid)
 
             # Chaque strates a des caracteristiques
@@ -81,6 +81,28 @@ class Neo4jDAO:
             st['characteristics'] = clist
             st['subcharacteristics'] = slist
             #st['interfaces'] = ilist
+            """
+            #On remplit les caracteristiques de l'enfant
+
+            # Chaque strates a des caracteristiques
+            childCharactList = self.graph.cypher.execute("MATCH (n:Strata)-[r:IS_CONSTITUTED_BY]->(c:Characteristic)-[b:BELONGS_TO]->(f:Family) where n.uid='" + strata.uid + "' RETURN c.uid as uid, f.uid as family, c.name as real_name")
+            print ("======Characteristic")
+            clist = []
+            for charact in charactList:
+                clist.append({'name' : charact.uid, 'family' : charact.family, 'real_name': charact.real_name})
+                print ("         " + charact.uid)
+
+            # Chaque strate a des sous-caracteristiques
+            print ("======subCharacteristic")
+            subCharactList = self.graph.cypher.execute("MATCH (s:Strata)-[r:IS_CONSTITUTED_BY]->(c:SubCharacteristic) where s.uid='" + strata.uid + "' RETURN c.uid as uid, c.name as real_name")
+            slist = []
+            for subCharact in subCharactList:
+                slist.append({'name' : subCharact.uid, 'real_name': subCharact.real_name})
+                print("         " + subCharact.uid)
+
+
+            st['child'] =
+            """
             c.append(st)
         return c
 
@@ -236,6 +258,9 @@ class Neo4jDAO:
         # on parcourt toutes les strates
         for t in data['stratas']:
             strataName = stratigraphyName + "_Strata" + str(self.getNbStratasByStratigraphy(stratigraphyName) + 1)
+            # s'il s'agit d'une strate enfant, on rajoute "_Child" a la fin du nom
+            if t['name'].endswith("_Child"):
+                strataName = stratigraphyName + "_Strata" + str(self.getNbStratasByStratigraphy(stratigraphyName)) + "_Child"
             self.createStrata(strataName, stratigraphyName)
 
             # pour chaque strate on attache une caracteristique ou sous caracteristique

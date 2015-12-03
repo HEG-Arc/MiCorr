@@ -962,6 +962,40 @@ angular.module('MiCorr').controller('showStrat', function ($scope, $routeParams,
     $scope.cancel = function () {
         $modalInstance.dismiss('cancel');
     };
+// Contrôlleur qui s'occupe d'ajouter une strate enfant
+}).controller('ModalAddChildStrataCtrl', function ($scope, $modal, $log) {
+    $scope.artefactName = $scope.$parent.artefactName;
+    $scope.open = function (size) {
+        var modalInstance = $modal.open({
+            templateUrl: 'modalAddStrata.html',
+            controller: 'ModalAddChildStrataInstanceCtrl',
+            resolve : {
+                arg1 : function(){
+                    return "hello";
+                }
+            }
+        });
+    }; // Instance du contrôlleur qui s'occupe d'ajouter une strate enfant
+}).controller('ModalAddChildStrataInstanceCtrl', function ($scope, $route, $modalInstance, MiCorrService, arg1, StrataData) {
+    $scope.route = $route;
+    $scope.natures = natures;
+    $scope.nature;
+    $scope.strataName;
+    $scope.strataUid;
+
+    // quand l'utilisateur appuie sur ok, on créé une instance de strate, et on l'ajoute dans notre service
+    // TODO: ask Marcel why he does $scope.strataName as it is empty
+    $scope.ok = function () {
+        var newStrata = natureFactory($scope.nature);
+        newStrata.setName($scope.strataName + "_Child");
+        newStrata.setUid($scope.strataUid);
+        StrataData.pushOneStrata(newStrata);
+        $modalInstance.close();
+    };
+
+    $scope.cancel = function () {
+        $modalInstance.dismiss('cancel');
+    };
 // Contrôlleur qui s'occupe de supprimer une strate dans le service
 }).controller('ModalDelStrataCtrl', function ($scope, $modal, $log, StrataData) {
     $scope.artefactName = $scope.$parent.artefactName;
