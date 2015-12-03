@@ -87,6 +87,7 @@ class ArtefactsListView(generic.ListView):
                       {'search': artefactssearch, 'results': filtered_artefacts_list, 'filter': artefactsfilter,
                        'self': self})
 
+
 class ArtefactsDetailView(generic.DetailView):
     """
     A detail view of a selected artefact
@@ -103,9 +104,11 @@ class ArtefactsDetailView(generic.DetailView):
         artefact = get_object_or_404(Artefact, pk=self.kwargs['pk'])
         sections = artefact.section_set.all()
         documents = artefact.document_set.all()
+        stratigraphies = artefact.stratigraphy_set.all()
         context['artefact'] = artefact
         context['sections'] = sections
         context['documents'] = documents
+        context['stratigraphies'] = stratigraphies
         return context
 
 

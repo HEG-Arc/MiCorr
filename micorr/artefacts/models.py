@@ -350,6 +350,24 @@ def get_doc_storage_path(instance, filename):
     return '/'.join(['artefacts', str(instance.artefact.id), 'documents', filename])
 
 
+class Stratigraphy(TimeStampedModel):
+    """
+    An artefact can be represented by one or more stratigraphies
+    """
+    artefact = models.ForeignKey(Artefact, blank=True, null=True, help_text='The artefact the stratigraphy represents')
+    order = models.IntegerField(blank=True, null=True, help_text='The order of a stratigraphy for a given artefact')
+    uid = models.CharField(max_length=500, blank=True, null=True, help_text='The identification of the stratigraphy')
+    url = models.CharField(max_length=500, blank=True, null=True, help_text='The url that leads to the corresponding stratigraphy in the tool')
+
+    class Meta:
+        ordering = ['order']
+        verbose_name = 'Stratigraphy'
+        verbose_name_plural = 'Stratigraphies'
+
+    def __unicode__(self):
+        return self.uid
+
+
 class Document(TimeStampedModel):
     """
     A document (PDF, Word, ...) can be attached to an artefact to add information

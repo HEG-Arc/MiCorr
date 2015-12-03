@@ -212,6 +212,16 @@
                 <div class="c3"><em>Date and aim of sampling</em></div>
                 <div class="c9"><p>{{ artefact.date_aim_sampling }}</p></div>
               </div>
+              <div class="row">
+                <div class="c3"><em>List of stratigraphies</em></div>
+                <div class="c9">
+                    {% for stratigraphy in stratigraphies %}
+                        <p><a href="{% url 'stratigraphies:list' %}{{ stratigraphy.url }}">Stratigraphy No{{ stratigraphy.order }}</a></p>
+                    {% empty %}
+                        <p>None</p>
+                    {% endfor %}
+                </div>
+              </div>
             </div>
             <div class="line palebox">
                 <h4 class="underline">Complementary information</h4>
