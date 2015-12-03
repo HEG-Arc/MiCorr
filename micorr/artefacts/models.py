@@ -272,6 +272,17 @@ class Artefact(TimeStampedModel):
                 artefact.append(self.origin.city.country.name)
         return " - ".join(artefact)
 
+    def artefact_verbose_description_short(self):
+        artefact = []
+        if self.alloy:
+            artefact.append(self.alloy.name)
+        if self.chronology_period:
+            artefact.append(self.chronology_period.chronology_category.name)
+        if self.origin:
+            if self.origin.city:
+                artefact.append(self.origin.city.country.name)
+        return " - ".join(artefact)
+
     def __unicode__(self):
         return self.artefact_verbose_description()
 
@@ -360,7 +371,7 @@ class Stratigraphy(TimeStampedModel):
     url = models.CharField(max_length=500, blank=True, null=True, help_text='The url that leads to the corresponding stratigraphy in the tool')
 
     class Meta:
-        ordering = ['order']
+        ordering = ['uid']
         verbose_name = 'Stratigraphy'
         verbose_name_plural = 'Stratigraphies'
 

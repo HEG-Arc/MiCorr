@@ -34,7 +34,7 @@
 
       {% block content %}
 
-      <h1>{{ artefact }}</h1>
+      <h1>{{ artefact.artefact_verbose_description_short }}</h1>
 
         <div class="row">
           <div class="c2"><em>Authors</em></div>
@@ -213,7 +213,7 @@
                 <div class="c9"><p>{{ artefact.date_aim_sampling }}</p></div>
               </div>
               <div class="row">
-                <div class="c3"><em>List of stratigraphies</em></div>
+                <div class="c3"><em>Stratigraphies</em></div>
                 <div class="c9">
                     {% for stratigraphy in stratigraphies %}
                         <p><a href="{% url 'stratigraphies:list' %}{{ stratigraphy.url }}">Stratigraphy No{{ stratigraphy.order }}</a></p>
