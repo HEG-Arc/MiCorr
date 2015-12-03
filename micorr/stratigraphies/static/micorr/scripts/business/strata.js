@@ -1225,7 +1225,7 @@ function CM() {
     this.dependencies.push('cpcompositionFamily');
     this.dependencies.push('subcpcompositionFamily');
     this.dependencies.push('subsubcpcompositionFamily');
-
+/*
     this.getJsonCharacteristics = function() {
         var c = this.toJsonCharacteristics();
         if (this.colourFamily != "")
@@ -1279,6 +1279,82 @@ function CM() {
             json.push({'name' : this.interfaceroughnessFamily});
         if (this.interfaceadherenceFamily != "")
             json.push({'name' : this.interfaceadherenceFamily});
+        return json;
+    };
+*/
+    this.getJsonCharacteristics = function(cp, m) {
+        var c = [];
+        if (this.shapeFamily != "")
+            c.push({'name' : this.shapeFamily});
+        if (this.natureFamily != "")
+                c.push({'name': this.natureFamilyUid});
+        if(cp!==undefined && m!==undefined)
+        {
+            if (cp.widthFamily != null)
+                c.push({'name': cp.widthFamily});
+            if (cp.thicknessFamily != "")
+                c.push({'name': cp.thicknessFamily});
+            if (cp.continuityFamily != "")
+                c.push({'name': cp.continuityFamily});
+            if (cp.directionFamily != "")
+                c.push({'name': cp.directionFamily});
+            if (cp.interfaceprofileFamily != null)
+                c.push({'name': cp.interfaceprofileFamily})
+            if (cp.colourFamily != "")
+                c.push(cp.getJsonColour());
+            if (cp.cohesionFamily != "")
+                c.push(cp.getJsonCohesion());
+            if (cp.hardnessFamily != "")
+                c.push(cp.getJsonHardness());
+            if (cp.crackingFamily != "")
+                c.push(cp.getJsonCracking());
+            if (cp.porosityFamily != "")
+                c.push(cp.getJsonPorosity());
+            if (cp.brightnessFamily != "")
+                c.push(cp.getJsonBrightness());
+            if (cp.opacityFamily != "")
+                c.push(cp.getJsonOpacity());
+            if (cp.magnetismFamily != "")
+                c.push(cp.getJsonMagnetism());
+            if (cp.cpriMicrostructureFamily != "")
+                c.push(cp.getJsonCprimicrostructure());
+            /*
+            if (cp.cmcompositionFamily != "")
+                c.push(cp.getJsonCmcomposition());
+            if (cp.cmLevelOfCorrosionFamily != "")
+                c.push(cp.getJsonCmLevelOfCorrosionFamily());
+            if (cp.subcmcompositionFamily != "")
+                c.push(cp.getJsonSubCmcomposition());
+            if (cp.subcmLevelOfCorrosionFamily != "")
+                c.push(cp.getJsonSubCmLevelOfCorrosionFamily());
+            if (cp.cpcompositionFamily != "")
+                c.push(cp.getJsonCPComposition());
+            if (cp.subcpcompositionFamily != "")
+                c.push(cp.getJsonSubcpcompositionFamily());
+            if (cp.subsubcpcompositionFamily != "")
+                c.push(cp.getJsonSubsubcpcompositionFamily());
+            if (cp.subcprimicrostructureFamily.length > 0) {
+                var q = cp.getJsonSubCpriMicrostructure();
+                for (var i = 0; i < q.length; i++)
+                    c.push(q[i]);
+            }
+            */
+        }
+        return c;
+    }
+
+    this.getJsonInterface = function(cp, m) {
+        var json = [];
+        if(cp!==undefined && m!==undefined) {
+            if (cp.interfaceprofileFamily != "")
+                json.push({'name': cp.interfaceprofileFamily});
+            if (cp.interfacetransitionFamily != "")
+                json.push({'name': cp.interfacetransitionFamily});
+            if (m.interfaceroughnessFamily != "")
+                json.push({'name': m.interfaceroughnessFamily});
+            if (m.interfaceadherenceFamily != "")
+                json.push({'name': m.interfaceadherenceFamily});
+        }
         return json;
     };
 };

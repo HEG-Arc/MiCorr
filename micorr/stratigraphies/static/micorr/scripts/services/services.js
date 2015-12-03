@@ -195,11 +195,22 @@ angular.module('MiCorr').factory('StrataData', function () {
             var st = rstratas;
             var temp = {'artefact' : artefactName, 'stratigraphy' : stratigraphyName, 'stratas' : []};
             for (var i = 0; i < st.length; i++) {
-                var s = st[i];
-                var strat = {'name': s.getName(), 'characteristics': '', 'interfaces': ''};
-                strat['characteristics'] = s.getJsonCharacteristics();
-                strat['interfaces'] = s.getJsonInterface();
-                temp['stratas'].push(strat);
+                //si on a à faire à une strate de nature 'CM' alors on va récupérer les caractèristiques des couches voisines 'CP' et 'M'
+                if(st[i].getShortNatureFamily()=='CM'){
+                    var cm = st[i]
+                    var cp = st[i-1]
+                    var m = st[i+1]
+                    var strat = {'name': s.getName(), 'characteristics': '', 'interfaces': ''};
+                    strat['characteristics'] = cm.getJsonCharacteristics(cp, m);
+                    strat['interfaces'] = cm.getJsonInterface(cp, m);
+                    temp['stratas'].push(strat);
+                } else {
+                    var s = st[i];
+                    var strat = {'name': s.getName(), 'characteristics': '', 'interfaces': ''};
+                    strat['characteristics'] = s.getJsonCharacteristics();
+                    strat['interfaces'] = s.getJsonInterface();
+                    temp['stratas'].push(strat);
+                }
             }
             console.log(temp);
             return temp;
