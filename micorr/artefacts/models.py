@@ -371,7 +371,7 @@ class Stratigraphy(TimeStampedModel):
     url = models.CharField(max_length=500, blank=True, null=True, help_text='The url that leads to the corresponding stratigraphy in the tool')
 
     class Meta:
-        ordering = ['uid']
+        ordering = ['artefact', 'order']
         verbose_name = 'Stratigraphy'
         verbose_name_plural = 'Stratigraphies'
 
