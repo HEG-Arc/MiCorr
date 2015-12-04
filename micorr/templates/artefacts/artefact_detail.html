@@ -107,14 +107,12 @@
                 <div class="c9"><p>{{ artefact.recorded_conservation_data }}</p></div>
               </div>
             </div>
-            <div class="line palebox">
-                <h4 class="underline">Complementary information</h4>
-                {% if sections.1.complementary_information != '' %}
-                    <p>{{ sections.1.complementary_information|safe }}</p>
-                {% else %}
-                    <p>None</p>
-                {% endif %}
-            </div>
+            {% if sections.1.complementary_information != '' %}
+                <div class="line palebox">
+                    <h4 class="underline">Complementary information</h4>
+                        <p>{{ sections.1.complementary_information|safe }}</p>
+                </div>
+            {% endif %}
             <div class="line">
                 <div id="accordionN2" aria-multiselectable="true">
 
@@ -223,14 +221,12 @@
                 </div>
               </div>
             </div>
-            <div class="line palebox">
+            {% if sections.4.complementary_information != '' %}
+              <div class="line palebox">
                 <h4 class="underline">Complementary information</h4>
-                {% if sections.4.complementary_information != '' %}
                     <p>{{ sections.4.complementary_information|safe }}</p>
-                {% else %}
-                    <p>None</p>
-                {% endif %}
-            </div>
+              </div>
+            {% endif %}
           </div>
 
 
@@ -265,14 +261,12 @@
                           </div>
                         {% endfor %}
                     </div>
-                    <div class="line palebox">
-                        <h4 class="underline">Complementary information</h4>
-                        {% if sections.6.complementary_information != '' %}
-                            <p>{{ sections.6.complementary_information|safe }}</p>
-                        {% else %}
-                            <p>None</p>
-                        {% endif %}
-                    </div>
+                    {% if sections.6.complementary_information != '' %}
+                        <div class="line palebox">
+                            <h4 class="underline">Complementary information</h4>
+                                <p>{{ sections.6.complementary_information|safe }}</p>
+                        </div>
+                    {% endif %}
                   </div>
 
                 <!--CORROSION LAYERS-->
@@ -295,14 +289,12 @@
                           </div>
                         {% endfor %}
                     </div>
-                    <div class="line palebox">
-                        <h4 class="underline">Complementary information</h4>
-                        {% if sections.7.complementary_information != '' %}
-                            <p>{{ sections.7.complementary_information|safe }}</p>
-                        {% else %}
-                            <p>None</p>
-                        {% endif %}
-                    </div>
+                    {% if sections.7.complementary_information != '' %}
+                        <div class="line palebox">
+                            <h4 class="underline">Complementary information</h4>
+                                <p>{{ sections.7.complementary_information|safe }}</p>
+                        </div>
+                    {% endif %}
                   </div>
                 </div> <!--accordionN2 -->
             </div>
