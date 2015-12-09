@@ -95,8 +95,8 @@ class ArtefactFilter(django_filters.FilterSet):
     """
     metal1 = django_filters.ModelChoiceFilter(label='Metal Family', queryset=Metal.objects.filter(id__in=Artefact.objects.values_list("metal1").distinct()), empty_label='All Metal Families')
     corrosion_form = django_filters.ModelChoiceFilter(label='Corrosion Form', queryset=CorrosionForm.objects.all(), empty_label='All Corrosion Forms')
-    environment_new = django_filters.ModelChoiceFilter(label='Environment', queryset=Environment.objects.all(), empty_label='All Environments')
+    environment = django_filters.ModelChoiceFilter(label='Environment', queryset=Environment.objects.all(), empty_label='All Environments')
 
     class Meta:
         model = Artefact
-        fields = ['metal1', 'corrosion_form', 'environment_new']
+        fields = ['metal1', 'corrosion_form', 'environment']

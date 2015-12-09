@@ -227,7 +227,7 @@ class Artefact(TimeStampedModel):
     recovering_date = models.ForeignKey(RecoveringDate, verbose_name='date of recovering', blank=True, null=True, help_text='The date of excavation')
     chronology_period = models.ForeignKey(ChronologyPeriod, verbose_name='dating of artefact (Tpq _ Taq)', blank=True, null=True,
                                           help_text='The approximate dating of the artefact')
-    environment_new = models.ForeignKey(Environment, verbose_name='burial conditions / environment', blank=True, null=True,
+    environment = models.ForeignKey(Environment, verbose_name='burial conditions / environment', blank=True, null=True,
                                          help_text='The environment where the artefact was buried.')
     location = models.ForeignKey(Contact, verbose_name='artefact location', blank=True, null=True, related_name='artefact location', help_text='The actual location of the artefact')
     owner = models.ForeignKey(Contact, blank=True, null=True, related_name='artefact owner', help_text='The owner of the artefact')
@@ -243,15 +243,6 @@ class Artefact(TimeStampedModel):
         verbose_name = 'Artefact'
         verbose_name_plural = 'Artefacts'
         ordering = ['metal1', 'alloy', 'chronology_period__chronology_category', 'type']
-
-    """
-    For the previous version, when an artefact could have multiple environments
-    def get_environments(self):
-        environments_list = []
-        for env in self.environment.all():
-            environments_list.append(env.name)
-        return "/ ".join(environments_list)
-    """
 
     def get_authors(self):
         authors_list = []
