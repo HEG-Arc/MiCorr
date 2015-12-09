@@ -227,8 +227,6 @@ class Artefact(TimeStampedModel):
     recovering_date = models.ForeignKey(RecoveringDate, verbose_name='date of recovering', blank=True, null=True, help_text='The date of excavation')
     chronology_period = models.ForeignKey(ChronologyPeriod, verbose_name='dating of artefact (Tpq _ Taq)', blank=True, null=True,
                                           help_text='The approximate dating of the artefact')
-    environment = models.ManyToManyField(Environment, verbose_name='burial conditions / environment', related_name='the environments', blank=True, null=True,
-                                         help_text='The environment(s) where the artefact was buried.')
     environment_new = models.ForeignKey(Environment, verbose_name='burial conditions / environment', blank=True, null=True,
                                          help_text='The environment where the artefact was buried.')
     location = models.ForeignKey(Contact, verbose_name='artefact location', blank=True, null=True, related_name='artefact location', help_text='The actual location of the artefact')
