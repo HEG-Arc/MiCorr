@@ -11,7 +11,7 @@ class ArtefactAdmin(admin.ModelAdmin):
                        'sample_description', 'sample_number', 'date_aim_sampling']}),
         ('Foreign keys', {
             'fields': ['user', 'author', 'metal1', 'metalx', 'alloy', 'type', 'origin', 'recovering_date', 'chronology_period',
-                       'environment', 'location', 'owner', 'technology', 'sample_location',
+                       'environment', 'environment_new', 'location', 'owner', 'technology', 'sample_location',
                        'responsible_institution', 'microstructure', 'corrosion_form', 'corrosion_type']})
     ]
     ordering = ['-id']
