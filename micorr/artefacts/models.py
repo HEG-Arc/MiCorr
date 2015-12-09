@@ -246,11 +246,14 @@ class Artefact(TimeStampedModel):
         verbose_name_plural = 'Artefacts'
         ordering = ['metal1', 'alloy', 'chronology_period__chronology_category', 'type']
 
+    """
+    For the previous version, when an artefact could have multiple environments
     def get_environments(self):
         environments_list = []
         for env in self.environment.all():
             environments_list.append(env.name)
         return "/ ".join(environments_list)
+    """
 
     def get_authors(self):
         authors_list = []
