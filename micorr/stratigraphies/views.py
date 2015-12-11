@@ -106,3 +106,9 @@ def deleteArtefact(request, artefact):
 
     response = ms.delArtefact(artefact)
     return HttpResponse(json.dumps(response), content_type='application/json')
+
+# Retourne toutes les caracteristiques d'une nature family
+# @ params : stratigraphy uid de la nature family
+def getnaturefamily(request, nature):
+    ms = MiCorrService()
+    return HttpResponse(json.dumps(ms.getnaturefamily(nature)), content_type='application/json')

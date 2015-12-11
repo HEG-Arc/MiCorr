@@ -14,4 +14,5 @@ urlpatterns = patterns('',
     url(r'^json/match/(?P<data>[[a-zA-Z0-9%\{\}\[\]\'\"\:\,\ \_]{0,}]{0,})$', 'stratigraphies.views.match'),
     url(r'^json/deleteStratigraphy/(?P<stratigraphy>\w+)$', 'stratigraphies.views.deleteStratigraphy'),
     url(r'^json/deleteartefact/(?P<artefact>\w+)$', 'stratigraphies.views.deleteArtefact'),
+    url(r'^json/getnaturefamily/(?P<nature>\w+)$', 'stratigraphies.views.getnaturefamily'),
 )

@@ -141,6 +141,34 @@ class Neo4jDAO:
 
         return chars
 
+    # Retourne la liste des caracteristiques pour une nature family (S, NMM, Metal, etc.)
+    # @params uid de la nature family
+    # @returns la liste des caracteristiques pour une nature family (S, NMM, Metal, etc.)
+    def getnaturefamily(self, nature):
+        # on retournera c
+        n = []
+
+        # on cherche d'abord toutes les families liees a la nature family cherchee
+        familiesList = self.graph.cypher.execute("MATCH (a:Nature)-[r:HAS_FAMILY]->(b:Family) where a.uid='" + nature + "' RETURN b.uid as uid order by ID(b)")
+        print (nature)
+
+        # pour chaque famille on va faire une requete
+        for family in familiesList:
+            fam = {'name': family.uid, 'characteristics': ''}
+            print ("***" + family.uid)
+
+            # chaque famille a des caracteristiques
+            charactList = self.graph.cypher.execute("MATCH (c:Characteristic)-[b:BELONGS_TO]->(f:Family) where f.uid='" + family.uid + "' RETURN f.uid as family, c.uid as uid, c.name as real_name")
+            print ("======Characteristic")
+            clist = []
+            for charact in charactList:
+                clist.append({'name': charact.uid, 'family': charact.family, 'real_name': charact.real_name})
+                print ("         " + charact.uid)
+
+            fam['characteristics'] = clist
+            n.append(fam)
+        return n
+
     # Ajout d'une stratigraphie
     # @params nom de l'artefact et description de la stratigraphie de la stratigraphie
     # @returns true si ajout, false si refus d'ajout

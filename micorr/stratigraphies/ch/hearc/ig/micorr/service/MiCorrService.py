@@ -63,5 +63,6 @@ class MiCorrService:
     def test(self):
         return MiCorrService.db.test()
 
-
-
+    def getnaturefamily(self, nature):
+        MiCorrService.db.begin()
+        return MiCorrService.db.getnaturefamily(nature)
