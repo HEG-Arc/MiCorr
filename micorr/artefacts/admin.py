@@ -32,10 +32,6 @@ class ArtefactAdmin(admin.ModelAdmin):
         return chronology
 
 
-class CorrosionFormAdmin(admin.ModelAdmin):
-    list_display = ('corrosion_category', 'form')
-
-
 class ChronologyCategoryAdmin(admin.ModelAdmin):
     list_display = ('order', 'name')
 
@@ -70,7 +66,7 @@ admin.site.register(Environment)
 admin.site.register(Technology)
 admin.site.register(Microstructure)
 admin.site.register(CorrosionCategory)
-admin.site.register(CorrosionForm, CorrosionFormAdmin)
+admin.site.register(CorrosionForm)
 admin.site.register(CorrosionType)
 admin.site.register(Artefact, ArtefactAdmin)
 admin.site.register(SectionCategory, SectionCategoryAdmin)
