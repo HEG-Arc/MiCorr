@@ -95,7 +95,7 @@ class ArtefactFilter(django_filters.FilterSet):
     A filter which appears on top of the artefacts list
     """
     metal1 = django_filters.ModelChoiceFilter(label='Metal Family', queryset=Metal.objects.filter(id__in=Artefact.objects.values_list("metal1").distinct()), empty_label='All Metal Families')
-    corrosion_form = django_filters.ModelChoiceFilter(label='Corrosion Forms', queryset=CorrosionCategory.objects.filter(id__in=CorrosionForm.objects.values_list("corrosion_category").distinct()), empty_label='All Corrosion Forms')
+    corrosion_form = django_filters.ModelChoiceFilter(label='Corrosion Forms', queryset=CorrosionCategory.objects.filter(id__in=CorrosionForm.objects.values_list("corrosion_category")), empty_label='All Corrosion Forms')
     environment = django_filters.ModelChoiceFilter(label='Environment', queryset=Environment.objects.all(), empty_label='All Environments')
 
     class Meta:
