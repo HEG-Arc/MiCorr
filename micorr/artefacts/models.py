@@ -171,27 +171,10 @@ class Microstructure(TimeStampedModel):
         return self.name
 
 
-class CorrosionCategory(TimeStampedModel):
-    """
-    The corrosion category the corrosion form belongs to
-    """
-    name = models.CharField(max_length=100, blank=True)
-
-    class Meta:
-        ordering = ['name']
-        verbose_name = 'Corrosion Category'
-        verbose_name_plural = 'Corrosion Categories'
-
-    def __unicode__(self):
-        return self.name
-
-
 class CorrosionForm(TimeStampedModel):
     """
     The corrosion form observed
     """
-    corrosion_category = models.ForeignKey(CorrosionCategory, blank=True, null=True,
-                                           help_text='A general corrosion category')
     form = models.CharField(max_length=100, blank=True)
 
     class Meta:

@@ -1,7 +1,6 @@
 from django import forms
 from django.forms import TextInput, FileInput
-from .models import Artefact, Document, Metal, CorrosionCategory, CorrosionForm, Environment, Origin, \
-    ChronologyPeriod, Alloy, Technology
+from .models import Artefact, Document, Metal, CorrosionForm, Environment, Origin, ChronologyPeriod, Alloy, Technology
 from tinymce.widgets import TinyMCE
 import django_filters
 
@@ -95,7 +94,7 @@ class ArtefactFilter(django_filters.FilterSet):
     A filter which appears on top of the artefacts list
     """
     metal1 = django_filters.ModelChoiceFilter(label='Metal Family', queryset=Metal.objects.filter(id__in=Artefact.objects.values_list("metal1").distinct()), empty_label='All Metal Families')
-    corrosion_form = django_filters.ModelChoiceFilter(label='Corrosion Forms', queryset=CorrosionCategory.objects.filter(name__in=Artefact.objects.values_list("corrosion_form__form")), empty_label='All Corrosion Forms')
+    corrosion_form = django_filters.ModelChoiceFilter(label='Corrosion Forms', queryset=CorrosionForm.objects.all(), empty_label='All Corrosion Forms')
     environment = django_filters.ModelChoiceFilter(label='Environment', queryset=Environment.objects.all(), empty_label='All Environments')
 
     class Meta:
