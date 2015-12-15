@@ -145,7 +145,7 @@ class Neo4jDAO:
     # @params uid de la nature family
     # @returns la liste des caracteristiques pour une nature family (S, NMM, Metal, etc.)
     def getnaturefamily(self, nature):
-        # on retournera c
+        # on retournera n
         n = []
 
         # on cherche d'abord toutes les families liees a la nature family cherchee
@@ -154,18 +154,31 @@ class Neo4jDAO:
 
         # pour chaque famille on va faire une requete
         for family in familiesList:
-            fam = {'name': family.uid, 'characteristics': ''}
+            fam = {'name': family.uid, 'characteristics': []}
             print ("***" + family.uid)
 
             # chaque famille a des caracteristiques
-            charactList = self.graph.cypher.execute("MATCH (c:Characteristic)-[b:BELONGS_TO]->(f:Family) where f.uid='" + family.uid + "' RETURN f.uid as family, c.uid as uid, c.name as real_name")
-            print ("======Characteristic")
-            clist = []
-            for charact in charactList:
-                clist.append({'name': charact.uid, 'family': charact.family, 'real_name': charact.real_name})
-                print ("         " + charact.uid)
+            charactList = self.graph.cypher.execute("MATCH (c:Characteristic)-[b:BELONGS_TO]->(f:Family) where f.uid='" + family.uid + "' RETURN f.uid as family, c.uid as uid, c.name as real_name, c.description as description")
 
-            fam['characteristics'] = clist
+            for charact in charactList:
+                # pour chaque caracteristiques on ajoute les sous-caracteristiques
+                subcharactList = self.graph.cypher.execute("MATCH (a)-[r:HAS_SPECIALIZATION]->(b) where a.uid='" + charact.uid + "' RETURN b.uid as uid, b.description as description, b.name as sub_real_name order by a.uid asc")
+
+                sc = []
+                for subcharact in subcharactList:
+                    # pour chaque sous-caracteristique on ajoute les sous-sous-caracteristiques
+                    subsubcharactList = self.graph.cypher.execute("MATCH (sub:SubCharacteristic)-[:HAS_SPECIALIZATION]->(subsub:SubCharacteristic) where sub.uid='" + subcharact.uid + "' RETURN subsub.uid as uid, subsub.name as subsub_real_name order by subsub.uid asc")
+
+                    subsubcharactItems = []
+                    for subsubcharact in subsubcharactList:
+                        subsubcharactItems.append({'name': subsubcharact.uid, 'subsub_real_name': subsubcharact.subsub_real_name})
+
+                    ssc = {'name': subcharact.uid, 'description': subcharact.description, 'subcharacteristics': '', 'sub_real_name': subcharact.sub_real_name}
+                    ssc['subcharacteristics'] = subsubcharactItems
+                    sc.append(ssc)
+
+                fam['characteristics'].append({'name': charact.uid, 'description': charact.description, 'real_name': charact.real_name, 'subcharacteristics': sc})
+
             n.append(fam)
         return n
 
