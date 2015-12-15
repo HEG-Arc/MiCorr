@@ -1,7 +1,6 @@
 from django.contrib import admin
 from .models import Metal, Alloy, Type, Origin, RecoveringDate, ChronologyCategory, ChronologyPeriod, Environment, \
-    Technology, \
-    Microstructure, CorrosionCategory, CorrosionForm, CorrosionType, Artefact, SectionCategory, Section, Image, \
+    Technology, Microstructure, CorrosionForm, CorrosionType, Artefact, SectionCategory, Section, Image, \
     Document, Stratigraphy
 
 
