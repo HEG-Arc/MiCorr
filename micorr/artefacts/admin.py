@@ -1,7 +1,8 @@
 from django.contrib import admin
 from .models import Metal, Alloy, Type, Origin, RecoveringDate, ChronologyCategory, ChronologyPeriod, Environment, \
     Technology, \
-    Microstructure, CorrosionForm, CorrosionType, Artefact, SectionCategory, Section, Image, Document, Stratigraphy
+    Microstructure, CorrosionCategory, CorrosionForm, CorrosionType, Artefact, SectionCategory, Section, Image, \
+    Document, Stratigraphy
 
 
 class ArtefactAdmin(admin.ModelAdmin):
@@ -29,6 +30,10 @@ class ArtefactAdmin(admin.ModelAdmin):
         if obj.chronology_period:
             chronology = obj.chronology_period.chronology_category
         return chronology
+
+
+class CorrosionFormAdmin(admin.ModelAdmin):
+    list_display = ('corrosion_category', 'form')
 
 
 class ChronologyCategoryAdmin(admin.ModelAdmin):
@@ -64,7 +69,8 @@ admin.site.register(ChronologyPeriod)
 admin.site.register(Environment)
 admin.site.register(Technology)
 admin.site.register(Microstructure)
-admin.site.register(CorrosionForm)
+admin.site.register(CorrosionCategory)
+admin.site.register(CorrosionForm, CorrosionFormAdmin)
 admin.site.register(CorrosionType)
 admin.site.register(Artefact, ArtefactAdmin)
 admin.site.register(SectionCategory, SectionCategoryAdmin)
