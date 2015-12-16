@@ -12,6 +12,6 @@ class HomePageView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(HomePageView, self).get_context_data(**kwargs)
         context['metalfamilies'] = Metal.objects.filter(id__in=Artefact.objects.values_list("metal1").distinct())
-        context['corrosionforms'] = CorrosionForm.objects.all()
+        context['corrosionforms'] = CorrosionForm.objects.filter(id__in=Artefact.objects.values_list("corrosion_form"))
         context['environments'] = Environment.objects.all()
         return context
