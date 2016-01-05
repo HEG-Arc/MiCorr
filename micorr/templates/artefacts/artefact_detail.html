@@ -1,4 +1,6 @@
 {% extends "base.html" %}
+{% load terms %}
+{% filter replace_terms %}
 
     {% block title %}
         <title>MiCorr | {{ artefact.pk }}</title>
@@ -350,3 +352,5 @@
 
 
         {% endblock content %}
+
+{% endfilter %}
