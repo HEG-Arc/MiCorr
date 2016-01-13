@@ -13,7 +13,7 @@
  * Dans chaque div, un <svg></svg> est créé grâce à raphaeljs
  * chaque svg est affiché à l'écrean
  */
-angular.module('MiCorr').directive('strata', function($compile, StrataData){
+angular.module('micorrApp').directive('strata', function($compile, StrataData){
     return {
         restrict : 'EA',
         replace : true,

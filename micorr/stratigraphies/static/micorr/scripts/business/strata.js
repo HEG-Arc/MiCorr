@@ -3,7 +3,7 @@
  *
  * Version: 1
  *
- * Ce fichier représente les classes business de MiCorrApp
+ * Ce fichier représente les classes business de micorrApp
  * Tout tourne autour des classes business
  * Il existe 7 nature de matériau (CM, CP, D, M ,NMM, POM, S, SV)
  * Chacune de ces familles héritent de la classe Strata qui contient les propriétés en commun de chaque familles

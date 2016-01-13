@@ -1,4 +1,4 @@
-<section ng-controller="showStrat">
+<section ng-controller="ShowStratCtrl">
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-6">
@@ -165,7 +165,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-6">
-                <div ng-controller="tabsStrata">
+                <div ng-controller="TabsStrataCtrl">
                     <div ng-hide="showTabForms">
                         <div class="jumbotron">
                             <h1>Stratigraphy visualizer</h1>
@@ -217,7 +217,7 @@
                         </div>
                     </div>
                     <tabset ng-show="showTabForms" justified="true">
-                        <tab heading="Morphology" ng-controller="stratMorphologyCtrl" active="activeMorphologyTab">
+                        <tab heading="Morphology" ng-controller="StratMorphologyCtrl" active="activeMorphologyTab">
                             <form>
                                 <div class="row-fluid">
                                     <div class="col-md-6 form-group">
@@ -278,7 +278,7 @@
                                 </div>
                             </form>
                         </tab>
-                        <tab heading="Texture" ng-controller="stratTextureCtrl">
+                        <tab heading="Texture" ng-controller="StratTextureCtrl">
                             <form>
                                 <div class="row-fluid">
                                     <div ng-show="showPorosity" class="col-md-6 form-group">
@@ -306,7 +306,7 @@
                                 </div>
                             </form>
                         </tab>
-                        <tab heading="Microstructure" ng-controller="stratMicrostructureCtrl">
+                        <tab heading="Microstructure" ng-controller="StratMicrostructureCtrl">
                             <form>
                                 <div class="row-fluid">
                                     <div ng-show="showCmlevelofcorrosionFamily" class="col-md-6 form-group">
@@ -376,7 +376,7 @@
                                 </div>
                             </form>
                         </tab>
-                        <tab heading="Composition" ng-controller="stratCompositionCtrl">
+                        <tab heading="Composition" ng-controller="StratCompositionCtrl">
                             <form>
                                 <div class="row-fluid">
                                     <div ng-show="showScomposition" class="col-md-6 form-group">
@@ -455,7 +455,7 @@
 
                             </form>
                         </tab>
-                        <tab heading="Interfaces" ng-controller="stratInterfaceCtrl" active="activeTabInterface">
+                        <tab heading="Interfaces" ng-controller="StratInterfaceCtrl" active="activeTabInterface">
                             <div class="row-fluid">
                                 <div ng-show="showProfile" class="col-md-6 form-group">
                                     <label for="interfaceProfileFamily">Profile</label>

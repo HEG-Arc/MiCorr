@@ -1,7 +1,7 @@
 {% load static %}
 
 <!DOCTYPE html>
-<html ng-app="MiCorr">
+<html ng-app="micorrApp">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="Pragma" content="no-cache">
@@ -25,8 +25,33 @@
     <script src="../static/micorr/scripts/directives/picklist.js"></script>
     <script type="text/javascript" src="http://gabelerner.github.io/canvg/canvg.js"></script>
     <script src="../static/micorr/scripts/business/strata.js"></script>
+    <script src="../static/micorr/scripts/app.js"></script>
     <script src="../static/micorr/scripts/init.js"></script>
-    <script src="../static/micorr/scripts/controllers/controllers.js"></script>
+    <script src="../static/micorr/scripts/controllers/addStratigraphy.js"></script>
+    <script src="../static/micorr/scripts/controllers/listArtefacts.js"></script>
+    <script src="../static/micorr/scripts/controllers/main.js"></script>
+    <script src="../static/micorr/scripts/controllers/modalAddArtefact.js"></script>
+    <script src="../static/micorr/scripts/controllers/modalAddChildStrata.js"></script>
+    <script src="../static/micorr/scripts/controllers/modalAddChildStrataInstance.js"></script>
+    <script src="../static/micorr/scripts/controllers/modalAddStrata.js"></script>
+    <script src="../static/micorr/scripts/controllers/modalAddStrataInstance.js"></script>
+    <script src="../static/micorr/scripts/controllers/modalAddStratigraphy.js"></script>
+    <script src="../static/micorr/scripts/controllers/modalAddStratigraphyInstance.js"></script>
+    <script src="../static/micorr/scripts/controllers/modalDelArtefact.js"></script>
+    <script src="../static/micorr/scripts/controllers/modalDelStrata.js"></script>
+    <script src="../static/micorr/scripts/controllers/modalDelStratigraphy.js"></script>
+    <script src="../static/micorr/scripts/controllers/modalExportStrataCtrl.js"></script>
+    <script src="../static/micorr/scripts/controllers/modalSaveStrata.js"></script>
+    <script src="../static/micorr/scripts/controllers/modalShowSimilarStrata.js"></script>
+    <script src="../static/micorr/scripts/controllers/pickList.js"></script>
+    <script src="../static/micorr/scripts/controllers/showArtefact.js"></script>
+    <script src="../static/micorr/scripts/controllers/showStrat.js"></script>
+    <script src="../static/micorr/scripts/controllers/stratComposition.js"></script>
+    <script src="../static/micorr/scripts/controllers/stratInterface.js"></script>
+    <script src="../static/micorr/scripts/controllers/stratMicrostructure.js"></script>
+    <script src="../static/micorr/scripts/controllers/stratMorphology.js"></script>
+    <script src="../static/micorr/scripts/controllers/stratTexture.js"></script>
+    <script src="../static/micorr/scripts/controllers/tabsStrata.js"></script>
     <script src="../static/micorr/scripts/services/services.js"></script>
     <script src="../static/micorr/scripts/directives/directives.js"></script>
     <script src="../static/micorr/scripts/algorithms/PoissonDiskSampler.js"></script>
@@ -59,7 +84,7 @@
 
 <div style="margin-top:70px;;"></div>
 
-<div ng-controller="mainController" class="container-fluid" ng-view></div>
+<div ng-controller="MainCtrl" class="container-fluid" ng-view></div>
 
 <footer>
     <p>&copy; HE-Arc 2015</p>

@@ -498,12 +498,15 @@ angular.module('MiCorr').controller('showStrat', function ($scope, $routeParams,
 }).controller('tabsStrata', function ($scope, $route, $window, MiCorrService, StrataData) {
 
 //Contrôlleur qui s'occupe de l'onglet de la morphologie
-}).controller('stratMorphologyCtrl', function ($scope, $route, $window, StrataData) {
+}).controller('stratMorphologyCtrl', ['$scope', '$route', '$window', 'StrataData', function ($scope, $route, $window, StrataData) {
+    StrataData().then(
+      alert('test')
+    );
     // On récupère les valeurs qui vont aller dans les champs de notre formulaire
-    $scope.fShapeFamily     = "";
-    $scope.shapeFamily      = StrataData.getShapeFamily()['characteristics'];
+    $scope.fShapeFamily = "";
+    $scope.shapeFamily = StrataData.getShapeFamily()['characteristics'];
 
-    $scope.widthFamily      = StrataData.getWidthFamily()['characteristics'];
+    $scope.widthFamily = StrataData.getWidthFamily()['characteristics'];
     $scope.thicknessFamily = StrataData.getThicknessFamily()['characteristics'];
     $scope.continuityFamily = StrataData.getContinuityFamily()['characteristics'];
     $scope.directionFamily = StrataData.getDirectionFamily()['characteristics'];
@@ -574,7 +577,7 @@ angular.module('MiCorr').controller('showStrat', function ($scope, $routeParams,
         $scope.$emit('updateDraw');
     };
 //Contrôlleur qui s'occupe de l'onglet de la texture
-}).controller('stratTextureCtrl', function ($scope, $route, $window, StrataData) {
+}]).controller('stratTextureCtrl', function ($scope, $route, $window, StrataData) {
 
     $scope.porosityFamily   = StrataData.getPorosityFamily()['characteristics'];
     $scope.cohesionFamily   = StrataData.getCohesionFamily()['characteristics'];
@@ -1346,9 +1349,6 @@ angular.module('MiCorr').controller('mainController', function ($scope, $route, 
             return subsubList;
 
     };
-
-
-
 
 }).controller('ModalDelstratigraphyCtrl', function ($scope, $route, $modal, $log, StrataData, MiCorrService) {
     $scope.open = function (size, strat) {
