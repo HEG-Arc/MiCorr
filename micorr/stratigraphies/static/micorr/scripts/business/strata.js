@@ -1078,7 +1078,7 @@ function CP() {
     SubCPRIMicrostructureStrata.call(this);
 
 
-    this.natureFamily = "Corroded Products";
+    this.natureFamily = "Corrosion Products";
     this.shortNatureFamily = "CP";
     this.natureFamilyUid = "cpCharacteristic";
 
