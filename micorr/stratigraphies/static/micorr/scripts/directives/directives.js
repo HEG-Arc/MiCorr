@@ -347,6 +347,7 @@ angular.module('micorrApp').directive('strata', function($compile, StrataData){
                 scope.setInterfaceTab(false);
             });
 
+            /*
             // construction du texte à afficher dans le tooltip
             var tooltipText = [];
             for (var i = 0; i < strat.getJsonCharacteristics().length; i++)
@@ -361,7 +362,8 @@ angular.module('micorrApp').directive('strata', function($compile, StrataData){
             for (var i = 0; i < tooltipText.length; i++)
                 if (tooltipText[i] != "" || tooltipText[i] != "undefined")
                     tooltipStr += tooltipText[i] + "\r\n";
-
+            */
+            var tooltipStr = strat.getNatureFamily();
             element.children()[1].setAttribute("title", tooltipStr);
             // on gére les toolstips avec jqueryui
             $(document).tooltip();
