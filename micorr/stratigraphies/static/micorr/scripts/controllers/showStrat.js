@@ -228,13 +228,17 @@ angular.module('micorrApp')
         };
 
         $scope.$on('StrataDataLoaded', function(event) {
+            // on charge une nouvelle stratigraphie donc on supprime la stratigraphie en mémoire dans le service
+            StrataData.clear();
             initShowStrata();
+            $scope.$broadcast('initShowStrat');
         });
 
         // on charge une nouvelle stratigraphie donc on supprime la stratigraphie en mémoire dans le service
         StrataData.clear();
-
         initShowStrata();
+        $scope.$broadcast('initShowStrat');
+
 
         /*
         *

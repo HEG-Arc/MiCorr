@@ -75,7 +75,7 @@ angular.module('micorrApp')
         StrataData.setSubcmLevelOfCorrosionFamily($scope.getSubCharacteristicsFromFamily('cmLevelOfCorrosionFamily', 'sub'));
         StrataData.setSubmmicrostructureFamily($scope.getSubCharacteristicsFromFamily('mMicrostructureFamily', 'sub'));
         StrataData.setSubmcompositionFamily($scope.getSubCharacteristicsFromFamily('mCompositionFamily', 'sub'));
-    }).then(function(){
+    }).success(function(){
         $scope.$broadcast('StrataDataLoaded');
     });
 
