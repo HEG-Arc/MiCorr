@@ -120,7 +120,7 @@ class Neo4jDAO:
         familyList = self.graph.cypher.execute("MATCH (n:Family) RETURN n.uid as name, n.name as fam_real_name")
         for family in familyList:
             #pour chaque famille on ajoute les caracteristiques
-            caracList = self.graph.cypher.execute("MATCH (a)-[r:BELONGS_TO]->(b) where b.uid = '" + family.name + "' return a.uid as uid, a.description as description, a.name as carac_real_name order by a.uid asc")
+            caracList = self.graph.cypher.execute("MATCH (a)-[r:BELONGS_TO]->(b) where b.uid = '" + family.name + "' return a.uid as uid, a.description as description, a.name as carac_real_name order by a.order asc")
             fam = {'family' : family.name, 'characteristics' : [], 'fam_real_name': family.fam_real_name}
             for carac in caracList:
                 # pour chaque caracteristiques on ajoute les sous caracteristiques

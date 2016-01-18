@@ -222,13 +222,13 @@
                                 <div class="row-fluid">
                                     <div class="col-md-6 form-group">
                                         <label for="morphologyShape">Shape</label>
-                                        <select id="morphologyShape" class="form-control" ng-model="selectedShapeFamily" ng-options="x.real_name for x in shapeFamily | orderBy:x.order" ng-change="upMorpho()">
+                                        <select id="morphologyShape" class="form-control" ng-model="selectedShapeFamily" ng-options="x.real_name for x in shapeFamily | orderBy:'x.order'" ng-change="upMorpho()">
                                             <option value=""></option>
                                         </select>
                                     </div>
                                     <div ng-show="showWidth" class="col-md-6 form-group">
                                         <label for="morphologyWidth">Width</label>
-                                        <select id="morphologyWidth" class="form-control" ng-model="selectedWidthFamily" ng-options="x.real_name for x in widthFamily | orderBy:x.order" ng-change="upMorpho()">
+                                        <select id="morphologyWidth" class="form-control" ng-model="selectedWidthFamily" ng-options="x.real_name for x in widthFamily | orderBy:'x.order'" ng-change="upMorpho()">
                                             <option value=""></option>
                                         </select>
                                     </div>
@@ -236,13 +236,13 @@
                                 <div class="row-fluid">
                                     <div ng-show="showThickness" class="col-md-6 form-group">
                                         <label for="morphologyThickness">Thickness</label>
-                                        <select id="morphologyThickness" class="form-control" ng-model="selectedThicknessFamily" ng-options="x.real_name for x in thicknessFamily | orderBy:x.order" ng-change="upMorpho()">
+                                        <select id="morphologyThickness" class="form-control" ng-model="selectedThicknessFamily" ng-options="x.real_name for x in thicknessFamily | orderBy:'x.order'" ng-change="upMorpho()">
                                             <option value=""></option>
                                         </select>
                                     </div>
                                     <div ng-show="showContinuity" class="col-md-6 form-group">
                                         <label for="morphologyContinuity">Continuity</label>
-                                        <select id="morphologyContinuity" class="form-control" ng-model="selectedContinuityFamily" ng-options="x.real_name for x in continuityFamily | orderBy:x.order" ng-change="upMorpho()">
+                                        <select id="morphologyContinuity" class="form-control" ng-model="selectedContinuityFamily" ng-options="x.real_name for x in continuityFamily | orderBy:'x.order'" ng-change="upMorpho()">
                                             <option value=""></option>
                                         </select>
                                     </div>
@@ -250,13 +250,13 @@
                                 <div class="row-fluid">
                                     <div ng-show="showDirection" class="col-md-6 form-group">
                                         <label for="morphologyDirection">Direction</label>
-                                        <select id="morphologyDirection" class="form-control" ng-model="selectedDirectionFamily" ng-options="x.real_name for x in directionFamily | orderBy:x.order" ng-change="upMorpho()">
+                                        <select id="morphologyDirection" class="form-control" ng-model="selectedDirectionFamily" ng-options="x.real_name for x in directionFamily | orderBy:'x.order'" ng-change="upMorpho()">
                                             <option value=""></option>
                                         </select>
                                     </div>
                                     <div ng-show="showColor" class="col-md-6 form-group">
                                         <label for="physicalPropertyColor">Colour</label>
-                                        <select id="physicalPropertyColor" class="form-control" ng-model="selectedColourFamily" ng-options="x.real_name for x in colourFamily | orderBy:x.order" ng-change="upMorpho()">
+                                        <select id="physicalPropertyColor" class="form-control" ng-model="selectedColourFamily" ng-options="x.real_name for x in colourFamily | orderBy:'x.order'" ng-change="upMorpho()">
                                             <option value=""></option>
                                         </select>
                                     </div>
@@ -264,13 +264,13 @@
                                 <div class="row-fluid">
                                     <div ng-show="showBrightness" class="col-md-6 form-group">
                                         <label for="physicalPropertyBrightness">Brightness</label>
-                                        <select id="physicalPropertyBrightness" class="form-control" ng-model="selectedBrightnessFamily" ng-options="x.real_name for x in brightnessFamily | orderBy:x.order" ng-change="upMorpho()">
+                                        <select id="physicalPropertyBrightness" class="form-control" ng-model="selectedBrightnessFamily" ng-options="x.real_name for x in brightnessFamily | orderBy:'x.order'" ng-change="upMorpho()">
                                             <option value=""></option>
                                         </select>
                                     </div>
                                     <div ng-show="showBrightness" class="col-md-6 form-group">
                                         <label for="physicalPropertyOpacity">Opacity</label>
-                                        <select id="physicalPropertyOpacity" class="form-control" ng-model="selectedOpacityFamily" ng-options="x.real_name for x in opacityFamily | orderBy:x.order" ng-change="upMorpho()">
+                                        <select id="physicalPropertyOpacity" class="form-control" ng-model="selectedOpacityFamily" ng-options="x.real_name for x in opacityFamily | orderBy:'x.order'" ng-change="upMorpho()">
                                             <option value=""></option>
                                         </select>
                                     </div>
@@ -278,7 +278,7 @@
                                 <div class="row-fluid">
                                     <div ng-show="showMagnetism" class="col-md-6 form-group">
                                         <label for="physicalPropertyMagnetism">Magnetism</label>
-                                        <select id="physicalPropertyMagnetism" class="form-control" ng-model="selectedMagnetismFamily" ng-options="x.real_name for x in magnetismFamily | orderBy:x.order" ng-change="upMorpho()">
+                                        <select id="physicalPropertyMagnetism" class="form-control" ng-model="selectedMagnetismFamily" ng-options="x.real_name for x in magnetismFamily | orderBy:'x.order'" ng-change="upMorpho()">
                                             <option value=""></option>
                                         </select>
                                     </div>
@@ -292,13 +292,13 @@
                                 <div class="row-fluid">
                                     <div ng-show="showPorosity" class="col-md-6 form-group">
                                         <label for="texturePorosity">Texture</label>
-                                        <select id="texturePorosity" class="form-control" ng-model="selectedPorosityFamily" ng-options="x.real_name for x in porosityFamily | orderBy:x.order" ng-change="upTexture()">
+                                        <select id="texturePorosity" class="form-control" ng-model="selectedPorosityFamily" ng-options="x.real_name for x in porosityFamily | orderBy:'x.order'" ng-change="upTexture()">
                                             <option value=""></option>
                                         </select>
                                     </div>
                                     <div ng-show="showCohesion" class="col-md-6 form-group">
                                         <label for="textureCohesion">Cohesion</label>
-                                        <select id="textureCohesion" class="form-control" ng-model="selectedCohesionFamily" ng-options="x.real_name for x in cohesionFamily | orderBy:x.order" ng-change="upTexture()">
+                                        <select id="textureCohesion" class="form-control" ng-model="selectedCohesionFamily" ng-options="x.real_name for x in cohesionFamily | orderBy:'x.order'" ng-change="upTexture()">
                                             <option value=""></option>
                                         </select>
                                     </div>
@@ -306,13 +306,13 @@
                                 <div class="row-fluid">
                                     <div ng-show="showHardness" class="col-md-6 form-group">
                                         <label for="textureHardness">Hardness</label>
-                                        <select id="textureHardness" class="form-control" ng-model="selectedHardnessFamily" ng-options="x.real_name for x in hardnessFamily | orderBy:x.order" ng-change="upTexture()">
+                                        <select id="textureHardness" class="form-control" ng-model="selectedHardnessFamily" ng-options="x.real_name for x in hardnessFamily | orderBy:'x.order'" ng-change="upTexture()">
                                             <option value=""></option>
                                         </select>
                                     </div>
                                     <div ng-show="showCracking" class="col-md-6 form-group">
                                         <label for="textureCracking">Cracking</label>
-                                        <select id="textureCracking" class="form-control" ng-model="selectedCrackingFamily" ng-options="x.real_name for x in crackingFamily | orderBy:x.order" ng-change="upTexture()">
+                                        <select id="textureCracking" class="form-control" ng-model="selectedCrackingFamily" ng-options="x.real_name for x in crackingFamily | orderBy:'x.order'" ng-change="upTexture()">
                                             <option value=""></option>
                                         </select>
                                     </div>
@@ -324,13 +324,13 @@
                                 <div class="row-fluid">
                                     <div ng-show="showCmlevelofcorrosionFamily" class="col-md-6 form-group">
                                         <label for="cmlevelofcorrosionFamily">Level of corrosion</label>
-                                        <select id="cmlevelofcorrosionFamily" class="form-control" ng-model="selectedCmlevelofcorrosionFamily" ng-options="x.real_name for x in cmlevelofcorrosionFamily | orderBy:x.order" ng-change="upMicrostructure()">
+                                        <select id="cmlevelofcorrosionFamily" class="form-control" ng-model="selectedCmlevelofcorrosionFamily" ng-options="x.real_name for x in cmlevelofcorrosionFamily | orderBy:'x.order'" ng-change="upMicrostructure()">
                                             <option value=""></option>
                                         </select>
                                     </div>
                                     <div ng-show="showcprimicrostructureFamily" class="col-md-6 form-group">
                                         <label for="cpriMicrostructureFamily">Microstructure</label>
-                                        <select id="cpriMicrostructureFamily" class="form-control" ng-model="selectedCprimicrostructureFamily" ng-options="x.real_name for x in cprimicrostructureFamily | orderBy:x.order" ng-change="upMicrostructure()">
+                                        <select id="cpriMicrostructureFamily" class="form-control" ng-model="selectedCprimicrostructureFamily" ng-options="x.real_name for x in cprimicrostructureFamily | orderBy:'x.order'" ng-change="upMicrostructure()">
                                             <option value=""></option>
                                         </select>
                                     </div>
@@ -339,7 +339,7 @@
 
                                     <div ng-show="showcprimicrostructureaggregatecompositionFamily" class="col-md-6 form-group">
                                         <label for="cprimicrostructureaggregatecomposition">CPRI microstructure aggregate composition</label>
-                                        <select id="cprimicrostructureaggregatecomposition" class="form-control" ng-model="selectedCprimicrostructureaggregatecompositionFamily" ng-options="x.real_name for x in cprimicrostructureaggregatecompositionFamily | orderBy:x.order" ng-change="upMicrostructure2()">
+                                        <select id="cprimicrostructureaggregatecomposition" class="form-control" ng-model="selectedCprimicrostructureaggregatecompositionFamily" ng-options="x.real_name for x in cprimicrostructureaggregatecompositionFamily | orderBy:'x.order'" ng-change="upMicrostructure2()">
                                             <option value=""></option>
                                         </select>
                                     </div>
@@ -360,7 +360,7 @@
                                     </div>
                                     <div ng-show="showmmicrostructureFamily" class="col-md-6 form-group">
                                         <label for="mMicrostructureFamily">Microstructure</label>
-                                        <select id="mMicrostructureFamily" class="form-control" ng-model="selectedMmicrostructureFamily" ng-options="x.real_name for x in mmicrostructureFamily | orderBy:x.order" ng-change="upMicrostructure()">
+                                        <select id="mMicrostructureFamily" class="form-control" ng-model="selectedMmicrostructureFamily" ng-options="x.real_name for x in mmicrostructureFamily | orderBy:'x.order'" ng-change="upMicrostructure()">
                                             <option value=""></option>
                                         </select>
                                     </div>
@@ -400,13 +400,13 @@
                                 <div class="row-fluid">
                                     <div ng-show="showScomposition" class="col-md-6 form-group">
                                         <label for="sCompositionFamily">Composition</label>
-                                        <select id="sCompositionFamily" class="form-control" ng-model="selectedscompositionFamily" ng-options="x.real_name for x in scompositionFamily | orderBy:x.order" ng-change="upComposition()">
+                                        <select id="sCompositionFamily" class="form-control" ng-model="selectedscompositionFamily" ng-options="x.real_name for x in scompositionFamily | orderBy:'x.order'" ng-change="upComposition()">
                                             <option value=""></option>
                                         </select>
                                     </div>
                                     <div ng-show="showNmmcomposition" class="col-md-6 form-group">
                                         <label for="nmmCompositionFamily">Composition</label>
-                                        <select id="nmmCompositionFamily" class="form-control" ng-model="selectedNmmcompositionFamily" ng-options="x.real_name for x in nmmcompositionFamily | orderBy:x.order" ng-change="upComposition()">
+                                        <select id="nmmCompositionFamily" class="form-control" ng-model="selectedNmmcompositionFamily" ng-options="x.real_name for x in nmmcompositionFamily | orderBy:'x.order'" ng-change="upComposition()">
                                             <option value=""></option>
                                         </select>
                                     </div>
@@ -414,13 +414,13 @@
                                 <div class="row-fluid">
                                     <div ng-show="showDcomposition" class="col-md-6 form-group">
                                         <label for="dCompositionFamily">Composition</label>
-                                        <select id="dCompositionFamily" class="form-control" ng-model="selectedDcompositionFamily" ng-options="x.real_name for x in dcompositionFamily | orderBy:x.order" ng-change="upComposition()">
+                                        <select id="dCompositionFamily" class="form-control" ng-model="selectedDcompositionFamily" ng-options="x.real_name for x in dcompositionFamily | orderBy:'x.order'" ng-change="upComposition()">
                                             <option value=""></option>
                                         </select>
                                     </div>
                                     <div ng-show="showPomcomposition" class="col-md-6 form-group">
                                         <label for="pomCompositionFamily">Composition</label>
-                                        <select id="pomCompositionFamily" class="form-control" ng-model="selectedPomcompositionFamily" ng-options="x.real_name for x in pomcompositionFamily | orderBy:x.order" ng-change="upComposition()">
+                                        <select id="pomCompositionFamily" class="form-control" ng-model="selectedPomcompositionFamily" ng-options="x.real_name for x in pomcompositionFamily | orderBy:'x.order'" ng-change="upComposition()">
                                             <option value=""></option>
                                         </select>
                                     </div>
@@ -428,7 +428,7 @@
                                 <div class="row-fluid">
                                     <div ng-show="showCmcomposition" class="col-md-6 form-group">
                                         <label for="cmCompositionFamily">Composition</label>
-                                        <select id="cmCompositionFamily" class="form-control" ng-model="selectedCmcompositionFamily" ng-options="x.real_name for x in cmcompositionFamily | orderBy:x.order" ng-change="upComposition2()">
+                                        <select id="cmCompositionFamily" class="form-control" ng-model="selectedCmcompositionFamily" ng-options="x.real_name for x in cmcompositionFamily | orderBy:'x.order'" ng-change="upComposition2()">
                                             <option value=""></option>
                                         </select>
                                     </div>
@@ -442,13 +442,13 @@
                                 <div class="row-fluid">
                                     <div ng-show="showMcomposition" class="col-md-6 form-group">
                                         <label for="mCompositionFamily">Main element</label>
-                                        <select id="mCompositionFamily" class="form-control" ng-model="selectedMcompositionFamily" ng-options="x.real_name for x in mcompositionFamily | orderBy:x.order" ng-change="upComposition2()">
+                                        <select id="mCompositionFamily" class="form-control" ng-model="selectedMcompositionFamily" ng-options="x.real_name for x in mcompositionFamily | orderBy:'x.order'" ng-change="upComposition2()">
                                             <option value=""></option>
                                         </select>
                                     </div>
                                     <div ng-show="showCpcomposition" class="col-md-6 form-group">
                                         <label for="cpCompositionFamily">Main element</label>
-                                        <select id="cpCompositionFamily" class="form-control" ng-model="selectedCpcompositionFamily" ng-options="x.real_name for x in cpcompositionFamily | orderBy:x.order" ng-change="upComposition2()">
+                                        <select id="cpCompositionFamily" class="form-control" ng-model="selectedCpcompositionFamily" ng-options="x.real_name for x in cpcompositionFamily | orderBy:'x.order'" ng-change="upComposition2()">
                                             <option value=""></option>
                                         </select>
                                     </div>
@@ -489,13 +489,13 @@
                             <div class="row-fluid">
                                 <div ng-show="showProfile" class="col-md-6 form-group">
                                     <label for="interfaceProfileFamily">Profile</label>
-                                    <select id="interfaceProfileFamily" class="form-control" ng-model="selectedInterfaceprofileFamily" ng-options="x.real_name for x in interfaceprofileFamily | orderBy:x.order" ng-change="upInterface()">
+                                    <select id="interfaceProfileFamily" class="form-control" ng-model="selectedInterfaceprofileFamily" ng-options="x.real_name for x in interfaceprofileFamily | orderBy:'x.order'" ng-change="upInterface()">
                                         <option value=""></option>
                                     </select>
                                 </div>
                                 <div ng-show="showinterfacetransition" class="col-md-6 form-group">
                                     <label for="interfaceTransitionFamily">Transition</label>
-                                    <select id="interfaceTransitionFamily" class="form-control" ng-model="selectedInterfacetransitionFamily" ng-options="x.real_name for x in interfacetransitionFamily | orderBy:x.order" ng-change="upInterface()">
+                                    <select id="interfaceTransitionFamily" class="form-control" ng-model="selectedInterfacetransitionFamily" ng-options="x.real_name for x in interfacetransitionFamily | orderBy:'x.order'" ng-change="upInterface()">
                                         <option value=""></option>
                                     </select>
                                 </div>
@@ -503,13 +503,13 @@
                             <div class="row-fluid">
                                 <div ng-show="showinterfaceroughness" class="col-md-6 form-group">
                                     <label for="interfaceRoughnessFamily">Roughness</label>
-                                    <select id="interfaceRoughnessFamily" class="form-control" ng-model="selectedInterfaceroughnessFamily" ng-options="x.real_name for x in interfaceroughnessFamily | orderBy:x.order" ng-change="upInterface()">
+                                    <select id="interfaceRoughnessFamily" class="form-control" ng-model="selectedInterfaceroughnessFamily" ng-options="x.real_name for x in interfaceroughnessFamily | orderBy:'x.order'" ng-change="upInterface()">
                                         <option value=""></option>
                                     </select>
                                 </div>
                                 <div ng-show="showinterfaceadherence" class="col-md-6 form-group">
                                     <label for="interfaceAdherenceFamily">Adherence</label>
-                                    <select id="interfaceAdherenceFamily" class="form-control" ng-model="selectedInterfaceadherenceFamily" ng-options="x.real_name for x in interfaceadherenceFamily | orderBy:x.order" ng-change="upInterface()">
+                                    <select id="interfaceAdherenceFamily" class="form-control" ng-model="selectedInterfaceadherenceFamily" ng-options="x.real_name for x in interfaceadherenceFamily | orderBy:'x.order'" ng-change="upInterface()">
                                         <option value=""></option>
                                     </select>
                                 </div>
