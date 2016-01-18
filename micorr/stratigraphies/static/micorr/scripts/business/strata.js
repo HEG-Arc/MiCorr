@@ -29,7 +29,6 @@ function Strata() {
     this.name = "";
     this.sub_real_name = "";
     this.subsub_real_name = "";
-    this.order = "",
     this.orderName = "";
     this.uid = "";
     this.shapeFamily = "";
