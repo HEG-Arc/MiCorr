@@ -8,7 +8,7 @@
  * Controlleur qui est appelé lors de l'affichage d'une stratographie
  */
 angular.module('micorrApp')
-    .controller('ShowStratCtrl', function ($scope, $routeParams, $timeout, MiCorrService, StrataData) {
+    .controller('ShowStratCtrl', function ($scope, $routeParams, $timeout, MiCorrService, StrataData, ngProgress) {
 
         // Variable mise a false à chaque fois qu'n ouvre une stratigraphie
         $scope.askLeave = false;
@@ -113,6 +113,7 @@ angular.module('micorrApp')
 
             //Quand on accède au détail d'une stratigraphie, la première chose effectuée est le chargement en asynchrone des strates qui constituent cette stratigraphie.
             MiCorrService.getDetailedStratigraphy($scope.stratigraphyName).success(function(data){
+
                 // On parcourt toutes les strates que le service nous a retourné
                 for (var i = 0; i < data.length; i++) {
                     var loadedStrata = data[i];
@@ -207,14 +208,15 @@ angular.module('micorrApp')
                                 strata.setSubCmLevelOfCorrosionFamily($scope.getSubCharacteristicByFamily(subCharacteristicsList, StrataData.getSubcmLevelOfCorrosionFamily()));
                             if (strata.findDependency('submcompositionFamily'))
                                 strata.setSubmcompositionFamily($scope.getSubCharacteristicByFamily(subCharacteristicsList, StrataData.getSubmcompositionFamily()));
-                        }
 
-                        // Picklist
-                        // on charge les données pour les picklist
-                        if (strata.findDependency('subcprimicrostructureFamily'))
-                            strata.setSubcprimicrostructureFamily($scope.getSubCharacteristicByFamilyMulti(subCharacteristicsList, StrataData.getSubcprimicrostructureFamily()));
-                        if (strata.findDependency('submmicrostructureFamily'))
-                            strata.setSubmmicrostructureFamily($scope.getSubCharacteristicByFamilyMulti(subCharacteristicsList, StrataData.getSubmmicrostructureFamily()));
+
+                            // Picklist
+                            // on charge les données pour les picklist
+                            if (strata.findDependency('subcprimicrostructureFamily'))
+                                strata.setSubcprimicrostructureFamily($scope.getSubCharacteristicByFamilyMulti(subCharacteristicsList, StrataData.getSubcprimicrostructureFamily()));
+                            if (strata.findDependency('submmicrostructureFamily'))
+                                strata.setSubmmicrostructureFamily($scope.getSubCharacteristicByFamilyMulti(subCharacteristicsList, StrataData.getSubmmicrostructureFamily()));
+                        }
                         if (strata.findDependency('cpcompositionextensionFamily'))
                                 strata.setCpcompositionextensionFamily($scope.getCharacteristicByFamilyMulti(loadedStrata['characteristics'], "cpCompositionExtensionFamily"));
                         if (strata.findDependency('cprimicrostructureaggregatecompositionextensionFamily'))
@@ -224,21 +226,20 @@ angular.module('micorrApp')
                         // Une fois notre instance de strate créé avec tous les paramètres nécessaires, alors on l'ajoute à notre service.
                         StrataData.pushOneStrata(strata);
                     }
-            }});
+            }}).success(function(){
+                $scope.$broadcast('initShowStrat');
+            });
         };
 
-        $scope.$on('StrataDataLoaded', function(event) {
-            // on charge une nouvelle stratigraphie donc on supprime la stratigraphie en mémoire dans le service
-            StrataData.clear();
+        MiCorrService.getAllCharacteristic().success(function(data) {
+            if (typeof data !== "undefined") {
+                StrataData.clear();
+                StrataData.Fill(data);
+            }
+        }).success(function(){
             initShowStrata();
-            $scope.$broadcast('initShowStrat');
+            ngProgress.complete();
         });
-
-        // on charge une nouvelle stratigraphie donc on supprime la stratigraphie en mémoire dans le service
-        StrataData.clear();
-        initShowStrata();
-        $scope.$broadcast('initShowStrat');
-
 
         /*
         *
