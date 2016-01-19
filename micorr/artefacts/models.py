@@ -354,6 +354,10 @@ def get_doc_storage_path(instance, filename):
     return '/'.join(['artefacts', str(instance.artefact.id), 'documents', filename])
 
 
+def get_img_storage_path_stratigraphy(instance, filename):
+    return '/'.join(['artefacts', str(instance.artefact.id), 'stratigraphies', filename])
+
+
 class Stratigraphy(TimeStampedModel):
     """
     An artefact can be represented by one or more stratigraphies
@@ -362,6 +366,7 @@ class Stratigraphy(TimeStampedModel):
     order = models.IntegerField(blank=True, null=True, help_text='The order of a stratigraphy for a given artefact')
     uid = models.CharField(max_length=500, blank=True, null=True, help_text='The identification of the stratigraphy')
     url = models.CharField(max_length=500, blank=True, null=True, help_text='The url that leads to the corresponding stratigraphy in the tool')
+    image = models.ImageField(upload_to=get_img_storage_path_stratigraphy, blank=True, null=True, help_text='The image file for a stratigraphy')
 
     class Meta:
         ordering = ['artefact', 'order']

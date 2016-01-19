@@ -129,14 +129,14 @@ class Neo4jDAO:
                 sc = []
                 for subcarac in subcaracList:
                     # pour chaque sous-caracteristique on ajoute les sous-sous caracteristiques
-                    subsubcaractList = self.graph.cypher.execute("MATCH (sub:SubCharacteristic)-[:`HAS_SPECIALIZATION`]->(subsub:SubCharacteristic) where sub.uid='" + subcarac.uid + "' RETURN subsub.uid as uid, subsub.name as subsub_real_name order by subsub.uid asc")
+                    subsubcaractList = self.graph.cypher.execute("MATCH (sub:SubCharacteristic)-[:`HAS_SPECIALIZATION`]->(subsub:SubCharacteristic) where sub.uid='" + subcarac.uid + "' RETURN subsub.uid as uid, subsub.name as subsub_real_name order by subsub.name asc")
 
                     subsubcaractItems = []
                     for subsubcarac in subsubcaractList:
                         subsubcaractItems.append({'name' : subsubcarac.uid, 'subsub_real_name': subsubcarac.subsub_real_name})
 
                     ssc = {'name' : subcarac.uid, 'description' : subcarac.description, 'subcharacteristics' : '', 'sub_real_name': subcarac.sub_real_name}
-                    ssc['subcharacteristics'] = subsubcaractItems;
+                    ssc['subcharacteristics'] = subsubcaractItems
                     sc.append(ssc)
 
 
