@@ -47,6 +47,7 @@ function Strata() {
     this.dependencies.push('widthFamily');
     this.dependencies.push('continuityFamily');
     this.dependencies.push('directionFamily');
+    this.dependencies.push('interfaceprofileFamily');
 
     this.toJsonCharacteristics = function() {
         var json = [];

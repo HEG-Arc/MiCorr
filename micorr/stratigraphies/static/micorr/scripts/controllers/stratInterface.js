@@ -25,14 +25,9 @@ angular.module('micorrApp')
         };
 
         $scope.$on('initShowStrat', function(event) {
-            if(typeof StrataData.getInterfaceprofileFamily() !== "undefined"){
-                initStratInterface();
-            }
+            initStratInterface();
         });
 
-        if(typeof StrataData.getInterfaceprofileFamily() !== "undefined"){
-            initStratInterface();
-        }
 
          /*
          * Met à jour les valeurs dans les champs quand on change de strate. Est appelé par un événement parent

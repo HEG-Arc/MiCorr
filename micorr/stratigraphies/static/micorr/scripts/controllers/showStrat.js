@@ -422,6 +422,7 @@ angular.module('micorrApp')
                 $scope.showCpcomposition = strata.findDependency('cpcompositionFamily');
                 $scope.showCmcomposition = strata.findDependency('cmcompositionFamily');
                 $scope.showMcomposition = strata.findDependency('mcompositionFamily');
+                $scope.showinterfaceprofileFamily = strata.findDependency('interfaceprofileFamily');
                 $scope.showinterfacetransition = strata.findDependency('interfacetransitionFamily');
                 $scope.showinterfaceroughness = strata.findDependency('interfaceroughnessFamily');
                 $scope.showinterfaceadherence = strata.findDependency('interfaceadherenceFamily');

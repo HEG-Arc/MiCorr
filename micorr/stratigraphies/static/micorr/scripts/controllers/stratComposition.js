@@ -41,14 +41,8 @@ angular.module('micorrApp')
         };
 
         $scope.$on('initShowStrat', function(event) {
-            if(typeof StrataData.getScompositionFamily() !== "undefined"){
-                initStratComposition();
-            }
-        });
-
-        if(typeof StrataData.getScompositionFamily() !== "undefined"){
             initStratComposition();
-        }
+        });
 
         $scope.upMulti = function(){
             $scope.upComposition();
