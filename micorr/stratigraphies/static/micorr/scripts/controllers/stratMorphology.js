@@ -13,24 +13,15 @@ angular.module('micorrApp')
         var initStratMorphology = function(){
             // On récupère les valeurs qui vont aller dans les champs de notre formulaire
             $scope.fShapeFamily = "";
-            if(typeof StrataData.getShapeFamily() !== "undefined")
-                $scope.shapeFamily = StrataData.getShapeFamily()['characteristics'];
-            if(typeof StrataData.getWidthFamily() !== "undefined")
-                $scope.widthFamily = StrataData.getWidthFamily()['characteristics'];
-            if(typeof StrataData.getThicknessFamily() !== "undefined")
-                $scope.thicknessFamily = StrataData.getThicknessFamily()['characteristics'];
-            if(typeof StrataData.getContinuityFamily() !== "undefined")
-                $scope.continuityFamily = StrataData.getContinuityFamily()['characteristics'];
-            if(typeof StrataData.getDirectionFamily() !== "undefined")
-                $scope.directionFamily = StrataData.getDirectionFamily()['characteristics'];
-            if(typeof StrataData.getColourFamily() !== "undefined")
-                $scope.colourFamily = StrataData.getColourFamily()['characteristics'];
-            if(typeof StrataData.getBrightnessFamily() !== "undefined")
-                $scope.brightnessFamily = StrataData.getBrightnessFamily()['characteristics'];
-            if(typeof StrataData.getOpacityFamily() !== "undefined")
-                $scope.opacityFamily = StrataData.getOpacityFamily()['characteristics'];
-            if(typeof StrataData.getMagnetismFamily() !== "undefined")
-                $scope.magnetismFamily = StrataData.getMagnetismFamily()['characteristics'];
+            $scope.shapeFamily = StrataData.getShapeFamily()['characteristics'];
+            $scope.widthFamily = StrataData.getWidthFamily()['characteristics'];
+            $scope.thicknessFamily = StrataData.getThicknessFamily()['characteristics'];
+            $scope.continuityFamily = StrataData.getContinuityFamily()['characteristics'];
+            $scope.directionFamily = StrataData.getDirectionFamily()['characteristics'];
+            $scope.colourFamily = StrataData.getColourFamily()['characteristics'];
+            $scope.brightnessFamily = StrataData.getBrightnessFamily()['characteristics'];
+            $scope.opacityFamily = StrataData.getOpacityFamily()['characteristics'];
+            $scope.magnetismFamily = StrataData.getMagnetismFamily()['characteristics'];
 
             //valeurs sélectionnées dans les champs de notre formulaire
             $scope.selectedShapeFamily;

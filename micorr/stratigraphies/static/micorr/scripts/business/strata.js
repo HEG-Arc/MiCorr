@@ -43,6 +43,11 @@ function Strata() {
 
     this.dependencies = new Array();
 
+    this.dependencies.push('thicknessFamily');
+    this.dependencies.push('widthFamily');
+    this.dependencies.push('continuityFamily');
+    this.dependencies.push('directionFamily');
+
     this.toJsonCharacteristics = function() {
         var json = [];
         if (this.shapeFamily != "")
@@ -1283,7 +1288,7 @@ function CM() {
     };
 */
     this.getJsonCharacteristics = function(cp, m) {
-        var c = [];
+        var c = this.toJsonCharacteristics();
         if (this.shapeFamily != "")
             c.push({'name' : this.shapeFamily});
         if (this.natureFamily != "")
