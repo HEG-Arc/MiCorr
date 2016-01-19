@@ -215,7 +215,7 @@
                 <div class="c3"><em>Stratigraphies</em></div>
                 <div class="c9">
                     {% for stratigraphy in stratigraphies %}
-                        <p><a href="{{ stratigraphy.url }}" class="image-popup"><img src="{{ stratigraphy.image.url }}" class="img-responsive"></a></p>
+                        <p><a href="{% url 'stratigraphies:list' %}{{ stratigraphy.url }}"><img src="{{ stratigraphy.image.url }}" class="img-responsive"></a></p>
                     {% empty %}
                         <p>None</p>
                     {% endfor %}
