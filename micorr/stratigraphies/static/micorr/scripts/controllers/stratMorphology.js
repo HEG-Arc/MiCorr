@@ -36,14 +36,8 @@ angular.module('micorrApp')
         };
 
         $scope.$on('initShowStrat', function(event) {
-            if(typeof StrataData.getShapeFamily() !== "undefined"){
-                initStratMorphology();
-            }
-        });
-
-        if(typeof StrataData.getShapeFamily() !== "undefined"){
             initStratMorphology();
-        }
+        });
 
          /*
          * Met à jour les valeurs dans les champs quand on change de strate. Est appelé par un événement parent

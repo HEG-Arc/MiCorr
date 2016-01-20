@@ -84,15 +84,11 @@ angular.module('micorrApp').factory('MiCorrService', function ($http, $q) {
 // Contient les données sur les strates qui seront échangées entre les différents contrôlleurs
 angular.module('micorrApp').factory('StrataData', function StrataDataFactory() {
     var getStrataData = function() {
+
         var rawCharacteristics = "";    // Caractéristiques retournées par le serveur au format json et non modifié
-
         var selectedStrata = 0;         // index de la strate sélectionnée par l'utilisateur
-
-        var rstratas = [];      // Liste de toutes les strates pour la stratigraphie en cours
-
-        var listImages = [];      // Liste de toutes les images raphaeljs pour la stratigraphie en cours
-
-        // Toutes les caractéristiques
+        var rstratas = [];              // Liste de toutes les strates pour la stratigraphie en cours
+        var listImages = [];            // Liste de toutes les images raphaeljs pour la stratigraphie en cours
         var shapeFamily = [];
         var widthFamily = [];
         var thicknessFamily = [];
@@ -116,33 +112,22 @@ angular.module('micorrApp').factory('StrataData', function StrataDataFactory() {
         var cmlevelofcorrosionFamily = [];
         var cprimicrostructureFamily = [];
         var mmicrostructureFamily = [];
-
-        // Toutes les interfaces
         var interfaceprofileFamily = [];
         var interfacetransitionFamily = [];
         var interfaceroughnessFamily = [];
         var interfaceadherenceFamily = [];
-
-        // Toutes les sous caractéristiques
         var subcpcompositionFamily = [];
         var subsubcpcompositionFamily = [];
-
         var cpcompositionextensionFamily = [];
         var cprimicrostructureaggregatecompositionFamily = [];
         var cprimicrostructureaggregatecompositionextensionFamily = [];
-
         var submmicrostructureFamily = [];
         var subcprimicrostructureFamily = [];
-
         var subcprimicrostructureaggregatecompositionFamily = [];
         var subsubcprimicrostructureaggregatecompositionFamily = [];
-
         var subcmcompositionFamily = [];
-
         var subcmLevelOfCorrosionFamily = [];
-
         var submmicrostructureFamily = [];
-
         var submcompositionFamily = [];
 
         return {
@@ -216,7 +201,100 @@ angular.module('micorrApp').factory('StrataData', function StrataDataFactory() {
                 console.log(temp);
                 return temp;
             },
+            Fill: function (data) {
+                var characteristics = data;
 
+                /*
+                 * parcours les caractéristiques de data et retourne les caractéristiques de la famille voulue
+                 * @params name : nom de la famille
+                 * @returns liste des caractéristiques d'une famille au format json
+                 */
+                var parseCharasteristic = function (name) {
+                    for (var i = 0; i < characteristics.length; i++) {
+                        if (characteristics[i].family == name)
+                            return characteristics[i];
+                    }
+                };
+
+                /* parcourt les sous-caractéristiques de data et retourne les sous caractéristique pour une famille
+                 * comme une sous caractéristique n'est pas liée à une famille on doit pour une famille parcourir toutes les sous-caractéristique de chaque caractéristique
+                 * et retourner ces sous caractéristiques dans une liste
+                 * @params family : nom de la famille
+                 *         level('sub') : on cherche les sous-caractéristiques
+                 *         level('subsub') : on cherche les sous-sous caractéristiques
+                 * @returns liste des caractéristiques d'une famille au format Array
+                 */
+                var getSubCharacteristicsFromFamily = function (family, level) {
+                    var subList = [];
+                    var subsubList = [];
+                    var list = parseCharasteristic(family);
+                    list = list['characteristics'];
+                    // on parcourt les caractéristiques et sous-caractéristiques pour la famille demandée
+                    // on alimente ûn tableau pour les sub et subsub
+                    for (var i = 0; i < list.length; i++) {
+                        var sub = list[i]['subcharacteristics'];
+                        for (var j = 0; j < sub.length; j++) {
+                            subList.push({'name': sub[j].name});
+                            var subsub = sub[j]['subcharacteristics'];
+                            for (var k = 0; k < subsub.length; k++) {
+                                //console.log(subsub);
+                                subsubList.push({'name': subsub[k].name});
+                            }
+                        }
+
+                    }
+
+                    // selon ce qu'on demande on retourne l'un ou l'autre
+                    if (level == "sub")
+                        return subList;
+                    else if (level == "subsub")
+                        return subsubList;
+
+                };
+
+                this.setRawCharacteristics(characteristics);
+
+                this.shapeFamily = parseCharasteristic('shapeFamily');
+                this.widthFamily = parseCharasteristic('widthFamily');
+                this.thicknessFamily = parseCharasteristic('thicknessFamily');
+                this.continuityFamily = parseCharasteristic('continuityFamily');
+                this.directionFamily = parseCharasteristic('directionFamily');
+                this.colourFamily = parseCharasteristic('colourFamily');
+                this.brightnessFamily = parseCharasteristic('brightnessFamily');
+                this.opacityFamily = parseCharasteristic('opacityFamily');
+                this.magnetismFamily = parseCharasteristic('magnetismFamily');
+                this.porosityFamily = parseCharasteristic('porosityFamily');
+                this.cohesionFamily = parseCharasteristic('cohesionFamily');
+                this.hardnessFamily = parseCharasteristic('hardnessFamily');
+                this.crackingFamily = parseCharasteristic('crackingFamily');
+                this.scompositionFamily = parseCharasteristic('sCompositionFamily');
+                this.nmmcompositionFamily = parseCharasteristic('nmmCompositionFamily');
+                this.dcompositionFamily = parseCharasteristic('dCompositionFamily');
+                this.pomcompositionFamily = parseCharasteristic('pomCompositionFamily');
+                this.cpcompositionFamily = parseCharasteristic('cpCompositionFamily');
+                this.cmcompositionFamily = parseCharasteristic('cmCompositionFamily');
+                this.mcompositionFamily = parseCharasteristic('mCompositionFamily');
+                this.cmlevelofcorrosionFamily = parseCharasteristic('cmLevelOfCorrosionFamily');
+                this.cprimicrostructureFamily = parseCharasteristic('cpriMicrostructureFamily');
+                this.mmicrostructureFamily = parseCharasteristic('mMicrostructureFamily');
+                this.interfaceprofileFamily = parseCharasteristic('interfaceProfileFamily');
+                this.interfacetransitionFamily = parseCharasteristic('interfaceTransitionFamily');
+                this.interfaceroughnessFamily = parseCharasteristic('interfaceRoughnessFamily');
+                this.interfaceadherenceFamily = parseCharasteristic('interfaceAdherenceFamily');
+                this.subcpcompositionFamily = getSubCharacteristicsFromFamily('cpCompositionFamily', 'sub')
+                this.subsubcpcompositionFamily = getSubCharacteristicsFromFamily('cpCompositionFamily', 'subsub')
+                this.cpcompositionextensionFamily = getSubCharacteristicsFromFamily('cpCompositionExtensionFamily', 'sub');
+                this.cprimicrostructureaggregatecompositionFamily = parseCharasteristic('cpriMicrostructureAggregateCompositionFamily');
+                this.cprimicrostructureaggregatecompositionextensionFamily = parseCharasteristic('cpriMicrostructureAggregateCompositionExtensionFamily');
+                this.submmicrostructureFamily = getSubCharacteristicsFromFamily('mMicrostructureFamily', 'sub');
+                this.subcprimicrostructureFamily = getSubCharacteristicsFromFamily('cpriMicrostructureFamily', 'sub');
+                this.subcprimicrostructureaggregatecompositionFamily = getSubCharacteristicsFromFamily('cpriMicrostructureAggregateCompositionFamily', 'sub');
+                this.subsubcprimicrostructureaggregatecompositionFamily = getSubCharacteristicsFromFamily('cpriMicrostructureAggregateCompositionFamily', 'subsub');
+                this.subcmcompositionFamily = getSubCharacteristicsFromFamily('cmCompositionFamily', 'sub');
+                this.subcmLevelOfCorrosionFamily = getSubCharacteristicsFromFamily('cmLevelOfCorrosionFamily', 'sub');
+                this.submmicrostructureFamily = getSubCharacteristicsFromFamily('mMicrostructureFamily', 'sub');
+                this.submcompositionFamily = getSubCharacteristicsFromFamily('mCompositionFamily', 'sub');
+            },
             getRawCharacteristics: function () {
                 return this.rawCharacteristics;
             },

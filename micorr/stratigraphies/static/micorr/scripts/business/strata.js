@@ -29,7 +29,6 @@ function Strata() {
     this.name = "";
     this.sub_real_name = "";
     this.subsub_real_name = "";
-    this.order = "",
     this.orderName = "";
     this.uid = "";
     this.shapeFamily = "";
@@ -43,6 +42,12 @@ function Strata() {
     this.shortNatureFamily = "";
 
     this.dependencies = new Array();
+
+    this.dependencies.push('thicknessFamily');
+    this.dependencies.push('widthFamily');
+    this.dependencies.push('continuityFamily');
+    this.dependencies.push('directionFamily');
+    this.dependencies.push('interfaceprofileFamily');
 
     this.toJsonCharacteristics = function() {
         var json = [];
@@ -1284,7 +1289,7 @@ function CM() {
     };
 */
     this.getJsonCharacteristics = function(cp, m) {
-        var c = [];
+        var c = this.toJsonCharacteristics();
         if (this.shapeFamily != "")
             c.push({'name' : this.shapeFamily});
         if (this.natureFamily != "")

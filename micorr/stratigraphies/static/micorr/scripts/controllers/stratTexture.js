@@ -24,14 +24,8 @@ angular.module('micorrApp')
         };
 
         $scope.$on('initShowStrat', function(event) {
-            if(typeof StrataData.getPorosityFamily() !== "undefined"){
-                initStratTexture();
-            }
-        });
-
-        if(typeof StrataData.getPorosityFamily() !== "undefined"){
             initStratTexture();
-        }
+        });
 
          /* Met à jour les données de la strate en fonction des valeurs dans le formulaire
          * @params

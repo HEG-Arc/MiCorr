@@ -8,7 +8,7 @@
  * Controlleur qui est appelé lors de l'affichage d'une stratographie
  */
 angular.module('micorrApp')
-    .controller('ShowStratCtrl', function ($scope, $routeParams, $timeout, MiCorrService, StrataData) {
+    .controller('ShowStratCtrl', function ($scope, $routeParams, $timeout, MiCorrService, StrataData, ngProgress) {
 
         // Variable mise a false à chaque fois qu'n ouvre une stratigraphie
         $scope.askLeave = false;
@@ -113,6 +113,7 @@ angular.module('micorrApp')
 
             //Quand on accède au détail d'une stratigraphie, la première chose effectuée est le chargement en asynchrone des strates qui constituent cette stratigraphie.
             MiCorrService.getDetailedStratigraphy($scope.stratigraphyName).success(function(data){
+
                 // On parcourt toutes les strates que le service nous a retourné
                 for (var i = 0; i < data.length; i++) {
                     var loadedStrata = data[i];
@@ -207,14 +208,15 @@ angular.module('micorrApp')
                                 strata.setSubCmLevelOfCorrosionFamily($scope.getSubCharacteristicByFamily(subCharacteristicsList, StrataData.getSubcmLevelOfCorrosionFamily()));
                             if (strata.findDependency('submcompositionFamily'))
                                 strata.setSubmcompositionFamily($scope.getSubCharacteristicByFamily(subCharacteristicsList, StrataData.getSubmcompositionFamily()));
-                        }
 
-                        // Picklist
-                        // on charge les données pour les picklist
-                        if (strata.findDependency('subcprimicrostructureFamily'))
-                            strata.setSubcprimicrostructureFamily($scope.getSubCharacteristicByFamilyMulti(subCharacteristicsList, StrataData.getSubcprimicrostructureFamily()));
-                        if (strata.findDependency('submmicrostructureFamily'))
-                            strata.setSubmmicrostructureFamily($scope.getSubCharacteristicByFamilyMulti(subCharacteristicsList, StrataData.getSubmmicrostructureFamily()));
+
+                            // Picklist
+                            // on charge les données pour les picklist
+                            if (strata.findDependency('subcprimicrostructureFamily'))
+                                strata.setSubcprimicrostructureFamily($scope.getSubCharacteristicByFamilyMulti(subCharacteristicsList, StrataData.getSubcprimicrostructureFamily()));
+                            if (strata.findDependency('submmicrostructureFamily'))
+                                strata.setSubmmicrostructureFamily($scope.getSubCharacteristicByFamilyMulti(subCharacteristicsList, StrataData.getSubmmicrostructureFamily()));
+                        }
                         if (strata.findDependency('cpcompositionextensionFamily'))
                                 strata.setCpcompositionextensionFamily($scope.getCharacteristicByFamilyMulti(loadedStrata['characteristics'], "cpCompositionExtensionFamily"));
                         if (strata.findDependency('cprimicrostructureaggregatecompositionextensionFamily'))
@@ -224,21 +226,20 @@ angular.module('micorrApp')
                         // Une fois notre instance de strate créé avec tous les paramètres nécessaires, alors on l'ajoute à notre service.
                         StrataData.pushOneStrata(strata);
                     }
-            }});
+            }}).success(function(){
+                $scope.$broadcast('initShowStrat');
+            });
         };
 
-        $scope.$on('StrataDataLoaded', function(event) {
-            // on charge une nouvelle stratigraphie donc on supprime la stratigraphie en mémoire dans le service
-            StrataData.clear();
+        MiCorrService.getAllCharacteristic().success(function(data) {
+            if (typeof data !== "undefined") {
+                StrataData.clear();
+                StrataData.Fill(data);
+            }
+        }).success(function(){
             initShowStrata();
-            $scope.$broadcast('initShowStrat');
+            ngProgress.complete();
         });
-
-        // on charge une nouvelle stratigraphie donc on supprime la stratigraphie en mémoire dans le service
-        StrataData.clear();
-        initShowStrata();
-        $scope.$broadcast('initShowStrat');
-
 
         /*
         *
@@ -327,7 +328,7 @@ angular.module('micorrApp')
         */
         $scope.update = function(index){
             $scope.showTabForms = true; //Affichage de formulaire
-            StrataData.setSelectedStrata(index); // on set dans le sevice quelle est la strate sélectionnée
+            StrataData.setSelectedStrata(index); // on set dans le service quelle est la strate sélectionnée
             $scope.hideShowForms(StrataData.getStratas()[index]);   // On affiche/masque les champs en fonction de la nature de la strate
             $scope.strataName = StrataData.getStratas()[index].getName();   // On affiche le nom de la strate
             $scope.natureFamilyname = StrataData.getStratas()[index].getNatureFamily(); // On affiche la nature de la strate
@@ -401,7 +402,10 @@ angular.module('micorrApp')
                 $scope.showcprimicrostructureaggregatecompositionextensionFamily = false;
 
             } else {
-
+                $scope.showWidth = strata.findDependency('widthFamily');
+                $scope.showThickness = strata.findDependency('thicknessFamily');
+                $scope.showContinuity = strata.findDependency('continuityFamily');
+                $scope.showDirection = strata.findDependency('directionFamily');
                 $scope.showColor = strata.findDependency('colourFamily');
                 $scope.showBrightness = strata.findDependency('brightnessFamily');
                 $scope.showOpacity = strata.findDependency('opacityFamily');
@@ -413,11 +417,12 @@ angular.module('micorrApp')
                 $scope.showCracking = strata.findDependency('crackingFamily');
                 $scope.showScomposition = strata.findDependency('scompositionFamily');
                 $scope.showNmmcomposition = strata.findDependency('nmmcompositionFamily');
-                $scope.showDcomposition =  strata.findDependency('dcompositionFamily');
+                $scope.showDcomposition = strata.findDependency('dcompositionFamily');
                 $scope.showPomcomposition = strata.findDependency('pomcompositionFamily');
                 $scope.showCpcomposition = strata.findDependency('cpcompositionFamily');
                 $scope.showCmcomposition = strata.findDependency('cmcompositionFamily');
                 $scope.showMcomposition = strata.findDependency('mcompositionFamily');
+                $scope.showinterfaceprofileFamily = strata.findDependency('interfaceprofileFamily');
                 $scope.showinterfacetransition = strata.findDependency('interfacetransitionFamily');
                 $scope.showinterfaceroughness = strata.findDependency('interfaceroughnessFamily');
                 $scope.showinterfaceadherence = strata.findDependency('interfaceadherenceFamily');
@@ -432,22 +437,21 @@ angular.module('micorrApp')
                 $scope.showcprimicrostructureFamily = strata.findDependency('cprimicrostructureFamily');
                 $scope.showsubmcompositionFamily = strata.findDependency('submcompositionFamily');
 
-            // on affiche seulement si cprimicrostructure n'est pas égal à noMiccrostructure
-            if (strata.findDependency('cprimicrostructureFamily') && strata.getCpriMicrostructureFamily() != "noMicrostructureCharacteristic") {
-                $scope.showsubcprimicrostructureFamily = strata.findDependency('subcprimicrostructureFamily');
-                $scope.showsubcprimicrostructureaggregatecompositionFamily = strata.findDependency('subcprimicrostructureaggregatecompositionFamily');
-                $scope.showsubsubcprimicrostructureaggregatecompositionFamily = strata.findDependency('subsubcprimicrostructureaggregatecompositionFamily');
-                $scope.showcprimicrostructureaggregatecompositionFamily = strata.findDependency('cprimicrostructureaggregatecompositionFamily');
-                $scope.showcprimicrostructureaggregatecompositionextensionFamily = strata.findDependency('cprimicrostructureaggregatecompositionextensionFamily');
-            }
-            else {
-                $scope.showsubcprimicrostructureFamily = false;
-                $scope.showsubcprimicrostructureaggregatecompositionFamily = false;
-                $scope.showsubsubcprimicrostructureaggregatecompositionFamily = false;
-                $scope.showcprimicrostructureaggregatecompositionFamily = false;
-                $scope.showcprimicrostructureaggregatecompositionextensionFamily = false;
-            }
-
+                // on affiche seulement si cprimicrostructure n'est pas égal à noMiccrostructure
+                if (strata.findDependency('cprimicrostructureFamily') && strata.getCpriMicrostructureFamily() != "noMicrostructureCharacteristic") {
+                    $scope.showsubcprimicrostructureFamily = strata.findDependency('subcprimicrostructureFamily');
+                    $scope.showsubcprimicrostructureaggregatecompositionFamily = strata.findDependency('subcprimicrostructureaggregatecompositionFamily');
+                    $scope.showsubsubcprimicrostructureaggregatecompositionFamily = strata.findDependency('subsubcprimicrostructureaggregatecompositionFamily');
+                    $scope.showcprimicrostructureaggregatecompositionFamily = strata.findDependency('cprimicrostructureaggregatecompositionFamily');
+                    $scope.showcprimicrostructureaggregatecompositionextensionFamily = strata.findDependency('cprimicrostructureaggregatecompositionextensionFamily');
+                }
+                else {
+                    $scope.showsubcprimicrostructureFamily = false;
+                    $scope.showsubcprimicrostructureaggregatecompositionFamily = false;
+                    $scope.showsubsubcprimicrostructureaggregatecompositionFamily = false;
+                    $scope.showcprimicrostructureaggregatecompositionFamily = false;
+                    $scope.showcprimicrostructureaggregatecompositionextensionFamily = false;
+                }
             }
 
         };

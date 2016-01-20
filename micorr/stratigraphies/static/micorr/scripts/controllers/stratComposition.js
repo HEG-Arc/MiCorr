@@ -41,14 +41,8 @@ angular.module('micorrApp')
         };
 
         $scope.$on('initShowStrat', function(event) {
-            if(typeof StrataData.getScompositionFamily() !== "undefined"){
-                initStratComposition();
-            }
-        });
-
-        if(typeof StrataData.getScompositionFamily() !== "undefined"){
             initStratComposition();
-        }
+        });
 
         $scope.upMulti = function(){
             $scope.upComposition();
@@ -76,7 +70,7 @@ angular.module('micorrApp')
                 $scope.selectedCmcompositionFamily = getCharacteristicByItsName($scope.cmcompositionFamily, strata.getCmcompositionFamily());
             if (strata.findDependency('mcompositionFamily'))
                 $scope.selectedMcompositionFamily = getCharacteristicByItsName($scope.mcompositionFamily, strata.getMcompositionFamily());
-            if (strata.findDependency('cpcompositionextensionFamily'))
+            if (strata.findDependency('cpcompositionextensionFamily') && typeof $scope.cpcompositionextensionFamily !== "undefined")
                 $scope.selectedCpcompositionextensionFamily = getCharacteristicByItsNameMulti($scope.cpcompositionextensionFamily, strata.getCpcompositionextensionFamily());
 
             // met à jour les données des formulaires en fonction de mcompositionFamily
