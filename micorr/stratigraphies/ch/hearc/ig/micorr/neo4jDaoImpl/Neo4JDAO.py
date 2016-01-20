@@ -48,7 +48,7 @@ class Neo4jDAO:
 
             # Chaque strate a des sous-caracteristiques
             print ("======subCharacteristic")
-            subCharactList = self.graph.cypher.execute("MATCH (s:Strata)-[r:IS_CONSTITUTED_BY]->(c:SubCharacteristic) where s.uid='" + strata.uid + "' RETURN c.uid as uid, c.name as real_name")
+            subCharactList = self.graph.cypher.execute("MATCH (s:Strata)-[r:IS_CONSTITUTED_BY]->(c:SubCharacteristic) where s.uid='" + strata.uid + "' RETURN c.uid as uid, c.name as real_name order by real_name")
             slist = []
             for subCharact in subCharactList:
                 slist.append({'name' : subCharact.uid, 'real_name': subCharact.real_name})
@@ -129,7 +129,7 @@ class Neo4jDAO:
                 sc = []
                 for subcarac in subcaracList:
                     # pour chaque sous-caracteristique on ajoute les sous-sous caracteristiques
-                    subsubcaractList = self.graph.cypher.execute("MATCH (sub:SubCharacteristic)-[:`HAS_SPECIALIZATION`]->(subsub:SubCharacteristic) where sub.uid='" + subcarac.uid + "' RETURN subsub.uid as uid, subsub.name as subsub_real_name order by subsub.name asc")
+                    subsubcaractList = self.graph.cypher.execute("MATCH (sub:SubCharacteristic)-[:`HAS_SPECIALIZATION`]->(subsub:SubCharacteristic) where sub.uid='" + subcarac.uid + "' RETURN subsub.uid as uid, subsub.name as subsub_real_name order by subsub_real_name")
 
                     subsubcaractItems = []
                     for subsubcarac in subsubcaractList:
