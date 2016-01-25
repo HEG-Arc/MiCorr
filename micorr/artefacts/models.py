@@ -68,6 +68,7 @@ class Origin(TimeStampedModel):
         if self.city:
             origin.append(self.city.name)
             origin.append(self.city.region.name)
+            origin.append(self.city.country.name)
         return ", ".join(origin)
 
     class Meta:
