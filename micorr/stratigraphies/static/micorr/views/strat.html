@@ -5,7 +5,7 @@
                 <ol class="breadcrumb">
                     <li><a href="#">Home</a></li>
                     <li><a href="#/artefact/{{artefactName}}">{{artefactName}}</a></li>
-                    <li><a href="#/artefact/{{artefactName}}/{{stratigraphyName}}">{{stratigrapgydescription}}<a/></li>
+                    <li><a href="#/artefact/{{artefactName}}/{{stratigraphyName}}">{{stratigrapydescription}}</a></li>
                 </ol>
             </div>
             <div class="col-md-6">
@@ -174,13 +174,13 @@
                     </div>
 
                     <div class="row-fluid" ng-show="showTabForms">
-                        <div class="col-md-7    ">
+                        <div class="col-md-7">
                             <blockquote>
                                 <p>
                                     Strata : {{strataName}}
                                 </p>
                                     <div class="col-md-3 text-center" ng-controller="ModalAddChildStrataCtrl">
-                                        <script type="text/ng-template" id="modalAddStrata.html">
+                                        <script type="text/ng-template" id="modalAddChildStrata.html">
                                             <div class="modal-header">
                                                 <h3 class="modal-title">Add a child strata</h3>
                                             </div>
