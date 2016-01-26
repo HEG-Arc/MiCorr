@@ -35,15 +35,15 @@ class Neo4jDAO:
 
         # pour chaque strates on va faire une requete
         for strata in strataList:
-            st = {'name' : strata.uid, 'characteristics' : '', 'subcharacteristics' : '', 'interfaces' : '', 'child' : ''}
+            st = {'name': strata.uid, 'characteristics': '', 'subcharacteristics': '', 'interfaces': '', 'child': ''}
             print ("***" + strata.uid)
 
             # Chaque strates a des caracteristiques
-            charactList = self.graph.cypher.execute("MATCH (n:Strata)-[r:IS_CONSTITUTED_BY]->(c:Characteristic)-[b:BELONGS_TO]->(f:Family) where n.uid='" + strata.uid + "' RETURN c.uid as uid, f.uid as family, c.name as real_name, c.order as order")
+            charactList = self.graph.cypher.execute("MATCH (n:Strata)-[r:IS_CONSTITUTED_BY]->(c:Characteristic)-[b:BELONGS_TO]->(f:Family) where n.uid='" + strata.uid + "' RETURN c.uid as uid, f.uid as family, c.name as real_name, c.visible as visible c.order as order")
             print ("======Characteristic")
             clist = []
             for charact in charactList:
-                clist.append({'name' : charact.uid, 'family' : charact.family, 'real_name': charact.real_name, 'order': charact.order})
+                clist.append({'name': charact.uid, 'family': charact.family, 'real_name': charact.real_name, 'order': charact.order, 'visible': charact.visible})
                 print ("         " + charact.uid)
 
             # Chaque strate a des sous-caracteristiques
@@ -120,7 +120,7 @@ class Neo4jDAO:
         familyList = self.graph.cypher.execute("MATCH (n:Family) RETURN n.uid as name, n.name as fam_real_name")
         for family in familyList:
             #pour chaque famille on ajoute les caracteristiques
-            caracList = self.graph.cypher.execute("MATCH (a)-[r:BELONGS_TO]->(b) where b.uid = '" + family.name + "' return a.uid as uid, a.description as description, a.name as carac_real_name order by a.order asc")
+            caracList = self.graph.cypher.execute("MATCH (a)-[r:BELONGS_TO]->(b) where b.uid = '" + family.name + "' return a.uid as uid, a.description as description, a.name as carac_real_name, a.visible as visible order by a.order asc")
             fam = {'family' : family.name, 'characteristics' : [], 'fam_real_name': family.fam_real_name}
             for carac in caracList:
                 # pour chaque caracteristiques on ajoute les sous caracteristiques
@@ -135,12 +135,12 @@ class Neo4jDAO:
                     for subsubcarac in subsubcaractList:
                         subsubcaractItems.append({'name' : subsubcarac.uid, 'subsub_real_name': subsubcarac.subsub_real_name})
 
-                    ssc = {'name' : subcarac.uid, 'description' : subcarac.description, 'subcharacteristics' : '', 'sub_real_name': subcarac.sub_real_name}
+                    ssc = {'name': subcarac.uid, 'description': subcarac.description, 'subcharacteristics': '', 'sub_real_name': subcarac.sub_real_name}
                     ssc['subcharacteristics'] = subsubcaractItems
                     sc.append(ssc)
 
 
-                fam['characteristics'].append({'name' : carac.uid, 'description' : carac.description, 'real_name': carac.carac_real_name, 'subcharacteristics' : sc})
+                fam['characteristics'].append({'name': carac.uid, 'description': carac.description, 'real_name': carac.carac_real_name, 'visible': carac.visible, 'subcharacteristics': sc})
 
             chars.append(fam)
 
