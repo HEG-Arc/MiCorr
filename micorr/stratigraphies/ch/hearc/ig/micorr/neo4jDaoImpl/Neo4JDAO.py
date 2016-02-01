@@ -39,7 +39,7 @@ class Neo4jDAO:
             print ("***" + strata.uid)
 
             # Chaque strates a des caracteristiques
-            charactList = self.graph.cypher.execute("MATCH (n:Strata)-[r:IS_CONSTITUTED_BY]->(c:Characteristic)-[b:BELONGS_TO]->(f:Family) where n.uid='" + strata.uid + "' RETURN c.uid as uid, f.uid as family, c.name as real_name, c.visible as visible c.order as order")
+            charactList = self.graph.cypher.execute("MATCH (n:Strata)-[r:IS_CONSTITUTED_BY]->(c:Characteristic)-[b:BELONGS_TO]->(f:Family) where n.uid='" + strata.uid + "' RETURN c.uid as uid, f.uid as family, c.name as real_name, c.visible as visible, c.order as order")
             print ("======Characteristic")
             clist = []
             for charact in charactList:
@@ -59,14 +59,14 @@ class Neo4jDAO:
             interfaceName = self.graph.cypher.execute("MATCH (s:Strata)-[r:HAS_UPPER_INTERFACE]->(n:Interface) where s.uid='" + strata.uid + "' RETURN n.uid as uid")
 
             if len(interfaceName) > 0:
-                ilist = {'name' : interfaceName[0].uid, 'characteristics' : ''}
+                ilist = {'name': interfaceName[0].uid, 'characteristics': ''}
                 interfaceList = self.graph.cypher.execute("MATCH (s:Strata)-[r:HAS_UPPER_INTERFACE]->(i:Interface) where s.uid='" + strata.uid + "' RETURN i.uid as uid")
 
                 #Chaque interface a des caracteristiques
                 intCharactList = self.graph.cypher.execute("MATCH (i:Interface)-[r:IS_CONSTITUTED_BY]->(c:Characteristic)-[b:BELONGS_TO]->(f:Family) where i.uid='" + interfaceName[0].uid + "' RETURN c.uid as uid, f.uid as family")
                 iclist = []
                 for ic in intCharactList:
-                    iclist.append({'name' : ic.uid, 'family' : ic.family})
+                    iclist.append({'name': ic.uid, 'family': ic.family})
                     print("            " + ic.uid)
 
                 # on rassemble toutes les donnees dans c
@@ -133,7 +133,7 @@ class Neo4jDAO:
 
                     subsubcaractItems = []
                     for subsubcarac in subsubcaractList:
-                        subsubcaractItems.append({'name' : subsubcarac.uid, 'subsub_real_name': subsubcarac.subsub_real_name})
+                        subsubcaractItems.append({'name': subsubcarac.uid, 'subsub_real_name': subsubcarac.subsub_real_name})
 
                     ssc = {'name': subcarac.uid, 'description': subcarac.description, 'subcharacteristics': '', 'sub_real_name': subcarac.sub_real_name}
                     ssc['subcharacteristics'] = subsubcaractItems
@@ -242,7 +242,7 @@ class Neo4jDAO:
         #self.deleteAllStrataFromAStratigraphy(stratigraphy)
         self.query = "match (a:Artefact)-[i:IS_REPRESENTED_BY]->(s:Stratigraphy) where s.uid = '" + stratigraphy + "' optional match (s)-[r]->()  delete i, r, s";
         self.graph.cypher.execute(self.query)
-        return {'res' : 1}
+        return {'res': 1}
 
     # cree une interface
     # @params nom de la strate et nom de l'interface
@@ -331,7 +331,7 @@ class Neo4jDAO:
                 if len(i) > 0:
                     self.attachCharacteristicToInterface(interfaceName, i['name'])
 
-        return {'res' : 1}
+        return {'res': 1}
 
     # on cree une requete pour retrouver les artefacts similaires dans la base
     # @params stratigraphie au format json
@@ -363,7 +363,7 @@ class Neo4jDAO:
         listChar = set(listChar)
         listCharInt = set(listCharInt)
 
-        qry  = "MATCH (a:Artefact)-->(s:Stratigraphy)-->(st:Strata) "
+        qry = "MATCH (a:Artefact)-->(s:Stratigraphy)-->(st:Strata) "
 
         cpt = 1
         for c in listChar:
@@ -410,14 +410,14 @@ class Neo4jDAO:
         print (res)
 
         for i in res:
-            line = {'artefact' : '', 'stratum' : '', 'diffnbstratum' : '', 'tci' : '', 'totalmatching' : '', 'totalrelation' : '', 'matching100' : ''}
+            line = {'artefact': '', 'stratum': '', 'diffnbstratum': '', 'tci': '', 'totalmatching': '', 'totalrelation': '', 'matching100': ''}
             line['artefact'] = i['auid']
-            line['stratum']  = i['stratum']
-            line['diffnbstratum']  = i['DiffNombreStratum']
-            line['tci']  = i['TotalComparisonIndicator1']
-            line['totalmatching']  = i['TotalMatching']
-            line['totalrelation']  = i['TotalRelations']
-            line['matching100']  = i['Matching100']
+            line['stratum'] = i['stratum']
+            line['diffnbstratum'] = i['DiffNombreStratum']
+            line['tci'] = i['TotalComparisonIndicator1']
+            line['totalmatching'] = i['TotalMatching']
+            line['totalrelation'] = i['TotalRelations']
+            line['matching100'] = i['Matching100']
             result.append(line)
 
 
@@ -431,13 +431,12 @@ class Neo4jDAO:
         self.query = "MATCH (n:Artefact) where n.uid='" + artefact + "' RETURN count(n.uid) as nb"
         self.nb = self.graph.cypher.execute(self.query)[0].nb
 
-
         if self.nb >= 1:
-            return {'res' : 0}
+            return {'res': 0}
         else:
             self.query = "CREATE(artefact:Artefact{uid:'" + artefact + "',date:'" + time.strftime("%Y-%m-%d") + "',label:'artefact'})"
             self.graph.cypher.execute(self.query)
-            return {'res' : 1}
+            return {'res': 1}
 
     # suppression d'un artefact
     # @params nom de l'artefact
@@ -451,21 +450,4 @@ class Neo4jDAO:
         self.query = "match (a:Artefact) where a.uid='" + artefact + "' optional match (a)-[x]-() delete x, a"
         self.graph.cypher.execute(self.query)
 
-        return {'res' : 1}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        return {'res': 1}
