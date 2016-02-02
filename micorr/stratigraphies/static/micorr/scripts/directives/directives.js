@@ -424,7 +424,7 @@ angular.module('micorrApp').directive('strata', function($compile, StrataData){
                 var s2 = stratas[i];
 
                 if (strata.getShortNatureFamily() == s2.getShortNatureFamily()){
-                    if (compareTwoStratas(strata, s2)){ // si les strates sont similaires alors onprend le nom de la strate similaire
+                    if (compareTwoStratas(strata, s2)){ // si les strates sont similaires alors on prend le nom de la strate similaire
                         strata.setOrderName(s2.getOrderName()); // la propriété orderName permet de stocker pour une strate, son nom (CP1, CP2, M1, M2, M3, M1)
                         similar = true;
                     }
@@ -437,14 +437,16 @@ angular.module('micorrApp').directive('strata', function($compile, StrataData){
                 strata.setOrderName(strata.getShortNatureFamily() + (sameNature + 1));
 
             // On affiche le nom de la strate
-            element.children()[0].innerText = strata.getOrderName();
+            //element.children()[0].innerText = strata.getOrderName();
+
+            element.children()[0].innerHTML = '<button class="btn btn-link btn-xs" ng-click="removeStrata('+index+')" title="delete this strata"><span class="glyphicon glyphicon-remove"></span></button></br>' + strata.getOrderName();
 
             // on affiche les boutons pour bouger la strate
             var btns = "";
             if (index > 0)
-                btns += '<button ng-click="movestrataup(' + index + ')" type="button" class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span></button>';
+                btns += '<button ng-click="movestrataup(' + index + ')" type="button" class="btn btn-link btn-xs" title="move up this strata"><span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span></button>';
             if (index < stratas.length - 1)
-                btns += '<button ng-click="movestratadown(' + index + ')" type="button" class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span></button>';
+                btns += '<button ng-click="movestratadown(' + index + ')" type="button" class="btn btn-link btn-xs" title="move down this strata"><span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span></button>';
 
             $(element.children()[1]).append(btns);
             $compile(element.contents())(scope);

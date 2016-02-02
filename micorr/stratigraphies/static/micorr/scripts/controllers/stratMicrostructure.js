@@ -42,10 +42,6 @@ angular.module('micorrApp')
             }
         });
 
-        if(typeof StrataData.getCprimicrostructureFamily() !== "undefined"){
-            initMicrostructure();
-        }
-
         $scope.upMulti = function(){
             $scope.upMicrostructure();
         };
@@ -157,5 +153,4 @@ angular.module('micorrApp')
             $scope.$emit('updateFormOnly');
         };
 
-    //Contrôlleur qui s'occupe des picklist
     });

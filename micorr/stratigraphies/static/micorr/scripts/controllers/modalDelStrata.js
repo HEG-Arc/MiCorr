@@ -6,6 +6,9 @@
  * @description
  * # ModalDelStrataCtrl
  * Contrôlleur qui s'occupe de supprimer une strate dans le service
+ *
+ * !!!CE FICHIER N'EST PLUS UTILISE!!!
+ *
  */
 angular.module('micorrApp')
     .controller('ModalDelStrataCtrl', function ($scope, $modal, $log, StrataData) {

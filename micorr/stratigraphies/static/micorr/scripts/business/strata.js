@@ -1102,8 +1102,6 @@ function CP() {
     this.dependencies.push('interfaceadherenceFamily');
     this.dependencies.push('cpcompositionextensionFamily');
     this.dependencies.push('cprimicrostructureaggregatecompositionFamily');
-    this.dependencies.push('cpcompositionextensionFamily');
-    this.dependencies.push('cprimicrostructureaggregatecompositionFamily');
     this.dependencies.push('cprimicrostructureaggregatecompositionextensionFamily');
     this.dependencies.push('cpcompositionFamily');
     this.dependencies.push('subcpcompositionFamily');

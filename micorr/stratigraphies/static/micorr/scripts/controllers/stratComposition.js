@@ -70,7 +70,7 @@ angular.module('micorrApp')
                 $scope.selectedCmcompositionFamily = getCharacteristicByItsName($scope.cmcompositionFamily, strata.getCmcompositionFamily());
             if (strata.findDependency('mcompositionFamily'))
                 $scope.selectedMcompositionFamily = getCharacteristicByItsName($scope.mcompositionFamily, strata.getMcompositionFamily());
-            if (strata.findDependency('cpcompositionextensionFamily') && typeof $scope.cpcompositionextensionFamily !== "undefined")
+            if (strata.findDependency('cpcompositionextensionFamily'))
                 $scope.selectedCpcompositionextensionFamily = getCharacteristicByItsNameMulti($scope.cpcompositionextensionFamily, strata.getCpcompositionextensionFamily());
 
             // met à jour les données des formulaires en fonction de mcompositionFamily
@@ -174,5 +174,4 @@ angular.module('micorrApp')
 
             $scope.$emit('updateFormOnly');
         };
-    //Contrôlleur qui s'occupe de l'onglet de l'interface
     });

@@ -10,7 +10,7 @@
 angular.module('micorrApp')
     .controller('ShowStratCtrl', function ($scope, $routeParams, $timeout, MiCorrService, StrataData, ngProgress) {
 
-        // Variable mise a false à chaque fois qu'n ouvre une stratigraphie
+        // Variable mise a false à chaque fois qu'on ouvre une stratigraphie
         $scope.askLeave = false;
         // Quand l'url change on appelle cette méthode
         $scope.$on('$locationChangeStart', function( event ) {
@@ -22,6 +22,14 @@ angular.module('micorrApp')
                 }
             }
         });
+
+
+        //quand on supprime une strate, on se positionne sur la strate 0 et on met à jour le dessin
+        $scope.removeStrata = function (index) {
+            StrataData.delStrata(index);
+            $scope.$emit('doUpdate', 0);
+            $scope.$emit('updateDraw');
+        };
 
         /*
         * Déplace une strate vers le haut et met à jour l'interface
@@ -73,7 +81,7 @@ angular.module('micorrApp')
             $scope.strataName = "No strata selected";         // par défaut aucune strata n'est choisie
             $scope.natureFamilyname = "";                           // par défaut aucune nature n'est choisie
 
-            //ces variables servent à afficher/masquer dans le formulaire les champs appartenants à une nature de matériau
+            // ces variables servent à afficher/masquer dans le formulaire les champs appartenants à une nature de matériau
             // par exemple SI on prend D, le champ colourFamily s'affiche alors qu'il va se masquer dès qu'on va sélectionner un SV
             $scope.showTabForms = false;        //par défaut le formulaire est masqué
 
@@ -131,7 +139,7 @@ angular.module('micorrApp')
                         /*
                         * on utilise la méthode getCharacteristicByFamily qui possède deux paramètres
                         * 1) la liste des charactéristiques pour cette strate au format JSON
-                        * 2) la famille de characteristiques qu'on veut ressortir
+                        * 2) la famille des characteristiques qu'on veut ressortir
                         * On fait ça comme ça car les données sont une liste au format json
                         * et cette méthode permet de retrouver la bonne charactéristique pour la bonne famille de charactéristique
                         */
@@ -193,32 +201,31 @@ angular.module('micorrApp')
                         //sub
                         // Puis on charge les sous-caractéristiques et sous-sous-caractéristiques
                         var subCharacteristicsList = loadedStrata['subcharacteristics'];
-                        if(typeof StrataData.getSubcpcompositionFamily() !== "undefined") {
-                            if (strata.findDependency('subcpcompositionFamily'))
-                                strata.setSubcpcompositionFamily($scope.getSubCharacteristicByFamily(subCharacteristicsList, StrataData.getSubcpcompositionFamily()));
-                            if (strata.findDependency('subsubcpcompositionFamily'))
-                                strata.setSubsubcpcompositionFamily($scope.getSubCharacteristicByFamily(subCharacteristicsList, StrataData.getSubsubcpcompositionFamily()));
-                            if (strata.findDependency('subcprimicrostructureaggregatecompositionFamily'))
-                                strata.setSubcprimicrostructureaggregateCompositionFamily($scope.getSubCharacteristicByFamily(subCharacteristicsList, StrataData.getSubcprimicrostructureaggregatecompositionFamily()));
-                            if (strata.findDependency('subsubcprimicrostructureaggregatecompositionFamily'))
-                                strata.setSubsubcprimicrostructureaggregateCompositionFamily($scope.getSubCharacteristicByFamily(subCharacteristicsList, StrataData.getSubsubcprimicrostructureaggregatecompositionFamily()));
-                            if (strata.findDependency('subcmcompositionFamily'))
-                                strata.setSubCmcompositionFamily($scope.getSubCharacteristicByFamily(subCharacteristicsList, StrataData.getSubcmcompositionFamily()));
-                            if (strata.findDependency('subcmlevelofcorrosionFamily'))
-                                strata.setSubCmLevelOfCorrosionFamily($scope.getSubCharacteristicByFamily(subCharacteristicsList, StrataData.getSubcmLevelOfCorrosionFamily()));
-                            if (strata.findDependency('submcompositionFamily'))
-                                strata.setSubmcompositionFamily($scope.getSubCharacteristicByFamily(subCharacteristicsList, StrataData.getSubmcompositionFamily()));
+
+                        if (strata.findDependency('subcpcompositionFamily'))
+                            strata.setSubcpcompositionFamily($scope.getSubCharacteristicByFamily(subCharacteristicsList, StrataData.getSubcpcompositionFamily()));
+                        if (strata.findDependency('subsubcpcompositionFamily'))
+                            strata.setSubsubcpcompositionFamily($scope.getSubCharacteristicByFamily(subCharacteristicsList, StrataData.getSubsubcpcompositionFamily()));
+                        if (strata.findDependency('subcprimicrostructureaggregatecompositionFamily'))
+                            strata.setSubcprimicrostructureaggregateCompositionFamily($scope.getSubCharacteristicByFamily(subCharacteristicsList, StrataData.getSubcprimicrostructureaggregatecompositionFamily()));
+                        if (strata.findDependency('subsubcprimicrostructureaggregatecompositionFamily'))
+                            strata.setSubsubcprimicrostructureaggregateCompositionFamily($scope.getSubCharacteristicByFamily(subCharacteristicsList, StrataData.getSubsubcprimicrostructureaggregatecompositionFamily()));
+                        if (strata.findDependency('subcmcompositionFamily'))
+                            strata.setSubCmcompositionFamily($scope.getSubCharacteristicByFamily(subCharacteristicsList, StrataData.getSubcmcompositionFamily()));
+                        if (strata.findDependency('subcmlevelofcorrosionFamily'))
+                            strata.setSubCmLevelOfCorrosionFamily($scope.getSubCharacteristicByFamily(subCharacteristicsList, StrataData.getSubcmLevelOfCorrosionFamily()));
+                        if (strata.findDependency('submcompositionFamily'))
+                            strata.setSubmcompositionFamily($scope.getSubCharacteristicByFamily(subCharacteristicsList, StrataData.getSubmcompositionFamily()));
 
 
-                            // Picklist
-                            // on charge les données pour les picklist
-                            if (strata.findDependency('subcprimicrostructureFamily'))
-                                strata.setSubcprimicrostructureFamily($scope.getSubCharacteristicByFamilyMulti(subCharacteristicsList, StrataData.getSubcprimicrostructureFamily()));
-                            if (strata.findDependency('submmicrostructureFamily'))
-                                strata.setSubmmicrostructureFamily($scope.getSubCharacteristicByFamilyMulti(subCharacteristicsList, StrataData.getSubmmicrostructureFamily()));
-                        }
+                        // Picklist
+                        // on charge les données pour les picklist
+                        if (strata.findDependency('subcprimicrostructureFamily'))
+                            strata.setSubcprimicrostructureFamily($scope.getSubCharacteristicByFamilyMulti(subCharacteristicsList, StrataData.getSubcprimicrostructureFamily()));
+                        if (strata.findDependency('submmicrostructureFamily'))
+                            strata.setSubmmicrostructureFamily($scope.getSubCharacteristicByFamilyMulti(subCharacteristicsList, StrataData.getSubmmicrostructureFamily()));
                         if (strata.findDependency('cpcompositionextensionFamily'))
-                                strata.setCpcompositionextensionFamily($scope.getCharacteristicByFamilyMulti(loadedStrata['characteristics'], "cpCompositionExtensionFamily"));
+                            strata.setCpcompositionextensionFamily($scope.getCharacteristicByFamilyMulti(loadedStrata['characteristics'], "cpCompositionExtensionFamily"));
                         if (strata.findDependency('cprimicrostructureaggregatecompositionextensionFamily'))
                             strata.setCprimicrostructureaggregateCompositionextensionFamily($scope.getCharacteristicByFamilyMulti(loadedStrata['characteristics'], "cpriMicrostructureAggregateCompositionExtensionFamily"));
 

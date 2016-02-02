@@ -6,6 +6,9 @@
  * @description
  * # ModalAddStrataInstanceCtrl
  * Instance du contrôlleur qui s'occupe d'ajouter une strate
+ *
+ * !!!CE FICHIER N'EST PLUS UTILISE!!!
+ *
  */
 angular.module('micorrApp')
     .controller('ModalAddStrataInstanceCtrl', function ($scope, $route, $modalInstance, MiCorrService, arg1, StrataData) {
@@ -27,5 +30,4 @@ angular.module('micorrApp')
         $scope.cancel = function () {
             $modalInstance.dismiss('cancel');
         };
-    // Contrôlleur qui s'occupe d'ajouter une strate enfant
     });

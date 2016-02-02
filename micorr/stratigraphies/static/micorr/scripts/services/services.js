@@ -176,6 +176,13 @@ angular.module('micorrApp').factory('StrataData', function StrataDataFactory() {
                 if (rstratas.length == 0)
                     rstratas.push(natureFactory("M"));
             },
+            delStrata: function (index) {
+                var idel = parseInt(index);
+                rstratas.splice(idel, 1);
+                // SI on a plus de strate alors on en rajoute une nouvelle pour éviter les erreurs
+                if (rstratas.length == 0)
+                    rstratas.push(natureFactory("M"));
+            },
             // création d'un json contenant toute la stratigraphie au format JSON
             StratasToJson: function (artefactName, stratigraphyName) {
                 var st = rstratas;
@@ -186,7 +193,7 @@ angular.module('micorrApp').factory('StrataData', function StrataDataFactory() {
                         var cm = st[i]
                         var cp = st[i - 1]
                         var m = st[i + 1]
-                        var strat = {'name': s.getName(), 'characteristics': '', 'interfaces': ''};
+                        var strat = {'name': cm.getName(), 'characteristics': '', 'interfaces': ''};
                         strat['characteristics'] = cm.getJsonCharacteristics(cp, m);
                         strat['interfaces'] = cm.getJsonInterface(cp, m);
                         temp['stratas'].push(strat);
@@ -216,7 +223,7 @@ angular.module('micorrApp').factory('StrataData', function StrataDataFactory() {
                     }
                 };
 
-                /* parcourt les sous-caractéristiques de data et retourne les sous caractéristique pour une famille
+                /* parcours les sous-caractéristiques de data et retourne les sous caractéristique pour une famille
                  * comme une sous caractéristique n'est pas liée à une famille on doit pour une famille parcourir toutes les sous-caractéristique de chaque caractéristique
                  * et retourner ces sous caractéristiques dans une liste
                  * @params family : nom de la famille
@@ -550,6 +557,14 @@ angular.module('micorrApp').factory('StrataData', function StrataDataFactory() {
         }
     };
     return getStrataData();
+});
+
+angular.module('micorrApp').factory('httpRequestTracker', function httpRequestTrackerFactory($http) {
+        var httpRequestTracker = {};
+        httpRequestTracker.hasPendingRequests = function () {
+            return $http.pendingRequests.length > 0;
+        };
+        return httpRequestTracker;
 });
 
 
