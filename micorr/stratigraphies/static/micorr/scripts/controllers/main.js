@@ -17,6 +17,7 @@ angular.module('micorrApp')
     .controller('MainCtrl', function ($scope, $route, $routeParams, MiCorrService, StrataData, ngProgress, httpRequestTracker) {
 
     ngProgress.height('4px');
+    ngProgress.color('#e27e14;');
     ngProgress.start();
 
     $scope.hasPendingRequests = function () {
