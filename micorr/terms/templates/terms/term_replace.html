@@ -1,8 +1,0 @@
-{% spaceless %}
-  <a  {% if url_is_external %}
-        href="{{ url }}"
-      {% else %}
-        style="cursor: help;"
-        title="{{ definition }}"
-      {% endif %}>%s</a>
-{% endspaceless %}
