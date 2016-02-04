@@ -27,7 +27,7 @@ angular.module('micorrApp')
                             newStrata.setName($scope.strataName);
                             newStrata.setUid($scope.strataUid);
                             StrataData.pushOneStrata(newStrata);
-                            scopeParent.$emit('doUpdate', 0);
+                            scopeParent.$emit('doUpdate', StrataData.getStratas().length-1);
                             scopeParent.$emit('updateDraw');
                             $modalInstance.close();
                         };

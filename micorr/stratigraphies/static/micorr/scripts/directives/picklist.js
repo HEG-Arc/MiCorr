@@ -118,7 +118,7 @@ function fxPickList($compile, $templateCache){
 			//always assign to model and expect destoptions is updated from model.
 	        //do not update desttoptions to model.
 			$scope.rightShift=function(){
-				 var models=modelFn($scope);
+				var models=modelFn($scope);
 				for (var i=0; i<$scope.picklist_src.length; i++){
 					models.push($scope.itemToValue($scope.picklist_src[i]));
 				}
@@ -126,7 +126,7 @@ function fxPickList($compile, $templateCache){
 				$scope.picklist_src.length=0;
 			};
 			$scope.rightShiftAll=function(){
-				 var models=modelFn($scope);
+				var models=modelFn($scope);
 				for (var i=0; i<$scope.srcoptions.length; i++){
 					models.push($scope.itemToValue($scope.srcoptions[i]));
 				}
@@ -134,7 +134,7 @@ function fxPickList($compile, $templateCache){
 				$scope.srcoptions.length=0;
 			};
 			$scope.leftShift=function(){
-				 var models=modelFn($scope);
+				var models=modelFn($scope);
 				for (var i=0; i<$scope.picklist_dest.length; i++){
 					$scope.srcoptions.push($scope.picklist_dest[i]);
 				}
@@ -310,19 +310,19 @@ var fxPickListTpl=
 "			</div>"+
 "			<div style=\"display: table-cell; width: 10%; vertical-align: middle;\" class=\"btn-group-vertical\">"+
 "				<div>"+
-"					<button type=\"button\" class=\"btn btn-info\" data-ng-click=\"rightShift(); update()\" >"+
-"						<span class=\"glyphicon glyphicon-step-forward\"></span>"+
+"					<button type=\"button\" class=\"btn btn-link\" data-ng-click=\"rightShift();\" >"+
+"						<span class=\"glyphicon glyphicon-chevron-right\"></span>"+
 "					</button>"+
 "				</div>"+
 "				<div>"+
-"					<button type=\"button\" class=\"btn btn-info\" data-ng-click=\"leftShift(); update()\">"+
-"						<span class=\"glyphicon glyphicon-step-backward\"></span>"+
+"					<button type=\"button\" class=\"btn btn-link\" data-ng-click=\"leftShift();\">"+
+"						<span class=\"glyphicon glyphicon-chevron-left\"></span>"+
 "					</button>"+
 "				</div>"+
 "			</div>"+
 "			<div style=\"display: table-cell; width: 45%;vertical-align: middle;\">"+
                 "<label>Choosen characteristics</label>" +
-"				<select multiple size=\"5\" class=\"form-control\" data-ng-options=\"fake\" name=\"fake\" data-ng-model=\"picklist_dest\" data-picklist-dest>"+
+"				<select multiple size=\"5\" class=\"form-control\" data-ng-options=\"fake\" name=\"fake\" data-ng-model=\"picklist_dest\" ng-change=\"update();\" data-picklist-dest>"+
 "				</select>"+
 "			</div>"+
 "		</div>"+

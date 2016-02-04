@@ -99,8 +99,8 @@ angular.module('micorrApp')
                 temp[index].setMmicrostructureFamily($scope.selectedMmicrostructureFamily.name);
             if (temp[index].findDependency('cmlevelofcorrosionFamily'))
                 temp[index].setCmLevelOfCorrosionFamily($scope.selectedCmlevelofcorrosionFamily.name);
-            /*if (temp[index].findDependency('cprimicrostructureaggregatecompositionFamily'))
-                temp[index].setCprimicrostructureaggregateCompositionFamily($scope.selectedCprimicrostructureaggregatecompositionFamily.name);*/
+            if (temp[index].findDependency('cprimicrostructureaggregatecompositionFamily'))
+                temp[index].setCprimicrostructureaggregateCompositionFamily($scope.selectedCprimicrostructureaggregatecompositionFamily.name);
             if (temp[index].findDependency('cprimicrostructureaggregatecompositionextensionFamily'))
                 temp[index].setCprimicrostructureaggregateCompositionextensionFamily($scope.selectedCprimicrostructureaggregatecompositionExtensionFamily);
             if (temp[index].findDependency('subcmlevelofcorrosionFamily'))
@@ -109,9 +109,8 @@ angular.module('micorrApp')
                 temp[index].setSubmmicrostructureFamily($scope.selectedSubmmicrostructureFamily);
             if (temp[index].findDependency('subcprimicrostructureFamily'))
                 temp[index].setSubcprimicrostructureFamily($scope.selectedSubcprimicrostructureFamily);
-
-            /*if (temp[index].findDependency('subcprimicrostructureaggregatecompositionFamily'))
-                temp[index].setSubcprimicrostructureaggregateCompositionFamily($scope.selectedSubcprimicrostructureaggregatecompositionFamily.name);*/
+            if (temp[index].findDependency('subcprimicrostructureaggregatecompositionFamily'))
+                temp[index].setSubcprimicrostructureaggregateCompositionFamily($scope.selectedSubcprimicrostructureaggregatecompositionFamily.name);
             if (temp[index].findDependency('subsubcprimicrostructureaggregatecompositionFamily'))
                 temp[index].setSubsubcprimicrostructureaggregateCompositionFamily($scope.selectedSubsubcprimicrostructureaggregatecompositionFamily.name);
 

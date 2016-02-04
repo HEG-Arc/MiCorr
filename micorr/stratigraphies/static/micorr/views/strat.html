@@ -10,7 +10,7 @@
             <div class="loader--text"></div>
         </div>
     </div>
-    <div class="container-fluid">
+    <div class="container-fluid" ng-hide="hasPendingRequests()">
         <div class="row">
             <div class="col-md-6">
                 <ol class="breadcrumb">
@@ -172,7 +172,7 @@
         </div>
     </div>
 
-    <div class="container-fluid">
+    <div class="container-fluid" ng-hide="hasPendingRequests()">
         <div class="row">
             <div class="col-md-6">
                 <div ng-controller="TabsStrataCtrl">
@@ -232,64 +232,64 @@
                                 <div class="row-fluid">
                                     <div class="col-md-6 form-group">
                                         <label for="morphologyShape"><span class="glyphicon glyphicon-eye-close" title="no visual impact on the strata"></span> Shape</label>
-                                        <select id="morphologyShape" class="form-control" required="required" ng-model="selectedShapeFamily" ng-options="x.real_name for x in shapeFamily" ng-change="upMorpho()">
-                                            <option style="display:none" value="">select an option...</option>
+                                        <select id="morphologyShape" class="form-control" ng-model="selectedShapeFamily" ng-options="x.real_name for x in shapeFamily" ng-change="upMorpho()">
+                                            <option value=""> </option>
                                         </select>
                                     </div>
                                     <div ng-show="showWidth" class="col-md-6 form-group">
                                         <label for="morphologyWidth"><span class="glyphicon glyphicon-eye-open" title="visual impact on the strata"></span> Width</label>
-                                        <select id="morphologyWidth" class="form-control" required="required" ng-model="selectedWidthFamily" ng-options="x.real_name for x in widthFamily" ng-change="upMorpho()">
-                                            <option style="display:none" value="">select an option...</option>
+                                        <select id="morphologyWidth" class="form-control" ng-model="selectedWidthFamily" ng-options="x.real_name for x in widthFamily" ng-change="upMorpho()">
+                                            <option value=""> </option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="row-fluid">
                                     <div ng-show="showThickness" class="col-md-6 form-group">
                                         <label for="morphologyThickness"><span class="glyphicon glyphicon-eye-open" title="visual impact on the strata"></span> Thickness</label>
-                                        <select id="morphologyThickness" class="form-control" required="required" ng-model="selectedThicknessFamily" ng-options="x.real_name for x in thicknessFamily" ng-change="upMorpho()">
-                                            <option style="display:none" value="">select an option...</option>
+                                        <select id="morphologyThickness" class="form-control" ng-model="selectedThicknessFamily" ng-options="x.real_name for x in thicknessFamily" ng-change="upMorpho()">
+                                            <option value=""> </option>
                                         </select>
                                     </div>
                                     <div ng-show="showContinuity" class="col-md-6 form-group">
                                         <label for="morphologyContinuity"><span class="glyphicon glyphicon-eye-close" title="no visual impact on the strata"></span> Continuity</label>
-                                        <select id="morphologyContinuity" class="form-control" required="required" ng-model="selectedContinuityFamily" ng-options="x.real_name for x in continuityFamily" ng-change="upMorpho()">
-                                            <option style="display:none" value="">select an option...</option>
+                                        <select id="morphologyContinuity" class="form-control" ng-model="selectedContinuityFamily" ng-options="x.real_name for x in continuityFamily" ng-change="upMorpho()">
+                                            <option value=""> </option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="row-fluid">
                                     <div ng-show="showDirection" class="col-md-6 form-group">
                                         <label for="morphologyDirection"><span class="glyphicon glyphicon-eye-close" title="no visual impact on the strata"></span> Direction</label>
-                                        <select id="morphologyDirection" class="form-control" required="required" ng-model="selectedDirectionFamily" ng-options="x.real_name for x in directionFamily" ng-change="upMorpho()">
-                                            <option style="display:none" value="">select an option...</option>
+                                        <select id="morphologyDirection" class="form-control" ng-model="selectedDirectionFamily" ng-options="x.real_name for x in directionFamily" ng-change="upMorpho()">
+                                            <option value=""> </option>
                                         </select>
                                     </div>
                                     <div ng-show="showColor" class="col-md-6 form-group">
                                         <label for="physicalPropertyColor"><span class="glyphicon glyphicon-eye-open" title="visual impact on the strata"></span> Colour</label>
-                                        <select id="physicalPropertyColor" class="form-control" required="required" ng-model="selectedColourFamily" ng-options="x.real_name for x in colourFamily" ng-change="upMorpho()">
-                                            <option style="display:none" value="">select an option...</option>
+                                        <select id="physicalPropertyColor" class="form-control" ng-model="selectedColourFamily" ng-options="x.real_name for x in colourFamily" ng-change="upMorpho()">
+                                            <option value=""> </option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="row-fluid">
                                     <div ng-show="showBrightness" class="col-md-6 form-group">
                                         <label for="physicalPropertyBrightness"><span class="glyphicon glyphicon-eye-close" title="no visual impact on the strata"></span> Brightness</label>
-                                        <select id="physicalPropertyBrightness" class="form-control" required="required" ng-model="selectedBrightnessFamily" ng-options="x.real_name for x in brightnessFamily" ng-change="upMorpho()">
-                                            <option style="display:none" value="">select an option...</option>
+                                        <select id="physicalPropertyBrightness" class="form-control" ng-model="selectedBrightnessFamily" ng-options="x.real_name for x in brightnessFamily" ng-change="upMorpho()">
+                                            <option value=""> </option>
                                         </select>
                                     </div>
                                     <div ng-show="showBrightness" class="col-md-6 form-group">
                                         <label for="physicalPropertyOpacity"><span class="glyphicon glyphicon-eye-close" title="no visual impact on the strata"></span> Opacity</label>
-                                        <select id="physicalPropertyOpacity" class="form-control" required="required" ng-model="selectedOpacityFamily" ng-options="x.real_name for x in opacityFamily" ng-change="upMorpho()">
-                                            <option style="display:none" value="">select an option...</option>
+                                        <select id="physicalPropertyOpacity" class="form-control" ng-model="selectedOpacityFamily" ng-options="x.real_name for x in opacityFamily" ng-change="upMorpho()">
+                                            <option value=""> </option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="row-fluid">
                                     <div ng-show="showMagnetism" class="col-md-6 form-group">
                                         <label for="physicalPropertyMagnetism"><span class="glyphicon glyphicon-eye-close" title="no visual impact on the strata"></span> Magnetism</label>
-                                        <select id="physicalPropertyMagnetism" class="form-control" required="required" ng-model="selectedMagnetismFamily" ng-options="x.real_name for x in magnetismFamily" ng-change="upMorpho()">
-                                            <option style="display:none" value="">select an option...</option>
+                                        <select id="physicalPropertyMagnetism" class="form-control" ng-model="selectedMagnetismFamily" ng-options="x.real_name for x in magnetismFamily" ng-change="upMorpho()">
+                                            <option value=""> </option>
                                         </select>
                                     </div>
                                     <div class="col-md-6 form-group">
@@ -302,28 +302,28 @@
                                 <div class="row-fluid">
                                     <div ng-show="showPorosity" class="col-md-6 form-group">
                                         <label for="texturePorosity"><span class="glyphicon glyphicon-eye-open" title="visual impact on the strata"></span> Texture</label>
-                                        <select id="texturePorosity" class="form-control" required="required" ng-model="selectedPorosityFamily" ng-options="x.real_name for x in porosityFamily" ng-change="upTexture()">
-                                            <option style="display:none" value="">select an option...</option>
+                                        <select id="texturePorosity" class="form-control" ng-model="selectedPorosityFamily" ng-options="x.real_name for x in porosityFamily" ng-change="upTexture()">
+                                            <option value=""> </option>
                                         </select>
                                     </div>
                                     <div ng-show="showCohesion" class="col-md-6 form-group">
                                         <label for="textureCohesion"><span class="glyphicon glyphicon-eye-open" title="visual impact on the strata"></span> Cohesion</label>
-                                        <select id="textureCohesion" class="form-control" required="required" ng-model="selectedCohesionFamily" ng-options="x.real_name for x in cohesionFamily" ng-change="upTexture()">
-                                            <option style="display:none" value="">select an option...</option>
+                                        <select id="textureCohesion" class="form-control" ng-model="selectedCohesionFamily" ng-options="x.real_name for x in cohesionFamily" ng-change="upTexture()">
+                                            <option value=""> </option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="row-fluid">
                                     <div ng-show="showHardness" class="col-md-6 form-group">
                                         <label for="textureHardness"><span class="glyphicon glyphicon-eye-close" title="no visual impact on the strata"></span> Hardness</label>
-                                        <select id="textureHardness" class="form-control" required="required" ng-model="selectedHardnessFamily" ng-options="x.real_name for x in hardnessFamily" ng-change="upTexture()">
-                                            <option style="display:none" value="">select an option...</option>
+                                        <select id="textureHardness" class="form-control" ng-model="selectedHardnessFamily" ng-options="x.real_name for x in hardnessFamily" ng-change="upTexture()">
+                                            <option value=""> </option>
                                         </select>
                                     </div>
                                     <div ng-show="showCracking" class="col-md-6 form-group">
                                         <label for="textureCracking"><span class="glyphicon glyphicon-eye-open" title="visual impact on the strata"></span> Cracking</label>
-                                        <select id="textureCracking" class="form-control" required="required" ng-model="selectedCrackingFamily" ng-options="x.real_name for x in crackingFamily" ng-change="upTexture()">
-                                            <option style="display:none" value="">select an option...</option>
+                                        <select id="textureCracking" class="form-control" ng-model="selectedCrackingFamily" ng-options="x.real_name for x in crackingFamily" ng-change="upTexture()">
+                                            <option value=""> </option>
                                         </select>
                                     </div>
                                 </div>
@@ -334,23 +334,23 @@
                                 <div class="row-fluid">
                                     <div ng-show="showCmlevelofcorrosionFamily" class="col-md-6 form-group">
                                         <label for="cmlevelofcorrosionFamily">Level of corrosion</label>
-                                        <select id="cmlevelofcorrosionFamily" class="form-control" required="required" ng-model="selectedCmlevelofcorrosionFamily" ng-options="x.real_name for x in cmlevelofcorrosionFamily" ng-change="upMicrostructure()">
-                                            <option style="display:none" value="">select an option...</option>
+                                        <select id="cmlevelofcorrosionFamily" class="form-control" ng-model="selectedCmlevelofcorrosionFamily" ng-options="x.real_name for x in cmlevelofcorrosionFamily" ng-change="upMicrostructure()">
+                                            <option value=""> </option>
                                         </select>
                                     </div>
                                     <div ng-show="showcprimicrostructureFamily" class="col-md-6 form-group">
                                         <label for="cpriMicrostructureFamily"><span class="glyphicon glyphicon-eye-open" title="visual impact on the strata"></span> Microstructure</label>
-                                        <select id="cpriMicrostructureFamily" class="form-control" required="required" ng-model="selectedCprimicrostructureFamily" ng-options="x.real_name for x in cprimicrostructureFamily" ng-change="upMicrostructure()">
-                                            <option style="display:none" value="">select an option...</option>
+                                        <select id="cpriMicrostructureFamily" class="form-control" ng-model="selectedCprimicrostructureFamily" ng-options="x.real_name for x in cprimicrostructureFamily" ng-change="upMicrostructure()">
+                                            <option value=""> </option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="row-fluid">
 
                                     <div ng-show="showcprimicrostructureaggregatecompositionFamily" class="col-md-6 form-group">
-                                        <label for="cprimicrostructureaggregatecomposition">CPRI microstructure aggregate composition</label>
-                                        <select id="cprimicrostructureaggregatecomposition" class="form-control" required="required" ng-model="selectedCprimicrostructureaggregatecompositionFamily" ng-options="x.real_name for x in cprimicrostructureaggregatecompositionFamily" ng-change="upMicrostructure2()">
-                                            <option style="display:none" value="">select an option...</option>
+                                        <label for="cprimicrostructureaggregatecomposition"><span class="glyphicon glyphicon-eye-close" title="no visual impact on the strata"></span> CPRI microstructure aggregate composition</label>
+                                        <select id="cprimicrostructureaggregatecomposition" class="form-control" ng-model="selectedCprimicrostructureaggregatecompositionFamily" ng-options="x.real_name for x in cprimicrostructureaggregatecompositionFamily" ng-change="upMicrostructure2()">
+                                            <option value=""> </option>
                                         </select>
                                     </div>
                                     <!-- sub CM Level of Corrosion n'est pas affiché pour l'instant. Demander à Christian Degrigny pourquoi
@@ -363,43 +363,43 @@
                                 <div class="row-fluid">
 
                                     <div ng-show="showsubcprimicrostructureaggregatecompositionFamily" class="col-md-6 form-group">
-                                        <label for="subcprimicrostructureaggregatecompositionFamily">Sub CPRI microstructure aggregate composition</label>
-                                        <select id="subcprimicrostructureaggregatecompositionFamily" class="form-control" required="required" ng-model="selectedSubcprimicrostructureaggregatecompositionFamily" ng-options="x.sub_real_name for x in subcprimicrostructureaggregatecompositionFamily" ng-change="upMicrostructure3()">
-                                            <option style="display:none" value="">select an option...</option>
+                                        <label for="subcprimicrostructureaggregatecompositionFamily"><span class="glyphicon glyphicon-eye-close" title="no visual impact on the strata"></span> Sub CPRI microstructure aggregate composition</label>
+                                        <select id="subcprimicrostructureaggregatecompositionFamily" class="form-control" ng-model="selectedSubcprimicrostructureaggregatecompositionFamily" ng-options="x.sub_real_name for x in subcprimicrostructureaggregatecompositionFamily" ng-change="upMicrostructure3()">
+                                            <option value=""> </option>
                                         </select>
                                     </div>
                                     <div ng-show="showmmicrostructureFamily" class="col-md-6 form-group">
-                                        <label for="mMicrostructureFamily">Microstructure</label>
-                                        <select id="mMicrostructureFamily" class="form-control" required="required" ng-model="selectedMmicrostructureFamily" ng-options="x.real_name for x in mmicrostructureFamily" ng-change="upMicrostructure()">
-                                            <option style="display:none" value="">select an option...</option>
+                                        <label for="mMicrostructureFamily"><span class="glyphicon glyphicon-eye-open" title="visual impact on the strata"></span> Microstructure</label>
+                                        <select id="mMicrostructureFamily" class="form-control" ng-model="selectedMmicrostructureFamily" ng-options="x.real_name for x in mmicrostructureFamily" ng-change="upMicrostructure()">
+                                            <option value=""> </option>
                                         </select>
                                     </div>
 
                                 </div>
                                 <div class="row-fluid">
                                     <div ng-show="showsubsubcprimicrostructureaggregatecompositionFamily" class="col-md-6 form-group">
-                                        <label for="subsubcprimicrostructureaggregatecompositionFamily">Sub Sub CPRI microstructure aggregate composition</label>
-                                        <select id="subsubcprimicrostructureaggregatecompositionFamily" class="form-control" required="required" ng-model="selectedSubsubcprimicrostructureaggregatecompositionFamily" ng-options="x.name for x in subsubcprimicrostructureaggregatecompositionFamily" ng-change="upMicrostructure()">
-                                            <option style="display:none" value="">select an option...</option>
+                                        <label for="subsubcprimicrostructureaggregatecompositionFamily"><span class="glyphicon glyphicon-eye-close" title="no visual impact on the strata"></span> Sub Sub CPRI microstructure aggregate composition</label>
+                                        <select id="subsubcprimicrostructureaggregatecompositionFamily" class="form-control" ng-model="selectedSubsubcprimicrostructureaggregatecompositionFamily" ng-options="x.name for x in subsubcprimicrostructureaggregatecompositionFamily" ng-change="upMicrostructure()">
+                                            <option value=""> </option>
                                         </select>
                                     </div>
                                     <div class="col-md-6 form-group"></div>
                                 </div>
                                 <div class="row-fluid">
-                                    <div class="col-md-12 form-group" ng-show="showsubcprimicrostructureFamily" data-ng-controller="PickListCtrl">
-                                        <label class="control-label">Sub cpriMicrostructure</label>
-                                        <picklist size="10"  data-picklist="" data-pick-model="selectedSubcprimicrostructureFamily" data-pick-options="v.name for v in subcprimicrostructureFamily"/>
+                                    <div class="col-md-12 form-group" ng-show="showsubcprimicrostructureFamily">
+                                        <label class="control-label"><span class="glyphicon glyphicon-eye-open" title="visual impact on the strata"></span> Sub cpriMicrostructure</label>
+                                        <picklist size="10"  data-picklist="" data-pick-model="selectedSubcprimicrostructureFamily" data-pick-options="v.name for v in subcprimicrostructureFamily" />
                                     </div>
                                 </div>
                                 <div class="row-fluid">
-                                    <div class="col-md-12 form-group" ng-show="showsubmmicrostructureFamily" data-ng-controller="PickListCtrl">
-                                        <label class="control-label">Sub Microstructure</label>
+                                    <div class="col-md-12 form-group" ng-show="showsubmmicrostructureFamily">
+                                        <label class="control-label"><span class="glyphicon glyphicon-eye-open" title="visual impact on the strata"></span> Sub Microstructure</label>
                                         <picklist size="10"  data-picklist="" data-pick-model="selectedSubmmicrostructureFamily" data-pick-options="v.name for v in submmicrostructureFamily"/>
                                     </div>
                                 </div>
                                 <div class="row-fluid">
-                                    <div class="col-md-12 form-group" ng-show="showcprimicrostructureaggregatecompositionextensionFamily" data-ng-controller="PickListCtrl">
-                                        <label class="control-label">CPRI Microstructure aggregate composition extension</label>
+                                    <div class="col-md-12 form-group" ng-show="showcprimicrostructureaggregatecompositionextensionFamily">
+                                        <label class="control-label"><span class="glyphicon glyphicon-eye-close" title="no visual impact on the strata"></span> CPRI Microstructure aggregate composition extension</label>
                                         <picklist size="10"  data-picklist="" data-pick-model="selectedCprimicrostructureaggregatecompositionExtensionFamily" data-pick-options="v.real_name for v in cprimicrostructureaggregatecompositionExtensionFamily"/>
                                     </div>
                                 </div>
@@ -410,78 +410,78 @@
                                 <div class="row-fluid">
                                     <div ng-show="showScomposition" class="col-md-6 form-group">
                                         <label for="sCompositionFamily">Composition</label>
-                                        <select id="sCompositionFamily" class="form-control" required="required" ng-model="selectedscompositionFamily" ng-options="x.real_name for x in scompositionFamily" ng-change="upComposition()">
-                                            <option style="display:none" value="">select an option...</option>
+                                        <select id="sCompositionFamily" class="form-control" ng-model="selectedscompositionFamily" ng-options="x.real_name for x in scompositionFamily" ng-change="upComposition()">
+                                            <option value=""> </option>
                                         </select>
                                     </div>
                                     <div ng-show="showNmmcomposition" class="col-md-6 form-group">
                                         <label for="nmmCompositionFamily">Composition</label>
-                                        <select id="nmmCompositionFamily" class="form-control" required="required" ng-model="selectedNmmcompositionFamily" ng-options="x.real_name for x in nmmcompositionFamily" ng-change="upComposition()">
-                                            <option style="display:none" value="">select an option...</option>
+                                        <select id="nmmCompositionFamily" class="form-control" ng-model="selectedNmmcompositionFamily" ng-options="x.real_name for x in nmmcompositionFamily" ng-change="upComposition()">
+                                            <option value=""> </option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="row-fluid">
                                     <div ng-show="showDcomposition" class="col-md-6 form-group">
                                         <label for="dCompositionFamily">Composition</label>
-                                        <select id="dCompositionFamily" class="form-control" required="required" ng-model="selectedDcompositionFamily" ng-options="x.real_name for x in dcompositionFamily" ng-change="upComposition()">
-                                            <option style="display:none" value="">select an option...</option>
+                                        <select id="dCompositionFamily" class="form-control" ng-model="selectedDcompositionFamily" ng-options="x.real_name for x in dcompositionFamily" ng-change="upComposition()">
+                                            <option value=""> </option>
                                         </select>
                                     </div>
                                     <div ng-show="showPomcomposition" class="col-md-6 form-group">
                                         <label for="pomCompositionFamily">Composition</label>
-                                        <select id="pomCompositionFamily" class="form-control" required="required" ng-model="selectedPomcompositionFamily" ng-options="x.real_name for x in pomcompositionFamily" ng-change="upComposition()">
-                                            <option style="display:none" value="">select an option...</option>
+                                        <select id="pomCompositionFamily" class="form-control" ng-model="selectedPomcompositionFamily" ng-options="x.real_name for x in pomcompositionFamily" ng-change="upComposition()">
+                                            <option value=""> </option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="row-fluid">
                                     <div ng-show="showCmcomposition" class="col-md-6 form-group">
                                         <label for="cmCompositionFamily">Composition</label>
-                                        <select id="cmCompositionFamily" class="form-control" required="required" ng-model="selectedCmcompositionFamily" ng-options="x.real_name for x in cmcompositionFamily" ng-change="upComposition2()">
-                                            <option style="display:none" value="">select an option...</option>
+                                        <select id="cmCompositionFamily" class="form-control" ng-model="selectedCmcompositionFamily" ng-options="x.real_name for x in cmcompositionFamily" ng-change="upComposition2()">
+                                            <option value=""> </option>
                                         </select>
                                     </div>
                                     <div ng-show="showsubcmcompositionFamily" class="col-md-6 form-group">
                                         <label for="subcmcompositionFamily">Sub CM composition</label>
-                                        <select id="subcmcompositionFamily" class="form-control" required="required" ng-model="selectedSubcmcompositionFamily" ng-options="x.sub_real_name for x in subcmcompositionFamily" ng-change="upComposition()">
-                                            <option style="display:none" value="">select an option...</option>
+                                        <select id="subcmcompositionFamily" class="form-control" ng-model="selectedSubcmcompositionFamily" ng-options="x.sub_real_name for x in subcmcompositionFamily" ng-change="upComposition()">
+                                            <option value=""> </option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="row-fluid">
                                     <div ng-show="showMcomposition" class="col-md-6 form-group">
                                         <label for="mCompositionFamily">Main element</label>
-                                        <select id="mCompositionFamily" class="form-control" required="required" ng-model="selectedMcompositionFamily" ng-options="x.real_name for x in mcompositionFamily" ng-change="upComposition2()">
-                                            <option style="display:none" value="">select an option...</option>
+                                        <select id="mCompositionFamily" class="form-control" ng-model="selectedMcompositionFamily" ng-options="x.real_name for x in mcompositionFamily" ng-change="upComposition2()">
+                                            <option value=""> </option>
                                         </select>
                                     </div>
                                     <div ng-show="showCpcomposition" class="col-md-6 form-group">
                                         <label for="cpCompositionFamily">Main element</label>
-                                        <select id="cpCompositionFamily" class="form-control" required="required" ng-model="selectedCpcompositionFamily" ng-options="x.real_name for x in cpcompositionFamily" ng-change="upComposition2()">
-                                            <option style="display:none" value="">select an option...</option>
+                                        <select id="cpCompositionFamily" class="form-control" ng-model="selectedCpcompositionFamily" ng-options="x.real_name for x in cpcompositionFamily" ng-change="upComposition2()">
+                                            <option value=""> </option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="row-fluid">
                                     <div ng-show="showsubcpcompositionFamily" class="col-md-6 form-group">
                                         <label for="subcpcompositionFamily">Main and secondary elements</label>
-                                        <select id="subcpcompositionFamily" class="form-control" required="required" ng-model="selectedSubcpcompositionFamily" ng-options="x.sub_real_name for x in subcpcompositionFamily" ng-change="upComposition3()">
-                                            <option style="display:none" value="">select an option...</option>
+                                        <select id="subcpcompositionFamily" class="form-control" ng-model="selectedSubcpcompositionFamily" ng-options="x.sub_real_name for x in subcpcompositionFamily" ng-change="upComposition3()">
+                                            <option value=""> </option>
                                         </select>
                                     </div>
                                     <div ng-show="showsubsubcpcompositionFamily" class="col-md-6 form-group">
                                         <label for="subsubcpcompositionFamily">Compound</label>
-                                        <select id="subsubcpcompositionFamily" class="form-control" required="required" ng-model="selectedSubsubcpcompositionFamily" ng-options="x.name for x in subsubcpcompositionFamily" ng-change="upComposition()">
-                                            <option style="display:none" value="">select an option...</option>
+                                        <select id="subsubcpcompositionFamily" class="form-control" ng-model="selectedSubsubcpcompositionFamily" ng-options="x.name for x in subsubcpcompositionFamily" ng-change="upComposition()">
+                                            <option value=""> </option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="row-fluid">
                                     <div ng-show="showsubmcompositionFamily" class="col-md-6 form-group">
                                         <label for="submcompositionFamily">Alloy</label>
-                                        <select id="submcompositionFamily" class="form-control" required="required" ng-model="selectedSubmcompositionFamily" ng-options="x.sub_real_name for x in submcompositionFamily" ng-change="upComposition()">
-                                            <option style="display:none" value="">select an option...</option>
+                                        <select id="submcompositionFamily" class="form-control" ng-model="selectedSubmcompositionFamily" ng-options="x.sub_real_name for x in submcompositionFamily" ng-change="upComposition()">
+                                            <option value=""> </option>
                                         </select>
                                     </div>
                                 </div>
@@ -499,28 +499,28 @@
                             <div class="row-fluid">
                                 <div ng-show="showinterfaceprofileFamily" class="col-md-6 form-group">
                                     <label for="interfaceProfileFamily"><span class="glyphicon glyphicon-eye-open" title="visual impact on the strata"></span> Profile</label>
-                                    <select id="interfaceProfileFamily" class="form-control" required="required" ng-model="selectedInterfaceprofileFamily" ng-options="x.real_name for x in interfaceprofileFamily" ng-change="upInterface()">
-                                        <option style="display:none" value="">select an option...</option>
+                                    <select id="interfaceProfileFamily" class="form-control" ng-model="selectedInterfaceprofileFamily" ng-options="x.real_name for x in interfaceprofileFamily" ng-change="upInterface()">
+                                        <option value=""> </option>
                                     </select>
                                 </div>
                                 <div ng-show="showinterfacetransition" class="col-md-6 form-group">
                                     <label for="interfaceTransitionFamily"><span class="glyphicon glyphicon-eye-open" title="visual impact on the strata"></span> Transition</label>
-                                    <select id="interfaceTransitionFamily" class="form-control" required="required" ng-model="selectedInterfacetransitionFamily" ng-options="x.real_name for x in interfacetransitionFamily" ng-change="upInterface()">
-                                        <option style="display:none" value="">select an option...</option>
+                                    <select id="interfaceTransitionFamily" class="form-control" ng-model="selectedInterfacetransitionFamily" ng-options="x.real_name for x in interfacetransitionFamily" ng-change="upInterface()">
+                                        <option value=""> </option>
                                     </select>
                                 </div>
                             </div>
                             <div class="row-fluid">
                                 <div ng-show="showinterfaceroughness" class="col-md-6 form-group">
                                     <label for="interfaceRoughnessFamily"><span class="glyphicon glyphicon-eye-open" title="visual impact on the strata"></span> Roughness</label>
-                                    <select id="interfaceRoughnessFamily" class="form-control" required="required" ng-model="selectedInterfaceroughnessFamily" ng-options="x.real_name for x in interfaceroughnessFamily" ng-change="upInterface()">
-                                        <option style="display:none" value="">select an option...</option>
+                                    <select id="interfaceRoughnessFamily" class="form-control" ng-model="selectedInterfaceroughnessFamily" ng-options="x.real_name for x in interfaceroughnessFamily" ng-change="upInterface()">
+                                        <option value=""> </option>
                                     </select>
                                 </div>
                                 <div ng-show="showinterfaceadherence" class="col-md-6 form-group">
                                     <label for="interfaceAdherenceFamily"><span class="glyphicon glyphicon-eye-close" title="no visual impact on the strata"></span> Adherence</label>
-                                    <select id="interfaceAdherenceFamily" class="form-control" required="required" ng-model="selectedInterfaceadherenceFamily" ng-options="x.real_name for x in interfaceadherenceFamily" ng-change="upInterface()">
-                                        <option style="display:none" value="">select an option...</option>
+                                    <select id="interfaceAdherenceFamily" class="form-control" ng-model="selectedInterfaceadherenceFamily" ng-options="x.real_name for x in interfaceadherenceFamily" ng-change="upInterface()">
+                                        <option value=""> </option>
                                     </select>
                                 </div>
                             </div>
