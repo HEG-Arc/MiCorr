@@ -310,19 +310,19 @@ var fxPickListTpl=
 "			</div>"+
 "			<div style=\"display: table-cell; width: 10%; vertical-align: middle;\" class=\"btn-group-vertical\">"+
 "				<div>"+
-"					<button type=\"button\" class=\"btn btn-link\" data-ng-click=\"rightShift();\" >"+
+"					<button type=\"button\" class=\"btn btn-link\" data-ng-click=\"rightShift(); update()\" >"+
 "						<span class=\"glyphicon glyphicon-chevron-right\"></span>"+
 "					</button>"+
 "				</div>"+
 "				<div>"+
-"					<button type=\"button\" class=\"btn btn-link\" data-ng-click=\"leftShift();\">"+
+"					<button type=\"button\" class=\"btn btn-link\" data-ng-click=\"leftShift(); update()\">"+
 "						<span class=\"glyphicon glyphicon-chevron-left\"></span>"+
 "					</button>"+
 "				</div>"+
 "			</div>"+
 "			<div style=\"display: table-cell; width: 45%;vertical-align: middle;\">"+
                 "<label>Choosen characteristics</label>" +
-"				<select multiple size=\"5\" class=\"form-control\" data-ng-options=\"fake\" name=\"fake\" data-ng-model=\"picklist_dest\" ng-change=\"update();\" data-picklist-dest>"+
+"				<select multiple size=\"5\" class=\"form-control\" data-ng-options=\"fake\" name=\"fake\" data-ng-model=\"picklist_dest\" data-picklist-dest>"+
 "				</select>"+
 "			</div>"+
 "		</div>"+

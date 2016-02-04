@@ -256,9 +256,11 @@ angular.module('micorrApp')
         * @returns valeur de la charactéristique
         */
         $scope.getCharacteristicByFamily = function(data, family) {
-            for (var i = 0; i < data.length; i++) {
-                if (data[i].family == family){
-                    return data[i].name;
+            if(typeof data !== 'undefined'){
+                for (var i = 0; i < data.length; i++) {
+                    if (data[i].family == family){
+                        return data[i].name;
+                    }
                 }
             }
             return "";

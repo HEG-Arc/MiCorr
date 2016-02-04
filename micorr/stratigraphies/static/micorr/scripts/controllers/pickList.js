@@ -9,5 +9,5 @@
  */
 angular.module('micorrApp')
     .controller('PickListCtrl', function ($scope, $location, $routeParams, MiCorrService) {
-
+        $scope.selectedSubcprimicrostructureFamily = [];
     });
