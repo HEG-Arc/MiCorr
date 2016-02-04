@@ -1,0 +1,8 @@
+{% spaceless %}
+  <a  {% if url_is_external %}
+        href="{{ url }}"
+      {% else %}
+        onclick="window.open('{{ url }}', '', 'height=450px, width=700px');"
+        style="cursor: help;"
+      {% endif %}>%s</a>
+{% endspaceless %}
