@@ -304,7 +304,6 @@ class Neo4jDAO:
     # @params details d'une stratigraphie au format json
     # @returns 1 si ok
     def save(self, data):
-        #Alessio me donne la structure du json 'data'. De celui-ci je recupere les strates avec leurs eventuels enfants
         stratigraphyName = data['stratigraphy']
 
         # on supprime entierement toutes les strates de l'ancienne stratigraphie pour en creer une nouvelle
@@ -314,9 +313,6 @@ class Neo4jDAO:
         # on parcourt toutes les strates
         for t in data['stratas']:
             strataName = stratigraphyName + "_Strata" + str(self.getNbStratasByStratigraphy(stratigraphyName) + 1)
-            # s'il s'agit d'une strate enfant, on rajoute "_Child" a la fin du nom
-            if t['name'].endswith("_Child"):
-                strataName = stratigraphyName + "_Strata" + str(self.getNbStratasByStratigraphy(stratigraphyName)) + "_Child"
             self.createStrata(strataName, stratigraphyName)
 
             # pour chaque strate on attache une caracteristique ou sous caracteristique

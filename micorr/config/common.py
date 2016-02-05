@@ -68,6 +68,7 @@ class Common(Configuration):
         'wagtail.contrib.wagtailsitemaps',
         # end wagtail apps
         'robots',
+        'simplejson',
     )
 
     # Apps specific for this project go here.
