@@ -10,6 +10,17 @@
 angular.module('micorrApp')
     .controller('StratMorphologyCtrl', function ($scope, $route, $window, StrataData) {
 
+        //valeurs sélectionnées dans les champs de notre formulaire
+        $scope.selectedShapeFamily;
+        $scope.selectedWidthFamily;
+        $scope.selectedThicknessFamily;
+        $scope.selectedContinuityFamily;
+        $scope.selectedDirectionFamily;
+        $scope.selectedColourFamily;
+        $scope.selectedBrightnessFamily;
+        $scope.selectedOpacityFamily;
+        $scope.selectedMagnetismFamily;
+
         var initStratMorphology = function(){
             // On récupère les valeurs qui vont aller dans les champs de notre formulaire
             $scope.fShapeFamily = "";
@@ -22,17 +33,6 @@ angular.module('micorrApp')
             $scope.brightnessFamily = StrataData.getBrightnessFamily()['characteristics'];
             $scope.opacityFamily = StrataData.getOpacityFamily()['characteristics'];
             $scope.magnetismFamily = StrataData.getMagnetismFamily()['characteristics'];
-
-            //valeurs sélectionnées dans les champs de notre formulaire
-            $scope.selectedShapeFamily;
-            $scope.selectedWidthFamily;
-            $scope.selectedThicknessFamily;
-            $scope.selectedContinuityFamily;
-            $scope.selectedDirectionFamily;
-            $scope.selectedColourFamily;
-            $scope.selectedBrightnessFamily;
-            $scope.selectedOpacityFamily;
-            $scope.selectedMagnetismFamily;
         };
 
         $scope.$on('initShowStrat', function(event) {

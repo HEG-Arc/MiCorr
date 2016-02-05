@@ -10,17 +10,17 @@
 angular.module('micorrApp')
     .controller('StratTextureCtrl', function ($scope, $route, $window, StrataData) {
 
+        //valeurs sélectionnées dans les champs de notre formulaire
+        $scope.selectedPorosityFamily;
+        $scope.selectedCohesionFamily;
+        $scope.selectedHardnessFamily;
+        $scope.selectedCrackingFamily;
+
         var initStratTexture = function(){
             $scope.porosityFamily = StrataData.getPorosityFamily()['characteristics'];
             $scope.cohesionFamily = StrataData.getCohesionFamily()['characteristics'];
             $scope.hardnessFamily = StrataData.getHardnessFamily()['characteristics'];
             $scope.crackingFamily = StrataData.getCrackingFamily()['characteristics'];
-
-            //valeurs sélectionnées dans les champs de notre formulaire
-            $scope.selectedPorosityFamily;
-            $scope.selectedCohesionFamily;
-            $scope.selectedHardnessFamily;
-            $scope.selectedCrackingFamily;
         };
 
         $scope.$on('initShowStrat', function(event) {

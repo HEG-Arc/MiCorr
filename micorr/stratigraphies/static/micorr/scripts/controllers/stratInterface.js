@@ -10,18 +10,18 @@
 angular.module('micorrApp')
     .controller('StratInterfaceCtrl', function ($scope, $route, $window, StrataData) {
 
+        //valeurs sélectionnées dans les champs de notre formulaire
+        $scope.selectedInterfaceprofileFamily;
+        $scope.selectedInterfacetransitionFamily;
+        $scope.selectedInterfaceroughnessFamily;
+        $scope.selectedInterfaceadherenceFamily;
+
         var initStratInterface = function(){
             // On récupère les valeurs qui vont aller dans les champs de notre formulaire
             $scope.interfaceprofileFamily = StrataData.getInterfaceprofileFamily()['characteristics'];
             $scope.interfacetransitionFamily = StrataData.getInterfacetransitionFamily()['characteristics'];
             $scope.interfaceroughnessFamily = StrataData.getInterfaceroughnessFamily()['characteristics'];
             $scope.interfaceadherenceFamily = StrataData.getInterfaceadherenceFamily()['characteristics'];
-
-            //valeurs sélectionnées dans les champs de notre formulaire
-            $scope.selectedInterfaceprofileFamily;
-            $scope.selectedInterfacetransitionFamily;
-            $scope.selectedInterfaceroughnessFamily;
-            $scope.selectedInterfaceadherenceFamily;
         };
 
         $scope.$on('initShowStrat', function(event) {

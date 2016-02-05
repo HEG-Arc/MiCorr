@@ -10,6 +10,20 @@
 angular.module('micorrApp')
     .controller('StratCompositionCtrl', function ($scope, $route, $window, StrataData) {
 
+        //valeurs sélectionnées dans les champs de notre formulaire
+        $scope.selectedScompositionFamily;
+        $scope.selectedNmmcompositionFamily;
+        $scope.selectedDcompositionFamily;
+        $scope.selectedPomcompositionFamily;
+        $scope.selectedCpcompositionFamily;
+        $scope.selectedCmcompositionFamily;
+        $scope.selectedMcompositionFamily;
+        $scope.selectedSubcpcompositionFamily;
+        $scope.selectedSubsubcpcompositionFamily;
+        $scope.selectedSubcmcompositionFamily;
+        $scope.selectedCpcompositionextensionFamily = [];
+        $scope.selectedSubmcompositionFamily;
+
         var initStratComposition = function(){
             // On récupère les valeurs qui vont aller dans les champs de notre formulaire
             $scope.scompositionFamily = StrataData.getScompositionFamily()['characteristics'];
@@ -24,20 +38,6 @@ angular.module('micorrApp')
             $scope.subsubcpcompositionFamily = StrataData.getSubsubcpcompositionFamily();
             $scope.subcmcompositionFamily = StrataData.getSubcmcompositionFamily();
             $scope.submcompositionFamily = StrataData.getSubmcompositionFamily();
-
-            //valeurs sélectionnées dans les champs de notre formulaire
-            $scope.selectedScompositionFamily;
-            $scope.selectedNmmcompositionFamily;
-            $scope.selectedDcompositionFamily;
-            $scope.selectedPomcompositionFamily;
-            $scope.selectedCpcompositionFamily;
-            $scope.selectedCmcompositionFamily;
-            $scope.selectedMcompositionFamily;
-            $scope.selectedSubcpcompositionFamily;
-            $scope.selectedSubsubcpcompositionFamily;
-            $scope.selectedSubcmcompositionFamily;
-            $scope.selectedCpcompositionextensionFamily = [];
-            $scope.selectedSubmcompositionFamily;
         };
 
         $scope.$on('initShowStrat', function(event) {

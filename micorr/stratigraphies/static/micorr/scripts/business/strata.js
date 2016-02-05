@@ -1133,12 +1133,8 @@ function CP() {
             c.push(this.getJsonCprimicrostructure());
         if (this.cprimicrostructureaggregateCompositionFamily != "")
             c.push(this.getJsonCprimicrostructureaggregateCompositionFamily());
-        if (this.cprimicrostructureaggregateCompositionextensionFamily != "")
-            c.push(this.getJsonCprimicrostructureaggregateCompositionextensionFamily());
         if (this.cprimicrostructureaggregatecompositionFamily != "")
             c.push(this.getJsonCprimicrostructureaggregateCompositionFamily());
-        if (this.cprimicrostructureaggregatecompositionextensionFamily != "")
-            c.push(this.getJsonCprimicrostructureaggregateCompositionextensionFamily());
         if (this.cpcompositionFamily != "")
             c.push(this.getJsonCPComposition());
         if (this.subcpcompositionFamily != "")
@@ -1367,10 +1363,12 @@ function M() {
             c.push(this.getJsonMComposition());
         if (this.submcompositionFamily != "")
             c.push(this.getJsonSubMComposition());
+        /*
         if (this.submcompositionFamily != "")
             c.push(this.getJsonSubMComposition());
         if (this.submmicrostructureFamily != "")
             c.push(this.getJsonSubmmicrostructure());
+        */
         if (this.submmicrostructureFamily.length > 0) {
             var q = this.getJsonSubmmicrostructure();
             for (var i = 0; i < q.length; i++)

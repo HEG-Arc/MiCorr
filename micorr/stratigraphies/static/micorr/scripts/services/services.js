@@ -279,7 +279,7 @@ angular.module('micorrApp').factory('StrataData', function StrataDataFactory() {
                 this.interfaceadherenceFamily = parseCharasteristic('interfaceAdherenceFamily');
                 this.subcpcompositionFamily = getSubCharacteristicsFromFamily('cpCompositionFamily', 'sub')
                 this.subsubcpcompositionFamily = getSubCharacteristicsFromFamily('cpCompositionFamily', 'subsub')
-                this.cpcompositionextensionFamily = getSubCharacteristicsFromFamily('cpCompositionExtensionFamily', 'sub');
+                this.cpcompositionextensionFamily = parseCharasteristic('cpCompositionExtensionFamily', 'sub');
                 this.cprimicrostructureaggregatecompositionFamily = parseCharasteristic('cpriMicrostructureAggregateCompositionFamily');
                 this.cprimicrostructureaggregatecompositionextensionFamily = parseCharasteristic('cpriMicrostructureAggregateCompositionExtensionFamily');
                 this.submmicrostructureFamily = getSubCharacteristicsFromFamily('mMicrostructureFamily', 'sub');
