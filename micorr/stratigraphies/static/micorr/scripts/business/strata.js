@@ -36,7 +36,7 @@ function Strata() {
     this.thicknessFamily = "";
     this.continuityFamily = "";
     this.directionFamily = "";
-    this.interfaceprofileFamily = "";
+    this.interfaceprofileFamily = "straightCharacteristic"; //par défaut on veut afficher une interface droite
     this.natureFamily = "";
     this.natureFamilyUid = "";
     this.shortNatureFamily = "";
@@ -1269,7 +1269,6 @@ function CM() {
         return c;
     }
 
-
     this.getJsonInterface = function() {
         var json = [];
         if (this.interfaceprofileFamily != "")
@@ -1283,7 +1282,7 @@ function CM() {
         return json;
     };
 
-
+    /*
     this.getJsonInterface = function(cp, m) {
         var json = [];
         if(cp!==undefined && m!==undefined) {
@@ -1298,6 +1297,7 @@ function CM() {
         }
         return json;
     };
+    */
 };
 
 //Metal
