@@ -372,7 +372,7 @@ class Neo4jDAO:
 
         nbChar = len(listChar) + len(listCharInt)
 
-        qry += "with a.uid as auid,  count(st) as stratum, count(st)-" + str(nbStrata) + " as DiffNombreStratum, "
+        qry += "with a.uid as auid, a.artefact_id as artefact_id, count(st) as stratum, count(st)-" + str(nbStrata) + " as DiffNombreStratum, "
 
         qry += "( "
         cpt = 1
@@ -393,21 +393,20 @@ class Neo4jDAO:
         qry += ") as TotalMatching "
 
         qry += "MATCH (a:Artefact)-->(s:Stratigraphy)-->(st:Strata)-[r:IS_CONSTITUTED_BY]-(o) WHERE a.uid=auid "
-        qry += "with auid, stratum, DiffNombreStratum, TotalComparisonIndicator1, TotalMatching, count(r) as countrelations "
+        qry += "with auid, artefact_id, stratum, DiffNombreStratum, TotalComparisonIndicator1, TotalMatching, count(r) as countrelations "
         qry += "MATCH(a:Artefact)-->(s:Stratigraphy)-->(st:Strata)-[:HAS_UPPER_INTERFACE]->(i:Interface)-[r1:IS_CONSTITUTED_BY]->(o1) WHERE a.uid=auid "
-        qry += "with auid, stratum, DiffNombreStratum, TotalComparisonIndicator1, TotalMatching, count(r1) + countrelations as TotalRelations "
-        qry += "RETURN auid, stratum, DiffNombreStratum, TotalComparisonIndicator1, TotalMatching, TotalRelations, 100*TotalMatching/TotalRelations as Matching100 "
+        qry += "with auid, artefact_id, stratum, DiffNombreStratum, TotalComparisonIndicator1, TotalMatching, count(r1) + countrelations as TotalRelations "
+        qry += "RETURN auid, artefact_id, stratum, DiffNombreStratum, TotalComparisonIndicator1, TotalMatching, TotalRelations, 100*TotalMatching/TotalRelations as Matching100 "
         qry += "ORDER BY Matching100 DESC, TotalComparisonIndicator1 DESC "
 
         result = []
 
         res = self.graph.cypher.execute(qry)
-        print (qry)
-        print (res)
 
         for i in res:
-            line = {'artefact': '', 'stratum': '', 'diffnbstratum': '', 'tci': '', 'totalmatching': '', 'totalrelation': '', 'matching100': ''}
+            line = {'artefact': '', 'artefact_id': '', 'stratum': '', 'diffnbstratum': '', 'tci': '', 'totalmatching': '', 'totalrelation': '', 'matching100': ''}
             line['artefact'] = i['auid']
+            line['artefact_id'] = i['artefact_id']
             line['stratum'] = i['stratum']
             line['diffnbstratum'] = i['DiffNombreStratum']
             line['tci'] = i['TotalComparisonIndicator1']
@@ -415,8 +414,6 @@ class Neo4jDAO:
             line['totalrelation'] = i['TotalRelations']
             line['matching100'] = i['Matching100']
             result.append(line)
-
-
 
         return result
 

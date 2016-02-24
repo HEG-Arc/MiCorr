@@ -84,6 +84,7 @@
                                             <tr>
                                                 <td>#</td>
                                                 <td>Artefact</td>
+                                                <td>Real artefact</td>
                                                 <td>NB strata</td>
                                                 <td>Diff NB strata</td>
                                                 <td>Total comparison indicator</td>
@@ -96,6 +97,7 @@
                                             <tr ng-repeat='result in results'>
                                                 <td><strong>{{$index + 1}}</strong></td>
                                                 <td><a href='#/artefact/{{result.artefact}}' target="_blank">{{result.artefact}}</a></td>
+                                                <td><a href='/artefacts/{{result.artefact_id}}' target="_blank">{{result.artefact_id}}</a></td>
                                                 <td>{{result.stratum}}</td>
                                                 <td>{{result.diffnbstratum}}</td>
                                                 <td>{{result.tci}}</td>
@@ -116,9 +118,6 @@
                                 Find similar
                             </button>
                         </div>
-
-
-
                     </div>
                     <div class="col-md-2 text-center">
                         <div ng-controller="ModalExportStrataCtrl">
