@@ -1180,92 +1180,16 @@ function CP() {
 // Corroded Metal
 function CM() {
     Strata.call(this);
-    ColourStrata.call(this);
-    BrightnessStrata.call(this);
-    OpacityStrata.call(this);
-    MagnetismStrata.call(this);
-    PorosityStrata.call(this);
-    CpriMicrostructureStrata.call(this);
-    CohesionStrata.call(this);
-    HardnessStrata.call(this);
-    CrackingStrata.call(this);
-    CMCompositionStrata.call(this);
-    InterfaceTransitionStrata.call(this);
-    InterfaceRoughnessStrata.call(this);
-    InterfaceAdherenceStrata.call(this);
-    CMLevelOfCorrosionStrata.call(this);
-    SubCMCompositionStrata.call(this);
-    SubCMLevelOfCorrosionStrata.call(this);
-    SubCPRIMicrostructureStrata.call(this);
-    CPCompositionStrata.call(this);
-    SubCpCompositionStrata.call(this);
-    SubSubCpCompositionStrata.call(this);
 
     this.natureFamily = "Corroded metal";
     this.shortNatureFamily = "CM";
     this.natureFamilyUid = "cmCharacteristic";
-
-    this.dependencies.push('colourFamily');
-    this.dependencies.push('brightnessFamily');
-    this.dependencies.push('opacityFamily');
-    this.dependencies.push('magnetismFamily');
-    this.dependencies.push('porosityFamily');
-    this.dependencies.push('cprimicrostructureFamily');
-    this.dependencies.push('cohesionFamily');
-    this.dependencies.push('hardnessFamily');
-    this.dependencies.push('crackingFamily');
-    this.dependencies.push('cmcompositionFamily');
-    this.dependencies.push('interfacetransitionFamily');
-    this.dependencies.push('interfaceroughnessFamily');
-    this.dependencies.push('interfaceadherenceFamily');
-    this.dependencies.push('cmlevelofcorrosionFamily');
-    this.dependencies.push('subcmcompositionFamily');
-    this.dependencies.push('subcmlevelofcorrosionFamily');
-    this.dependencies.push('subcprimicrostructureFamily');
-    this.dependencies.push('cpcompositionFamily');
-    this.dependencies.push('subcpcompositionFamily');
-    this.dependencies.push('subsubcpcompositionFamily');
+    this.relatedCP = null;
+    this.relatedM = null;
+    this.ratio = 3;
 
     this.getJsonCharacteristics = function() {
         var c = this.toJsonCharacteristics();
-        if (this.colourFamily != "")
-            c.push(this.getJsonColour());
-        if (this.cohesionFamily != "")
-            c.push(this.getJsonCohesion());
-        if (this.hardnessFamily != "")
-            c.push(this.getJsonHardness());
-        if (this.crackingFamily != "")
-            c.push(this.getJsonCracking());
-        if (this.porosityFamily != "")
-            c.push(this.getJsonPorosity());
-        if (this.brightnessFamily != "")
-            c.push(this.getJsonBrightness());
-        if (this.opacityFamily != "")
-            c.push(this.getJsonOpacity());
-        if (this.magnetismFamily != "")
-            c.push(this.getJsonMagnetism());
-        if (this.cpriMicrostructureFamily != "")
-            c.push(this.getJsonCprimicrostructure());
-        if (this.cmcompositionFamily != "")
-            c.push(this.getJsonCmcomposition());
-        if (this.cmLevelOfCorrosionFamily != "")
-            c.push(this.getJsonCmLevelOfCorrosionFamily());
-        if (this.subcmcompositionFamily != "")
-            c.push(this.getJsonSubCmcomposition());
-        if (this.subcmLevelOfCorrosionFamily != "")
-            c.push(this.getJsonSubCmLevelOfCorrosionFamily());
-        if (this.cpcompositionFamily != "")
-            c.push(this.getJsonCPComposition());
-        if (this.subcpcompositionFamily != "")
-            c.push(this.getJsonSubcpcompositionFamily());
-        if (this.subsubcpcompositionFamily != "")
-            c.push(this.getJsonSubsubcpcompositionFamily());
-        if (this.subcprimicrostructureFamily.length > 0) {
-            var q = this.getJsonSubCpriMicrostructure();
-            for (var i = 0; i < q.length; i++)
-                c.push(q[i]);
-        }
-
         return c;
     }
 
@@ -1273,31 +1197,9 @@ function CM() {
         var json = [];
         if (this.interfaceprofileFamily != "")
             json.push({'name' : this.interfaceprofileFamily});
-        if (this.interfacetransitionFamily != "")
-            json.push({'name' : this.interfacetransitionFamily});
-        if (this.interfaceroughnessFamily != "")
-            json.push({'name' : this.interfaceroughnessFamily});
-        if (this.interfaceadherenceFamily != "")
-            json.push({'name' : this.interfaceadherenceFamily});
         return json;
     };
 
-    /*
-    this.getJsonInterface = function(cp, m) {
-        var json = [];
-        if(cp!==undefined && m!==undefined) {
-            if (cp.interfaceprofileFamily != "")
-                json.push({'name': cp.interfaceprofileFamily});
-            if (cp.interfacetransitionFamily != "")
-                json.push({'name': cp.interfacetransitionFamily});
-            if (m.interfaceroughnessFamily != "")
-                json.push({'name': m.interfaceroughnessFamily});
-            if (m.interfaceadherenceFamily != "")
-                json.push({'name': m.interfaceadherenceFamily});
-        }
-        return json;
-    };
-    */
 };
 
 //Metal
@@ -1389,4 +1291,18 @@ function M() {
             json.push({'name' : this.interfaceadherenceFamily});
         return json;
     };
+};
+
+function Ratio(ratio) {
+    var ratio = ratio;
+
+    this.__defineGetter__("ratio", function () {
+        return ratio;
+    });
+
+    this.__defineSetter__("ratio", function (val) {
+        val = parseInt(val);
+        ratio = val;
+    });
+
 };

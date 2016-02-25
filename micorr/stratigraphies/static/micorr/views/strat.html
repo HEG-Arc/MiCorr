@@ -209,11 +209,12 @@
                                                 <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
                                             </div>
                                         </script>
-
+                                        <!--
                                         <button type="button" class="btn btn-primary" ng-click="open()">
                                                 <span class="glyphicon glyphicon glyphicon-plus" aria-hidden="true"></span>
                                                 Add a child strata
                                         </button>
+                                        -->
                                     </div>
                             </blockquote>
                         </div>
@@ -224,6 +225,9 @@
                                 </p>
                             </blockquote>
                         </div>
+                    </div>
+                    <div ng-show="corrodedMetalStrataSelected">
+                        <input type="range" max="10" ng-model="ratio.ratio" ng-change="ratioChange()"></input>
                     </div>
                     <tabset ng-show="showTabForms" justified="true">
                         <tab heading="Morphology" ng-controller="StratMorphologyCtrl" active="activeMorphologyTab">
@@ -522,10 +526,17 @@
                                         <option value=""> </option>
                                     </select>
                                 </div>
+                                <div ng-show="showAddCorrodedMetalStrata" class="col-md-6 form-group">
+                                    <button type="button" class="btn btn-link" ng-click="addCorrodedMetalStrata()">
+                                        <span class="glyphicon glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                        Add Corroded Metal Strata
+                                    </button>
+                                </div>
                             </div>
                         </tab>
                     </tabset>
                 </div>
+
             </div>
             <div id="hello" class="col-md-6">
                 <div id="stratasvg" class="row-fluid">

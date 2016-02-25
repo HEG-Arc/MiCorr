@@ -420,6 +420,20 @@ angular.module('micorrApp')
                 $scope.showcprimicrostructureaggregatecompositionextensionFamily = false;
             }
 
+            if (strata.getNatureFamilyUid() == 'mCharacteristic'){
+                $scope.showAddCorrodedMetalStrata = true;
+            } else {
+                $scope.showAddCorrodedMetalStrata = false;
+            }
+
+            if (strata.getNatureFamilyUid() == 'cmCharacteristic'){
+                $scope.corrodedMetalStrataSelected = true;
+                if(typeof $scope.ratio == "undefined")
+                    $scope.ratio = strata.ratio;
+            } else {
+                $scope.corrodedMetalStrataSelected = false;
+            }
+
 
         };
 
@@ -451,4 +465,13 @@ angular.module('micorrApp')
             MiCorrService.saveStratigraphy(encodeURIComponent(j));
             $scope.askLeave = false;
         });
+
+        $scope.ratio = new Ratio(3);
+
+        $scope.ratioChange = function() {
+            //mise à jour du dessin
+            $scope.$emit('updateDraw');
+        }
     });
+
+

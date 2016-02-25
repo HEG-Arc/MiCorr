@@ -63,4 +63,37 @@ angular.module('micorrApp')
 
             $scope.$emit('updateDraw');
         };
+
+        $scope.addCorrodedMetalStrata = function() {
+            if(StrataData.getCurrentSelectedStrata()!=0) {
+                if(StrataData.getStratas()[StrataData.getCurrentSelectedStrata()-1].getNatureFamilyUid()=="cpCharacteristic") {
+                    var cmStrata = natureFactory("CM");
+                    cmStrata.relatedCP = StrataData.getStratas()[StrataData.getCurrentSelectedStrata()-1];
+                    cmStrata.relatedM = StrataData.getStratas()[StrataData.getCurrentSelectedStrata()]
+                    StrataData.getStratas().splice(StrataData.getCurrentSelectedStrata(), 0, cmStrata);
+                    $scope.$emit('doUpdate', StrataData.getCurrentSelectedStrata());
+                    $scope.$emit('updateDraw');
+                } else {
+                    cmStrata.relatedM = StrataData.getStratas()[StrataData.getCurrentSelectedStrata()];
+                    var cmStrata = natureFactory("CM");
+                    StrataData.getStratas().splice(StrataData.getCurrentSelectedStrata(), 0, cmStrata);
+                    var cpStrata = natureFactory("CP");
+                    StrataData.getStratas().splice(StrataData.getCurrentSelectedStrata(), 0, cpStrata);
+                    cmStrata.relatedCP = cpStrata;
+                    $scope.$emit('doUpdate', StrataData.getCurrentSelectedStrata());
+                    $scope.$emit('updateDraw');
+
+                }
+            } else {
+                cmStrata.relatedM = StrataData.getStratas()[StrataData.getCurrentSelectedStrata()];
+                var cmStrata = natureFactory("CM");
+                StrataData.getStratas().splice(StrataData.getCurrentSelectedStrata(), 0, cmStrata);
+                var cpStrata = natureFactory("CP");
+                StrataData.getStratas().splice(StrataData.getCurrentSelectedStrata(), 0, cpStrata);
+                cmStrata.relatedCP = cpStrata;
+                $scope.$emit('doUpdate', StrataData.getCurrentSelectedStrata());
+                $scope.$emit('updateDraw');
+            }
+
+        };
     });
