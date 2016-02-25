@@ -409,10 +409,13 @@ class Neo4jDAO:
             line['totalmatching'] = i['TotalMatching']
             line['totalrelation'] = i['TotalRelations']
             line['matching100'] = i['Matching100']
+            # Add artefact characteristics
             # from ... import Artefacts
-            # artefact = Artefacts.objects.get(pk=int(i['artefact_id'])) # contrôler le format de artefact_id
-            # line['artefact_name'] = artefact.name
-            # line['artefact_....'] = artefact....
+            # if i['artefact_id']:
+            #    artefact = Artefacts.objects.get(pk=int(i['artefact_id'])) # contrôler le format de artefact_id
+            #    line['artefact_name'] = artefact.name
+            #    line['artefact_....'] = artefact....
+            # regarder s'il faut faire un else pour mettre des valeurs s'il n'y a pas d'artefact
             result.append(line)
 
         return result
