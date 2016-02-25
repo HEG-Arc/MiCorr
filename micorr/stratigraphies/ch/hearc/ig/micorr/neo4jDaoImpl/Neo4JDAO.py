@@ -1,6 +1,7 @@
 from py2neo import Graph
 import time
 from py2neo import Node, Relationship
+import uuid
 
 
 class Neo4jDAO:
@@ -191,19 +192,14 @@ class Neo4jDAO:
     # @params nom de l'artefact et description de la stratigraphie de la stratigraphie
     # @returns true si ajout, false si refus d'ajout
     def addStratigraphy(self, artefact, stratigraphy):
-        self.insertOk = True
+        self.insertOk = False
 
-        cpt = 1
-        name = artefact + "_stratigraphy" + str(cpt)
-
-        while self.stratigraphyExists(name) > 0:
-            cpt = cpt + 1
-            name = artefact + "_stratigraphy" + str(cpt)
+        name = str(uuid.uuid1())
 
         if self.stratigraphyExists(stratigraphy) > 0:
             self.insertOk = False
         else:
-            self.insertOk = True
+            self.insertOk = name
             self.graph.cypher.execute_one("CREATE(stratigraphy:Stratigraphy{uid:'" + name + "', date:'" + time.strftime("%Y-%m-%d") + "', artefact_uid: '" + artefact + "', label:'stratigraphy', description:'" + stratigraphy + "'})")
             self.graph.cypher.execute_one("MATCH (a:Artefact),(b:Stratigraphy) WHERE a.uid = '" + artefact + "' AND b.uid= '" + name + "' CREATE (a)-[:IS_REPRESENTED_BY]->(b)")
 
