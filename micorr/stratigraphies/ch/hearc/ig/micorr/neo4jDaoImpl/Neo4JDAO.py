@@ -409,6 +409,10 @@ class Neo4jDAO:
             line['totalmatching'] = i['TotalMatching']
             line['totalrelation'] = i['TotalRelations']
             line['matching100'] = i['Matching100']
+            # from ... import Artefacts
+            # artefact = Artefacts.objects.get(pk=int(i['artefact_id'])) # contrôler le format de artefact_id
+            # line['artefact_name'] = artefact.name
+            # line['artefact_....'] = artefact....
             result.append(line)
 
         return result
