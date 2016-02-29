@@ -82,28 +82,30 @@
                                     <table class="table table-hover">
                                         <thead>
                                             <tr>
-                                                <td>#</td>
-                                                <td>Artefact</td>
-                                                <td>Real artefact</td>
-                                                <td>NB strata</td>
-                                                <td>Diff NB strata</td>
-                                                <td>Total comparison indicator</td>
-                                                <td>Total matching</td>
-                                                <td>Total relations</td>
-                                                <td>Matching 100%</td>
+                                                <th>#</th>
+                                                <th>Artefact</th>
+                                                <th>Matching 100%</th>
+                                                <th>Real artefact</th>
+                                                <th>Metal Family</th>
+                                                <th>Metal Alloy</th>
+                                                <th>Object</th>
+                                                <th>Technology</th>
+                                                <th>Chronology</th>
+                                                <th>Microstructure</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr ng-repeat='result in results'>
                                                 <td><strong>{{$index + 1}}</strong></td>
                                                 <td><a href='#/artefact/{{result.artefact}}' target="_blank">{{result.artefact}}</a></td>
-                                                <td><a href='/artefacts/{{result.artefact_id}}' target="_blank">{{result.artefact_id}}</a></td>
-                                                <td>{{result.stratum}}</td>
-                                                <td>{{result.diffnbstratum}}</td>
-                                                <td>{{result.tci}}</td>
-                                                <td>{{result.totalmatching}}</td>
-                                                <td>{{result.totalrelation}}</td>
                                                 <td>{{result.matching100}}</td>
+                                                <td><a href='/artefacts/{{result.artefact_id}}' target="_blank">{{result.artefact_id}}</a></td>
+                                                <td>{{result.artefact_metal1}}</td>
+                                                <td>{{result.artefact_alloy}}</td>
+                                                <td>{{result.artefact_type}}</td>
+                                                <td>{{result.artefact_technology}}</td>
+                                                <td>{{result.artefact_chronology_category}}</td>
+                                                <td>{{result.artefact_microstructure}}</td>
                                             </tr>
                                         </tbody>
                                     </table>

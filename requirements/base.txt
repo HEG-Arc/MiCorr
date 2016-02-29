@@ -30,7 +30,7 @@ unicode-slugify==0.1.3
 django-autoslug==1.9.3
 
 # Useful things
-django-avatar==2.0
+django-avatar==2.2.1
 
 # Git revision
 dealer==1.1.1
@@ -43,8 +43,8 @@ django-libsass==0.6
 wagtail==1.1
 
 # Your custom requirements go here
-django-newsletter==0.5.2
-django-tinymce==2.0.6
+django-newsletter==0.6
+django-tinymce==2.2.0
 sorl-thumbnail==12.3
 django-envelope==1.0
 django-cities-light==3.2.0
@@ -54,4 +54,4 @@ lxml==3.4.4
 django-terms==1.1.3
 django-robots==1.1
 py2neo==2.0.7
-simplejson==3.8.1
+simplejson==3.8.2

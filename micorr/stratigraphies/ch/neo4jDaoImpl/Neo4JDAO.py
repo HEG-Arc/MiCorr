@@ -2,6 +2,7 @@ from py2neo import Graph
 import time
 from py2neo import Node, Relationship
 import uuid
+from artefacts.models import Artefact
 
 
 class Neo4jDAO:
@@ -410,12 +411,15 @@ class Neo4jDAO:
             line['totalrelation'] = i['TotalRelations']
             line['matching100'] = i['Matching100']
             # Add artefact characteristics
-            # from ... import Artefacts
-            # if i['artefact_id']:
-            #    artefact = Artefacts.objects.get(pk=int(i['artefact_id'])) # contrôler le format de artefact_id
-            #    line['artefact_name'] = artefact.name
-            #    line['artefact_....'] = artefact....
-            # regarder s'il faut faire un else pour mettre des valeurs s'il n'y a pas d'artefact
+            print i['artefact_id']
+            if i['artefact_id']:
+                artefact = Artefact.objects.get(pk=i['artefact_id'])
+                line['artefact_metal1'] = artefact.metal1.element
+                line['artefact_alloy'] = artefact.alloy.name
+                line['artefact_type'] = artefact.type.name
+                line['artefact_technology'] = artefact.technology.name
+                line['artefact_chronology_category'] = artefact.chronology_period.chronology_category.name
+                line['artefact_microstructure'] = artefact.microstructure.name
             result.append(line)
 
         return result

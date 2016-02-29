@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 import simplejson as json
-from .ch.hearc.ig.micorr.service.MiCorrService import MiCorrService
+from .ch.service.MiCorrService import MiCorrService
 
 
 #retourne la page d'accueil
