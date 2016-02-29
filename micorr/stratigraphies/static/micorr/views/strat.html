@@ -83,9 +83,7 @@
                                         <thead>
                                             <tr>
                                                 <th>#</th>
-                                                <th>Artefact</th>
                                                 <th>Matching 100%</th>
-                                                <th>Real artefact</th>
                                                 <th>Metal Family</th>
                                                 <th>Metal Alloy</th>
                                                 <th>Object</th>
@@ -97,14 +95,12 @@
                                         <tbody>
                                             <tr ng-repeat='result in results'>
                                                 <td><strong>{{$index + 1}}</strong></td>
-                                                <td><a href='#/artefact/{{result.artefact}}' target="_blank">{{result.artefact}}</a></td>
-                                                <td>{{result.matching100}}</td>
-                                                <td><a href='/artefacts/{{result.artefact_id}}' target="_blank">{{result.artefact_id}}</a></td>
+                                                <td><a href='/artefacts/{{result.artefact_id}}' target="_blank">{{result.matching100}}</a></td>
                                                 <td>{{result.artefact_metal1}}</td>
                                                 <td>{{result.artefact_alloy}}</td>
                                                 <td>{{result.artefact_type}}</td>
-                                                <td>{{result.artefact_technology}}</td>
                                                 <td>{{result.artefact_chronology_category}}</td>
+                                                <td>{{result.artefact_technology}}</td>
                                                 <td>{{result.artefact_microstructure}}</td>
                                             </tr>
                                         </tbody>
