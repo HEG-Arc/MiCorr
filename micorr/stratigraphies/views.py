@@ -32,7 +32,13 @@ def getallcharacteristic(request):
 # @ params
 def addStratigraphy(request, artefact, stratigraphy):
     ms = MiCorrService()
-    response = {"insertStatus" : ms.addStratigraphy(artefact, stratigraphy)}
+    # uuid = stratigraphy name when insert is successful or False otherwise
+    uuid = ms.addStratigraphy(artefact, stratigraphy)
+    if uuid:
+        insert_status = True
+    else:
+        insert_status = False
+    response = {"insertStatus": insert_status}
     return HttpResponse(json.dumps(response), content_type='application/json')
 
 # Verifie si une stratigraphie existe deja
