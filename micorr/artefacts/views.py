@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.views import generic
 from haystack.forms import SearchForm
 from django.http import HttpResponse
-#from micorr.stratigraphies.ch.neo4jDaoImpl.Neo4JDAO import Neo4jDAO
+from stratigraphies.ch.neo4jDaoImpl.Neo4JDAO import Neo4jDAO
 
 #import rdflib
 #from SPARQLWrapper import SPARQLWrapper, JSON
@@ -62,11 +62,10 @@ def displayOntology(request):
 
 
 def searchStratigraphy(self):
-    # neo = Neo4jDAO()
-    # stratigraphy = Neo4jDAO.addStratigraphy(neo, "Search", "search")
-    # if stratigraphy:
-    #     return redirect("/micorr/#/artefact/Search/" + stratigraphy + "/search")
-    pass
+    neo = Neo4jDAO()
+    stratigraphy = Neo4jDAO.addStratigraphy(neo, "Search", "search")
+    if stratigraphy:
+        return redirect("/micorr/#/artefact/Search/" + stratigraphy + "/search")
 
 
 class ArtefactsListView(generic.ListView):
