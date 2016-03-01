@@ -40,8 +40,9 @@ class Neo4jDAO:
         return user_uid
 
     def setStratigraphyUser(self, stratigraphy, user_id):
-        self.graph.cypher.execute("MATCH (n:`Stratigraphy`) WHERE n.uid='%s' SET n.user_uid=%s" % (stratigraphy, user_id))
-
+        n = self.graph.cypher.execute_one("MATCH (n:`Stratigraphy`) WHERE n.uid='%s' RETURN n" % stratigraphy)
+        n.properties["user_uid"] = user_id
+        n.push()
 
     # retourne tous les details d'une stratigraphie, caracteristiques, sous-caracteristiques et interfaces
     # @params le nom de la stratigraphie
