@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 
 from .views import ArtefactsListView, ArtefactsDetailView, ArtefactsUpdateView, ArtefactsDeleteView, \
     ArtefactsCreateView, DocumentUpdateView, DocumentDeleteView, DocumentCreateView, \
-    OriginCreateView, ChronologyCreateView, AlloyCreateView, TechnologyCreateView
+    OriginCreateView, ChronologyCreateView, AlloyCreateView, TechnologyCreateView, searchStratigraphy
 
 urlpatterns = patterns('',
     url(r'^$', ArtefactsListView.as_view(), name='artefact-list'),
@@ -26,6 +26,7 @@ urlpatterns = patterns('',
        login_required(DocumentDeleteView.as_view()), name='document-delete'),
     url(r'^(?P<artefact_id>\d+)/document/create/$', login_required(DocumentCreateView.as_view()),
        name='document-create'),
+    url(r'^stratigraphy/$', searchStratigraphy, name='searchStratigraphy'),
 
     #url(r'^test-ontology/$', displayOntology),
 )

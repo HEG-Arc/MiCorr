@@ -1,8 +1,9 @@
 from django.core.urlresolvers import reverse, reverse_lazy
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
 from django.views import generic
 from haystack.forms import SearchForm
 from django.http import HttpResponse
+from micorr.stratigraphies.ch.neo4jDaoImpl.Neo4JDAO import Neo4jDAO
 
 #import rdflib
 #from SPARQLWrapper import SPARQLWrapper, JSON
@@ -58,6 +59,16 @@ def displayOntology(request):
 
     return render(request, "artefacts/artefact_ontology_answer.html", locals())
 """
+
+
+def searchStratigraphy(self):
+    """
+    Allows to add a stratigraphy owned by the "Search" artefact
+    """
+    neo = Neo4jDAO()
+    stratigraphy = Neo4jDAO.addStratigraphy(neo, "Search", "search")
+    if stratigraphy:
+        return redirect("/micorr/#/artefact/Search/" + stratigraphy + "/search")
 
 
 class ArtefactsListView(generic.ListView):
