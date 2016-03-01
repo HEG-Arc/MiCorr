@@ -70,12 +70,21 @@ def getallartefacts(request):
 # @ params stratigraphie au format urlencode
 def save(request, data):
     ms = MiCorrService()
-
     # transformation de urlencode en json
     data = json.loads(data)
-
-    response = ms.save(data)
-
+    stratigraphy = data['stratigraphy']
+    user_id = ms.getStratigraphyUser(stratigraphy)
+    if user_id:
+        if user_id == request.user.id:
+            response = ms.save(data)
+        else:
+            # Not allowed to save the stratigraphy!
+            response = {'res': 0}
+    else:
+        # This stratigraphy belongs to nobody, we try to add the current user_id
+        if request.user.is_authenticated():
+            ms.setStratigraphyUser(stratigraphy, user_id)
+        response = ms.save(data)
     return HttpResponse(json.dumps(response), content_type='application/json')
 
 # retourne les artefacts similaires

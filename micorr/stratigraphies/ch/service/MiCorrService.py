@@ -7,6 +7,14 @@ class MiCorrService:
         if MiCorrService.db == None:
             MiCorrService.db = Neo4jDAO()
 
+    def getStratigraphyUser(self, stratigraphy):
+        MiCorrService.db.begin()
+        return MiCorrService.db.getStratigraphyUser(stratigraphy)
+
+    def setStratigraphyUser(self, stratigraphy, user_id):
+        MiCorrService.db.begin()
+        return MiCorrService.db.setStratigraphyUser(stratigraphy, user_id)
+
     def getAllArtefacts(self):
         MiCorrService.db.begin()
         return MiCorrService.db.getAllArtefacts()
