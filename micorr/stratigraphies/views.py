@@ -83,7 +83,9 @@ def save(request, data):
     else:
         # This stratigraphy belongs to nobody, we try to add the current user_id
         if request.user.is_authenticated():
+            print "USER ID: %s" % request.user
             ms.setStratigraphyUser(stratigraphy, user_id)
+        print "SAVING STRATIGRAPHY"
         response = ms.save(data)
     return HttpResponse(json.dumps(response), content_type='application/json')
 
