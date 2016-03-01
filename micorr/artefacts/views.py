@@ -58,15 +58,16 @@ def displayOntology(request):
         listResultsStore.append(row.fname)
 
     return render(request, "artefacts/artefact_ontology_answer.html", locals())
-
+"""
 
 
 def searchStratigraphy(self):
-    neo = Neo4jDAO()
-    stratigraphy = Neo4jDAO.addStratigraphy(neo, "Search", "search")
-    if stratigraphy:
-        return redirect("/micorr/#/artefact/Search/" + stratigraphy + "/search")
-"""
+    # neo = Neo4jDAO()
+    # stratigraphy = Neo4jDAO.addStratigraphy(neo, "Search", "search")
+    # if stratigraphy:
+    #     return redirect("/micorr/#/artefact/Search/" + stratigraphy + "/search")
+    pass
+
 
 class ArtefactsListView(generic.ListView):
     """
