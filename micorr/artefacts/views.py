@@ -62,9 +62,6 @@ def displayOntology(request):
 
 
 def searchStratigraphy(self):
-    """
-    Allows to add a stratigraphy owned by the "Search" artefact
-    """
     neo = Neo4jDAO()
     stratigraphy = Neo4jDAO.addStratigraphy(neo, "Search", "search")
     if stratigraphy:
