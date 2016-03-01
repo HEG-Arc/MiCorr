@@ -17,12 +17,22 @@ from .forms import UserForm
 # Import the customized User model
 from .models import User
 
+from stratigraphies.ch.neo4jDaoImpl.Neo4JDAO import Neo4jDAO
+
 
 class UserDetailView(LoginRequiredMixin, DetailView):
     model = User
     # These next two lines tell the view to index lookups by username
     slug_field = "username"
     slug_url_kwarg = "username"
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super(UserDetailView, self).get_context_data(**kwargs)
+        # Add the stratigraphies of the user
+        stratigraphies = Neo4jDAO().getStratigraphiesByUser(self.request.user.id)
+        context['stratigraphies'] = stratigraphies
+        return context
 
 
 class UserRedirectView(LoginRequiredMixin, RedirectView):

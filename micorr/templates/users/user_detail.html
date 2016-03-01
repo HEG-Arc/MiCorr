@@ -15,7 +15,7 @@
   </div>
 
 {% if object == request.user %}
-<!-- Action buttons -->     
+<!-- Action buttons -->
 <div class="row">
 
   <div class="col-sm-12 ">
@@ -24,6 +24,10 @@
     <a class="btn btn-info" href="{% url 'avatar_change' %}">Avatar</a>
     <!-- Your Stuff: Custom user template urls -->
   </div>
+
+
+    {% if stratigraphies %}y'en a{% else %}y'en a pas :-({% endif %}
+    {{ stratigraphies }}
 
 </div>
 <!-- End Action buttons -->

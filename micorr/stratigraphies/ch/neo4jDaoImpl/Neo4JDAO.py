@@ -26,7 +26,12 @@ class Neo4jDAO:
 
     def getStratigraphiesByUser(self, user_id):
         stratigraphies = self.graph.cypher.execute("MATCH (n:Stratigraphy) WHERE n.user_uid=%s RETURN n" % user_id)
-        return stratigraphies
+        stratigraphies_list = []
+        for stratigraphy in stratigraphies:
+            stratigraphies_list.append({'date': stratigraphy.date, 'uid': stratigraphy.uid,
+                                        'description': stratigraphy.description,
+                                        'artefact_uid': stratigraphy.artefact_uid})
+        return stratigraphies_list
 
     def getStratigraphyUser(self, stratigraphy):
         user_uid = self.graph.cypher.execute_one("MATCH (n:Stratigraphy) WHERE n.uid='%s' RETURN n.user_uid" % stratigraphy)
