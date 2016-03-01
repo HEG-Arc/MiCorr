@@ -74,6 +74,7 @@ def save(request, data):
     data = json.loads(data)
     stratigraphy = data['stratigraphy']
     user_id = ms.getStratigraphyUser(stratigraphy)
+    print "CURRENT USER: %s" % request.user
     if user_id:
         if user_id == request.user.id:
             response = ms.save(data)
