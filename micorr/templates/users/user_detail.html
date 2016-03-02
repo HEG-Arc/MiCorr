@@ -24,10 +24,26 @@
     <a class="btn btn-info" href="{% url 'avatar_change' %}">Avatar</a>
     <!-- Your Stuff: Custom user template urls -->
   </div>
-
-
-    {% if stratigraphies %}y'en a{% else %}y'en a pas :-({% endif %}
-    {{ stratigraphies }}
+</div>
+<div class="row">
+  <div class="col-sm-12 ">
+    <h1>Stratigraphies</h1>
+      {% if stratigraphies %}
+          <table class="table table-bordered table-striped table-hover">
+            <tr>
+                <th>Date</th><th>Description</th>
+            </tr>
+            {% for stratigraphy in stratigraphies %}
+                <tr>
+                    <td>{{ stratigraphy.date }}</td>
+                    <td><a href="/micorr/#/artefact/{{ stratigraphy.artefact_uid }}/{{ stratigraphy.uid }}/{{ stratigraphy.description }}">{{ stratigraphy.description }}</a></td>
+                </tr>
+            {% endfor %}
+          </table>
+      {% else %}
+          <p>There are no saved stratigraphies in your profile. Use the SAVE button to add stratigraphies to your profile.</p>
+      {% endif %}
+  </div>
 
 </div>
 <!-- End Action buttons -->
