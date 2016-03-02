@@ -28,9 +28,10 @@ class Neo4jDAO:
         stratigraphies = self.graph.cypher.execute("MATCH (n:Stratigraphy) WHERE n.user_uid=%s RETURN n" % user_id)
         stratigraphies_list = []
         for stratigraphy in stratigraphies:
-            stratigraphies_list.append({'date': stratigraphy.date, 'uid': stratigraphy.uid,
-                                        'description': stratigraphy.description,
-                                        'artefact_uid': stratigraphy.artefact_uid})
+            # TODO: We should be able to use stratigraphy.date to access the properties of the record :-(
+            stratigraphies_list.append({'date': stratigraphy[0].properties['date'], 'uid': stratigraphy[0].properties['uid'],
+                                        'description': stratigraphy[0].properties['description'],
+                                        'artefact_uid': stratigraphy[0].properties['artefact_uid']})
         return stratigraphies_list
 
     def getStratigraphyUser(self, stratigraphy):
