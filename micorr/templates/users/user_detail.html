@@ -29,7 +29,7 @@
   <div class="col-sm-12 ">
     <h1>Stratigraphies</h1>
       {% if stratigraphies %}
-          <table>
+          <table class="table table-bordered table-striped table-hover">
             <tr>
                 <th>Date</th><th>Description</th>
             </tr>
@@ -44,8 +44,6 @@
           <p>There are no saved stratigraphies in your profile. Use the SAVE button to add stratigraphies to your profile.</p>
       {% endif %}
   </div>
-    {% if stratigraphies %}y'en a{% else %}y'en a pas :-({% endif %}
-    {{ stratigraphies }}
 
 </div>
 <!-- End Action buttons -->
