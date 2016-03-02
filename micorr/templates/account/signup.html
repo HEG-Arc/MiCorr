@@ -4,13 +4,14 @@
 {% load i18n %}
 {% load crispy_forms_tags %}
 
-{% block title %}{% trans "Signup" %}{% endblock title %}
+{% block title %}<title>{% trans "MiCorr | Contribute" %}</title>{% endblock title %}
 
 {% block content %}
-<h1>{% trans "Sign Up" %}</h1>
+<h1>{% trans "Contribute" %}</h1>
 
 <p>{% blocktrans %}Already have an account? Then please <a href="{{ login_url }}">sign in</a>.{% endblocktrans %}</p>
 
+<h2>Create your personal account</h2>
 <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
   {% csrf_token %}
   {{ form|crispy }}
