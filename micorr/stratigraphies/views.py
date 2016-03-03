@@ -3,6 +3,7 @@ from django.http import HttpResponse
 import simplejson as json
 from .ch.service.MiCorrService import MiCorrService
 from .forms import StratigraphyDescriptionUpdateForm
+from django.views.decorators.csrf import csrf_exempt
 
 
 #retourne la page d'accueil
@@ -68,6 +69,7 @@ def getallartefacts(request):
     return HttpResponse(json.dumps(artefacts), content_type='application/json')
 
 
+@csrf_exempt
 def update_stratigraphy_description(request, stratigraphy):
     ms = MiCorrService()
     if request.method == 'POST':
