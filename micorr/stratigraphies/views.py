@@ -77,7 +77,13 @@ def update_stratigraphy_description(request, stratigraphy):
             form = StratigraphyDescriptionUpdateForm(request.POST)
             if form.is_valid():
                 ms.updateStratigraphyDescription(stratigraphy, form.cleaned_data['description'])
-    return HttpResponse('OK')
+                return HttpResponse(form.cleaned_data['description'])
+            else:
+                return HttpResponse('Form is not valid!')
+        else:
+            return HttpResponse('No stratigraphy exists with that UID')
+    else:
+        return HttpResponse('Only POST is allowed!')
 
 
 # retourne sauvegarde un facies de corrosion
