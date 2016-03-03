@@ -427,7 +427,7 @@ class Neo4jDAO:
         qry += "RETURN auid, artefact_id, stratum, DiffNombreStratum, TotalComparisonIndicator1, TotalMatching, TotalRelations, 100*TotalMatching/TotalRelations as Matching100 "
         qry += "ORDER BY Matching100 DESC, TotalComparisonIndicator1 DESC "
 
-        result = []
+        old_list = []
 
         res = self.graph.cypher.execute(qry)
 
@@ -442,7 +442,6 @@ class Neo4jDAO:
             line['totalrelation'] = i['TotalRelations']
             line['matching100'] = i['Matching100']
             # Add artefact characteristics
-            print i['artefact_id']
             if i['artefact_id']:
                 artefact = Artefact.objects.get(pk=i['artefact_id'])
                 line['artefact_metal1'] = artefact.metal1.element
@@ -451,8 +450,12 @@ class Neo4jDAO:
                 line['artefact_chronology_category'] = artefact.chronology_period.chronology_category.name
                 line['artefact_technology'] = artefact.technology.name
                 line['artefact_microstructure'] = artefact.microstructure.name
-            result.append(line)
-
+            old_list.append(line)
+        result = []
+        for j in old_list:
+            if j['artefact_id'] and j['matching100'] < 100:
+                result.append(j)
+        print result
         return result
 
     # Ajout d'un artefact
