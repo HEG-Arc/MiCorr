@@ -13,7 +13,7 @@ $(document).ready(function(){
       $(this).text($(this).data('on'));
 
     }
-    
+
   });
 
 
@@ -43,7 +43,7 @@ $(document).ready(function(){
      var oldLocation=window.location.href.replace(window.location.hash, '');
      var newLocation=this;
 
-     // make sure it's the same location      
+     // make sure it's the same location
      if(oldLocation+newHash==newLocation)
      {
         // get target
@@ -69,18 +69,18 @@ $(document).ready(function(){
        // page scrolling effect.
        if($(this).parent().parent().hasClass('nav')) { // test the UL
          // Unfold the node
-         var unfold = $(this).attr('href'); //id of the "title" node          
+         var unfold = $(this).attr('href'); //id of the "title" node
          $(unfold).next().collapse('show'); // next node is the content to unfold
          //$(unfold).next().addClass('in'); //collapse('show'); //next node is the content to unfold
        }
        // A menu / nav element of level 2 has been clicked, unfold its parent
        if($(this).parent().parent().hasClass('subnav')) { // test the UL
          // Unfold the parent to make sure that we can jump to this section
-         var unfold = $(this).parent().parent().prev().attr('href'); //id of the "title" node          
+         var unfold = $(this).parent().parent().prev().attr('href'); //id of the "title" node
          $(unfold).next().collapse('show'); // next node is the content to unfold
          //$(unfold).next().addClass('in');//.collapse('show'); //next node is the content to unfold
        }
-       
+
         // cancel default click action
         return false;
      }
@@ -90,7 +90,7 @@ $(document).ready(function(){
   $('.image-popup').magnificPopup({
    type:'image'
   });
-
+  $('.editable').jinplace();
 });
 
 
