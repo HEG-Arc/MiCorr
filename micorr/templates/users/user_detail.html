@@ -2,7 +2,15 @@
 {% load avatar_tags %}
 {% load static %}
 
-{% block custom_header_script %}<script src="//cdnjs.cloudflare.com/ajax/libs/jinplace/1.2.1/jinplace.min.js"></script>{% endblock custom_header_script %}
+{% block custom_header_script %}
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jinplace/1.2.1/jinplace.min.js"></script>
+    <script>
+        $(function() {
+          $('.editable').jinplace();
+        });
+    </script>
+{% endblock custom_header_script %}
 
 {% block title %}<title>MiCorr | {{ object.username }} User Profile</title>{% endblock %}
 
