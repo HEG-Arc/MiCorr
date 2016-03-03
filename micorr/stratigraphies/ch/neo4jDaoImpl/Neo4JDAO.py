@@ -50,6 +50,11 @@ class Neo4jDAO:
         n.properties["user_uid"] = user_id
         n.push()
 
+    def updateStratigraphyDescription(self, stratigraphy, description):
+        n = self.graph.cypher.execute_one("MATCH (n:`Stratigraphy`) WHERE n.uid='%s' RETURN n" % stratigraphy)
+        n.properties["description"] = description
+        n.push()
+
     # retourne tous les details d'une stratigraphie, caracteristiques, sous-caracteristiques et interfaces
     # @params le nom de la stratigraphie
     # @returns tous les details de la stratigraphie voulue

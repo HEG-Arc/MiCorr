@@ -1,0 +1,4 @@
+<form id="update-description" method="post" action="{% url 'stratigraphies:update-description' stratigraphy.uid %}">
+    {{ form.as_p }}
+    <input type="submit" value="save" />
+</form>

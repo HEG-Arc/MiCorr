@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 import simplejson as json
 from .ch.service.MiCorrService import MiCorrService
+from .forms import StratigraphyDescriptionUpdateForm
 
 
 #retourne la page d'accueil
@@ -65,6 +66,20 @@ def getallartefacts(request):
     for artefact in ms.getAllArtefacts():
         artefacts['artefacts'].append({'name' : artefact.name})
     return HttpResponse(json.dumps(artefacts), content_type='application/json')
+
+
+def update_stratigraphy_description(request, stratigraphy):
+    ms = MiCorrService()
+    if request.method == 'POST':
+        if ms.stratigraphyExists(stratigraphy):  # True/False
+            form = StratigraphyDescriptionUpdateForm(request.POST)
+            if form.is_valid():
+                ms.updateStratigraphyDescription(stratigraphy, form.cleaned_data['description'])
+    else:
+        pass
+    return True
+
+
 
 # retourne sauvegarde un facies de corrosion
 # @ params stratigraphie au format urlencode
