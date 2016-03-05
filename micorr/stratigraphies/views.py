@@ -78,7 +78,7 @@ def update_stratigraphy_description(request, stratigraphy):
             if form.is_valid():
                 if form.cleaned_data['attribute'] == 'description':
                     ms.updateStratigraphyDescription(stratigraphy, form.cleaned_data['value'])
-                    return HttpResponse(form.cleaned_data['description'])
+                    return HttpResponse(form.cleaned_data['value'])
                 else:
                     return HttpResponse('Only the description can be edited!')
             else:
