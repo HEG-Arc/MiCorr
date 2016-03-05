@@ -76,8 +76,11 @@ def update_stratigraphy_description(request, stratigraphy):
         if ms.stratigraphyExists(stratigraphy):  # True/False
             form = StratigraphyDescriptionUpdateForm(request.POST)
             if form.is_valid():
-                ms.updateStratigraphyDescription(stratigraphy, form.cleaned_data['description'])
-                return HttpResponse(form.cleaned_data['description'])
+                if form.cleaned_data['attribute'] == 'description':
+                    ms.updateStratigraphyDescription(stratigraphy, form.cleaned_data['value'])
+                    return HttpResponse(form.cleaned_data['description'])
+                else:
+                    return HttpResponse('Only the description can be edited!')
             else:
                 return HttpResponse('Form is not valid! %s' % form.errors)
         else:

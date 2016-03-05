@@ -35,4 +35,5 @@ class StratigraphyDescriptionUpdateForm(forms.Form):
     """
     Edit the description of a stratigraphy
     """
-    description = forms.CharField(label='Description', max_length=100)
+    attribute = forms.CharField(label='attribute', max_length=100)
+    value = forms.CharField(label='value', max_length=100)

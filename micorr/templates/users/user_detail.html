@@ -38,8 +38,8 @@
                     <td>{{ stratigraphy.date }}</td>
                     <td>
                         <span class="editable" data-url="{% url 'stratigraphies:update-description' stratigraphy.uid %}" data-attribute="description" data-activator="#edit-{{ stratigraphy.uid }}">{{ stratigraphy.description }}</span>
-                        <span id="edit-{{ stratigraphy.uid }}" class="button">Edit!</span>
-                        <a href="/micorr/#/artefact/{{ stratigraphy.artefact_uid }}/{{ stratigraphy.uid }}/{{ stratigraphy.description }}">view</a>
+                        [<span id="edit-{{ stratigraphy.uid }}" class="button"><i class="fa fa-pencil"></i> Rename</span> | <i class="fa fa-bars"></i>
+                        <a href="/micorr/#/artefact/{{ stratigraphy.artefact_uid }}/{{ stratigraphy.uid }}/{{ stratigraphy.description }}">Display</a>]
                     </td>
                 </tr>
             {% endfor %}
