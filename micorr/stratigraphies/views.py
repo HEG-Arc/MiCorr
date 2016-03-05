@@ -79,7 +79,7 @@ def update_stratigraphy_description(request, stratigraphy):
                 ms.updateStratigraphyDescription(stratigraphy, form.cleaned_data['description'])
                 return HttpResponse(form.cleaned_data['description'])
             else:
-                return HttpResponse('Form is not valid!')
+                return HttpResponse('Form is not valid! %s' % form.errors)
         else:
             return HttpResponse('No stratigraphy exists with that UID')
     else:
