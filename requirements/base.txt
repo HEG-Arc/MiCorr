@@ -41,6 +41,8 @@ django-modelcluster==1.0
 django-taggit==0.17.6
 django-libsass==0.6
 wagtail==1.1
+django-treebeard==3.0
+Willow==0.2.1
 
 # Your custom requirements go here
 django-newsletter==0.6
