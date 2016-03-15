@@ -36,26 +36,6 @@
           <div class="c3"><em>Authors</em></div>
           <div class="c9"><p>{{ form.author }} <a onmouseover="this.style.cursor='pointer'" onclick="window.open('{% url 'contacts:contact-create' %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><span class="glyphicon glyphicon-plus"></span></a></p> <p><i>{{ form.author.help_text }}</i></p></div>
         </div>
-        <div class="row">
-            <div class="c3"><em>1st metal element</em></div>
-            <div class="c9"><p>{{ form.metal1 }}</p> <p><i>{{ form.metal1.help_text }}</i></p></div>
-        </div>
-        <div class="row">
-            <div class="c3"><em>Other metal elements</em></div>
-            <div class="c9"><p>{{ form.metalx }}</p> <p><i>{{ form.metalx.help_text }}</i></p></div>
-        </div>
-        <div class="row">
-            <div class="c3"><em>Microstructure</em></div>
-            <div class="c9"><p>{{ form.microstructure }}</p> <p><i>{{ form.microstructure.help_text }}</i></p></div>
-        </div>
-        <div class="row">
-            <div class="c3"><em>Corrosion form</em></div>
-            <div class="c9"><p>{{ form.corrosion_form }}</p> <p><i>{{ form.corrosion_form.help_text }}</i></p></div>
-        </div>
-        <div class="row">
-            <div class="c3"><em>Corrosion type</em></div>
-            <div class="c9"><p>{{ form.corrosion_type }}</p> <p><i>{{ form.corrosion_type.help_text }}</i></p></div>
-        </div>
 
         <div  id="accordionN1" aria-multiselectable="true">
 
@@ -73,6 +53,7 @@
                   <p><a name="fig1"></a>{{ sections.0.image_set.all.0.legend }}</p>
                 </div>
               </div>
+                <p><i>General picture of the object should contain a scale and a chart colour. The caption gives the name of the artefact, the type of alloy and any relevant information.</i></p>
             </div>
           </div>
 
@@ -126,6 +107,7 @@
                 {% else %}
                     <p>None</p>
                 {% endif %}
+                <p><i>Any important information that does not fit to the previous fields.</i></p>
             </div>
             <div class="line">
                 <div id="accordionN2" aria-multiselectable="true">
@@ -135,8 +117,8 @@
                       <a class="line" data-toggle="collapse" data-parent="#accordionN2" href="#content21" aria-expanded="true" aria-controls="content21">Zones of the artefact submitted to visual observation and location of sampling areas</a>
                   </div>
                   <div class="row accordion-content2 collapse in" id="content21" aria-labelledby="title21">
-                    {% if sections.2.image_set.all %}
                     <div class="line lightbox">
+                    {% if sections.2.image_set.all %}
                         {% for image in sections.2.image_set.all %}
                           <div class="row">
                             <div class="c6">
@@ -147,8 +129,9 @@
                             </div>
                           </div>
                         {% endfor %}
-                    </div>
                     {% endif %}
+                        <p><i>Picture of the object / element with arrows indicating the location of the sampling area. Pictures with details can be provided. Caption should be more or less the same as: Location of sampling area and sample selected.</i></p>
+                    </div>
                   </div>
 
                 <!--MACROSCOPIC-->
@@ -161,6 +144,7 @@
                     </div>
                     {% if sections.3.image_set.all %}
                     <div class="line lightbox">
+                    <p><i>The schematic representation below gives an overview of the corrosion layers encountered on the object (to precise) from a first visual macroscopic observation.</i></p>
                         {% for image in sections.3.image_set.all %}
                           <div class="row">
                             <div class="c6">
@@ -173,6 +157,7 @@
                         {% endfor %}
                     </div>
                     {% endif %}
+                    <p><i>Stratigraphic representation of the object in cross-section by macroscopic observation. The schematic drawing should indicate the whole stratigraphy of layers using the encoded strata system developed within Bertholon schematic description of metal corrosion.</i></p>
                   </div>
                 </div>
             </div>
@@ -194,6 +179,7 @@
                     </div>
                   </div>
                 {% endfor %}
+                <p><i>General picture of the unetched cross-section of an element / object in dark field with a scale and indication of other figures found below in the file. The caption should be more or less the same as: Micrograph of the cross-section showing the location of Fig.... Unetched, dark field, x (indication of the magnification). The next figure should be the MiCorr stratigraphy built using the MiCorr application.</i></p>
             </div>
             <div class="line lightbox">
               <div class="row">
@@ -232,6 +218,7 @@
                 {% else %}
                     <p>None</p>
                 {% endif %}
+                 <p><i>Any important information that does not fit to the previous fields.</i></p>
             </div>
           </div>
 
@@ -242,6 +229,8 @@
           </div>
           <div class="row accordion-content3 collapse in" id="content4"  aria-labelledby="title4">
             <div class="line palebox">
+                <p><em>Analyses performed</em></p>
+                <p><i>Listing of the techniques used: Metallography (etched with ? reagent), SEM-EDS, FTIR, Raman spectroscopy and XRD...</i></p>
                 <p>{{ sections.5.content|safe }}</p>
             </div>
             <div class="line">
@@ -253,7 +242,19 @@
                   </div>
                   <div class="row accordion-content2 collapse in" id="content41" aria-labelledby="title41">
                     <div class="line palebox">
+                        <div class="row">
+                            <div class="c3"><em>Microstructure</em></div>
+                            <div class="c9"><p>{{ form.microstructure }}</p> <p><i>{{ form.microstructure.help_text }}</i></p></div>
+                        </div>
                         <p>{{ sections.6.content|safe }}</p>
+                        <div class="row">
+                            <div class="c3"><em>Major element(s) (conc. > 1 mass%)</em></div>
+                            <div class="c9"><p>{{ form.metal1 }}</p> <p><i>{{ form.metal1.help_text }}</i></p></div>
+                        </div>
+                        <div class="row">
+                            <div class="c3"><em>Minor element(s) (conc. < 1 mass%)</em></div>
+                            <div class="c9"><p>{{ form.metalx }}</p> <p><i>{{ form.metalx.help_text }}</i></p></div>
+                        </div>
                     </div>
                     <div class="line lightbox">
                         {% for image in sections.6.image_set.all %}
@@ -284,6 +285,14 @@
                   <div class="row accordion-content2 collapse in" id="content42"  aria-labelledby="title42">
                     <div class="line palebox">
                         <p>{{ sections.7.content|safe }}</p>
+                        <div class="row">
+                            <div class="c3"><em>Corrosion form</em></div>
+                            <div class="c9"><p>{{ form.corrosion_form }}</p> <p><i>{{ form.corrosion_form.help_text }}</i></p></div>
+                        </div>
+                        <div class="row">
+                            <div class="c3"><em>Corrosion type</em></div>
+                            <div class="c9"><p>{{ form.corrosion_type }}</p> <p><i>{{ form.corrosion_type.help_text }}</i></p></div>
+                        </div>
                     </div>
                     <div class="line lightbox">
                         {% for image in sections.7.image_set.all %}
