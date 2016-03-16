@@ -230,7 +230,7 @@
           <div class="row accordion-content3 collapse in" id="content4"  aria-labelledby="title4">
             <div class="line palebox">
                 <p><em>Analyses performed</em></p>
-                <p><i>Listing of the techniques used: Metallography (etched with ? reagent), SEM-EDS, FTIR, Raman spectroscopy and XRD...</i></p>
+                <p><i>List of the techniques used: Metallography (etched with ? reagent), SEM-EDS, FTIR, Raman spectroscopy, XRD, etc.</i></p>
                 <p>{{ sections.5.content|safe }}</p>
             </div>
             <div class="line">
@@ -242,6 +242,9 @@
                   </div>
                   <div class="row accordion-content2 collapse in" id="content41" aria-labelledby="title41">
                     <div class="line palebox">
+                        <div class="row">
+                            <div class="c9"><p>{{ form.test }}</p></div>
+                        </div>
                         <div class="row">
                             <div class="c3"><em>Microstructure</em></div>
                             <div class="c9"><p>{{ form.microstructure }}</p> <p><i>{{ form.microstructure.help_text }}</i></p></div>
@@ -257,6 +260,9 @@
                         </div>
                     </div>
                     <div class="line lightbox">
+                        <div class="row">
+                            <div class="c9"><p>{{ form.photo }}</p></div>
+                        </div>
                         {% for image in sections.6.image_set.all %}
                           <div class="row">
                             <div class="c6">

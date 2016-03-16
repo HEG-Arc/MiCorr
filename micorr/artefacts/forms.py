@@ -1,5 +1,5 @@
 from django import forms
-from django.forms import TextInput, FileInput
+from django.forms import TextInput
 from .models import Artefact, Document, Metal, CorrosionForm, Environment, Origin, ChronologyPeriod, Alloy, Technology
 from cities_light.models import Country
 from tinymce.widgets import TinyMCE
@@ -21,6 +21,9 @@ class ArtefactsCreateForm(forms.ModelForm):
     """
     Create a new artefact
     """
+    test = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 20}))
+    photo = forms.ImageField()
+
     class Meta:
         model = Artefact
         exclude = ['user']
