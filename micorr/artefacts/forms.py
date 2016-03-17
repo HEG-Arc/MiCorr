@@ -21,8 +21,20 @@ class ArtefactsCreateForm(forms.ModelForm):
     """
     Create a new artefact
     """
-    test = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 20}))
-    photo = forms.ImageField()
+    object_image = forms.ImageField()
+    zones_image = forms.ImageField()
+    macroscopic_text = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 20}))
+    macroscopic_image = forms.ImageField()
+    sample_image = forms.ImageField()
+    metal_text = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 20}))
+    metal_image = forms.ImageField()
+    corrosion_text = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 20}))
+    corrosion_image = forms.ImageField()
+    synthesis_text = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 20}))
+    synthesis_image = forms.ImageField()
+    conclusion_text = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 20}))
+    conclusion_image = forms.ImageField()
+    references_text = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 20}))
 
     class Meta:
         model = Artefact
