@@ -23,18 +23,18 @@ class ArtefactsCreateForm(forms.ModelForm):
     """
     object_image = forms.ImageField()
     zones_image = forms.ImageField()
-    macroscopic_text = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 20}))
+    macroscopic_text = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}))
     macroscopic_image = forms.ImageField()
     sample_image = forms.ImageField()
-    metal_text = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 20}))
+    metal_text = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}))
     metal_image = forms.ImageField()
-    corrosion_text = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 20}))
+    corrosion_text = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}))
     corrosion_image = forms.ImageField()
-    synthesis_text = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 20}))
+    synthesis_text = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}))
     synthesis_image = forms.ImageField()
-    conclusion_text = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 20}))
+    conclusion_text = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}))
     conclusion_image = forms.ImageField()
-    references_text = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 20}))
+    references_text = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}))
 
     class Meta:
         model = Artefact

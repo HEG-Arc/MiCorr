@@ -86,7 +86,7 @@
               </div>
               <div class="row">
                 <div class="c3"><em>Burial conditions / environment</em></div>
-                <div class="c9"><p>{{ form.environment }}</p> <p><i>{{ form.environment.help_text }}</i></p></div>
+                <div class="c9"><p>{{ form.environment }} <span class="glyphicon glyphicon-plus"></span></p> <p><i>{{ form.environment.help_text }}</i></p></div>
               </div>
               <div class="row">
                 <div class="c3"><em>Artefact location</em></div>
@@ -253,20 +253,23 @@
                   <div class="row accordion-content2 collapse in" id="content41" aria-labelledby="title41">
                     <div class="line palebox">
                         <div class="row">
-                            <div class="c9"><p>{{ form.metal_text }}</p></div>
+                            <div class="c9">
+                                <p>{{ form.metal_text }}</p>
+                                <p><i>A description of the metal: its composition, texture (porosity), hardness, microstructure revealed by etching and specific features (figures and tables are referred as Fig. 1, Table 1).</i></p>
+                            </div>
                         </div>
                         <div class="row">
                             <div class="c3"><em>Microstructure</em></div>
-                            <div class="c9"><p>{{ form.microstructure }}</p> <p><i>{{ form.microstructure.help_text }}</i></p></div>
+                            <div class="c9"><p>{{ form.microstructure }} <span class="glyphicon glyphicon-plus"></span></p> <p><i>{{ form.microstructure.help_text }}</i></p></div>
                         </div>
                         <p>{{ sections.6.content|safe }}</p>
                         <div class="row">
                             <div class="c3"><em>Major element(s) (conc. > 1 mass%)</em></div>
-                            <div class="c9"><p>{{ form.metal1 }}</p> <p><i>{{ form.metal1.help_text }}</i></p></div>
+                            <div class="c9"><p>{{ form.metal1 }} <span class="glyphicon glyphicon-plus"></span></p> <p><i>{{ form.metal1.help_text }}</i></p></div>
                         </div>
                         <div class="row">
                             <div class="c3"><em>Minor element(s) (conc. < 1 mass%)</em></div>
-                            <div class="c9"><p>{{ form.metalx }}</p> <p><i>{{ form.metalx.help_text }}</i></p></div>
+                            <div class="c9"><p>{{ form.metalx }} <span class="glyphicon glyphicon-plus"></span></p> <p><i>{{ form.metalx.help_text }}</i></p></div>
                         </div>
                     </div>
                     <div class="line lightbox">
@@ -301,16 +304,19 @@
                   <div class="row accordion-content2 collapse in" id="content42"  aria-labelledby="title42">
                     <div class="line palebox">
                         <div class="row">
-                            <div class="c9"><p>{{ form.corrosion_text }}</p></div>
+                            <div class="c9">
+                                <p>{{ form.corrosion_text }}</p>
+                                <p><i>A description of the corrosion layers: their composition, texture (porosity), microstructure if any and specific features (figures and tables are referred as Fig. 1, Table 1). The corrosion form(s) and corrosion type should be deduced.</i></p>
+                            </div>
                         </div>
                         <p>{{ sections.7.content|safe }}</p>
                         <div class="row">
                             <div class="c3"><em>Corrosion form</em></div>
-                            <div class="c9"><p>{{ form.corrosion_form }}</p> <p><i>{{ form.corrosion_form.help_text }}</i></p></div>
+                            <div class="c9"><p>{{ form.corrosion_form }} <span class="glyphicon glyphicon-plus"></span></p> <p><i>{{ form.corrosion_form.help_text }}</i></p></div>
                         </div>
                         <div class="row">
                             <div class="c3"><em>Corrosion type</em></div>
-                            <div class="c9"><p>{{ form.corrosion_type }}</p> <p><i>{{ form.corrosion_type.help_text }}</i></p></div>
+                            <div class="c9"><p>{{ form.corrosion_type }} <span class="glyphicon glyphicon-plus"></span></p> <p><i>{{ form.corrosion_type.help_text }}</i></p></div>
                         </div>
                     </div>
                     <div class="line lightbox">
@@ -376,7 +382,10 @@
           <div class="row accordion-content3 collapse in" id="content6"  aria-labelledby="title6">
             <div class="line palebox">
                 <div class="row">
-                    <div class="c9"><p>{{ form.conclusion_text }}</p></div>
+                    <div class="c9">
+                        <p>{{ form.conclusion_text }}</p>
+                        <p><i>A brief summary of all data collected: metal with composition and microstructure. Corrosion forms and type as well as description of the corrosion layers. Location of the limit of the original surface if any.</i></p>
+                    </div>
                 </div>
                 <p>{{ sections.9.content|safe }}</p>
             </div>
