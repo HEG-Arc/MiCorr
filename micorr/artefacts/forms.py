@@ -42,6 +42,7 @@ class ArtefactsCreateForm(forms.ModelForm):
         widgets = {
             'type': TextInput(),
             'recovering_date': TextInput(),
+            'chronology_period': TextInput(),
         }
 
 

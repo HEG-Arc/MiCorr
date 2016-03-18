@@ -31,7 +31,7 @@ class Alloy(TimeStampedModel):
     name = models.CharField(max_length=100, blank=True, help_text='The artefact alloy')
 
     class Meta:
-        ordering = ['order']
+        ordering = ['order', 'name']
         verbose_name = 'Alloy'
         verbose_name_plural = 'Alloys'
 
@@ -72,6 +72,7 @@ class Origin(TimeStampedModel):
         return ", ".join(origin)
 
     class Meta:
+        ordering = ['site']
         verbose_name = 'Origin'
         verbose_name_plural = 'Origins'
 
