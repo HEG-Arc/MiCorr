@@ -33,8 +33,8 @@
           <h1>New artefact</h1>
 
         <div class="row">
-          <div class="c3"><em>Authors</em></div>
-          <div class="c9"><p>{{ form.author }} <a onmouseover="this.style.cursor='pointer'" onclick="window.open('{% url 'contacts:contact-create' %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><span class="glyphicon glyphicon-plus"></span></a></p> <p><i>{{ form.author.help_text }}</i></p></div>
+          <div class="c3"><em>Author(s)</em></div>
+          <div class="c9"><p><a onmouseover="this.style.cursor='pointer'" onclick="window.open('{% url 'contacts:contact-create' %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><span class="glyphicon glyphicon-plus"></span></a></p> <p><i>{{ form.author.help_text }}</i></p></div>
         </div>
 
         <div  id="accordionN1" aria-multiselectable="true">
@@ -78,11 +78,11 @@
               </div>
               <div class="row">
                 <div class="c3"><em>Origin and date of recovering</em></div>
-                <div class="c9"><p>{{ form.origin }} <a onmouseover="this.style.cursor='pointer'" onclick="window.open('{% url 'artefacts:origin-create' %}', 'newwindow', 'height=450px, width=700px');"><span class="glyphicon glyphicon-plus"></span></a></p> <p><i>{{ form.origin.help_text }}</i></p> {{ form.recovering_date }} <i>{{ form.recovering_date.help_text }}</i></div>
+                <div class="c9"><p><a onmouseover="this.style.cursor='pointer'" onclick="window.open('{% url 'artefacts:origin-create' %}', 'newwindow', 'height=450px, width=700px');"><span class="glyphicon glyphicon-plus"></span></a></p> <p><i>{{ form.origin.help_text }}</i></p> {{ form.recovering_date }} <i>{{ form.recovering_date.help_text }}</i></div>
               </div>
               <div class="row">
                 <div class="c3"><em>Dating of artefact (Tpq _ Taq)</em></div>
-                <div class="c9"><p>{{ form.chronology_period }} <a onmouseover="this.style.cursor='pointer'" onclick="window.open('{% url 'artefacts:chronology-create' %}', 'newwindow', 'height=450px, width=700px');"><span class="glyphicon glyphicon-plus"></span></a></p> <p><i>{{ form.chronology_period.help_text }}</i></p></div>
+                <div class="c9"><p>{{ form.chronology_period }}</p> <p><i>{{ form.chronology_period.help_text }}</i></p></div>
               </div>
               <div class="row">
                 <div class="c3"><em>Burial conditions / environment</em></div>
@@ -90,11 +90,11 @@
               </div>
               <div class="row">
                 <div class="c3"><em>Artefact location</em></div>
-                <div class="c9"><p>{{ form.location }} <a onmouseover="this.style.cursor='pointer'" onclick="window.open('{% url 'contacts:contact-create' %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><span class="glyphicon glyphicon-plus"></span></a></p> <p><i>{{ form.location.help_text }}</i></p></div>
+                <div class="c9"><p><a onmouseover="this.style.cursor='pointer'" onclick="window.open('{% url 'contacts:contact-create' %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><span class="glyphicon glyphicon-plus"></span></a></p> <p><i>{{ form.location.help_text }}</i></p></div>
               </div>
               <div class="row">
                 <div class="c3"><em>Owner</em></div>
-                <div class="c9"><p>{{ form.owner }} <a onmouseover="this.style.cursor='pointer'" onclick="window.open('{% url 'contacts:contact-create' %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><span class="glyphicon glyphicon-plus"></span></a></p> <p><i>{{ form.owner.help_text }}</i></p></div>
+                <div class="c9"><p><a onmouseover="this.style.cursor='pointer'" onclick="window.open('{% url 'contacts:contact-create' %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><span class="glyphicon glyphicon-plus"></span></a></p> <p><i>{{ form.owner.help_text }}</i></p></div>
               </div>
               <div class="row">
                 <div class="c3"><em>Inv. Number</em></div>
@@ -210,11 +210,11 @@
               </div>
               <div class="row">
                 <div class="c3"><em>Sample location</em></div>
-                <div class="c9"><p>{{ form.sample_location }} <a onmouseover="this.style.cursor='pointer'" onclick="window.open('{% url 'contacts:contact-create' %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><span class="glyphicon glyphicon-plus"></span></a></p> <p><i>{{ form.sample_location.help_text }}</i></p></div>
+                <div class="c9"><p><a onmouseover="this.style.cursor='pointer'" onclick="window.open('{% url 'contacts:contact-create' %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><span class="glyphicon glyphicon-plus"></span></a></p> <p><i>{{ form.sample_location.help_text }}</i></p></div>
               </div>
               <div class="row">
                 <div class="c3"><em>Responsible institution</em></div>
-                <div class="c9"><p>{{ form.responsible_institution }} <a onmouseover="this.style.cursor='pointer'" onclick="window.open('{% url 'contacts:contact-create' %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><span class="glyphicon glyphicon-plus"></span></a></p> <p><i>{{ form.responsible_institution.help_text }}</i></p></div>
+                <div class="c9"><p><a onmouseover="this.style.cursor='pointer'" onclick="window.open('{% url 'contacts:contact-create' %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><span class="glyphicon glyphicon-plus"></span></a></p> <p><i>{{ form.responsible_institution.help_text }}</i></p></div>
               </div>
               <div class="row">
                 <div class="c3"><em>Date and aim of sampling</em></div>
