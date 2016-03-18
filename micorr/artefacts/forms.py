@@ -54,6 +54,14 @@ class OriginCreateForm(forms.ModelForm):
         model = Origin
 
 
+class EnvironmentCreateForm(forms.ModelForm):
+    """
+    Create a new alloy
+    """
+    class Meta:
+        model = Environment
+
+
 class ChronologyCreateForm(forms.ModelForm):
     """
     Create a new chronology

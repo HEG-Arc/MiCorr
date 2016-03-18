@@ -1,0 +1,12 @@
+<div class="row">
+    <form action="{% url 'artefacts:environment-create' %}" method="post">
+        {% csrf_token %}
+            {% for field in form %}
+                <p>{{ field.label_tag }}</p>
+                <p>{{ field }}</p>
+                <p><i>{{ field.help_text }}</i></p>
+                <br/>
+            {% endfor %}
+        <input type="submit" value="Submit">
+    </form>
+</div>
