@@ -8,9 +8,10 @@ from stratigraphies.ch.neo4jDaoImpl.Neo4JDAO import Neo4jDAO
 #import rdflib
 #from SPARQLWrapper import SPARQLWrapper, JSON
 
-from .models import Artefact, Document, Origin, ChronologyPeriod, Alloy, Technology, Environment
+from .models import Artefact, Document, Origin, ChronologyPeriod, Alloy, Technology, Environment, Microstructure, Metal
 from .forms import ArtefactsUpdateForm, ArtefactsCreateForm, DocumentUpdateForm, DocumentCreateForm, ArtefactFilter,\
-    OriginCreateForm, ChronologyCreateForm, AlloyCreateForm, TechnologyCreateForm, EnvironmentCreateForm
+    OriginCreateForm, ChronologyCreateForm, AlloyCreateForm, TechnologyCreateForm, EnvironmentCreateForm, \
+    MicrostructureCreateForm, MetalCreateForm
 
 """
 def displayOntology(request):
@@ -197,6 +198,24 @@ class TechnologyCreateView(generic.CreateView):
     model = Technology
     template_name_suffix = '_create_form'
     form_class = TechnologyCreateForm
+
+
+class MicrostructureCreateView(generic.CreateView):
+    """
+    A view which allows the user to create a microstructure
+    """
+    model = Microstructure
+    template_name_suffix = '_create_form'
+    form_class = MicrostructureCreateForm
+
+
+class MetalCreateView(generic.CreateView):
+    """
+    A view which allows the user to create a metal
+    """
+    model = Metal
+    template_name_suffix = '_create_form'
+    form_class = MetalCreateForm
 
 
 class DocumentUpdateView(generic.UpdateView):

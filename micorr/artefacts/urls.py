@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from .views import ArtefactsListView, ArtefactsDetailView, ArtefactsUpdateView, ArtefactsDeleteView, \
     ArtefactsCreateView, DocumentUpdateView, DocumentDeleteView, DocumentCreateView, \
     OriginCreateView, ChronologyCreateView, AlloyCreateView, EnvironmentCreateView, TechnologyCreateView, \
-    searchStratigraphy
+    MicrostructureCreateView, MetalCreateView, searchStratigraphy
 
 urlpatterns = patterns('',
     url(r'^$', ArtefactsListView.as_view(), name='artefact-list'),
@@ -21,6 +21,8 @@ urlpatterns = patterns('',
     url(r'^create/alloy/$', login_required(AlloyCreateView.as_view()), name='alloy-create'),
     url(r'^create/technology/$', login_required(TechnologyCreateView.as_view()), name='technology-create'),
     url(r'^create/environment/$', login_required(EnvironmentCreateView.as_view()), name='environment-create'),
+    url(r'^create/microstructure/$', login_required(MicrostructureCreateView.as_view()), name='microstructure-create'),
+    url(r'^create/metal/$', login_required(MetalCreateView.as_view()), name='metal-create'),
 
     url(r'^(?P<artefact_id>\d+)/document/(?P<pk>\d+)/update/$', login_required(DocumentUpdateView.as_view()),
        name='document-update'),

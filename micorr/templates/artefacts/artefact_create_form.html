@@ -260,16 +260,16 @@
                         </div>
                         <div class="row">
                             <div class="c3"><em>Microstructure</em></div>
-                            <div class="c9"><p>{{ form.microstructure }} <span class="glyphicon glyphicon-plus"></span></p> <p><i>{{ form.microstructure.help_text }}</i></p></div>
+                            <div class="c9"><p>{{ form.microstructure }} <a onmouseover="this.style.cursor='pointer'" onclick="window.open('{% url 'artefacts:microstructure-create' %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><span class="glyphicon glyphicon-plus"></span></a></p> <p><i>{{ form.microstructure.help_text }}</i></p></div>
                         </div>
                         <p>{{ sections.6.content|safe }}</p>
                         <div class="row">
                             <div class="c3"><em>Major element(s) (conc. > 1 mass%)</em></div>
-                            <div class="c9"><p>{{ form.metal1 }} <span class="glyphicon glyphicon-plus"></span></p> <p><i>{{ form.metal1.help_text }}</i></p></div>
+                            <div class="c9"><p>{{ form.metal1 }} <a onmouseover="this.style.cursor='pointer'" onclick="window.open('{% url 'artefacts:metal-create' %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><span class="glyphicon glyphicon-plus"></span></a> <p><i>{{ form.metal1.help_text }}</i></p></div>
                         </div>
                         <div class="row">
                             <div class="c3"><em>Minor element(s) (conc. < 1 mass%)</em></div>
-                            <div class="c9"><p>{{ form.metalx }} <span class="glyphicon glyphicon-plus"></span></p> <p><i>{{ form.metalx.help_text }}</i></p></div>
+                            <div class="c9"><p>{{ form.metalx }} <a onmouseover="this.style.cursor='pointer'" onclick="window.open('{% url 'artefacts:metal-create' %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><span class="glyphicon glyphicon-plus"></span></a></p> <p><i>{{ form.metalx.help_text }}</i></p></div>
                         </div>
                     </div>
                     <div class="line lightbox">
