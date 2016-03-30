@@ -265,7 +265,7 @@
                         <p>{{ sections.6.content|safe }}</p>
                         <div class="row">
                             <div class="c3"><em>Major element(s) (conc. > 1 mass%)</em></div>
-                            <div class="c9"><p>{{ form.metal1 }} <a onmouseover="this.style.cursor='pointer'" onclick="window.open('{% url 'artefacts:metal-create' %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><span class="glyphicon glyphicon-plus"></span></a> <p><i>{{ form.metal1.help_text }}</i></p></div>
+                            <div class="c9"><p>{{ form.metal1 }} <a onmouseover="this.style.cursor='pointer'" onclick="window.open('{% url 'artefacts:metal-create' %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><span class="glyphicon glyphicon-plus"></span></a></p> <p><i>{{ form.metal1.help_text }}</i></p></div>
                         </div>
                         <div class="row">
                             <div class="c3"><em>Minor element(s) (conc. < 1 mass%)</em></div>
@@ -312,11 +312,11 @@
                         <p>{{ sections.7.content|safe }}</p>
                         <div class="row">
                             <div class="c3"><em>Corrosion form</em></div>
-                            <div class="c9"><p>{{ form.corrosion_form }} <span class="glyphicon glyphicon-plus"></span></p> <p><i>{{ form.corrosion_form.help_text }}</i></p></div>
+                            <div class="c9"><p>{{ form.corrosion_form }} <a onmouseover="this.style.cursor='pointer'" onclick="window.open('{% url 'artefacts:corrosionform-create' %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><span class="glyphicon glyphicon-plus"></span></a></p> <p><i>{{ form.corrosion_form.help_text }}</i></p></div>
                         </div>
                         <div class="row">
                             <div class="c3"><em>Corrosion type</em></div>
-                            <div class="c9"><p>{{ form.corrosion_type }} <span class="glyphicon glyphicon-plus"></span></p> <p><i>{{ form.corrosion_type.help_text }}</i></p></div>
+                            <div class="c9"><p>{{ form.corrosion_type }} <a onmouseover="this.style.cursor='pointer'" onclick="window.open('{% url 'artefacts:corrosiontype-create' %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><span class="glyphicon glyphicon-plus"></span></a></p> <p><i>{{ form.corrosion_type.help_text }}</i></p></div>
                         </div>
                     </div>
                     <div class="line lightbox">

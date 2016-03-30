@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import TextInput
-from .models import Artefact, Document, Metal, CorrosionForm, Environment, Origin, ChronologyPeriod, Alloy, \
-    Technology, Microstructure
+from .models import Artefact, Document, Metal, CorrosionForm, CorrosionType, Environment, Origin, ChronologyPeriod, \
+    Alloy, Technology, Microstructure
 from cities_light.models import Country
 from tinymce.widgets import TinyMCE
 import django_filters
@@ -108,6 +108,24 @@ class MetalCreateForm(forms.ModelForm):
 
     class Meta:
         model = Metal
+
+
+class CorrosionFormCreateForm(forms.ModelForm):
+    """
+    Create a new corrosion form
+    """
+
+    class Meta:
+        model = CorrosionForm
+
+
+class CorrosionTypeCreateForm(forms.ModelForm):
+    """
+    Create a new corrosion type
+    """
+
+    class Meta:
+        model = CorrosionType
 
 
 class DocumentUpdateForm(forms.ModelForm):
