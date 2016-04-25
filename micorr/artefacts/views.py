@@ -8,9 +8,11 @@ from stratigraphies.ch.neo4jDaoImpl.Neo4JDAO import Neo4jDAO
 #import rdflib
 #from SPARQLWrapper import SPARQLWrapper, JSON
 
-from .models import Artefact, Document, Origin, ChronologyPeriod, Alloy, Technology
+from .models import Artefact, Document, Origin, ChronologyPeriod, Alloy, Technology, Environment, Microstructure, \
+    Metal, CorrosionForm, CorrosionType
 from .forms import ArtefactsUpdateForm, ArtefactsCreateForm, DocumentUpdateForm, DocumentCreateForm, ArtefactFilter,\
-    OriginCreateForm, ChronologyCreateForm, AlloyCreateForm, TechnologyCreateForm
+    OriginCreateForm, ChronologyCreateForm, AlloyCreateForm, TechnologyCreateForm, EnvironmentCreateForm, \
+    MicrostructureCreateForm, MetalCreateForm, CorrosionFormCreateForm, CorrosionTypeCreateForm
 
 """
 def displayOntology(request):
@@ -157,7 +159,6 @@ class ArtefactsCreateView(generic.CreateView):
 class OriginCreateView(generic.CreateView):
     """
     A view which allows the user to create an origin
-    When the chronology is created, it redirects the user to the artefact list
     """
     model = Origin
     template_name_suffix = '_create_form'
@@ -167,7 +168,6 @@ class OriginCreateView(generic.CreateView):
 class ChronologyCreateView(generic.CreateView):
     """
     A view which allows the user to create a chronology
-    When the chronology is created, it redirects the user to the artefact list
     """
     model = ChronologyPeriod
     template_name_suffix = '_create_form'
@@ -177,22 +177,64 @@ class ChronologyCreateView(generic.CreateView):
 class AlloyCreateView(generic.CreateView):
     """
     A view which allows the user to create an alloy
-    When the chronology is created, it redirects the user to the artefact list
     """
     model = Alloy
     template_name_suffix = '_create_form'
     form_class = AlloyCreateForm
-    success_url = reverse_lazy('artefacts:artefact-list')
+
+
+class EnvironmentCreateView(generic.CreateView):
+    """
+    A view which allows the user to create an environment
+    """
+    model = Environment
+    template_name_suffix = '_create_form'
+    form_class = EnvironmentCreateForm
 
 
 class TechnologyCreateView(generic.CreateView):
     """
     A view which allows the user to create a technology
-    When the chronology is created, it redirects the user to the artefact list
     """
     model = Technology
     template_name_suffix = '_create_form'
     form_class = TechnologyCreateForm
+
+
+class MicrostructureCreateView(generic.CreateView):
+    """
+    A view which allows the user to create a microstructure
+    """
+    model = Microstructure
+    template_name_suffix = '_create_form'
+    form_class = MicrostructureCreateForm
+
+
+class MetalCreateView(generic.CreateView):
+    """
+    A view which allows the user to create a metal
+    """
+    model = Metal
+    template_name_suffix = '_create_form'
+    form_class = MetalCreateForm
+
+
+class CorrosionFormCreateView(generic.CreateView):
+    """
+    A view which allows the user to create a corrosion form
+    """
+    model = CorrosionForm
+    template_name_suffix = '_create_form'
+    form_class = CorrosionFormCreateForm
+
+
+class CorrosionTypeCreateView(generic.CreateView):
+    """
+    A view which allows the user to create a corrosion type
+    """
+    model = CorrosionType
+    template_name_suffix = '_create_form'
+    form_class = CorrosionTypeCreateForm
 
 
 class DocumentUpdateView(generic.UpdateView):
@@ -248,19 +290,3 @@ class DocumentCreateView(generic.CreateView):
 
     def get_success_url(self):
         return reverse('artefacts:artefact-detail', kwargs={'pk': self.kwargs.get('artefact_id', None)}, )
-
-
-"""
-class GenericCreateView(generic.CreateView):
-
-    Allows the user to add an instance of an artefact foreign key model when adding an artefact
-
-    template_name = 'foreignkeys_update_form'
-
-    all_models_dict = {
-        "role_list" : Metal.objects.all(),
-        "venue_list": Venue.objects.all(),
-                           #and so on for all the desired models...
-
-    }
-"""

@@ -3,7 +3,8 @@ from django.contrib.auth.decorators import login_required
 
 from .views import ArtefactsListView, ArtefactsDetailView, ArtefactsUpdateView, ArtefactsDeleteView, \
     ArtefactsCreateView, DocumentUpdateView, DocumentDeleteView, DocumentCreateView, \
-    OriginCreateView, ChronologyCreateView, AlloyCreateView, TechnologyCreateView, searchStratigraphy
+    OriginCreateView, ChronologyCreateView, AlloyCreateView, EnvironmentCreateView, TechnologyCreateView, \
+    MicrostructureCreateView, MetalCreateView, CorrosionFormCreateView, CorrosionTypeCreateView, searchStratigraphy
 
 urlpatterns = patterns('',
     url(r'^$', ArtefactsListView.as_view(), name='artefact-list'),
@@ -19,6 +20,11 @@ urlpatterns = patterns('',
     url(r'^create/chronology/$', login_required(ChronologyCreateView.as_view()), name='chronology-create'),
     url(r'^create/alloy/$', login_required(AlloyCreateView.as_view()), name='alloy-create'),
     url(r'^create/technology/$', login_required(TechnologyCreateView.as_view()), name='technology-create'),
+    url(r'^create/environment/$', login_required(EnvironmentCreateView.as_view()), name='environment-create'),
+    url(r'^create/microstructure/$', login_required(MicrostructureCreateView.as_view()), name='microstructure-create'),
+    url(r'^create/metal/$', login_required(MetalCreateView.as_view()), name='metal-create'),
+    url(r'^create/corrosionform/$', login_required(CorrosionFormCreateView.as_view()), name='corrosionform-create'),
+    url(r'^create/corrosiontype/$', login_required(CorrosionTypeCreateView.as_view()), name='corrosiontype-create'),
 
     url(r'^(?P<artefact_id>\d+)/document/(?P<pk>\d+)/update/$', login_required(DocumentUpdateView.as_view()),
        name='document-update'),
