@@ -3,23 +3,30 @@ module.exports = function (grunt) {
     require('load-grunt-tasks')(grunt);
 
     grunt.initConfig({
-        // Other grunt tasks
-        // ...
-
+        
         babel: {
             es6: {
                 files: [
                     {
                         expand: true,
-                        src: ['micorr/stratigraphies/static/micorr/scripts/*.es6'],
-                        ext: '.js'
+			cwd: 'micorr/stratigraphies/static/micorr/scripts/ES2015',
+                        src: '**/*.js',
+                        ext: '.js',
+			dest: 'micorr/stratigraphies/static/micorr/scripts/'	
                     }
                 ]
             }
-        }
+        },
+	watch: {
+      		scripts: {
+        	files: "micorr/stratigraphies/static/micorr/scripts/ES2015/**/*.js",
+        	tasks: ["babel"]
+		}
+      }
     });
 
-    grunt.registerTask("default", ["babel"]);
+    grunt.loadNpmTasks('grunt-contrib-watch');
+    //grunt.registerTask("default", ["babel"]);
 }
 
 

@@ -1,22 +1,22 @@
 (function (global, factory) {
     if (typeof define === "function" && define.amd) {
-        define(['exports', './characteristic'], factory);
+        define(['exports', './strata'], factory);
     } else if (typeof exports !== "undefined") {
-        factory(exports, require('./characteristic'));
+        factory(exports, require('./strata'));
     } else {
         var mod = {
             exports: {}
         };
-        factory(mod.exports, global.characteristic);
-        global.strata = mod.exports;
+        factory(mod.exports, global.strata);
+        global.stratigraphy = mod.exports;
     }
-})(this, function (exports, _characteristic) {
+})(this, function (exports, _strata) {
     'use strict';
 
     Object.defineProperty(exports, "__esModule", {
         value: true
     });
-    exports.Strata = undefined;
+    exports.Stratigraphy = undefined;
 
     function _classCallCheck(instance, Constructor) {
         if (!(instance instanceof Constructor)) {
@@ -42,21 +42,28 @@
         };
     }();
 
-    let Strata = function () {
-        function Strata() {
-            _classCallCheck(this, Strata);
+    let Stratigraphy = function () {
+        function Stratigraphy() {
+            _classCallCheck(this, Stratigraphy);
 
-            this.characteristics = [];
+            //contient toutes les strates de la stratigraphie
+            this.stratas = [];
         }
 
-        _createClass(Strata, [{
-            key: 'addCharacteristic',
-            value: function addCharacteristic(characteristic) {
-                this.characteristics.push(characteristic);
+        /**
+         * Ajoute une strate à la stratigraphie
+         * @param strata La strate à ajouter
+         */
+
+
+        _createClass(Stratigraphy, [{
+            key: 'addStrata',
+            value: function addStrata(strata) {
+                this.stratas.push(strata);
             }
         }, {
-            key: 'removeCharacteristic',
-            value: function removeCharacteristic(uid) {}
+            key: 'removeStrata',
+            value: function removeStrata(uid) {}
         }, {
             key: 'getId',
             value: function getId() {
@@ -77,10 +84,20 @@
             value: function setUid(uid) {
                 this.uid = uid;
             }
+        }, {
+            key: 'getDescription',
+            value: function getDescription() {
+                return this.description;
+            }
+        }, {
+            key: 'setDescription',
+            value: function setDescription(description) {
+                this.description = description;
+            }
         }]);
 
-        return Strata;
+        return Stratigraphy;
     }();
 
-    exports.Strata = Strata;
+    exports.Stratigraphy = Stratigraphy;
 });

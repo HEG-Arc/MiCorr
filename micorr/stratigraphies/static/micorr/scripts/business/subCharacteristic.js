@@ -1,22 +1,17 @@
 (function (global, factory) {
     if (typeof define === "function" && define.amd) {
-        define(['exports', './characteristic'], factory);
+        define([], factory);
     } else if (typeof exports !== "undefined") {
-        factory(exports, require('./characteristic'));
+        factory();
     } else {
         var mod = {
             exports: {}
         };
-        factory(mod.exports, global.characteristic);
-        global.strata = mod.exports;
+        factory();
+        global.subCharacteristic = mod.exports;
     }
-})(this, function (exports, _characteristic) {
-    'use strict';
-
-    Object.defineProperty(exports, "__esModule", {
-        value: true
-    });
-    exports.Strata = undefined;
+})(this, function () {
+    "use strict";
 
     function _classCallCheck(instance, Constructor) {
         if (!(instance instanceof Constructor)) {
@@ -42,45 +37,43 @@
         };
     }();
 
-    let Strata = function () {
-        function Strata() {
-            _classCallCheck(this, Strata);
-
-            this.characteristics = [];
+    let SubCharacteristic = function () {
+        function SubCharacteristic() {
+            _classCallCheck(this, SubCharacteristic);
         }
 
-        _createClass(Strata, [{
-            key: 'addCharacteristic',
-            value: function addCharacteristic(characteristic) {
-                this.characteristics.push(characteristic);
-            }
-        }, {
-            key: 'removeCharacteristic',
-            value: function removeCharacteristic(uid) {}
-        }, {
-            key: 'getId',
+        _createClass(SubCharacteristic, [{
+            key: "getId",
             value: function getId() {
                 return this.id;
             }
         }, {
-            key: 'setId',
+            key: "setId",
             value: function setId(id) {
                 this.id = id;
             }
         }, {
-            key: 'getUid',
+            key: "getUid",
             value: function getUid() {
                 return this.uid;
             }
         }, {
-            key: 'setUid',
+            key: "setUid",
             value: function setUid(uid) {
                 this.uid = uid;
             }
+        }, {
+            key: "getName",
+            value: function getName() {
+                return this.name;
+            }
+        }, {
+            key: "setName",
+            value: function setName(name) {
+                this.name = name;
+            }
         }]);
 
-        return Strata;
+        return SubCharacteristic;
     }();
-
-    exports.Strata = Strata;
 });
