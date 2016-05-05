@@ -6,6 +6,10 @@
 
 class SubCharacteristic{
 
+    constructor(){
+
+    }
+
     getId(){
         return this.id;
     }
@@ -30,3 +34,5 @@ class SubCharacteristic{
         this.name = name;
     }
 }
+
+export{SubCharacteristic};

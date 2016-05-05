@@ -45,19 +45,9 @@
     let Characteristic = function () {
         function Characteristic() {
             _classCallCheck(this, Characteristic);
-
-            this.subCharacteristics = [];
         }
 
         _createClass(Characteristic, [{
-            key: 'addSubCharacteristic',
-            value: function addSubCharacteristic(subCharacteristic) {
-                this.subCharacteristics.push(subCharacteristic);
-            }
-        }, {
-            key: 'removeSubCharacteristic',
-            value: function removeSubCharacteristic(uid) {}
-        }, {
             key: 'getId',
             value: function getId() {
                 return this.id;

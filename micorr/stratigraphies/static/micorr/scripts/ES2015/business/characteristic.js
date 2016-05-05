@@ -8,16 +8,6 @@ import {SubCharacteristic} from './subCharacteristic';
 
 class Characteristic{
     constructor(){
-        this.subCharacteristics = [];
-    }
-
-    addSubCharacteristic(subCharacteristic){
-        this.subCharacteristics.push(subCharacteristic);
-        
-    }
-
-    removeSubCharacteristic(uid){
-
     }
 
     getId(){

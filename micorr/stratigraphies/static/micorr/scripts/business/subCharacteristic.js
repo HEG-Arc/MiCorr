@@ -1,17 +1,21 @@
 (function (global, factory) {
     if (typeof define === "function" && define.amd) {
-        define([], factory);
+        define(["exports"], factory);
     } else if (typeof exports !== "undefined") {
-        factory();
+        factory(exports);
     } else {
         var mod = {
             exports: {}
         };
-        factory();
+        factory(mod.exports);
         global.subCharacteristic = mod.exports;
     }
-})(this, function () {
+})(this, function (exports) {
     "use strict";
+
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
 
     function _classCallCheck(instance, Constructor) {
         if (!(instance instanceof Constructor)) {
@@ -76,4 +80,6 @@
 
         return SubCharacteristic;
     }();
+
+    exports.SubCharacteristic = SubCharacteristic;
 });

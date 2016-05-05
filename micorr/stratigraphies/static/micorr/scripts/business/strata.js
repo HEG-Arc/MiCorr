@@ -1,16 +1,16 @@
 (function (global, factory) {
     if (typeof define === "function" && define.amd) {
-        define(['exports', './characteristic'], factory);
+        define(['exports', './characteristic', './subCharacteristic'], factory);
     } else if (typeof exports !== "undefined") {
-        factory(exports, require('./characteristic'));
+        factory(exports, require('./characteristic'), require('./subCharacteristic'));
     } else {
         var mod = {
             exports: {}
         };
-        factory(mod.exports, global.characteristic);
+        factory(mod.exports, global.characteristic, global.subCharacteristic);
         global.strata = mod.exports;
     }
-})(this, function (exports, _characteristic) {
+})(this, function (exports, _characteristic, _subCharacteristic) {
     'use strict';
 
     Object.defineProperty(exports, "__esModule", {
@@ -47,9 +47,15 @@
             _classCallCheck(this, Strata);
 
             this.characteristics = [];
+            this.subCharacteristics = [];
         }
 
         _createClass(Strata, [{
+            key: 'addSubCharacteristic',
+            value: function addSubCharacteristic(subCharacteristic) {
+                this.subCharacteristics.push(subCharacteristic);
+            }
+        }, {
             key: 'addCharacteristic',
             value: function addCharacteristic(characteristic) {
                 this.characteristics.push(characteristic);
@@ -57,6 +63,19 @@
         }, {
             key: 'removeCharacteristic',
             value: function removeCharacteristic(uid) {}
+        }, {
+            key: 'removeSubCharacteristic',
+            value: function removeSubCharacteristic(uid) {}
+        }, {
+            key: 'getSubCharacteristics',
+            value: function getSubCharacteristics() {
+                return this.subCharacteristics;
+            }
+        }, {
+            key: 'getCharacteristics',
+            value: function getCharacteristics() {
+                return this.characteristics;
+            }
         }, {
             key: 'getId',
             value: function getId() {

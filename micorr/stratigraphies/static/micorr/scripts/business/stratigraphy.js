@@ -94,6 +94,11 @@
             value: function setDescription(description) {
                 this.description = description;
             }
+        }, {
+            key: 'getStratas',
+            value: function getStratas() {
+                return this.stratas;
+            }
         }]);
 
         return Stratigraphy;
