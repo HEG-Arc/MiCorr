@@ -82,6 +82,29 @@ angular.module('micorrApp').factory('MiCorrService', function ($http, $q) {
 });
 
 // Contient les données sur les strates qui seront échangées entre les différents contrôlleurs
+angular.module('micorrApp').factory('StratigraphyData', function StratigraphyDataFactory() {
+    var getStratigraphyData = function() {
+
+        var stratig = null;
+        var test = 'test'
+
+        return {
+            getStratigraphy: function(){
+                if (stratig == null){
+                    stratig = new stratigraphy.Stratigraphy;
+                }
+                return stratig;
+            },
+            getTest: function(){
+                return test;
+            }
+        }
+    };
+    return getStratigraphyData();
+});
+
+
+// Contient les données sur les strates qui seront échangées entre les différents contrôlleurs
 angular.module('micorrApp').factory('StrataData', function StrataDataFactory() {
     var getStrataData = function() {
 

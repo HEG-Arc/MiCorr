@@ -8,7 +8,7 @@
  * Controlleur qui est appelé lors de l'affichage d'une stratographie
  */
 angular.module('micorrApp')
-    .controller('ShowStratCtrl', function ($scope, $routeParams, $timeout, MiCorrService, StrataData, ngProgress) {
+    .controller('ShowStratCtrl', function ($scope, $routeParams, $timeout, MiCorrService, StrataData, StratigraphyData, ngProgress) {
 
         // Variable mise a false à chaque fois qu'on ouvre une stratigraphie
         $scope.askLeave = false;
@@ -117,33 +117,33 @@ angular.module('micorrApp')
             $scope.showsubmmicrostructureFamily = false;
             $scope.showsubmcompositionFamily = false;
 
-            //Quand on accède au détail d'une stratigraphie, la première chose effectuée est le chargement en asynchrone des strates qui constituent cette stratigraphie.
+            //Chargement de la stratigraphie
             MiCorrService.getDetailedStratigraphy($scope.stratigraphyName).success(function (data) {
-                var stratigraphy = new stratigraphy.Stratigraphy();
-                stratigraphy.setDescription($scope.stratigraphyName)
-                //On parse le JSON pour récupérer le contenu
-                var jsonData = JSON.parse(body);
+                var hello = StratigraphyData.getTest();
+                var st = StratigraphyData.getStratigraphy();
+                st.setDescription($scope.stratigraphyName)
+
                 //Boucle sur les strates
-                for (var i = 0; i < jsonData.length; i++) {
-                    var strata = new strata.Strata();
-                    var currentStrata = jsonData[i];
-                    strata.setUid(currentStrata.name);
+                for (var i = 0; i < data.length; i++) {
+                    var str = new strata.Strata();
+                    var currentStrata = data[i];
+                    str.setUid(currentStrata.name);
                     //Boucle sur les characteristiques
                     for (var j = 0; j < currentStrata.characteristics.length; j++) {
                         var currentCharacteristic = currentStrata.characteristics[j];
-                        var characteristic = new characteristic.Characteristic();
-                        characteristic.setName(currentCharacteristic.name);
-                        characteristic.setFamily(currentCharacteristic.family);
-                        strata.addCharacteristic(characteristic);
+                        var char = new characteristic.Characteristic();
+                        char.setName(currentCharacteristic.name);
+                        char.setFamily(currentCharacteristic.family);
+                        str.addCharacteristic(char);
                     }
                     //Boucle sur les sous characteristiques
                     for (var j = 0; j < currentStrata.subcharacteristics.length; j++) {
                         var currentSubCharacteristic = currentStrata.subcharacteristics[j];
-                        var subCharacteristic = new subCharacteristic.SubCharacteristic();
-                        subCharacteristic.setName(currentSubCharacteristic.name);
-                        strata.addSubCharacteristic(subCharacteristic);
+                        var subChar = new subCharacteristic.SubCharacteristic();
+                        subChar.setName(currentSubCharacteristic.name);
+                        str.addSubCharacteristic(subChar);
                     }
-                    stratigraphy.addStrata(strata);
+                    st.addStrata(str);
                 }
             }).success(function () {
                 $scope.$broadcast('initShowStrat');
