@@ -12,6 +12,22 @@ class Strata {
         this.subCharacteristics = [];
     }
 
+
+    /**
+     * Retourne les characteristiques correspondant à la famille donnée en paramètre
+     * @param family la famille recherchée
+     * @returns les characteristiques correspondante
+     */
+    getCharacteristicsByFamily(family){
+        var charact = [];
+        for(var i = 0; i<  this.characteristics.length; i++){
+            if(this.characteristics[i].getFamily()==family){
+                charact.push(this.characteristics[i]);
+            }
+        }
+        return charact;
+    }
+
     addSubCharacteristic(subCharacteristic){
         this.subCharacteristics.push(subCharacteristic);
     }

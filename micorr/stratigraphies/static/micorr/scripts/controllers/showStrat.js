@@ -119,7 +119,7 @@ angular.module('micorrApp')
 
             //Chargement de la stratigraphie
             MiCorrService.getDetailedStratigraphy($scope.stratigraphyName).success(function (data) {
-                var hello = StratigraphyData.getTest();
+
                 var st = StratigraphyData.getStratigraphy();
                 st.setDescription($scope.stratigraphyName)
 
@@ -144,9 +144,12 @@ angular.module('micorrApp')
                         str.addSubCharacteristic(subChar);
                     }
                     st.addStrata(str);
+
                 }
+                $scope.stratas = st.getStratas();
             }).success(function () {
                 $scope.$broadcast('initShowStrat');
+                ngProgress.complete();
             });
         };
 
@@ -281,16 +284,9 @@ angular.module('micorrApp')
          * Mise à jour du dessin lors d'un évenement provenant d'un enfant
          */
         $scope.$on('updateDraw', function () {
-            $timeout(function () { // on attend que tous les $apply() soient finis
-                /*On force ici la mise à jour des dessins qui sont dans une liste qui sont affichés avec une directive
-                 * rstratas contient une liste d'instance de stratigraphies
-                 * Si on met à jour une propriété dans notre service, le watch ne verra rien et rien ne sera mis à jour
-                 * SI on veut forcer une mise à jour il faut supprimer la référence vers le service qui contient les strates
-                 * forcer une mise à jour avec $apply()
-                 * récupérer la référence vers les strates du service et enfin refaire une mise à jour avec $apply()*/
-                $scope.rstratas = new Array();
+            $timeout(function () {
                 $scope.$apply();
-                $scope.rstratas = StrataData.getStratas();
+                $scope.stratas = StratigraphyData.getStratigraphy().getStratas();
                 $scope.$apply();
             });
         });
@@ -306,11 +302,12 @@ angular.module('micorrApp')
             $scope.askLeave = false;
         });
 
+        /*
         $scope.ratio = new Ratio(3);
 
         $scope.ratioChange = function () {
             //mise à jour du dessin
             $scope.$emit('updateDraw');
-        }
+        }*/
     });
 

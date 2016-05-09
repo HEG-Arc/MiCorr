@@ -6,11 +6,22 @@
  * Contient les 3 directives qui sont utilisées dans MiCorrApp
  */
 
-/* Cette directive représente le dessin de la stratigraphie
+/* Cette directive représente le dessin de chaque strate
+ * elle est composée de trois div. la première est la globale. cette div possède deux div
+ * la première qui est embarquée est la div d'interface
+ * la seconde est la div de strate
+ * Dans chaque div, un <svg></svg> est créé grâce à raphaeljs
+ * chaque svg est affiché à l'écrean
  */
-angular.module('micorrApp').directive('stratigraphy', function($compile, StrataData){
+angular.module('micorrApp').directive('strata', function($compile, StratigraphyData){
     return {
-        drawStratigraphy : function(){
+        restrict : 'EA',
+        replace : true,
+        transclude : true,
+        template : '<div class="svgcanvas col-md-11 text-center"><div></div><div title="We ask for your age only for statistical purposes."></div></div>',
+        link : function(scope, element, attrs) {
+            var stratigraphy = StratigraphyData.getStratigraphy();
+            var strata = stratigraphy.getStratas()[attrs.index];
 
         }
     };

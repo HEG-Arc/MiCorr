@@ -50,7 +50,25 @@
             this.subCharacteristics = [];
         }
 
+        /**
+         * Retourne les characteristiques correspondant à la famille donnée en paramètre
+         * @param family la famille recherchée
+         * @returns les characteristiques correspondante
+         */
+
+
         _createClass(Strata, [{
+            key: 'getCharacteristicsByFamily',
+            value: function getCharacteristicsByFamily(family) {
+                var charact = [];
+                for (var i = 0; i < this.characteristics.length; i++) {
+                    if (this.characteristics[i].getFamily() == family) {
+                        charact.push(this.characteristics[i]);
+                    }
+                }
+                return charact;
+            }
+        }, {
             key: 'addSubCharacteristic',
             value: function addSubCharacteristic(subCharacteristic) {
                 this.subCharacteristics.push(subCharacteristic);
