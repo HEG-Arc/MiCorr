@@ -133,6 +133,7 @@ angular.module('micorrApp')
                         var currentCharacteristic = currentStrata.characteristics[j];
                         var char = new characteristic.Characteristic();
                         char.setName(currentCharacteristic.name);
+                        char.setRealName(currentCharacteristic.real_name);
                         char.setFamily(currentCharacteristic.family);
                         str.addCharacteristic(char);
                     }

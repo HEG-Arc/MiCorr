@@ -7,21 +7,25 @@
  */
 
 /* Cette directive représente le dessin de chaque strate
- * elle est composée de trois div. la première est la globale. cette div possède deux div
- * la première qui est embarquée est la div d'interface
- * la seconde est la div de strate
- * Dans chaque div, un <svg></svg> est créé grâce à raphaeljs
- * chaque svg est affiché à l'écrean
  */
 angular.module('micorrApp').directive('strata', function($compile, StratigraphyData){
     return {
         restrict : 'EA',
         replace : true,
         transclude : true,
-        template : '<div class="svgcanvas col-md-11 text-center"><div></div><div title="We ask for your age only for statistical purposes."></div></div>',
+        template : '<div class="svgcanvas col-md-11 text-center"><div></div><div></div></div>',
         link : function(scope, element, attrs) {
-            var stratigraphy = StratigraphyData.getStratigraphy();
-            var strata = stratigraphy.getStratas()[attrs.index];
+            var index = attrs.index;
+
+            var st = StratigraphyData.getStratigraphy();
+            var str = st.getStratas()[index];
+            var interfaceDiv = element.context.childNodes[0];
+            var strataDiv = element.context.childNodes[1];
+            strataDiv.id = "strata"+index;
+            var strUid = str.getUid();
+
+            var graphGenUtil = new graphGenerationUtil.GraphGenerationUtil(null, strataDiv.id);
+            graphGenUtil.drawStrata(str);
 
         }
     };

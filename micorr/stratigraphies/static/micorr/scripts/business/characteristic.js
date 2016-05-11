@@ -98,6 +98,16 @@
                 this.name = name;
             }
         }, {
+            key: 'getRealName',
+            value: function getRealName() {
+                return this.realName;
+            }
+        }, {
+            key: 'setRealName',
+            value: function setRealName(realName) {
+                this.realName = realName;
+            }
+        }, {
             key: 'getFamily',
             value: function getFamily() {
                 return this.family;
