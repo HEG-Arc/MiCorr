@@ -156,7 +156,7 @@ function getRandomInt(min, max) {
  *         nbCol : nombre de craquelures verticales
  * €returns
  */
-function drawCracking(paper, width, height, nbLines, nbCol) {
+function drawCracking(draw, width, height, nbLines, nbCol) {
     var nb_hoph = 8; // nombre de courbes de béziers horizontales
     var nb_hopv = 5; // nombre de courbes de béziers verticales
     var y = height / (nbLines+1);
@@ -167,7 +167,9 @@ function drawCracking(paper, width, height, nbLines, nbCol) {
         for (var i = 0; i < nb_hoph; i++){
             var x_delta_hop = x + t_hoph / 2 + getRandomInt(-30 , 30);
             var y_delta_hop = y + getRandomInt(-30 , 30);
-            paper.path(['M', x, y, 'Q', x_delta_hop, y_delta_hop, x + t_hoph, y]).attr("stroke-width", 2);
+            var path = draw.path('M' + ' '+ x + ' '+ y + ' Q ' + x_delta_hop + ' ' + y_delta_hop +' '+ (x + t_hoph) +' ' +y).fill('none');
+            path.stroke({ color: 'black', width: 2 })
+
             x += t_hoph;
         }
         y += height / (nbLines + 1);
@@ -181,7 +183,8 @@ function drawCracking(paper, width, height, nbLines, nbCol) {
         for (var i = 0; i < nb_hopv; i++){
             var x_delta_hop = x + getRandomInt(-30 , 30);//t_hoph / 2 + getRandomInt(-30 , 30);
             var y_delta_hop = y + t_hop_v / 2 + getRandomInt(-30 , 30);
-            paper.path(['M', x, y, 'Q', x_delta_hop, y_delta_hop, x , y + t_hop_v]).attr("stroke-width", 2);
+            var path = draw.path('M' + ' '+ x + ' '+ y + ' Q' + ' ' + x_delta_hop +' '+ y_delta_hop +' '+ x + ' ' + (y + t_hop_v)).fill('none');
+            path.stroke({ color: 'black', width: 2 })
             y += t_hop_v;
         }
         x += width / (nbCol + 1)
@@ -334,8 +337,8 @@ function drawInterface(paper, index, width, height, type, nb_hop, bottomBackgrou
  *         height : hauteur
  * €returns
  */
-function drawalternatingBands(paper, nb_hop, nb_lines, width, height) {
-    var rect = paper.rect(0, 0, width, height).attr("stroke-width", 0);
+function drawalternatingBands(draw, nb_hop, nb_lines, width, height) {
+    var rect = draw.rect(0, 0, width, height).attr("stroke-width", 0);
 
     var y = height / nb_lines;
 
@@ -363,7 +366,14 @@ function drawalternatingBands(paper, nb_hop, nb_lines, width, height) {
             x += h_hop;
         }
         y += height / nb_lines;
-        paper.path(t).attr("stroke", "grey");;
+
+        var pathString = '';
+        for(var i = 0; i < t.length; i++){
+            pathString = pathString + t[i] + ' ';
+        }
+
+        var path = draw.path(pathString).fill('none');
+        path.stroke({ color: 'grey', width: 1 })
     }
 }
 

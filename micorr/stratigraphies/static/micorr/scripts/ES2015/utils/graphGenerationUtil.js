@@ -35,6 +35,10 @@ class GraphGenerationUtil {
             color = strata.getCharacteristicsByFamily('colourFamily')[0].getRealName();
         }
 
+        if (color == 'black'){
+            color = '#34282C';
+        }
+
 
         var draw = SVG(this.divID).size(width, height);
         var rect = draw.rect(width, height).attr({ fill: color });
@@ -77,7 +81,7 @@ class GraphGenerationUtil {
                     break;
 
                 case "alternatingBandsCharacteristic":
-                    //TODO: Courbe de Beziers
+                    drawalternatingBands(draw, 6, 10, width, height);
                     break;
 
                 case "cristallineMicrostructureCharacteristic":
@@ -97,46 +101,33 @@ class GraphGenerationUtil {
 
 
         //subcprimicrostructure
-        //TODO: Sous characteristique
-        /*
-         if (strata.getCharacteristicsByFamily('subcprimicrostructureFamily').length > 0) {
-         for (var i = 0; i < strata.getCharacteristicsByFamily('subcprimicrostructureFamily'); i++) {
-         var char = strata.getCharacteristicsByFamily('subcprimicrostructureFamily')[i].getName();
-         if (char == "eutecticPhaseNoMicrostructureCpri" ||
-         char == "eutecticPhaseCristallineMicrostructureCpri" ||
-         char == "eutecticPhaseIsolatedAggregateMicrostructureCpri" ||
-         char == "eutecticPhaseScatteredAggregateMicrostructureCpri" ||
-         char == "eutecticPhaseAlternatingBandsCpri" ||
-         char == "eutecticPhaseHexagonalNetworkCpri" ||
-         char == "eutecticPhasePseudomorphOfDendriticCpri" ||
-         char == "eutecticPhasePseudomorphOfGranularCpri") {
-         //TODO: PoissonDisk
-         }
-         else if (char == "twinLinesNoMicrostructureCpri" ||
-         char == "twinLinesCristallineMicrostructureCpri" ||
-         char == "twinLinesIsolatedAggregateMicrostructureCpri" ||
-         char == "twinLinesScatteredAggregateMicrostructureCpri" ||
-         char == "twinLinesAlternatingBandsCpri" ||
-         char == "twinLinesHexagonalNetworkCpri" ||
-         char == "twinLinesPseudomorphOfDendriticCpri" ||
-         char == "twinLinesPseudomorphOfGranularCpri") {
-         var image = draw.image("../static/micorr/images/c/macles/Macles_" + height + "x" + width + ".png");
-         image.size(width, height)
-         }
-         else if (char == "inclusionsNoMicrostructureCpri" ||
-         char == "inclusionsCristallineMicrostructureCpri" ||
-         char == "inclusionsIsolatedAggregateMicrostructureCpri" ||
-         char == "inclusionsScatteredAggregateMicrostructureCpri" ||
-         char == "inclusionsAlternatingBandsCpri" ||
-         char == "inclusionsHexagonalNetworkCpri" ||
-         char == "inclusionsPseudomorphOfDendriticCpri" ||
-         char == "inclusionsPseudomorphOfGranularCpri") {
-         var image = draw.image("../static/micorr/images/c/inclusion/Inclusions_" + height + "x" + width + ".png");
-         image.size(width, height)
-         }
-         }
-         }
-         */
+        if (strata.isSubCharacteristic('eutecticPhaseNoMicrostructureCpri') || strata.isSubCharacteristic('eutecticPhaseCristallineMicrostructureCpri') ||
+            strata.isSubCharacteristic('eutecticPhaseIsolatedAggregateMicrostructureCpri') || strata.isSubCharacteristic('eutecticPhaseScatteredAggregateMicrostructureCpri') ||
+            strata.isSubCharacteristic('eutecticPhaseAlternatingBandsCpri') || strata.isSubCharacteristic('eutecticPhaseHexagonalNetworkCpri') ||
+            strata.isSubCharacteristic('eutecticPhasePseudomorphOfDendriticCpri') || strata.isSubCharacteristic('eutecticPhasePseudomorphOfGranularCpri')) {
+
+            poisson.push({'min': 40, 'max': 60, 'img': 'eutetic1', 'imgw': 80, 'imgh': 83});
+            poisson.push({'min': 30, 'max': 50, 'img': 'eutetic2', 'imgw': 57, 'imgh': 60});
+            poisson.push({'min': 36, 'max': 45, 'img': 'eutetic3', 'imgw': 71, 'imgh': 44});
+        }
+        if (strata.isSubCharacteristic('twinLinesNoMicrostructureCpri') || strata.isSubCharacteristic('twinLinesCristallineMicrostructureCpri') ||
+            strata.isSubCharacteristic('twinLinesIsolatedAggregateMicrostructureCpri') || strata.isSubCharacteristic('twinLinesScatteredAggregateMicrostructureCpri') ||
+            strata.isSubCharacteristic('twinLinesAlternatingBandsCpri') || strata.isSubCharacteristic('twinLinesHexagonalNetworkCpri') ||
+            strata.isSubCharacteristic('twinLinesPseudomorphOfDendriticCpri') || strata.isSubCharacteristic('twinLinesPseudomorphOfGranularCpri')) {
+
+            var image = draw.image("../static/micorr/images/c/macles/Macles_" + height + "x" + width + ".png");
+            image.size(width, height);
+        }
+        if (strata.isSubCharacteristic('inclusionsNoMicrostructureCpri') || strata.isSubCharacteristic('inclusionsCristallineMicrostructureCpri') ||
+            strata.isSubCharacteristic('inclusionsIsolatedAggregateMicrostructureCpri') || strata.isSubCharacteristic('inclusionsScatteredAggregateMicrostructureCpri') ||
+            strata.isSubCharacteristic('inclusionsAlternatingBandsCpri') || strata.isSubCharacteristic('inclusionsHexagonalNetworkCpri') ||
+            strata.isSubCharacteristic('inclusionsPseudomorphOfDendriticCpri') || strata.isSubCharacteristic('inclusionsPseudomorphOfGranularCpri')) {
+
+            var image = draw.image("../static/micorr/images/c/inclusion/Inclusions_" + height + "x" + width + ".png");
+            image.size(width, height);
+        }
+
+
         //MmicrostructureFamily
         if (strata.getCharacteristicsByFamily('mMicrostructureFamily').length > 0) {
             var char = strata.getCharacteristicsByFamily('mMicrostructureFamily')[0].getName();
@@ -152,50 +143,38 @@ class GraphGenerationUtil {
             }
         }
 
-        /*
-         //SubmMicrostructureFamily
-         //TODO: Sous-characteristique
-         if (strata.getCharacteristicsByFamily('submMicrostructureFamily').length > 0) {
-         for (var i = 0; i < strata.getCharacteristicsByFamily('submMicrostructureFamily'); i++) {
-         var char = strata.getCharacteristicsByFamily('submMicrostructureFamily')[i].getName();
-         if (char == "eutecticPhaseDendritic" ||
-         char == "eutecticPhaseGrainElongated" ||
-         char == "eutecticPhaseGrainLarge" ||
-         char == "eutecticPhaseGrainSmall") {
-         //TODO: PoissonDisk
-         }
-         else if (char == "twinLinesDendritic" ||
-         char == "twinLinesGrainElongated" ||
-         char == "twinLinesGrainLarge" ||
-         char == "twinLinesGrainSmall") {
-         var image = draw.image("../static/micorr/images/c/macles/Macles_" + height + "x" + width + ".png");
-         image.size(width, height);
-         }
 
-         else if (char == "inclusionsDendritic" ||
-         char == "inclusionsGrainElongated" ||
-         char == "inclusionsGrainLarge" ||
-         char == "inclusionsGrainSmall") {
-         var image = draw.image("../static/micorr/images/c/inclusion/Inclusions_" + height + "x" + width + ".png");
-         image.size(width, height);
-         }
-         }
-         }
-         */
+        //SubmMicrostructure
+        if (strata.isSubCharacteristic('eutecticPhaseDendritic') || strata.isSubCharacteristic('eutecticPhaseGrainElongated') ||
+            strata.isSubCharacteristic('eutecticPhaseGrainLarge') || strata.isSubCharacteristic('eutecticPhaseGrainSmall')) {
+            poisson.push({'min': 40, 'max': 60, 'img': 'eutetic1', 'imgw': 80, 'imgh': 83});
+            poisson.push({'min': 30, 'max': 50, 'img': 'eutetic2', 'imgw': 57, 'imgh': 60});
+            poisson.push({'min': 36, 'max': 45, 'img': 'eutetic3', 'imgw': 71, 'imgh': 44});
+        }
+        if (strata.isSubCharacteristic('twinLinesDendritic') || strata.isSubCharacteristic('twinLinesGrainElongated') ||
+            strata.isSubCharacteristic('twinLinesGrainLarge') || strata.isSubCharacteristic('twinLinesGrainSmall')) {
+            var image = draw.image("../static/micorr/images/c/macles/Macles_" + height + "x" + width + ".png");
+            image.size(width, height);
+        }
+        if (strata.isSubCharacteristic('inclusionsDendritic') || strata.isSubCharacteristic('inclusionsGrainElongated') ||
+            strata.isSubCharacteristic('inclusionsGrainLarge') || strata.isSubCharacteristic('inclusionsGrainSmall')) {
+            var image = draw.image("../static/micorr/images/c/inclusion/Inclusions_" + height + "x" + width + ".png");
+            image.size(width, height);
+        }
 
         if (strata.getCharacteristicsByFamily('crackingFamily').length > 0) {
             var char = strata.getCharacteristicsByFamily('crackingFamily')[0].getName();
             switch (char) {
                 case "simpleCracksCharacteristic" :
-                    //TODO: Courbe de beziers
+                    drawCracking(draw, width, height, 1, 0);
                     break;
 
                 case "branchedCracksCharacteristic" :
-                    //TODO: Courbe de beziers
+                    drawCracking(draw, width, height, 1, 1);
                     break;
 
                 case "networkCracksCharacteristic" :
-                    //TODO: Courbe de beziers
+                    drawCracking(draw, width, height, 2, 5);
                     break;
             }
         }

@@ -7,7 +7,7 @@ import {Characteristic} from './characteristic';
 import {SubCharacteristic} from './subCharacteristic';
 
 class Strata {
-    constructor(){
+    constructor() {
         this.characteristics = [];
         this.subCharacteristics = [];
     }
@@ -18,53 +18,71 @@ class Strata {
      * @param family la famille recherchée
      * @returns les characteristiques correspondante
      */
-    getCharacteristicsByFamily(family){
+        getCharacteristicsByFamily(family) {
         var charact = [];
-        for(var i = 0; i<  this.characteristics.length; i++){
-            if(this.characteristics[i].getFamily()==family){
+        for (var i = 0; i < this.characteristics.length; i++) {
+            if (this.characteristics[i].getFamily() == family) {
                 charact.push(this.characteristics[i]);
             }
         }
         return charact;
     }
 
-    addSubCharacteristic(subCharacteristic){
+
+    /**
+     * Cette méthoe indique si une sous-caracterisitique existe dans une strate.
+     * @param le nom de la sous caracteristique à vérifier
+     * @returns boolean indiquant si la sous-caracteristique existe
+     */
+    isSubCharacteristic(name) {
+        var exists = false;
+        var i = 0;
+        while (exists == false && i < this.subCharacteristics.length) {
+            if (this.subCharacteristics[i].getName() == name) {
+                exists = true;
+            }
+            i++;
+        }
+        return exists;
+    }
+
+    addSubCharacteristic(subCharacteristic) {
         this.subCharacteristics.push(subCharacteristic);
     }
 
-    addCharacteristic(characteristic){
+    addCharacteristic(characteristic) {
         this.characteristics.push(characteristic);
     }
 
-    removeCharacteristic(uid){
+    removeCharacteristic(uid) {
 
     }
 
-    removeSubCharacteristic(uid){
+    removeSubCharacteristic(uid) {
 
     }
 
-    getSubCharacteristics(){
+    getSubCharacteristics() {
         return this.subCharacteristics;
     }
 
-    getCharacteristics(){
+    getCharacteristics() {
         return this.characteristics;
     }
 
-    getId(){
+    getId() {
         return this.id;
     }
 
-    setId(id){
+    setId(id) {
         this.id = id;
     }
 
-    getUid(){
+    getUid() {
         return this.uid;
     }
 
-    setUid(uid){
+    setUid(uid) {
         this.uid = uid;
     }
 

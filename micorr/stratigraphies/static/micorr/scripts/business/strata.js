@@ -69,6 +69,19 @@
                 return charact;
             }
         }, {
+            key: 'isSubCharacteristic',
+            value: function isSubCharacteristic(name) {
+                var exists = false;
+                var i = 0;
+                while (exists == false && i < this.subCharacteristics.length) {
+                    if (this.subCharacteristics[i].getName() == name) {
+                        exists = true;
+                    }
+                    i++;
+                }
+                return exists;
+            }
+        }, {
             key: 'addSubCharacteristic',
             value: function addSubCharacteristic(subCharacteristic) {
                 this.subCharacteristics.push(subCharacteristic);
