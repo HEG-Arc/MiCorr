@@ -73,7 +73,7 @@ class GraphGenerationUtil {
 
         var profile = '';
         if (strata.getCharacteristicsByFamily('interfaceProfileFamily').length > 0) {
-            transition = strata.getCharacteristicsByFamily('interfaceProfileFamily')[0].getName();
+            profile = strata.getCharacteristicsByFamily('interfaceProfileFamily')[0].getName();
         }
 
         var upperRect = draw.rect(interfaceWidth, interfaceHeight).attr({ fill: upperInterfaceColor });
@@ -83,7 +83,6 @@ class GraphGenerationUtil {
         //Si elle est droite on dessine simplement deux rectangles
 
         if (profile == 'straightCharacteristic') {
-            var sPath = "M0 " + (interfaceHeight / 2) + "L" + interfaceWidth + " " + interfaceHeight / 2;
             window.alert(lowerInterfaceColor);
             window.alert(upperInterfaceColor);
             var upperRect = draw.rect(interfaceWidth, interfaceHeight).attr({ fill: upperInterfaceColor });
@@ -96,6 +95,22 @@ class GraphGenerationUtil {
             var divisionPath = draw.path("M0 " + (interfaceHeight / 2) + "L" + interfaceWidth + " " + (interfaceHeight / 2)).fill('none');
             divisionPath.stroke({ color: 'black', width: divisionLineWidth });
         }
+        else if (profile == 'wavyCharacteristic'){
+            drawInterface(draw, index, interfaceWidth, interfaceHeight, 'wavy', 8, lowerInterfaceColor, upperInterfaceColor, borderWidth, divisionLineWidth, diffuse, transition);
+        }
+        else if(profile == 'bumpyCharacteristic'){
+            drawInterface(draw, index, interfaceWidth, interfaceHeight, 'bumpy', 20, lowerInterfaceColor, upperInterfaceColor, borderWidth, divisionLineWidth, diffuse, transition);
+        }
+        else if(profile == 'irregularCharacteristic'){
+             drawInterface(draw, index, interfaceWidth, interfaceHeight, 'irregular', 30, lowerInterfaceColor, upperInterfaceColor, borderWidth, divisionLineWidth, diffuse, transition);
+        }
+        else{
+            //Si il n'y a aucune transition on a pas besoin d'interface
+            interfaceDiv.style.height = '0px';
+        }
+
+        //Si l'interface n'est pas droite on la dessine avec la méthode de dessin de l'interface
+
 
 
     }
