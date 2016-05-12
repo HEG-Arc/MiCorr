@@ -117,6 +117,16 @@
             value: function setFamily(family) {
                 this.family = family;
             }
+        }, {
+            key: 'isInterface',
+            value: function isInterface() {
+                return this.int;
+            }
+        }, {
+            key: 'setInterface',
+            value: function setInterface(int) {
+                this.int = int;
+            }
         }]);
 
         return Characteristic;

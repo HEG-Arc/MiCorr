@@ -58,6 +58,7 @@ class Stratigraphy {
         return this.stratas;
     }
 
+
 }
 
 export{Stratigraphy};

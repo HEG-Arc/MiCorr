@@ -22,10 +22,13 @@ angular.module('micorrApp').directive('strata', function($compile, StratigraphyD
             var interfaceDiv = element.context.childNodes[0];
             var strataDiv = element.context.childNodes[1];
             strataDiv.id = "strata"+index;
-            var strUid = str.getUid();
+            interfaceDiv.id = "strataInterface"+index;
 
-            var graphGenUtil = new graphGenerationUtil.GraphGenerationUtil(null, strataDiv.id);
-            graphGenUtil.drawStrata(str);
+            var graphGenUtil = new graphGenerationUtil.GraphGenerationUtil(null, st);
+
+            //Dessin de l'interface et de la strate
+            graphGenUtil.drawInterface(str, interfaceDiv.id);
+            graphGenUtil.drawStrata(str, strataDiv.id);
 
         }
     };

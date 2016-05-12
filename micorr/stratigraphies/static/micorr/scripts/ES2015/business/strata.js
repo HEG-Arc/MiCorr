@@ -86,6 +86,14 @@ class Strata {
         this.uid = uid;
     }
 
+    getIndex(){
+        return this.index;
+    }
+
+    setIndex(index){
+        this.index = index;
+    }
+
 }
 
 export{Strata};

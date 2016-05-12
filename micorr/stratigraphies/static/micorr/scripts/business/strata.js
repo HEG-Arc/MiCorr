@@ -127,6 +127,16 @@
             value: function setUid(uid) {
                 this.uid = uid;
             }
+        }, {
+            key: 'getIndex',
+            value: function getIndex() {
+                return this.index;
+            }
+        }, {
+            key: 'setIndex',
+            value: function setIndex(index) {
+                this.index = index;
+            }
         }]);
 
         return Strata;

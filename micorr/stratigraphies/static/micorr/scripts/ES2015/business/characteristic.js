@@ -65,7 +65,12 @@ class Characteristic{
     setFamily(family){
         this.family = family;
     }
-
+    isInterface(){
+        return this.int;
+    }
+    setInterface(int){
+        this.int = int;
+    }
 
 }
 

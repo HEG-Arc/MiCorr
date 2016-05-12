@@ -128,7 +128,8 @@ angular.module('micorrApp')
                     var str = new strata.Strata();
                     var currentStrata = data[i];
                     str.setUid(currentStrata.name);
-                    //Boucle sur les characteristiques
+                    str.setIndex(i);
+                    //Boucle sur les caracteristiques
                     for (var j = 0; j < currentStrata.characteristics.length; j++) {
                         var currentCharacteristic = currentStrata.characteristics[j];
                         var char = new characteristic.Characteristic();
@@ -137,15 +138,23 @@ angular.module('micorrApp')
                         char.setFamily(currentCharacteristic.family);
                         str.addCharacteristic(char);
                     }
-                    //Boucle sur les sous characteristiques
+                    //Boucle sur les sous caracteristiques
                     for (var j = 0; j < currentStrata.subcharacteristics.length; j++) {
                         var currentSubCharacteristic = currentStrata.subcharacteristics[j];
                         var subChar = new subCharacteristic.SubCharacteristic();
                         subChar.setName(currentSubCharacteristic.name);
                         str.addSubCharacteristic(subChar);
                     }
+                    //Boucle sur les caracteristiques d'interface
+                    for(var j= 0; j <currentStrata.interfaces.characteristics.length; j++){
+                        var currentCharacteristic = currentStrata.interfaces.characteristics[j];
+                        var char = new characteristic.Characteristic();
+                        char.setName(currentCharacteristic.name);
+                        char.setFamily(currentCharacteristic.family);
+                        char.setInterface(true);
+                        str.addCharacteristic(char);
+                    }
                     st.addStrata(str);
-
                 }
                 $scope.stratas = st.getStratas();
             }).success(function () {
