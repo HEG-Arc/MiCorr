@@ -86,7 +86,8 @@ angular.module('micorrApp').factory('StratigraphyData', function StratigraphyDat
     var getStratigraphyData = function() {
 
         var stratig = null;
-        var test = 'test'
+        var selectedStrata = 0;
+
 
         return {
             getStratigraphy: function(){
@@ -95,8 +96,11 @@ angular.module('micorrApp').factory('StratigraphyData', function StratigraphyDat
                 }
                 return stratig;
             },
-            getTest: function(){
-                return test;
+            getSelectedStrata: function(){
+                return this.selectedStrata();
+            },
+            setSelectedStrata: function(index){
+                this.selectedStrata = index;
             }
         }
     };

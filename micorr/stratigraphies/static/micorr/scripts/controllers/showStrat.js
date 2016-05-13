@@ -189,11 +189,21 @@ angular.module('micorrApp')
          * @returns
          */
         $scope.update = function (index) {
+            var stratig = StratigraphyData.getStratigraphy();
+            var strat = stratig.getStratas()[index];
             $scope.showTabForms = true; //Affichage de formulaire
-            StrataData.setSelectedStrata(index); // on set dans le service quelle est la strate sélectionnée
+            StratigraphyData.setSelectedStrata(index); // On indique au service la strate sélectionnée
+
+            $scope.hideShowForms(strat); //TODO: réimplémenter hideShowForms
+            $scope.strataName = strat.getUid();
+            $scope.natureFamilyname = strat.getCharacteristicByFamily('natureFamily')[0].getName();
+
+            /* Actuellement entrain d'être réimplémenté
             $scope.hideShowForms(StrataData.getStratas()[index]);   // On affiche/masque les champs en fonction de la nature de la strate
             $scope.strataName = StrataData.getStratas()[index].getName();   // On affiche le nom de la strate
             $scope.natureFamilyname = StrataData.getStratas()[index].getNatureFamily(); // On affiche la nature de la strate
+            */
+
 
             // Dans notre formulaire on a des onglets
             // chaque onglet a un controlleur
@@ -220,7 +230,7 @@ angular.module('micorrApp')
          * affiche/masque des champs en fonction de la strate
          * @params strata : strate sélectionnée
          */
-        $scope.hideShowForms = function (strata) {
+        $scope.hideShowForms = function (strata) { //TODO: Réimplémenter avec la nouvelle classe business Strata
 
             $scope.showWidth = strata.findDependency('widthFamily');
             $scope.showThickness = strata.findDependency('thicknessFamily');

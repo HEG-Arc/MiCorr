@@ -322,21 +322,19 @@ function drawInterface(draw, index, width, height, type, nb_hop, bottomBackgroun
         }
     var path1 = draw.path(lineString).fill('none');
     var path2 = draw.path(tString).fill(bottomBackgroundColor);
-    path1.stroke({ color: strokeColor, width: 8 })
+    path1.stroke({ color: strokeColor, width: 5 })
     path2.stroke({ color: bottomBackgroundColor, width:1 })
     // Si c'est la première interface alros la bordure extérieure commence au milieu
     var startHeight = 0;
     if (index == 0) {
         startHeight = height / 2;
     }
-    /*BEFORE
-    paper.path("M0 " + startHeight + "L0 " + height).attr("stroke-width", borderWidth);
-    paper.path("M" + width + " " + startHeight + "L" + width + " " + height).attr("stroke-width", borderWidth);
-    */
-    var borderPath = draw.path("M0 " + startHeight + "L0 " + height).fill('none');
-    borderPath.stroke({ color: 'black', width: borderWidth });
-    var divisionPath = draw.path("M" + width + " " + startHeight + "L" + width + " " + height).fill('none');
-    divisionPath.stroke({ color: 'black', width: borderWidth });
+
+    var leftBorder = draw.path("M0 " + startHeight + "L0 " + height).fill('none');
+    leftBorder.stroke({ color: 'black', width: borderWidth });
+
+    var rightBorder = draw.path("M" + width + " " + startHeight + "L" + width + " " + height).fill('none');
+    rightBorder.stroke({ color: 'black', width: borderWidth });
 
     if (transition == "semiGradualSuperiorCharacteristic" || transition == "gradualCharacteristic") {
         var heightBottom = height / 2 - bubbleTransitionSize;
@@ -348,8 +346,6 @@ function drawInterface(draw, index, width, height, type, nb_hop, bottomBackgroun
             point.x(pds.pointList[i].x);
             point.y(pds.pointList[i].y);
             point.fill(topBackgroundColor);
-           // BEFORE: paper.circle(pds.pointList[i].x, pds.po;intList[i].y + (height / 2), bubbleTransitionSize).attr("fill", topBackgroundColor);
-            //console.log("X " +  pds.pointList[i].x + " Y + " + pds.pointList[i].y);
         }
     }
 

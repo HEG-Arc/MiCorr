@@ -127,6 +127,8 @@ class GraphGenerationUtil {
         var width = getWidths(strata.getCharacteristicsByFamily('widthFamily')[0].getName());
         var color = 'white';
         document.getElementById(divID).style.height = height + "px";
+        var borderWidth = 8;
+
         // Initialisation du POISSON DISK DISTRIBUTION
         var poisson = [];
         var pds = new PoissonDiskSampler(width, height);
@@ -142,6 +144,8 @@ class GraphGenerationUtil {
 
         var draw = SVG(divID).size(width, height);
         var rect = draw.rect(width, height).attr({ fill: color });
+
+
 
 
         if (strata.getCharacteristicsByFamily('porosityFamily').length > 0) {
@@ -302,6 +306,21 @@ class GraphGenerationUtil {
             image.y(pds.pointList[i].y - pds.pointList[i].h / 2);
 
         }
+
+        //Dessin des bords
+        var leftBorder = draw.path("M0 0L0 " + height).fill('none');
+        var rightBorder = draw.path("M" + width + " 0L" + width + " " + height).fill('none');
+        leftBorder.stroke({ color: 'black', width: borderWidth });
+        rightBorder.stroke({ color: 'black', width: borderWidth });
+
+        //Dessin du bord inférieur si c'est la dernière strate
+        var index = strata.getIndex();
+        var lastIndex = this.stratig.getStratas().length;
+        if(strata.getIndex() == this.stratig.getStratas().length -1){
+            var bottomBorder = draw.path("M0 " + height + "L" + width + " " + height).fill('none');
+            bottomBorder.stroke({ color: 'black', width: borderWidth });
+        }
+
 
 
     }
