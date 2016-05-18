@@ -8,7 +8,7 @@
  * Contrôlleur qui s'occupe de l'onglet de la morphologie
  */
 angular.module('micorrApp')
-    .controller('StratMorphologyCtrl', function ($scope, $route, $window, StrataData) {
+    .controller('StratMorphologyCtrl', function ($scope, $route, $window, StrataData, StratigraphyData) {
 
         //valeurs sélectionnées dans les champs de notre formulaire
         $scope.selectedShapeFamily;
@@ -21,52 +21,69 @@ angular.module('micorrApp')
         $scope.selectedOpacityFamily;
         $scope.selectedMagnetismFamily;
 
-        var initStratMorphology = function(){
+        var initStratMorphology = function () {
             // On récupère les valeurs qui vont aller dans les champs de notre formulaire
             $scope.fShapeFamily = "";
-            $scope.shapeFamily = StrataData.getShapeFamily()['characteristics'];
-            $scope.widthFamily = StrataData.getWidthFamily()['characteristics'];
-            $scope.thicknessFamily = StrataData.getThicknessFamily()['characteristics'];
-            $scope.continuityFamily = StrataData.getContinuityFamily()['characteristics'];
-            $scope.directionFamily = StrataData.getDirectionFamily()['characteristics'];
-            $scope.colourFamily = StrataData.getColourFamily()['characteristics'];
-            $scope.brightnessFamily = StrataData.getBrightnessFamily()['characteristics'];
-            $scope.opacityFamily = StrataData.getOpacityFamily()['characteristics'];
-            $scope.magnetismFamily = StrataData.getMagnetismFamily()['characteristics'];
+            $scope.shapeFamily = StratigraphyData.getShapeFamily()['characteristics'];
+            $scope.widthFamily = StratigraphyData.getWidthFamily()['characteristics'];
+            $scope.thicknessFamily = StratigraphyData.getThicknessFamily()['characteristics'];
+            $scope.continuityFamily = StratigraphyData.getContinuityFamily()['characteristics'];
+            $scope.directionFamily = StratigraphyData.getDirectionFamily()['characteristics'];
+            $scope.colourFamily = StratigraphyData.getColourFamily()['characteristics'];
+            $scope.brightnessFamily = StratigraphyData.getBrightnessFamily()['characteristics'];
+            $scope.opacityFamily = StratigraphyData.getOpacityFamily()['characteristics'];
+            $scope.magnetismFamily = StratigraphyData.getMagnetismFamily()['characteristics'];
         };
 
-        $scope.$on('initShowStrat', function(event) {
+        $scope.$on('initShowStrat', function (event) {
             initStratMorphology();
         });
 
-         /*
+        /*
          * Met à jour les valeurs dans les champs quand on change de strate. Est appelé par un événement parent
          * On met à jour les valeurs sélectionnées en fonction des valeurs qui se trouvent dans la strate actuelle
          */
-        $scope.$on('updateMorphology', function(){
-            var strata = StrataData.getStratas()[StrataData.getCurrentSelectedStrata()];
-            $scope.selectedShapeFamily = getCharacteristicByItsName($scope.shapeFamily, strata.getShapeFamily());
-            $scope.selectedWidthFamily = getCharacteristicByItsName($scope.widthFamily, strata.getWidthFamily());
-            $scope.selectedThicknessFamily = getCharacteristicByItsName($scope.thicknessFamily, strata.getThicknessFamily());
-            $scope.selectedContinuityFamily = getCharacteristicByItsName($scope.continuityFamily, strata.getContinuityFamily());
-            $scope.selectedDirectionFamily = getCharacteristicByItsName($scope.directionFamily, strata.getDirectionFamily());
+        $scope.$on('updateMorphology', function () {
 
-            if (strata.findDependency('colourFamily'))
-                $scope.selectedColourFamily = getCharacteristicByItsName($scope.colourFamily, strata.getColourFamily());
-            if (strata.findDependency('brightnessFamily'))
-                $scope.selectedBrightnessFamily = getCharacteristicByItsName($scope.brightnessFamily, strata.getBrightnessFamily());
-            if (strata.findDependency('opacityFamily'))
-                $scope.selectedOpacityFamily = getCharacteristicByItsName($scope.opacityFamily, strata.getOpacityFamily());
-            if (strata.findDependency('magnetismFamily'))
-                $scope.selectedMagnetismFamily = getCharacteristicByItsName($scope.magnetismFamily, strata.getMagnetismFamily());
 
+            var strata = StratigraphyData.getStratigraphy().getStratas()[StratigraphyData.getSelectedStrata()];
+
+
+            if (strata.getCharacteristicsByFamily("shapeFamily").length > 0) {
+                $scope.selectedShapeFamily = getCharacteristicByItsName($scope.shapeFamily, strata.getCharacteristicsByFamily("shapeFamily")[0].getName());
+            }
+            if (strata.getCharacteristicsByFamily("widthFamily").length > 0) {
+                $scope.selectedWidthFamily = getCharacteristicByItsName($scope.widthFamily, strata.getCharacteristicsByFamily("widthFamily")[0].getName());
+            }
+            if (strata.getCharacteristicsByFamily("thicknessFamily").length > 0) {
+                $scope.selectedThicknessFamily = getCharacteristicByItsName($scope.thicknessFamily, strata.getCharacteristicsByFamily("thicknessFamily")[0].getName());
+            }
+            if (strata.getCharacteristicsByFamily("continuityFamily").length > 0) {
+                $scope.selectedContinuityFamily = getCharacteristicByItsName($scope.continuityFamily, strata.getCharacteristicsByFamily("continuityFamily")[0].getName());
+            }
+            if (strata.getCharacteristicsByFamily("directionFamily").length > 0) {
+                $scope.selectedDirectionFamily = getCharacteristicByItsName($scope.directionFamily, strata.getCharacteristicsByFamily("directionFamily")[0].getName());
+            }
+            if (strata.getCharacteristicsByFamily("colourFamily").length > 0) {
+                $scope.selectedColourFamily = getCharacteristicByItsName($scope.colourFamily, strata.getCharacteristicsByFamily("colourFamily")[0].getName());
+            }
+
+            if (strata.getCharacteristicsByFamily("brightnessFamily").length > 0) {
+                $scope.selectedBrightnessFamily = getCharacteristicByItsName($scope.brightnessFamily, strata.getCharacteristicsByFamily("brightnessFamily")[0].getName());
+            }
+            if (strata.getCharacteristicsByFamily("opacityFamily").length > 0) {
+                $scope.selectedOpacityFamily = getCharacteristicByItsName($scope.opacityFamily, strata.getCharacteristicsByFamily("opacityFamily")[0].getName());
+            }
+            if (strata.getCharacteristicsByFamily("magnetismFamily").length > 0) {
+                $scope.selectedMagnetismFamily = getCharacteristicByItsName($scope.magnetismFamily, strata.getCharacteristicsByFamily("magnetismFamily")[0].getName());
+            }
 
         });
 
-         /*
+        /*
          * Met à jour les données de la strate en fonction des valeurs dans le formulaire
          */
-        $scope.upMorpho = function() {
+        $scope.upMorpho = function () {
             var temp = StrataData.getStratas();
             var index = StrataData.getCurrentSelectedStrata();
 

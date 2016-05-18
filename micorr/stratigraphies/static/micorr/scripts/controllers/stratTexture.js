@@ -8,7 +8,7 @@
  * Contrôlleur qui s'occupe de l'onglet de la texture
  */
 angular.module('micorrApp')
-    .controller('StratTextureCtrl', function ($scope, $route, $window, StrataData) {
+    .controller('StratTextureCtrl', function ($scope, $route, $window, StrataData, StratigraphyData) {
 
         //valeurs sélectionnées dans les champs de notre formulaire
         $scope.selectedPorosityFamily;
@@ -16,39 +16,45 @@ angular.module('micorrApp')
         $scope.selectedHardnessFamily;
         $scope.selectedCrackingFamily;
 
-        var initStratTexture = function(){
-            $scope.porosityFamily = StrataData.getPorosityFamily()['characteristics'];
-            $scope.cohesionFamily = StrataData.getCohesionFamily()['characteristics'];
-            $scope.hardnessFamily = StrataData.getHardnessFamily()['characteristics'];
-            $scope.crackingFamily = StrataData.getCrackingFamily()['characteristics'];
+        var initStratTexture = function () {
+            $scope.porosityFamily = StratigraphyData.getPorosityFamily()['characteristics'];
+            $scope.cohesionFamily = StratigraphyData.getCohesionFamily()['characteristics'];
+            $scope.hardnessFamily = StratigraphyData.getHardnessFamily()['characteristics'];
+            $scope.crackingFamily = StratigraphyData.getCrackingFamily()['characteristics'];
         };
 
-        $scope.$on('initShowStrat', function(event) {
+        $scope.$on('initShowStrat', function (event) {
             initStratTexture();
         });
 
-         /* Met à jour les données de la strate en fonction des valeurs dans le formulaire
+        /* Met à jour les données de la strate en fonction des valeurs dans le formulaire
          * @params
          * @returns
          */
-        $scope.$on('updateTexture', function(){
-            var strata = StrataData.getStratas()[StrataData.getCurrentSelectedStrata()];
+        $scope.$on('updateTexture', function () {
 
-            if (strata.findDependency('porosityFamily'))
-                $scope.selectedPorosityFamily = getCharacteristicByItsName($scope.porosityFamily, strata.getPorosityFamily());
-            if (strata.findDependency('cohesionFamily'))
-                $scope.selectedCohesionFamily = getCharacteristicByItsName($scope.cohesionFamily, strata.getCohesionFamily());
-            if (strata.findDependency('hardnessFamily'))
-                $scope.selectedHardnessFamily = getCharacteristicByItsName($scope.hardnessFamily, strata.getHardnessFamily());
-            if (strata.findDependency('crackingFamily'))
-                $scope.selectedCrackingFamily = getCharacteristicByItsName($scope.crackingFamily, strata.getCrackingFamily());
+            var strata = StratigraphyData.getStratigraphy().getStratas()[StratigraphyData.getSelectedStrata()];
+
+
+            if (strata.getCharacteristicsByFamily("porosityFamily").length > 0) {
+                $scope.selectedPorosityFamily = getCharacteristicByItsName($scope.porosityFamily, strata.getCharacteristicsByFamily("porosityFamily")[0].getName());
+            }
+            if (strata.getCharacteristicsByFamily("cohesionFamily").length > 0) {
+                $scope.selectedCohesionFamily = getCharacteristicByItsName($scope.cohesionFamily, strata.getCharacteristicsByFamily("cohesionFamily")[0].getName());
+            }
+            if (strata.getCharacteristicsByFamily("hardnessFamily").length > 0) {
+                $scope.selectedHardnessFamily = getCharacteristicByItsName($scope.hardnessFamily, strata.getCharacteristicsByFamily("hardnessFamily")[0].getName());
+            }
+            if (strata.getCharacteristicsByFamily("crackingFamily").length > 0) {
+                $scope.selectedCrackingFamily = getCharacteristicByItsName($scope.crackingFamily, strata.getCharacteristicsByFamily("crackingFamily")[0].getName());
+            }
         });
 
-         /* Met à jour les données de la strate en fonction des valeurs dans le formulaire
+        /* Met à jour les données de la strate en fonction des valeurs dans le formulaire
          * @params
          * @returns
          */
-        $scope.upTexture = function() {
+        $scope.upTexture = function () {
             var temp = StrataData.getStratas();
             var index = StrataData.getCurrentSelectedStrata();
 

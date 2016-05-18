@@ -69,6 +69,15 @@
                 return charact;
             }
         }, {
+            key: 'isFamily',
+            value: function isFamily(family) {
+                var exists = false;
+                if (getCharacteristicsByFamily(family).length > 0) {
+                    exists = true;
+                }
+                return exists;
+            }
+        }, {
             key: 'isSubCharacteristic',
             value: function isSubCharacteristic(name) {
                 var exists = false;

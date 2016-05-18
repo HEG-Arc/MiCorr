@@ -146,7 +146,7 @@ angular.module('micorrApp')
                         str.addSubCharacteristic(subChar);
                     }
                     //Boucle sur les caracteristiques d'interface
-                    for(var j= 0; j <currentStrata.interfaces.characteristics.length; j++){
+                    for (var j = 0; j < currentStrata.interfaces.characteristics.length; j++) {
                         var currentCharacteristic = currentStrata.interfaces.characteristics[j];
                         var char = new characteristic.Characteristic();
                         char.setName(currentCharacteristic.name);
@@ -163,12 +163,14 @@ angular.module('micorrApp')
             });
         };
 
-        MiCorrService.getAllCharacteristic().success(function(data) {
+        MiCorrService.getAllCharacteristic().success(function (data) {
+
             if (typeof data !== "undefined") {
-                StrataData.clear();
-                StrataData.Fill(data);
+               // StrataData.clear();
+                StratigraphyData.Fill(data);
+
             }
-        }).success(function(){
+        }).success(function () {
             initShowStrata();
             ngProgress.complete();
         });
@@ -196,13 +198,7 @@ angular.module('micorrApp')
 
             $scope.hideShowForms(strat); //TODO: réimplémenter hideShowForms
             $scope.strataName = strat.getUid();
-            $scope.natureFamilyname = strat.getCharacteristicByFamily('natureFamily')[0].getName();
-
-            /* Actuellement entrain d'être réimplémenté
-            $scope.hideShowForms(StrataData.getStratas()[index]);   // On affiche/masque les champs en fonction de la nature de la strate
-            $scope.strataName = StrataData.getStratas()[index].getName();   // On affiche le nom de la strate
-            $scope.natureFamilyname = StrataData.getStratas()[index].getNatureFamily(); // On affiche la nature de la strate
-            */
+            $scope.natureFamilyname = strat.getCharacteristicsByFamily('natureFamily')[0].getName();
 
 
             // Dans notre formulaire on a des onglets
@@ -232,71 +228,112 @@ angular.module('micorrApp')
          */
         $scope.hideShowForms = function (strata) { //TODO: Réimplémenter avec la nouvelle classe business Strata
 
-            $scope.showWidth = strata.findDependency('widthFamily');
-            $scope.showThickness = strata.findDependency('thicknessFamily');
-            $scope.showContinuity = strata.findDependency('continuityFamily');
-            $scope.showDirection = strata.findDependency('directionFamily');
-            $scope.showColor = strata.findDependency('colourFamily');
-            $scope.showBrightness = strata.findDependency('brightnessFamily');
-            $scope.showOpacity = strata.findDependency('opacityFamily');
-            $scope.showMagnetism = strata.findDependency('magnetismFamily');
-            $scope.showPorosity = strata.findDependency('porosityFamily');
-            $scope.showmmicrostructureFamily = strata.findDependency('mmicrostructureFamily');
-            $scope.showCohesion = strata.findDependency('cohesionFamily');
-            $scope.showHardness = strata.findDependency('hardnessFamily');
-            $scope.showCracking = strata.findDependency('crackingFamily');
-            $scope.showScomposition = strata.findDependency('scompositionFamily');
-            $scope.showNmmcomposition = strata.findDependency('nmmcompositionFamily');
-            $scope.showDcomposition = strata.findDependency('dcompositionFamily');
-            $scope.showPomcomposition = strata.findDependency('pomcompositionFamily');
-            $scope.showCpcomposition = strata.findDependency('cpcompositionFamily');
-            $scope.showCmcomposition = strata.findDependency('cmcompositionFamily');
-            $scope.showMcomposition = strata.findDependency('mcompositionFamily');
-            $scope.showinterfaceprofileFamily = strata.findDependency('interfaceprofileFamily');
-            $scope.showinterfacetransition = strata.findDependency('interfacetransitionFamily');
-            $scope.showinterfaceroughness = strata.findDependency('interfaceroughnessFamily');
-            $scope.showinterfaceadherence = strata.findDependency('interfaceadherenceFamily');
-            $scope.showCmlevelofcorrosionFamily = strata.findDependency('cmlevelofcorrosionFamily');
-            $scope.showcpcompositionextensionfamily = strata.findDependency('cpcompositionextensionFamily');
-            $scope.showsubcpcompositionFamily = strata.findDependency('subcpcompositionFamily');
-            $scope.showsubsubcpcompositionFamily = strata.findDependency('subsubcpcompositionFamily');
-            $scope.showsubcmcompositionFamily = strata.findDependency('subcmcompositionFamily');
-            $scope.showsubcmlevelofcorrosionFamily = strata.findDependency('subcmlevelofcorrosionFamily');
-            $scope.showsubmmicrostructureFamily = strata.findDependency('submmicrostructureFamily');
+            if (strata.getCharacteristicsByFamily('natureFamily')[0].getRealName() == 'Metal') {
+                $scope.showWidth = true;
 
-            $scope.showcprimicrostructureFamily = strata.findDependency('cprimicrostructureFamily');
-            $scope.showsubmcompositionFamily = strata.findDependency('submcompositionFamily');
+                $scope.showWidth = true;
+                $scope.showThickness = true;
+                $scope.showContinuity = true;
+                $scope.showDirection = true;
+                $scope.showColor = true;
+                $scope.showBrightness = true;
+                $scope.showOpacity = true;
+                $scope.showMagnetism = true;
+                $scope.showPorosity = true;
+                $scope.showmmicrostructureFamily = true;
+                $scope.showCohesion = true;
+                $scope.showHardness = true;
+                $scope.showCracking = true;
+                $scope.showScomposition = true;
+                $scope.showNmmcomposition = true;
+                $scope.showDcomposition = true;
+                $scope.showPomcomposition = true;
+                $scope.showCpcomposition = true;
+                $scope.showCmcomposition = true;
+                $scope.showMcomposition = true;
+                $scope.showinterfaceprofileFamily = true;
+                $scope.showinterfacetransition = true;
+                $scope.showinterfaceroughness = true;
+                $scope.showinterfaceadherence = true;
+                $scope.showCmlevelofcorrosionFamily = true;
+                $scope.showcpcompositionextensionfamily = true;
+                $scope.showsubcpcompositionFamily = true;
+                $scope.showsubsubcpcompositionFamily = true;
+                $scope.showsubcmcompositionFamily = true;
+                $scope.showsubcmlevelofcorrosionFamily = true;
+                $scope.showsubmmicrostructureFamily = true;
 
-            // on affiche seulement si cprimicrostructure n'est pas égal à noMiccrostructure
-            if (strata.findDependency('cprimicrostructureFamily') && strata.getCpriMicrostructureFamily() != "noMicrostructureCharacteristic") {
-                $scope.showsubcprimicrostructureFamily = strata.findDependency('subcprimicrostructureFamily');
-                $scope.showsubcprimicrostructureaggregatecompositionFamily = strata.findDependency('subcprimicrostructureaggregatecompositionFamily');
-                $scope.showsubsubcprimicrostructureaggregatecompositionFamily = strata.findDependency('subsubcprimicrostructureaggregatecompositionFamily');
-                $scope.showcprimicrostructureaggregatecompositionFamily = strata.findDependency('cprimicrostructureaggregatecompositionFamily');
-                $scope.showcprimicrostructureaggregatecompositionextensionFamily = strata.findDependency('cprimicrostructureaggregatecompositionextensionFamily');
+                $scope.showcprimicrostructureFamily = true;
+                $scope.showsubmcompositionFamily = true;
             }
-            else {
-                $scope.showsubcprimicrostructureFamily = false;
-                $scope.showsubcprimicrostructureaggregatecompositionFamily = false;
-                $scope.showsubsubcprimicrostructureaggregatecompositionFamily = false;
-                $scope.showcprimicrostructureaggregatecompositionFamily = false;
-                $scope.showcprimicrostructureaggregatecompositionextensionFamily = false;
-            }
+            /* //TODO: Réimplémenter en fonction de la nature
+             $scope.showWidth = strata.isFamily('widthFamily');
 
-            if (strata.getNatureFamilyUid() == 'mCharacteristic') {
-                $scope.showAddCorrodedMetalStrata = true;
-            } else {
-                $scope.showAddCorrodedMetalStrata = false;
-            }
+             $scope.showWidth = strata.findDependency('widthFamily');
+             $scope.showThickness = strata.findDependency('thicknessFamily');
+             $scope.showContinuity = strata.findDependency('continuityFamily');
+             $scope.showDirection = strata.findDependency('directionFamily');
+             $scope.showColor = strata.findDependency('colourFamily');
+             $scope.showBrightness = strata.findDependency('brightnessFamily');
+             $scope.showOpacity = strata.findDependency('opacityFamily');
+             $scope.showMagnetism = strata.findDependency('magnetismFamily');
+             $scope.showPorosity = strata.findDependency('porosityFamily');
+             $scope.showmmicrostructureFamily = strata.findDependency('mmicrostructureFamily');
+             $scope.showCohesion = strata.findDependency('cohesionFamily');
+             $scope.showHardness = strata.findDependency('hardnessFamily');
+             $scope.showCracking = strata.findDependency('crackingFamily');
+             $scope.showScomposition = strata.findDependency('scompositionFamily');
+             $scope.showNmmcomposition = strata.findDependency('nmmcompositionFamily');
+             $scope.showDcomposition = strata.findDependency('dcompositionFamily');
+             $scope.showPomcomposition = strata.findDependency('pomcompositionFamily');
+             $scope.showCpcomposition = strata.findDependency('cpcompositionFamily');
+             $scope.showCmcomposition = strata.findDependency('cmcompositionFamily');
+             $scope.showMcomposition = strata.findDependency('mcompositionFamily');
+             $scope.showinterfaceprofileFamily = strata.findDependency('interfaceprofileFamily');
+             $scope.showinterfacetransition = strata.findDependency('interfacetransitionFamily');
+             $scope.showinterfaceroughness = strata.findDependency('interfaceroughnessFamily');
+             $scope.showinterfaceadherence = strata.findDependency('interfaceadherenceFamily');
+             $scope.showCmlevelofcorrosionFamily = strata.findDependency('cmlevelofcorrosionFamily');
+             $scope.showcpcompositionextensionfamily = strata.findDependency('cpcompositionextensionFamily');
+             $scope.showsubcpcompositionFamily = strata.findDependency('subcpcompositionFamily');
+             $scope.showsubsubcpcompositionFamily = strata.findDependency('subsubcpcompositionFamily');
+             $scope.showsubcmcompositionFamily = strata.findDependency('subcmcompositionFamily');
+             $scope.showsubcmlevelofcorrosionFamily = strata.findDependency('subcmlevelofcorrosionFamily');
+             $scope.showsubmmicrostructureFamily = strata.findDependency('submmicrostructureFamily');
 
-            if (strata.getNatureFamilyUid() == 'cmCharacteristic') {
-                $scope.corrodedMetalStrataSelected = true;
-                if (typeof $scope.ratio == "undefined")
-                    $scope.ratio = strata.ratio;
-            } else {
-                $scope.corrodedMetalStrataSelected = false;
-            }
+             $scope.showcprimicrostructureFamily = strata.findDependency('cprimicrostructureFamily');
+             $scope.showsubmcompositionFamily = strata.findDependency('submcompositionFamily');
 
+             // on affiche seulement si cprimicrostructure n'est pas égal à noMiccrostructure
+             if (strata.findDependency('cprimicrostructureFamily') && strata.getCpriMicrostructureFamily() != "noMicrostructureCharacteristic") {
+             $scope.showsubcprimicrostructureFamily = strata.findDependency('subcprimicrostructureFamily');
+             $scope.showsubcprimicrostructureaggregatecompositionFamily = strata.findDependency('subcprimicrostructureaggregatecompositionFamily');
+             $scope.showsubsubcprimicrostructureaggregatecompositionFamily = strata.findDependency('subsubcprimicrostructureaggregatecompositionFamily');
+             $scope.showcprimicrostructureaggregatecompositionFamily = strata.findDependency('cprimicrostructureaggregatecompositionFamily');
+             $scope.showcprimicrostructureaggregatecompositionextensionFamily = strata.findDependency('cprimicrostructureaggregatecompositionextensionFamily');
+             }
+             else {
+             $scope.showsubcprimicrostructureFamily = false;
+             $scope.showsubcprimicrostructureaggregatecompositionFamily = false;
+             $scope.showsubsubcprimicrostructureaggregatecompositionFamily = false;
+             $scope.showcprimicrostructureaggregatecompositionFamily = false;
+             $scope.showcprimicrostructureaggregatecompositionextensionFamily = false;
+             }
+
+             if (strata.getNatureFamilyUid() == 'mCharacteristic') {
+             $scope.showAddCorrodedMetalStrata = true;
+             } else {
+             $scope.showAddCorrodedMetalStrata = false;
+             }
+
+             if (strata.getNatureFamilyUid() == 'cmCharacteristic') {
+             $scope.corrodedMetalStrataSelected = true;
+             if (typeof $scope.ratio == "undefined")
+             $scope.ratio = strata.ratio;
+             } else {
+             $scope.corrodedMetalStrataSelected = false;
+             }
+             */
 
         };
 
@@ -323,11 +360,11 @@ angular.module('micorrApp')
         });
 
         /*
-        $scope.ratio = new Ratio(3);
+         $scope.ratio = new Ratio(3);
 
-        $scope.ratioChange = function () {
-            //mise à jour du dessin
-            $scope.$emit('updateDraw');
-        }*/
+         $scope.ratioChange = function () {
+         //mise à jour du dessin
+         $scope.$emit('updateDraw');
+         }*/
     });
 

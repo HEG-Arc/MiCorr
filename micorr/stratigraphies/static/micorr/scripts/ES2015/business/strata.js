@@ -29,6 +29,13 @@ class Strata {
     }
 
 
+    isFamily(family){
+        var exists = false;
+        if(getCharacteristicsByFamily(family).length > 0){
+            exists = true;
+        }
+        return exists;
+    }
     /**
      * Cette méthoe indique si une sous-caracterisitique existe dans une strate.
      * @param le nom de la sous caracteristique à vérifier
