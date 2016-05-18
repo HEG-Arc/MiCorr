@@ -73,7 +73,7 @@ angular.module('micorrApp').directive('strata', function ($compile, Stratigraphy
      * en fonction des autres strates de la stratigraphie
      * L'affichage vient à gauche des dessins des strates
      */
-    .directive('stratainfo', function ($compile, StrataData) {
+    .directive('stratainfo', function ($compile, StrataData, StratigraphyData) {
         return {
             restrict: 'EA',
             replace: true,
@@ -83,12 +83,11 @@ angular.module('micorrApp').directive('strata', function ($compile, Stratigraphy
                 var index = attrs.index;    // index de la strate
 
                 // on récupère les strates et la strate
-                var stratas = scope.rstratas;
+                var stratas = StratigraphyData.getStratigraphy().getStratas();
                 var strata = stratas[index];
-                var nb = stratas.length;
 
-                var similarName = "";
-                var sameNature = 0;
+                var sameNature = 1;
+                var label;
 
                 var similar = false;
 
@@ -96,23 +95,17 @@ angular.module('micorrApp').directive('strata', function ($compile, Stratigraphy
                 for (var i = 0; i < index; i++) {
                     var s2 = stratas[i];
 
-                    if (strata.getShortNatureFamily() == s2.getShortNatureFamily()) {
-                        if (compareTwoStratas(strata, s2)) { // si les strates sont similaires alors on prend le nom de la strate similaire
-                            strata.setOrderName(s2.getOrderName()); // la propriété orderName permet de stocker pour une strate, son nom (CP1, CP2, M1, M2, M3, M1)
-                            similar = true;
-                        }
+                    if(strata.getCharacteristicsByFamily("natureFamily")[0].getName() == s2.getCharacteristicsByFamily("natureFamily")[0].getName()){
                         sameNature++;
                     }
+
                 }
 
-                // si les strates ne sont pas similaire alors on créé un nouveau nom et on lui ajouter le nom à la propriété orderName
-                if (!similar)
-                    strata.setOrderName(strata.getShortNatureFamily() + (sameNature + 1));
+                label = strata.getCharacteristicsByFamily("natureFamily")[0].getName().charAt(0) + sameNature;
 
-                // On affiche le nom de la strate
-                //element.children()[0].innerText = strata.getOrderName();
+                window.alert(label);
 
-                element.children()[0].innerHTML = '<button class="btn btn-link btn-xs" ng-click="removeStrata(' + index + ')" title="delete this strata"><span class="glyphicon glyphicon-remove"></span></button></br>' + strata.getOrderName();
+                element.children()[0].innerHTML = '<button class="btn btn-link btn-xs" ng-click="removeStrata(' + index + ')" title="delete this strata"><span class="glyphicon glyphicon-remove"></span></button></br>' + label;
 
                 // on affiche les boutons pour bouger la strate
                 var btns = "";
