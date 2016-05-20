@@ -131,6 +131,22 @@ angular.module('micorrApp').factory('StratigraphyData', function StratigraphyDat
 
 
         return {
+
+            getStrataNature: function(strataData){
+                var nature;
+                var found = false;
+                var i = 0;
+                while(!found && i < strataData.characteristics.length){
+                    var currentCharacteristic = strataData.characteristics[i];
+                        if(currentCharacteristic.family == "natureFamily"){
+                            nature = currentCharacteristic.real_name;
+                            found = true;
+                        }
+                    i++;
+                }
+                return nature;
+            },
+
             getStratigraphy: function(){
                 if (stratig == null){
                     stratig = new stratigraphy.Stratigraphy;

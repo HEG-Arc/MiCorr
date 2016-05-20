@@ -43,11 +43,14 @@
     }();
 
     let Strata = function () {
-        function Strata() {
+        function Strata(nature) {
             _classCallCheck(this, Strata);
 
-            this.characteristics = [];
-            this.subCharacteristics = [];
+            this.nature = nature;
+            this.dependencies = new Array();
+            this.characteristics = new Array();
+            this.subCharacteristics = new Array();
+            this.init();
         }
 
         /**
@@ -98,7 +101,19 @@
         }, {
             key: 'addCharacteristic',
             value: function addCharacteristic(characteristic) {
-                this.characteristics.push(characteristic);
+                var found = false;
+                var i = 0;
+
+                while (!found && i < this.characteristics.length) {
+                    if (characteristic.family == this.characteristics[i].family) {
+                        found = true;
+                        this.characteristics[i] = characteristic;
+                    }
+                    i++;
+                }
+                if (!found) {
+                    this.characteristics.push(characteristic);
+                }
             }
         }, {
             key: 'removeCharacteristic',
@@ -115,6 +130,16 @@
             key: 'getCharacteristics',
             value: function getCharacteristics() {
                 return this.characteristics;
+            }
+        }, {
+            key: 'getNature',
+            value: function getNature() {
+                return this.nature;
+            }
+        }, {
+            key: 'setNature',
+            value: function setNature(nature) {
+                this.nature = nature;
             }
         }, {
             key: 'getId',
@@ -145,6 +170,126 @@
             key: 'setIndex',
             value: function setIndex(index) {
                 this.index = index;
+            }
+        }, {
+            key: 'findDependency',
+            value: function findDependency(dep) {
+                for (var i = 0; i < this.dependencies.length; i++) {
+                    if (this.dependencies[i] == dep) return true;
+                }
+                return false;
+            }
+        }, {
+            key: 'init',
+            value: function init() {
+                this.dependencies.push('thicknessFamily');
+                this.dependencies.push('widthFamily');
+                this.dependencies.push('continuityFamily');
+                this.dependencies.push('directionFamily');
+                this.dependencies.push('interfaceprofileFamily');
+
+                if (this.nature == "Soil") {
+                    this.dependencies.push('colourFamily');
+                    this.dependencies.push('brightnessFamily');
+                    this.dependencies.push('opacityFamily');
+                    this.dependencies.push('magnetismFamily');
+                    this.dependencies.push('porosityFamily');
+                    this.dependencies.push('cohesionFamily');
+                    this.dependencies.push('hardnessFamily');
+                    this.dependencies.push('crackingFamily');
+                    this.dependencies.push('scompositionFamily');
+                    this.dependencies.push('interfacetransitionFamily');
+                    this.dependencies.push('interfaceroughnessFamily');
+                    this.dependencies.push('interfaceadherenceFamily');
+                }
+
+                if (this.nature == "Non-Metallic material") {
+                    this.dependencies.push('colourFamily');
+                    this.dependencies.push('brightnessFamily');
+                    this.dependencies.push('opacityFamily');
+                    this.dependencies.push('magnetismFamily');
+                    this.dependencies.push('porosityFamily');
+                    this.dependencies.push('cohesionFamily');
+                    this.dependencies.push('hardnessFamily');
+                    this.dependencies.push('crackingFamily');
+                    this.dependencies.push('nmmcompositionFamily');
+                    this.dependencies.push('interfacetransitionFamily');
+                    this.dependencies.push('interfaceroughnessFamily');
+                    this.dependencies.push('interfaceadherenceFamily');
+                }
+
+                if (this.nature == "Deposit") {
+
+                    this.dependencies.push('colourFamily');
+                    this.dependencies.push('brightnessFamily');
+                    this.dependencies.push('opacityFamily');
+                    this.dependencies.push('magnetismFamily');
+                    this.dependencies.push('porosityFamily');
+                    this.dependencies.push('cohesionFamily');
+                    this.dependencies.push('hardnessFamily');
+                    this.dependencies.push('crackingFamily');
+                    this.dependencies.push('dcompositionFamily');
+                    this.dependencies.push('interfacetransitionFamily');
+                    this.dependencies.push('interfaceroughnessFamily');
+                    this.dependencies.push('interfaceadherenceFamily');
+                }
+
+                if (this.nature == "Pseudomorph of organic material") {
+                    this.dependencies.push('colourFamily');
+                    this.dependencies.push('brightnessFamily');
+                    this.dependencies.push('opacityFamily');
+                    this.dependencies.push('magnetismFamily');
+                    this.dependencies.push('porosityFamily');
+                    this.dependencies.push('cohesionFamily');
+                    this.dependencies.push('hardnessFamily');
+                    this.dependencies.push('crackingFamily');
+                    this.dependencies.push('pomcompositionFamily');
+                    this.dependencies.push('interfacetransitionFamily');
+                    this.dependencies.push('interfaceroughnessFamily');
+                    this.dependencies.push('interfaceadherenceFamily');
+                }
+
+                if (this.nature == "Corrosion products") {
+                    this.dependencies.push('colourFamily');
+                    this.dependencies.push('brightnessFamily');
+                    this.dependencies.push('opacityFamily');
+                    this.dependencies.push('magnetismFamily');
+                    this.dependencies.push('porosityFamily');
+                    this.dependencies.push('cprimicrostructureFamily');
+                    this.dependencies.push('cohesionFamily');
+                    this.dependencies.push('hardnessFamily');
+                    this.dependencies.push('crackingFamily');
+                    this.dependencies.push('interfacetransitionFamily');
+                    this.dependencies.push('interfaceroughnessFamily');
+                    this.dependencies.push('interfaceadherenceFamily');
+                    this.dependencies.push('cpcompositionextensionFamily');
+                    this.dependencies.push('cprimicrostructureaggregatecompositionFamily');
+                    this.dependencies.push('cprimicrostructureaggregatecompositionextensionFamily');
+                    this.dependencies.push('cpcompositionFamily');
+                    this.dependencies.push('subcpcompositionFamily');
+                    this.dependencies.push('subsubcpcompositionFamily');
+                    this.dependencies.push('subcprimicrostructureFamily');
+                    this.dependencies.push('subcprimicrostructureaggregatecompositionFamily');
+                    this.dependencies.push('subsubcprimicrostructureaggregatecompositionFamily');
+                }
+
+                if (this.nature == "Metal") {
+                    this.dependencies.push('colourFamily');
+                    this.dependencies.push('brightnessFamily');
+                    this.dependencies.push('opacityFamily');
+                    this.dependencies.push('magnetismFamily');
+                    this.dependencies.push('porosityFamily');
+                    this.dependencies.push('mmicrostructureFamily');
+                    this.dependencies.push('cohesionFamily');
+                    this.dependencies.push('hardnessFamily');
+                    this.dependencies.push('crackingFamily');
+                    this.dependencies.push('mcompositionFamily');
+                    this.dependencies.push('interfacetransitionFamily');
+                    this.dependencies.push('interfaceroughnessFamily');
+                    this.dependencies.push('interfaceadherenceFamily');
+                    this.dependencies.push('submmicrostructureFamily');
+                    this.dependencies.push('submcompositionFamily');
+                }
             }
         }]);
 

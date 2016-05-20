@@ -17,8 +17,10 @@ angular.module('micorrApp').directive('strata', function ($compile, Stratigraphy
         link: function (scope, element, attrs) {
             var index = attrs.index;
 
-            var st = StratigraphyData.getStratigraphy();
+            var st = scope.stratigraphy;
+
             var str = st.getStratas()[index];
+
             var interfaceDiv = element.context.childNodes[0];
             var strataDiv = element.context.childNodes[1];
             strataDiv.id = "strata" + index;
@@ -101,13 +103,14 @@ angular.module('micorrApp').directive('strata', function ($compile, Stratigraphy
 
                 }
 
-                label = strata.getCharacteristicsByFamily("natureFamily")[0].getName().charAt(0) + sameNature;
-
-                window.alert(label);
+                label = strata.getCharacteristicsByFamily("natureFamily")[0].getName();
+                label = label.split("Char")
+                label = label[0] + sameNature;
 
                 element.children()[0].innerHTML = '<button class="btn btn-link btn-xs" ng-click="removeStrata(' + index + ')" title="delete this strata"><span class="glyphicon glyphicon-remove"></span></button></br>' + label;
 
                 // on affiche les boutons pour bouger la strate
+                /* TODO: Gérer les boutons pour que la div ne devienne pas trop grande
                 var btns = "";
                 if (index > 0)
                     btns += '<button ng-click="movestrataup(' + index + ')" type="button" class="btn btn-link btn-xs" title="move up this strata"><span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span></button>';
@@ -116,6 +119,7 @@ angular.module('micorrApp').directive('strata', function ($compile, Stratigraphy
 
                 $(element.children()[1]).append(btns);
                 $compile(element.contents())(scope);
+                */
             }
         };
     });

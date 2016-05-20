@@ -55,9 +55,28 @@ angular.module('micorrApp')
          * @returns
          */
         $scope.upTexture = function () {
+
+            var strata = StratigraphyData.getStratigraphy().getStratas()[StratigraphyData.getSelectedStrata()];
+
+            if (strata.findDependency('porosityFamily')) {
+            var char = new characteristic.Characteristic();
+            char.setFamily("porosityFamily");
+            char.setName($scope.selectedPorosityFamily.name);
+            char.setRealName($scope.selectedPorosityFamily.real_name);
+            strata.addCharacteristic(char);
+            }
+            /*
+            if (temp[index].findDependency('cohesionFamily'))
+                temp[index].setCohesionFamily($scope.selectedCohesionFamily.name);
+            if (temp[index].findDependency('hardnessFamily'))
+                temp[index].setHardnessFamily($scope.selectedHardnessFamily.name);
+            if (temp[index].findDependency('crackingFamily'))
+                temp[index].setCrackingFamily($scope.selectedCrackingFamily.name);
+
             var temp = StrataData.getStratas();
             var index = StrataData.getCurrentSelectedStrata();
 
+            /*
             if (temp[index].findDependency('porosityFamily'))
                 temp[index].setPorosityFamily($scope.selectedPorosityFamily.name);
             if (temp[index].findDependency('cohesionFamily'))
@@ -66,7 +85,7 @@ angular.module('micorrApp')
                 temp[index].setHardnessFamily($scope.selectedHardnessFamily.name);
             if (temp[index].findDependency('crackingFamily'))
                 temp[index].setCrackingFamily($scope.selectedCrackingFamily.name);
-
+            */
             $scope.$emit('updateDraw');
         };
     });
