@@ -8,7 +8,7 @@
  * Contrôlleur qui s'occupe d'ajouter une strate
  */
 angular.module('micorrApp')
-    .controller('ModalAddStrataCtrl', function ($scope, $rootScope, $route, $modal, MiCorrService, StrataData) {
+    .controller('ModalAddStrataCtrl', function ($scope, $rootScope, $route, $modal, MiCorrService, StrataData, StratigraphyData) {
         $rootScope.route = $route;
         $rootScope.natures = natures;
         $scope.nature;
@@ -23,13 +23,25 @@ angular.module('micorrApp')
                 controller: ['$scope', 'scopeParent', '$modalInstance',
                     function ($scope, scopeParent, $modalInstance) {
                         $scope.ok = function () {
+
+                            var nature = returnNatureCharacteristic($scope.nature);
+                            var newStrata = new strata.Strata(nature.getRealName());
+                            newStrata.addCharacteristic(nature);
+                            newStrata.setUid($scope.strataName);
+                            newStrata.setIndex(StratigraphyData.getStratigraphy().getStratas().length);
+
+                            StratigraphyData.pushOneStrata(newStrata);
+                            scopeParent.$emit('doUpdate', StratigraphyData.getStratigraphy().getStratas().length-1);
+                            scopeParent.$emit('updateDraw');
+                            $modalInstance.close();
+                            /*
                             var newStrata = natureFactory($scope.nature);
                             newStrata.setName($scope.strataName);
                             newStrata.setUid($scope.strataUid);
                             StrataData.pushOneStrata(newStrata);
                             scopeParent.$emit('doUpdate', StrataData.getStratas().length-1);
                             scopeParent.$emit('updateDraw');
-                            $modalInstance.close();
+                            $modalInstance.close(); */
                         };
 
                         $scope.cancel = function () {

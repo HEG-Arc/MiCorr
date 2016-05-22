@@ -30,8 +30,12 @@ class GraphGenerationUtil {
         var borderWidth = 8;
         var divisionLineWidth = 5;
 
+        var strataWidth = 500
 
-        var strataWidth = getWidths(strata.getCharacteristicsByFamily('widthFamily')[0].getName());
+        if(strata.getCharacteristicsByFamily('widthFamily').length > 0){
+            strataWidth = getWidths(strata.getCharacteristicsByFamily('widthFamily')[0].getName());
+        }
+
         var interfaceWidth = strataWidth;
 
         var draw = SVG(divID).size(interfaceWidth, interfaceHeight);
@@ -83,8 +87,7 @@ class GraphGenerationUtil {
         //Si elle est droite on dessine simplement deux rectangles
 
         if (profile == 'straightCharacteristic') {
-            window.alert(lowerInterfaceColor);
-            window.alert(upperInterfaceColor);
+
             var upperRect = draw.rect(interfaceWidth, interfaceHeight).attr({ fill: upperInterfaceColor });
             var lowerRect = draw.rect(interfaceWidth, interfaceHeight).x(0).y(interfaceHeight / 2).attr({fill: lowerInterfaceColor });
 
@@ -121,10 +124,18 @@ class GraphGenerationUtil {
      * @param divID La div dans laquelle on veut dessiner la strate
      */
         drawStrata(strata, divID) {
+        var height = 100;
+        var width = 500
+        if(strata.getCharacteristicsByFamily('thicknessFamily').length > 0){
+            height = getThicknesses(strata.getCharacteristicsByFamily('thicknessFamily')[0].getName());
+        }
+
+        if(strata.getCharacteristicsByFamily('widthFamily').length > 0){
+            width = getWidths(strata.getCharacteristicsByFamily('widthFamily')[0].getName());
+        }
 
 
-        var height = getThicknesses(strata.getCharacteristicsByFamily('thicknessFamily')[0].getName());
-        var width = getWidths(strata.getCharacteristicsByFamily('widthFamily')[0].getName());
+
         var color = 'white';
         document.getElementById(divID).style.height = height + "px";
         var borderWidth = 8;
@@ -335,6 +346,9 @@ class GraphGenerationUtil {
         this.divID = id;
     }
 
+    setStratig(stratig){
+        this.stratig = stratig;
+    }
     getStratig() {
         return this.stratig;
     }

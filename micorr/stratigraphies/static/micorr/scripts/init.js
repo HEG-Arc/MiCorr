@@ -29,6 +29,49 @@ function natureFactory(nature) {
         return new SV();
 }
 
+function returnNatureCharacteristic(nature){
+    var natureChar = new characteristic.Characteristic();
+    natureChar.setFamily('natureFamily');
+    if (nature == "cmCharacteristic" || nature == "CM"){
+         natureChar.setName('cmCharacteristic');
+        natureChar.setRealName("Corroded Metal");
+    }
+
+    else if (nature == "cpCharacteristic" || nature == "CP"){
+        natureChar.setName('cpCharacteristic');
+        natureChar.setRealName("Corrosion Products");
+    }
+
+    else if (nature == "dCharacteristic" || nature == "D"){
+        natureChar.setName('dCharacteristic');
+        natureChar.setRealName("Deposit");
+    }
+
+    else if (nature == "mCharacteristic" || nature == "M"){
+        natureChar.setName('mCharacteristic');
+        natureChar.setRealName("Metal");
+    }
+
+    else if (nature == "nmmCharacteristic" || nature == "NMM"){
+        natureChar.setName('nmmCharacteristic');
+        natureChar.setRealName("Non-Metallic material");
+    }
+    else if (nature == "pomCharacteristic" || nature == "POM"){
+        natureChar.setName('pomCharacteristic');
+        natureChar.setRealName("Pseudomorph of organic material");
+    }
+    else if (nature == "sCharacteristic" || nature == "S"){
+        natureChar.setName('sCharacteristic');
+        natureChar.setRealName("Soil");
+    }
+    else if (nature == "svCharacteristic" || nature == "SV"){
+        natureChar.setName('svCharacteristic');
+        natureChar.setRealName("Structural Void");
+    }
+
+    return natureChar;
+}
+
 /* retourne la largeur des strates
  * @params charactéristique de largeur
  * €returns largeur qui convient, par défaut 500px

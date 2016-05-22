@@ -80,7 +80,12 @@
                 var borderWidth = 8;
                 var divisionLineWidth = 5;
 
-                var strataWidth = getWidths(strata.getCharacteristicsByFamily('widthFamily')[0].getName());
+                var strataWidth = 500;
+
+                if (strata.getCharacteristicsByFamily('widthFamily').length > 0) {
+                    strataWidth = getWidths(strata.getCharacteristicsByFamily('widthFamily')[0].getName());
+                }
+
                 var interfaceWidth = strataWidth;
 
                 var draw = SVG(divID).size(interfaceWidth, interfaceHeight);
@@ -130,8 +135,7 @@
                 //Si elle est droite on dessine simplement deux rectangles
 
                 if (profile == 'straightCharacteristic') {
-                    window.alert(lowerInterfaceColor);
-                    window.alert(upperInterfaceColor);
+
                     var upperRect = draw.rect(interfaceWidth, interfaceHeight).attr({ fill: upperInterfaceColor });
                     var lowerRect = draw.rect(interfaceWidth, interfaceHeight).x(0).y(interfaceHeight / 2).attr({ fill: lowerInterfaceColor });
 
@@ -157,9 +161,16 @@
         }, {
             key: 'drawStrata',
             value: function drawStrata(strata, divID) {
+                var height = 100;
+                var width = 500;
+                if (strata.getCharacteristicsByFamily('thicknessFamily').length > 0) {
+                    height = getThicknesses(strata.getCharacteristicsByFamily('thicknessFamily')[0].getName());
+                }
 
-                var height = getThicknesses(strata.getCharacteristicsByFamily('thicknessFamily')[0].getName());
-                var width = getWidths(strata.getCharacteristicsByFamily('widthFamily')[0].getName());
+                if (strata.getCharacteristicsByFamily('widthFamily').length > 0) {
+                    width = getWidths(strata.getCharacteristicsByFamily('widthFamily')[0].getName());
+                }
+
                 var color = 'white';
                 document.getElementById(divID).style.height = height + "px";
                 var borderWidth = 8;
@@ -340,6 +351,11 @@
             key: 'setDivID',
             value: function setDivID(id) {
                 this.divID = id;
+            }
+        }, {
+            key: 'setStratig',
+            value: function setStratig(stratig) {
+                this.stratig = stratig;
             }
         }, {
             key: 'getStratig',

@@ -84,55 +84,79 @@ angular.module('micorrApp')
          * Met à jour les données de la strate en fonction des valeurs dans le formulaire
          */
         $scope.upMorpho = function () {
-            var temp = StrataData.getStratas();
-            var index = StrataData.getCurrentSelectedStrata();
+            var strata = StratigraphyData.getStratigraphy().getStratas()[StratigraphyData.getSelectedStrata()];
+
 
             //A VOIR SI ON NE AJOUTE PAS UNE OPTION 'DEFAULT' OU 'NULL' DANS NEO4J
-            if ($scope.selectedShapeFamily == null)
-                temp[index].setShapeFamily("");
-            else
-                temp[index].setShapeFamily($scope.selectedShapeFamily.name);
-            if ($scope.selectedWidthFamily == null)
-                temp[index].setWidthFamily("");
-            else
-                temp[index].setWidthFamily($scope.selectedWidthFamily.name);
-            if ($scope.selectedThicknessFamily == null)
-                temp[index].setThicknessFamily("");
-            else
-                temp[index].setThicknessFamily($scope.selectedThicknessFamily.name);
-            if ($scope.selectedContinuityFamily == null)
-                temp[index].setContinuityFamily("");
-            else
-                temp[index].setContinuityFamily($scope.selectedContinuityFamily.name);
-            if ($scope.selectedDirectionFamily == null)
-                temp[index].setDirectionFamily("");
-            else
-                temp[index].setDirectionFamily($scope.selectedDirectionFamily.name);
-            if (temp[index].findDependency('colourFamily')) {
-                if ($scope.selectedColourFamily == null)
-                    temp[index].setColourFamily("");
-                else
-                    temp[index].setColourFamily($scope.selectedColourFamily.name);
+            if ($scope.selectedShapeFamily != null) {
+
+                var char = new characteristic.Characteristic();
+                char.setFamily("shapeFamily");
+                char.setName($scope.selectedShapeFamily.name);
+                char.setRealName($scope.selectedShapeFamily.real_name);
+                strata.addCharacteristic(char);
             }
-            if (temp[index].findDependency('brightnessFamily')) {
-                if ($scope.selectedBrightnessFamily == null)
-                    temp[index].setBrightnessFamily("");
-                else
-                    temp[index].setBrightnessFamily($scope.selectedBrightnessFamily.name);
+
+            if ($scope.selectedWidthFamily != null) {
+                var char = new characteristic.Characteristic();
+                char.setFamily("widthFamily");
+                char.setName($scope.selectedWidthFamily.name);
+                char.setRealName($scope.selectedWidthFamily.real_name);
+                strata.addCharacteristic(char);
             }
-            if (temp[index].findDependency('opacityFamily')) {
-                if ($scope.selectedOpacityFamily == null)
-                    temp[index].setOpacityFamily("");
-                else
-                    temp[index].setOpacityFamily($scope.selectedOpacityFamily.name);
+            if ($scope.selectedThicknessFamily != null) {
+                var char = new characteristic.Characteristic();
+                char.setFamily("thicknessFamily");
+                char.setName($scope.selectedThicknessFamily.name);
+                char.setRealName($scope.selectedThicknessFamily.real_name);
+                strata.addCharacteristic(char);
             }
-            if (temp[index].findDependency('magnetismFamily')) {
-                if ($scope.selectedMagnetismFamily == null)
-                    temp[index].setMagnetismFamily("");
-                else
-                    temp[index].setMagnetismFamily($scope.selectedMagnetismFamily.name);
+            if ($scope.selectedContinuityFamily != null) {
+                var char = new characteristic.Characteristic();
+                char.setFamily("continuityFamily");
+                char.setName($scope.selectedContinuityFamily.name);
+                char.setRealName($scope.selectedContinuityFamily.real_name);
+                strata.addCharacteristic(char);
+            }
+
+            if ($scope.selectedDirectionFamily != null) {
+                var char = new characteristic.Characteristic();
+                char.setFamily("directionFamily");
+                char.setName($scope.selectedDirectionFamily.name);
+                char.setRealName($scope.selectedDirectionFamily.real_name);
+                strata.addCharacteristic(char);
+            }
+            if (strata.findDependency('colourFamily')) {
+                var char = new characteristic.Characteristic();
+                char.setFamily("colourFamily");
+                char.setName($scope.selectedColourFamily.name);
+                char.setRealName($scope.selectedColourFamily.real_name);
+                strata.addCharacteristic(char);
+            }
+
+            if (strata.findDependency('brightnessFamily')) {
+                var char = new characteristic.Characteristic();
+                char.setFamily("brightnessFamily");
+                char.setName($scope.selectedBrightnessFamily.name);
+                char.setRealName($scope.selectedBrightnessFamily.real_name);
+                strata.addCharacteristic(char);
+            }
+            if (strata.findDependency('opacityFamily')) {
+                var char = new characteristic.Characteristic();
+                char.setFamily("opacityFamily");
+                char.setName($scope.selectedOpacityFamily.name);
+                char.setRealName($scope.selectedOpacityFamily.real_name);
+                strata.addCharacteristic(char);
+            }
+            if (strata.findDependency('magnetismFamily')) {
+                var char = new characteristic.Characteristic();
+                char.setFamily("magnetismFamily");
+                char.setName($scope.selectedMagnetismFamily.name);
+                char.setRealName($scope.selectedMagnetismFamily.real_name);
+                strata.addCharacteristic(char);
             }
             //mise à jour du dessin
             $scope.$emit('updateDraw');
         };
+
     });

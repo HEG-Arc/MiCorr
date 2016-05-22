@@ -58,34 +58,42 @@ angular.module('micorrApp')
 
             var strata = StratigraphyData.getStratigraphy().getStratas()[StratigraphyData.getSelectedStrata()];
 
-            if (strata.findDependency('porosityFamily')) {
-            var char = new characteristic.Characteristic();
-            char.setFamily("porosityFamily");
-            char.setName($scope.selectedPorosityFamily.name);
-            char.setRealName($scope.selectedPorosityFamily.real_name);
-            strata.addCharacteristic(char);
+            if($scope.selectedPorosityFamily != undefined) {
+                if (strata.findDependency('porosityFamily')) {
+                    var char = new characteristic.Characteristic();
+                    char.setFamily("porosityFamily");
+                    char.setName($scope.selectedPorosityFamily.name);
+                    char.setRealName($scope.selectedPorosityFamily.real_name);
+                    strata.addCharacteristic(char);
+                }
             }
-            /*
-            if (temp[index].findDependency('cohesionFamily'))
-                temp[index].setCohesionFamily($scope.selectedCohesionFamily.name);
-            if (temp[index].findDependency('hardnessFamily'))
-                temp[index].setHardnessFamily($scope.selectedHardnessFamily.name);
-            if (temp[index].findDependency('crackingFamily'))
-                temp[index].setCrackingFamily($scope.selectedCrackingFamily.name);
-
-            var temp = StrataData.getStratas();
-            var index = StrataData.getCurrentSelectedStrata();
-
-            /*
-            if (temp[index].findDependency('porosityFamily'))
-                temp[index].setPorosityFamily($scope.selectedPorosityFamily.name);
-            if (temp[index].findDependency('cohesionFamily'))
-                temp[index].setCohesionFamily($scope.selectedCohesionFamily.name);
-            if (temp[index].findDependency('hardnessFamily'))
-                temp[index].setHardnessFamily($scope.selectedHardnessFamily.name);
-            if (temp[index].findDependency('crackingFamily'))
-                temp[index].setCrackingFamily($scope.selectedCrackingFamily.name);
-            */
+            if($scope.selectedCohesionFamily != undefined) {
+                if (strata.findDependency('cohesionFamily')) {
+                    var char = new characteristic.Characteristic();
+                    char.setFamily("cohesionFamily");
+                    char.setName($scope.selectedCohesionFamily.name);
+                    char.setRealName($scope.selectedCohesionFamily.real_name);
+                    strata.addCharacteristic(char);
+                }
+            }
+            if($scope.selectedHardnessFamily != undefined) {
+                if (strata.findDependency('hardnessFamily')) {
+                    var char = new characteristic.Characteristic();
+                    char.setFamily("hardnessFamily");
+                    char.setName($scope.selectedHardnessFamily.name);
+                    char.setRealName($scope.selectedHardnessFamily.real_name);
+                    strata.addCharacteristic(char);
+                }
+            }
+            if($scope.selectedCrackingFamily != undefined) {
+                if (strata.findDependency('crackingFamily')) {
+                    var char = new characteristic.Characteristic();
+                    char.setFamily("crackingFamily");
+                    char.setName($scope.selectedCrackingFamily.name);
+                    char.setRealName($scope.selectedCrackingFamily.real_name);
+                    strata.addCharacteristic(char);
+                }
+            }
             $scope.$emit('updateDraw');
         };
     });

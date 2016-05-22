@@ -26,7 +26,7 @@ angular.module('micorrApp')
 
         //quand on supprime une strate, on se positionne sur la strate 0 et on met à jour le dessin
         $scope.removeStrata = function (index) {
-            StrataData.delStrata(index);
+            StratigraphyData.delStrata(index);
             $scope.$emit('doUpdate', 0);
             $scope.$emit('updateDraw');
         };
@@ -38,7 +38,7 @@ angular.module('micorrApp')
         $scope.movestrataup = function (i) {
             var current = parseInt(i);
             if (current > 0) {
-                StrataData.swapTwoStratas(current, current - 1);
+                StratigraphyData.swapTwoStratas(current, current - 1);
                 $scope.$broadcast('doUpdate', current - 1);
                 $scope.$broadcast('updateDraw');
             }
@@ -49,9 +49,10 @@ angular.module('micorrApp')
          * @params i strate actuelle qui va se faire déplacer
          */
         $scope.movestratadown = function (i) {
+
             var current = parseInt(i);
-            if (parseInt(StrataData.getCurrentSelectedStrata()) + 1 < StrataData.getStratas().length) {
-                StrataData.swapTwoStratas(current, current + 1);
+            if (current + 1 < StratigraphyData.getStratigraphy().getStratas().length) {
+                StratigraphyData.swapTwoStratas(current, current + 1);
                 $scope.$broadcast('doUpdate', current + 1);
                 $scope.$broadcast('updateDraw', current + 1);
             }
@@ -199,7 +200,7 @@ angular.module('micorrApp')
             $scope.showTabForms = true; //Affichage de formulaire
             StratigraphyData.setSelectedStrata(index); // On indique au service la strate sélectionnée
 
-            $scope.hideShowForms(strat); //TODO: réimplémenter hideShowForms
+            $scope.hideShowForms(strat);
             $scope.strataName = strat.getUid();
             $scope.natureFamilyname = strat.getCharacteristicsByFamily('natureFamily')[0].getName();
 

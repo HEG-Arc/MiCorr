@@ -153,7 +153,29 @@ angular.module('micorrApp').factory('StratigraphyData', function StratigraphyDat
                 }
                 return stratig;
             },
+            swapTwoStratas: function (index1, index2) {
+                var stratas = stratig.getStratas();
+                var temp;
+                temp = stratas[index1];
+                stratas[index1] = stratas[index2];
+                stratas[index2] = temp;
 
+                stratas[index1].setIndex(index1);
+                stratas[index2].setIndex(index2);
+            },
+
+            delStrata: function (index) {
+                var idel = parseInt(index);
+                var stratas = stratig.getStratas();
+                stratas.splice(idel, 1);
+                // SI on a plus de strate alors on en rajoute une nouvelle pour éviter les erreurs
+                if (stratas.length == 0)
+                    stratas.push(natureFactory("M"));
+            },
+
+            pushOneStrata: function (strata) {
+                stratig.getStratas().push(strata);
+            },
             Fill: function (data) {
                 var characteristics = data;
 

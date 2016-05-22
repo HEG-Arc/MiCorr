@@ -58,20 +58,45 @@ angular.module('micorrApp')
          * Met à jour les données de la strate en fonction des valeurs dans le formulaire
          */
         $scope.upInterface = function () {
-            var temp = StrataData.getStratas();
-            var index = StrataData.getCurrentSelectedStrata();
+            var strata = StratigraphyData.getStratigraphy().getStratas()[StratigraphyData.getSelectedStrata()];
 
-            temp[index].setInterfaceprofileFamily($scope.selectedInterfaceprofileFamily.name);
-            if (temp[index].findDependency('interfacetransitionFamily'))
-                temp[index].setInterfacetransitionFamily($scope.selectedInterfacetransitionFamily.name);
-            if (temp[index].findDependency('interfaceroughnessFamily'))
-                temp[index].setInterfaceroughnessFamily($scope.selectedInterfaceroughnessFamily.name);
-            if (temp[index].findDependency('interfaceadherenceFamily'))
-                temp[index].setInterfaceadherenceFamily($scope.selectedInterfaceadherenceFamily.name);
+            if (strata.findDependency('interfaceprofileFamily')) {
+            var char = new characteristic.Characteristic();
+            char.setFamily("interfaceProfileFamily");
+            char.setName($scope.selectedInterfaceprofileFamily.name);
+            char.setRealName($scope.selectedInterfaceprofileFamily.real_name);
+            strata.addCharacteristic(char);
+            }
+            if (strata.findDependency('interfacetransitionFamily')) {
+            var char = new characteristic.Characteristic();
+            char.setFamily("interfaceTransitionFamily");
+            char.setName($scope.selectedInterfacetransitionFamily.name);
+            char.setRealName($scope.selectedInterfacetransitionFamily.real_name);
+            strata.addCharacteristic(char);
+            }
+
+            if (strata.findDependency('interfaceroughnessFamily')) {
+            var char = new characteristic.Characteristic();
+            char.setFamily("interfaceRoughnessFamily");
+            char.setName($scope.selectedInterfaceroughnessFamily.name);
+            char.setRealName($scope.selectedInterfaceroughnessFamily.real_name);
+            strata.addCharacteristic(char);
+            }
+
+            if (strata.findDependency('interfaceadherenceFamily')) {
+            var char = new characteristic.Characteristic();
+            char.setFamily("interfaceAdherenceFamily");
+            char.setName($scope.selectedInterfaceadherenceFamily.name);
+            char.setRealName($scope.selectedInterfaceadherenceFamily.real_name);
+            strata.addCharacteristic(char);
+            }
+
+
 
             $scope.$emit('updateDraw');
         };
 
+        /* Ne semble plus utilisé
         $scope.addCorrodedMetalStrata = function () {
             if (StrataData.getCurrentSelectedStrata() != 0) {
                 if (StrataData.getStratas()[StrataData.getCurrentSelectedStrata() - 1].getNatureFamilyUid() == "cpCharacteristic") {
@@ -103,5 +128,6 @@ angular.module('micorrApp')
                 $scope.$emit('updateDraw');
             }
 
-        };
+
+        };*/
     });

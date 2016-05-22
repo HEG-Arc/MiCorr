@@ -139,8 +139,16 @@ class Strata {
 
     /**
      * Cette méthode initialise la strate en ajoutant à un tableau les propriétés modifiables
+     * et en lui attribuant des valeurs par défaut
      */
     init() {
+
+        var profileChar = new characteristic.Characteristic();
+        profileChar.setName('straightCharacteristic');
+        profileChar.setRealName('straight');
+        this.addCharacteristic(profileChar);
+
+
         this.dependencies.push('thicknessFamily');
         this.dependencies.push('widthFamily');
         this.dependencies.push('continuityFamily');
@@ -148,6 +156,7 @@ class Strata {
         this.dependencies.push('interfaceprofileFamily');
 
         if (this.nature == "Soil") {
+
             this.dependencies.push('colourFamily');
             this.dependencies.push('brightnessFamily');
             this.dependencies.push('opacityFamily');
@@ -234,6 +243,7 @@ class Strata {
         }
 
         if (this.nature == "Metal") {
+
             this.dependencies.push('colourFamily');
             this.dependencies.push('brightnessFamily');
             this.dependencies.push('opacityFamily');
@@ -253,6 +263,7 @@ class Strata {
 
 
     }
+
 
 }
 
