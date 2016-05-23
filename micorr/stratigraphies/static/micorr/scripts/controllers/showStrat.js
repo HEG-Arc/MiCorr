@@ -139,15 +139,9 @@ angular.module('micorrApp')
                         char.setName(currentCharacteristic.name);
                         char.setRealName(currentCharacteristic.real_name);
                         char.setFamily(currentCharacteristic.family);
-                        str.addCharacteristic(char);
+                        str.replaceCharacteristic(char);
                     }
-                    //Boucle sur les sous caracteristiques
-                    for (var j = 0; j < currentStrata.subcharacteristics.length; j++) {
-                        var currentSubCharacteristic = currentStrata.subcharacteristics[j];
-                        var subChar = new subCharacteristic.SubCharacteristic();
-                        subChar.setName(currentSubCharacteristic.name);
-                        str.addSubCharacteristic(subChar);
-                    }
+
                     //Boucle sur les caracteristiques d'interface
                     for (var j = 0; j < currentStrata.interfaces.characteristics.length; j++) {
                         var currentCharacteristic = currentStrata.interfaces.characteristics[j];
@@ -155,8 +149,90 @@ angular.module('micorrApp')
                         char.setName(currentCharacteristic.name);
                         char.setFamily(currentCharacteristic.family);
                         char.setInterface(true);
-                        str.addCharacteristic(char);
+
+                        //Si c'est une caracteristique d'une de ces familles on peut en ajouter plusieurs
+                        if (char.getFamily() == "cpcompositionextensionFamily" || char.getFamily() == "cprimicrostructureaggregatecompositionextensionFamily") {
+                            str.addCharacteristic(char)
+                        }
+                        else {
+                            //Sinon, il n'y en a que une donc on la remplace
+                            str.replaceCharacteristic(char);
+                        }
                     }
+
+
+                    //Récupération des sous caractéristiques:
+                    var subCharacteristicsList = currentStrata['subcharacteristics'];
+
+                    if (str.findDependency('subcpcompositionFamily')) {
+                        var subChar = new subCharacteristic.SubCharacteristic();
+                        subChar.setFamily('subcpcompositionFamily');
+                        subChar.setName($scope.getSubCharacteristicByFamily(subCharacteristicsList, StratigraphyData.getSubcpcompositionFamily()));
+                        str.addSubCharacteristic(subChar);
+                    }
+
+                    if (str.findDependency('subsubcpcompositionFamily')) {
+                        var subChar = new subCharacteristic.SubCharacteristic();
+                        subChar.setFamily('subsubcpcompositionFamily');
+                        subChar.setName($scope.getSubCharacteristicByFamily(subCharacteristicsList, StratigraphyData.getSubsubcpcompositionFamily()));
+                        str.addSubCharacteristic(subChar);
+                    }
+
+                    if (str.findDependency('subcprimicrostructureaggregatecompositionFamily')) {
+                        var subChar = new subCharacteristic.SubCharacteristic();
+                        subChar.setFamily('subcprimicrostructureaggregatecompositionFamily');
+                        subChar.setName($scope.getSubCharacteristicByFamily(subCharacteristicsList, StratigraphyData.getSubcprimicrostructureaggregatecompositionFamily()));
+                        str.addSubCharacteristic(subChar);
+                    }
+
+                    if (str.findDependency('subsubcprimicrostructureaggregatecompositionFamily')) {
+                        var subChar = new subCharacteristic.SubCharacteristic();
+                        subChar.setFamily('subsubcprimicrostructureaggregatecompositionFamily');
+                        subChar.setName($scope.getSubCharacteristicByFamily(subCharacteristicsList, StratigraphyData.getSubsubcprimicrostructureaggregatecompositionFamily()));
+                        str.addSubCharacteristic(subChar);
+                    }
+
+                    if (str.findDependency('subcmcompositionFamily')) {
+                        var subChar = new subCharacteristic.SubCharacteristic();
+                        subChar.setFamily('subcmcompositionFamily');
+                        subChar.setName($scope.getSubCharacteristicByFamily(subCharacteristicsList, StratigraphyData.getSubcmcompositionFamily()));
+                        str.addSubCharacteristic(subChar);
+                    }
+
+                    if (str.findDependency('subcmlevelofcorrosionFamily')) {
+                        var subChar = new subCharacteristic.SubCharacteristic();
+                        subChar.setFamily('subcmlevelofcorrosionFamily');
+                        subChar.setName($scope.getSubCharacteristicByFamily(subCharacteristicsList, StratigraphyData.getSubcmLevelOfCorrosionFamily()));
+                        str.addSubCharacteristic(subChar);
+                    }
+
+                    if (str.findDependency('submcompositionFamily')) {
+                        var subChar = new subCharacteristic.SubCharacteristic();
+                        subChar.setFamily('submcompositionFamily');
+                        subChar.setName($scope.getSubCharacteristicByFamily(subCharacteristicsList, StratigraphyData.getSubmcompositionFamily()));
+                        str.addSubCharacteristic(subChar);
+                    }
+
+
+                    //Chargement des données pour la picklist
+                    if (str.findDependency('subcprimicrostructureFamily')) {
+                        for (var j = 0; j < $scope.getSubCharacteristicByFamilyMulti(subCharacteristicsList, StratigraphyData.getSubcprimicrostructureFamily()).length; j++) {
+                            var subChar = new subCharacteristic.SubCharacteristic();
+                            subChar.setFamily('subcprimicrostructureFamily');
+                            subChar.setName($scope.getSubCharacteristicByFamilyMulti(subCharacteristicsList, StratigraphyData.getSubcprimicrostructureFamily())[j]);
+                            str.addSubCharacteristic(subChar);
+                        }
+                    }
+                    if (str.findDependency('submmicrostructureFamily')) {
+                        for (var j = 0; j < $scope.getSubCharacteristicByFamilyMulti(subCharacteristicsList, StratigraphyData.getSubmmicrostructureFamily()).length; j++) {
+                            var subChar = new subCharacteristic.SubCharacteristic();
+                            subChar.setFamily('submmicrostructureFamily');
+                            subChar.setName($scope.getSubCharacteristicByFamilyMulti(subCharacteristicsList, StratigraphyData.getSubmmicrostructureFamily())[j]);
+                            str.addSubCharacteristic(subChar);
+                        }
+                    }
+
+
                     st.addStrata(str);
                 }
                 $scope.stratas = st.getStratas();
@@ -188,6 +264,53 @@ angular.module('micorrApp')
                 $scope.update(index); // on donne toujours l'index de la strate sélectionnée pour la mise à jour
             });
         });
+
+        /*
+         * cherche dans une liste (liste de sous-charactéristiques) une valeur et si elle correspond
+         * à la valeur donnée en paramètre alors on retourne la sous caractéristique
+         * @params sub : sous-charactéristique de cette strate
+         *         list : liste des sous caractéristiques pour cette famille
+         * @returns valeur de la charactéristique
+         */
+        $scope.getSubCharacteristicByFamily = function (sub, list) {
+            for (var i = 0; i < sub.length; i++) {
+                for (var j = 0; j < list.length; j++) {
+                    if (sub[i].name == list[j].name)
+                        return sub[i].name;
+                }
+            }
+            return "";
+        }
+
+
+        $scope.getSubCharacteristicByFamilyMulti = function (sub, list) {
+            var t = [];
+            for (var i = 0; i < sub.length; i++) {
+                for (var j = 0; j < list.length; j++) {
+                    if (sub[i].name == list[j].name)
+                        t.push({'name': sub[i].name});
+                    //return sub[i].name;
+                }
+            }
+            return t;
+        }
+
+        /*
+         * cherche dans une liste (liste de sous-charactéristiques) des valeurs et si elles correspondent
+         * à la valeur donnée en paramètre alors on retourne les sous caractéristiques
+         * @params sub : sous-charactéristique de cette strate
+         *         list : liste des sous caractéristiques pour cette famille
+         * @returns valeurs de la caractéristique
+         */
+        $scope.getCharacteristicByFamilyMulti = function (data, family) {
+            var t = [];
+            for (var i = 0; i < data.length; i++) {
+                if (data[i].family == family) {
+                    t.push({'name': data[i].name});
+                }
+            }
+            return t;
+        }
 
         /*
          * exécute une mise à jour de l'interface. On met à jour le formulaire pour être plus précis
@@ -230,48 +353,7 @@ angular.module('micorrApp')
          * affiche/masque des champs en fonction de la strate
          * @params strata : strate sélectionnée
          */
-        $scope.hideShowForms = function (strata) { //TODO: Réimplémenter avec la nouvelle classe business Strata
-
-            /*
-             $scope.showWidth = true;
-
-             $scope.showWidth = true;
-             $scope.showThickness = true;
-             $scope.showContinuity = true;
-             $scope.showDirection = true;
-             $scope.showColor = true;
-             $scope.showBrightness = true;
-             $scope.showOpacity = true;
-             $scope.showMagnetism = true;
-             $scope.showPorosity = true;
-             $scope.showmmicrostructureFamily = true;
-             $scope.showCohesion = true;
-             $scope.showHardness = true;
-             $scope.showCracking = true;
-             $scope.showScomposition = true;
-             $scope.showNmmcomposition = true;
-             $scope.showDcomposition = true;
-             $scope.showPomcomposition = true;
-             $scope.showCpcomposition = true;
-             $scope.showCmcomposition = true;
-             $scope.showMcomposition = true;
-             $scope.showinterfaceprofileFamily = true;
-             $scope.showinterfacetransition = true;
-             $scope.showinterfaceroughness = true;
-             $scope.showinterfaceadherence = true;
-             $scope.showCmlevelofcorrosionFamily = true;
-             $scope.showcpcompositionextensionfamily = true;
-             $scope.showsubcpcompositionFamily = true;
-             $scope.showsubsubcpcompositionFamily = true;
-             $scope.showsubcmcompositionFamily = true;
-             $scope.showsubcmlevelofcorrosionFamily = true;
-             $scope.showsubmmicrostructureFamily = true;
-
-             $scope.showcprimicrostructureFamily = true;
-             $scope.showsubmcompositionFamily = true;
-
-             */
-
+        $scope.hideShowForms = function (strata) {
 
             $scope.showWidth = strata.findDependency('widthFamily');
             $scope.showThickness = strata.findDependency('thicknessFamily');

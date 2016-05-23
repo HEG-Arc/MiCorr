@@ -105,7 +105,7 @@ angular.module('micorrApp')
             char.setFamily("cpriMicrostructureFamily");
             char.setName($scope.selectedCprimicrostructureFamily.name);
             char.setRealName($scope.selectedCprimicrostructureFamily.real_name);
-            strata.addCharacteristic(char);
+            strata.replaceCharacteristic(char);
             }
 
             if (strata.findDependency('mmicrostructureFamily')) {
@@ -113,28 +113,28 @@ angular.module('micorrApp')
             char.setFamily("mMicrostructureFamily");
             char.setName($scope.selectedMmicrostructureFamily.name);
             char.setRealName($scope.selectedMmicrostructureFamily.real_name);
-            strata.addCharacteristic(char);
+            strata.replaceCharacteristic(char);
             }
             if (strata.findDependency('cmlevelofcorrosionFamily')) {
             var char = new characteristic.Characteristic();
             char.setFamily("cmLevelOfCorrosionFamily");
             char.setName($scope.selectedCmlevelofcorrosionFamily.name);
             char.setRealName($scope.selectedCmlevelofcorrosionFamily.real_name);
-            strata.addCharacteristic(char);
+            strata.replaceCharacteristic(char);
             }
             if (strata.findDependency('cprimicrostructureaggregatecompositionFamily')) {
             var char = new characteristic.Characteristic();
             char.setFamily("cpriMicrostructureAggregateCompositionFamily");
             char.setName($scope.selectedCprimicrostructureaggregatecompositionFamily.name);
             char.setRealName($scope.selectedCprimicrostructureaggregatecompositionFamily.real_name);
-            strata.addCharacteristic(char);
+            strata.replaceCharacteristic(char);
             }
             if (strata.findDependency('cprimicrostructureaggregatecompositionextensionFamily')) {
             var char = new characteristic.Characteristic();
             char.setFamily("cpriMicrostructureaggregateCompositionExtensionFamily");
             char.setName($scope.selectedCprimicrostructureaggregatecompositionExtensionFamily.name);
             char.setRealName($scope.selectedCprimicrostructureaggregatecompositionExtensionFamily.real_name);
-            strata.addCharacteristic(char);
+            strata.replaceCharacteristic(char);
             }
 
 

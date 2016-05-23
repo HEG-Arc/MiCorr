@@ -76,6 +76,16 @@
             value: function setName(name) {
                 this.name = name;
             }
+        }, {
+            key: "getFamily",
+            value: function getFamily() {
+                return this.family;
+            }
+        }, {
+            key: "setFamily",
+            value: function setFamily(family) {
+                this.family = family;
+            }
         }]);
 
         return SubCharacteristic;

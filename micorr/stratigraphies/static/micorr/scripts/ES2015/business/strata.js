@@ -32,6 +32,21 @@ class Strata {
         return charact;
     }
 
+    /**
+     * Retourne les sous caractéristiques de la famille en paramètre
+     * @param family
+     * @returns {Array} liste de sous caractéristiques
+     */
+    getSubCharacteristicsByFamily(family) {
+        var charact = [];
+        for (var i = 0; i < this.subCharacteristics.length; i++) {
+            if (this.subCharacteristics[i].getFamily() == family) {
+                charact.push(this.subCharacteristics[i]);
+            }
+        }
+        return charact;
+    }
+
 
     isFamily(family) {
         var exists = false;
@@ -58,22 +73,50 @@ class Strata {
         return exists;
     }
 
-    addSubCharacteristic(subCharacteristic) {
+    /**
+     * Ajoute une sous caractéristique sans vérifier si il en existe déjà une pour cette famille
+     * @param subCharacteristic
+     */
+        addSubCharacteristic(subCharacteristic) {
         this.subCharacteristics.push(subCharacteristic);
     }
 
-    addCharacteristic(characteristic) {
+    /**
+     * Remplace une sous caractéristique de la famille de celle donnée en paramètre
+     * @param subCharacteristic
+     */
+        replaceSubCharacteristic(subCharacteristic) {
         var found = false;
         var i = 0;
 
-        while(!found && i < this.characteristics.length){
-            if(characteristic.family == this.characteristics[i].family){
+        while (!found && i < this.subCharacteristics.length) {
+            if (subCharacteristic.family == this.subCharacteristics[i].family) {
+                found = true;
+                this.subCharacteristics[i] = subCharacteristic;
+            }
+            i++;
+        }
+        if (!found) {
+            this.subCharacteristics.push(subCharacteristic);
+        }
+    }
+
+    addCharacteristic(characteristic) {
+        this.characteristics.push(characteristic);
+    }
+
+    replaceCharacteristic(characteristic) {
+        var found = false;
+        var i = 0;
+
+        while (!found && i < this.characteristics.length) {
+            if (characteristic.family == this.characteristics[i].family) {
                 found = true;
                 this.characteristics[i] = characteristic;
             }
             i++;
         }
-        if(!found) {
+        if (!found) {
             this.characteristics.push(characteristic);
         }
 
@@ -141,12 +184,12 @@ class Strata {
      * Cette méthode initialise la strate en ajoutant à un tableau les propriétés modifiables
      * et en lui attribuant des valeurs par défaut
      */
-    init() {
+        init() {
 
         var profileChar = new characteristic.Characteristic();
         profileChar.setName('straightCharacteristic');
         profileChar.setRealName('straight');
-        this.addCharacteristic(profileChar);
+        this.replaceCharacteristic(profileChar);
 
 
         this.dependencies.push('thicknessFamily');

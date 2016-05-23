@@ -34,7 +34,7 @@ module.exports = {
                     var characteristic = new Characteristic();
                     characteristic.setName(currentCharacteristic.name);
                     characteristic.setFamily(currentCharacteristic.family);
-                    strata.addCharacteristic(characteristic);
+                    strata.replaceCharacteristic(characteristic);
                 }
 		//Boucle sur les sous characteristiques
 		for(var j = 0; j < currentStrata.subcharacteristics.length; j++){

@@ -64,7 +64,7 @@ angular.module('micorrApp')
                     char.setFamily("porosityFamily");
                     char.setName($scope.selectedPorosityFamily.name);
                     char.setRealName($scope.selectedPorosityFamily.real_name);
-                    strata.addCharacteristic(char);
+                    strata.replaceCharacteristic(char);
                 }
             }
             if($scope.selectedCohesionFamily != undefined) {
@@ -73,7 +73,7 @@ angular.module('micorrApp')
                     char.setFamily("cohesionFamily");
                     char.setName($scope.selectedCohesionFamily.name);
                     char.setRealName($scope.selectedCohesionFamily.real_name);
-                    strata.addCharacteristic(char);
+                    strata.replaceCharacteristic(char);
                 }
             }
             if($scope.selectedHardnessFamily != undefined) {
@@ -82,7 +82,7 @@ angular.module('micorrApp')
                     char.setFamily("hardnessFamily");
                     char.setName($scope.selectedHardnessFamily.name);
                     char.setRealName($scope.selectedHardnessFamily.real_name);
-                    strata.addCharacteristic(char);
+                    strata.replaceCharacteristic(char);
                 }
             }
             if($scope.selectedCrackingFamily != undefined) {
@@ -91,7 +91,7 @@ angular.module('micorrApp')
                     char.setFamily("crackingFamily");
                     char.setName($scope.selectedCrackingFamily.name);
                     char.setRealName($scope.selectedCrackingFamily.real_name);
-                    strata.addCharacteristic(char);
+                    strata.replaceCharacteristic(char);
                 }
             }
             $scope.$emit('updateDraw');

@@ -94,7 +94,7 @@ angular.module('micorrApp')
                 char.setFamily("shapeFamily");
                 char.setName($scope.selectedShapeFamily.name);
                 char.setRealName($scope.selectedShapeFamily.real_name);
-                strata.addCharacteristic(char);
+                strata.replaceCharacteristic(char);
             }
 
             if ($scope.selectedWidthFamily != null) {
@@ -102,21 +102,21 @@ angular.module('micorrApp')
                 char.setFamily("widthFamily");
                 char.setName($scope.selectedWidthFamily.name);
                 char.setRealName($scope.selectedWidthFamily.real_name);
-                strata.addCharacteristic(char);
+                strata.replaceCharacteristic(char);
             }
             if ($scope.selectedThicknessFamily != null) {
                 var char = new characteristic.Characteristic();
                 char.setFamily("thicknessFamily");
                 char.setName($scope.selectedThicknessFamily.name);
                 char.setRealName($scope.selectedThicknessFamily.real_name);
-                strata.addCharacteristic(char);
+                strata.replaceCharacteristic(char);
             }
             if ($scope.selectedContinuityFamily != null) {
                 var char = new characteristic.Characteristic();
                 char.setFamily("continuityFamily");
                 char.setName($scope.selectedContinuityFamily.name);
                 char.setRealName($scope.selectedContinuityFamily.real_name);
-                strata.addCharacteristic(char);
+                strata.replaceCharacteristic(char);
             }
 
             if ($scope.selectedDirectionFamily != null) {
@@ -124,14 +124,14 @@ angular.module('micorrApp')
                 char.setFamily("directionFamily");
                 char.setName($scope.selectedDirectionFamily.name);
                 char.setRealName($scope.selectedDirectionFamily.real_name);
-                strata.addCharacteristic(char);
+                strata.replaceCharacteristic(char);
             }
             if (strata.findDependency('colourFamily')) {
                 var char = new characteristic.Characteristic();
                 char.setFamily("colourFamily");
                 char.setName($scope.selectedColourFamily.name);
                 char.setRealName($scope.selectedColourFamily.real_name);
-                strata.addCharacteristic(char);
+                strata.replaceCharacteristic(char);
             }
 
             if (strata.findDependency('brightnessFamily')) {
@@ -139,21 +139,21 @@ angular.module('micorrApp')
                 char.setFamily("brightnessFamily");
                 char.setName($scope.selectedBrightnessFamily.name);
                 char.setRealName($scope.selectedBrightnessFamily.real_name);
-                strata.addCharacteristic(char);
+                strata.replaceCharacteristic(char);
             }
             if (strata.findDependency('opacityFamily')) {
                 var char = new characteristic.Characteristic();
                 char.setFamily("opacityFamily");
                 char.setName($scope.selectedOpacityFamily.name);
                 char.setRealName($scope.selectedOpacityFamily.real_name);
-                strata.addCharacteristic(char);
+                strata.replaceCharacteristic(char);
             }
             if (strata.findDependency('magnetismFamily')) {
                 var char = new characteristic.Characteristic();
                 char.setFamily("magnetismFamily");
                 char.setName($scope.selectedMagnetismFamily.name);
                 char.setRealName($scope.selectedMagnetismFamily.real_name);
-                strata.addCharacteristic(char);
+                strata.replaceCharacteristic(char);
             }
             //mise à jour du dessin
             $scope.$emit('updateDraw');

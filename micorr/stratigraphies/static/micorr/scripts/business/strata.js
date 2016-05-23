@@ -72,6 +72,17 @@
                 return charact;
             }
         }, {
+            key: 'getSubCharacteristicsByFamily',
+            value: function getSubCharacteristicsByFamily(family) {
+                var charact = [];
+                for (var i = 0; i < this.subCharacteristics.length; i++) {
+                    if (this.subCharacteristics[i].getFamily() == family) {
+                        charact.push(this.subCharacteristics[i]);
+                    }
+                }
+                return charact;
+            }
+        }, {
             key: 'isFamily',
             value: function isFamily(family) {
                 var exists = false;
@@ -99,8 +110,30 @@
                 this.subCharacteristics.push(subCharacteristic);
             }
         }, {
+            key: 'replaceSubCharacteristic',
+            value: function replaceSubCharacteristic(subCharacteristic) {
+                var found = false;
+                var i = 0;
+
+                while (!found && i < this.subCharacteristics.length) {
+                    if (subCharacteristic.family == this.subCharacteristics[i].family) {
+                        found = true;
+                        this.subCharacteristics[i] = subCharacteristic;
+                    }
+                    i++;
+                }
+                if (!found) {
+                    this.subCharacteristics.push(subCharacteristic);
+                }
+            }
+        }, {
             key: 'addCharacteristic',
             value: function addCharacteristic(characteristic) {
+                this.characteristics.push(characteristic);
+            }
+        }, {
+            key: 'replaceCharacteristic',
+            value: function replaceCharacteristic(characteristic) {
                 var found = false;
                 var i = 0;
 
@@ -186,7 +219,7 @@
                 var profileChar = new characteristic.Characteristic();
                 profileChar.setName('straightCharacteristic');
                 profileChar.setRealName('straight');
-                this.addCharacteristic(profileChar);
+                this.replaceCharacteristic(profileChar);
 
                 this.dependencies.push('thicknessFamily');
                 this.dependencies.push('widthFamily');

@@ -122,14 +122,14 @@ angular.module('micorrApp')
                 char.setFamily("sCompositionFamily");
                 char.setName($scope.selectedScompositionFamily.name);
                 char.setRealName($scope.selectedScompositionFamily.real_name);
-                strata.addCharacteristic(char);
+                strata.replaceCharacteristic(char);
             }
             if (strata.findDependency('nmmcompositionFamily')) {
                 var char = new characteristic.Characteristic();
                 char.setFamily("nmmCompositionFamily");
                 char.setName($scope.selectedNmmcompositionFamily.name);
                 char.setRealName($scope.selectedNmmcompositionFamily.real_name);
-                strata.addCharacteristic(char);
+                strata.replaceCharacteristic(char);
             }
 
             if (strata.findDependency('dcompositionFamily')) {
@@ -137,14 +137,14 @@ angular.module('micorrApp')
                 char.setFamily("dCompositionFamily");
                 char.setName($scope.selectedDcompositionFamily.name);
                 char.setRealName($scope.selectedDcompositionFamily.real_name);
-                strata.addCharacteristic(char);
+                strata.replaceCharacteristic(char);
             }
             if (strata.findDependency('pomcompositionFamily')) {
                 var char = new characteristic.Characteristic();
                 char.setFamily("pomCompositionFamily");
                 char.setName($scope.selectedPomcompositionFamily.name);
                 char.setRealName($scope.selectedPomcompositionFamily.real_name);
-                strata.addCharacteristic(char);
+                strata.replaceCharacteristic(char);
             }
 
 
@@ -153,7 +153,7 @@ angular.module('micorrApp')
                 char.setFamily("cpCompositionExtensionFamily");
                 char.setName($scope.selectedCpcompositionextensionFamily.name);
                 char.setRealName($scope.selectedCpcompositionextensionFamily.real_name);
-                strata.addCharacteristic(char);
+                strata.replaceCharacteristic(char);
             }
 
             /** TODO: Sous caracteristiques

@@ -65,14 +65,14 @@ angular.module('micorrApp')
             char.setFamily("interfaceProfileFamily");
             char.setName($scope.selectedInterfaceprofileFamily.name);
             char.setRealName($scope.selectedInterfaceprofileFamily.real_name);
-            strata.addCharacteristic(char);
+            strata.replaceCharacteristic(char);
             }
             if (strata.findDependency('interfacetransitionFamily')) {
             var char = new characteristic.Characteristic();
             char.setFamily("interfaceTransitionFamily");
             char.setName($scope.selectedInterfacetransitionFamily.name);
             char.setRealName($scope.selectedInterfacetransitionFamily.real_name);
-            strata.addCharacteristic(char);
+            strata.replaceCharacteristic(char);
             }
 
             if (strata.findDependency('interfaceroughnessFamily')) {
@@ -80,7 +80,7 @@ angular.module('micorrApp')
             char.setFamily("interfaceRoughnessFamily");
             char.setName($scope.selectedInterfaceroughnessFamily.name);
             char.setRealName($scope.selectedInterfaceroughnessFamily.real_name);
-            strata.addCharacteristic(char);
+            strata.replaceCharacteristic(char);
             }
 
             if (strata.findDependency('interfaceadherenceFamily')) {
@@ -88,7 +88,7 @@ angular.module('micorrApp')
             char.setFamily("interfaceAdherenceFamily");
             char.setName($scope.selectedInterfaceadherenceFamily.name);
             char.setRealName($scope.selectedInterfaceadherenceFamily.real_name);
-            strata.addCharacteristic(char);
+            strata.replaceCharacteristic(char);
             }
 
 

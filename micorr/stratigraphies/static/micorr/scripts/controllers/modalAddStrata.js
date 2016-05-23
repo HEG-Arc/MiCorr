@@ -26,7 +26,7 @@ angular.module('micorrApp')
 
                             var nature = returnNatureCharacteristic($scope.nature);
                             var newStrata = new strata.Strata(nature.getRealName());
-                            newStrata.addCharacteristic(nature);
+                            newStrata.replaceCharacteristic(nature);
                             newStrata.setUid($scope.strataName);
                             newStrata.setIndex(StratigraphyData.getStratigraphy().getStratas().length);
 

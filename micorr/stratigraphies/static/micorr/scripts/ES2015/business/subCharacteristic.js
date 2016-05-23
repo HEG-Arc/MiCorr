@@ -33,6 +33,14 @@ class SubCharacteristic{
     setName(name){
         this.name = name;
     }
+
+    getFamily(){
+        return this.family;
+    }
+
+    setFamily(family){
+        this.family = family;
+    }
 }
 
 export{SubCharacteristic};
