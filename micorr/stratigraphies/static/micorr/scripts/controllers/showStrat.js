@@ -219,7 +219,7 @@ angular.module('micorrApp')
                         for (var j = 0; j < $scope.getSubCharacteristicByFamilyMulti(subCharacteristicsList, StratigraphyData.getSubcprimicrostructureFamily()).length; j++) {
                             var subChar = new subCharacteristic.SubCharacteristic();
                             subChar.setFamily('subcprimicrostructureFamily');
-                            subChar.setName($scope.getSubCharacteristicByFamilyMulti(subCharacteristicsList, StratigraphyData.getSubcprimicrostructureFamily())[j]);
+                            subChar.setName($scope.getSubCharacteristicByFamilyMulti(subCharacteristicsList, StratigraphyData.getSubcprimicrostructureFamily())[j].name);
                             str.addSubCharacteristic(subChar);
                         }
                     }
@@ -227,7 +227,7 @@ angular.module('micorrApp')
                         for (var j = 0; j < $scope.getSubCharacteristicByFamilyMulti(subCharacteristicsList, StratigraphyData.getSubmmicrostructureFamily()).length; j++) {
                             var subChar = new subCharacteristic.SubCharacteristic();
                             subChar.setFamily('submmicrostructureFamily');
-                            subChar.setName($scope.getSubCharacteristicByFamilyMulti(subCharacteristicsList, StratigraphyData.getSubmmicrostructureFamily())[j]);
+                            subChar.setName($scope.getSubCharacteristicByFamilyMulti(subCharacteristicsList, StratigraphyData.getSubmmicrostructureFamily())[j].name);
                             str.addSubCharacteristic(subChar);
                         }
                     }
@@ -346,7 +346,7 @@ angular.module('micorrApp')
          * Met à jour le formulaire
          */
         $scope.$on('updateFormOnly', function (event) {
-            $scope.hideShowForms(StrataData.getStratas()[StrataData.getCurrentSelectedStrata()]);
+            $scope.hideShowForms(StratigraphyData.getStratigraphy().getStratas()[StratigraphyData.getSelectedStrata()]);
         });
 
         /*

@@ -32,6 +32,8 @@ class Strata {
         return charact;
     }
 
+
+
     /**
      * Retourne les sous caractéristiques de la famille en paramètre
      * @param family
@@ -47,6 +49,32 @@ class Strata {
         return charact;
     }
 
+    /**
+     * Supprime toutes les characteristiques d'une famille
+     * @param family
+     */
+    clearCharacteristicsFromFamily(family){
+
+        for (var i = 0; i < this.characteristics.length; i++) {
+            if (this.characteristics[i].getFamily() == family) {
+                this.characteristics.splice(i, 1);
+                i--;
+            }
+        }
+    }
+
+    /**
+     * Supprime toutes les sous characteristiques d'une famille
+     * @param family
+     */
+    clearSubCharacteristicsFromFamily(family){
+        for (var i = 0; i < this.subCharacteristics.length; i++) {
+            if (this.subCharacteristics[i].getFamily() == family) {
+                this.subCharacteristics.splice(i, 1);
+                i--;
+            }
+        }
+    }
 
     isFamily(family) {
         var exists = false;

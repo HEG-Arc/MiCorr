@@ -83,6 +83,27 @@
                 return charact;
             }
         }, {
+            key: 'clearCharacteristicsFromFamily',
+            value: function clearCharacteristicsFromFamily(family) {
+
+                for (var i = 0; i < this.characteristics.length; i++) {
+                    if (this.characteristics[i].getFamily() == family) {
+                        this.characteristics.splice(i, 1);
+                        i--;
+                    }
+                }
+            }
+        }, {
+            key: 'clearSubCharacteristicsFromFamily',
+            value: function clearSubCharacteristicsFromFamily(family) {
+                for (var i = 0; i < this.subCharacteristics.length; i++) {
+                    if (this.subCharacteristics[i].getFamily() == family) {
+                        this.subCharacteristics.splice(i, 1);
+                        i--;
+                    }
+                }
+            }
+        }, {
             key: 'isFamily',
             value: function isFamily(family) {
                 var exists = false;

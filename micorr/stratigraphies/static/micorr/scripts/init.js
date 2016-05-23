@@ -139,7 +139,7 @@ getCharacteristicByItsNameMulti = function (data, name) {
 
     for (var i = 0; i < name.length; i++) {
         for (var j = 0; j < data.length; j++) {
-            if (name[i].name == data[j].name) {
+            if (name[i].getName() == data[j].name) {
                 t.push(data[j]);
             }
         }
