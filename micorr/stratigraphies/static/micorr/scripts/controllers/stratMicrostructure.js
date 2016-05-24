@@ -23,6 +23,16 @@ angular.module('micorrApp')
         $scope.selectedSubmmicrostructureFamily = [];
 
         var initMicrostructure = function () {
+            $scope.selectedCprimicrostructureFamily = null;
+            $scope.selectedMmicrostructureFamily = null;
+            $scope.selectedCmlevelofcorrosionFamily = null;
+
+            $scope.selectedCprimicrostructureaggregatecompositionFamily = null;
+
+            $scope.selectedSubcprimicrostructureaggregatecompositionFamily = null;
+            $scope.selectedSubsubcprimicrostructureaggregatecompositionFamily = null;
+            $scope.selectedSubcmlevelofcorrosionFamily = null;
+
             // On récupère les valeurs qui vont aller dans les champs de notre formulaire
             $scope.cprimicrostructureFamily = StratigraphyData.getCprimicrostructureFamily()['characteristics'];
             $scope.mmicrostructureFamily = StratigraphyData.getMmicrostructureFamily()['characteristics'];
@@ -102,93 +112,87 @@ angular.module('micorrApp')
             var strata = StratigraphyData.getStratigraphy().getStratas()[StratigraphyData.getSelectedStrata()];
 
 
-            if (strata.findDependency('cprimicrostructureFamily')) {
-                var char = new characteristic.Characteristic();
-                char.setFamily("cpriMicrostructureFamily");
-                char.setName($scope.selectedCprimicrostructureFamily.name);
-                char.setRealName($scope.selectedCprimicrostructureFamily.real_name);
-                strata.replaceCharacteristic(char);
+            if ($scope.selectedCprimicrostructureFamily != null) {
+                if (strata.findDependency('cprimicrostructureFamily')) {
+                    var char = new characteristic.Characteristic();
+                    char.setFamily("cpriMicrostructureFamily");
+                    char.setName($scope.selectedCprimicrostructureFamily.name);
+                    char.setRealName($scope.selectedCprimicrostructureFamily.real_name);
+                    strata.replaceCharacteristic(char);
+                }
             }
 
 
-            if (strata.findDependency('mmicrostructureFamily')) {
-                var char = new characteristic.Characteristic();
-                char.setFamily("mMicrostructureFamily");
+            if ($scope.selectedMmicrostructureFamily != null) {
+                if (strata.findDependency('mmicrostructureFamily')) {
+                    var char = new characteristic.Characteristic();
+                    char.setFamily("mMicrostructureFamily");
 
-                if ($scope.selectedMmicrostructureFamily != undefined) {
+
                     char.setName($scope.selectedMmicrostructureFamily.name);
                     char.setRealName($scope.selectedMmicrostructureFamily.real_name);
-                }
-                else {
-                    char.setName = "";
-                    char.setRealName = "";
-                }
 
-                strata.replaceCharacteristic(char);
+
+                    strata.replaceCharacteristic(char);
+                }
             }
 
+            if ($scope.selectedCmlevelofcorrosionFamily != null) {
 
-            if (strata.findDependency('cmlevelofcorrosionFamily')) {
-                var char = new characteristic.Characteristic();
-                char.setFamily("cmLevelOfCorrosionFamily");
-                if ($scope.selectedCmlevelofcorrosionFamily != undefined) {
+                if (strata.findDependency('cmlevelofcorrosionFamily')) {
+                    var char = new characteristic.Characteristic();
+                    char.setFamily("cmLevelOfCorrosionFamily");
+
                     char.setName($scope.selectedCmlevelofcorrosionFamily.name);
                     char.setRealName($scope.selectedCmlevelofcorrosionFamily.real_name);
+
+                    strata.replaceCharacteristic(char);
                 }
-                else {
-                    char.setName = "";
-                    char.setRealName = "";
-                }
-                strata.replaceCharacteristic(char);
             }
 
 
-            if (strata.findDependency('cprimicrostructureaggregatecompositionFamily')) {
-                var char = new characteristic.Characteristic();
-                char.setFamily("cpriMicrostructureAggregateCompositionFamily");
-                if ($scope.selectedCprimicrostructureaggregatecompositionFamily != undefined) {
+            if ($scope.selectedCprimicrostructureaggregatecompositionFamily != null) {
+                if (strata.findDependency('cprimicrostructureaggregatecompositionFamily')) {
+                    var char = new characteristic.Characteristic();
+                    char.setFamily("cpriMicrostructureAggregateCompositionFamily");
+
                     char.setName($scope.selectedCprimicrostructureaggregatecompositionFamily.name);
                     char.setRealName($scope.selectedCprimicrostructureaggregatecompositionFamily.real_name);
+
+                    strata.replaceCharacteristic(char);
                 }
-                else {
-                    char.setName = "";
-                    char.setRealName = "";
-                }
-                strata.replaceCharacteristic(char);
             }
 
 
-            if (strata.findDependency('cprimicrostructureaggregatecompositionextensionFamily')) {
-                var char = new characteristic.Characteristic();
-                char.setFamily("cpriMicrostructureaggregateCompositionExtensionFamily");
-                if ($scope.selectedCprimicrostructureaggregatecompositionExtensionFamily != undefined) {
+            if ($scope.selectedCprimicrostructureaggregatecompositionExtensionFamily != null) {
+                if (strata.findDependency('cprimicrostructureaggregatecompositionextensionFamily')) {
+                    var char = new characteristic.Characteristic();
+                    char.setFamily("cpriMicrostructureaggregateCompositionExtensionFamily");
+
                     char.setName($scope.selectedCprimicrostructureaggregatecompositionExtensionFamily.name);
                     char.setRealName($scope.selectedCprimicrostructureaggregatecompositionExtensionFamily.real_name);
+
+                    strata.replaceCharacteristic(char);
                 }
-                else {
-                    char.setName = "";
-                    char.setRealName = "";
-                }
-                strata.replaceCharacteristic(char);
             }
 
 
-            if (strata.findDependency('subcmlevelofcorrosionFamily')) {
-                var subChar = new subCharacteristic.SubCharacteristic();
-                subChar.setFamily('subcmlevelofcorrosionFamily');
-                if($scope.selectedSubcmlevelofcorrosionFamily != undefined) {
+            if ($scope.selectedSubcmlevelofcorrosionFamily != null) {
+                if (strata.findDependency('subcmlevelofcorrosionFamily')) {
+                    var subChar = new subCharacteristic.SubCharacteristic();
+                    subChar.setFamily('subcmlevelofcorrosionFamily');
+
                     subChar.setName($scope.selectedSubcmlevelofcorrosionFamily.name);
+
+
+                    strata.replaceSubCharacteristic(subChar);
                 }
-                else{
-                    subChar.setName("");
-                }
-                strata.replaceSubCharacteristic(subChar);
             }
 
             if (strata.findDependency('submmicrostructureFamily')) {
 
                 strata.clearSubCharacteristicsFromFamily('submmicrostructureFamily');
-                var test = strata.getSubCharacteristicsByFamily('submmicrostructureFamily');
+
                 for (var i = 0; i < $scope.selectedSubmmicrostructureFamily.length; i++) {
                     var subChar = new subCharacteristic.SubCharacteristic();
                     subChar.setName($scope.selectedSubmmicrostructureFamily[i].name);
@@ -208,27 +212,26 @@ angular.module('micorrApp')
                 }
             }
 
-            if (strata.findDependency('subcprimicrostructureaggregatecompositionFamily')) {
-                var subChar = new subCharacteristic.SubCharacteristic();
-                subChar.setFamily('subcprimicrostructureaggregatecompositionFamily');
-                if($scope.selectedSubcprimicrostructureaggregatecompositionFamily != undefined) {
+            if ($scope.selectedSubcprimicrostructureaggregatecompositionFamily != null) {
+                if (strata.findDependency('subcprimicrostructureaggregatecompositionFamily')) {
+                    var subChar = new subCharacteristic.SubCharacteristic();
+                    subChar.setFamily('subcprimicrostructureaggregatecompositionFamily');
+
                     subChar.setName($scope.selectedSubcprimicrostructureaggregatecompositionFamily.name);
+
+                    strata.replaceSubCharacteristic(subChar);
                 }
-                else{
-                    subChar.setName("");
-                }
-                strata.replaceSubCharacteristic(subChar);
             }
-            if (strata.findDependency('subsubcprimicrostructureaggregatecompositionFamily')) {
-                var subChar = new subCharacteristic.SubCharacteristic();
-                subChar.setFamily('subsubcprimicrostructureaggregatecompositionFamily');
-                if($scope.selectedSubsubcprimicrostructureaggregatecompositionFamily != undefined) {
+
+            if ($scope.selectedSubsubcprimicrostructureaggregatecompositionFamily != null) {
+                if (strata.findDependency('subsubcprimicrostructureaggregatecompositionFamily')) {
+                    var subChar = new subCharacteristic.SubCharacteristic();
+                    subChar.setFamily('subsubcprimicrostructureaggregatecompositionFamily');
+
                     subChar.setName($scope.selectedSubsubcprimicrostructureaggregatecompositionFamily.name);
+
+                    strata.replaceSubCharacteristic(subChar);
                 }
-                else{
-                    subChar.setName("");
-                }
-                strata.replaceSubCharacteristic(subChar);
             }
 
             $scope.$emit('updateDraw');

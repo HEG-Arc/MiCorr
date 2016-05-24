@@ -32,6 +32,10 @@ angular.module('micorrApp')
          * @returns
          */
         $scope.$on('updateTexture', function () {
+            $scope.selectedPorosityFamily = null;
+            $scope.selectedCohesionFamily = null;
+            $scope.selectedHardnessFamily = null;
+            $scope.selectedCrackingFamily = null;
 
             var strata = StratigraphyData.getStratigraphy().getStratas()[StratigraphyData.getSelectedStrata()];
 
@@ -58,7 +62,7 @@ angular.module('micorrApp')
 
             var strata = StratigraphyData.getStratigraphy().getStratas()[StratigraphyData.getSelectedStrata()];
 
-            if($scope.selectedPorosityFamily != undefined) {
+            if($scope.selectedPorosityFamily != null) {
                 if (strata.findDependency('porosityFamily')) {
                     var char = new characteristic.Characteristic();
                     char.setFamily("porosityFamily");
@@ -67,7 +71,7 @@ angular.module('micorrApp')
                     strata.replaceCharacteristic(char);
                 }
             }
-            if($scope.selectedCohesionFamily != undefined) {
+            if($scope.selectedCohesionFamily != null) {
                 if (strata.findDependency('cohesionFamily')) {
                     var char = new characteristic.Characteristic();
                     char.setFamily("cohesionFamily");
@@ -76,7 +80,7 @@ angular.module('micorrApp')
                     strata.replaceCharacteristic(char);
                 }
             }
-            if($scope.selectedHardnessFamily != undefined) {
+            if($scope.selectedHardnessFamily != null) {
                 if (strata.findDependency('hardnessFamily')) {
                     var char = new characteristic.Characteristic();
                     char.setFamily("hardnessFamily");
@@ -85,7 +89,7 @@ angular.module('micorrApp')
                     strata.replaceCharacteristic(char);
                 }
             }
-            if($scope.selectedCrackingFamily != undefined) {
+            if($scope.selectedCrackingFamily != null) {
                 if (strata.findDependency('crackingFamily')) {
                     var char = new characteristic.Characteristic();
                     char.setFamily("crackingFamily");

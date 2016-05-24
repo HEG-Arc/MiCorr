@@ -31,6 +31,7 @@ angular.module('micorrApp')
                             newStrata.setIndex(StratigraphyData.getStratigraphy().getStratas().length);
 
                             StratigraphyData.pushOneStrata(newStrata);
+
                             scopeParent.$emit('doUpdate', StratigraphyData.getStratigraphy().getStratas().length-1);
                             scopeParent.$emit('updateDraw');
                             $modalInstance.close();

@@ -75,6 +75,19 @@
                 var index = strata.getIndex();
                 var interfaceDiv = document.getElementById(divID);
                 var interfaceHeight = 22;
+
+                //On vérifie si on se trouve dans une strate CM ou si il y a une strate CM en dessus
+                //Si c'est le cas on ne montre pas l'interface
+                if (strata.getCharacteristicsByFamily('natureFamily')[0].getName() == 'cmCharacteristic') {
+                    interfaceHeight = 0;
+                }
+                if (strata.index > 0) {
+                    var upperStrata = this.stratig.getStratas()[index - 1];
+                    if (upperStrata.getCharacteristicsByFamily('natureFamily')[0].getName() == 'cmCharacteristic') {
+                        interfaceHeight = 0;
+                    }
+                }
+
                 interfaceDiv.style.height = interfaceHeight + "px";
 
                 var borderWidth = 8;
@@ -161,6 +174,7 @@
         }, {
             key: 'drawStrata',
             value: function drawStrata(strata, divID) {
+
                 var height = 100;
                 var width = 500;
                 if (strata.getCharacteristicsByFamily('thicknessFamily').length > 0) {
@@ -171,14 +185,78 @@
                     width = getWidths(strata.getCharacteristicsByFamily('widthFamily')[0].getName());
                 }
 
-                var color = 'white';
                 document.getElementById(divID).style.height = height + "px";
                 var borderWidth = 8;
+
+                var draw = SVG(divID).size(width, height);
+                this.fillStrata(draw, strata);
+
+                //Strate CM
+                if (strata.getCharacteristicsByFamily('natureFamily')[0].getName() == 'cmCharacteristic') {
+                    if (strata.getIndex() > 0 && strata.getIndex() < this.stratig.getStratas().length - 1) {
+                        var upperStrata = this.stratig.getStratas()[strata.getIndex() - 1];
+                        var lowerStrata = this.stratig.getStratas()[strata.getIndex() + 1];
+                        if (upperStrata.getCharacteristicsByFamily('natureFamily')[0].getName() == 'cpCharacteristic' && lowerStrata.getCharacteristicsByFamily('natureFamily')[0].getName() == 'mCharacteristic') {
+                            this.drawCM(strata, width, height, draw);
+                        }
+                    }
+                }
+
+                //Dessin des bords
+                var leftBorder = draw.path("M0 0L0 " + height).fill('none');
+                var rightBorder = draw.path("M" + width + " 0L" + width + " " + height).fill('none');
+                leftBorder.stroke({ color: 'black', width: borderWidth });
+                rightBorder.stroke({ color: 'black', width: borderWidth });
+
+                //Dessin du bord inférieur si c'est la dernière strate
+                var index = strata.getIndex();
+                var lastIndex = this.stratig.getStratas().length;
+                if (strata.getIndex() == this.stratig.getStratas().length - 1) {
+                    var bottomBorder = draw.path("M0 " + height + "L" + width + " " + height).fill('none');
+                    bottomBorder.stroke({ color: 'black', width: borderWidth });
+                }
+            }
+        }, {
+            key: 'drawCM',
+            value: function drawCM(strata, width, height, draw) {
+                var ratio = strata.getCharacteristicsByFamily('cmCorrosionRatioFamily')[0].getRealName();
+                ratio = parseInt(ratio.substr(1));
+
+                var begin = 0 - 2 * height / 10 * ratio;
+
+                var rectHeight = begin + height;
+                var topX = rectHeight + height;
+                var pathString = 'M 0 ' + begin + ' L ' + width + ' ' + begin + ' L ' + width + ' ' + rectHeight;
+
+                //On dessine les triangles en fonction de la taille de la strata
+                for (var i = 0; i < 7; i++) {
+                    var divisor = 8;
+                    var topY = width - (i + 1) * (width / divisor) - i * (width / divisor);
+                    var downY = topY - width / divisor;
+                    pathString = pathString + ' L ' + topY + ' ' + topX + ' L ' + downY + ' ' + rectHeight;
+                }
+
+                draw.path(pathString);
+            }
+        }, {
+            key: 'fillStrata',
+            value: function fillStrata(draw, strata) {
+
+                var height = 100;
+                var width = 500;
+                if (strata.getCharacteristicsByFamily('thicknessFamily').length > 0) {
+                    height = getThicknesses(strata.getCharacteristicsByFamily('thicknessFamily')[0].getName());
+                }
+
+                if (strata.getCharacteristicsByFamily('widthFamily').length > 0) {
+                    width = getWidths(strata.getCharacteristicsByFamily('widthFamily')[0].getName());
+                }
 
                 // Initialisation du POISSON DISK DISTRIBUTION
                 var poisson = [];
                 var pds = new PoissonDiskSampler(width, height);
 
+                var color = 'white';
                 if (strata.getCharacteristicsByFamily('colourFamily').length > 0) {
                     color = strata.getCharacteristicsByFamily('colourFamily')[0].getRealName();
                 }
@@ -187,7 +265,6 @@
                     color = '#474747';
                 }
 
-                var draw = SVG(divID).size(width, height);
                 var rect = draw.rect(width, height).attr({ fill: color });
 
                 if (strata.getCharacteristicsByFamily('porosityFamily').length > 0) {
@@ -326,20 +403,6 @@
                     image.size(pds.pointList[i].w, pds.pointList[i].h);
                     image.x(pds.pointList[i].x - pds.pointList[i].w / 2);
                     image.y(pds.pointList[i].y - pds.pointList[i].h / 2);
-                }
-
-                //Dessin des bords
-                var leftBorder = draw.path("M0 0L0 " + height).fill('none');
-                var rightBorder = draw.path("M" + width + " 0L" + width + " " + height).fill('none');
-                leftBorder.stroke({ color: 'black', width: borderWidth });
-                rightBorder.stroke({ color: 'black', width: borderWidth });
-
-                //Dessin du bord inférieur si c'est la dernière strate
-                var index = strata.getIndex();
-                var lastIndex = this.stratig.getStratas().length;
-                if (strata.getIndex() == this.stratig.getStratas().length - 1) {
-                    var bottomBorder = draw.path("M0 " + height + "L" + width + " " + height).fill('none');
-                    bottomBorder.stroke({ color: 'black', width: borderWidth });
                 }
             }
         }, {

@@ -25,6 +25,21 @@ class GraphGenerationUtil {
         var index = strata.getIndex();
         var interfaceDiv = document.getElementById(divID);
         var interfaceHeight = 22;
+
+
+
+        //On vérifie si on se trouve dans une strate CM ou si il y a une strate CM en dessus
+        //Si c'est le cas on ne montre pas l'interface
+        if(strata.getCharacteristicsByFamily('natureFamily')[0].getName() == 'cmCharacteristic' ) {
+            interfaceHeight = 0;
+        }
+        if(strata.index > 0){
+            var upperStrata = this.stratig.getStratas()[index -1];
+            if(upperStrata.getCharacteristicsByFamily('natureFamily')[0].getName() == 'cmCharacteristic'){
+                interfaceHeight = 0;
+            }
+        }
+
         interfaceDiv.style.height = interfaceHeight + "px";
 
         var borderWidth = 8;
@@ -32,7 +47,7 @@ class GraphGenerationUtil {
 
         var strataWidth = 500
 
-        if(strata.getCharacteristicsByFamily('widthFamily').length > 0){
+        if (strata.getCharacteristicsByFamily('widthFamily').length > 0) {
             strataWidth = getWidths(strata.getCharacteristicsByFamily('widthFamily')[0].getName());
         }
 
@@ -98,22 +113,21 @@ class GraphGenerationUtil {
             var divisionPath = draw.path("M0 " + (interfaceHeight / 2) + "L" + interfaceWidth + " " + (interfaceHeight / 2)).fill('none');
             divisionPath.stroke({ color: 'black', width: divisionLineWidth });
         }
-        else if (profile == 'wavyCharacteristic'){
+        else if (profile == 'wavyCharacteristic') {
             drawInterface(draw, index, interfaceWidth, interfaceHeight, 'wavy', 8, lowerInterfaceColor, upperInterfaceColor, borderWidth, divisionLineWidth, diffuse, transition);
         }
-        else if(profile == 'bumpyCharacteristic'){
+        else if (profile == 'bumpyCharacteristic') {
             drawInterface(draw, index, interfaceWidth, interfaceHeight, 'bumpy', 20, lowerInterfaceColor, upperInterfaceColor, borderWidth, divisionLineWidth, diffuse, transition);
         }
-        else if(profile == 'irregularCharacteristic'){
-             drawInterface(draw, index, interfaceWidth, interfaceHeight, 'irregular', 30, lowerInterfaceColor, upperInterfaceColor, borderWidth, divisionLineWidth, diffuse, transition);
+        else if (profile == 'irregularCharacteristic') {
+            drawInterface(draw, index, interfaceWidth, interfaceHeight, 'irregular', 30, lowerInterfaceColor, upperInterfaceColor, borderWidth, divisionLineWidth, diffuse, transition);
         }
-        else{
+        else {
             //Si il n'y a aucune transition on a pas besoin d'interface
             interfaceDiv.style.height = '0px';
         }
 
         //Si l'interface n'est pas droite on la dessine avec la méthode de dessin de l'interface
-
 
 
     }
@@ -124,26 +138,101 @@ class GraphGenerationUtil {
      * @param divID La div dans laquelle on veut dessiner la strate
      */
         drawStrata(strata, divID) {
+
         var height = 100;
         var width = 500
-        if(strata.getCharacteristicsByFamily('thicknessFamily').length > 0){
+        if (strata.getCharacteristicsByFamily('thicknessFamily').length > 0) {
             height = getThicknesses(strata.getCharacteristicsByFamily('thicknessFamily')[0].getName());
         }
 
-        if(strata.getCharacteristicsByFamily('widthFamily').length > 0){
+        if (strata.getCharacteristicsByFamily('widthFamily').length > 0) {
             width = getWidths(strata.getCharacteristicsByFamily('widthFamily')[0].getName());
         }
 
-
-
-        var color = 'white';
         document.getElementById(divID).style.height = height + "px";
         var borderWidth = 8;
+
+
+        var draw = SVG(divID).size(width, height);
+        this.fillStrata(draw, strata);
+
+        //Strate CM
+        if (strata.getCharacteristicsByFamily('natureFamily')[0].getName() == 'cmCharacteristic') {
+            if (strata.getIndex() > 0 && strata.getIndex() < this.stratig.getStratas().length - 1) {
+                var upperStrata = this.stratig.getStratas()[strata.getIndex() - 1];
+                var lowerStrata = this.stratig.getStratas()[strata.getIndex() + 1];
+                if (upperStrata.getCharacteristicsByFamily('natureFamily')[0].getName() == 'cpCharacteristic'
+                    && lowerStrata.getCharacteristicsByFamily('natureFamily')[0].getName() == 'mCharacteristic') {
+                    this.drawCM(strata, width, height, draw);
+                }
+            }
+
+        }
+
+        //Dessin des bords
+        var leftBorder = draw.path("M0 0L0 " + height).fill('none');
+        var rightBorder = draw.path("M" + width + " 0L" + width + " " + height).fill('none');
+        leftBorder.stroke({ color: 'black', width: borderWidth });
+        rightBorder.stroke({ color: 'black', width: borderWidth });
+
+        //Dessin du bord inférieur si c'est la dernière strate
+        var index = strata.getIndex();
+        var lastIndex = this.stratig.getStratas().length;
+        if (strata.getIndex() == this.stratig.getStratas().length - 1) {
+            var bottomBorder = draw.path("M0 " + height + "L" + width + " " + height).fill('none');
+            bottomBorder.stroke({ color: 'black', width: borderWidth });
+        }
+
+    }
+
+    /**
+     * Cette méthode s'occupe de dessiner la strate CM
+     */
+        drawCM(strata, width, height, draw) {
+        var ratio = strata.getCharacteristicsByFamily('cmCorrosionRatioFamily')[0].getRealName();
+        ratio = parseInt(ratio.substr(1));
+
+
+        var begin = 0 - ((2*height) / 10) * ratio;
+
+        var rectHeight = begin + height;
+        var topX = rectHeight + height;
+        var pathString = 'M 0 ' + begin + ' L ' + width + ' ' + begin + ' L ' + width + ' ' + rectHeight;
+
+        //On dessine les triangles en fonction de la taille de la strata
+        for (var i = 0; i < 7; i++) {
+            var divisor = 8;
+            var topY = width - (i + 1) * (width / divisor) - i * (width / divisor);
+            var downY = topY - (width / divisor)
+            pathString = pathString + ' L ' + topY + ' ' + topX + ' L ' + downY + ' ' + rectHeight;
+        }
+
+        draw.path(pathString);
+    }
+
+    /**
+     * Cette méthode remplit la strate avec les images et les éléments générés
+     * @param canvas
+     * @param strata
+     */
+        fillStrata(draw, strata) {
+
+
+        var height = 100;
+        var width = 500
+        if (strata.getCharacteristicsByFamily('thicknessFamily').length > 0) {
+            height = getThicknesses(strata.getCharacteristicsByFamily('thicknessFamily')[0].getName());
+        }
+
+        if (strata.getCharacteristicsByFamily('widthFamily').length > 0) {
+            width = getWidths(strata.getCharacteristicsByFamily('widthFamily')[0].getName());
+        }
 
         // Initialisation du POISSON DISK DISTRIBUTION
         var poisson = [];
         var pds = new PoissonDiskSampler(width, height);
 
+        var color = 'white';
         if (strata.getCharacteristicsByFamily('colourFamily').length > 0) {
             color = strata.getCharacteristicsByFamily('colourFamily')[0].getRealName();
         }
@@ -152,12 +241,7 @@ class GraphGenerationUtil {
             color = '#474747';
         }
 
-
-        var draw = SVG(divID).size(width, height);
         var rect = draw.rect(width, height).attr({ fill: color });
-
-
-
 
         if (strata.getCharacteristicsByFamily('porosityFamily').length > 0) {
             var char = strata.getCharacteristicsByFamily('porosityFamily')[0].getName();
@@ -317,26 +401,7 @@ class GraphGenerationUtil {
             image.y(pds.pointList[i].y - pds.pointList[i].h / 2);
 
         }
-
-        //Dessin des bords
-        var leftBorder = draw.path("M0 0L0 " + height).fill('none');
-        var rightBorder = draw.path("M" + width + " 0L" + width + " " + height).fill('none');
-        leftBorder.stroke({ color: 'black', width: borderWidth });
-        rightBorder.stroke({ color: 'black', width: borderWidth });
-
-        //Dessin du bord inférieur si c'est la dernière strate
-        var index = strata.getIndex();
-        var lastIndex = this.stratig.getStratas().length;
-        if(strata.getIndex() == this.stratig.getStratas().length -1){
-            var bottomBorder = draw.path("M0 " + height + "L" + width + " " + height).fill('none');
-            bottomBorder.stroke({ color: 'black', width: borderWidth });
-        }
-
-
-
-
     }
-
 
     getDivID() {
         return this.divID;
@@ -346,9 +411,10 @@ class GraphGenerationUtil {
         this.divID = id;
     }
 
-    setStratig(stratig){
+    setStratig(stratig) {
         this.stratig = stratig;
     }
+
     getStratig() {
         return this.stratig;
     }

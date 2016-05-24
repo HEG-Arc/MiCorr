@@ -39,7 +39,7 @@ function returnNatureCharacteristic(nature){
 
     else if (nature == "cpCharacteristic" || nature == "CP"){
         natureChar.setName('cpCharacteristic');
-        natureChar.setRealName("Corrosion Products");
+        natureChar.setRealName("Corrosion products");
     }
 
     else if (nature == "dCharacteristic" || nature == "D"){

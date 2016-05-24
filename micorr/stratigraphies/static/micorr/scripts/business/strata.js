@@ -240,6 +240,7 @@
                 var profileChar = new characteristic.Characteristic();
                 profileChar.setName('straightCharacteristic');
                 profileChar.setRealName('straight');
+                profileChar.setFamily('interfaceProfileFamily');
                 this.replaceCharacteristic(profileChar);
 
                 this.dependencies.push('thicknessFamily');
@@ -351,6 +352,15 @@
                     this.dependencies.push('interfaceadherenceFamily');
                     this.dependencies.push('submmicrostructureFamily');
                     this.dependencies.push('submcompositionFamily');
+                }
+
+                if (this.nature == 'Corroded Metal') {
+                    var ratioChar = new characteristic.Characteristic();
+                    ratioChar.setName('r1Characteristic');
+                    ratioChar.setRealName('r1');
+                    ratioChar.setFamily('cmCorrosionRatioFamily');
+
+                    this.replaceCharacteristic(ratioChar);
                 }
             }
         }]);

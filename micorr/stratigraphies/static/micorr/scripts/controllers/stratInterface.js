@@ -17,6 +17,11 @@ angular.module('micorrApp')
         $scope.selectedInterfaceadherenceFamily;
 
         var initStratInterface = function () {
+            $scope.selectedInterfaceprofileFamily = null;
+            $scope.selectedInterfacetransitionFamily = null;
+            $scope.selectedInterfaceroughnessFamily = null;
+            $scope.selectedInterfaceadherenceFamily = null;
+
             // On récupère les valeurs qui vont aller dans les champs de notre formulaire
             $scope.interfaceprofileFamily = StratigraphyData.getInterfaceprofileFamily()['characteristics'];
             $scope.interfacetransitionFamily = StratigraphyData.getInterfacetransitionFamily()['characteristics'];
@@ -60,74 +65,80 @@ angular.module('micorrApp')
         $scope.upInterface = function () {
             var strata = StratigraphyData.getStratigraphy().getStratas()[StratigraphyData.getSelectedStrata()];
 
-            if (strata.findDependency('interfaceprofileFamily')) {
-            var char = new characteristic.Characteristic();
-            char.setFamily("interfaceProfileFamily");
-            char.setName($scope.selectedInterfaceprofileFamily.name);
-            char.setRealName($scope.selectedInterfaceprofileFamily.real_name);
-            strata.replaceCharacteristic(char);
+            if($scope.selectedInterfaceprofileFamily != null) {
+                if (strata.findDependency('interfaceprofileFamily')) {
+                    var char = new characteristic.Characteristic();
+                    char.setFamily("interfaceProfileFamily");
+                    char.setName($scope.selectedInterfaceprofileFamily.name);
+                    char.setRealName($scope.selectedInterfaceprofileFamily.real_name);
+                    strata.replaceCharacteristic(char);
+                }
             }
-            if (strata.findDependency('interfacetransitionFamily')) {
-            var char = new characteristic.Characteristic();
-            char.setFamily("interfaceTransitionFamily");
-            char.setName($scope.selectedInterfacetransitionFamily.name);
-            char.setRealName($scope.selectedInterfacetransitionFamily.real_name);
-            strata.replaceCharacteristic(char);
+            if($scope.selectedInterfacetransitionFamily != null) {
+                if (strata.findDependency('interfacetransitionFamily')) {
+                    var char = new characteristic.Characteristic();
+                    char.setFamily("interfaceTransitionFamily");
+                    char.setName($scope.selectedInterfacetransitionFamily.name);
+                    char.setRealName($scope.selectedInterfacetransitionFamily.real_name);
+                    strata.replaceCharacteristic(char);
+                }
             }
-
-            if (strata.findDependency('interfaceroughnessFamily')) {
-            var char = new characteristic.Characteristic();
-            char.setFamily("interfaceRoughnessFamily");
-            char.setName($scope.selectedInterfaceroughnessFamily.name);
-            char.setRealName($scope.selectedInterfaceroughnessFamily.real_name);
-            strata.replaceCharacteristic(char);
-            }
-
-            if (strata.findDependency('interfaceadherenceFamily')) {
-            var char = new characteristic.Characteristic();
-            char.setFamily("interfaceAdherenceFamily");
-            char.setName($scope.selectedInterfaceadherenceFamily.name);
-            char.setRealName($scope.selectedInterfaceadherenceFamily.real_name);
-            strata.replaceCharacteristic(char);
+            if($scope.selectedInterfaceroughnessFamily != null) {
+                if (strata.findDependency('interfaceroughnessFamily')) {
+                    var char = new characteristic.Characteristic();
+                    char.setFamily("interfaceRoughnessFamily");
+                    char.setName($scope.selectedInterfaceroughnessFamily.name);
+                    char.setRealName($scope.selectedInterfaceroughnessFamily.real_name);
+                    strata.replaceCharacteristic(char);
+                }
             }
 
+            if($scope.selectedInterfaceadherenceFamily != null) {
+                if (strata.findDependency('interfaceadherenceFamily')) {
+                    var char = new characteristic.Characteristic();
+                    char.setFamily("interfaceAdherenceFamily");
+                    char.setName($scope.selectedInterfaceadherenceFamily.name);
+                    char.setRealName($scope.selectedInterfaceadherenceFamily.real_name);
+                    strata.replaceCharacteristic(char);
+                }
+            }
 
 
             $scope.$emit('updateDraw');
         };
 
         /* Ne semble plus utilisé
-        $scope.addCorrodedMetalStrata = function () {
-            if (StrataData.getCurrentSelectedStrata() != 0) {
-                if (StrataData.getStratas()[StrataData.getCurrentSelectedStrata() - 1].getNatureFamilyUid() == "cpCharacteristic") {
-                    var cmStrata = natureFactory("CM");
-                    cmStrata.relatedCP = StrataData.getStratas()[StrataData.getCurrentSelectedStrata() - 1];
-                    cmStrata.relatedM = StrataData.getStratas()[StrataData.getCurrentSelectedStrata()]
-                    StrataData.getStratas().splice(StrataData.getCurrentSelectedStrata(), 0, cmStrata);
-                    $scope.$emit('doUpdate', StrataData.getCurrentSelectedStrata());
-                    $scope.$emit('updateDraw');
-                } else {
-                    cmStrata.relatedM = StrataData.getStratas()[StrataData.getCurrentSelectedStrata()];
-                    var cmStrata = natureFactory("CM");
-                    StrataData.getStratas().splice(StrataData.getCurrentSelectedStrata(), 0, cmStrata);
-                    var cpStrata = natureFactory("CP");
-                    StrataData.getStratas().splice(StrataData.getCurrentSelectedStrata(), 0, cpStrata);
-                    cmStrata.relatedCP = cpStrata;
-                    $scope.$emit('doUpdate', StrataData.getCurrentSelectedStrata());
-                    $scope.$emit('updateDraw');
+         $scope.addCorrodedMetalStrata = function () {
+         if (StrataData.getCurrentSelectedStrata() != 0) {
+         if (StrataData.getStratas()[StrataData.getCurrentSelectedStrata() - 1].getNatureFamilyUid() == "cpCharacteristic") {
+         var cmStrata = natureFactory("CM");
+         cmStrata.relatedCP = StrataData.getStratas()[StrataData.getCurrentSelectedStrata() - 1];
+         cmStrata.relatedM = StrataData.getStratas()[StrataData.getCurrentSelectedStrata()]
+         StrataData.getStratas().splice(StrataData.getCurrentSelectedStrata(), 0, cmStrata);
+         $scope.$emit('doUpdate', StrataData.getCurrentSelectedStrata());
+         $scope.$emit('updateDraw');
+         } else {
+         cmStrata.relatedM = StrataData.getStratas()[StrataData.getCurrentSelectedStrata()];
+         var cmStrata = natureFactory("CM");
+         StrataData.getStratas().splice(StrataData.getCurrentSelectedStrata(), 0, cmStrata);
+         var cpStrata = natureFactory("CP");
+         StrataData.getStratas().splice(StrataData.getCurrentSelectedStrata(), 0, cpStrata);
+         cmStrata.relatedCP = cpStrata;
+         $scope.$emit('doUpdate', StrataData.getCurrentSelectedStrata());
+         $scope.$emit('updateDraw');
 
-                }
-            } else {
-                cmStrata.relatedM = StrataData.getStratas()[StrataData.getCurrentSelectedStrata()];
-                var cmStrata = natureFactory("CM");
-                StrataData.getStratas().splice(StrataData.getCurrentSelectedStrata(), 0, cmStrata);
-                var cpStrata = natureFactory("CP");
-                StrataData.getStratas().splice(StrataData.getCurrentSelectedStrata(), 0, cpStrata);
-                cmStrata.relatedCP = cpStrata;
-                $scope.$emit('doUpdate', StrataData.getCurrentSelectedStrata());
-                $scope.$emit('updateDraw');
-            }
+         }
+         } else {
+         cmStrata.relatedM = StrataData.getStratas()[StrataData.getCurrentSelectedStrata()];
+         var cmStrata = natureFactory("CM");
+         StrataData.getStratas().splice(StrataData.getCurrentSelectedStrata(), 0, cmStrata);
+         var cpStrata = natureFactory("CP");
+         StrataData.getStratas().splice(StrataData.getCurrentSelectedStrata(), 0, cpStrata);
+         cmStrata.relatedCP = cpStrata;
+         $scope.$emit('doUpdate', StrataData.getCurrentSelectedStrata());
+         $scope.$emit('updateDraw');
+         }
 
 
-        };*/
+         };*/
     });

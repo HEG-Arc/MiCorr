@@ -22,6 +22,16 @@ angular.module('micorrApp')
         $scope.selectedMagnetismFamily;
 
         var initStratMorphology = function () {
+            $scope.selectedShapeFamily = null;
+            $scope.selectedWidthFamily = null;
+            $scope.selectedThicknessFamily = null;
+            $scope.selectedContinuityFamily = null;
+            $scope.selectedDirectionFamily = null;
+            $scope.selectedColourFamily = null;
+            $scope.selectedBrightnessFamily = null;
+            $scope.selectedOpacityFamily = null;
+            $scope.selectedMagnetismFamily = null;
+
             // On récupère les valeurs qui vont aller dans les champs de notre formulaire
             $scope.fShapeFamily = "";
             $scope.shapeFamily = StratigraphyData.getShapeFamily()['characteristics'];
@@ -87,7 +97,6 @@ angular.module('micorrApp')
             var strata = StratigraphyData.getStratigraphy().getStratas()[StratigraphyData.getSelectedStrata()];
 
 
-            //A VOIR SI ON NE AJOUTE PAS UNE OPTION 'DEFAULT' OU 'NULL' DANS NEO4J
             if ($scope.selectedShapeFamily != null) {
 
                 var char = new characteristic.Characteristic();
@@ -126,34 +135,42 @@ angular.module('micorrApp')
                 char.setRealName($scope.selectedDirectionFamily.real_name);
                 strata.replaceCharacteristic(char);
             }
-            if (strata.findDependency('colourFamily')) {
-                var char = new characteristic.Characteristic();
-                char.setFamily("colourFamily");
-                char.setName($scope.selectedColourFamily.name);
-                char.setRealName($scope.selectedColourFamily.real_name);
-                strata.replaceCharacteristic(char);
+            if ($scope.selectedColourFamily != null) {
+                if (strata.findDependency('colourFamily')) {
+                    var char = new characteristic.Characteristic();
+                    char.setFamily("colourFamily");
+                    char.setName($scope.selectedColourFamily.name);
+                    char.setRealName($scope.selectedColourFamily.real_name);
+                    strata.replaceCharacteristic(char);
+                }
             }
 
-            if (strata.findDependency('brightnessFamily')) {
-                var char = new characteristic.Characteristic();
-                char.setFamily("brightnessFamily");
-                char.setName($scope.selectedBrightnessFamily.name);
-                char.setRealName($scope.selectedBrightnessFamily.real_name);
-                strata.replaceCharacteristic(char);
+            if ($scope.selectedBrightnessFamily != null) {
+                if (strata.findDependency('brightnessFamily')) {
+                    var char = new characteristic.Characteristic();
+                    char.setFamily("brightnessFamily");
+                    char.setName($scope.selectedBrightnessFamily.name);
+                    char.setRealName($scope.selectedBrightnessFamily.real_name);
+                    strata.replaceCharacteristic(char);
+                }
             }
-            if (strata.findDependency('opacityFamily')) {
-                var char = new characteristic.Characteristic();
-                char.setFamily("opacityFamily");
-                char.setName($scope.selectedOpacityFamily.name);
-                char.setRealName($scope.selectedOpacityFamily.real_name);
-                strata.replaceCharacteristic(char);
+            if ($scope.selectedOpacityFamily != null) {
+                if (strata.findDependency('opacityFamily')) {
+                    var char = new characteristic.Characteristic();
+                    char.setFamily("opacityFamily");
+                    char.setName($scope.selectedOpacityFamily.name);
+                    char.setRealName($scope.selectedOpacityFamily.real_name);
+                    strata.replaceCharacteristic(char);
+                }
             }
-            if (strata.findDependency('magnetismFamily')) {
-                var char = new characteristic.Characteristic();
-                char.setFamily("magnetismFamily");
-                char.setName($scope.selectedMagnetismFamily.name);
-                char.setRealName($scope.selectedMagnetismFamily.real_name);
-                strata.replaceCharacteristic(char);
+            if ($scope.selectedMagnetismFamily != null) {
+                if (strata.findDependency('magnetismFamily')) {
+                    var char = new characteristic.Characteristic();
+                    char.setFamily("magnetismFamily");
+                    char.setName($scope.selectedMagnetismFamily.name);
+                    char.setRealName($scope.selectedMagnetismFamily.real_name);
+                    strata.replaceCharacteristic(char);
+                }
             }
             //mise à jour du dessin
             $scope.$emit('updateDraw');

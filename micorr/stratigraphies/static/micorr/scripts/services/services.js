@@ -168,9 +168,8 @@ angular.module('micorrApp').factory('StratigraphyData', function StratigraphyDat
                 var idel = parseInt(index);
                 var stratas = stratig.getStratas();
                 stratas.splice(idel, 1);
-                // SI on a plus de strate alors on en rajoute une nouvelle pour éviter les erreurs
-                if (stratas.length == 0)
-                    stratas.push(natureFactory("M"));
+                stratas[idel].setIndex(idel);
+
             },
 
             pushOneStrata: function (strata) {
