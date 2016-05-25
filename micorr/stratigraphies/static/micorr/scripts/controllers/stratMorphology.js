@@ -22,15 +22,7 @@ angular.module('micorrApp')
         $scope.selectedMagnetismFamily;
 
         var initStratMorphology = function () {
-            $scope.selectedShapeFamily = null;
-            $scope.selectedWidthFamily = null;
-            $scope.selectedThicknessFamily = null;
-            $scope.selectedContinuityFamily = null;
-            $scope.selectedDirectionFamily = null;
-            $scope.selectedColourFamily = null;
-            $scope.selectedBrightnessFamily = null;
-            $scope.selectedOpacityFamily = null;
-            $scope.selectedMagnetismFamily = null;
+
 
             // On récupère les valeurs qui vont aller dans les champs de notre formulaire
             $scope.fShapeFamily = "";
@@ -49,12 +41,29 @@ angular.module('micorrApp')
             initStratMorphology();
         });
 
+        /**
+         * Cette fonction vide les champs et est appelée à chaque chargement du formulaire
+         * pour éviter de garder des anciennes valeurs
+         */
+        function emptyFields(){
+            $scope.selectedShapeFamily = null;
+            $scope.selectedWidthFamily = null;
+            $scope.selectedThicknessFamily = null;
+            $scope.selectedContinuityFamily = null;
+            $scope.selectedDirectionFamily = null;
+            $scope.selectedColourFamily = null;
+            $scope.selectedBrightnessFamily = null;
+            $scope.selectedOpacityFamily = null;
+            $scope.selectedMagnetismFamily = null;
+        }
+
         /*
          * Met à jour les valeurs dans les champs quand on change de strate. Est appelé par un événement parent
          * On met à jour les valeurs sélectionnées en fonction des valeurs qui se trouvent dans la strate actuelle
          */
         $scope.$on('updateMorphology', function () {
 
+            emptyFields();
 
             var strata = StratigraphyData.getStratigraphy().getStratas()[StratigraphyData.getSelectedStrata()];
 
@@ -89,6 +98,8 @@ angular.module('micorrApp')
             }
 
         });
+
+
 
         /*
          * Met à jour les données de la strate en fonction des valeurs dans le formulaire

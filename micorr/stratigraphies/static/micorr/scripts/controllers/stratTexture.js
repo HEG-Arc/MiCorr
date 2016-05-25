@@ -27,18 +27,25 @@ angular.module('micorrApp')
             initStratTexture();
         });
 
+        /**
+         * Cette fonction vide les champs et est appelée à chaque chargement du formulaire
+         * pour éviter de garder des anciennes valeurs
+         */
+        function emptyFields() {
+            $scope.selectedPorosityFamily = null;
+            $scope.selectedCohesionFamily = null;
+            $scope.selectedHardnessFamily = null;
+            $scope.selectedCrackingFamily = null;
+        }
+
         /* Met à jour les données de la strate en fonction des valeurs dans le formulaire
          * @params
          * @returns
          */
         $scope.$on('updateTexture', function () {
-            $scope.selectedPorosityFamily = null;
-            $scope.selectedCohesionFamily = null;
-            $scope.selectedHardnessFamily = null;
-            $scope.selectedCrackingFamily = null;
+            emptyFields();
 
             var strata = StratigraphyData.getStratigraphy().getStratas()[StratigraphyData.getSelectedStrata()];
-
 
             if (strata.getCharacteristicsByFamily("porosityFamily").length > 0) {
                 $scope.selectedPorosityFamily = getCharacteristicByItsName($scope.porosityFamily, strata.getCharacteristicsByFamily("porosityFamily")[0].getName());

@@ -391,13 +391,22 @@ angular.module('micorrApp')
             $scope.showsubmcompositionFamily = strata.findDependency('submcompositionFamily');
 
             // on affiche seulement si cprimicrostructure n'est pas égal à noMiccrostructure
-            if (strata.findDependency('cprimicrostructureFamily') && strata.getCharacteristicsByFamily("cpriMicrostructureFamily")[0].getName() != "noMicrostructureCharacteristic") {
+            var noMicrostructure = false;
+            if(strata.getCharacteristicsByFamily("cpriMicrostructureFamily").length > 0){
+                if(strata.getCharacteristicsByFamily("cpriMicrostructureFamily")[0].getName() == "noMicrostructureCharacteristic"){
+                    noMicrostructure = true;
+                }
+            }
+            else{
+                noMicrostructure = true;
+            }
+
+            if (strata.findDependency('cprimicrostructureFamily') && !noMicrostructure) {
                 $scope.showsubcprimicrostructureFamily = strata.findDependency('subcprimicrostructureFamily');
                 $scope.showsubcprimicrostructureaggregatecompositionFamily = strata.findDependency('subcprimicrostructureaggregatecompositionFamily');
                 $scope.showsubsubcprimicrostructureaggregatecompositionFamily = strata.findDependency('subsubcprimicrostructureaggregatecompositionFamily');
                 $scope.showcprimicrostructureaggregatecompositionFamily = strata.findDependency('cprimicrostructureaggregatecompositionFamily');
                 $scope.showcprimicrostructureaggregatecompositionextensionFamily = strata.findDependency('cprimicrostructureaggregatecompositionextensionFamily');
-
             }
             else {
                 $scope.showsubcprimicrostructureFamily = false;
@@ -495,7 +504,7 @@ angular.module('micorrApp')
             ratioChar.setName(rName+'Characteristic');
             ratioChar.setRealName(rName);
             ratioChar.setFamily('cmCorrosionRatioFamily');
-            var strata = StratigraphyData.getStratigraphy().getStratas()[StratigraphyData.getSelectedStrata()]
+            var strata = StratigraphyData.getStratigraphy().getStratas()[StratigraphyData.getSelectedStrata()];
             strata.replaceCharacteristic(ratioChar);
             //mise à jour du dessin
             $scope.$emit('updateDraw');

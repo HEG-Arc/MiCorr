@@ -54,18 +54,7 @@ angular.module('micorrApp')
          * @returns
          */
         $scope.$on('updateComposition', function () {
-            $scope.selectedScompositionFamily = null;
-            $scope.selectedNmmcompositionFamily = null;
-            $scope.selectedDcompositionFamily = null;
-            $scope.selectedPomcompositionFamily = null;
-            $scope.selectedCpcompositionFamily = null;
-            $scope.selectedCmcompositionFamily = null;
-            $scope.selectedMcompositionFamily = null;
-            $scope.selectedSubcpcompositionFamily = null;
-            $scope.selectedSubsubcpcompositionFamily = null;
-            $scope.selectedSubcmcompositionFamily = null;
-            //$scope.selectedCpcompositionextensionFamily = [];
-            $scope.selectedSubmcompositionFamily = null;
+
 
             var strata = StratigraphyData.getStratigraphy().getStratas()[StratigraphyData.getSelectedStrata()];
 
@@ -123,15 +112,33 @@ angular.module('micorrApp')
             }
 
         });
+        /**
+         * Cette fonction vide les champs et est appelée à chaque chargement du formulaire
+         * pour éviter de garder des anciennes valeurs
+         */
+        function emptyFields() {
+            $scope.selectedScompositionFamily = null;
+            $scope.selectedNmmcompositionFamily = null;
+            $scope.selectedDcompositionFamily = null;
+            $scope.selectedPomcompositionFamily = null;
+            $scope.selectedCpcompositionFamily = null;
+            $scope.selectedCmcompositionFamily = null;
+            $scope.selectedMcompositionFamily = null;
+            $scope.selectedSubcpcompositionFamily = null;
+            $scope.selectedSubsubcpcompositionFamily = null;
+            $scope.selectedSubcmcompositionFamily = null;
+            $scope.selectedSubmcompositionFamily = null;
+        }
+
 
         /* Met à jour les données de la strate en fonction des valeurs dans le formulaire
          * @params
          * @returns
          */
         $scope.upComposition = function () {
+
+            emptyFields();
             var strata = StratigraphyData.getStratigraphy().getStratas()[StratigraphyData.getSelectedStrata()];
-
-
 
             if ($scope.selectedScompositionFamily != null) {
 
@@ -204,7 +211,7 @@ angular.module('micorrApp')
                     subChar.setFamily("subsubcpcompositionFamily");
 
                     subChar.setName($scope.selectedSubsubcpcompositionFamily.name);
-                    subChar.setRealName($scope.selectedSubsubcpcompositionFamily.real_name);
+
 
                     strata.replaceSubCharacteristic(subChar);
                 }
@@ -217,7 +224,7 @@ angular.module('micorrApp')
                     subChar.setFamily("subcmcompositionFamily");
 
                     subChar.setName($scope.selectedSubcmcompositionFamily.name);
-                    subChar.setRealName($scope.selectedSubcmcompositionFamily.real_name);
+
 
                     strata.replaceSubCharacteristic(subChar);
                 }
@@ -230,7 +237,7 @@ angular.module('micorrApp')
                     subChar.setFamily("submcompositionFamily");
 
                     subChar.setName($scope.selectedSubmcompositionFamily.name);
-                    subChar.setRealName($scope.selectedSubmcompositionFamily.real_name);
+
 
                     strata.replaceSubCharacteristic(subChar);
                 }
@@ -278,7 +285,7 @@ angular.module('micorrApp')
             if ($scope.selectedCpcompositionFamily != null) {
                 if (strata.findDependency('cpcompositionFamily')) {
                     var char = new characteristic.Characteristic();
-                    char.setFamily('cpcompositionFamily');
+                    char.setFamily('cpCompositionFamily');
 
                     char.setName($scope.selectedCpcompositionFamily.name);
                     char.setRealName($scope.selectedCpcompositionFamily.real_name);
@@ -293,7 +300,7 @@ angular.module('micorrApp')
             if ($scope.selectedCmcompositionFamily != null) {
                 if (strata.findDependency('cmcompositionFamily')) {
                     var char = new characteristic.Characteristic();
-                    char.setFamily('cmcompositionFamily');
+                    char.setFamily('cmCompositionFamily');
 
                     char.setName($scope.selectedCmcompositionFamily.name);
                     char.setRealName($scope.selectedCmcompositionFamily.real_name);
@@ -318,12 +325,18 @@ angular.module('micorrApp')
                     subChar.setFamily('subcpcompositionFamily');
 
                     subChar.setName($scope.selectedSubcpcompositionFamily.name);
-                    subChar.setRealName($scope.selectedSubcpcompositionFamily.real_name);
+                    //subChar.setRealName($scope.selectedSubcpcompositionFamily.real_name);
 
                     strata.replaceSubCharacteristic(subChar);
 
-                    $scope.subsubcpcompositionFamily = returnSubCharacteristicsFromParent(StratigraphyData.getRawCharacteristics(), 'cpCompositionFamily', strata.getCharacteristicsByFamily('cpCompositionFamily')[0].getName(), strata.getSubCharacteristicsByFamily('subcpcompositionFamily'));
-                    $scope.selectedSubsubcpcompositionFamily = getCharacteristicByItsName($scope.subsubcpcompositionFamily, strata.getSubCharacteristicsByFamily('subsubcpcompositionFamily')[0].getName());
+                    $scope.subsubcpcompositionFamily = returnSubCharacteristicsFromParent(StratigraphyData.getRawCharacteristics(), 'cpCompositionFamily', strata.getCharacteristicsByFamily('cpCompositionFamily')[0].getName(), strata.getSubCharacteristicsByFamily('subcpcompositionFamily')[0].getName());
+                    window.alert(strata.getSubCharacteristicsByFamily('subcpcompositionFamily')[0].getName())
+
+                    if(strata.getSubCharacteristicsByFamily('subsubcpcompositionFamily') > 0) {
+                        $scope.selectedSubsubcpcompositionFamily = getCharacteristicByItsName($scope.subsubcpcompositionFamily, strata.getSubCharacteristicsByFamily('subsubcpcompositionFamily')[0].getName());
+                    }
+
+
                 }
             }
 
@@ -336,5 +349,4 @@ angular.module('micorrApp')
 
             $scope.$emit('updateFormOnly');
         };
-    })
-;
+    });

@@ -56,15 +56,27 @@ angular.module('micorrApp')
             $scope.upMicrostructure();
         };
 
+        function emptyFields() {
+            $scope.selectedCprimicrostructureFamily = null;
+            $scope.selectedMmicrostructureFamily = null;
+            $scope.selectedCmlevelofcorrosionFamily = null;
+
+            $scope.selectedCprimicrostructureaggregatecompositionFamily = null;
+
+            $scope.selectedSubcprimicrostructureaggregatecompositionFamily = null;
+            $scope.selectedSubsubcprimicrostructureaggregatecompositionFamily = null;
+            $scope.selectedSubcmlevelofcorrosionFamily = null;
+        }
+
         /* Met à jour les valeurs dans les champs quand on change de strate. Est appelé par un événement parent
          * On met à jour les valeurs sélectionnées en fonction des valeurs qui se trouvent dans la strate actuelle
          * @params
          * @returns
          */
         $scope.$on('updateMicrostructure', function () {
+            emptyFields();
 
             var strata = StratigraphyData.getStratigraphy().getStratas()[StratigraphyData.getSelectedStrata()];
-
 
             if (strata.getCharacteristicsByFamily("cpriMicrostructureFamily").length > 0) {
                 $scope.selectedCprimicrostructureFamily = getCharacteristicByItsName($scope.cprimicrostructureFamily, strata.getCharacteristicsByFamily("cpriMicrostructureFamily")[0].getName());
