@@ -62,8 +62,8 @@
                 this.stratas.push(strata);
             }
         }, {
-            key: 'removeStrata',
-            value: function removeStrata(uid) {}
+            key: 'toJson',
+            value: function toJson() {}
         }, {
             key: 'getId',
             value: function getId() {

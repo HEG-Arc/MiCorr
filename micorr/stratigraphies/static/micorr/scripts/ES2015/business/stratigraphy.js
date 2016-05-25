@@ -23,10 +23,9 @@ class Stratigraphy {
     }
 
     /**
-     * Supprime une strate de la stratigraphie
-     * @param uid
+     * Retourne toute la stratigraphie au format JSON
      */
-        removeStrata(uid) {
+    toJson(){
 
     }
 

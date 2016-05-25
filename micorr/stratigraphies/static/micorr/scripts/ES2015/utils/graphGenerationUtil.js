@@ -27,15 +27,14 @@ class GraphGenerationUtil {
         var interfaceHeight = 22;
 
 
-
         //On vérifie si on se trouve dans une strate CM ou si il y a une strate CM en dessus
         //Si c'est le cas on ne montre pas l'interface
-        if(strata.getCharacteristicsByFamily('natureFamily')[0].getName() == 'cmCharacteristic' ) {
+        if (strata.getCharacteristicsByFamily('natureFamily')[0].getName() == 'cmCharacteristic') {
             interfaceHeight = 0;
         }
-        if(strata.index > 0){
-            var upperStrata = this.stratig.getStratas()[index -1];
-            if(upperStrata.getCharacteristicsByFamily('natureFamily')[0].getName() == 'cmCharacteristic'){
+        if (strata.index > 0) {
+            var upperStrata = this.stratig.getStratas()[index - 1];
+            if (upperStrata.getCharacteristicsByFamily('natureFamily')[0].getName() == 'cmCharacteristic') {
                 interfaceHeight = 0;
             }
         }
@@ -189,25 +188,37 @@ class GraphGenerationUtil {
      * Cette méthode s'occupe de dessiner la strate CM
      */
         drawCM(strata, width, height, draw) {
+        var upperStrata = this.stratig.getStratas()[strata.getIndex() - 1];
+        var lowerStrata = this.stratig.getStratas()[strata.getIndex() + 1];
+
+        //On remplit le fond de la strate avec le même fond que la strate inférieure
+        this.fillStrata(draw, lowerStrata);
+
+        //On dessine ensuite une forme qui permet de cacher une partie de la strate pour donner
+        //l'illusion que les triangles s'agrandissent/rapetississent
         var ratio = strata.getCharacteristicsByFamily('cmCorrosionRatioFamily')[0].getRealName();
         ratio = parseInt(ratio.substr(1));
 
 
-        var begin = 0 - ((2*height) / 10) * ratio;
+        var begin = 0 - ((2 * height) / 10) * ratio;
 
         var rectHeight = begin + height;
         var topX = rectHeight + height;
         var pathString = 'M 0 ' + begin + ' L ' + width + ' ' + begin + ' L ' + width + ' ' + rectHeight;
 
-        //On dessine les triangles en fonction de la taille de la strata
+        //On dessine les triangles en fonction des dimensions de la strate
+        //Ces triangles se trouve par dessus un rectangle qui fait les dimensions d'une strate
         for (var i = 0; i < 7; i++) {
             var divisor = 8;
             var topY = width - (i + 1) * (width / divisor) - i * (width / divisor);
             var downY = topY - (width / divisor)
             pathString = pathString + ' L ' + topY + ' ' + topX + ' L ' + downY + ' ' + rectHeight;
         }
-
-        draw.path(pathString);
+        var upperStrataColor = 'white';
+        if(upperStrata.getCharacteristicsByFamily('colourFamily').length > 0){
+            upperStrataColor = upperStrata.getCharacteristicsByFamily('colourFamily')[0].getRealName();
+        }
+        draw.path(pathString).attr({ fill: upperStrataColor });
     }
 
     /**
@@ -216,7 +227,6 @@ class GraphGenerationUtil {
      * @param strata
      */
         fillStrata(draw, strata) {
-
 
         var height = 100;
         var width = 500
