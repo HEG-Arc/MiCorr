@@ -14,7 +14,7 @@
  * On doit avant tout accéder d'abord à la liste des artefacts ou stratigraphies avant d'aller dans les détails sinon les charactéristiques ne sont pas chargées
  */
 angular.module('micorrApp')
-    .controller('MainCtrl', function ($scope, $route, $routeParams, MiCorrService, StrataData, ngProgress, httpRequestTracker) {
+    .controller('MainCtrl', function ($scope, $route, $routeParams, MiCorrService, StrataData, StratigraphyData, ngProgress, httpRequestTracker) {
 
     ngProgress.height('4px');
     ngProgress.color('#e27e14;');

@@ -10,7 +10,7 @@
  * @params nature : nom de la nature dont on veut l'instance
  * €returns instance de la nature qui convient
  */
-function natureFactory (nature){
+function natureFactory(nature) {
     if (nature == "cmCharacteristic" || nature == "CM")
         return new CM();
     else if (nature == "cpCharacteristic" || nature == "CP")
@@ -27,6 +27,49 @@ function natureFactory (nature){
         return new S();
     else if (nature == "svCharacteristic" || nature == "SV")
         return new SV();
+}
+
+function returnNatureCharacteristic(nature){
+    var natureChar = new characteristic.Characteristic();
+    natureChar.setFamily('natureFamily');
+    if (nature == "cmCharacteristic" || nature == "CM"){
+         natureChar.setName('cmCharacteristic');
+        natureChar.setRealName("Corroded Metal");
+    }
+
+    else if (nature == "cpCharacteristic" || nature == "CP"){
+        natureChar.setName('cpCharacteristic');
+        natureChar.setRealName("Corrosion products");
+    }
+
+    else if (nature == "dCharacteristic" || nature == "D"){
+        natureChar.setName('dCharacteristic');
+        natureChar.setRealName("Deposit");
+    }
+
+    else if (nature == "mCharacteristic" || nature == "M"){
+        natureChar.setName('mCharacteristic');
+        natureChar.setRealName("Metal");
+    }
+
+    else if (nature == "nmmCharacteristic" || nature == "NMM"){
+        natureChar.setName('nmmCharacteristic');
+        natureChar.setRealName("Non-Metallic material");
+    }
+    else if (nature == "pomCharacteristic" || nature == "POM"){
+        natureChar.setName('pomCharacteristic');
+        natureChar.setRealName("Pseudomorph of organic material");
+    }
+    else if (nature == "sCharacteristic" || nature == "S"){
+        natureChar.setName('sCharacteristic');
+        natureChar.setRealName("Soil");
+    }
+    else if (nature == "svCharacteristic" || nature == "SV"){
+        natureChar.setName('svCharacteristic');
+        natureChar.setRealName("Structural Void");
+    }
+
+    return natureChar;
 }
 
 /* retourne la largeur des strates
@@ -61,15 +104,15 @@ function getThicknesses(thickness) {
 }
 
 // matreials or voids constituing the corroded artefact
-var natures = {"natures" : [
-    {"guidc" : "cmCharacteristic", "description" : "Corroded metal", "code" : "CM"},
-    {"guidc" : "cpCharacteristic", "description" : "Corroded product", "code" : "CP"},
-    {"guidc" : "dCharacteristic", "description" : "Deposit", "code" : "D"},
-    {"guidc" : "mCharacteristic", "description" : "Metal", "code" : "M"},
-    {"guidc" : "nmmCharacteristic", "description" : "Non-Metallic material", "code" : "NMM"},
-    {"guidc" : "pomCharacteristic", "description" : "Pseudomorph of organic material", "code" : "POM"},
-    {"guidc" : "sCharacteristic", "description" : "Soil", "code" : "S"},
-    {"guidc" : "svCharacteristic", "description" : "Strucural void", "code" : "SV"},
+var natures = {"natures": [
+    {"guidc": "cmCharacteristic", "description": "Corroded metal", "code": "CM"},
+    {"guidc": "cpCharacteristic", "description": "Corroded product", "code": "CP"},
+    {"guidc": "dCharacteristic", "description": "Deposit", "code": "D"},
+    {"guidc": "mCharacteristic", "description": "Metal", "code": "M"},
+    {"guidc": "nmmCharacteristic", "description": "Non-Metallic material", "code": "NMM"},
+    {"guidc": "pomCharacteristic", "description": "Pseudomorph of organic material", "code": "POM"},
+    {"guidc": "sCharacteristic", "description": "Soil", "code": "S"},
+    {"guidc": "svCharacteristic", "description": "Strucural void", "code": "SV"}
 ]};
 
 /* fonction qui parcourt une liste de caractéristique et qui retourne une caractéristique si elle est trouvée en fonction du paramètre
@@ -77,9 +120,9 @@ var natures = {"natures" : [
  *         name : nom de la caractéristique à trouver
  * €returns nom de la caractéristique trouvée dans la liste
  */
-getCharacteristicByItsName = function(data, name) {
+getCharacteristicByItsName = function (data, name) {
     for (var i = 0; i < data.length; i++) {
-        if (data[i].name == name){
+        if (data[i].name == name) {
             return data[i];
         }
     }
@@ -91,12 +134,12 @@ getCharacteristicByItsName = function(data, name) {
  *         name : nom de la caractéristique à trouver
  * €returns nom de la caractéristique trouvée dans la liste
  */
-getCharacteristicByItsNameMulti = function(data, name) {
+getCharacteristicByItsNameMulti = function (data, name) {
     var t = [];
 
-    for (var i = 0; i < name.length; i++){
-        for (var j = 0; j < data.length; j++){
-            if (name[i].name == data[j].name){
+    for (var i = 0; i < name.length; i++) {
+        for (var j = 0; j < data.length; j++) {
+            if (name[i].getName() == data[j].name) {
                 t.push(data[j]);
             }
         }
@@ -126,9 +169,9 @@ function compareTwoStratas(s1, s2) {
 
         for (var i = 0; i < s1car.length; i++) {
             var trouve = false;
-            for (var j = 0; j < s2car.length; j++){
+            for (var j = 0; j < s2car.length; j++) {
                 if (s1car[i].name == s2car[j].name)
-                trouve = true;
+                    trouve = true;
             }
             if (trouve == false)
                 return false;
@@ -145,7 +188,7 @@ function compareTwoStratas(s1, s2) {
  * €returns nombre aléatoire
  */
 function getRandomInt(min, max) {
-  return Math.floor(Math.random() * (max - min)) + min;
+    return Math.floor(Math.random() * (max - min)) + min;
 }
 
 /* Dessine des craquelures sur une strate. Utilise des courbes de béziers aléatoirement pour dessiner les lignes
@@ -156,18 +199,20 @@ function getRandomInt(min, max) {
  *         nbCol : nombre de craquelures verticales
  * €returns
  */
-function drawCracking(paper, width, height, nbLines, nbCol) {
+function drawCracking(draw, width, height, nbLines, nbCol) {
     var nb_hoph = 8; // nombre de courbes de béziers horizontales
     var nb_hopv = 5; // nombre de courbes de béziers verticales
-    var y = height / (nbLines+1);
+    var y = height / (nbLines + 1);
     //horizontal
     for (var c = 0; c < nbLines; c++) {
         var x = 0;
-        var t_hoph = width/nb_hoph;
-        for (var i = 0; i < nb_hoph; i++){
-            var x_delta_hop = x + t_hoph / 2 + getRandomInt(-30 , 30);
-            var y_delta_hop = y + getRandomInt(-30 , 30);
-            paper.path(['M', x, y, 'Q', x_delta_hop, y_delta_hop, x + t_hoph, y]).attr("stroke-width", 2);
+        var t_hoph = width / nb_hoph;
+        for (var i = 0; i < nb_hoph; i++) {
+            var x_delta_hop = x + t_hoph / 2 + getRandomInt(-30, 30);
+            var y_delta_hop = y + getRandomInt(-30, 30);
+            var path = draw.path('M' + ' ' + x + ' ' + y + ' Q ' + x_delta_hop + ' ' + y_delta_hop + ' ' + (x + t_hoph) + ' ' + y).fill('none');
+            path.stroke({ color: 'black', width: 2 })
+
             x += t_hoph;
         }
         y += height / (nbLines + 1);
@@ -175,13 +220,14 @@ function drawCracking(paper, width, height, nbLines, nbCol) {
 
     //vertical
     x = width / (nbCol + 1);
-    for (var c = 0; c < nbCol; c++){
+    for (var c = 0; c < nbCol; c++) {
         y = 0;
         var t_hop_v = height / nb_hopv;
-        for (var i = 0; i < nb_hopv; i++){
-            var x_delta_hop = x + getRandomInt(-30 , 30);//t_hoph / 2 + getRandomInt(-30 , 30);
-            var y_delta_hop = y + t_hop_v / 2 + getRandomInt(-30 , 30);
-            paper.path(['M', x, y, 'Q', x_delta_hop, y_delta_hop, x , y + t_hop_v]).attr("stroke-width", 2);
+        for (var i = 0; i < nb_hopv; i++) {
+            var x_delta_hop = x + getRandomInt(-30, 30);//t_hoph / 2 + getRandomInt(-30 , 30);
+            var y_delta_hop = y + t_hop_v / 2 + getRandomInt(-30, 30);
+            var path = draw.path('M' + ' ' + x + ' ' + y + ' Q' + ' ' + x_delta_hop + ' ' + y_delta_hop + ' ' + x + ' ' + (y + t_hop_v)).fill('none');
+            path.stroke({ color: 'black', width: 2 })
             y += t_hop_v;
         }
         x += width / (nbCol + 1)
@@ -199,12 +245,12 @@ function drawCracking(paper, width, height, nbLines, nbCol) {
  *         topBackgroundColor : couleur supérieure de l'interface
  * €returns
  */
-function drawInterface(paper, index, width, height, type, nb_hop, bottomBackgroundColor, topBackgroundColor, borderWidth, interfaceLineThickness, diffuse, transition) {
+function drawInterface(draw, index, width, height, type, nb_hop, bottomBackgroundColor, topBackgroundColor, borderWidth, interfaceLineThickness, diffuse, transition) {
     /* Le dessin des interfaces se fait en 3 étapes
-    *  1) Tout d'abord on colorie la zone de dessin avec la couleur topBackground et sans cadre
-    *  2) on dessine la ligne d'interface avec le tableau line = []
-    *  3) on dessine la ligne d'interface accompagnée d'un polygone qui vient faire office de partie inférieure de l'interface et avec la couleur bottombackgroundcolor
-    */
+     *  1) Tout d'abord on colorie la zone de dessin avec la couleur topBackground et sans cadre
+     *  2) on dessine la ligne d'interface avec le tableau line = []
+     *  3) on dessine la ligne d'interface accompagnée d'un polygone qui vient faire office de partie inférieure de l'interface et avec la couleur bottombackgroundcolor
+     */
 
     // Si la couleur des deux strates est noire alors la ligne d'interface est blanche
     var strokeColor = "black";
@@ -213,15 +259,18 @@ function drawInterface(paper, index, width, height, type, nb_hop, bottomBackgrou
 
     var bubbleTransitionSize = 4;
 
-    var rect = paper.rect(0, 0, width, height).attr("stroke-width", 0); // zone de dessin sans cadre
-
-    if ((transition == "semiGradualInferiorCharacteristic"  || transition == "gradualCharacteristic") && index != 0){
+    // BEFORE : var rect = paper.rect(0, 0, width, height).attr("stroke-width", 0); // zone de dessin sans cadre
+    var rect = draw.rect(width, height).fill('none');
+    if ((transition == "semiGradualInferiorCharacteristic" || transition == "gradualCharacteristic") && index != 0) {
         var pds = new PoissonDiskSampler(width, height);
         for (var i = 0; i < 50; i++)
-            pds.createPointsPerso(10, 10, 'none', 0,  0);
-        for (var i = 0; i < pds.pointList.length; i++){
-            paper.circle(pds.pointList[i].x, pds.pointList[i].y + bubbleTransitionSize, bubbleTransitionSize).attr("fill", bottomBackgroundColor);
-            //console.log("X " +  pds.pointList[i].x + " Y + " + pds.pointList[i].y);
+            pds.createPointsPerso(10, 10, 'none', 0, 0);
+        for (var i = 0; i < pds.pointList.length; i++) {
+            // BEFORE: paper.circle(pds.pointList[i].x, pds.pointList[i].y + bubbleTransitionSize, bubbleTransitionSize).attr("fill", bottomBackgroundColor);
+            var point = draw.circle(bubbleTransitionSize);
+            point.x(pds.pointList[i].x);
+            point.y(pds.pointList[i].y);
+            point.fill(bottomBackgroundColor);
         }
     }
 
@@ -234,7 +283,7 @@ function drawInterface(paper, index, width, height, type, nb_hop, bottomBackgrou
     var x = 0;
     var h_hop = width / nb;
     var y = height / 2;
-    for (var i = 0 ; i < nb; i++) {
+    for (var i = 0; i < nb; i++) {
         t.push('M');
         line.push('M');
         t.push(x);
@@ -244,36 +293,36 @@ function drawInterface(paper, index, width, height, type, nb_hop, bottomBackgrou
         t.push('Q');
         line.push('Q');
         // on utilise les courbes de béziers pour faire des vagues
-        if (type == "wavy"){
-            t.push(x + width/nb/2);
-            line.push(x + width/nb/2);
-            if ((i % 2) == 0){
+        if (type == "wavy") {
+            t.push(x + width / nb / 2);
+            line.push(x + width / nb / 2);
+            if ((i % 2) == 0) {
                 line.push(y + y / 2);
                 t.push(y + y / 2);
             }
-            else{
+            else {
                 line.push(y - y / 2);
                 t.push(y - y / 2);
             }
         }
         else if (type == "bumpy") { // on fait des bosses avec les courbes de béziers en introduisant des hauteurs aléatoires
-            t.push(x + width/nb/2);
-            line.push(x + width/nb/2);
+            t.push(x + width / nb / 2);
+            line.push(x + width / nb / 2);
             var rnd = getRandomInt(0, y);
-            if ((i % 2) == 0){
+            if ((i % 2) == 0) {
                 line.push(y + rnd);
                 t.push(y + rnd);
             }
-            else{
+            else {
                 line.push(y - rnd);
                 t.push(y - rnd);
             }
         }
         else if (type == "irregular") { // on faire des formes irrégulières avec les courbes de béziers avec des valeurs aléatoires
-            var rndx = getRandomInt(0, width/nb);
+            var rndx = getRandomInt(0, width / nb);
             t.push(x + rndx);
             line.push(x + rndx);
-            var rnd = getRandomInt(-height*0.8, height*0.8);
+            var rnd = getRandomInt(-height * 0.8, height * 0.8);
             line.push(y + rnd);
             t.push(y + rnd);
 
@@ -295,32 +344,51 @@ function drawInterface(paper, index, width, height, type, nb_hop, bottomBackgrou
     }
 
     var lineAttrs = new Array();
-    lineAttrs.push({"stroke-width" : interfaceLineThickness});
+    lineAttrs.push({"stroke-width": interfaceLineThickness});
 
-    if (diffuse){
+    if (diffuse) {
         lineAttrs.push({"stroke-dasharray": ["."]});
         lineAttrs.push({"stroke": "grey"});
     }
-    paper.path(line).attr("stroke", strokeColor).attr(lineAttrs);
-    paper.path(t).attr("fill", bottomBackgroundColor).attr("stroke", bottomBackgroundColor);;
+    /*BEFORE
+     paper.path(line).attr("stroke", strokeColor).attr(lineAttrs);
+     paper.path(t).attr("fill", bottomBackgroundColor).attr("stroke", bottomBackgroundColor);;
+     */
+    var lineString = '';
+    for (var i = 0; i < line.length; i++) {
+        lineString = lineString + line[i] + ' ';
+    }
 
-
+    var tString = '';
+        for(var i = 0; i < t.length; i++){
+            tString = tString + t[i] + ' ';
+        }
+    var path1 = draw.path(lineString).fill('none');
+    var path2 = draw.path(tString).fill(bottomBackgroundColor);
+    path1.stroke({ color: strokeColor, width: 5 })
+    path2.stroke({ color: bottomBackgroundColor, width:1 })
     // Si c'est la première interface alros la bordure extérieure commence au milieu
     var startHeight = 0;
-    if (index == 0)
-        startHeight = height/2;
-    paper.path("M0 " + startHeight + "L0 " + height).attr("stroke-width", borderWidth);
-    paper.path("M" + width + " " + startHeight + "L" + width + " " + height).attr("stroke-width", borderWidth);
+    if (index == 0) {
+        startHeight = height / 2;
+    }
 
+    var leftBorder = draw.path("M0 " + startHeight + "L0 " + height).fill('none');
+    leftBorder.stroke({ color: 'black', width: borderWidth });
 
-    if (transition == "semiGradualSuperiorCharacteristic" || transition == "gradualCharacteristic"){
-        var heightBottom = height/2 - bubbleTransitionSize;
+    var rightBorder = draw.path("M" + width + " " + startHeight + "L" + width + " " + height).fill('none');
+    rightBorder.stroke({ color: 'black', width: borderWidth });
+
+    if (transition == "semiGradualSuperiorCharacteristic" || transition == "gradualCharacteristic") {
+        var heightBottom = height / 2 - bubbleTransitionSize;
         var pds = new PoissonDiskSampler(width, heightBottom);
         for (var i = 0; i < 50; i++)
-            pds.createPointsPerso(10, 10, 'none', 0,  0);
-        for (var i = 0; i < pds.pointList.length; i++){
-            paper.circle(pds.pointList[i].x, pds.pointList[i].y + (height / 2), bubbleTransitionSize).attr("fill", topBackgroundColor);
-            //console.log("X " +  pds.pointList[i].x + " Y + " + pds.pointList[i].y);
+            pds.createPointsPerso(10, 10, 'none', 0, 0);
+        for (var i = 0; i < pds.pointList.length; i++) {
+            var point = draw.circle(bubbleTransitionSize);
+            point.x(pds.pointList[i].x);
+            point.y(pds.pointList[i].y);
+            point.fill(topBackgroundColor);
         }
     }
 
@@ -334,8 +402,8 @@ function drawInterface(paper, index, width, height, type, nb_hop, bottomBackgrou
  *         height : hauteur
  * €returns
  */
-function drawalternatingBands(paper, nb_hop, nb_lines, width, height) {
-    var rect = paper.rect(0, 0, width, height).attr("stroke-width", 0);
+function drawalternatingBands(draw, nb_hop, nb_lines, width, height) {
+    var rect = draw.rect(0, 0, width, height).attr("stroke-width", 0);
 
     var y = height / nb_lines;
 
@@ -345,13 +413,13 @@ function drawalternatingBands(paper, nb_hop, nb_lines, width, height) {
         var x = 0;
         var h_hop = width / nb;
 
-        for (var i = 0 ; i < nb; i++) {
+        for (var i = 0; i < nb; i++) {
             t.push('M');
             t.push(x);
             t.push(y);
             t.push('Q');
 
-            t.push(x + width/nb/2);
+            t.push(x + width / nb / 2);
             if ((i % 2) == 0)
                 t.push(y + height / nb_lines);
             else
@@ -363,7 +431,14 @@ function drawalternatingBands(paper, nb_hop, nb_lines, width, height) {
             x += h_hop;
         }
         y += height / nb_lines;
-        paper.path(t).attr("stroke", "grey");;
+
+        var pathString = '';
+        for (var i = 0; i < t.length; i++) {
+            pathString = pathString + t[i] + ' ';
+        }
+
+        var path = draw.path(pathString).fill('none');
+        path.stroke({ color: 'grey', width: 1 })
     }
 }
 
@@ -381,7 +456,7 @@ function testUserInput(text) {
  * @params couleur au format caractéristique
  * €returns couleur formattée
  */
-function returnFormattedColor (color) {
+function returnFormattedColor(color) {
     color = color.replace('Characteristic', '');
     if (color == "black")
         color = "#474747";
@@ -397,21 +472,21 @@ function returnSubCharacteristicsFromParent(data, family, lvl1, lvl2) {
     var subList = [];
     var subsubList = [];
     // On parcourt toutes les familles
-    for (var i = 0; i < data.length; i++){
-        if (data[i].family == family){
+    for (var i = 0; i < data.length; i++) {
+        if (data[i].family == family) {
             var caracts = data[i].characteristics;
-            for (var j = 0; j < caracts.length; j++){
-                if (caracts[j].name == lvl1){
+            for (var j = 0; j < caracts.length; j++) {
+                if (caracts[j].name == lvl1) {
                     var caract = caracts[j];
-                    for (var k = 0; k < caract.subcharacteristics.length; k++){
+                    for (var k = 0; k < caract.subcharacteristics.length; k++) {
                         var subcaract = caract.subcharacteristics[k];
-                        subList.push({'name' : subcaract.name, 'sub_real_name' : subcaract.sub_real_name});
+                        subList.push({'name': subcaract.name, 'sub_real_name': subcaract.sub_real_name});
 
                         if (subcaract.name == lvl2) {
                             var subsubcaracts = subcaract.subcharacteristics;
-                            for (var l = 0; l < subsubcaracts.length; l++){
+                            for (var l = 0; l < subsubcaracts.length; l++) {
                                 var subsubcaract = subsubcaracts[l];
-                                subsubList.push({'name' : subsubcaract.subsub_real_name});
+                                subsubList.push({'name': subsubcaract.subsub_real_name});
                             }
                         }
 

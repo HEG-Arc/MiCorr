@@ -8,7 +8,7 @@
  * Contrôlleur qui s'occupe de l'onglet de la texture
  */
 angular.module('micorrApp')
-    .controller('StratTextureCtrl', function ($scope, $route, $window, StrataData) {
+    .controller('StratTextureCtrl', function ($scope, $route, $window, StrataData, StratigraphyData) {
 
         //valeurs sélectionnées dans les champs de notre formulaire
         $scope.selectedPorosityFamily;
@@ -16,51 +16,95 @@ angular.module('micorrApp')
         $scope.selectedHardnessFamily;
         $scope.selectedCrackingFamily;
 
-        var initStratTexture = function(){
-            $scope.porosityFamily = StrataData.getPorosityFamily()['characteristics'];
-            $scope.cohesionFamily = StrataData.getCohesionFamily()['characteristics'];
-            $scope.hardnessFamily = StrataData.getHardnessFamily()['characteristics'];
-            $scope.crackingFamily = StrataData.getCrackingFamily()['characteristics'];
+        var initStratTexture = function () {
+            $scope.porosityFamily = StratigraphyData.getPorosityFamily()['characteristics'];
+            $scope.cohesionFamily = StratigraphyData.getCohesionFamily()['characteristics'];
+            $scope.hardnessFamily = StratigraphyData.getHardnessFamily()['characteristics'];
+            $scope.crackingFamily = StratigraphyData.getCrackingFamily()['characteristics'];
         };
 
-        $scope.$on('initShowStrat', function(event) {
+        $scope.$on('initShowStrat', function (event) {
             initStratTexture();
         });
 
-         /* Met à jour les données de la strate en fonction des valeurs dans le formulaire
+        /**
+         * Cette fonction vide les champs et est appelée à chaque chargement du formulaire
+         * pour éviter de garder des anciennes valeurs
+         */
+        function emptyFields() {
+            $scope.selectedPorosityFamily = null;
+            $scope.selectedCohesionFamily = null;
+            $scope.selectedHardnessFamily = null;
+            $scope.selectedCrackingFamily = null;
+        }
+
+        /* Met à jour les données de la strate en fonction des valeurs dans le formulaire
          * @params
          * @returns
          */
-        $scope.$on('updateTexture', function(){
-            var strata = StrataData.getStratas()[StrataData.getCurrentSelectedStrata()];
+        $scope.$on('updateTexture', function () {
+            emptyFields();
 
-            if (strata.findDependency('porosityFamily'))
-                $scope.selectedPorosityFamily = getCharacteristicByItsName($scope.porosityFamily, strata.getPorosityFamily());
-            if (strata.findDependency('cohesionFamily'))
-                $scope.selectedCohesionFamily = getCharacteristicByItsName($scope.cohesionFamily, strata.getCohesionFamily());
-            if (strata.findDependency('hardnessFamily'))
-                $scope.selectedHardnessFamily = getCharacteristicByItsName($scope.hardnessFamily, strata.getHardnessFamily());
-            if (strata.findDependency('crackingFamily'))
-                $scope.selectedCrackingFamily = getCharacteristicByItsName($scope.crackingFamily, strata.getCrackingFamily());
+            var strata = StratigraphyData.getStratigraphy().getStratas()[StratigraphyData.getSelectedStrata()];
+
+            if (strata.getCharacteristicsByFamily("porosityFamily").length > 0) {
+                $scope.selectedPorosityFamily = getCharacteristicByItsName($scope.porosityFamily, strata.getCharacteristicsByFamily("porosityFamily")[0].getName());
+            }
+            if (strata.getCharacteristicsByFamily("cohesionFamily").length > 0) {
+                $scope.selectedCohesionFamily = getCharacteristicByItsName($scope.cohesionFamily, strata.getCharacteristicsByFamily("cohesionFamily")[0].getName());
+            }
+            if (strata.getCharacteristicsByFamily("hardnessFamily").length > 0) {
+                $scope.selectedHardnessFamily = getCharacteristicByItsName($scope.hardnessFamily, strata.getCharacteristicsByFamily("hardnessFamily")[0].getName());
+            }
+            if (strata.getCharacteristicsByFamily("crackingFamily").length > 0) {
+                $scope.selectedCrackingFamily = getCharacteristicByItsName($scope.crackingFamily, strata.getCharacteristicsByFamily("crackingFamily")[0].getName());
+            }
         });
 
-         /* Met à jour les données de la strate en fonction des valeurs dans le formulaire
+        /* Met à jour les données de la strate en fonction des valeurs dans le formulaire
          * @params
          * @returns
          */
-        $scope.upTexture = function() {
-            var temp = StrataData.getStratas();
-            var index = StrataData.getCurrentSelectedStrata();
+        $scope.upTexture = function () {
 
-            if (temp[index].findDependency('porosityFamily'))
-                temp[index].setPorosityFamily($scope.selectedPorosityFamily.name);
-            if (temp[index].findDependency('cohesionFamily'))
-                temp[index].setCohesionFamily($scope.selectedCohesionFamily.name);
-            if (temp[index].findDependency('hardnessFamily'))
-                temp[index].setHardnessFamily($scope.selectedHardnessFamily.name);
-            if (temp[index].findDependency('crackingFamily'))
-                temp[index].setCrackingFamily($scope.selectedCrackingFamily.name);
+            var strata = StratigraphyData.getStratigraphy().getStratas()[StratigraphyData.getSelectedStrata()];
 
+            if($scope.selectedPorosityFamily != null) {
+                if (strata.findDependency('porosityFamily')) {
+                    var char = new characteristic.Characteristic();
+                    char.setFamily("porosityFamily");
+                    char.setName($scope.selectedPorosityFamily.name);
+                    char.setRealName($scope.selectedPorosityFamily.real_name);
+                    strata.replaceCharacteristic(char);
+                }
+            }
+            if($scope.selectedCohesionFamily != null) {
+                if (strata.findDependency('cohesionFamily')) {
+                    var char = new characteristic.Characteristic();
+                    char.setFamily("cohesionFamily");
+                    char.setName($scope.selectedCohesionFamily.name);
+                    char.setRealName($scope.selectedCohesionFamily.real_name);
+                    strata.replaceCharacteristic(char);
+                }
+            }
+            if($scope.selectedHardnessFamily != null) {
+                if (strata.findDependency('hardnessFamily')) {
+                    var char = new characteristic.Characteristic();
+                    char.setFamily("hardnessFamily");
+                    char.setName($scope.selectedHardnessFamily.name);
+                    char.setRealName($scope.selectedHardnessFamily.real_name);
+                    strata.replaceCharacteristic(char);
+                }
+            }
+            if($scope.selectedCrackingFamily != null) {
+                if (strata.findDependency('crackingFamily')) {
+                    var char = new characteristic.Characteristic();
+                    char.setFamily("crackingFamily");
+                    char.setName($scope.selectedCrackingFamily.name);
+                    char.setRealName($scope.selectedCrackingFamily.real_name);
+                    strata.replaceCharacteristic(char);
+                }
+            }
             $scope.$emit('updateDraw');
         };
     });
