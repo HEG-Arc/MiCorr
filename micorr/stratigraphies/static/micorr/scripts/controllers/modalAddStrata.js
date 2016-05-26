@@ -30,7 +30,7 @@ angular.module('micorrApp')
                             newStrata.replaceCharacteristic(nature);
 
                             newStrata.setIndex(StratigraphyData.getStratigraphy().getStratas().length);
-                            newStrata.setUid(StratigraphyData.getStratigraphy().getUid() + '_strata_' +newStrata.getIndex());
+                            newStrata.setUid(StratigraphyData.getStratigraphy().getUid() + '_strata_' +(newStrata.getIndex()+1));
 
                             StratigraphyData.pushOneStrata(newStrata);
 
