@@ -7,7 +7,7 @@
  * # ModalShowSimilarStrataCtrl
  */
 angular.module('micorrApp')
-    .controller('ModalShowSimilarStrataCtrl', function ($scope, $route, $modal, $log, StrataData, MiCorrService) {
+    .controller('ModalShowSimilarStrataCtrl', function ($scope, $route, $modal, $log, StrataData, StratigraphyData, MiCorrService) {
         $scope.open = function (size) {
             var modalInstance = $modal.open({
                 templateUrl: 'showSimilarStrataContent.html',
@@ -20,7 +20,7 @@ angular.module('micorrApp')
                          * Il est inutile de renseigner les nom d'artefact et de stratigraphie car on compare uniquement les couches de corrosion entre elles
                          * Une fois la requête effectuée, on ressort le résultat
                          */
-                        MiCorrService.matchStratigraphy(encodeURIComponent(JSON.stringify(StrataData.StratasToJson("USELESS", "USELESS")))).success(function(data){
+                        MiCorrService.matchStratigraphy(encodeURIComponent(JSON.stringify(StratigraphyData.getStratigraphy().toJson()))).success(function(data){
                              $scope.results = data;
                         });
 

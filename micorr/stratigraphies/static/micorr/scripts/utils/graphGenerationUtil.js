@@ -382,15 +382,18 @@
                     var char = strata.getCharacteristicsByFamily('crackingFamily')[0].getName();
                     switch (char) {
                         case "simpleCracksCharacteristic":
-                            drawCracking(draw, width, height, 1, 0);
+                            var image = draw.image("../static/micorr/images/c/cracking/Simple/Horizontal/CP_CrackingSimple_" + height + "x" + width + ".png");
+                            image.size(width, height);
                             break;
 
                         case "branchedCracksCharacteristic":
-                            drawCracking(draw, width, height, 1, 1);
+                            var image = draw.image("../static/micorr/images/c/cracking/Branched/CP_CrackingBranched_" + height + "x" + width + ".png");
+                            image.size(width, height);
                             break;
 
                         case "networkCracksCharacteristic":
-                            drawCracking(draw, width, height, 2, 5);
+                            var image = draw.image("../static/micorr/images/c/cracking/Network/CP_CrackingNetwork_" + height + "x" + width + ".png");
+                            image.size(width, height);
                             break;
                     }
                 }
