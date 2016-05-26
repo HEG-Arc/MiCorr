@@ -75,16 +75,12 @@
                 var index = strata.getIndex();
                 var interfaceDiv = document.getElementById(divID);
                 var interfaceHeight = 22;
+                var isUpperCM = false;
 
-                //On vérifie si on se trouve dans une strate CM ou si il y a une strate CM en dessus
-                //Si c'est le cas on ne montre pas l'interface
-                if (strata.getCharacteristicsByFamily('natureFamily')[0].getName() == 'cmCharacteristic') {
-                    interfaceHeight = 0;
-                }
                 if (strata.index > 0) {
                     var upperStrata = this.stratig.getStratas()[index - 1];
                     if (upperStrata.getCharacteristicsByFamily('natureFamily')[0].getName() == 'cmCharacteristic') {
-                        interfaceHeight = 0;
+                        isUpperCM = true;
                     }
                 }
 
@@ -141,17 +137,22 @@
                     profile = strata.getCharacteristicsByFamily('interfaceProfileFamily')[0].getName();
                 }
 
-                var upperRect = draw.rect(interfaceWidth, interfaceHeight).attr({ fill: upperInterfaceColor });
-                var lowerRect = draw.rect(interfaceWidth, interfaceHeight).x(0).y(interfaceHeight / 2).attr({ fill: lowerInterfaceColor });
-
                 //On va maintenant dessiner l'interface
                 //Si elle est droite on dessine simplement deux rectangles
 
                 if (profile == 'straightCharacteristic') {
 
-                    var upperRect = draw.rect(interfaceWidth, interfaceHeight).attr({ fill: upperInterfaceColor });
-                    var lowerRect = draw.rect(interfaceWidth, interfaceHeight).x(0).y(interfaceHeight / 2).attr({ fill: lowerInterfaceColor });
-
+                    //On adapte l'interface si on est dans une strate CM
+                    if (strata.getCharacteristicsByFamily('natureFamily')[0].getName() == 'cmCharacteristic') {
+                        var rect = draw.rect(interfaceWidth, interfaceHeight).attr({ fill: upperInterfaceColor });
+                        //var lowerRect = draw.rect(interfaceWidth, 0).x(0).y(interfaceHeight / 2).attr({fill: lowerInterfaceColor });
+                    } else if (isUpperCM) {
+                            var rect = draw.rect(interfaceWidth, interfaceHeight).attr({ fill: lowerInterfaceColor });
+                            //var lowerRect = draw.rect(interfaceWidth, 0).x(0).y(interfaceHeight / 2).attr({fill: lowerInterfaceColor });
+                        } else {
+                                var upperRect = draw.rect(interfaceWidth, interfaceHeight).attr({ fill: upperInterfaceColor });
+                                var lowerRect = draw.rect(interfaceWidth, interfaceHeight).x(0).y(interfaceHeight / 2).attr({ fill: lowerInterfaceColor });
+                            }
                     //On dessine la bordure extérieure et la droite qui sépare les strates
                     var borderPath = draw.path("M0 0L0 " + interfaceHeight + " M" + strataWidth + " " + " 0L" + interfaceWidth + " " + interfaceHeight).fill('none');
                     borderPath.stroke({ color: 'black', width: borderWidth });
