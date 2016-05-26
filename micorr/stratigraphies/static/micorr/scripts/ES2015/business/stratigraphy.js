@@ -14,19 +14,21 @@ class Stratigraphy {
         this.stratas = [];
     }
 
+    toJson(){
+        var jsonStratigraphy = {'artefact': this.getArtefact(), 'stratigraphy': this.getUid(), 'stratas': []};
+
+        for(var i = 0; i < this.stratas.length; i++){
+            jsonStratigraphy.stratas.push(this.stratas[i].toJson());
+        }
+
+        return jsonStratigraphy;
+    }
     /**
      * Ajoute une strate à la stratigraphie
      * @param strata La strate à ajouter
      */
         addStrata(strata) {
         this.stratas.push(strata);
-    }
-
-    /**
-     * Retourne toute la stratigraphie au format JSON
-     */
-    toJson(){
-
     }
 
     getId() {
@@ -55,6 +57,12 @@ class Stratigraphy {
 
     getStratas(){
         return this.stratas;
+    }
+    setArtefact(artefact){
+        this.artefact = artefact;
+    }
+    getArtefact(){
+        return this.artefact;
     }
 
 

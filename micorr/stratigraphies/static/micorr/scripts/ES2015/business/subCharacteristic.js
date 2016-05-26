@@ -10,6 +10,7 @@ class SubCharacteristic{
 
     }
 
+
     getId(){
         return this.id;
     }

@@ -53,14 +53,36 @@
             this.init();
         }
 
-        /**
-         * Retourne les characteristiques correspondant à la famille donnée en paramètre
-         * @param family la famille recherchée
-         * @returns les characteristiques correspondante
-         */
-
-
         _createClass(Strata, [{
+            key: 'toJson',
+            value: function toJson() {
+                var jsonStrata = [];
+                var jsonChar = [];
+                var jsonInterface = [];
+
+                var jsonStrata = { 'name': this.getUid(), 'characteristics': [], 'interfaces': [] };
+
+                //On récupère les caractéristiques
+                for (var i = 0; i < this.characteristics.length; i++) {
+                    if (!this.characteristics[i].isInterface()) {
+                        jsonStrata.characteristics.push({ 'name': this.characteristics[i].getName() });
+                    }
+                }
+                //On récupère les sous caractéristiques
+                for (var i = 0; i < this.subCharacteristics.length; i++) {
+                    jsonStrata.characteristics.push({ 'name': this.subCharacteristics[i].getName() });
+                }
+
+                //On récupère les caractéristiques d'interface
+                for (var i = 0; i < this.characteristics.length; i++) {
+                    if (this.characteristics[i].isInterface()) {
+                        jsonStrata.interfaces.push({ 'name': this.characteristics[i].getName() });
+                    }
+                }
+
+                return jsonStrata;
+            }
+        }, {
             key: 'getCharacteristicsByFamily',
             value: function getCharacteristicsByFamily(family) {
                 var charact = [];
@@ -241,6 +263,7 @@
                 profileChar.setName('straightCharacteristic');
                 profileChar.setRealName('straight');
                 profileChar.setFamily('interfaceProfileFamily');
+                profileChar.setInterface(true);
                 this.replaceCharacteristic(profileChar);
 
                 this.dependencies.push('thicknessFamily');

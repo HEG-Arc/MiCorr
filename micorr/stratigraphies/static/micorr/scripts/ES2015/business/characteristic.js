@@ -10,6 +10,8 @@ class Characteristic{
     constructor(){
     }
 
+
+
     getId(){
         return this.id;
     }
@@ -68,9 +70,11 @@ class Characteristic{
     isInterface(){
         return this.int;
     }
+
     setInterface(int){
         this.int = int;
     }
+
 
 }
 

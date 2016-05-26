@@ -50,20 +50,22 @@
             this.stratas = [];
         }
 
-        /**
-         * Ajoute une strate à la stratigraphie
-         * @param strata La strate à ajouter
-         */
-
-
         _createClass(Stratigraphy, [{
+            key: 'toJson',
+            value: function toJson() {
+                var jsonStratigraphy = { 'artefact': this.getArtefact(), 'stratigraphy': this.getUid(), 'stratas': [] };
+
+                for (var i = 0; i < this.stratas.length; i++) {
+                    jsonStratigraphy.stratas.push(this.stratas[i].toJson());
+                }
+
+                return jsonStratigraphy;
+            }
+        }, {
             key: 'addStrata',
             value: function addStrata(strata) {
                 this.stratas.push(strata);
             }
-        }, {
-            key: 'toJson',
-            value: function toJson() {}
         }, {
             key: 'getId',
             value: function getId() {
@@ -98,6 +100,16 @@
             key: 'getStratas',
             value: function getStratas() {
                 return this.stratas;
+            }
+        }, {
+            key: 'setArtefact',
+            value: function setArtefact(artefact) {
+                this.artefact = artefact;
+            }
+        }, {
+            key: 'getArtefact',
+            value: function getArtefact() {
+                return this.artefact;
             }
         }]);
 

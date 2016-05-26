@@ -122,7 +122,8 @@ angular.module('micorrApp')
             MiCorrService.getDetailedStratigraphy($scope.stratigraphyName).success(function (data) {
 
                 var st = StratigraphyData.getStratigraphy();
-                st.setDescription($scope.stratigraphyName)
+                st.setUid($scope.stratigraphyName);
+                st.setArtefact($scope.artefactName);
 
                 //Boucle sur les strates
                 for (var i = 0; i < data.length; i++) {
@@ -237,6 +238,7 @@ angular.module('micorrApp')
                 }
                 $scope.stratas = st.getStratas();
                 $scope.stratigraphy = st;
+
             }).success(function () {
                 $scope.$broadcast('initShowStrat');
                 ngProgress.complete();
@@ -488,8 +490,9 @@ angular.module('micorrApp')
          * est appelé par un événement provenant d'un enfant
          */
         $scope.$on('save', function () {
-            var j = JSON.stringify(StrataData.StratasToJson($scope.artefactName, $scope.stratigraphyName));
+            var j = JSON.stringify($scope.stratigraphy.toJson());
             console.log(j);
+
             MiCorrService.saveStratigraphy(encodeURIComponent(j));
             $scope.askLeave = false;
         });
