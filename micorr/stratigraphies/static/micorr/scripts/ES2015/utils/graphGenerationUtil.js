@@ -162,11 +162,9 @@ class GraphGenerationUtil {
 
         //Strate CM
         if (strata.getCharacteristicsByFamily('natureFamily')[0].getName() == 'cmCharacteristic') {
-            if (strata.getIndex() > 0 && strata.getIndex() < this.stratig.getStratas().length - 1) {
-                var upperStrata = this.stratig.getStratas()[strata.getIndex() - 1];
+            if (strata.getIndex() < this.stratig.getStratas().length - 1) {
                 var lowerStrata = this.stratig.getStratas()[strata.getIndex() + 1];
-                if (upperStrata.getCharacteristicsByFamily('natureFamily')[0].getName() == 'cpCharacteristic'
-                    && lowerStrata.getCharacteristicsByFamily('natureFamily')[0].getName() == 'mCharacteristic') {
+                if (lowerStrata.getCharacteristicsByFamily('natureFamily')[0].getName() == 'mCharacteristic') {
                     this.drawCM(strata, width, height, draw);
                 }
             }
@@ -193,7 +191,11 @@ class GraphGenerationUtil {
      * Cette méthode s'occupe de dessiner la strate CM
      */
         drawCM(strata, width, height, draw) {
-        var upperStrata = this.stratig.getStratas()[strata.getIndex() - 1];
+        var upperStrata;
+        if (strata.getIndex() > 0) {
+            upperStrata = this.stratig.getStratas()[strata.getIndex() - 1];
+        }
+
         var lowerStrata = this.stratig.getStratas()[strata.getIndex() + 1];
 
         //On remplit le fond de la strate avec le même fond que la strate inférieure
@@ -205,7 +207,7 @@ class GraphGenerationUtil {
         ratio = parseInt(ratio.substr(1));
 
 
-        var begin = 0 - ((2 * height) / 10) * ratio;
+        var begin = 0 - ((2 * height) / 3) * ratio;
 
         var rectHeight = begin + height;
         var topX = rectHeight + height;
@@ -220,8 +222,11 @@ class GraphGenerationUtil {
             pathString = pathString + ' L ' + topY + ' ' + topX + ' L ' + downY + ' ' + rectHeight;
         }
         var upperStrataColor = 'white';
-        if (upperStrata.getCharacteristicsByFamily('colourFamily').length > 0) {
-            upperStrataColor = upperStrata.getCharacteristicsByFamily('colourFamily')[0].getRealName();
+        if (upperStrata != undefined) {
+
+            if (upperStrata.getCharacteristicsByFamily('colourFamily').length > 0) {
+                upperStrataColor = upperStrata.getCharacteristicsByFamily('colourFamily')[0].getRealName();
+            }
         }
         draw.path(pathString).attr({ fill: upperStrataColor });
     }
