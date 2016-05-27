@@ -166,17 +166,21 @@ angular.module('micorrApp')
                     var subCharacteristicsList = currentStrata['subcharacteristics'];
 
                     if (str.findDependency('subcpcompositionFamily')) {
-                        var subChar = new subCharacteristic.SubCharacteristic();
-                        subChar.setFamily('subcpcompositionFamily');
-                        subChar.setName($scope.getSubCharacteristicByFamily(subCharacteristicsList, StratigraphyData.getSubcpcompositionFamily()));
-                        str.addSubCharacteristic(subChar);
+                        if ($scope.getSubCharacteristicByFamily(subCharacteristicsList, StratigraphyData.getSubcpcompositionFamily()).length > 0) {
+                            var subChar = new subCharacteristic.SubCharacteristic();
+                            subChar.setFamily('subcpcompositionFamily');
+                            subChar.setName($scope.getSubCharacteristicByFamily(subCharacteristicsList, StratigraphyData.getSubcpcompositionFamily()));
+                            str.addSubCharacteristic(subChar);
+                        }
                     }
 
                     if (str.findDependency('subsubcpcompositionFamily')) {
-                        var subChar = new subCharacteristic.SubCharacteristic();
-                        subChar.setFamily('subsubcpcompositionFamily');
-                        subChar.setName($scope.getSubCharacteristicByFamily(subCharacteristicsList, StratigraphyData.getSubsubcpcompositionFamily()));
-                        str.addSubCharacteristic(subChar);
+                        if ($scope.getSubCharacteristicByFamily(subCharacteristicsList, StratigraphyData.getSubsubcpcompositionFamily()).length > 0) {
+                            var subChar = new subCharacteristic.SubCharacteristic();
+                            subChar.setFamily('subsubcpcompositionFamily');
+                            subChar.setName($scope.getSubCharacteristicByFamily(subCharacteristicsList, StratigraphyData.getSubsubcpcompositionFamily()));
+                            str.addSubCharacteristic(subChar);
+                        }
                     }
 
                     if (str.findDependency('subcprimicrostructureaggregatecompositionFamily')) {
@@ -394,12 +398,12 @@ angular.module('micorrApp')
 
             // on affiche seulement si cprimicrostructure n'est pas égal à noMiccrostructure
             var noMicrostructure = false;
-            if(strata.getCharacteristicsByFamily("cpriMicrostructureFamily").length > 0){
-                if(strata.getCharacteristicsByFamily("cpriMicrostructureFamily")[0].getName() == "noMicrostructureCharacteristic"){
+            if (strata.getCharacteristicsByFamily("cpriMicrostructureFamily").length > 0) {
+                if (strata.getCharacteristicsByFamily("cpriMicrostructureFamily")[0].getName() == "noMicrostructureCharacteristic") {
                     noMicrostructure = true;
                 }
             }
-            else{
+            else {
                 noMicrostructure = true;
             }
 
@@ -424,10 +428,16 @@ angular.module('micorrApp')
                 $scope.showAddCorrodedMetalStrata = false;
             }
 
-            if (strata.getNature() == 'Corroded Metal') {
+
+            if (strata.getNature() == 'Corroded metal') {
+
                 $scope.corrodedMetalStrataSelected = true;
-                if (typeof $scope.ratio == "undefined")
-                    $scope.ratio = strata.ratio;
+                if (typeof $scope.ratio == "undefined") {
+                    var ratio = strata.getCharacteristicsByFamily('cmCorrosionRatioFamily')[0].getRealName();
+                    ratio = parseInt(ratio.substr(1));
+                    $scope.ratio = new Ratio(ratio);
+                }
+
             } else {
                 $scope.corrodedMetalStrataSelected = false;
             }
@@ -497,14 +507,13 @@ angular.module('micorrApp')
             $scope.askLeave = false;
         });
 
-        $scope.ratio = new Ratio(1);
 
-        $scope.ratioChange = function() {
+        $scope.ratioChange = function () {
 
             var ratioChar = new characteristic.Characteristic();
 
             var rName = 'r' + $scope.ratio.ratio;
-            ratioChar.setName(rName+'Characteristic');
+            ratioChar.setName(rName + 'Characteristic');
             ratioChar.setRealName(rName);
             ratioChar.setFamily('cmCorrosionRatioFamily');
             var strata = StratigraphyData.getStratigraphy().getStratas()[StratigraphyData.getSelectedStrata()];

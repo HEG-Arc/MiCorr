@@ -34,7 +34,7 @@ function returnNatureCharacteristic(nature){
     natureChar.setFamily('natureFamily');
     if (nature == "cmCharacteristic" || nature == "CM"){
          natureChar.setName('cmCharacteristic');
-        natureChar.setRealName("Corroded Metal");
+        natureChar.setRealName("Corroded metal");
     }
 
     else if (nature == "cpCharacteristic" || nature == "CP"){

@@ -225,7 +225,7 @@
                         </div>
                     </div>
                     <div ng-show="corrodedMetalStrataSelected">
-                        <input type="range" max="10" ng-model="ratio.ratio" ng-change="ratioChange()"></input>
+                        <input type="range" min ="1" max="3" ng-model="ratio.ratio" ng-change="ratioChange()"></input>
                     </div>
                     <tabset ng-show="showTabForms" justified="true">
                         <tab heading="Morphology" ng-controller="StratMorphologyCtrl" active="activeMorphologyTab">
