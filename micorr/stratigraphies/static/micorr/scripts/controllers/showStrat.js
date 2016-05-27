@@ -170,15 +170,18 @@ angular.module('micorrApp')
                             var subChar = new subCharacteristic.SubCharacteristic();
                             subChar.setFamily('subcpcompositionFamily');
                             subChar.setName($scope.getSubCharacteristicByFamily(subCharacteristicsList, StratigraphyData.getSubcpcompositionFamily()));
-                            str.addSubCharacteristic(subChar);
+                            if (subChar.getName() != "" && subChar.getName() != undefined) {
+
+                                str.addSubCharacteristic(subChar);
+                            }
                         }
                     }
 
                     if (str.findDependency('subsubcpcompositionFamily')) {
-                        if ($scope.getSubCharacteristicByFamily(subCharacteristicsList, StratigraphyData.getSubsubcpcompositionFamily()).length > 0) {
-                            var subChar = new subCharacteristic.SubCharacteristic();
-                            subChar.setFamily('subsubcpcompositionFamily');
-                            subChar.setName($scope.getSubCharacteristicByFamily(subCharacteristicsList, StratigraphyData.getSubsubcpcompositionFamily()));
+                        var subChar = new subCharacteristic.SubCharacteristic();
+                        subChar.setFamily('subsubcpcompositionFamily');
+                        subChar.setName($scope.getSubCharacteristicByFamily(subCharacteristicsList, StratigraphyData.getSubsubcpcompositionFamily()));
+                        if (subChar.getName() != "" && subChar.getName() != undefined) {
                             str.addSubCharacteristic(subChar);
                         }
                     }
@@ -187,35 +190,45 @@ angular.module('micorrApp')
                         var subChar = new subCharacteristic.SubCharacteristic();
                         subChar.setFamily('subcprimicrostructureaggregatecompositionFamily');
                         subChar.setName($scope.getSubCharacteristicByFamily(subCharacteristicsList, StratigraphyData.getSubcprimicrostructureaggregatecompositionFamily()));
-                        str.addSubCharacteristic(subChar);
+                        if (subChar.getName() != "" && subChar.getName() != undefined) {
+                            str.addSubCharacteristic(subChar);
+                        }
                     }
 
                     if (str.findDependency('subsubcprimicrostructureaggregatecompositionFamily')) {
                         var subChar = new subCharacteristic.SubCharacteristic();
                         subChar.setFamily('subsubcprimicrostructureaggregatecompositionFamily');
                         subChar.setName($scope.getSubCharacteristicByFamily(subCharacteristicsList, StratigraphyData.getSubsubcprimicrostructureaggregatecompositionFamily()));
-                        str.addSubCharacteristic(subChar);
+                        if (subChar.getName() != "" && subChar.getName() != undefined) {
+                            str.addSubCharacteristic(subChar);
+                        }
                     }
 
                     if (str.findDependency('subcmcompositionFamily')) {
                         var subChar = new subCharacteristic.SubCharacteristic();
                         subChar.setFamily('subcmcompositionFamily');
                         subChar.setName($scope.getSubCharacteristicByFamily(subCharacteristicsList, StratigraphyData.getSubcmcompositionFamily()));
-                        str.addSubCharacteristic(subChar);
+                        if (subChar.getName() != "" && subChar.getName() != undefined) {
+                            str.addSubCharacteristic(subChar);
+                        }
                     }
 
                     if (str.findDependency('subcmlevelofcorrosionFamily')) {
                         var subChar = new subCharacteristic.SubCharacteristic();
                         subChar.setFamily('subcmlevelofcorrosionFamily');
                         subChar.setName($scope.getSubCharacteristicByFamily(subCharacteristicsList, StratigraphyData.getSubcmLevelOfCorrosionFamily()));
-                        str.addSubCharacteristic(subChar);
+                        if (subChar.getName() != "" && subChar.getName() != undefined) {
+                            str.addSubCharacteristic(subChar);
+                        }
                     }
 
                     if (str.findDependency('submcompositionFamily')) {
                         var subChar = new subCharacteristic.SubCharacteristic();
                         subChar.setFamily('submcompositionFamily');
                         subChar.setName($scope.getSubCharacteristicByFamily(subCharacteristicsList, StratigraphyData.getSubmcompositionFamily()));
-                        str.addSubCharacteristic(subChar);
+                        if (subChar.getName() != "" && subChar.getName() != undefined) {
+                            str.addSubCharacteristic(subChar);
+                        }
                     }
 
 
