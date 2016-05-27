@@ -206,8 +206,19 @@ class GraphGenerationUtil {
         var ratio = strata.getCharacteristicsByFamily('cmCorrosionRatioFamily')[0].getRealName();
         ratio = parseInt(ratio.substr(1));
 
+        var begin = 0;
+        switch(ratio){
+            case 1:
+                begin = 0 - ((2 * height) / 9) * 1;
+                break;
+            case 2:
+                begin = 0 - height;
+                break;
+            case 3:
+                begin = 0 - ((2 * height) / 9) * 8;
+                break;
 
-        var begin = 0 - ((2 * height) / 3) * ratio;
+        }
 
         var rectHeight = begin + height;
         var topX = rectHeight + height;

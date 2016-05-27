@@ -377,7 +377,8 @@
                     this.dependencies.push('submcompositionFamily');
                 }
 
-                if (this.nature == 'Corroded Metal') {
+                if (this.nature == 'Corroded metal') {
+                    this.dependencies.push('thicknessFamily');
                     var ratioChar = new characteristic.Characteristic();
                     ratioChar.setName('r1Characteristic');
                     ratioChar.setRealName('r1');
