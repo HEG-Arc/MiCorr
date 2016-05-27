@@ -116,7 +116,6 @@ angular.module('micorrApp')
              if (strata.getSubCharacteristicsByFamily("subsubcpcompositionFamily").length > 0) {
                  if (strata.findDependency('subsubcpcompositionFamily')) {
                      $scope.subsubcpcompositionFamily = returnSubCharacteristicsFromParent(StratigraphyData.getRawCharacteristics(), 'cpCompositionFamily', strata.getCharacteristicsByFamily('cpCompositionFamily')[0].getName(), strata.getSubCharacteristicsByFamily('subcpcompositionFamily')[0].getName());
-                     var test = $scope.subsubcpcompositionFamily;
                      $scope.selectedSubsubcpcompositionFamily = getCharacteristicByItsName($scope.subsubcpcompositionFamily, strata.getSubCharacteristicsByFamily('subsubcpcompositionFamily')[0].getName());
                  }
                  var test = $scope.selectedSubsubcpcompositionFamily;
@@ -201,7 +200,7 @@ angular.module('micorrApp')
 
 
                 if (strata.findDependency('cpcompositionextensionFamily')) {
-                    strata.clearCharacteristicsFromFamily('cpCompositionextensionFamily');
+                    strata.clearCharacteristicsFromFamily('cpCompositionExtensionFamily');
                     for (var i = 0;i< $scope.selectedCpcompositionextensionFamily.length; i++) {
                         var char = new characteristic.Characteristic();
                         char.setFamily("cpCompositionExtensionFamily");
@@ -221,10 +220,7 @@ angular.module('micorrApp')
                 if (strata.findDependency('subsubcpcompositionFamily')) {
                     var subChar = new subCharacteristic.SubCharacteristic();
                     subChar.setFamily("subsubcpcompositionFamily");
-
                     subChar.setName($scope.selectedSubsubcpcompositionFamily.name);
-
-
                     strata.replaceSubCharacteristic(subChar);
                 }
             }
