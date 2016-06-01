@@ -68,6 +68,9 @@ function returnNatureCharacteristic(nature){
         natureChar.setName('svCharacteristic');
         natureChar.setRealName("Structural Void");
     }
+    else{
+        return undefined;
+    }
 
     return natureChar;
 }

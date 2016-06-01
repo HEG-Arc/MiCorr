@@ -25,26 +25,37 @@ angular.module('micorrApp')
                         $scope.ok = function () {
 
                             var nature = returnNatureCharacteristic($scope.nature);
-                            var newStrata = new strata.Strata(nature.getRealName());
+                            if (nature != undefined) {
+                                var newStrata = new strata.Strata(nature.getRealName(), false);
+                                newStrata.replaceCharacteristic(nature);
+                                newStrata.setIndex(StratigraphyData.getStratigraphy().getStratas().length);
+                                newStrata.setUid(StratigraphyData.getStratigraphy().getUid() + '_strata_' + (newStrata.getIndex() + 1));
 
-                            newStrata.replaceCharacteristic(nature);
+                                //Si c'est une strate CM on lui ajoute deux strates enfant
+                                if (nature.getRealName() == 'Corroded metal') {
+                                    //Ajout de la sous strate CP
+                                    var cpNature = returnNatureCharacteristic('CP');
+                                    var childCPStrata = new strata.Strata(cpNature.getRealName(), true);
+                                    childCPStrata.replaceCharacteristic(cpNature);
+                                    childCPStrata.setUid(newStrata.getUid() + '_childCP');
+                                    newStrata.addChildStrata(childCPStrata);
 
-                            newStrata.setIndex(StratigraphyData.getStratigraphy().getStratas().length);
-                            newStrata.setUid(StratigraphyData.getStratigraphy().getUid() + '_strata_' +(newStrata.getIndex()+1));
+                                    //Ajout de la sous strate M
+                                    var mNature = returnNatureCharacteristic('M');
+                                    var childMStrata = new strata.Strata(cpNature.getRealName(), true);
+                                    childMStrata.replaceCharacteristic(cpNature);
+                                    childMStrata.setUid(newStrata.getUid() + '_childM');
+                                    newStrata.addChildStrata(childMStrata);
+                                }
 
-                            StratigraphyData.pushOneStrata(newStrata);
 
-                            scopeParent.$emit('doUpdate', StratigraphyData.getStratigraphy().getStratas().length-1);
-                            scopeParent.$emit('updateDraw');
-                            $modalInstance.close();
-                            /*
-                            var newStrata = natureFactory($scope.nature);
-                            newStrata.setName($scope.strataName);
-                            newStrata.setUid($scope.strataUid);
-                            StrataData.pushOneStrata(newStrata);
-                            scopeParent.$emit('doUpdate', StrataData.getStratas().length-1);
-                            scopeParent.$emit('updateDraw');
-                            $modalInstance.close(); */
+                                StratigraphyData.pushOneStrata(newStrata);
+
+                                scopeParent.$emit('doUpdate', StratigraphyData.getStratigraphy().getStratas().length - 1);
+                                scopeParent.$emit('updateDraw');
+                                $modalInstance.close();
+                            }
+
                         };
 
                         $scope.cancel = function () {

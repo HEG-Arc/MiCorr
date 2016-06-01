@@ -130,7 +130,7 @@ angular.module('micorrApp')
 
                     var currentStrata = data[i];
                     var nature = StratigraphyData.getStrataNature(currentStrata);
-                    var str = new strata.Strata(nature);
+                    var str = new strata.Strata(nature, false);
                     str.setUid(currentStrata.name);
                     str.setIndex(i);
                     //Boucle sur les caracteristiques
