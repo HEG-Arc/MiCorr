@@ -161,7 +161,6 @@ angular.module('micorrApp')
                         }
                     }
 
-
                     //Récupération des sous caractéristiques:
                     var subCharacteristicsList = currentStrata['subcharacteristics'];
 
@@ -250,6 +249,11 @@ angular.module('micorrApp')
                         }
                     }
 
+                    //Récupération des strates enfant
+
+                    for (var j = 0; j < currentStrata.children.length; j++) {
+                        window.alert('isChild');
+                    }
 
                     st.addStrata(str);
                 }

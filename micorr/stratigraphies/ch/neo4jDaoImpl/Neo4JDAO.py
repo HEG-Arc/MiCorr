@@ -71,7 +71,7 @@ class Neo4jDAO:
 
         # pour chaque strates on va faire une requete
         for strata in strataList:
-            st = {'name': strata.uid, 'characteristics': '', 'subcharacteristics': '', 'interfaces': '', 'child': ''}
+            st = {'name': strata.uid, 'characteristics': '', 'subcharacteristics': '', 'interfaces': '', 'children': ''}
             print ("***" + strata.uid)
 
             # Chaque strates a des caracteristiques
@@ -120,23 +120,26 @@ class Neo4jDAO:
 
             st['characteristics'] = clist
             st['subcharacteristics'] = slist
-            #st['interfaces'] = ilist
-            """
-            #Une strate peut avoir un enfant (maximum)
 
-            childList = self.graph.cypher.execute("MATCH (a:Strata)-[r:IS_CHILD_OF]->(b:Strata) where b.uid='" + strata.uid + "' RETURN a.uid as uid")
-            childStList = []
+
+
+            #Recuperation des enfants
+
+            childList = self.graph.cypher.execute("MATCH (a:Strata)-[r:IS_PARENT_OF]->(b:Strata) where a.uid='" + strata.uid + "' RETURN b.uid as uid")
+            children = []
             for child in childList:
-                childStList = {'name': child.uid, 'characteristics': '', 'subcharacteristics': ''}
+                cst = {'name': child.uid, 'characteristics': ''}
 
                 # Chaque strate enfant a des caracteristiques
                 print ("======Characteristic")
-                childCharactList = self.graph.cypher.execute("MATCH (n:Strata)-[r:IS_CONSTITUTED_BY]->(c:Characteristic) where n.uid='" + child.uid + "' RETURN c.uid as uid, c.name as real_name")
+                childCharactList = self.graph.cypher.execute("MATCH (n:Strata)-[r:IS_CONSTITUTED_BY]->(c:Characteristic)-[b:BELONGS_TO]->(f:Family) where n.uid='" + child.uid + "' RETURN c.uid as uid, c.name as real_name, f.uid as family")
                 childCList = []
                 for charact in childCharactList:
-                    childCList.append({'name': charact.uid, 'real_name': charact.real_name})
+                    childCList.append({'name': charact.uid, 'real_name': charact.real_name, 'family': charact.family})
                     print ("         " + charact.uid)
 
+
+                '''
                 # Chaque strate a des sous-caracteristiques
                 print ("======subCharacteristic")
                 subCharactList = self.graph.cypher.execute("MATCH (s:Strata)-[r:IS_CONSTITUTED_BY]->(c:SubCharacteristic) where s.uid='" + strata.uid + "' RETURN c.uid as uid, c.name as real_name")
@@ -144,14 +147,15 @@ class Neo4jDAO:
                 for subCharact in subCharactList:
                     childSList.append({'name': subCharact.uid, 'real_name': subCharact.real_name})
                     print("         " + subCharact.uid)
-
-                childStList['characteristics'] = childCList
-                childStList['subcharacteristics'] = childSList
-
-            # On ajoute l'enfant a la strate parent
-            st['child'] = childStList
-            """
+                '''
+                cst['characteristics'] = childCList
+                children.append(cst);
+                print('IM HERE BRO')
+                #childStList['subcharacteristics'] = childSList
+            st['children'] = children;
+            print('PASSED')
             c.append(st)
+
         return c
 
     # retourne la liste de toutes les caracteristiques, sous-caracteristiques et sous-sous-caracteristiques
