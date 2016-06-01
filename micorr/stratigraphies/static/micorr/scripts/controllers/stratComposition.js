@@ -91,6 +91,18 @@ angular.module('micorrApp')
                 $scope.selectedCpcompositionextensionFamily = getCharacteristicByItsNameMulti($scope.cpcompositionextensionFamily, strata.getCharacteristicsByFamily("cpCompositionExtensionFamily"));
             }
 
+            //Reprise des characteristiques de composition pour la strate CM
+            if (strata.getNature() == 'Corroded metal') {
+                var CPChild = strata.getChildStrataByNature('Corrosion products');
+                var MChild = strata.getChildStrataByNature('Metal');
+                if (CPChild.getCharacteristicsByFamily("cpCompositionExtensionFamily").length > 0) {
+                    $scope.selectedCMCPComposition = getCharacteristicByItsNameMulti($scope.cpcompositionextensionFamily, CPChild.getCharacteristicsByFamily("cpCompositionExtensionFamily"));
+                }
+                if (MChild.getCharacteristicsByFamily("cpCompositionExtensionFamily").length > 0) {
+                    $scope.selectedCMMComposition = getCharacteristicByItsNameMulti($scope.cpcompositionextensionFamily, MChild.getCharacteristicsByFamily("cpCompositionExtensionFamily"));
+                }
+            }
+
 
             //Sous caracteristiques
 
@@ -213,7 +225,7 @@ angular.module('micorrApp')
             }
 
             //Ajout  des composition aux deux strates enfant de la strate CM
-            if(strata.getNature() == 'Corroded metal'){
+            if (strata.getNature() == 'Corroded metal') {
                 //Strate enfant CP
                 var childCP = strata.getChildStrataByNature('Corrosion products');
                 childCP.clearCharacteristicsFromFamily('cpCompositionExtensionFamily');
@@ -237,7 +249,6 @@ angular.module('micorrApp')
                 }
 
             }
-
 
 
             //Sous caractéristiques

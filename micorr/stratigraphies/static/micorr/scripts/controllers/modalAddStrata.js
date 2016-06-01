@@ -42,8 +42,8 @@ angular.module('micorrApp')
 
                                     //Ajout de la sous strate M
                                     var mNature = returnNatureCharacteristic('M');
-                                    var childMStrata = new strata.Strata(cpNature.getRealName(), true);
-                                    childMStrata.replaceCharacteristic(cpNature);
+                                    var childMStrata = new strata.Strata(mNature.getRealName(), true);
+                                    childMStrata.replaceCharacteristic(mNature);
                                     childMStrata.setUid(newStrata.getUid() + '_childM');
                                     newStrata.addChildStrata(childMStrata);
                                 }

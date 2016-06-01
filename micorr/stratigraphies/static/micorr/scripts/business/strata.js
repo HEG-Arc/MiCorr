@@ -59,11 +59,9 @@
         _createClass(Strata, [{
             key: 'toJson',
             value: function toJson() {
-                var jsonStrata = [];
-                var jsonChar = [];
-                var jsonInterface = [];
+                var childStratas = [];
 
-                var jsonStrata = { 'name': this.getUid(), 'characteristics': [], 'interfaces': [] };
+                var jsonStrata = { 'name': this.getUid(), 'characteristics': [], 'interfaces': [], 'children': [] };
 
                 //On récupère les caractéristiques
                 for (var i = 0; i < this.characteristics.length; i++) {
@@ -80,6 +78,13 @@
                 for (var i = 0; i < this.characteristics.length; i++) {
                     if (this.characteristics[i].isInterface()) {
                         jsonStrata.interfaces.push({ 'name': this.characteristics[i].getName() });
+                    }
+                }
+
+                //On récupère les strates enfants si ce n'est pas une strate enfant
+                if (!this.child) {
+                    for (var i = 0; i < this.childStratas.length; i++) {
+                        jsonStrata.children.push(this.childStratas[i].toJson());
                     }
                 }
 
@@ -416,9 +421,6 @@
                     this.replaceCharacteristic(ratioChar);
                 }
             }
-        }, {
-            key: 'initChild',
-            value: function initChild() {}
         }]);
 
         return Strata;

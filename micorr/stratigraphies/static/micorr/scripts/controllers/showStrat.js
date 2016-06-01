@@ -513,6 +513,7 @@ angular.module('micorrApp')
          * est appelé par un événement provenant d'un enfant
          */
         $scope.$on('save', function () {
+            var test = $scope.stratigraphy.toJson();
             var j = JSON.stringify($scope.stratigraphy.toJson());
             console.log(j);
 

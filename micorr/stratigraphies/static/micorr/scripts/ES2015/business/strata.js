@@ -22,11 +22,9 @@ class Strata {
     }
 
     toJson() {
-        var jsonStrata = [];
-        var jsonChar = [];
-        var jsonInterface = [];
+        var childStratas = [];
 
-        var jsonStrata = {'name': this.getUid(), 'characteristics': [], 'interfaces': []};
+        var jsonStrata = {'name': this.getUid(), 'characteristics': [], 'interfaces': [], 'children' : []};
 
         //On récupère les caractéristiques
         for (var i = 0; i < this.characteristics.length; i++) {
@@ -45,6 +43,14 @@ class Strata {
                 jsonStrata.interfaces.push({'name': this.characteristics[i].getName()});
             }
         }
+
+        //On récupère les strates enfants si ce n'est pas une strate enfant
+        if(!this.child){
+            for (var i = 0; i < this.childStratas.length; i++){
+                jsonStrata.children.push(childStratas[i].toJson());
+            }
+        }
+
 
         return jsonStrata;
 
@@ -415,13 +421,6 @@ class Strata {
 
 
         }
-    }
-
-    /**
-     * Cette méthode initialise une strate enfant
-     */
-        initChild() {
-
     }
 
 
