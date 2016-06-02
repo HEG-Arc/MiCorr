@@ -140,7 +140,7 @@ angular.module('micorrApp')
                         char.setName(currentCharacteristic.name);
                         char.setRealName(currentCharacteristic.real_name);
                         char.setFamily(currentCharacteristic.family);
-                        str.replaceCharacteristic(char);
+                        str.addCharacteristic(char);
                     }
 
                     //Boucle sur les caracteristiques d'interface
@@ -249,14 +249,50 @@ angular.module('micorrApp')
                         }
                     }
 
-                    //Récupération des strates enfant
 
+
+
+                    //Récupération des strates enfant
                     for (var j = 0; j < currentStrata.children.length; j++) {
-                        window.alert('isChild');
+                        var curChild = currentStrata.children[j];
+                        var nat = StratigraphyData.getStrataNature(curChild);
+                        var childStrata = new strata.Strata(nat, true);
+                        childStrata.setUid(curChild.name);
+                        //Boucle sur les caracteristiques
+                        for (var k = 0; k < curChild.characteristics.length; k++) {
+                            var curChar = curChild.characteristics[k];
+                            var char = new characteristic.Characteristic();
+                            char.setName(curChar.name);
+                            char.setRealName(curChar.real_name);
+                            char.setFamily(curChar.family);
+                            childStrata.addCharacteristic(char);
+                        }
+                        str.addChildStrata(childStrata);
+                    }
+
+                    /*Si la strate n'a pas d'enfants et que c'est une strate CM, on lui ajoute ses deux
+                    enfants. Celà permet de transformer les anciennes strates qui auraient été enregistrées
+                    avant l'instauration des strates enfants. */
+                    if (str.getNature() == 'Corroded metal' && currentStrata.children.length == 0) {
+                        //Ajout de la sous strate CP
+                        var cpNature = returnNatureCharacteristic('CP');
+                        var childCPStrata = new strata.Strata(cpNature.getRealName(), true);
+                        childCPStrata.replaceCharacteristic(cpNature);
+                        childCPStrata.setUid(str.getUid() + '_childCP');
+                        str.addChildStrata(childCPStrata);
+
+                        //Ajout de la sous strate M
+                        var mNature = returnNatureCharacteristic('M');
+                        var childMStrata = new strata.Strata(mNature.getRealName(), true);
+                        childMStrata.replaceCharacteristic(mNature);
+                        childMStrata.setUid(str.getUid() + '_childM');
+                        str.addChildStrata(childMStrata);
                     }
 
                     st.addStrata(str);
                 }
+
+
                 $scope.stratas = st.getStratas();
                 $scope.stratigraphy = st;
 
