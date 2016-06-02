@@ -149,11 +149,9 @@ class Neo4jDAO:
                     print("         " + subCharact.uid)
                 '''
                 cst['characteristics'] = childCList
-                children.append(cst);
-                print('IM HERE BRO')
+                children.append(cst)
                 #childStList['subcharacteristics'] = childSList
             st['children'] = children;
-            print('PASSED')
             c.append(st)
 
         return c
