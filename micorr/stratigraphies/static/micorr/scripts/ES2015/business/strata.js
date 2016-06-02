@@ -34,7 +34,7 @@ class Strata {
         }
         //On récupère les sous caractéristiques
         for (var i = 0; i < this.subCharacteristics.length; i++) {
-            jsonStrata.characteristics.push({'name': this.subCharacteristics[i].getName()});
+            jsonStrata.characteristics.push({'name': this.subCharacteristics[i].getUid()});
         }
 
         //On récupère les caractéristiques d'interface
@@ -289,14 +289,6 @@ class Strata {
      * et en lui attribuant des valeurs par défaut
      */
         init() {
-
-        var profileChar = new characteristic.Characteristic();
-        profileChar.setName('straightCharacteristic');
-        profileChar.setRealName('straight');
-        profileChar.setFamily('interfaceProfileFamily');
-        profileChar.setInterface(true);
-        this.replaceCharacteristic(profileChar);
-
 
         this.dependencies.push('thicknessFamily');
         this.dependencies.push('widthFamily');

@@ -71,7 +71,7 @@
                 }
                 //On récupère les sous caractéristiques
                 for (var i = 0; i < this.subCharacteristics.length; i++) {
-                    jsonStrata.characteristics.push({ 'name': this.subCharacteristics[i].getName() });
+                    jsonStrata.characteristics.push({ 'name': this.subCharacteristics[i].getUid() });
                 }
 
                 //On récupère les caractéristiques d'interface
@@ -84,7 +84,7 @@
                 //On récupère les strates enfants si ce n'est pas une strate enfant
                 if (!this.child) {
                     for (var i = 0; i < this.childStratas.length; i++) {
-                        jsonStrata.children.push(this.childStratas[i].toJson());
+                        jsonStrata.children.push(childStratas[i].toJson());
                     }
                 }
 
@@ -292,13 +292,6 @@
         }, {
             key: 'init',
             value: function init() {
-
-                var profileChar = new characteristic.Characteristic();
-                profileChar.setName('straightCharacteristic');
-                profileChar.setRealName('straight');
-                profileChar.setFamily('interfaceProfileFamily');
-                profileChar.setInterface(true);
-                this.replaceCharacteristic(profileChar);
 
                 this.dependencies.push('thicknessFamily');
                 this.dependencies.push('widthFamily');

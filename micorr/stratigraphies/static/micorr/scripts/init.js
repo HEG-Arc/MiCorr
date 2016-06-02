@@ -483,13 +483,14 @@ function returnSubCharacteristicsFromParent(data, family, lvl1, lvl2) {
                     var caract = caracts[j];
                     for (var k = 0; k < caract.subcharacteristics.length; k++) {
                         var subcaract = caract.subcharacteristics[k];
-                        subList.push({'name': subcaract.name, 'sub_real_name': subcaract.sub_real_name});
+                        subList.push({'uid': subcaract.name, 'name': subcaract.sub_real_name});
 
                         if (subcaract.name == lvl2) {
                             var subsubcaracts = subcaract.subcharacteristics;
                             for (var l = 0; l < subsubcaracts.length; l++) {
                                 var subsubcaract = subsubcaracts[l];
-                                subsubList.push({'name': subsubcaract.subsub_real_name});
+                                subsubList.push({'name': subsubcaract.subsub_real_name, 'uid' : subsubcaract.name});
+
                             }
                         }
 

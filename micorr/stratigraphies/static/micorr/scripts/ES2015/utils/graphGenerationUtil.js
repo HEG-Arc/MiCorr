@@ -94,7 +94,7 @@ class GraphGenerationUtil {
         //On va maintenant dessiner l'interface
         //Si elle est droite on dessine simplement deux rectangles
 
-        if (profile == 'straightCharacteristic') {
+        if (profile == 'straightCharacteristic' || profile == '') {
 
             //On adapte l'interface si on est dans une strate CM
             if (strata.getCharacteristicsByFamily('natureFamily')[0].getName() == 'cmCharacteristic') {

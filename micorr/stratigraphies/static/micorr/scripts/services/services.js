@@ -212,7 +212,7 @@ angular.module('micorrApp').factory('StratigraphyData', function StratigraphyDat
                     for (var i = 0; i < list.length; i++) {
                         var sub = list[i]['subcharacteristics'];
                         for (var j = 0; j < sub.length; j++) {
-                            subList.push({'name': sub[j].name});
+                            subList.push({'name': sub[j].sub_real_name, 'uid' : sub[j].name});
                             var subsub = sub[j]['subcharacteristics'];
                             for (var k = 0; k < subsub.length; k++) {
                                 //console.log(subsub);

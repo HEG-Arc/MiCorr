@@ -104,7 +104,9 @@ angular.module('micorrApp').directive('strata', function ($compile, Stratigraphy
 
                 label = strata.getCharacteristicsByFamily("natureFamily")[0].getName();
                 label = label.split("Char")
-                label = label[0] + sameNature;
+                label = label[0].toUpperCase();
+                label = label + sameNature;
+
 
                 element.children()[0].innerHTML = '<button class="btn btn-link btn-xs" ng-click="removeStrata(' + index + ')" title="delete this strata"><span class="glyphicon glyphicon-remove"></span></button></br>' + label;
 
