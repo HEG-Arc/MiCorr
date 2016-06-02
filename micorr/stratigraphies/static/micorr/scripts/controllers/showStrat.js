@@ -130,7 +130,7 @@ angular.module('micorrApp')
 
                     var currentStrata = data[i];
                     var nature = StratigraphyData.getStrataNature(currentStrata);
-                    var str = new strata.Strata(nature);
+                    var str = new strata.Strata(nature, false);
                     str.setUid(currentStrata.name);
                     str.setIndex(i);
                     //Boucle sur les caracteristiques
@@ -160,7 +160,6 @@ angular.module('micorrApp')
                             str.replaceCharacteristic(char);
                         }
                     }
-
 
                     //Récupération des sous caractéristiques:
                     var subCharacteristicsList = currentStrata['subcharacteristics'];
@@ -250,6 +249,11 @@ angular.module('micorrApp')
                         }
                     }
 
+                    //Récupération des strates enfant
+
+                    for (var j = 0; j < currentStrata.children.length; j++) {
+                        window.alert('isChild');
+                    }
 
                     st.addStrata(str);
                 }
@@ -513,6 +517,7 @@ angular.module('micorrApp')
          * est appelé par un événement provenant d'un enfant
          */
         $scope.$on('save', function () {
+            var test = $scope.stratigraphy.toJson();
             var j = JSON.stringify($scope.stratigraphy.toJson());
             console.log(j);
 

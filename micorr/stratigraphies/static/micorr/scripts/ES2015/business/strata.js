@@ -8,41 +8,67 @@ import {SubCharacteristic} from './subCharacteristic';
 
 class Strata {
 
-    constructor(nature) {
+    constructor(nature, child) {
         this.nature = nature;
         this.dependencies = new Array();
         this.characteristics = new Array();
         this.subCharacteristics = new Array();
+        this.childStratas = new Array();
+        this.child = child;
+
         this.init();
+
+
     }
 
-    toJson(){
-        var jsonStrata = [];
-        var jsonChar = [];
-        var jsonInterface = [];
+    toJson() {
+        var childStratas = [];
 
-        var jsonStrata = {'name': this.getUid(), 'characteristics': [], 'interfaces': []};
+        var jsonStrata = {'name': this.getUid(), 'characteristics': [], 'interfaces': [], 'children' : []};
 
         //On récupère les caractéristiques
-        for(var i = 0; i < this.characteristics.length; i++){
-            if(!this.characteristics[i].isInterface()){
-                jsonStrata.characteristics.push({'name' : this.characteristics[i].getName()});
+        for (var i = 0; i < this.characteristics.length; i++) {
+            if (!this.characteristics[i].isInterface()) {
+                jsonStrata.characteristics.push({'name': this.characteristics[i].getName()});
             }
         }
         //On récupère les sous caractéristiques
-        for(var i = 0; i < this.subCharacteristics.length; i++){
-                jsonStrata.characteristics.push({'name' : this.subCharacteristics[i].getName()});
+        for (var i = 0; i < this.subCharacteristics.length; i++) {
+            jsonStrata.characteristics.push({'name': this.subCharacteristics[i].getName()});
         }
 
         //On récupère les caractéristiques d'interface
-        for(var i = 0; i < this.characteristics.length; i++){
-            if(this.characteristics[i].isInterface()){
-                jsonStrata.interfaces.push({'name' : this.characteristics[i].getName()});
+        for (var i = 0; i < this.characteristics.length; i++) {
+            if (this.characteristics[i].isInterface()) {
+                jsonStrata.interfaces.push({'name': this.characteristics[i].getName()});
             }
         }
 
+        //On récupère les strates enfants si ce n'est pas une strate enfant
+        if(!this.child){
+            for (var i = 0; i < this.childStratas.length; i++){
+                jsonStrata.children.push(childStratas[i].toJson());
+            }
+        }
+
+
         return jsonStrata;
 
+    }
+
+    /**
+     * Retourne une strate enfant de la nature en paramètres
+     * @param nature la nature recherchée
+     * @returns la strate enfant
+     */
+    getChildStrataByNature(nature) {
+
+        for (var i = 0; i < this.childStratas.length; i++) {
+            if (this.childStratas[i].getNature() == nature) {
+                return this.childStratas[i];
+            }
+        }
+        return null;
     }
 
 
@@ -62,13 +88,12 @@ class Strata {
     }
 
 
-
     /**
      * Retourne les sous caractéristiques de la famille en paramètre
      * @param family
      * @returns {Array} liste de sous caractéristiques
      */
-    getSubCharacteristicsByFamily(family) {
+        getSubCharacteristicsByFamily(family) {
         var charact = [];
         for (var i = 0; i < this.subCharacteristics.length; i++) {
             if (this.subCharacteristics[i].getFamily() == family) {
@@ -82,7 +107,7 @@ class Strata {
      * Supprime toutes les characteristiques d'une famille
      * @param family
      */
-    clearCharacteristicsFromFamily(family){
+        clearCharacteristicsFromFamily(family) {
 
         for (var i = 0; i < this.characteristics.length; i++) {
             if (this.characteristics[i].getFamily() == family) {
@@ -96,7 +121,7 @@ class Strata {
      * Supprime toutes les sous characteristiques d'une famille
      * @param family
      */
-    clearSubCharacteristicsFromFamily(family){
+        clearSubCharacteristicsFromFamily(family) {
         for (var i = 0; i < this.subCharacteristics.length; i++) {
             if (this.subCharacteristics[i].getFamily() == family) {
                 this.subCharacteristics.splice(i, 1);
@@ -162,6 +187,10 @@ class Strata {
         this.characteristics.push(characteristic);
     }
 
+    addChildStrata(childStrata) {
+        this.childStratas.push(childStrata);
+    }
+
     replaceCharacteristic(characteristic) {
         var found = false;
         var i = 0;
@@ -178,6 +207,23 @@ class Strata {
         }
 
     }
+
+    /**
+     * Permet de savoir si la strate est une strate enfant.
+     * @returns Un booleen qui indique si c'est une strate enfant
+     */
+        isChild() {
+        return this.child;
+    }
+
+    /**
+     * Permet d'indiquer que la strate est une strate enfant
+     * @param child
+     */
+        setChild(child) {
+        this.child = child;
+    }
+
 
     removeCharacteristic(uid) {
 
@@ -236,6 +282,7 @@ class Strata {
         }
         return false;
     }
+
 
     /**
      * Cette méthode initialise la strate en ajoutant à un tableau les propriétés modifiables
@@ -363,7 +410,7 @@ class Strata {
             this.dependencies.push('submcompositionFamily');
         }
 
-        if(this.nature == 'Corroded metal'){
+        if (this.nature == 'Corroded metal') {
             this.dependencies.push('thicknessFamily');
             var ratioChar = new characteristic.Characteristic();
             ratioChar.setName('r1Characteristic');
@@ -373,10 +420,7 @@ class Strata {
             this.replaceCharacteristic(ratioChar);
 
 
-
         }
-
-
     }
 
 

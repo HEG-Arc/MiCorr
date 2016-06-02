@@ -24,6 +24,10 @@ angular.module('micorrApp')
         $scope.selectedCpcompositionextensionFamily = [];
         $scope.selectedSubmcompositionFamily = null;
 
+        //Les tableaux pour les picklist des strates enfant.
+        $scope.selectedCMCPComposition = [];
+        $scope.selectedCMMComposition = [];
+
         var initStratComposition = function () {
             // On récupère les valeurs qui vont aller dans les champs de notre formulaire
             $scope.scompositionFamily = StratigraphyData.getScompositionFamily()['characteristics'];
@@ -87,6 +91,18 @@ angular.module('micorrApp')
                 $scope.selectedCpcompositionextensionFamily = getCharacteristicByItsNameMulti($scope.cpcompositionextensionFamily, strata.getCharacteristicsByFamily("cpCompositionExtensionFamily"));
             }
 
+            //Reprise des characteristiques de composition pour la strate CM
+            if (strata.getNature() == 'Corroded metal') {
+                var CPChild = strata.getChildStrataByNature('Corrosion products');
+                var MChild = strata.getChildStrataByNature('Metal');
+                if (CPChild.getCharacteristicsByFamily("cpCompositionExtensionFamily").length > 0) {
+                    $scope.selectedCMCPComposition = getCharacteristicByItsNameMulti($scope.cpcompositionextensionFamily, CPChild.getCharacteristicsByFamily("cpCompositionExtensionFamily"));
+                }
+                if (MChild.getCharacteristicsByFamily("cpCompositionExtensionFamily").length > 0) {
+                    $scope.selectedCMMComposition = getCharacteristicByItsNameMulti($scope.cpcompositionextensionFamily, MChild.getCharacteristicsByFamily("cpCompositionExtensionFamily"));
+                }
+            }
+
 
             //Sous caracteristiques
 
@@ -99,27 +115,26 @@ angular.module('micorrApp')
             }
 
             // met à jour les données des formulaires en fonction de cmcompositionFamily
-             if (strata.getSubCharacteristicsByFamily("subcmcompositionFamily").length > 0) {
-                 if (strata.findDependency('subcmcompositionFamily')) {
-                     $scope.subcmcompositionFamily = returnSubCharacteristicsFromParent(StratigraphyData.getRawCharacteristics(), 'cmCompositionFamily', strata.getCharacteristicsByFamily('cmCompositionFamily')[0].getName(), '');
-                     $scope.selectedSubcmcompositionFamily = getCharacteristicByItsName($scope.subcmcompositionFamily, strata.getSubCharacteristicsByFamily('subcmcompositionFamily')[0].getName());
-                 }
-             }
+            if (strata.getSubCharacteristicsByFamily("subcmcompositionFamily").length > 0) {
+                if (strata.findDependency('subcmcompositionFamily')) {
+                    $scope.subcmcompositionFamily = returnSubCharacteristicsFromParent(StratigraphyData.getRawCharacteristics(), 'cmCompositionFamily', strata.getCharacteristicsByFamily('cmCompositionFamily')[0].getName(), '');
+                    $scope.selectedSubcmcompositionFamily = getCharacteristicByItsName($scope.subcmcompositionFamily, strata.getSubCharacteristicsByFamily('subcmcompositionFamily')[0].getName());
+                }
+            }
             // met à jour les données des formulaires en fonction de cpcompositionFamily
-             if (strata.getSubCharacteristicsByFamily("subcpcompositionFamily").length > 0) {
-                 if (strata.findDependency('subcpcompositionFamily')) {
-                     $scope.subcpcompositionFamily = returnSubCharacteristicsFromParent(StratigraphyData.getRawCharacteristics(), 'cpCompositionFamily', strata.getCharacteristicsByFamily('cpCompositionFamily')[0].getName(), '');
-                     $scope.selectedSubcpcompositionFamily = getCharacteristicByItsName($scope.subcpcompositionFamily, strata.getSubCharacteristicsByFamily('subcpcompositionFamily')[0].getName());
-                 }
-             }
+            if (strata.getSubCharacteristicsByFamily("subcpcompositionFamily").length > 0) {
+                if (strata.findDependency('subcpcompositionFamily')) {
+                    $scope.subcpcompositionFamily = returnSubCharacteristicsFromParent(StratigraphyData.getRawCharacteristics(), 'cpCompositionFamily', strata.getCharacteristicsByFamily('cpCompositionFamily')[0].getName(), '');
+                    $scope.selectedSubcpcompositionFamily = getCharacteristicByItsName($scope.subcpcompositionFamily, strata.getSubCharacteristicsByFamily('subcpcompositionFamily')[0].getName());
+                }
+            }
             // met à jour les données des formulaires en fonction de subcpcompositionFamily
-             if (strata.getSubCharacteristicsByFamily("subsubcpcompositionFamily").length > 0) {
-                 if (strata.findDependency('subsubcpcompositionFamily')) {
-                     $scope.subsubcpcompositionFamily = returnSubCharacteristicsFromParent(StratigraphyData.getRawCharacteristics(), 'cpCompositionFamily', strata.getCharacteristicsByFamily('cpCompositionFamily')[0].getName(), strata.getSubCharacteristicsByFamily('subcpcompositionFamily')[0].getName());
-                     $scope.selectedSubsubcpcompositionFamily = getCharacteristicByItsName($scope.subsubcpcompositionFamily, strata.getSubCharacteristicsByFamily('subsubcpcompositionFamily')[0].getName());
-                 }
-                 var test = $scope.selectedSubsubcpcompositionFamily;
-             }
+            if (strata.getSubCharacteristicsByFamily("subsubcpcompositionFamily").length > 0) {
+                if (strata.findDependency('subsubcpcompositionFamily')) {
+                    $scope.subsubcpcompositionFamily = returnSubCharacteristicsFromParent(StratigraphyData.getRawCharacteristics(), 'cpCompositionFamily', strata.getCharacteristicsByFamily('cpCompositionFamily')[0].getName(), strata.getSubCharacteristicsByFamily('subcpcompositionFamily')[0].getName());
+                    $scope.selectedSubsubcpcompositionFamily = getCharacteristicByItsName($scope.subsubcpcompositionFamily, strata.getSubCharacteristicsByFamily('subsubcpcompositionFamily')[0].getName());
+                }
+            }
 
         });
         /**
@@ -156,8 +171,8 @@ angular.module('micorrApp')
                     var char = new characteristic.Characteristic();
                     char.setFamily("sCompositionFamily");
 
-                        char.setName($scope.selectedScompositionFamily.name);
-                        char.setRealName($scope.selectedScompositionFamily.real_name);
+                    char.setName($scope.selectedScompositionFamily.name);
+                    char.setRealName($scope.selectedScompositionFamily.real_name);
 
                     strata.replaceCharacteristic(char);
                 }
@@ -167,8 +182,8 @@ angular.module('micorrApp')
                     var char = new characteristic.Characteristic();
                     char.setFamily("nmmCompositionFamily");
 
-                        char.setName($scope.selectedNmmcompositionFamily.name);
-                        char.setRealName($scope.selectedNmmcompositionFamily.real_name);
+                    char.setName($scope.selectedNmmcompositionFamily.name);
+                    char.setRealName($scope.selectedNmmcompositionFamily.real_name);
 
 
                     strata.replaceCharacteristic(char);
@@ -179,8 +194,8 @@ angular.module('micorrApp')
                     var char = new characteristic.Characteristic();
                     char.setFamily("dCompositionFamily");
 
-                        char.setName($scope.selectedDcompositionFamily.name);
-                        char.setRealName($scope.selectedDcompositionFamily.real_name);
+                    char.setName($scope.selectedDcompositionFamily.name);
+                    char.setRealName($scope.selectedDcompositionFamily.real_name);
 
                     strata.replaceCharacteristic(char);
                 }
@@ -190,26 +205,48 @@ angular.module('micorrApp')
                     var char = new characteristic.Characteristic();
                     char.setFamily("pomCompositionFamily");
 
-                        char.setName($scope.selectedPomcompositionFamily.name);
-                        char.setRealName($scope.selectedPomcompositionFamily.real_name);
+                    char.setName($scope.selectedPomcompositionFamily.name);
+                    char.setRealName($scope.selectedPomcompositionFamily.real_name);
 
                     strata.replaceCharacteristic(char);
                 }
             }
 
 
+            if (strata.findDependency('cpcompositionextensionFamily')) {
+                strata.clearCharacteristicsFromFamily('cpCompositionExtensionFamily');
+                for (var i = 0; i < $scope.selectedCpcompositionextensionFamily.length; i++) {
+                    var char = new characteristic.Characteristic();
+                    char.setFamily("cpCompositionExtensionFamily");
+                    char.setName($scope.selectedCpcompositionextensionFamily[i].name);
+                    char.setRealName($scope.selectedCpcompositionextensionFamily[i].real_name);
+                    strata.addCharacteristic(char);
+                }
+            }
 
-                if (strata.findDependency('cpcompositionextensionFamily')) {
-                    strata.clearCharacteristicsFromFamily('cpCompositionExtensionFamily');
-                    for (var i = 0;i< $scope.selectedCpcompositionextensionFamily.length; i++) {
-                        var char = new characteristic.Characteristic();
-                        char.setFamily("cpCompositionExtensionFamily");
-                        char.setName($scope.selectedCpcompositionextensionFamily[i].name);
-                        char.setRealName($scope.selectedCpcompositionextensionFamily[i].real_name);
-                        strata.addCharacteristic(char);
-                    }
+            //Ajout  des composition aux deux strates enfant de la strate CM
+            if (strata.getNature() == 'Corroded metal') {
+                //Strate enfant CP
+                var childCP = strata.getChildStrataByNature('Corrosion products');
+                childCP.clearCharacteristicsFromFamily('cpCompositionExtensionFamily');
+                for (var i = 0; i < $scope.selectedCMCPComposition.length; i++) {
+                    var char = new characteristic.Characteristic();
+                    char.setFamily("cpCompositionExtensionFamily");
+                    char.setName($scope.selectedCMCPComposition[i].name);
+                    char.setRealName($scope.selectedCMCPComposition[i].real_name);
+                    childCP.addCharacteristic(char);
+                }
 
-
+                //Strate enfant M
+                var childM = strata.getChildStrataByNature('Metal');
+                childM.clearCharacteristicsFromFamily('cpCompositionExtensionFamily');
+                for (var i = 0; i < $scope.selectedCMMComposition.length; i++) {
+                    var char = new characteristic.Characteristic();
+                    char.setFamily("cpCompositionExtensionFamily");
+                    char.setName($scope.selectedCMMComposition[i].name);
+                    char.setRealName($scope.selectedCMMComposition[i].real_name);
+                    childM.addCharacteristic(char);
+                }
 
             }
 
@@ -339,7 +376,7 @@ angular.module('micorrApp')
 
                     $scope.subsubcpcompositionFamily = returnSubCharacteristicsFromParent(StratigraphyData.getRawCharacteristics(), 'cpCompositionFamily', strata.getCharacteristicsByFamily('cpCompositionFamily')[0].getName(), strata.getSubCharacteristicsByFamily('subcpcompositionFamily')[0].getName());
 
-                    if(strata.getSubCharacteristicsByFamily('subsubcpcompositionFamily') > 0) {
+                    if (strata.getSubCharacteristicsByFamily('subsubcpcompositionFamily') > 0) {
                         $scope.selectedSubsubcpcompositionFamily = getCharacteristicByItsName($scope.subsubcpcompositionFamily, strata.getSubCharacteristicsByFamily('subsubcpcompositionFamily')[0].getName());
                     }
 

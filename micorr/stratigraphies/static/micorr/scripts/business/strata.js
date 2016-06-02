@@ -43,24 +43,25 @@
     }();
 
     let Strata = function () {
-        function Strata(nature) {
+        function Strata(nature, child) {
             _classCallCheck(this, Strata);
 
             this.nature = nature;
             this.dependencies = new Array();
             this.characteristics = new Array();
             this.subCharacteristics = new Array();
+            this.childStratas = new Array();
+            this.child = child;
+
             this.init();
         }
 
         _createClass(Strata, [{
             key: 'toJson',
             value: function toJson() {
-                var jsonStrata = [];
-                var jsonChar = [];
-                var jsonInterface = [];
+                var childStratas = [];
 
-                var jsonStrata = { 'name': this.getUid(), 'characteristics': [], 'interfaces': [] };
+                var jsonStrata = { 'name': this.getUid(), 'characteristics': [], 'interfaces': [], 'children': [] };
 
                 //On récupère les caractéristiques
                 for (var i = 0; i < this.characteristics.length; i++) {
@@ -80,7 +81,25 @@
                     }
                 }
 
+                //On récupère les strates enfants si ce n'est pas une strate enfant
+                if (!this.child) {
+                    for (var i = 0; i < this.childStratas.length; i++) {
+                        jsonStrata.children.push(this.childStratas[i].toJson());
+                    }
+                }
+
                 return jsonStrata;
+            }
+        }, {
+            key: 'getChildStrataByNature',
+            value: function getChildStrataByNature(nature) {
+
+                for (var i = 0; i < this.childStratas.length; i++) {
+                    if (this.childStratas[i].getNature() == nature) {
+                        return this.childStratas[i];
+                    }
+                }
+                return null;
             }
         }, {
             key: 'getCharacteristicsByFamily',
@@ -175,6 +194,11 @@
                 this.characteristics.push(characteristic);
             }
         }, {
+            key: 'addChildStrata',
+            value: function addChildStrata(childStrata) {
+                this.childStratas.push(childStrata);
+            }
+        }, {
             key: 'replaceCharacteristic',
             value: function replaceCharacteristic(characteristic) {
                 var found = false;
@@ -190,6 +214,16 @@
                 if (!found) {
                     this.characteristics.push(characteristic);
                 }
+            }
+        }, {
+            key: 'isChild',
+            value: function isChild() {
+                return this.child;
+            }
+        }, {
+            key: 'setChild',
+            value: function setChild(child) {
+                this.child = child;
             }
         }, {
             key: 'removeCharacteristic',
