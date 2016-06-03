@@ -370,8 +370,14 @@
                     if (char == "dendriticCharacteristic") {
                         var image = draw.image("../static/micorr/images/c/dendrites/dendritesmetal_" + height + "x" + width + ".png");
                         image.size(width, height);
-                    } else if (char == "grainSmallCharacteristic" || char == "grainElongatedCharacteristic") {
+                    } else if (char == "grainSmallCharacteristic") {
                         var image = draw.image("../static/micorr/images/c/grains/Grains_" + height + "x" + width + ".png");
+                        image.size(width, height);
+                    } else if (char == "grainLargeCharacteristic") {
+                        var image = draw.image("../static/micorr/images/c/GrainLarge/GrainLarge_" + height + "x" + width + ".png");
+                        image.size(width, height);
+                    } else if (char == "grainElongatedCharacteristic") {
+                        var image = draw.image("../static/micorr/images/c/ElongatedGrain/ElongatedGrain_" + height + "x" + width + ".png");
                         image.size(width, height);
                     }
                 }
@@ -391,6 +397,9 @@
                     image.size(width, height);
                 }
 
+                if (strata.isSubCharacteristic('')) {}
+
+                //Fissures
                 if (strata.getCharacteristicsByFamily('crackingFamily').length > 0) {
                     var char = strata.getCharacteristicsByFamily('crackingFamily')[0].getName();
                     switch (char) {
