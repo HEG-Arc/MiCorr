@@ -79,9 +79,14 @@
 
                 if (strata.index > 0) {
                     var upperStrata = this.stratig.getStratas()[index - 1];
-                    if (upperStrata.getCharacteristicsByFamily('natureFamily')[0].getName() == 'cmCharacteristic') {
+                    if (upperStrata.getCharacteristicsByFamily('natureFamily')[0].getName() == 'cmCharacteristic' && strata.getCharacteristicsByFamily('natureFamily')[0].getName() == 'mCharacteristic') {
                         isUpperCM = true;
                     }
+                }
+
+                //Si c'est une strate CM ou que la strate par dessus est une strate CM on n'affiche pas l'interface
+                if (strata.getCharacteristicsByFamily('natureFamily')[0].getName() == 'cmCharacteristic' || isUpperCM) {
+                    interfaceHeight = 0;
                 }
 
                 interfaceDiv.style.height = interfaceHeight + "px";
@@ -142,17 +147,6 @@
 
                 if (profile == 'straightCharacteristic' || profile == '') {
 
-                    //On adapte l'interface si on est dans une strate CM
-                    if (strata.getCharacteristicsByFamily('natureFamily')[0].getName() == 'cmCharacteristic') {
-                        var rect = draw.rect(interfaceWidth, interfaceHeight).attr({ fill: upperInterfaceColor });
-                        //var lowerRect = draw.rect(interfaceWidth, 0).x(0).y(interfaceHeight / 2).attr({fill: lowerInterfaceColor });
-                    } else if (isUpperCM) {
-                            var rect = draw.rect(interfaceWidth, interfaceHeight).attr({ fill: lowerInterfaceColor });
-                            //var lowerRect = draw.rect(interfaceWidth, 0).x(0).y(interfaceHeight / 2).attr({fill: lowerInterfaceColor });
-                        } else {
-                                var upperRect = draw.rect(interfaceWidth, interfaceHeight).attr({ fill: upperInterfaceColor });
-                                var lowerRect = draw.rect(interfaceWidth, interfaceHeight).x(0).y(interfaceHeight / 2).attr({ fill: lowerInterfaceColor });
-                            }
                     //On dessine la bordure extérieure et la droite qui sépare les strates
                     var borderPath = draw.path("M0 0L0 " + interfaceHeight + " M" + strataWidth + " " + " 0L" + interfaceWidth + " " + interfaceHeight).fill('none');
                     borderPath.stroke({ color: 'black', width: borderWidth });
