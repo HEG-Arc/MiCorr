@@ -580,32 +580,4 @@ angular.module('micorrApp')
             MiCorrService.saveStratigraphy(encodeURIComponent(j));
             $scope.askLeave = false;
         });
-
-
-        $scope.ratioChange = function () {
-
-            var ratioChar = new characteristic.Characteristic();
-
-            var rName = 'r' + $scope.ratio.ratio;
-            ratioChar.setName(rName + 'Characteristic');
-            ratioChar.setRealName(rName);
-            ratioChar.setFamily('cmCorrosionRatioFamily');
-            var strata = StratigraphyData.getStratigraphy().getStratas()[StratigraphyData.getSelectedStrata()];
-            strata.replaceCharacteristic(ratioChar);
-            //mise à jour du dessin
-            $scope.$emit('updateDraw');
-        }
     });
-
-function Ratio(ratio) {
-    var ratio = ratio;
-
-    this.__defineGetter__("ratio", function () {
-        return ratio;
-    });
-
-    this.__defineSetter__("ratio", function (val) {
-        val = parseInt(val);
-        ratio = val;
-    });
-}

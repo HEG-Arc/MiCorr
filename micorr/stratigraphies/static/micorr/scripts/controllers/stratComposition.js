@@ -91,6 +91,12 @@ angular.module('micorrApp')
                 $scope.selectedCpcompositionextensionFamily = getCharacteristicByItsNameMulti($scope.cpcompositionextensionFamily, strata.getCharacteristicsByFamily("cpCompositionExtensionFamily"));
             }
 
+            if (strata.getCharacteristicsByFamily('cmCorrosionRatioFamily').length > 0) {
+                var ratio = strata.getCharacteristicsByFamily('cmCorrosionRatioFamily')[0].getRealName();
+                ratio = parseInt(ratio.substr(1));
+                $scope.ratio = new Ratio(ratio);
+            }
+
             //Reprise des characteristiques de composition pour la strate CM
             if (strata.getNature() == 'Corroded metal') {
                 var CPChild = strata.getChildStrataByNature('Corrosion products');
@@ -386,8 +392,6 @@ angular.module('micorrApp')
 
                 }
             }
-
-
             //Plus utilisé
             /*temp[index].setSubcprimicrostructureaggregateCompositionFamily($scope.selectedSubcprimicrostructureaggregatecompositionFamily.name);
              $scope.subsubcprimicrostructureaggregatecompositionFamily = returnSubCharacteristicsFromParent(StrataData.getRawCharacteristics(), 'cpriMicrostructureAggregateCompositionFamily', temp[index].getCprimicrostructureaggregateCompositionFamily(), temp[index].getSubcprimicrostructureaggregateCompositionFamily());
@@ -395,5 +399,19 @@ angular.module('micorrApp')
              */
 
             $scope.$emit('updateFormOnly');
+        };
+        //Appelée lorsqu'on change déplace le slider dans la composition d'une strate CM
+        $scope.ratioChange = function () {
+
+            var ratioChar = new characteristic.Characteristic();
+
+            var rName = 'r' + $scope.ratio.ratio;
+            ratioChar.setName(rName + 'Characteristic');
+            ratioChar.setRealName(rName);
+            ratioChar.setFamily('cmCorrosionRatioFamily');
+            var strata = StratigraphyData.getStratigraphy().getStratas()[StratigraphyData.getSelectedStrata()];
+            strata.replaceCharacteristic(ratioChar);
+            //mise à jour du dessin
+            $scope.$emit('updateDraw');
         };
     });

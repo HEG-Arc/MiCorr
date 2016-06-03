@@ -84,7 +84,7 @@
                 //On récupère les strates enfants si ce n'est pas une strate enfant
                 if (!this.child) {
                     for (var i = 0; i < this.childStratas.length; i++) {
-                        jsonStrata.children.push(childStratas[i].toJson());
+                        jsonStrata.children.push(this.childStratas[i].toJson());
                     }
                 }
 
@@ -402,16 +402,6 @@
                     this.dependencies.push('interfaceadherenceFamily');
                     this.dependencies.push('submmicrostructureFamily');
                     this.dependencies.push('submcompositionFamily');
-                }
-
-                if (this.nature == 'Corroded metal') {
-                    this.dependencies.push('thicknessFamily');
-                    var ratioChar = new characteristic.Characteristic();
-                    ratioChar.setName('r1Characteristic');
-                    ratioChar.setRealName('r1');
-                    ratioChar.setFamily('cmCorrosionRatioFamily');
-
-                    this.replaceCharacteristic(ratioChar);
                 }
             }
         }]);

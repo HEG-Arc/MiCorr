@@ -466,6 +466,19 @@ function returnFormattedColor(color) {
     return color;
 }
 
+function Ratio(ratio) {
+    var ratio = ratio;
+
+    this.__defineGetter__("ratio", function () {
+        return ratio;
+    });
+
+    this.__defineSetter__("ratio", function (val) {
+        val = parseInt(val);
+        ratio = val;
+    })
+}
+
 /* formate le nom de la couleur en enlevant characteristic à la fin et en transformant le noir en anthracite
  * @params couleur au format caractéristique
  * €returns couleur formattée
