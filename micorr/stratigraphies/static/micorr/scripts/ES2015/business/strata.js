@@ -34,7 +34,7 @@ class Strata {
         }
         //On récupère les sous caractéristiques
         for (var i = 0; i < this.subCharacteristics.length; i++) {
-            jsonStrata.characteristics.push({'name': this.subCharacteristics[i].getName()});
+            jsonStrata.characteristics.push({'name': this.subCharacteristics[i].getUid()});
         }
 
         //On récupère les caractéristiques d'interface
@@ -47,7 +47,7 @@ class Strata {
         //On récupère les strates enfants si ce n'est pas une strate enfant
         if(!this.child){
             for (var i = 0; i < this.childStratas.length; i++){
-                jsonStrata.children.push(childStratas[i].toJson());
+                jsonStrata.children.push(this.childStratas[i].toJson());
             }
         }
 
@@ -290,14 +290,6 @@ class Strata {
      */
         init() {
 
-        var profileChar = new characteristic.Characteristic();
-        profileChar.setName('straightCharacteristic');
-        profileChar.setRealName('straight');
-        profileChar.setFamily('interfaceProfileFamily');
-        profileChar.setInterface(true);
-        this.replaceCharacteristic(profileChar);
-
-
         this.dependencies.push('thicknessFamily');
         this.dependencies.push('widthFamily');
         this.dependencies.push('continuityFamily');
@@ -410,17 +402,7 @@ class Strata {
             this.dependencies.push('submcompositionFamily');
         }
 
-        if (this.nature == 'Corroded metal') {
-            this.dependencies.push('thicknessFamily');
-            var ratioChar = new characteristic.Characteristic();
-            ratioChar.setName('r1Characteristic');
-            ratioChar.setRealName('r1');
-            ratioChar.setFamily('cmCorrosionRatioFamily')
 
-            this.replaceCharacteristic(ratioChar);
-
-
-        }
     }
 
 

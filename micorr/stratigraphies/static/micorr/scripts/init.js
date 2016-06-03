@@ -466,6 +466,19 @@ function returnFormattedColor(color) {
     return color;
 }
 
+function Ratio(ratio) {
+    var ratio = ratio;
+
+    this.__defineGetter__("ratio", function () {
+        return ratio;
+    });
+
+    this.__defineSetter__("ratio", function (val) {
+        val = parseInt(val);
+        ratio = val;
+    })
+}
+
 /* formate le nom de la couleur en enlevant characteristic à la fin et en transformant le noir en anthracite
  * @params couleur au format caractéristique
  * €returns couleur formattée
@@ -483,13 +496,14 @@ function returnSubCharacteristicsFromParent(data, family, lvl1, lvl2) {
                     var caract = caracts[j];
                     for (var k = 0; k < caract.subcharacteristics.length; k++) {
                         var subcaract = caract.subcharacteristics[k];
-                        subList.push({'name': subcaract.name, 'sub_real_name': subcaract.sub_real_name});
+                        subList.push({'uid': subcaract.name, 'name': subcaract.sub_real_name});
 
                         if (subcaract.name == lvl2) {
                             var subsubcaracts = subcaract.subcharacteristics;
                             for (var l = 0; l < subsubcaracts.length; l++) {
                                 var subsubcaract = subsubcaracts[l];
-                                subsubList.push({'name': subsubcaract.subsub_real_name});
+                                subsubList.push({'name': subsubcaract.subsub_real_name, 'uid' : subsubcaract.name});
+
                             }
                         }
 

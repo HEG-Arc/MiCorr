@@ -33,6 +33,13 @@ angular.module('micorrApp')
 
                                 //Si c'est une strate CM on lui ajoute deux strates enfant
                                 if (nature.getRealName() == 'Corroded metal') {
+                                    //Ajout d'un ratio de corrosion défini à 1 par défaut
+                                    var ratioChar = new characteristic.Characteristic();
+                                    ratioChar.setName('r1Characteristic');
+                                    ratioChar.setRealName('r1');
+                                    ratioChar.setFamily('cmCorrosionRatioFamily')
+                                    newStrata.replaceCharacteristic(ratioChar);
+
                                     //Ajout de la sous strate CP
                                     var cpNature = returnNatureCharacteristic('CP');
                                     var childCPStrata = new strata.Strata(cpNature.getRealName(), true);

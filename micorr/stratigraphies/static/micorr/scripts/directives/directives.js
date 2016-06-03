@@ -13,7 +13,7 @@ angular.module('micorrApp').directive('strata', function ($compile, Stratigraphy
         restrict: 'EA',
         replace: true,
         transclude: true,
-        template: '<div class="svgcanvas col-md-11 text-center"><div></div><div></div></div>',
+        template: '<div class="svgcanvas col-md-10 text-center"><div></div><div></div></div>',
         link: function (scope, element, attrs) {
             var index = attrs.index;
 
@@ -79,8 +79,9 @@ angular.module('micorrApp').directive('strata', function ($compile, Stratigraphy
             restrict: 'EA',
             replace: true,
             transclude: true,
-            template: '<div class="col-md-1 text-center"><div></div><div></div></div>',
+            template: '<div class="col-md-2 row text-right" style="padding-top:20px"><div style="float:left"></div><div style="float:rigth"></div></div>',
             link: function (scope, element, attrs) {
+
                 var index = attrs.index;    // index de la strate
 
                 // on récupère les strates et la strate
@@ -104,12 +105,13 @@ angular.module('micorrApp').directive('strata', function ($compile, Stratigraphy
 
                 label = strata.getCharacteristicsByFamily("natureFamily")[0].getName();
                 label = label.split("Char")
-                label = label[0] + sameNature;
+                label = label[0].toUpperCase();
+                label = label + sameNature;
+
 
                 element.children()[0].innerHTML = '<button class="btn btn-link btn-xs" ng-click="removeStrata(' + index + ')" title="delete this strata"><span class="glyphicon glyphicon-remove"></span></button></br>' + label;
 
                 // on affiche les boutons pour bouger la strate
-
             var btns = "";
             if (index > 0)
                 btns += '<button ng-click="movestrataup(' + index + ')" type="button" class="btn btn-link btn-xs" title="move up this strata"><span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span></button>';
