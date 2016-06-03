@@ -35,11 +35,6 @@ class GraphGenerationUtil {
             }
         }
 
-        //Si c'est une strate CM ou que la strate par dessus est une strate CM on n'affiche pas l'interface
-        if(strata.getCharacteristicsByFamily('natureFamily')[0].getName() == 'cmCharacteristic' || isUpperCM){
-            interfaceHeight = 0;
-        }
-
         interfaceDiv.style.height = interfaceHeight + "px";
 
         var borderWidth = 8;
@@ -97,33 +92,41 @@ class GraphGenerationUtil {
 
 
         //On va maintenant dessiner l'interface
-        //Si elle est droite on dessine simplement deux rectangles
 
-        if (profile == 'straightCharacteristic' || profile == '') {
-
-            //On dessine la bordure extérieure et la droite qui sépare les strates
+        //Si c'est une strate CM ou que la strate par dessus est une strate CM on n'affiche pas de trait
+        if (isUpperCM) {
+            var rect = draw.rect(interfaceWidth, interfaceHeight).attr({fill: lowerInterfaceColor});
             var borderPath = draw.path("M0 0L0 " + interfaceHeight + " M" + strataWidth + " " + " 0L" + interfaceWidth + " " + interfaceHeight).fill('none');
             borderPath.stroke({ color: 'black', width: borderWidth });
-
-            var divisionPath = draw.path("M0 " + (interfaceHeight / 2) + "L" + interfaceWidth + " " + (interfaceHeight / 2)).fill('none');
-            divisionPath.stroke({ color: 'black', width: divisionLineWidth });
         }
-        else if (profile == 'wavyCharacteristic') {
-            drawInterface(draw, index, interfaceWidth, interfaceHeight, 'wavy', 8, lowerInterfaceColor, upperInterfaceColor, borderWidth, divisionLineWidth, diffuse, transition);
-        }
-        else if (profile == 'bumpyCharacteristic') {
-            drawInterface(draw, index, interfaceWidth, interfaceHeight, 'bumpy', 20, lowerInterfaceColor, upperInterfaceColor, borderWidth, divisionLineWidth, diffuse, transition);
-        }
-        else if (profile == 'irregularCharacteristic') {
-            drawInterface(draw, index, interfaceWidth, interfaceHeight, 'irregular', 30, lowerInterfaceColor, upperInterfaceColor, borderWidth, divisionLineWidth, diffuse, transition);
+        else if(strata.getCharacteristicsByFamily('natureFamily')[0].getName() == 'cmCharacteristic'){
+            var rect = draw.rect(interfaceWidth, interfaceHeight).attr({fill: upperInterfaceColor});
+            var borderPath = draw.path("M0 0L0 " + interfaceHeight + " M" + strataWidth + " " + " 0L" + interfaceWidth + " " + interfaceHeight).fill('none');
+            borderPath.stroke({ color: 'black', width: borderWidth });
         }
         else {
-            //Si il n'y a aucune transition on a pas besoin d'interface
-            interfaceDiv.style.height = '0px';
+            //Si elle est droite on dessine simplement deux rectangles
+            if (profile == 'straightCharacteristic' || profile == '') {
+                var upperRect = draw.rect(interfaceWidth, interfaceHeight).attr({ fill: upperInterfaceColor });
+                var lowerRect = draw.rect(interfaceWidth, interfaceHeight).x(0).y(interfaceHeight / 2).attr({fill: lowerInterfaceColor });
+
+                //On dessine la bordure extérieure et la droite qui sépare les strates
+                var borderPath = draw.path("M0 0L0 " + interfaceHeight + " M" + strataWidth + " " + " 0L" + interfaceWidth + " " + interfaceHeight).fill('none');
+                borderPath.stroke({ color: 'black', width: borderWidth });
+
+                var divisionPath = draw.path("M0 " + (interfaceHeight / 2) + "L" + interfaceWidth + " " + (interfaceHeight / 2)).fill('none');
+                divisionPath.stroke({ color: 'black', width: divisionLineWidth });
+            }
+            else if (profile == 'wavyCharacteristic') {
+                drawInterface(draw, index, interfaceWidth, interfaceHeight, 'wavy', 8, lowerInterfaceColor, upperInterfaceColor, borderWidth, divisionLineWidth, diffuse, transition);
+            }
+            else if (profile == 'bumpyCharacteristic') {
+                drawInterface(draw, index, interfaceWidth, interfaceHeight, 'bumpy', 20, lowerInterfaceColor, upperInterfaceColor, borderWidth, divisionLineWidth, diffuse, transition);
+            }
+            else if (profile == 'irregularCharacteristic') {
+                drawInterface(draw, index, interfaceWidth, interfaceHeight, 'irregular', 30, lowerInterfaceColor, upperInterfaceColor, borderWidth, divisionLineWidth, diffuse, transition);
+            }
         }
-
-        //Si l'interface n'est pas droite on la dessine avec la méthode de dessin de l'interface
-
 
     }
 
@@ -198,7 +201,7 @@ class GraphGenerationUtil {
         ratio = parseInt(ratio.substr(1));
 
         var begin = 0;
-        switch(ratio){
+        switch (ratio) {
             case 1:
                 begin = 0 - ((2 * height) / 9) * 1;
                 break;
@@ -361,13 +364,13 @@ class GraphGenerationUtil {
                 var image = draw.image("../static/micorr/images/c/grains/Grains_" + height + "x" + width + ".png");
                 image.size(width, height);
             }
-            else if (char =="grainLargeCharacteristic"){
+            else if (char == "grainLargeCharacteristic") {
                 var image = draw.image("../static/micorr/images/c/GrainLarge/GrainLarge_" + height + "x" + width + ".png");
-                image.size(width,height)
+                image.size(width, height)
             }
-            else if (char =="grainElongatedCharacteristic"){
+            else if (char == "grainElongatedCharacteristic") {
                 var image = draw.image("../static/micorr/images/c/ElongatedGrain/ElongatedGrain_" + height + "x" + width + ".png");
-                image.size(width,height)
+                image.size(width, height)
             }
         }
 
@@ -390,7 +393,7 @@ class GraphGenerationUtil {
             image.size(width, height);
         }
 
-        if(strata.isSubCharacteristic('')){
+        if (strata.isSubCharacteristic('')) {
 
         }
 
