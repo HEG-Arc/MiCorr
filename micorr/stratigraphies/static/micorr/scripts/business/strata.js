@@ -252,16 +252,6 @@
                 this.nature = nature;
             }
         }, {
-            key: 'getId',
-            value: function getId() {
-                return this.id;
-            }
-        }, {
-            key: 'setId',
-            value: function setId(id) {
-                this.id = id;
-            }
-        }, {
             key: 'getUid',
             value: function getUid() {
                 return this.uid;
@@ -270,6 +260,20 @@
             key: 'setUid',
             value: function setUid(uid) {
                 this.uid = uid;
+            }
+        }, {
+            key: 'getName',
+            value: function getName() {
+                if (this.name == undefined) {
+                    return this.uid;
+                } else {
+                    return this.name;
+                }
+            }
+        }, {
+            key: 'setName',
+            value: function setName(name) {
+                this.name = name;
             }
         }, {
             key: 'getIndex',

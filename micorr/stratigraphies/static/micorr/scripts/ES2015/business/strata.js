@@ -250,21 +250,25 @@ class Strata {
         this.nature = nature;
     }
 
-
-    getId() {
-        return this.id;
-    }
-
-    setId(id) {
-        this.id = id;
-    }
-
     getUid() {
         return this.uid;
     }
 
     setUid(uid) {
         this.uid = uid;
+    }
+
+    getName(){
+        if(this.name == undefined){
+            return this.uid;
+        }
+        else{
+            return this.name;
+        }
+    }
+
+    setName(name){
+        this.name = name;
     }
 
     getIndex() {

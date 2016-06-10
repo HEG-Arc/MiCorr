@@ -124,6 +124,9 @@ angular.module('micorrApp')
                 var st = StratigraphyData.getStratigraphy();
                 st.setUid($scope.stratigraphyName);
                 st.setArtefact($scope.artefactName);
+                if($scope.stratigrapgydescription !=undefined){
+                    st.setDescription($scope.stratigrapgydescription)
+                }
 
                 //Boucle sur les strates
                 for (var i = 0; i < data.length; i++) {
@@ -133,6 +136,9 @@ angular.module('micorrApp')
                     var str = new strata.Strata(nature, false);
                     str.setUid(currentStrata.name);
                     str.setIndex(i);
+                    if(st.getDescription() != undefined){
+                        str.setName(st.getDescription() + '_strata_' + str.getIndex());
+                    }
                     //Boucle sur les caracteristiques
                     for (var j = 0; j < currentStrata.characteristics.length; j++) {
                         var currentCharacteristic = currentStrata.characteristics[j];
@@ -403,8 +409,8 @@ angular.module('micorrApp')
             StratigraphyData.setSelectedStrata(index); // On indique au service la strate sélectionnée
 
             $scope.hideShowForms(strat);
-            $scope.strataName = strat.getUid();
-            $scope.natureFamilyname = strat.getCharacteristicsByFamily('natureFamily')[0].getName();
+            $scope.strataName = strat.getName();
+            $scope.natureFamilyname = strat.getNature();
 
 
             // Dans notre formulaire on a des onglets
