@@ -1,22 +1,30 @@
 (function (global, factory) {
     if (typeof define === "function" && define.amd) {
-        define(['exports', '../business/stratigraphy', '../business/characteristic', '../business/subCharacteristic'], factory);
+        define(['exports', '../business/stratigraphy', '../business/characteristic', '../business/subCharacteristic', '../algorithms/poissonDisk', 'svg.js'], factory);
     } else if (typeof exports !== "undefined") {
-        factory(exports, require('../business/stratigraphy'), require('../business/characteristic'), require('../business/subCharacteristic'));
+        factory(exports, require('../business/stratigraphy'), require('../business/characteristic'), require('../business/subCharacteristic'), require('../algorithms/poissonDisk'), require('svg.js'));
     } else {
         var mod = {
             exports: {}
         };
-        factory(mod.exports, global.stratigraphy, global.characteristic, global.subCharacteristic);
+        factory(mod.exports, global.stratigraphy, global.characteristic, global.subCharacteristic, global.poissonDisk, global.svg);
         global.graphGenerationUtil = mod.exports;
     }
-})(this, function (exports, _stratigraphy, _characteristic, _subCharacteristic) {
+})(this, function (exports, _stratigraphy, _characteristic, _subCharacteristic, _poissonDisk, _svg) {
     'use strict';
 
     Object.defineProperty(exports, "__esModule", {
         value: true
     });
     exports.GraphGenerationUtil = undefined;
+
+    var _svg2 = _interopRequireDefault(_svg);
+
+    function _interopRequireDefault(obj) {
+        return obj && obj.__esModule ? obj : {
+            default: obj
+        };
+    }
 
     function _classCallCheck(instance, Constructor) {
         if (!(instance instanceof Constructor)) {
@@ -47,7 +55,10 @@
             _classCallCheck(this, GraphGenerationUtil);
 
             if (win != null) {
-                var drawer = require(svg.js)(win);
+                this.window = win;
+                //var drawer = require('svg.js')(win);
+
+                var drawer = (0, _svg2.default)(win);
             }
             this.stratig = stratig;
         }
@@ -176,14 +187,17 @@
                 var height = 100;
                 var width = 500;
                 if (strata.getCharacteristicsByFamily('thicknessFamily').length > 0) {
-                    height = getThicknesses(strata.getCharacteristicsByFamily('thicknessFamily')[0].getName());
+                    height = this.getThicknesses(strata.getCharacteristicsByFamily('thicknessFamily')[0].getName());
                 }
 
                 if (strata.getCharacteristicsByFamily('widthFamily').length > 0) {
-                    width = getWidths(strata.getCharacteristicsByFamily('widthFamily')[0].getName());
+                    width = this.getWidths(strata.getCharacteristicsByFamily('widthFamily')[0].getName());
                 }
 
-                document.getElementById(divID).style.height = height + "px";
+                if (this.window == undefined) {
+                    document.getElementById(divID).style.height = height + "px";
+                }
+
                 var borderWidth = 8;
 
                 var draw = SVG(divID).size(width, height);
@@ -193,6 +207,7 @@
                 if (strata.getCharacteristicsByFamily('natureFamily')[0].getName() == 'cmCharacteristic') {
                     if (strata.getIndex() < this.stratig.getStratas().length - 1) {
                         var lowerStrata = this.stratig.getStratas()[strata.getIndex() + 1];
+
                         if (lowerStrata.getCharacteristicsByFamily('natureFamily')[0].getName() == 'mCharacteristic') {
                             this.drawCM(strata, width, height, draw);
                         }
@@ -273,16 +288,23 @@
                 var height = 100;
                 var width = 500;
                 if (strata.getCharacteristicsByFamily('thicknessFamily').length > 0) {
-                    height = getThicknesses(strata.getCharacteristicsByFamily('thicknessFamily')[0].getName());
+                    height = this.getThicknesses(strata.getCharacteristicsByFamily('thicknessFamily')[0].getName());
                 }
 
                 if (strata.getCharacteristicsByFamily('widthFamily').length > 0) {
-                    width = getWidths(strata.getCharacteristicsByFamily('widthFamily')[0].getName());
+                    width = this.getWidths(strata.getCharacteristicsByFamily('widthFamily')[0].getName());
                 }
 
                 // Initialisation du POISSON DISK DISTRIBUTION
                 var poisson = [];
-                var pds = new PoissonDiskSampler(width, height);
+                //Instance Node.js
+                if (this.window == undefined) {
+                    var pds = new poissonDisk.PoissonDiskSampler(width, height);
+                }
+                //Instance Browser
+                else {
+                        var pds = new _poissonDisk.PoissonDiskSampler(width, height);
+                    }
 
                 var color = 'white';
                 if (strata.getCharacteristicsByFamily('colourFamily').length > 0) {
@@ -444,6 +466,16 @@
                     image.x(pds.pointList[i].x - pds.pointList[i].w / 2);
                     image.y(pds.pointList[i].y - pds.pointList[i].h / 2);
                 }
+            }
+        }, {
+            key: 'getThicknesses',
+            value: function getThicknesses(thickness) {
+                if (thickness == "thickCharacteristic") return 150;else if (thickness == "normalThicknessCharacteristic") return 100;else if (thickness == "thinCharacteristic") return 50;else return 100;
+            }
+        }, {
+            key: 'getWidths',
+            value: function getWidths(width) {
+                if (width == "largeCharacteristic") return 650;else if (width == "normalWidthCharacteristic") return 500;else if (width == "smallCharacteristic") return 300;else return 500;
             }
         }, {
             key: 'getDivID',

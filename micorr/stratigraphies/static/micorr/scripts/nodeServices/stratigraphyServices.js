@@ -2,10 +2,11 @@
  Ce fichier contient tous les services liés aux stratigraphies pour Node.js
  */
 var request = require("request");
-var Stratigraphy = require('../business/stratigraphy').Stratigraphy
-var Strata = require('../business/strata').Strata
-var Characteristic = require('../business/characteristic').Characteristic
-var SubCharacteristic = require('../business/subCharacteristic').SubCharacteristic
+var Stratigraphy = require('../business/stratigraphy').Stratigraphy;
+var Strata = require('../business/strata').Strata;
+var Characteristic = require('../business/characteristic').Characteristic;
+var SubCharacteristic = require('../business/subCharacteristic').SubCharacteristic;
+var GraphGenerationUtil = require('../utils/graphGenerationUtil').GraphGenerationUtil;
 
 var url = "http://dev.micorr.org/micorr";
 
@@ -29,26 +30,32 @@ module.exports = {
                 var currentStrata = jsonData[i];
                 strata.setUid(currentStrata.name);
                 //Boucle sur les characteristiques
-                for(var j = 0; j < currentStrata.characteristics.length; j++){
+                for (var j = 0; j < currentStrata.characteristics.length; j++) {
                     var currentCharacteristic = currentStrata.characteristics[j];
                     var characteristic = new Characteristic();
                     characteristic.setName(currentCharacteristic.name);
                     characteristic.setFamily(currentCharacteristic.family);
                     strata.replaceCharacteristic(characteristic);
                 }
-		//Boucle sur les sous characteristiques
-		for(var j = 0; j < currentStrata.subcharacteristics.length; j++){
-			var currentSubCharacteristic = currentStrata.subcharacteristics[j];
-			var subCharacteristic = new SubCharacteristic();
-			subCharacteristic.setName(currentSubCharacteristic.name);
-			strata.addSubCharacteristic(subCharacteristic);
-		}
+                //Boucle sur les sous characteristiques
+                for (var j = 0; j < currentStrata.subcharacteristics.length; j++) {
+                    var currentSubCharacteristic = currentStrata.subcharacteristics[j];
+                    var subCharacteristic = new SubCharacteristic();
+                    subCharacteristic.setName(currentSubCharacteristic.name);
+                    strata.addSubCharacteristic(subCharacteristic);
+                }
                 stratigraphy.addStrata(strata);
-		
+
             }
-		console.log(stratigraphy.getDescription())
             return callback(stratigraphy);
         });
+    },
+
+    drawStratigraphy: function (window ,stratigraphy) {
+        console.log('test');
+        var drawer = new GraphGenerationUtil(window, stratigraphy);
+        drawer.drawStrata(stratigraphy.getStratas()[0], 'drawing');
 
     }
+
 };

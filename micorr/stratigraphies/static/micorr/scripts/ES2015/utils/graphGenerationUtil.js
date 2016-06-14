@@ -5,13 +5,17 @@
 import{Stratigraphy} from '../business/stratigraphy';
 import{Strata} from '../business/stratigraphy';
 import{Characteristic} from '../business/characteristic';
-import{subCharacteristic} from '../business/subCharacteristic';
-
+import{SubCharacteristic} from '../business/subCharacteristic';
+import{PoissonDiskSampler} from '../algorithms/poissonDisk';
+import lib from 'svg.js';
 
 class GraphGenerationUtil {
     constructor(win, stratig) {
         if (win != null) {
-            var drawer = require(svg.js)(win)
+            this.window = win;
+            //var drawer = require('svg.js')(win);
+
+            var drawer = lib(win);
         }
         this.stratig = stratig;
     }
@@ -99,7 +103,7 @@ class GraphGenerationUtil {
             var borderPath = draw.path("M0 0L0 " + interfaceHeight + " M" + strataWidth + " " + " 0L" + interfaceWidth + " " + interfaceHeight).fill('none');
             borderPath.stroke({ color: 'black', width: borderWidth });
         }
-        else if(strata.getCharacteristicsByFamily('natureFamily')[0].getName() == 'cmCharacteristic'){
+        else if (strata.getCharacteristicsByFamily('natureFamily')[0].getName() == 'cmCharacteristic') {
             var rect = draw.rect(interfaceWidth, interfaceHeight).attr({fill: upperInterfaceColor});
             var borderPath = draw.path("M0 0L0 " + interfaceHeight + " M" + strataWidth + " " + " 0L" + interfaceWidth + " " + interfaceHeight).fill('none');
             borderPath.stroke({ color: 'black', width: borderWidth });
@@ -140,38 +144,78 @@ class GraphGenerationUtil {
         var height = 100;
         var width = 500
         if (strata.getCharacteristicsByFamily('thicknessFamily').length > 0) {
-            height = getThicknesses(strata.getCharacteristicsByFamily('thicknessFamily')[0].getName());
+            height = this.getThicknesses(strata.getCharacteristicsByFamily('thicknessFamily')[0].getName());
         }
 
         if (strata.getCharacteristicsByFamily('widthFamily').length > 0) {
-            width = getWidths(strata.getCharacteristicsByFamily('widthFamily')[0].getName());
+            width = this.getWidths(strata.getCharacteristicsByFamily('widthFamily')[0].getName());
         }
 
-        document.getElementById(divID).style.height = height + "px";
+        if (this.window == undefined) {
+            document.getElementById(divID).style.height = height + "px";
+        }
+
         var borderWidth = 8;
 
 
         var draw = SVG(divID).size(width, height);
-        this.fillStrata(draw, strata);
+        this
+            .
+            fillStrata(draw, strata)
+
+        ;
 
         //Strate CM
-        if (strata.getCharacteristicsByFamily('natureFamily')[0].getName() == 'cmCharacteristic') {
-            if (strata.getIndex() < this.stratig.getStratas().length - 1) {
+        if (strata
+
+            .
+            getCharacteristicsByFamily(
+            'natureFamily')[0].
+            getName()
+
+            == 'cmCharacteristic') {
+            if (strata
+
+                .
+                getIndex()
+
+                <
+                this
+                    .
+                    stratig
+                    .
+                    getStratas()
+
+                    .
+                    length
+                - 1) {
                 var lowerStrata = this.stratig.getStratas()[strata.getIndex() + 1];
-                if (lowerStrata.getCharacteristicsByFamily('natureFamily')[0].getName() == 'mCharacteristic') {
-                    this.drawCM(strata, width, height, draw);
+
+                if (lowerStrata
+
+                    .
+                    getCharacteristicsByFamily(
+                    'natureFamily')[0].
+                    getName()
+
+                    == 'mCharacteristic') {
+                    this
+                        .
+                        drawCM(strata, width, height, draw)
+
+                    ;
                 }
             }
 
         }
 
-        //Dessin des bords
+//Dessin des bords
         var leftBorder = draw.path("M0 0L0 " + height).fill('none');
         var rightBorder = draw.path("M" + width + " 0L" + width + " " + height).fill('none');
         leftBorder.stroke({ color: 'black', width: borderWidth });
         rightBorder.stroke({ color: 'black', width: borderWidth });
 
-        //Dessin du bord inférieur si c'est la dernière strate
+//Dessin du bord inférieur si c'est la dernière strate
         var index = strata.getIndex();
         var lastIndex = this.stratig.getStratas().length;
         if (strata.getIndex() == this.stratig.getStratas().length - 1) {
@@ -246,16 +290,23 @@ class GraphGenerationUtil {
         var height = 100;
         var width = 500
         if (strata.getCharacteristicsByFamily('thicknessFamily').length > 0) {
-            height = getThicknesses(strata.getCharacteristicsByFamily('thicknessFamily')[0].getName());
+            height = this.getThicknesses(strata.getCharacteristicsByFamily('thicknessFamily')[0].getName());
         }
 
         if (strata.getCharacteristicsByFamily('widthFamily').length > 0) {
-            width = getWidths(strata.getCharacteristicsByFamily('widthFamily')[0].getName());
+            width = this.getWidths(strata.getCharacteristicsByFamily('widthFamily')[0].getName());
         }
 
         // Initialisation du POISSON DISK DISTRIBUTION
         var poisson = [];
-        var pds = new PoissonDiskSampler(width, height);
+        //Instance Node.js
+        if(this.window == undefined){
+            var pds = new poissonDisk.PoissonDiskSampler(width, height);
+        }
+        //Instance Browser
+        else {
+            var pds = new PoissonDiskSampler(width, height);
+        }
 
         var color = 'white';
         if (strata.getCharacteristicsByFamily('colourFamily').length > 0) {
@@ -441,6 +492,29 @@ class GraphGenerationUtil {
             image.y(pds.pointList[i].y - pds.pointList[i].h / 2);
 
         }
+    }
+
+    getThicknesses(thickness) {
+        if (thickness == "thickCharacteristic")
+            return 150;
+        else if (thickness == "normalThicknessCharacteristic")
+            return 100;
+        else if (thickness == "thinCharacteristic")
+            return 50;
+        else
+            return 100;
+
+    }
+
+    getWidths(width) {
+        if (width == "largeCharacteristic")
+            return 650;
+        else if (width == "normalWidthCharacteristic")
+            return 500;
+        else if (width == "smallCharacteristic")
+            return 300;
+        else
+            return 500;
     }
 
     getDivID() {
