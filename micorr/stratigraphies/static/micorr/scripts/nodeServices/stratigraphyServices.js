@@ -29,14 +29,35 @@ module.exports = {
                 var strata = new Strata();
                 var currentStrata = jsonData[i];
                 strata.setUid(currentStrata.name);
+                strata.setIndex(i);
                 //Boucle sur les characteristiques
                 for (var j = 0; j < currentStrata.characteristics.length; j++) {
                     var currentCharacteristic = currentStrata.characteristics[j];
                     var characteristic = new Characteristic();
                     characteristic.setName(currentCharacteristic.name);
+                    characteristic.setRealName(currentCharacteristic.real_name);
                     characteristic.setFamily(currentCharacteristic.family);
-                    strata.replaceCharacteristic(characteristic);
+                    strata.addCharacteristic(characteristic);
                 }
+
+                //Boucle sur les characteristiques d'interface
+                for (var j = 0; j < currentStrata.interfaces.characteristics.length; j++) {
+                    var currentCharacteristic = currentStrata.interfaces.characteristics[j];
+                    var char = new Characteristic();
+                    char.setName(currentCharacteristic.name);
+                    char.setFamily(currentCharacteristic.family);
+                    char.setInterface(true);
+
+                    //Si c'est une caracteristique d'une de ces familles on peut en ajouter plusieurs
+                    if (char.getFamily() == "cpcompositionextensionFamily" || char.getFamily() == "cprimicrostructureaggregatecompositionextensionFamily") {
+                        strata.addCharacteristic(char)
+                    }
+                    else {
+                        //Sinon, il n'y en a que une donc on la remplace
+                        strata.replaceCharacteristic(char);
+                    }
+                }
+
                 //Boucle sur les sous characteristiques
                 for (var j = 0; j < currentStrata.subcharacteristics.length; j++) {
                     var currentSubCharacteristic = currentStrata.subcharacteristics[j];
@@ -51,11 +72,11 @@ module.exports = {
         });
     },
 
-    drawStratigraphy: function (window ,stratigraphy) {
-        console.log('test');
+    drawStratigraphy: function (window, stratigraphy) {
         var drawer = new GraphGenerationUtil(window, stratigraphy);
-        drawer.drawStrata(stratigraphy.getStratas()[0], 'drawing');
-
+        //drawer.drawStrata(stratigraphy.getStratas()[0], 'drawing');
+        var test = drawer.drawStratigraphy();
+        console.log(test);
     }
 
 };

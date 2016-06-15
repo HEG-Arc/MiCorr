@@ -147,7 +147,7 @@ class Strata {
         var exists = false;
         var i = 0;
         while (exists == false && i < this.subCharacteristics.length) {
-            if (this.subCharacteristics[i].getName() == name) {
+            if (this.subCharacteristics[i].getUid() == name) {
                 exists = true;
             }
             i++;
