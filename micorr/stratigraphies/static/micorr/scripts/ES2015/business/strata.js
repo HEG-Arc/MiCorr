@@ -147,7 +147,7 @@ class Strata {
         var exists = false;
         var i = 0;
         while (exists == false && i < this.subCharacteristics.length) {
-            if (this.subCharacteristics[i].getName() == name) {
+            if (this.subCharacteristics[i].getUid() == name) {
                 exists = true;
             }
             i++;
@@ -250,21 +250,25 @@ class Strata {
         this.nature = nature;
     }
 
-
-    getId() {
-        return this.id;
-    }
-
-    setId(id) {
-        this.id = id;
-    }
-
     getUid() {
         return this.uid;
     }
 
     setUid(uid) {
         this.uid = uid;
+    }
+
+    getName(){
+        if(this.name == undefined){
+            return this.uid;
+        }
+        else{
+            return this.name;
+        }
+    }
+
+    setName(name){
+        this.name = name;
     }
 
     getIndex() {

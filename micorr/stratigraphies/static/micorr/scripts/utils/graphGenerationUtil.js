@@ -1,16 +1,16 @@
 (function (global, factory) {
     if (typeof define === "function" && define.amd) {
-        define(['exports', '../business/stratigraphy', '../business/characteristic', '../business/subCharacteristic'], factory);
+        define(['exports', '../business/stratigraphy', '../business/characteristic', '../business/subCharacteristic', '../algorithms/poissonDisk'], factory);
     } else if (typeof exports !== "undefined") {
-        factory(exports, require('../business/stratigraphy'), require('../business/characteristic'), require('../business/subCharacteristic'));
+        factory(exports, require('../business/stratigraphy'), require('../business/characteristic'), require('../business/subCharacteristic'), require('../algorithms/poissonDisk'));
     } else {
         var mod = {
             exports: {}
         };
-        factory(mod.exports, global.stratigraphy, global.characteristic, global.subCharacteristic);
+        factory(mod.exports, global.stratigraphy, global.characteristic, global.subCharacteristic, global.poissonDisk);
         global.graphGenerationUtil = mod.exports;
     }
-})(this, function (exports, _stratigraphy, _characteristic, _subCharacteristic) {
+})(this, function (exports, _stratigraphy, _characteristic, _subCharacteristic, _poissonDisk) {
     'use strict';
 
     Object.defineProperty(exports, "__esModule", {
@@ -47,31 +47,45 @@
             _classCallCheck(this, GraphGenerationUtil);
 
             if (win != null) {
-                var drawer = require(svg.js)(win);
+                this.window = win;
+                var drawer = require('svg.js')(win);
             }
             this.stratig = stratig;
         }
 
         /**
-         * Cette méthode dessine l'interface de la strate
-         * @param strata la strate
-         * @param divID la div dans laquelle on veut dessiner l'interface
+         * Cette méthode est utilisée par Node.js pour dessiner la stratigraphie entière
          */
 
 
         _createClass(GraphGenerationUtil, [{
-            key: 'drawInterface',
-            value: function (_drawInterface) {
-                function drawInterface(_x, _x2) {
-                    return _drawInterface.apply(this, arguments);
+            key: 'drawStratigraphy',
+            value: function drawStratigraphy() {
+                var drawings = new Array();
+
+                var div = this.window.document.getElementById('drawing');
+                for (var i = 0; i < this.stratig.getStratas().length; i++) {
+                    var str = this.stratig.getStratas()[i];
+                    //drawInterface(str, 'drawing');
+                    console.log('strataUid: ' + str.getUid());
+                    var nestedStrata = this.drawStrata(str, 'drawing');
+                    drawings.push(nestedStrata);
                 }
-
-                drawInterface.toString = function () {
-                    return _drawInterface.toString();
-                };
-
-                return drawInterface;
-            }(function (strata, divID) {
+                var resultDraw = SVG('result');
+                var bottomY = 0;
+                for (var i = 0; i < drawings.length; i++) {
+                    var nestedObject = drawings[i];
+                    nestedObject.y(bottomY);
+                    bottomY = bottomY + nestedObject.height();
+                    resultDraw.add(drawings[i]);
+                }
+                var resultDiv = this.window.document.getElementById('result');
+                var svgContent = resultDiv.innerHTML;
+                return svgContent;
+            }
+        }, {
+            key: 'drawInterface',
+            value: function drawInterface(strata, divID) {
                 var index = strata.getIndex();
                 var interfaceDiv = document.getElementById(divID);
                 var interfaceHeight = 22;
@@ -161,14 +175,14 @@
                         var divisionPath = draw.path("M0 " + interfaceHeight / 2 + "L" + interfaceWidth + " " + interfaceHeight / 2).fill('none');
                         divisionPath.stroke({ color: 'black', width: divisionLineWidth });
                     } else if (profile == 'wavyCharacteristic') {
-                        drawInterface(draw, index, interfaceWidth, interfaceHeight, 'wavy', 8, lowerInterfaceColor, upperInterfaceColor, borderWidth, divisionLineWidth, diffuse, transition);
+                        this.drawCustomInterface(draw, index, interfaceWidth, interfaceHeight, 'wavy', 8, lowerInterfaceColor, upperInterfaceColor, borderWidth, divisionLineWidth, diffuse, transition);
                     } else if (profile == 'bumpyCharacteristic') {
-                        drawInterface(draw, index, interfaceWidth, interfaceHeight, 'bumpy', 20, lowerInterfaceColor, upperInterfaceColor, borderWidth, divisionLineWidth, diffuse, transition);
+                        this.drawCustomInterface(draw, index, interfaceWidth, interfaceHeight, 'bumpy', 20, lowerInterfaceColor, upperInterfaceColor, borderWidth, divisionLineWidth, diffuse, transition);
                     } else if (profile == 'irregularCharacteristic') {
-                        drawInterface(draw, index, interfaceWidth, interfaceHeight, 'irregular', 30, lowerInterfaceColor, upperInterfaceColor, borderWidth, divisionLineWidth, diffuse, transition);
+                        this.drawCustomInterface(draw, index, interfaceWidth, interfaceHeight, 'irregular', 30, lowerInterfaceColor, upperInterfaceColor, borderWidth, divisionLineWidth, diffuse, transition);
                     }
                 }
-            })
+            }
         }, {
             key: 'drawStrata',
             value: function drawStrata(strata, divID) {
@@ -176,42 +190,50 @@
                 var height = 100;
                 var width = 500;
                 if (strata.getCharacteristicsByFamily('thicknessFamily').length > 0) {
-                    height = getThicknesses(strata.getCharacteristicsByFamily('thicknessFamily')[0].getName());
+                    height = this.getThicknesses(strata.getCharacteristicsByFamily('thicknessFamily')[0].getName());
                 }
 
                 if (strata.getCharacteristicsByFamily('widthFamily').length > 0) {
-                    width = getWidths(strata.getCharacteristicsByFamily('widthFamily')[0].getName());
+                    width = this.getWidths(strata.getCharacteristicsByFamily('widthFamily')[0].getName());
                 }
 
-                document.getElementById(divID).style.height = height + "px";
+                if (this.window == undefined) {
+                    document.getElementById(divID).style.height = height + "px";
+                }
+
                 var borderWidth = 8;
 
                 var draw = SVG(divID).size(width, height);
-                this.fillStrata(draw, strata);
+                //on crée un groupe pour englober la strate et pour pouvoir la réutiliser
+                var nestedStrata = draw.nested();
+                nestedStrata.height(height);
+                nestedStrata.width(width);
+                this.fillStrata(nestedStrata, strata);
 
                 //Strate CM
                 if (strata.getCharacteristicsByFamily('natureFamily')[0].getName() == 'cmCharacteristic') {
                     if (strata.getIndex() < this.stratig.getStratas().length - 1) {
                         var lowerStrata = this.stratig.getStratas()[strata.getIndex() + 1];
                         if (lowerStrata.getCharacteristicsByFamily('natureFamily')[0].getName() == 'mCharacteristic') {
-                            this.drawCM(strata, width, height, draw);
+                            this.drawCM(strata, width, height, nestedStrata);
                         }
                     }
                 }
 
                 //Dessin des bords
-                var leftBorder = draw.path("M0 0L0 " + height).fill('none');
-                var rightBorder = draw.path("M" + width + " 0L" + width + " " + height).fill('none');
+                var leftBorder = nestedStrata.path("M0 0L0 " + height).fill('none');
+                var rightBorder = nestedStrata.path("M" + width + " 0L" + width + " " + height).fill('none');
                 leftBorder.stroke({ color: 'black', width: borderWidth });
                 rightBorder.stroke({ color: 'black', width: borderWidth });
 
                 //Dessin du bord inférieur si c'est la dernière strate
-                var index = strata.getIndex();
-                var lastIndex = this.stratig.getStratas().length;
                 if (strata.getIndex() == this.stratig.getStratas().length - 1) {
-                    var bottomBorder = draw.path("M0 " + height + "L" + width + " " + height).fill('none');
+                    var bottomBorder = nestedStrata.path("M0 " + height + "L" + width + " " + height).fill('none');
                     bottomBorder.stroke({ color: 'black', width: borderWidth });
                 }
+
+                //On retourne le dessin de la strate
+                return nestedStrata;
             }
         }, {
             key: 'drawCM',
@@ -273,16 +295,23 @@
                 var height = 100;
                 var width = 500;
                 if (strata.getCharacteristicsByFamily('thicknessFamily').length > 0) {
-                    height = getThicknesses(strata.getCharacteristicsByFamily('thicknessFamily')[0].getName());
+                    height = this.getThicknesses(strata.getCharacteristicsByFamily('thicknessFamily')[0].getName());
                 }
 
                 if (strata.getCharacteristicsByFamily('widthFamily').length > 0) {
-                    width = getWidths(strata.getCharacteristicsByFamily('widthFamily')[0].getName());
+                    width = this.getWidths(strata.getCharacteristicsByFamily('widthFamily')[0].getName());
                 }
 
                 // Initialisation du POISSON DISK DISTRIBUTION
                 var poisson = [];
-                var pds = new PoissonDiskSampler(width, height);
+                //Instance Node.js
+                if (this.window == undefined) {
+                    var pds = new poissonDisk.PoissonDiskSampler(width, height);
+                }
+                //Instance Browser
+                else {
+                        var pds = new _poissonDisk.PoissonDiskSampler(width, height);
+                    }
 
                 var color = 'white';
                 if (strata.getCharacteristicsByFamily('colourFamily').length > 0) {
@@ -292,6 +321,8 @@
                 if (color == 'black') {
                     color = '#474747';
                 }
+
+                console.log("rectColor: " + color);
 
                 var rect = draw.rect(width, height).attr({ fill: color });
 
@@ -331,7 +362,7 @@
                             break;
 
                         case "alternatingBandsCharacteristic":
-                            drawalternatingBands(draw, 6, 10, width, height);
+                            this.drawalternatingBands(draw, 6, 10, width, height);
                             break;
 
                         case "cristallineMicrostructureCharacteristic":
@@ -443,6 +474,195 @@
                     image.size(pds.pointList[i].w, pds.pointList[i].h);
                     image.x(pds.pointList[i].x - pds.pointList[i].w / 2);
                     image.y(pds.pointList[i].y - pds.pointList[i].h / 2);
+                }
+            }
+        }, {
+            key: 'getThicknesses',
+            value: function getThicknesses(thickness) {
+                if (thickness == "thickCharacteristic") return 150;else if (thickness == "normalThicknessCharacteristic") return 100;else if (thickness == "thinCharacteristic") return 50;else return 100;
+            }
+        }, {
+            key: 'getWidths',
+            value: function getWidths(width) {
+                if (width == "largeCharacteristic") return 650;else if (width == "normalWidthCharacteristic") return 500;else if (width == "smallCharacteristic") return 300;else return 500;
+            }
+        }, {
+            key: 'drawCustomInterface',
+            value: function drawCustomInterface(draw, index, width, height, type, nb_hop, bottomBackgroundColor, topBackgroundColor, borderWidth, interfaceLineThickness, diffuse, transition) {
+                /* Le dessin des interfaces se fait en 3 étapes
+                 *  1) Tout d'abord on colorie la zone de dessin avec la couleur topBackground et sans cadre
+                 *  2) on dessine la ligne d'interface avec le tableau line = []
+                 *  3) on dessine la ligne d'interface accompagnée d'un polygone qui vient faire office de partie inférieure de l'interface et avec la couleur bottombackgroundcolor
+                 */
+
+                // Si la couleur des deux strates est noire alors la ligne d'interface est blanche
+                var strokeColor = "black";
+                if (bottomBackgroundColor == "black" && topBackgroundColor == "black") strokeColor = "white";
+
+                var bubbleTransitionSize = 4;
+
+                // BEFORE : var rect = paper.rect(0, 0, width, height).attr("stroke-width", 0); // zone de dessin sans cadre
+                var rect = draw.rect(width, height).fill('none');
+                if ((transition == "semiGradualInferiorCharacteristic" || transition == "gradualCharacteristic") && index != 0) {
+                    var pds = new _poissonDisk.PoissonDiskSampler(width, height);
+                    for (var i = 0; i < 50; i++) pds.createPointsPerso(10, 10, 'none', 0, 0);
+                    for (var i = 0; i < pds.pointList.length; i++) {
+                        // BEFORE: paper.circle(pds.pointList[i].x, pds.pointList[i].y + bubbleTransitionSize, bubbleTransitionSize).attr("fill", bottomBackgroundColor);
+                        var point = draw.circle(bubbleTransitionSize);
+                        point.x(pds.pointList[i].x);
+                        point.y(pds.pointList[i].y);
+                        point.fill(bottomBackgroundColor);
+                    }
+                }
+
+                rect.attr("fill", topBackgroundColor);
+                var y = height / 2;
+                var t = [];
+                var line = [];
+                var nb = nb_hop;
+                var x = 0;
+                var h_hop = width / nb;
+                var y = height / 2;
+                for (var i = 0; i < nb; i++) {
+                    t.push('M');
+                    line.push('M');
+                    t.push(x);
+                    line.push(x);
+                    t.push(y);
+                    line.push(y);
+                    t.push('Q');
+                    line.push('Q');
+                    // on utilise les courbes de béziers pour faire des vagues
+                    if (type == "wavy") {
+                        t.push(x + width / nb / 2);
+                        line.push(x + width / nb / 2);
+                        if (i % 2 == 0) {
+                            line.push(y + y / 2);
+                            t.push(y + y / 2);
+                        } else {
+                            line.push(y - y / 2);
+                            t.push(y - y / 2);
+                        }
+                    } else if (type == "bumpy") {
+                        // on fait des bosses avec les courbes de béziers en introduisant des hauteurs aléatoires
+                        t.push(x + width / nb / 2);
+                        line.push(x + width / nb / 2);
+                        var rnd = getRandomInt(0, y);
+                        if (i % 2 == 0) {
+                            line.push(y + rnd);
+                            t.push(y + rnd);
+                        } else {
+                            line.push(y - rnd);
+                            t.push(y - rnd);
+                        }
+                    } else if (type == "irregular") {
+                        // on faire des formes irrégulières avec les courbes de béziers avec des valeurs aléatoires
+                        var rndx = getRandomInt(0, width / nb);
+                        t.push(x + rndx);
+                        line.push(x + rndx);
+                        var rnd = getRandomInt(-height * 0.8, height * 0.8);
+                        line.push(y + rnd);
+                        t.push(y + rnd);
+                    }
+                    line.push(x + h_hop);
+                    t.push(x + h_hop);
+                    line.push(y);
+                    t.push(y);
+
+                    t.push('L');
+                    t.push(x + h_hop);
+                    t.push(height);
+                    t.push('L');
+                    t.push(x);
+                    t.push(height);
+
+                    x += h_hop;
+                }
+
+                var lineAttrs = new Array();
+                lineAttrs.push({ "stroke-width": interfaceLineThickness });
+
+                if (diffuse) {
+                    lineAttrs.push({ "stroke-dasharray": ["."] });
+                    lineAttrs.push({ "stroke": "grey" });
+                }
+                /*BEFORE
+                 paper.path(line).attr("stroke", strokeColor).attr(lineAttrs);
+                 paper.path(t).attr("fill", bottomBackgroundColor).attr("stroke", bottomBackgroundColor);;
+                 */
+                var lineString = '';
+                for (var i = 0; i < line.length; i++) {
+                    lineString = lineString + line[i] + ' ';
+                }
+
+                var tString = '';
+                for (var i = 0; i < t.length; i++) {
+                    tString = tString + t[i] + ' ';
+                }
+                var path1 = draw.path(lineString).fill('none');
+                var path2 = draw.path(tString).fill(bottomBackgroundColor);
+                path1.stroke({ color: strokeColor, width: 5 });
+                path2.stroke({ color: bottomBackgroundColor, width: 1 });
+                // Si c'est la première interface alros la bordure extérieure commence au milieu
+                var startHeight = 0;
+                if (index == 0) {
+                    startHeight = height / 2;
+                }
+
+                var leftBorder = draw.path("M0 " + startHeight + "L0 " + height).fill('none');
+                leftBorder.stroke({ color: 'black', width: borderWidth });
+
+                var rightBorder = draw.path("M" + width + " " + startHeight + "L" + width + " " + height).fill('none');
+                rightBorder.stroke({ color: 'black', width: borderWidth });
+
+                if (transition == "semiGradualSuperiorCharacteristic" || transition == "gradualCharacteristic") {
+                    var heightBottom = height / 2 - bubbleTransitionSize;
+                    var pds = new _poissonDisk.PoissonDiskSampler(width, heightBottom);
+                    for (var i = 0; i < 50; i++) pds.createPointsPerso(10, 10, 'none', 0, 0);
+                    for (var i = 0; i < pds.pointList.length; i++) {
+                        var point = draw.circle(bubbleTransitionSize);
+                        point.x(pds.pointList[i].x);
+                        point.y(pds.pointList[i].y);
+                        point.fill(topBackgroundColor);
+                    }
+                }
+            }
+        }, {
+            key: 'drawalternatingBands',
+            value: function drawalternatingBands(draw, nb_hop, nb_lines, width, height) {
+                var rect = draw.rect(0, 0, width, height).attr("stroke-width", 0);
+
+                var y = height / nb_lines;
+
+                for (var a = 0; a < nb_lines; a++) {
+                    var t = [];
+                    var nb = nb_hop;
+                    var x = 0;
+                    var h_hop = width / nb;
+
+                    for (var i = 0; i < nb; i++) {
+                        t.push('M');
+                        t.push(x);
+                        t.push(y);
+                        t.push('Q');
+
+                        t.push(x + width / nb / 2);
+                        if (i % 2 == 0) t.push(y + height / nb_lines);else t.push(y - height / nb_lines);
+
+                        t.push(x + h_hop);
+                        t.push(y);
+
+                        x += h_hop;
+                    }
+                    y += height / nb_lines;
+
+                    var pathString = '';
+                    for (var i = 0; i < t.length; i++) {
+                        pathString = pathString + t[i] + ' ';
+                    }
+
+                    var path = draw.path(pathString).fill('none');
+                    path.stroke({ color: 'grey', width: 1 });
                 }
             }
         }, {
