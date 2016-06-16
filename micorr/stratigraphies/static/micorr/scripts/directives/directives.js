@@ -32,7 +32,7 @@ angular.module('micorrApp').directive('strata', function ($compile, Stratigraphy
             graphGenUtil.drawInterface(str, interfaceDiv.id);
             graphGenUtil.drawStrata(str, strataDiv.id);
 
-            window.alert(strataDiv.innerHTML);
+
             //Gestion en cas de clic sur une strate
             $(element.children()[0]).bind('click', function () {
                 scope.update(index);
