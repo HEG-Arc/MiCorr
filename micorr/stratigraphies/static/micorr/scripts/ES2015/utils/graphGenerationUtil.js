@@ -33,7 +33,7 @@ class GraphGenerationUtil {
         }
         var resultDraw = SVG('result');
         var bottomY = 0;
-        for(var i = 0; i<drawings.length; i++){
+        for (var i = 0; i < drawings.length; i++) {
             var nestedObject = drawings[i];
             nestedObject.y(bottomY);
             bottomY = bottomY + nestedObject.height();
@@ -41,6 +41,7 @@ class GraphGenerationUtil {
         }
         var resultDiv = this.window.document.getElementById('result');
         var svgContent = resultDiv.innerHTML;
+
         return svgContent;
     }
 
@@ -527,7 +528,14 @@ class GraphGenerationUtil {
         // BEFORE : var rect = paper.rect(0, 0, width, height).attr("stroke-width", 0); // zone de dessin sans cadre
         var rect = draw.rect(width, height).fill('none');
         if ((transition == "semiGradualInferiorCharacteristic" || transition == "gradualCharacteristic") && index != 0) {
-            var pds = new PoissonDiskSampler(width, height);
+            //Instance Node.js
+            if (this.window == undefined) {
+                var pds = new poissonDisk.PoissonDiskSampler(width, height);
+            }
+            //Instance Browser
+            else {
+                var pds = new PoissonDiskSampler(width, height);
+            }
             for (var i = 0; i < 50; i++)
                 pds.createPointsPerso(10, 10, 'none', 0, 0);
             for (var i = 0; i < pds.pointList.length; i++) {
