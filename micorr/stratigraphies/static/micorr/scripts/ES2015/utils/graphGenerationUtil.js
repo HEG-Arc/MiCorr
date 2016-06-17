@@ -291,11 +291,11 @@ class GraphGenerationUtil {
 
         // Initialisation du POISSON DISK DISTRIBUTION
         var poisson = [];
-        //Instance Node.js
+        //Instance browser
         if (this.window == undefined) {
             var pds = new poissonDisk.PoissonDiskSampler(width, height);
         }
-        //Instance Browser
+        //Instance Node.js
         else {
             var pds = new PoissonDiskSampler(width, height);
         }
@@ -528,11 +528,11 @@ class GraphGenerationUtil {
         // BEFORE : var rect = paper.rect(0, 0, width, height).attr("stroke-width", 0); // zone de dessin sans cadre
         var rect = draw.rect(width, height).fill('none');
         if ((transition == "semiGradualInferiorCharacteristic" || transition == "gradualCharacteristic") && index != 0) {
-            //Instance Node.js
+            //Instance Browser
             if (this.window == undefined) {
                 var pds = new poissonDisk.PoissonDiskSampler(width, height);
             }
-            //Instance Browser
+            //Instance Node.js
             else {
                 var pds = new PoissonDiskSampler(width, height);
             }
@@ -654,7 +654,14 @@ class GraphGenerationUtil {
 
         if (transition == "semiGradualSuperiorCharacteristic" || transition == "gradualCharacteristic") {
             var heightBottom = height / 2 - bubbleTransitionSize;
-            var pds = new PoissonDiskSampler(width, heightBottom);
+            //Instance Browser
+            if (this.window == undefined) {
+                var pds = new poissonDisk.PoissonDiskSampler(width, height);
+            }
+            //Instance Node.js
+            else {
+                var pds = new PoissonDiskSampler(width, height);
+            }
             for (var i = 0; i < 50; i++)
                 pds.createPointsPerso(10, 10, 'none', 0, 0);
             for (var i = 0; i < pds.pointList.length; i++) {
