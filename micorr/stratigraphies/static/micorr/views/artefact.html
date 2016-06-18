@@ -1,7 +1,7 @@
 <section>
     <ol class="breadcrumb">
         <li><a href="/">Home</a></li>
-        <li><a href="/artefacts">{{artefactName}}</a></li>
+        <li><a href="/artefacts">{{ artefactName }}</a></li>
     </ol>
 
     <div ng-controller="ModalAddStratigraphyCtrl">
@@ -12,7 +12,8 @@
             <div class="modal-body">
                 <form>
                     <div ng-controller="AddStratigraphyCtrl">
-                        <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
+                        <alert ng-repeat="alert in alerts" type="{{ alert.type }}"
+                               close="closeAlert($index)">{{ alert.msg }}</alert>
                     </div>
                     <fieldset>
                         <label>Name</label>
@@ -29,47 +30,55 @@
         </script>
 
         <button type="button" class="btn btn-primary" ng-click="open()">
-                <span class="glyphicon glyphicon glyphicon-plus" aria-hidden="true"></span>
-                Add a stratigraphy
+            <span class="glyphicon glyphicon glyphicon-plus" aria-hidden="true"></span>
+            Add a stratigraphy
         </button>
         <br/><br/>
     </div>
 
-    <div>
+    <div ng-controller="ShowArtefactCtrl">
         <table class="table table-hover">
             <thead>
-                <tr>
-                    <td width="50">#</td>
-                    <td>Stratigraphy</td>
-                    <td width="100" class="text-center">Edit</td>
-                    <td width="100"class="text-center">Remove</td>
-                </tr>
+            <tr>
+                <td width="50">#</td>
+                <td>picture</td>
+                <td>Stratigraphy</td>
+                <td width="100" class="text-center">Edit</td>
+                <td width="100" class="text-center">Remove</td>
+            </tr>
             </thead>
             <tbody>
-                <tr ng-repeat='strat in strats'>
-                    <td><strong>{{$index + 1}}</strong></td>
-                    <td><a href='#/artefact/{{artefactName}}/{{strat.name}}/{{strat.description}}'>{{strat.description}}</a></td>
-                    <td class="text-center"><a href='#/artefact/{{artefactName}}/{{strat.name}}/{{strat.description}}'><span class="glyphicon glyphicon glyphicon-pencil" aria-hidden="true"></span></a></td>
-                    <td class="text-center">
-                        <div ng-controller="ModalDelStratigraphyCtrl">
-                            <script type="text/ng-template" id="delStratigraphyContent.html">
-                                <div class="modal-header">
-                                    <h3 class="modal-title">Delete this stratigraphy</h3>
-                                </div>
-                                <div class="modal-body">
-                                    <p>Do you really want to delete this stratigraphy ?</p>
-                                </div>
-                                <div class="modal-footer">
-                                    <button class="btn btn-primary" ng-click="ok()">OK</button>
-                                    <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
-                                </div>
-                            </script>
 
-                            <a ng-click="open('sm', strat.name)"><span class="glyphicon glyphicon glyphicon-remove" aria-hidden="true"></span></a>
-                        </div>
+            <tr ng-repeat='strat in strats'>
+                <td><strong>{{$index + 1}}</strong></td>
+                <td><p bind-html-unsafe="strat.svg"></p></td>
+                <td>
+                    <a href='#/artefact/{{ artefactName }}/{{ strat.name }}/{{ strat.description }}'>{{ strat.description }}</a>
+                </td>
+                <td class="text-center"><a
+                        href='#/artefact/{{ artefactName }}/{{ strat.name }}/{{ strat.description }}'><span
+                        class="glyphicon glyphicon glyphicon-pencil" aria-hidden="true"></span></a></td>
+                <td class="text-center">
+                    <div ng-controller="ModalDelStratigraphyCtrl">
+                        <script type="text/ng-template" id="delStratigraphyContent.html">
+                            <div class="modal-header">
+                                <h3 class="modal-title">Delete this stratigraphy</h3>
+                            </div>
+                            <div class="modal-body">
+                                <p>Do you really want to delete this stratigraphy ?</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-primary" ng-click="ok()">OK</button>
+                                <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+                            </div>
+                        </script>
 
-                    </td>
-                </tr>
+                        <a ng-click="open('sm', strat.name)"><span class="glyphicon glyphicon glyphicon-remove"
+                                                                   aria-hidden="true"></span></a>
+                    </div>
+
+                </td>
+            </tr>
             </tbody>
         </table>
     </div>

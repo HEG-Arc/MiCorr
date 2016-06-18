@@ -118,6 +118,8 @@ angular.module('micorrApp')
             $scope.showsubmmicrostructureFamily = false;
             $scope.showsubmcompositionFamily = false;
 
+
+
             //Chargement de la stratigraphie
             MiCorrService.getDetailedStratigraphy($scope.stratigraphyName).success(function (data) {
 

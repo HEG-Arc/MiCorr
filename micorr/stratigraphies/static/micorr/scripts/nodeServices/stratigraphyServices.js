@@ -72,11 +72,17 @@ module.exports = {
         });
     },
 
-    drawStratigraphy: function (window, stratigraphy) {
-        var drawer = new GraphGenerationUtil(window, stratigraphy);
+    drawStratigraphy: function (stratigraphy, callback){
+
         //drawer.drawStrata(stratigraphy.getStratas()[0], 'drawing');
-        var test = drawer.drawStratigraphy();
-        console.log(test);
+        var jsdom = require("jsdom").jsdom;
+        var document = jsdom("<div id='drawing'></div><div id='result'></div><div id='exp'><div/>")
+        var window = document.defaultView;
+
+        var drawer = new GraphGenerationUtil(window, stratigraphy);
+        var result = drawer.drawStratigraphy();
+        console.log('stratigraphy drawed')
+        return callback(result);
     }
 
 };

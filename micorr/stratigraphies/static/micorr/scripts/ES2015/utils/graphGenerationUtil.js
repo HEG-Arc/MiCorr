@@ -13,6 +13,8 @@ class GraphGenerationUtil {
         if (win != null) {
             this.window = win;
             //var drawer = require('svg.js')(win);
+            //var svgimport = require('../dependencies/svg.import.js')(win);
+            //var svgparser = require('../dependencies/svg.parser.js');
         }
         this.stratig = stratig;
     }
@@ -23,6 +25,7 @@ class GraphGenerationUtil {
         drawStratigraphy() {
         var drawings = new Array();
 
+
         var div = this.window.document.getElementById('drawing');
         for (var i = 0; i < this.stratig.getStratas().length; i++) {
             var str = this.stratig.getStratas()[i];
@@ -32,15 +35,21 @@ class GraphGenerationUtil {
             drawings.push(nestedStrata);
         }
         var resultDraw = SVG('result');
+        var box = resultDraw.viewbox(0, 0,1000, 350)
         var bottomY = 0;
         for (var i = 0; i < drawings.length; i++) {
             var nestedObject = drawings[i];
             nestedObject.y(bottomY);
+
             bottomY = bottomY + nestedObject.height();
-            resultDraw.add(drawings[i]);
+            box.add(drawings[i]);
         }
-        var resultDiv = this.window.document.getElementById('result');
-        var svgContent = resultDiv.innerHTML;
+
+        //var resultDiv = this.window.document.getElementById('result');
+        //var svgContent = resultDiv.innerHTML;
+
+        box.width(250);
+        var svgContent = resultDraw.exportSvg()
 
         return svgContent;
     }
