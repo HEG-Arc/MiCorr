@@ -19,6 +19,9 @@ nosetests.xml
 # Pycharm
 .idea
 
+#npm
+#node_modules
+
 # Vim
 
 *~
