@@ -39,12 +39,19 @@ dispatcher.onPost("/node/getStratigraphySvg", function (req, res) {
 
 
     var params = querystring.parse(url.parse(req.url).query);
+    console.log('widthParam: '+ params['width']);
     if ('name' in params) {
+        var width = 250;
+        if('width' in params){
+            if(params['width'] != undefined) {
+                width = params['width'];
+            }
+        }
         stratigraphyServices.getStratigraphyByName(params['name'], function (stratig) {
             console.log('ready to draw');
             if(stratig != undefined) {
-                stratigraphyServices.drawStratigraphy(stratig, function (svgresult) {
-                    console.log(svgresult)
+
+                stratigraphyServices.drawStratigraphy(stratig, width, function (svgresult) {
                     res.write(svgresult);
                     res.end();
                 });

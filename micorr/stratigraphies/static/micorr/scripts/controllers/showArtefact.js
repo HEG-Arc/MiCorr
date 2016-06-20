@@ -19,7 +19,7 @@ angular.module('micorrApp')
             //Lorsque les stratigraphies sont toutes chargées on va pour chaqune aller chercher son svg
         }).success(function () {
             $scope.strats.forEach(function (listItem, index) {
-                MiCorrService.getStratigraphySvg(listItem.name).success(function (svgdata) {
+                MiCorrService.getStratigraphySvg(listItem.name, 150).success(function (svgdata) {
                     $scope.strats[index].svg = svgdata;
                 });
             });

@@ -13,11 +13,10 @@ angular.module('micorrApp').factory('MiCorrService', function ($http, $q) {
             return 'Hello!';
         },
 
-        getStratigraphySvg: function (name) {
+        getStratigraphySvg: function (name, width) {
 
-            return $http.post('http://localhost:8080/node/getStratigraphySvg' + '?name=' + name).error(function () {
+            return $http.post('http://localhost:8080/node/getStratigraphySvg' + '?name=' + name + '&width='+width).error(function () {
                 console.log('Problème de connexion avec le serveur pour récupérer le SVG');
-                alert('Erreur de chargement du SVG');
             });
         },
 
