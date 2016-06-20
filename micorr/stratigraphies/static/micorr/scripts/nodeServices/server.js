@@ -32,7 +32,7 @@ server.listen(PORT, function () {
 //Ecoute des requêtes
 
 //Récupération du svg d'une stratigraphie
-dispatcher.onPost("/node/getStratigraphySvg", function (req, res) {
+dispatcher.onPost("/getStratigraphySvg", function (req, res) {
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8000');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
     res.writeHead(200, {'Content-Type': 'text/plain'});
