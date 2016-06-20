@@ -15,7 +15,7 @@ angular.module('micorrApp').factory('MiCorrService', function ($http, $q) {
 
         getStratigraphySvg: function (name, width) {
 
-            return $http.post('http://localhost:8080/node/getStratigraphySvg' + '?name=' + name + '&width='+width).error(function () {
+            return $http.post('node/getStratigraphySvg' + '?name=' + name + '&width='+width).error(function () {
                 console.log('Problème de connexion avec le serveur pour récupérer le SVG');
             });
         },
