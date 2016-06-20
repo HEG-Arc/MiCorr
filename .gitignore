@@ -19,14 +19,15 @@ nosetests.xml
 # Pycharm
 .idea
 
+#npm
+#node_modules
+
 # Vim
 
 *~
 *.swp
 *.swo
 
-# npm
-node_modules/
 
 # Campass
 .sass-cache

@@ -8,7 +8,7 @@ var Characteristic = require('../business/characteristic').Characteristic;
 var SubCharacteristic = require('../business/subCharacteristic').SubCharacteristic;
 var GraphGenerationUtil = require('../utils/graphGenerationUtil').GraphGenerationUtil;
 
-var url = "http://dev.micorr.org/micorr";
+var url = "http://localhost:8000/micorr";
 
 module.exports = {
 
@@ -72,11 +72,18 @@ module.exports = {
         });
     },
 
-    drawStratigraphy: function (window, stratigraphy) {
-        var drawer = new GraphGenerationUtil(window, stratigraphy);
+    drawStratigraphy: function (stratigraphy, width, callback){
+
         //drawer.drawStrata(stratigraphy.getStratas()[0], 'drawing');
-        var test = drawer.drawStratigraphy();
-        console.log(test);
+        var jsdom = require("jsdom").jsdom;
+        var document = jsdom("<div id='drawing'></div><div id='result'></div><div id='exp'><div/>")
+        var window = document.defaultView;
+
+        var drawer = new GraphGenerationUtil(window, stratigraphy);
+        console.log('widthnow:' + width);
+        var result = drawer.drawStratigraphy(width);
+        console.log('stratigraphy drawed')
+        return callback(result);
     }
 
 };

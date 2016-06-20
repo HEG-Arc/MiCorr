@@ -9,71 +9,79 @@
 // Contient toutes les requêtes vers le serveur
 angular.module('micorrApp').factory('MiCorrService', function ($http, $q) {
     return{
-        sayHello: function(){
+        sayHello: function () {
             return 'Hello!';
         },
-        getAllArtefacts : function(){
-            return $http.get('json/getallartefacts').error(function(){
+
+        getStratigraphySvg: function (name, width) {
+
+            return $http.post('http://localhost:8080/node/getStratigraphySvg' + '?name=' + name + '&width='+width).error(function () {
+                console.log('Problème de connexion avec le serveur pour récupérer le SVG');
+            });
+        },
+
+        getAllArtefacts: function () {
+            return $http.get('json/getallartefacts').error(function () {
                 console.log('Problème de connexion avec le serveur pour récupérer les artefacts');
                 alert('Erreur de chargement des artefacts');
             });
         },
-        getStratigraphyByArtefact : function(artefact){
-            return $http.get('json/getstratsbyartefact/' + artefact).error(function(){
+        getStratigraphyByArtefact: function (artefact) {
+            return $http.get('json/getstratsbyartefact/' + artefact).error(function () {
                 console.log('Problème de connexion avec le serveur pour récupérer les stratigraphies');
                 alert('Erreur de chargement des stratigraphies');
             });
         },
-        getDetailedStratigraphy : function(stratigraphy) {
-            return $http.get('json/getstratigraphydetails/' + stratigraphy).error(function(){
+        getDetailedStratigraphy: function (stratigraphy) {
+            return $http.get('json/getstratigraphydetails/' + stratigraphy).error(function () {
                 console.log('Problème de connexion avec le serveur pour récupérer le détail des stratigraphies');
                 alert('Erreur de chargement du détail des stratigraphies');
             });
         },
-        stratigraphyExists : function(stratigraphy){
-            return $http.get('json/stratigraphyexists/' + stratigraphy).error(function(){
+        stratigraphyExists: function (stratigraphy) {
+            return $http.get('json/stratigraphyexists/' + stratigraphy).error(function () {
                 console.log('Problème de connexion avec le serveur pour voir si la stratigraphie existe');
                 alert('Erreur de dialogue avec le serveur');
             });
         },
-        addStratigraphy : function(artefact, stratigraphy){
-            return $http.get('json/addstratigraphy/' + artefact + '/' + stratigraphy).error(function(){
+        addStratigraphy: function (artefact, stratigraphy) {
+            return $http.get('json/addstratigraphy/' + artefact + '/' + stratigraphy).error(function () {
                 console.log('Problème de connexion avec le serveur pour ajouter une stratigraphie');
                 alert('Erreur de dialogue avec le serveur');
             });
         },
-        getAllCharacteristic : function() {
-            return $http.get('json/getallcharacteristic').error(function(){
+        getAllCharacteristic: function () {
+            return $http.get('json/getallcharacteristic').error(function () {
                 console.log('Problème de connexion avec le serveur pour charger les caractéristiques');
                 alert('Erreur de chargement des caractéristiques');
             });
         },
-        saveStratigraphy : function(data) {
-            return $http.get('json/save/' + data).error(function(){
+        saveStratigraphy: function (data) {
+            return $http.get('json/save/' + data).error(function () {
                 console.log('Problème de connexion avec le serveur pour sauver la stratigraphie');
                 alert('Erreur de sauvegarde de la stratigraphie');
             });
         },
-        matchStratigraphy : function(data) {
-            return $http.get('json/match/' + data).error(function(){
+        matchStratigraphy: function (data) {
+            return $http.get('json/match/' + data).error(function () {
                 console.log('Problème de connexion avec le serveur pour comparer la stratigraphie');
                 alert('Erreur de lors du match avec la stratigraphie');
             });
         },
-        deleteStratigraphy : function(data) {
-            return $http.get('json/deleteStratigraphy/' + data).error(function(){
+        deleteStratigraphy: function (data) {
+            return $http.get('json/deleteStratigraphy/' + data).error(function () {
                 console.log('Problème de connexion avec le serveur pour supprimer la stratigraphie');
                 alert('Erreur de suppression de la stratigraphie');
             });
         },
-        createArtefact : function(data) {
-            return $http.get('json/addartefact/' + data).error(function(){
+        createArtefact: function (data) {
+            return $http.get('json/addartefact/' + data).error(function () {
                 console.log('Problème de connexion avec le serveur pour créer un artefact');
                 alert('Erreur de création de artefact');
             });
         },
-        deleteArtefact : function(data) {
-            return $http.get('json/deleteartefact/' + data).error(function(){
+        deleteArtefact: function (data) {
+            return $http.get('json/deleteartefact/' + data).error(function () {
                 console.log('Problème de connexion avec le serveur pour supprimer un artefact');
                 alert('Erreur de suppression de artefact');
             });
@@ -83,7 +91,7 @@ angular.module('micorrApp').factory('MiCorrService', function ($http, $q) {
 
 // Contient les données sur les strates qui seront échangées entre les différents contrôlleurs
 angular.module('micorrApp').factory('StratigraphyData', function StratigraphyDataFactory() {
-    var getStratigraphyData = function() {
+    var getStratigraphyData = function () {
 
         var stratig = null;
         var selectedStrata = 0;
@@ -132,23 +140,23 @@ angular.module('micorrApp').factory('StratigraphyData', function StratigraphyDat
 
         return {
 
-            getStrataNature: function(strataData){
+            getStrataNature: function (strataData) {
                 var nature;
                 var found = false;
                 var i = 0;
-                while(!found && i < strataData.characteristics.length){
+                while (!found && i < strataData.characteristics.length) {
                     var currentCharacteristic = strataData.characteristics[i];
-                        if(currentCharacteristic.family == "natureFamily"){
-                            nature = currentCharacteristic.real_name;
-                            found = true;
-                        }
+                    if (currentCharacteristic.family == "natureFamily") {
+                        nature = currentCharacteristic.real_name;
+                        found = true;
+                    }
                     i++;
                 }
                 return nature;
             },
 
-            getStratigraphy: function(){
-                if (stratig == null){
+            getStratigraphy: function () {
+                if (stratig == null) {
                     stratig = new stratigraphy.Stratigraphy;
                 }
                 return stratig;
@@ -175,7 +183,7 @@ angular.module('micorrApp').factory('StratigraphyData', function StratigraphyDat
             pushOneStrata: function (strata) {
                 stratig.getStratas().push(strata);
             },
-            stratigraphyToJson: function(){
+            stratigraphyToJson: function () {
 
             },
 
@@ -212,7 +220,7 @@ angular.module('micorrApp').factory('StratigraphyData', function StratigraphyDat
                     for (var i = 0; i < list.length; i++) {
                         var sub = list[i]['subcharacteristics'];
                         for (var j = 0; j < sub.length; j++) {
-                            subList.push({'name': sub[j].sub_real_name, 'uid' : sub[j].name});
+                            subList.push({'name': sub[j].sub_real_name, 'uid': sub[j].name});
                             var subsub = sub[j]['subcharacteristics'];
                             for (var k = 0; k < subsub.length; k++) {
                                 //console.log(subsub);
@@ -279,10 +287,10 @@ angular.module('micorrApp').factory('StratigraphyData', function StratigraphyDat
             setRawCharacteristics: function (data) {
                 this.rawCharacteristics = data;
             },
-            getSelectedStrata: function(){
+            getSelectedStrata: function () {
                 return this.selectedStrata;
             },
-            setSelectedStrata: function(index){
+            setSelectedStrata: function (index) {
                 this.selectedStrata = index;
             },
             getSubmcompositionFamily: function () {
@@ -539,7 +547,7 @@ angular.module('micorrApp').factory('StratigraphyData', function StratigraphyDat
 
 // Contient les données sur les strates qui seront échangées entre les différents contrôlleurs
 angular.module('micorrApp').factory('StrataData', function StrataDataFactory() {
-    var getStrataData = function() {
+    var getStrataData = function () {
 
         var rawCharacteristics = "";    // Caractéristiques retournées par le serveur au format json et non modifié
         var selectedStrata = 0;         // index de la strate sélectionnée par l'utilisateur
@@ -1005,11 +1013,11 @@ angular.module('micorrApp').factory('StrataData', function StrataDataFactory() {
 });
 
 angular.module('micorrApp').factory('httpRequestTracker', function httpRequestTrackerFactory($http) {
-        var httpRequestTracker = {};
-        httpRequestTracker.hasPendingRequests = function () {
-            return $http.pendingRequests.length > 0;
-        };
-        return httpRequestTracker;
+    var httpRequestTracker = {};
+    httpRequestTracker.hasPendingRequests = function () {
+        return $http.pendingRequests.length > 0;
+    };
+    return httpRequestTracker;
 });
 
 
