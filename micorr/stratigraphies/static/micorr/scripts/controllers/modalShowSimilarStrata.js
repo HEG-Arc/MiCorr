@@ -23,9 +23,9 @@ angular.module('micorrApp')
                         MiCorrService.matchStratigraphy(encodeURIComponent(JSON.stringify(StratigraphyData.getStratigraphy().toJson()))).success(function (data) {
                             $scope.results = data;
                         }).success(function () {
-                            $scope.strats.forEach(function (listItem, index) {
-                                MiCorrService.getStratigraphySvg(listItem.name, 150).success(function (svgdata) {
-                                    $scope.strats[index].svg = svgdata;
+                            $scope.results.forEach(function (listItem, index) {
+                                MiCorrService.getStratigraphySvg(listItem.name, 100).success(function (svgdata) {
+                                    $scope.results[index].svg = svgdata;
                                 });
                             });
                         });
