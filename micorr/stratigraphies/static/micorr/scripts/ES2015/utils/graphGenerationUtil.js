@@ -12,7 +12,7 @@ class GraphGenerationUtil {
     constructor(win, stratig) {
         if (win != null) {
             this.window = win;
-            var drawer = require('svg.js')(win);
+            //var drawer = require('svg.js')(win);
             //var svgimport = require('../dependencies/svg.import.js')(win);
             //var svgparser = require('../dependencies/svg.parser.js');
         }
