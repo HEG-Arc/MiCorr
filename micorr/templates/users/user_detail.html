@@ -35,7 +35,7 @@
             </tr>
             {% for stratigraphy in stratigraphies %}
                 <tr>
-                    <td>{{ stratigraphy.date }}</td>
+                    <td>{% if stratigraphy.timestamp %}{{ stratigraphy.timestamp  }}{% else %}{{ stratigraphy.date }}{% endif %}</td>
                     <td>
                         <span class="editable" data-url="{% url 'stratigraphies:update-description' stratigraphy.uid %}" data-attribute="description" data-activator="#edit-{{ stratigraphy.uid }}">{{ stratigraphy.description }}</span>
                         [<span id="edit-{{ stratigraphy.uid }}" class="button" onmouseover="this.style.cursor='pointer'"><i class="fa fa-pencil"></i> Rename</span> | <i class="fa fa-bars"></i>

@@ -1,5 +1,6 @@
 from py2neo import Graph
 import time
+import datetime
 from py2neo import Node, Relationship
 import uuid
 from artefacts.models import Artefact
@@ -29,10 +30,15 @@ class Neo4jDAO:
         stratigraphies_list = []
         for stratigraphy in stratigraphies:
             # TODO: We should be able to use stratigraphy.date to access the properties of the record :-(
+            if stratigraphy[0].properties['timestamp']:
+                timestamp = datetime.datetime.fromtimestamp(float(stratigraphy[0].properties['timestamp'])).strftime('%Y-%m-%d %H:%M:%S')
+            else:
+                timestamp = None
             stratigraphies_list.append(
                 {'date': stratigraphy[0].properties['date'], 'uid': stratigraphy[0].properties['uid'],
                  'description': stratigraphy[0].properties['description'],
-                 'artefact_uid': stratigraphy[0].properties['artefact_uid']})
+                 'artefact_uid': stratigraphy[0].properties['artefact_uid'], 
+                 'timestamp': timestamp})
         return stratigraphies_list
 
     def getStratigraphyUser(self, stratigraphy):
@@ -258,8 +264,7 @@ class Neo4jDAO:
             self.insertOk = False
         else:
             self.insertOk = name
-            self.graph.cypher.execute_one("CREATE(stratigraphy:Stratigraphy{uid:'" + name + "', date:'" + time.strftime(
-                "%Y-%m-%d") + "', artefact_uid: '" + artefact + "', label:'stratigraphy', description:'" + stratigraphy + "'})")
+            self.graph.cypher.execute_one("CREATE(stratigraphy:Stratigraphy{uid:'%s', timestamp: %f, date:'%s', artefact_uid: '%s', label:'stratigraphy', description:'%s'})" % (name, time.time(), time.strftime("%Y-%m-%d"), artefact, stratigraphy))
             self.graph.cypher.execute_one(
                 "MATCH (a:Artefact),(b:Stratigraphy) WHERE a.uid = '" + artefact + "' AND b.uid= '" + name + "' CREATE (a)-[:IS_REPRESENTED_BY]->(b)")
 
