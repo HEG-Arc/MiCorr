@@ -56,7 +56,12 @@ class Neo4jDAO:
     def setStratigraphyUser(self, stratigraphy, user_id):
         n = self.graph.cypher.execute_one("MATCH (n:`Stratigraphy`) WHERE n.uid='%s' RETURN n" % stratigraphy)
         n.properties["user_uid"] = user_id
+        n.properties["creator_uid"] = user_id
         n.push()
+
+    def delStratigraphyUser(self, stratigraphy):
+        n = self.graph.cypher.execute_one("MATCH (n:`Stratigraphy`) WHERE n.uid='%s' REMOVE n.user_uid" % stratigraphy)
+        return n
 
     def updateStratigraphyDescription(self, stratigraphy, description):
         n = self.graph.cypher.execute_one("MATCH (n:`Stratigraphy`) WHERE n.uid='%s' RETURN n" % stratigraphy)

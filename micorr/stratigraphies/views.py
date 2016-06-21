@@ -1,9 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 import simplejson as json
 from .ch.service.MiCorrService import MiCorrService
 from .forms import StratigraphyDescriptionUpdateForm
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 
 #retourne la page d'accueil
@@ -87,6 +89,21 @@ def update_stratigraphy_description(request, stratigraphy):
             return HttpResponse('No stratigraphy exists with that UID')
     else:
         return HttpResponse('Only POST is allowed!')
+
+
+@csrf_exempt
+@login_required
+def delete_stratigraphy_user(request, stratigraphy):
+    ms = MiCorrService()
+    user_id = ms.getStratigraphyUser(stratigraphy)
+    if user_id:
+        if user_id == request.user.id:
+            # We remove the property
+            msg = ms.delStratigraphyUser(stratigraphy)
+            messages.success(request, 'The stratigraphy was deleted!')
+            return redirect('users:detail', request.user.username)
+    messages.warning(request, 'Unable to delete the stratigraphy!')
+    return redirect('users:detail', request.user.username)
 
 
 # retourne sauvegarde un facies de corrosion

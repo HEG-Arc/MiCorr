@@ -84,6 +84,21 @@
     </div>
   </div>
   <div class="container">
+    {% if messages %}
+    <div class="row">
+      <div class="c9">
+      <div class="container">
+      <div class="row">
+        {% for message in messages %}
+           <div class="alert alert-{% if message.tags %}{{ message.tags }}{% endif %}" role="alert">
+            {{ message }}
+           </div>
+        {% endfor %}
+      </div>
+      </div>
+      </div>
+    </div>
+    {% endif %}
     <div class="row">
       {% block sidemenu %}
       {% endblock sidemenu %}
