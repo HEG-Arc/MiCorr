@@ -12,8 +12,10 @@ from django.contrib import messages
 def home(request):
     return render(request, 'stratigraphies/index.html', locals())
 
+@csrf_exempt
 def test(request):
-    print ("HELLO")
+    if request.method == 'POST':
+        print 'Hello'
 
     ms = MiCorrService()
     ms.test()
@@ -108,10 +110,11 @@ def delete_stratigraphy_user(request, stratigraphy):
 
 # retourne sauvegarde un facies de corrosion
 # @ params stratigraphie au format urlencode
-def save(request, data):
+@csrf_exempt
+def save(request):
     ms = MiCorrService()
     # transformation de urlencode en json
-    data = json.loads(data)
+    data = json.loads(request.body)
     stratigraphy = data['stratigraphy']
     user_id = ms.getStratigraphyUser(stratigraphy)
     print "CURRENT USER: %s" % request.user
