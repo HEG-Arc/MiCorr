@@ -56,12 +56,18 @@ angular.module('micorrApp').factory('MiCorrService', function ($http, $q) {
                 alert('Erreur de chargement des caractéristiques');
             });
         },
-        saveStratigraphy: function (item) {
 
-            $http.post('json/save/' + item).error(function (data, status, headers, config) {
-                console.log('Erreur lors de la sauvegarde de la stratigraphie');
+
+        saveStratigraphy: function (item) {
+            $http.post('json/save', item, {headers: {'Content-Type': 'application/json'} }).error(function (data, status, headers, config) {
+                console.log('Could not save stratigraphy');
+                window.alert('Erreur lors de la sauvegarde de la stratigraphie');
+            }).success(function (data, status, headers, config) {
+                console.log('Saved');
             });
+
         },
+
         matchStratigraphy: function (data) {
             return $http.get('json/match/' + data).error(function () {
                 console.log('Problème de connexion avec le serveur pour comparer la stratigraphie');

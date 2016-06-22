@@ -585,7 +585,7 @@ angular.module('micorrApp')
             var j = JSON.stringify($scope.stratigraphy.toJson());
             console.log(j);
 
-            MiCorrService.saveStratigraphy(encodeURIComponent(j));
+            MiCorrService.saveStratigraphy(j);
             $scope.askLeave = false;
         });
     });

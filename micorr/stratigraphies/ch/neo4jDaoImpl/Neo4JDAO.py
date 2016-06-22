@@ -381,7 +381,7 @@ class Neo4jDAO:
     # @returns 1 si ok
     def save(self, data):
         stratigraphyName = data['stratigraphy']
-
+        print stratigraphyName
         # on supprime entierement toutes les strates de l'ancienne stratigraphie pour en creer une nouvelle
         # on fait ca pour partir sur une base vierge et on reconstruit de graphe a chaque sauvegarde
         self.deleteAllStrataFromAStratigraphy(stratigraphyName)
