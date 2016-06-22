@@ -15,9 +15,9 @@ class MiCorrService:
         MiCorrService.db.begin()
         return MiCorrService.db.setStratigraphyUser(stratigraphy, user_id)
 
-    def delStratigraphyUser(self, stratigraphy, user_id):
+    def delStratigraphyUser(self, stratigraphy):
         MiCorrService.db.begin()
-        return MiCorrService.db.delStratigraphyUser(stratigraphy, user_id)
+        return MiCorrService.db.delStratigraphyUser(stratigraphy)
 
     def updateStratigraphyDescription(self, stratigraphy, description):
         MiCorrService.db.begin()
