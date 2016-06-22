@@ -15,7 +15,7 @@ angular.module('micorrApp').factory('MiCorrService', function ($http, $q) {
 
         getStratigraphySvg: function (name, width) {
 
-            return $http.post('node/getStratigraphySvg' + '?name=' + name + '&width='+width).error(function () {
+            return $http.post('node/getStratigraphySvg' + '?name=' + name + '&width=' + width).error(function () {
                 console.log('Problème de connexion avec le serveur pour récupérer le SVG');
             });
         },
@@ -56,10 +56,10 @@ angular.module('micorrApp').factory('MiCorrService', function ($http, $q) {
                 alert('Erreur de chargement des caractéristiques');
             });
         },
-        saveStratigraphy: function (data) {
-            return $http.get('json/save/' + data).error(function () {
-                console.log('Problème de connexion avec le serveur pour sauver la stratigraphie');
-                alert('Erreur de sauvegarde de la stratigraphie');
+        saveStratigraphy: function (item) {
+
+            $http.post('json/save/' + item).error(function (data, status, headers, config) {
+                console.log('Erreur lors de la sauvegarde de la stratigraphie');
             });
         },
         matchStratigraphy: function (data) {
