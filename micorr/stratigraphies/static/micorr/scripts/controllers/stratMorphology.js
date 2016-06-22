@@ -184,7 +184,7 @@ angular.module('micorrApp')
                 }
             }
             //mise à jour du dessin
-            $scope.$emit('updateDraw');
+            $scope.$emit('updateSelectedStrata');
         };
 
     });

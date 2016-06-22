@@ -21,47 +21,14 @@ class Strata {
 
     }
 
-    toJson() {
-        var childStratas = [];
 
-        var jsonStrata = {'name': this.getUid(), 'characteristics': [], 'interfaces': [], 'children' : []};
-
-        //On récupère les caractéristiques
-        for (var i = 0; i < this.characteristics.length; i++) {
-            if (!this.characteristics[i].isInterface()) {
-                jsonStrata.characteristics.push({'name': this.characteristics[i].getName()});
-            }
-        }
-        //On récupère les sous caractéristiques
-        for (var i = 0; i < this.subCharacteristics.length; i++) {
-            jsonStrata.characteristics.push({'name': this.subCharacteristics[i].getUid()});
-        }
-
-        //On récupère les caractéristiques d'interface
-        for (var i = 0; i < this.characteristics.length; i++) {
-            if (this.characteristics[i].isInterface()) {
-                jsonStrata.interfaces.push({'name': this.characteristics[i].getName()});
-            }
-        }
-
-        //On récupère les strates enfants si ce n'est pas une strate enfant
-        if(!this.child){
-            for (var i = 0; i < this.childStratas.length; i++){
-                jsonStrata.children.push(this.childStratas[i].toJson());
-            }
-        }
-
-
-        return jsonStrata;
-
-    }
 
     /**
      * Retourne une strate enfant de la nature en paramètres
      * @param nature la nature recherchée
      * @returns la strate enfant
      */
-    getChildStrataByNature(nature) {
+        getChildStrataByNature(nature) {
 
         for (var i = 0; i < this.childStratas.length; i++) {
             if (this.childStratas[i].getNature() == nature) {
@@ -258,16 +225,16 @@ class Strata {
         this.uid = uid;
     }
 
-    getName(){
-        if(this.name == undefined){
+    getName() {
+        if (this.name == undefined) {
             return this.uid;
         }
-        else{
+        else {
             return this.name;
         }
     }
 
-    setName(name){
+    setName(name) {
         this.name = name;
     }
 
@@ -285,6 +252,25 @@ class Strata {
                 return true;
         }
         return false;
+    }
+
+
+    /**
+     * Permet d'enregistrer le dessin SVG.JS d'une image pour éviter de la redessiner à chaque fois
+     */
+    setStrataImage(strataImage){
+        this.strataImage = strataImage;
+    }
+
+    getStrataImage(){
+        return this.strataImage;
+    }
+
+    setInterfaceImage(interfaceImage){
+        this.interfaceImage = interfaceImage;
+    }
+    getInterfaceImage(){
+        return this.interfaceImage;
     }
 
 
@@ -406,6 +392,40 @@ class Strata {
             this.dependencies.push('submcompositionFamily');
         }
 
+
+    }
+
+    toJson() {
+        var childStratas = [];
+
+        var jsonStrata = {'name': this.getUid(), 'characteristics': [], 'interfaces': [], 'children': []};
+
+        //On récupère les caractéristiques
+        for (var i = 0; i < this.characteristics.length; i++) {
+            if (!this.characteristics[i].isInterface()) {
+                jsonStrata.characteristics.push({'name': this.characteristics[i].getName()});
+            }
+        }
+        //On récupère les sous caractéristiques
+        for (var i = 0; i < this.subCharacteristics.length; i++) {
+            jsonStrata.characteristics.push({'name': this.subCharacteristics[i].getUid()});
+        }
+
+        //On récupère les caractéristiques d'interface
+        for (var i = 0; i < this.characteristics.length; i++) {
+            if (this.characteristics[i].isInterface()) {
+                jsonStrata.interfaces.push({'name': this.characteristics[i].getName()});
+            }
+        }
+
+        //On récupère les strates enfants si ce n'est pas une strate enfant
+        if (!this.child) {
+            for (var i = 0; i < this.childStratas.length; i++) {
+                jsonStrata.children.push(this.childStratas[i].toJson());
+            }
+        }
+
+        return jsonStrata;
 
     }
 
