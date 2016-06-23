@@ -233,6 +233,7 @@
                 var nestedStrata = draw.nested();
                 nestedStrata.height(height);
                 nestedStrata.width(width);
+
                 this.fillStrata(nestedStrata, strata);
 
                 //Strate CM
@@ -308,18 +309,26 @@
                     var downY = topY - width / divisor;
                     pathString = pathString + ' L ' + topY + ' ' + topX + ' L ' + downY + ' ' + rectHeight;
                 }
-                var upperStrataColor = 'white';
+
                 if (upperStrata != undefined) {
 
-                    if (upperStrata.getCharacteristicsByFamily('colourFamily').length > 0) {
-                        upperStrataColor = upperStrata.getCharacteristicsByFamily('colourFamily')[0].getRealName();
-                    }
+                    var group = draw.group();
+                    this.fillStrata(group, upperStrata, width, height);
+                    //if (upperStrata.getCharacteristicsByFamily('colourFamily').length > 0) {
+                    //upperStrataColor = upperStrata.getCharacteristicsByFamily('colourFamily')[0].getRealName();
+                    //}
+                    var path = draw.path(pathString).attr({ fill: 'none' });
+                    group.clipWith(path);
+                } else {
+                    draw.path(pathString).attr({ fill: 'white' });
                 }
-                draw.path(pathString).attr({ fill: upperStrataColor });
             }
         }, {
             key: 'fillStrata',
             value: function fillStrata(draw, strata, w, h) {
+
+                //Création d'un groupe pour le contenu du fond de la strate pour pouvoir le réutiliser
+                var group = draw.group;
 
                 var height = 100;
                 var width = 500;
