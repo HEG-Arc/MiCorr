@@ -38,10 +38,7 @@ angular.module('micorrApp')
             $scope.cmcompositionFamily = StratigraphyData.getCmcompositionFamily()['characteristics'];
             $scope.mcompositionFamily = StratigraphyData.getMcompositionFamily()['characteristics'];
             $scope.cpcompositionextensionFamily = StratigraphyData.getCpcompositionextensionFamily()['characteristics'];
-            $scope.subcpcompositionFamily = StratigraphyData.getSubcpcompositionFamily();
-            $scope.subsubcpcompositionFamily = StratigraphyData.getSubsubcpcompositionFamily();
-            $scope.subcmcompositionFamily = StratigraphyData.getSubcmcompositionFamily();
-            $scope.submcompositionFamily = StratigraphyData.getSubmcompositionFamily();
+
         };
 
         $scope.$on('initShowStrat', function (event) {
@@ -159,6 +156,13 @@ angular.module('micorrApp')
             $scope.selectedSubsubcpcompositionFamily = null;
             $scope.selectedSubcmcompositionFamily = null;
             $scope.selectedSubmcompositionFamily = null;
+
+            $scope.subcpcompositionFamily = null;
+            $scope.subsubcpcompositionFamily = null;
+            $scope.subcmcompositionFamily = null;
+            $scope.submcompositionFamily = null;
+
+
         }
 
 
@@ -333,6 +337,7 @@ angular.module('micorrApp')
 
                     if (strata.getCharacteristicsByFamily('mCompositionFamily').length > 0) {
                         $scope.submcompositionFamily = returnSubCharacteristicsFromParent(StratigraphyData.getRawCharacteristics(), 'mCompositionFamily', strata.getCharacteristicsByFamily('mCompositionFamily')[0].getName(), '');
+
                         if (strata.getSubCharacteristicsByFamily('submcompositionFamily').length > 0) {
                             $scope.selectedSubmcompositionFamily = getCharacteristicByItsName($scope.submcompositionFamily, strata.getSubCharacteristicsByFamily('submcompositionFamily')[0].getName());
                         }
@@ -351,6 +356,7 @@ angular.module('micorrApp')
                     strata.replaceCharacteristic(char);
 
                     $scope.subcpcompositionFamily = returnSubCharacteristicsFromParent(StratigraphyData.getRawCharacteristics(), 'cpCompositionFamily', strata.getCharacteristicsByFamily('cpCompositionFamily')[0].getName(), '');
+                    $scope.subsubcpcompositionFamily = null;
                     if (strata.getCharacteristicsByFamily('subcpcompositionFamily').length > 0) {
                         $scope.selectedSubcpcompositionFamily = getCharacteristicByItsName($scope.subcpcompositionFamily, strata.getSubCharacteristicsByFamily('subcpcompositionFamily')[0].getName());
                     }
