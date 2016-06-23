@@ -14,6 +14,9 @@ angular.module('micorrApp')
                 size: size,
                 controller: ['$scope', '$modalInstance', 'scopeParent',
                     function ($scope, $modalInstance, scopeParent) {
+
+
+
                         $scope.results = "";
                         /* A l'ouverture de la fenêtre on va appeler un service qui va chercher les artefacts similaires
                          * Ce service prend comme paramètre la stratigraphie complète au format JSON
@@ -24,10 +27,13 @@ angular.module('micorrApp')
                             $scope.results = data;
                         }).success(function () {
                             $scope.results.forEach(function (listItem, index) {
-                                MiCorrService.getStratigraphySvg(listItem.stratig_uid, 100).success(function (svgdata) {
-                                    var test = $scope.results[index];
-                                    $scope.results[index].svg = svgdata;
+                                MiCorrService.getStratigraphyByArtefact(listItem.artefact).success(function (stratigraphies) {
+                                    MiCorrService.getStratigraphySvg(stratigraphies.strats[0].name, 100).success(function (svgdata) {
+                                        var test = $scope.results[index];
+                                        $scope.results[index].svg = svgdata;
+                                    });
                                 });
+
                             });
                         });
 
