@@ -68,10 +68,10 @@ class GraphGenerationUtil {
         drawInterface(strata, divID) {
         var index = strata.getIndex();
 
+
         var interfaceHeight = 22;
         var isUpperCM = false;
         var borderColor = 'black';
-
 
 
         if (strata.index > 0) {
@@ -215,6 +215,7 @@ class GraphGenerationUtil {
         var nestedStrata = draw.nested();
         nestedStrata.height(height);
         nestedStrata.width(width);
+
         this.fillStrata(nestedStrata, strata);
 
         //Strate CM
@@ -258,6 +259,7 @@ class GraphGenerationUtil {
         //On remplit le fond de la strate avec le même fond que la strate inférieure
         this.fillStrata(draw, lowerStrata, width, height);
 
+
         //On dessine ensuite une forme qui permet de cacher une partie de la strate pour donner
         //l'illusion que les triangles s'agrandissent/rapetississent
         if (strata.getCharacteristicsByFamily('cmCorrosionRatioFamily').length > 0) {
@@ -295,14 +297,21 @@ class GraphGenerationUtil {
             var downY = topY - (width / divisor)
             pathString = pathString + ' L ' + topY + ' ' + topX + ' L ' + downY + ' ' + rectHeight;
         }
-        var upperStrataColor = 'white';
+
         if (upperStrata != undefined) {
 
-            if (upperStrata.getCharacteristicsByFamily('colourFamily').length > 0) {
-                upperStrataColor = upperStrata.getCharacteristicsByFamily('colourFamily')[0].getRealName();
-            }
+            var group = draw.group();
+            this.fillStrata(group, upperStrata, width, height);
+            //if (upperStrata.getCharacteristicsByFamily('colourFamily').length > 0) {
+                //upperStrataColor = upperStrata.getCharacteristicsByFamily('colourFamily')[0].getRealName();
+            //}
+            var path = draw.path(pathString).attr({ fill: 'none' });
+            group.clipWith(path);
         }
-        draw.path(pathString).attr({ fill: upperStrataColor });
+        else{
+             draw.path(pathString).attr({ fill: 'white' });
+        }
+
     }
 
     /**
@@ -311,6 +320,9 @@ class GraphGenerationUtil {
      * @param strata
      */
         fillStrata(draw, strata, w, h) {
+
+        //Création d'un groupe pour le contenu du fond de la strate pour pouvoir le réutiliser
+        var group = draw.group;
 
         var height = 100;
         var width = 500;
@@ -354,18 +366,18 @@ class GraphGenerationUtil {
 
         if (strata.getCharacteristicsByFamily('porosityFamily').length > 0) {
             var char = strata.getCharacteristicsByFamily('porosityFamily')[0].getName();
-            var img = 'porosity';
+
             switch (char) {
                 case 'slightlyPorousCharacteristic':
-                    var image = draw.image("../static/micorr/images/c/CP/Porosity/SlightlyPorous/CP_SlightlyPorous_" + height + "x" + width + ".svg");
+                    var image = draw.image("../static/micorr/images/c/CP/Porosity/CP_SlightlyPorous_" + height + "x" + width + ".svg");
                     image.size(width, height);
                     break;
                 case 'porousCharacteristic':
-                    var image = draw.image("../static/micorr/images/c/CP/Porosity/Porous/CP_Porous_" + height + "x" + width + ".svg");
+                    var image = draw.image("../static/micorr/images/c/CP/Porosity/CP_Porous_" + height + "x" + width + ".svg");
                     image.size(width, height);
                     break;
                 case 'highlyPorousCharacteristic':
-                    var image = draw.image("../static/micorr/images/c/CP/Porosity/HighlyPorous/CP_HighlyPorous_" + height + "x" + width + ".svg");
+                    var image = draw.image("../static/micorr/images/c/CP/Porosity/CP_HighlyPorous_" + height + "x" + width + ".svg");
                     image.size(width, height);
                     break;
             }
@@ -442,23 +454,29 @@ class GraphGenerationUtil {
         //MmicrostructureFamily
         if (strata.getCharacteristicsByFamily('mMicrostructureFamily').length > 0) {
             var char = strata.getCharacteristicsByFamily('mMicrostructureFamily')[0].getName();
-            if (char == "dendriticCharacteristic") {
-                var image = draw.image("../static/micorr/images/c/M/Dendrite/M_Dendrites_" + height + "x" + width + ".svg");
-                image.size(width, height);
+            switch (char) {
+                case "dendriticCharacteristic":
+                    var image = draw.image("../static/micorr/images/c/M/Dendrites/M_Dendrites_" + height + "x" + width + ".svg");
+                    image.size(width, height);
+                    break;
+                case "deformedDendritesCharacteristic":
+                    var image = draw.image("../static/micorr/images/c/M/Dendrites/M_DeformedDendrites_" + height + "x" + width + ".svg");
+                    image.size(width, height);
+                    break;
+                case "grainSmallCharacteristic":
+                    var image = draw.image("../static/micorr/images/c/M/Grain/M_GrainSmall_" + height + "x" + width + ".svg");
+                    image.size(width, height);
+                    break;
+                case "grainLargeCharacteristic":
+                    var image = draw.image("../static/micorr/images/c/M/Grain/M_GrainLarge_" + height + "x" + width + ".svg");
+                    image.size(width, height);
+                    break;
+                case "grainElongatedCharacteristic":
+                    var image = draw.image("../static/micorr/images/c/M/Grain/M_GrainElongated_" + height + "x" + width + ".svg");
+                    image.size(width, height);
+                    break;
+            }
 
-            }
-            else if (char == "grainSmallCharacteristic") {
-                var image = draw.image("../static/micorr/images/c/M/Grain/M_GrainSmall_" + height + "x" + width + ".svg");
-                image.size(width, height);
-            }
-            else if (char == "grainLargeCharacteristic") {
-                var image = draw.image("../static/micorr/images/c/M/Grain/M_GrainLarge_" + height + "x" + width + ".svg");
-                image.size(width, height);
-            }
-            else if (char == "grainElongatedCharacteristic") {
-                var image = draw.image("../static/micorr/images/c/M/Grain/M_GrainElongated_" + height + "x" + width + ".svg");
-                image.size(width, height);
-            }
         }
 
 
