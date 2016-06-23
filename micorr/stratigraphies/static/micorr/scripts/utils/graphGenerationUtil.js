@@ -105,6 +105,7 @@
 
                 var interfaceHeight = 22;
                 var isUpperCM = false;
+                var borderColor = 'black';
 
                 if (strata.index > 0) {
                     var upperStrata = this.stratig.getStratas()[index - 1];
@@ -178,11 +179,11 @@
                 if (isUpperCM) {
                     var rect = nestedInterface.rect(interfaceWidth, interfaceHeight).attr({ fill: lowerInterfaceColor });
                     var borderPath = nestedInterface.path("M0 0L0 " + interfaceHeight + " M" + strataWidth + " " + " 0L" + interfaceWidth + " " + interfaceHeight).fill('none');
-                    borderPath.stroke({ color: 'black', width: borderWidth });
+                    borderPath.stroke({ color: borderColor, width: borderWidth });
                 } else if (strata.getCharacteristicsByFamily('natureFamily')[0].getName() == 'cmCharacteristic') {
                     var rect = nestedInterface.rect(interfaceWidth, interfaceHeight).attr({ fill: upperInterfaceColor });
                     var borderPath = nestedInterface.path("M0 0L0 " + interfaceHeight + " M" + strataWidth + " " + " 0L" + interfaceWidth + " " + interfaceHeight).fill('none');
-                    borderPath.stroke({ color: 'black', width: borderWidth });
+                    borderPath.stroke({ color: borderColor, width: borderWidth });
                 } else {
                     //Si elle est droite on dessine simplement deux rectangles
                     if (profile == 'straightCharacteristic' || profile == '') {
@@ -191,10 +192,10 @@
 
                         //On dessine la bordure extérieure et la droite qui sépare les strates
                         var borderPath = nestedInterface.path("M0 0L0 " + interfaceHeight + " M" + strataWidth + " " + " 0L" + interfaceWidth + " " + interfaceHeight).fill('none');
-                        borderPath.stroke({ color: 'black', width: borderWidth });
+                        borderPath.stroke({ color: borderColor, width: borderWidth });
 
                         var divisionPath = nestedInterface.path("M0 " + interfaceHeight / 2 + "L" + interfaceWidth + " " + interfaceHeight / 2).fill('none');
-                        divisionPath.stroke({ color: 'black', width: divisionLineWidth });
+                        divisionPath.stroke({ color: borderColor, width: divisionLineWidth });
                     } else if (profile == 'wavyCharacteristic') {
                         this.drawCustomInterface(nestedInterface, index, interfaceWidth, interfaceHeight, 'wavy', 8, lowerInterfaceColor, upperInterfaceColor, borderWidth, divisionLineWidth, diffuse, transition);
                     } else if (profile == 'bumpyCharacteristic') {
@@ -209,6 +210,7 @@
         }, {
             key: 'drawStrata',
             value: function drawStrata(strata, divID) {
+                var borderColor = 'black';
 
                 var height = 100;
                 var width = 500;
@@ -246,13 +248,13 @@
                 //Dessin des bords
                 var leftBorder = nestedStrata.path("M0 0L0 " + height).fill('none');
                 var rightBorder = nestedStrata.path("M" + width + " 0L" + width + " " + height).fill('none');
-                leftBorder.stroke({ color: 'black', width: borderWidth });
-                rightBorder.stroke({ color: 'black', width: borderWidth });
+                leftBorder.stroke({ color: borderColor, width: borderWidth });
+                rightBorder.stroke({ color: borderColor, width: borderWidth });
 
                 //Dessin du bord inférieur si c'est la dernière strate
                 if (strata.getIndex() == this.stratig.getStratas().length - 1) {
                     var bottomBorder = nestedStrata.path("M0 " + height + "L" + width + " " + height).fill('none');
-                    bottomBorder.stroke({ color: 'black', width: borderWidth });
+                    bottomBorder.stroke({ color: borderColor, width: borderWidth });
                 }
 
                 //On retourne le dessin de la strate

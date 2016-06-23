@@ -114,7 +114,7 @@ angular.module('micorrApp')
             }
 
 
-            $scope.$emit('updateDraw');
+            $scope.$emit('updateSelectedStrata');
         };
 
         /* Ne semble plus utilisé

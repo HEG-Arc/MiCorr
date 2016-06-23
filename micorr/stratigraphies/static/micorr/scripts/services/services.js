@@ -182,7 +182,9 @@ angular.module('micorrApp').factory('StratigraphyData', function StratigraphyDat
                 var idel = parseInt(index);
                 var stratas = stratig.getStratas();
                 stratas.splice(idel, 1);
-                stratas[idel].setIndex(idel);
+                if(stratas[idel] != undefined) {
+                    stratas[idel].setIndex(idel);
+                }
 
             },
 

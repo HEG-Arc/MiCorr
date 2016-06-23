@@ -37,11 +37,11 @@ angular
         });
 
 
-
+/*
         //Ajout du csrftoken pour les requêtes post
         $httpProvider.defaults.xsrfCookieName = 'csrftoken';
         $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
-
+*/
 
 
     // Désactivation de la mise en cache pour requêtes http pour IE

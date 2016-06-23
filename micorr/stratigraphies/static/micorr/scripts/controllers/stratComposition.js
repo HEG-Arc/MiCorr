@@ -307,7 +307,9 @@ angular.module('micorrApp')
             /*if (temp[index].findDependency('subcpcompositionFamily'))
              temp[index].setSubcpcompositionFamily($scope.selectedSubcpcompositionFamily.name);*/
 
-            $scope.$emit('updateDraw');
+            //$scope.$emit('updateDraw');
+            $scope.$emit('updateSelectedStrata');
+
             $scope.$emit('updateFormOnly');
         };
 
@@ -329,8 +331,12 @@ angular.module('micorrApp')
 
                     strata.replaceCharacteristic(char);
 
-                    $scope.submcompositionFamily = returnSubCharacteristicsFromParent(StratigraphyData.getRawCharacteristics(), 'mCompositionFamily', strata.getCharacteristicsByFamily('mCompositionFamily')[0].getName(), '');
-                    $scope.selectedSubmcompositionFamily = getCharacteristicByItsName($scope.submcompositionFamily, strata.getSubCharacteristicsByFamily('submcompositionFamily')[0].getName());
+                    if (strata.getCharacteristicsByFamily('mCompositionFamily').length > 0) {
+                        $scope.submcompositionFamily = returnSubCharacteristicsFromParent(StratigraphyData.getRawCharacteristics(), 'mCompositionFamily', strata.getCharacteristicsByFamily('mCompositionFamily')[0].getName(), '');
+                        if (strata.getSubCharacteristicsByFamily('submcompositionFamily').length > 0) {
+                            $scope.selectedSubmcompositionFamily = getCharacteristicByItsName($scope.submcompositionFamily, strata.getSubCharacteristicsByFamily('submcompositionFamily')[0].getName());
+                        }
+                    }
                 }
             }
 
@@ -365,7 +371,7 @@ angular.module('micorrApp')
                     $scope.selectedSubcmcompositionFamily = getCharacteristicByItsName($scope.subcmcompositionFamily, strata.getSubCharacteristicsByFamily('subcmcompositionFamily')[0].getName());
                 }
             }
-
+            $scope.$emit('updateSelectedStrata');
             $scope.$emit('updateFormOnly');
         };
 
@@ -397,7 +403,7 @@ angular.module('micorrApp')
              $scope.subsubcprimicrostructureaggregatecompositionFamily = returnSubCharacteristicsFromParent(StrataData.getRawCharacteristics(), 'cpriMicrostructureAggregateCompositionFamily', temp[index].getCprimicrostructureaggregateCompositionFamily(), temp[index].getSubcprimicrostructureaggregateCompositionFamily());
              $scope.selectedSubsubcprimicrostructureaggregatecompositionFamily = getCharacteristicByItsName($scope.subcprimicrostructureaggregatecompositionFamily, temp[index].getSubsubcprimicrostructureaggregateCompositionFamily());
              */
-
+            $scope.$emit('updateSelectedStrata');
             $scope.$emit('updateFormOnly');
         };
         //Appelée lorsqu'on change déplace le slider dans la composition d'une strate CM
@@ -412,6 +418,6 @@ angular.module('micorrApp')
             var strata = StratigraphyData.getStratigraphy().getStratas()[StratigraphyData.getSelectedStrata()];
             strata.replaceCharacteristic(ratioChar);
             //mise à jour du dessin
-            $scope.$emit('updateDraw');
+            $scope.$emit('updateSelectedStrata');
         };
     });

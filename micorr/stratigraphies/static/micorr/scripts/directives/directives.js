@@ -28,9 +28,17 @@ angular.module('micorrApp').directive('strata', function ($compile, Stratigraphy
 
             var graphGenUtil = new graphGenerationUtil.GraphGenerationUtil(null, st);
             graphGenUtil.setStratig(st);
+
+            var isSelectedStrata = false;
+            /*
+             * Si le SVG n'a jamais été généré ou que la strate à changé on le dessine
+             */
+            if(StratigraphyData.getSelectedStrata() == index){
+                isSelectedStrata = true;
+            }
             //Dessin de l'interface et de la strate
-            graphGenUtil.drawInterface(str, interfaceDiv.id);
-            graphGenUtil.drawStrata(str, strataDiv.id);
+            graphGenUtil.drawInterface(str, interfaceDiv.id, isSelectedStrata);
+            graphGenUtil.drawStrata(str, strataDiv.id, isSelectedStrata);
 
 
             //Gestion en cas de clic sur une strate
@@ -99,7 +107,7 @@ angular.module('micorrApp').directive('strata', function ($compile, Stratigraphy
                 for (var i = 0; i < index; i++) {
                     var s2 = stratas[i];
 
-                    if(strata.getCharacteristicsByFamily("natureFamily")[0].getName() == s2.getCharacteristicsByFamily("natureFamily")[0].getName()){
+                    if (strata.getCharacteristicsByFamily("natureFamily")[0].getName() == s2.getCharacteristicsByFamily("natureFamily")[0].getName()) {
                         sameNature++;
                     }
 
@@ -109,16 +117,16 @@ angular.module('micorrApp').directive('strata', function ($compile, Stratigraphy
                 label = label.split("Char")
                 label = label[0].toUpperCase();
                 label = label + sameNature;
-
+                element.children()[0].id = 'info'+index;
 
                 element.children()[0].innerHTML = '<button class="btn btn-link btn-xs" ng-click="removeStrata(' + index + ')" title="delete this strata"><span class="glyphicon glyphicon-remove"></span></button></br>' + label;
 
                 // on affiche les boutons pour bouger la strate
-            var btns = "";
-            if (index > 0)
-                btns += '<button ng-click="movestrataup(' + index + ')" type="button" class="btn btn-link btn-xs" title="move up this strata"><span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span></button>';
-            if (index < stratas.length - 1)
-                btns += '<button ng-click="movestratadown(' + index + ')" type="button" class="btn btn-link btn-xs" title="move down this strata"><span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span></button>';
+                var btns = "";
+                if (index > 0)
+                    btns += '<button ng-click="movestrataup(' + index + ')" type="button" class="btn btn-link btn-xs" title="move up this strata"><span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span></button>';
+                if (index < stratas.length - 1)
+                    btns += '<button ng-click="movestratadown(' + index + ')" type="button" class="btn btn-link btn-xs" title="move down this strata"><span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span></button>';
 
                 $(element.children()[1]).append(btns);
                 $compile(element.contents())(scope);

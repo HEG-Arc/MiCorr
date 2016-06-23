@@ -105,6 +105,6 @@ angular.module('micorrApp')
                     strata.replaceCharacteristic(char);
                 }
             }
-            $scope.$emit('updateDraw');
+           $scope.$emit('updateSelectedStrata');
         };
     });

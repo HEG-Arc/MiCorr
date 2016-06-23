@@ -268,7 +268,7 @@ angular.module('micorrApp')
             }
             */
 
-            $scope.$emit('updateDraw');
+            $scope.$emit('updateSelectedStrata');
             //Update formulaire pour afficher/masquer les sub/cpri microstructure
             $scope.$emit('updateFormOnly');
         };
