@@ -13,6 +13,7 @@ angular.module('micorrApp').factory('MiCorrService', function ($http, $q) {
             return 'Hello!';
         },
 
+
         getStratigraphySvg: function (name, width) {
 
             return $http.post('node/getStratigraphySvg' + '?name=' + name + '&width=' + width).error(function () {

@@ -460,7 +460,7 @@ class Neo4jDAO:
 
         nbChar = len(listChar) + len(listCharInt)
 
-        qry += "with a.uid as auid, a.artefact_id as artefact_id, s.uid as stratig_uid, count(st) as stratum, count(st)-" + str(
+        qry += "with a.uid as auid, a.artefact_id as artefact_id, count(st) as stratum, count(st)-" + str(
             nbStrata) + " as DiffNombreStratum, "
 
         qry += "( "
@@ -485,23 +485,18 @@ class Neo4jDAO:
         qry += "with auid, artefact_id, stratum, DiffNombreStratum, TotalComparisonIndicator1, TotalMatching, count(r) as countrelations "
         qry += "MATCH(a:Artefact)-->(s:Stratigraphy)-->(st:Strata)-[:HAS_UPPER_INTERFACE]->(i:Interface)-[r1:IS_CONSTITUTED_BY]->(o1) WHERE a.uid=auid "
         qry += "with auid, artefact_id, stratum, DiffNombreStratum, TotalComparisonIndicator1, TotalMatching, count(r1) + countrelations as TotalRelations "
-        qry += "RETURN auid, artefact_id, stratig_uid, stratum, DiffNombreStratum, TotalComparisonIndicator1, TotalMatching, TotalRelations, 100*TotalMatching/TotalRelations as Matching100 "
+        qry += "RETURN auid, artefact_id, stratum, DiffNombreStratum, TotalComparisonIndicator1, TotalMatching, TotalRelations, 100*TotalMatching/TotalRelations as Matching100 "
         qry += "ORDER BY Matching100 DESC, TotalComparisonIndicator1 DESC "
 
         old_list = []
 
-        print 'query: ' + qry
-
         res = self.graph.cypher.execute(qry)
 
-        print 'result : ' + res
-
         for i in res:
-            line = {'artefact': '', 'artefact_id': '', 'stratig_uid':'','stratum': '', 'diffnbstratum': '', 'tci': '',
+            line = {'artefact': '', 'artefact_id': '', 'stratum': '', 'diffnbstratum': '', 'tci': '',
                     'totalmatching': '', 'totalrelation': '', 'matching100': ''}
             line['artefact'] = i['auid']
             line['artefact_id'] = i['artefact_id']
-            line['stratig_uid'] = i['stratig_uid']
             line['stratum'] = i['stratum']
             line['diffnbstratum'] = i['DiffNombreStratum']
             line['tci'] = i['TotalComparisonIndicator1']
