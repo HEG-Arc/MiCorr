@@ -48,7 +48,7 @@
 
             if (win != null) {
                 this.window = win;
-                //var drawer = require('svg.js')(win);
+                var drawer = require('svg.js')(win);
                 //var svgimport = require('../dependencies/svg.import.js')(win);
                 //var svgparser = require('../dependencies/svg.parser.js');
             }
@@ -360,18 +360,18 @@
 
                 if (strata.getCharacteristicsByFamily('porosityFamily').length > 0) {
                     var char = strata.getCharacteristicsByFamily('porosityFamily')[0].getName();
-                    var img = 'porosity';
+
                     switch (char) {
                         case 'slightlyPorousCharacteristic':
-                            var image = draw.image("../static/micorr/images/c/CP/Porosity/SlightlyPorous/CP_SlightlyPorous_" + height + "x" + width + ".svg");
+                            var image = draw.image("../static/micorr/images/c/CP/Porosity/CP_SlightlyPorous_" + height + "x" + width + ".svg");
                             image.size(width, height);
                             break;
                         case 'porousCharacteristic':
-                            var image = draw.image("../static/micorr/images/c/CP/Porosity/Porous/CP_Porous_" + height + "x" + width + ".svg");
+                            var image = draw.image("../static/micorr/images/c/CP/Porosity/CP_Porous_" + height + "x" + width + ".svg");
                             image.size(width, height);
                             break;
                         case 'highlyPorousCharacteristic':
-                            var image = draw.image("../static/micorr/images/c/CP/Porosity/HighlyPorous/CP_HighlyPorous_" + height + "x" + width + ".svg");
+                            var image = draw.image("../static/micorr/images/c/CP/Porosity/CP_HighlyPorous_" + height + "x" + width + ".svg");
                             image.size(width, height);
                             break;
                     }
@@ -436,18 +436,27 @@
                 //MmicrostructureFamily
                 if (strata.getCharacteristicsByFamily('mMicrostructureFamily').length > 0) {
                     var char = strata.getCharacteristicsByFamily('mMicrostructureFamily')[0].getName();
-                    if (char == "dendriticCharacteristic") {
-                        var image = draw.image("../static/micorr/images/c/M/Dendrite/M_Dendrites_" + height + "x" + width + ".svg");
-                        image.size(width, height);
-                    } else if (char == "grainSmallCharacteristic") {
-                        var image = draw.image("../static/micorr/images/c/M/Grain/M_GrainSmall_" + height + "x" + width + ".svg");
-                        image.size(width, height);
-                    } else if (char == "grainLargeCharacteristic") {
-                        var image = draw.image("../static/micorr/images/c/M/Grain/M_GrainLarge_" + height + "x" + width + ".svg");
-                        image.size(width, height);
-                    } else if (char == "grainElongatedCharacteristic") {
-                        var image = draw.image("../static/micorr/images/c/M/Grain/M_GrainElongated_" + height + "x" + width + ".svg");
-                        image.size(width, height);
+                    switch (char) {
+                        case "dendriticCharacteristic":
+                            var image = draw.image("../static/micorr/images/c/M/Dendrites/M_Dendrites_" + height + "x" + width + ".svg");
+                            image.size(width, height);
+                            break;
+                        case "deformedDendritesCharacteristic":
+                            var image = draw.image("../static/micorr/images/c/M/Dendrites/M_DeformedDendrites_" + height + "x" + width + ".svg");
+                            image.size(width, height);
+                            break;
+                        case "grainSmallCharacteristic":
+                            var image = draw.image("../static/micorr/images/c/M/Grain/M_GrainSmall_" + height + "x" + width + ".svg");
+                            image.size(width, height);
+                            break;
+                        case "grainLargeCharacteristic":
+                            var image = draw.image("../static/micorr/images/c/M/Grain/M_GrainLarge_" + height + "x" + width + ".svg");
+                            image.size(width, height);
+                            break;
+                        case "grainElongatedCharacteristic":
+                            var image = draw.image("../static/micorr/images/c/M/Grain/M_GrainElongated_" + height + "x" + width + ".svg");
+                            image.size(width, height);
+                            break;
                     }
                 }
 
