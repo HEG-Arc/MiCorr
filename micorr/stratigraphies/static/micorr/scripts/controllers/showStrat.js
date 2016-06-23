@@ -566,6 +566,19 @@ angular.module('micorrApp')
         };
 
         /**
+         * Cette méthode ne regénère que l'interface modifié
+         */
+        $scope.$on('updateSelectedInterface', function () {
+            var graphGenUtil = new graphGenerationUtil.GraphGenerationUtil(null, StratigraphyData.getStratigraphy());
+
+            var index = parseInt(StratigraphyData.getSelectedStrata());
+            var strata = StratigraphyData.getStratigraphy().getStratas()[index];
+            var intDivName = 'strataInterface' + index;
+            var interfaceDiv = document.getElementById(intDivName);
+            interfaceDiv.innerHTML = '';
+            graphGenUtil.drawInterface(strata, intDivName);
+        });
+        /**
          * Cette méthode permet de régénérer uniquement la strate modifiée
          * et la couche CM qui se base dessus (s'il en existe une)
          */
@@ -573,7 +586,7 @@ angular.module('micorrApp')
             var index = parseInt(StratigraphyData.getSelectedStrata());
             var strata = StratigraphyData.getStratigraphy().getStratas()[index];
 
-
+            //on donne le nom des divs concernées pour les récupérer
             var intDivName = 'strataInterface' + index;
             var strDivName = 'strata' + index;
 
@@ -581,21 +594,22 @@ angular.module('micorrApp')
             var interfaceDiv = document.getElementById(intDivName);
             var strataDiv = document.getElementById(strDivName);
 
+            //On vide le contenu de la div et on redessine la strate
             interfaceDiv.innerHTML = '';
             strataDiv.innerHTML = '';
-            graphGenUtil.drawInterface(StratigraphyData.getStratigraphy().getStratas()[index], intDivName);
-            graphGenUtil.drawStrata(StratigraphyData.getStratigraphy().getStratas()[index], strDivName);
+            graphGenUtil.drawInterface(strata, intDivName);
+            graphGenUtil.drawStrata(strata, strDivName);
+
 
             //On vérifie ensuite s'il y a une strate de type CM par dessus ou par dessous
             if (strata.index > 0) {
                 var upperStrata = StratigraphyData.getStratigraphy().getStratas()[index - 1];
                 if (upperStrata.getCharacteristicsByFamily('natureFamily')[0].getName() == 'cmCharacteristic') {
+                    //On génère la strate CM du dessus
                     intDivName = 'strataInterface' + (index - 1);
-                    strDivName = 'strata' + (index -1);
-
+                    strDivName = 'strata' + (index - 1);
                     interfaceDiv = document.getElementById(intDivName);
                     strataDiv = document.getElementById(strDivName);
-
                     interfaceDiv.innerHTML = '';
                     strataDiv.innerHTML = '';
                     graphGenUtil.drawInterface(upperStrata, intDivName);
@@ -603,20 +617,20 @@ angular.module('micorrApp')
                 }
             }
 
-            if (strata.index < StratigraphyData.getStratigraphy().getStratas().length) {
+            if (strata.index < StratigraphyData.getStratigraphy().getStratas().length - 1) {
 
+                //De toute façon on regénère la strate du dessous car elle est liée à cette strate
+                var lowerStrata = StratigraphyData.getStratigraphy().getStratas()[index + 1];
+                intDivName = 'strataInterface' + (index + 1);
+                interfaceDiv = document.getElementById(intDivName);
+                interfaceDiv.innerHTML = '';
+                graphGenUtil.drawInterface(lowerStrata, intDivName);
 
-                var lowerStrata = StratigraphyData.getStratigraphy().getStratas()[index+1];
                 if (lowerStrata.getCharacteristicsByFamily('natureFamily')[0].getName() == 'cmCharacteristic') {
-                    intDivName = 'strataInterface' + (index+1);
-                    strDivName = 'strata' + (index+1) ;
-
-                    interfaceDiv = document.getElementById(intDivName);
+                    //On génère la strate CM du dessous
+                    strDivName = 'strata' + (index + 1);
                     strataDiv = document.getElementById(strDivName);
-
-                    interfaceDiv.innerHTML = '';
                     strataDiv.innerHTML = '';
-                    graphGenUtil.drawInterface(lowerStrata, intDivName);
                     graphGenUtil.drawStrata(lowerStrata, strDivName);
                 }
             }
