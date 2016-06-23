@@ -24,7 +24,8 @@ angular.module('micorrApp')
                             $scope.results = data;
                         }).success(function () {
                             $scope.results.forEach(function (listItem, index) {
-                                MiCorrService.getStratigraphySvg(listItem.name, 100).success(function (svgdata) {
+                                MiCorrService.getStratigraphySvg(listItem.stratig_uid, 100).success(function (svgdata) {
+                                    var test = $scope.results[index];
                                     $scope.results[index].svg = svgdata;
                                 });
                             });
