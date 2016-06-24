@@ -29,16 +29,14 @@ angular.module('micorrApp').directive('strata', function ($compile, Stratigraphy
             var graphGenUtil = new graphGenerationUtil.GraphGenerationUtil(null, st);
             graphGenUtil.setStratig(st);
 
-            var isSelectedStrata = false;
+
             /*
              * Si le SVG n'a jamais été généré ou que la strate à changé on le dessine
              */
-            if(StratigraphyData.getSelectedStrata() == index){
-                isSelectedStrata = true;
-            }
+
             //Dessin de l'interface et de la strate
-            graphGenUtil.drawInterface(str, interfaceDiv.id, isSelectedStrata);
-            graphGenUtil.drawStrata(str, strataDiv.id, isSelectedStrata);
+            graphGenUtil.drawInterface(str, interfaceDiv.id);
+            graphGenUtil.drawStrata(str, strataDiv.id);
 
 
             //Gestion en cas de clic sur une strate

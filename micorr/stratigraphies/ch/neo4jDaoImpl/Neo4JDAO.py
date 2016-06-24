@@ -77,7 +77,7 @@ class Neo4jDAO:
 
         # on cherche d'abord toutes les strates
         strataList = self.graph.cypher.execute(
-            "MATCH (n:Stratigraphy)-[r:POSSESSES]->(d:Strata) where n.uid='" + stratigraphy + "'  RETURN d.uid as uid order by ID(d)")
+            "MATCH (n:Stratigraphy)-[r:POSSESSES]->(d:Strata) where n.uid='" + stratigraphy + "'  RETURN d.uid as uid order by d.uid")
         print (stratigraphy)
 
         # pour chaque strates on va faire une requete
