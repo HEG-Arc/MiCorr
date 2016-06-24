@@ -51,7 +51,7 @@
 
             <tr ng-repeat='strat in strats'>
                 <td><strong>{{$index + 1}}</strong></td>
-                <td><p bind-html-unsafe="strat.svg"></p></td>
+                <td><a href='#/artefact/{{ artefactName }}/{{ strat.name }}/{{ strat.description }}'><p bind-html-unsafe="strat.svg"></p></a></td>
                 <td>
                     <a href='#/artefact/{{ artefactName }}/{{ strat.name }}/{{ strat.description }}'>{{ strat.description }}</a>
                 </td>
