@@ -1,4 +1,4 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import  url
 from django.contrib.auth.decorators import login_required
 from django.views.generic import TemplateView
 
@@ -6,7 +6,7 @@ from .views import ArtefactsListView, ArtefactsDetailView, ArtefactsUpdateView, 
     ArtefactsCreateView, DocumentUpdateView, DocumentDeleteView, DocumentCreateView, searchStratigraphy, \
     ImageCreateView, ImageDeleteView, StratigraphyDeleteView, ImageUpdateView
 
-urlpatterns = patterns('',
+urlpatterns = [
     url(r'^$', ArtefactsListView.as_view(), name='artefact-list'),
     url(r'^(?P<pk>\d+)/$', ArtefactsDetailView.as_view(), name='artefact-detail'),
 
@@ -55,4 +55,4 @@ urlpatterns = patterns('',
     url(r'^stratigraphy/$', searchStratigraphy, name='searchStratigraphy'),
 
     #url(r'^test-ontology/$', displayOntology),
-)
+]

@@ -113,7 +113,7 @@ class GenericIndexPage(Page):
 GenericIndexPage.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
-    InlinePanel(GenericIndexPage, 'related_links', label="Related links"),
+    InlinePanel('related_links', label="Related links"),
 ]
 
 GenericIndexPage.promote_panels = [
@@ -152,7 +152,7 @@ GenericPage.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
     FieldPanel('body', classname="full"),
-    InlinePanel(GenericPage, 'related_links', label="Related links"),
+    InlinePanel('related_links', label="Related links"),
 ]
 
 GenericPage.promote_panels = [
@@ -185,7 +185,7 @@ class HelpIndexPage(Page):
 HelpIndexPage.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
-    InlinePanel(HelpIndexPage, 'related_links', label="Related links"),
+    InlinePanel('related_links', label="Related links"),
 ]
 
 HelpIndexPage.promote_panels = [
@@ -226,7 +226,7 @@ HelpPage.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
     FieldPanel('body', classname="full"),
-    InlinePanel(HelpPage, 'related_links', label="Related links"),
+    InlinePanel('related_links', label="Related links"),
 ]
 
 HelpPage.promote_panels = [
