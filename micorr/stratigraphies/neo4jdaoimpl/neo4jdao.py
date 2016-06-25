@@ -3,6 +3,7 @@ import time
 import datetime
 from py2neo import Node, Relationship
 import uuid
+from django.conf import settings
 from artefacts.models import Artefact
 
 
@@ -10,7 +11,8 @@ class Neo4jDAO:
     # Initialisation de la connexion avec le serveur
     def __init__(self):
         # self.url = "http://MiCorr:hmqKUx4ehTQv0M7Z1STc@micorr.sb04.stations.graphenedb.com:24789/db/data/"
-        self.url = "http://neo4j:1234@localhost:7474/db/data/"
+        neo4j_auth = settings.NEO4J_AUTH.split('/')
+        self.url = "http://%s:%s@neo4j:7474/db/data" % (neo4j_auth[0], neo4j_auth[1])
         self.graph = Graph(self.url)
         self.tx = self.graph.cypher.begin()
 
@@ -37,7 +39,7 @@ class Neo4jDAO:
             stratigraphies_list.append(
                 {'date': stratigraphy[0].properties['date'], 'uid': stratigraphy[0].properties['uid'],
                  'description': stratigraphy[0].properties['description'],
-                 'artefact_uid': stratigraphy[0].properties['artefact_uid'], 
+                 'artefact_uid': stratigraphy[0].properties['artefact_uid'],
                  'timestamp': timestamp})
         return stratigraphies_list
 

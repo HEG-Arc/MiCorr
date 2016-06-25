@@ -1,10 +1,11 @@
-from ..neo4jDaoImpl.Neo4JDAO import Neo4jDAO
+from stratigraphies.neo4jdaoimpl.neo4jdao import Neo4jDAO
 
 
 class MiCorrService:
     db = None
+
     def __init__(self):
-        if MiCorrService.db == None:
+        if not MiCorrService.db:
             MiCorrService.db = Neo4jDAO()
 
     def getStratigraphyUser(self, stratigraphy):
