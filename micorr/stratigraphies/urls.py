@@ -1,6 +1,7 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import url
+from . import views
 
-urlpatterns = patterns('',
+urlpatterns = patterns['',
     url(r'^$', 'stratigraphies.views.home', name='list'),
     url(r'^test$', 'stratigraphies.views.test'),
     url(r'^json/isauthenticated', 'stratigraphies.views.isauthenticated'),
@@ -21,4 +22,5 @@ urlpatterns = patterns('',
     url(r'^update-description/(?P<stratigraphy>[\w-]+)/$', 'stratigraphies.views.update_stratigraphy_description', name='update-description'),
     url(r'^delete-user/(?P<stratigraphy>[\w-]+)/$', 'stratigraphies.views.delete_stratigraphy_user', name='delete-user'),
     url(r'^email$', 'stratigraphies.views.sendEmail', name='send_email'),
-)
+]
+

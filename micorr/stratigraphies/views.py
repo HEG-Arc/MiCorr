@@ -2,11 +2,14 @@ from django.core.mail import send_mail
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 import simplejson as json
-from .ch.service.MiCorrService import MiCorrService
-from .forms import StratigraphyDescriptionUpdateForm
-from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
+from django.shortcuts import render, redirect
+from django.views.decorators.csrf import csrf_exempt
+
+from stratigraphies.service import micorrservice
+from .forms import StratigraphyDescriptionUpdateForm
 
 
 #retourne la page d'accueil
@@ -18,7 +21,7 @@ def test(request):
     if request.method == 'POST':
         print 'Hello'
 
-    ms = MiCorrService()
+    ms = micorrservice()
     ms.test()
 
     return render(request, 'stratigraphies/test.html', locals())
@@ -26,19 +29,19 @@ def test(request):
 # Retourne tous les details d'une stratigraphie, characteristiques et interfaces
 # @ params : stratigraphy nom de la stratigraphie
 def getStratigraphyDetails(request, stratigraphy):
-    ms = MiCorrService()
+    ms = micorrservice()
     return HttpResponse(json.dumps(ms.getStratigraphyDetails(stratigraphy)), content_type='application/json')
 
 # retourne toutes les sous caracteristiques et sous caracteristiques
 # @ params
 def getallcharacteristic(request):
-    ms = MiCorrService()
+    ms = micorrservice()
     return HttpResponse(json.dumps(ms.getAllCharacteristic()), content_type='application/json')
 
 # retourne toutes les caracteristiques et sous caracteristiques
 # @ params
 def addStratigraphy(request, artefact, stratigraphy):
-    ms = MiCorrService()
+    ms = micorrservice()
     # uuid = stratigraphy name when insert is successful or False otherwise
     uuid = ms.addStratigraphy(artefact, stratigraphy)
     if uuid:
@@ -51,14 +54,14 @@ def addStratigraphy(request, artefact, stratigraphy):
 # Verifie si une stratigraphie existe deja
 # @ params stratigraphy nom de la stratigraphie
 def stratigraphyExists(request, stratigraphy):
-    ms = MiCorrService()
+    ms = micorrservice()
     exists = {"StratigraphyExists" : ms.stratigraphyExists(stratigraphy)}
     return HttpResponse(json.dumps(exists), content_type='application/json')
 
 # retourne toutes les sous caracteristiques et sous caracteristiques
 # @ params
 def getStratigraphyByArtefact(request, artefact):
-    ms = MiCorrService()
+    ms = micorrservice()
     strats = {'strats' : []}
     for strat in ms.getStratigraphyByArtefact(artefact):
         strats['strats'].append({'name' : strat.name, 'description' : strat.description})
@@ -83,7 +86,7 @@ def sendEmail(request):
 # retourne la liste de tous les artefacts
 # @ params
 def getallartefacts(request):
-    ms = MiCorrService()
+    ms = micorrservice()
     artefacts = {'artefacts' : []}
     for artefact in ms.getAllArtefacts():
         artefacts['artefacts'].append({'name' : artefact.name})
@@ -92,7 +95,7 @@ def getallartefacts(request):
 
 @csrf_exempt
 def update_stratigraphy_description(request, stratigraphy):
-    ms = MiCorrService()
+    ms = micorrservice()
     if request.method == 'POST':
         if ms.stratigraphyExists(stratigraphy):  # True/False
             form = StratigraphyDescriptionUpdateForm(request.POST)
@@ -113,7 +116,7 @@ def update_stratigraphy_description(request, stratigraphy):
 @csrf_exempt
 @login_required
 def delete_stratigraphy_user(request, stratigraphy):
-    ms = MiCorrService()
+    ms = micorrservice()
     user_id = ms.getStratigraphyUser(stratigraphy)
     if user_id:
         if user_id == request.user.id:
@@ -129,7 +132,7 @@ def delete_stratigraphy_user(request, stratigraphy):
 # @ params stratigraphie au format urlencode
 @csrf_exempt
 def save(request):
-    ms = MiCorrService()
+    ms = micorrservice()
     # transformation de urlencode en json
     data = json.loads(request.body)
     stratigraphy = data['stratigraphy']
@@ -155,7 +158,6 @@ def save(request):
 @csrf_exempt
 def match (request):
     ms = MiCorrService()
-    #transformation de urlencode au format json
     data = json.loads(request.body)
     response = ms.match(data)
     return HttpResponse(json.dumps(response), content_type='application/json')
@@ -163,7 +165,7 @@ def match (request):
 # supprime une stratigraphie
 # @ params nom de la stratigraphie
 def deleteStratigraphy(request, stratigraphy):
-    ms = MiCorrService()
+    ms = micorrservice()
 
     response = ms.deleteStratigrapy(stratigraphy)
 
@@ -172,7 +174,7 @@ def deleteStratigraphy(request, stratigraphy):
 # Ajoute un artefact
 # @ params nom de l'artefact
 def addArtefact(request, artefact):
-    ms = MiCorrService()
+    ms = micorrservice()
 
     response = ms.addArtefact(artefact)
 
@@ -181,7 +183,7 @@ def addArtefact(request, artefact):
 # supprime un artefact
 # @ params nom de l'artefact
 def deleteArtefact(request, artefact):
-    ms = MiCorrService()
+    ms = micorrservice()
 
     response = ms.delArtefact(artefact)
     return HttpResponse(json.dumps(response), content_type='application/json')
@@ -189,5 +191,5 @@ def deleteArtefact(request, artefact):
 # Retourne toutes les caracteristiques d'une nature family
 # @ params : stratigraphy uid de la nature family
 def getnaturefamily(request, nature):
-    ms = MiCorrService()
+    ms = micorrservice()
     return HttpResponse(json.dumps(ms.getnaturefamily(nature)), content_type='application/json')
