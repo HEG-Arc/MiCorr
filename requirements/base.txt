@@ -64,5 +64,5 @@ django-haystack
 lxml
 django-terms
 django-robots
-py2neo
+py2neo==2.0.8  # important, py2neo==3 is not compatible
 simplejson
