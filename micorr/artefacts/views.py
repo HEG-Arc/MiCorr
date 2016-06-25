@@ -2,9 +2,8 @@ from django.core.urlresolvers import reverse, reverse_lazy
 from django.shortcuts import get_object_or_404, render, redirect
 from django.views import generic
 from haystack.forms import SearchForm
-from django.http import HttpResponse
-from stratigraphies.ch.neo4jDaoImpl.Neo4JDAO import Neo4jDAO
 
+from stratigraphies.neo4jdaoimpl.neo4jdao import Neo4jDAO
 #import rdflib
 #from SPARQLWrapper import SPARQLWrapper, JSON
 

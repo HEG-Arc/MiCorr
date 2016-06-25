@@ -218,25 +218,25 @@ class Artefact(TimeStampedModel):
     # Foreign Keys
     user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name="user's object", blank=True, null=True,
                              help_text='The user who entered the artefact into the database')
-    author = models.ManyToManyField(Contact, verbose_name='authors', blank=True, null=True, related_name='the authors', help_text='The author(s) of this file is (are) responsible for the information provided. Author(s) should provide their last name, initial of their first name and in brackets the abbreviation of their institutional affiliation, such as Degrigny C. (HE-Arc CR).')
-    metal1 = models.ForeignKey(Metal, verbose_name='1st metal element', blank=True, null=True, related_name='1st metal element', help_text='The primary metal element of the artefact')
-    metalx = models.ManyToManyField(Metal, verbose_name='other metal elements', blank=True, null=True, related_name='other metal elements', help_text='The other metal elements of the artefact.')
+    author = models.ManyToManyField(Contact, verbose_name='authors', blank=True, related_name='artefacts', help_text='The author(s) of this file is (are) responsible for the information provided. Author(s) should provide their last name, initial of their first name and in brackets the abbreviation of their institutional affiliation, such as Degrigny C. (HE-Arc CR).')
+    metal1 = models.ForeignKey(Metal, verbose_name='1st metal element', blank=True, null=True, related_name='first_metal_artefacts', help_text='The primary metal element of the artefact')
+    metalx = models.ManyToManyField(Metal, verbose_name='other metal elements', blank=True, related_name='other_metal_artefacts', help_text='The other metal elements of the artefact.')
     alloy = models.ForeignKey(Alloy, blank=True, null=True, help_text='The alloy the artefact is made of')
     type = models.ForeignKey(Type, verbose_name='type of artefact', blank=True, null=True,
                              help_text='The name of the artefact, its typology')
-    origin = models.ForeignKey(Origin, blank=True, null=True, related_name='origin',
+    origin = models.ForeignKey(Origin, blank=True, null=True, related_name='artefacts',
                                help_text='The place, city and country where the artefact comes from or the object to which the section considered belongs to')
     recovering_date = models.ForeignKey(RecoveringDate, verbose_name='date of recovering', blank=True, null=True, help_text='The date of excavation for archaeological objects, of production and use for other artefacts')
     chronology_period = models.ForeignKey(ChronologyPeriod, verbose_name='dating of artefact (Tpq _ Taq)', blank=True, null=True,
                                           help_text='The dating of the artefact')
     environment = models.ForeignKey(Environment, verbose_name='burial conditions / environment', blank=True, null=True,
                                          help_text='The environment where the artefact was found.')
-    location = models.ForeignKey(Contact, verbose_name='artefact location', blank=True, null=True, related_name='artefact location', help_text='The actual location of the artefact')
-    owner = models.ForeignKey(Contact, blank=True, null=True, related_name='artefact owner', help_text='The owner of the artefact')
+    location = models.ForeignKey(Contact, verbose_name='artefact location', blank=True, null=True, related_name='artefacts_locations', help_text='The actual location of the artefact')
+    owner = models.ForeignKey(Contact, blank=True, null=True, related_name='artefacts_owners', help_text='The owner of the artefact')
     technology = models.ForeignKey(Technology, blank=True, null=True,
                                    help_text='The manufacturing techniques used to produce the artefact')
-    sample_location = models.ForeignKey(Contact, blank=True, null=True, related_name='sample location', help_text='The actual location of the artefact sample')
-    responsible_institution = models.ForeignKey(Contact, blank=True, null=True, related_name='responsible institution', help_text='The responsible institution for the artefact sample')
+    sample_location = models.ForeignKey(Contact, blank=True, null=True, related_name='sample_location', help_text='The actual location of the artefact sample')
+    responsible_institution = models.ForeignKey(Contact, blank=True, null=True, related_name='responsible_institution', help_text='The responsible institution for the artefact sample')
     microstructure = models.ForeignKey(Microstructure, blank=True, null=True, help_text='A description of the metal: its composition, texture (porosity), hardness, microstructure revealed by etching and specific features (figures and tables are referred as Fig. 1, Table 1)')
     corrosion_form = models.ForeignKey(CorrosionForm, blank=True, null=True)
     corrosion_type = models.ForeignKey(CorrosionType, blank=True, null=True, help_text='A description of the corrosion layers: their composition, texture (porosity), microstructure if any and specific features (figures and tables are referred as Fig. 1, Table 1). The corrosion form(s) and corrosion type should be deduced')

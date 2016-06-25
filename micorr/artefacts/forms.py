@@ -54,6 +54,7 @@ class OriginCreateForm(forms.ModelForm):
 
     class Meta:
         model = Origin
+        exclude = []
 
 
 class EnvironmentCreateForm(forms.ModelForm):
@@ -63,6 +64,7 @@ class EnvironmentCreateForm(forms.ModelForm):
 
     class Meta:
         model = Environment
+        exclude = []
 
 
 class ChronologyCreateForm(forms.ModelForm):
@@ -72,6 +74,7 @@ class ChronologyCreateForm(forms.ModelForm):
 
     class Meta:
         model = ChronologyPeriod
+        exclude = []
 
 
 class AlloyCreateForm(forms.ModelForm):
@@ -81,6 +84,7 @@ class AlloyCreateForm(forms.ModelForm):
 
     class Meta:
         model = Alloy
+        exclude = []
 
 
 class TechnologyCreateForm(forms.ModelForm):
@@ -90,6 +94,7 @@ class TechnologyCreateForm(forms.ModelForm):
 
     class Meta:
         model = Technology
+        exclude = []
 
 
 class MicrostructureCreateForm(forms.ModelForm):
@@ -99,6 +104,7 @@ class MicrostructureCreateForm(forms.ModelForm):
 
     class Meta:
         model = Microstructure
+        exclude = []
 
 
 class MetalCreateForm(forms.ModelForm):
@@ -108,6 +114,7 @@ class MetalCreateForm(forms.ModelForm):
 
     class Meta:
         model = Metal
+        exclude = []
 
 
 class CorrosionFormCreateForm(forms.ModelForm):
@@ -117,6 +124,7 @@ class CorrosionFormCreateForm(forms.ModelForm):
 
     class Meta:
         model = CorrosionForm
+        exclude = []
 
 
 class CorrosionTypeCreateForm(forms.ModelForm):
@@ -126,6 +134,7 @@ class CorrosionTypeCreateForm(forms.ModelForm):
 
     class Meta:
         model = CorrosionType
+        exclude = []
 
 
 class DocumentUpdateForm(forms.ModelForm):
