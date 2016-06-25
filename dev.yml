@@ -17,9 +17,10 @@ services:
   neo4j:
     build: ./compose/neo4j
     volumes:
-      - neo4j_data_dev:/data
+      - ./data/neo4j:/data
     environment:
       - NEO4J_AUTH=neo4j/secret
+      - NEO4J_dbms_allowFormatMigration=true
     ports:
       - "7474:7474"
       - "7687:7687"
