@@ -15,12 +15,27 @@ angular.module('micorrApp').factory('MiCorrService', function ($http, $q) {
 
 
 
-        getStratigraphySvg: function (name, width) {
 
-            return $http.post('node/getStratigraphySvg' + '?name=' + name + '&width=' + width).error(function () {
-                console.log('Problème de connexion avec le serveur pour récupérer le SVG');
-            });
+         getStratigraphySvg: function (name, width) {
+
+         return $http.post('node/getStratigraphySvg' + '?name=' + name + '&width=' + width).error(function () {
+         console.log('Problème de connexion avec le serveur pour récupérer le SVG');
+         });
+         },
+
+         getStratigraphyImageUrl: function(name, width, format){
+            return "node/exportStratigraphy?name="+name+"&width="+width+"&format="+format;
         },
+
+
+        /* TEMPS
+         exportStratigraphy: function (svgdata, format) {
+         return $http.post('json/export', svgdata).error(function (data, status, headers, config) {
+         console.log('Could not download the ' + format +' file');
+         }).success(function (data, status, headers, config) {
+         console.log('loaded');
+         });
+         }, */
 
         getAllArtefacts: function () {
             return $http.get('json/getallartefacts').error(function () {
@@ -184,7 +199,7 @@ angular.module('micorrApp').factory('StratigraphyData', function StratigraphyDat
                 var idel = parseInt(index);
                 var stratas = stratig.getStratas();
                 stratas.splice(idel, 1);
-                if(stratas[idel] != undefined) {
+                if (stratas[idel] != undefined) {
                     stratas[idel].setIndex(idel);
                 }
 

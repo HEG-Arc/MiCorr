@@ -72,7 +72,7 @@ module.exports = {
         });
     },
 
-    drawStratigraphy: function (stratigraphy, width, callback){
+    drawStratigraphy: function (stratigraphy, width, callback) {
 
         //drawer.drawStrata(stratigraphy.getStratas()[0], 'drawing');
         var jsdom = require("jsdom").jsdom;
@@ -80,10 +80,43 @@ module.exports = {
         var window = document.defaultView;
 
         var drawer = new GraphGenerationUtil(window, stratigraphy);
-        console.log('widthnow:' + width);
+        if (width == undefined) {
+            width = 200;
+        }
         var result = drawer.drawStratigraphy(width);
         console.log('stratigraphy drawed')
         return callback(result);
+    },
+
+    /**
+     * Cette méthode exporte la stratigraphie au format spécifié en paramètres
+     * @param svgdata
+     * @param format
+     * @param width
+     * @param callback
+     * @returns {*}
+     */
+    exportStratigraphy: function (svgdata, format, width, callback) {
+
+        var Rsvg = require('librsvg').Rsvg;
+        var fs = require('fs');
+        var util = require('util');
+
+
+        try {
+            var svg = new Rsvg(svgdata);
+
+            var fileContent = svg.render({
+                format: format,
+                width: svg.width,
+                height: svg.height
+            }).data;
+        }
+        catch(err) {
+            console.log('error while drawing');
+        }
+        return callback(fileContent);
     }
+
 
 };
