@@ -817,6 +817,8 @@ class GraphGenerationUtil {
     getStratig() {
         return this.stratig;
     }
+
+
 }
 
 

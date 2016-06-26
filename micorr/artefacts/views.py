@@ -67,7 +67,7 @@ def searchStratigraphy(self):
     neo = Neo4jDAO()
     stratigraphy = Neo4jDAO.addStratigraphy(neo, "Search", "search")
     if stratigraphy:
-        return redirect("/micorr/#/artefact/Search/" + stratigraphy + "/search")
+        return redirect("/micorr/#/stratigraphy/" + stratigraphy)
 
 
 class ArtefactsListView(generic.ListView):

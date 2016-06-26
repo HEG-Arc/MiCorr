@@ -655,6 +655,13 @@ angular.module('micorrApp')
             });
         });
 
+        $scope.toPng = function () {
+
+            MiCorrService.exportStratigraphy(StratigraphyData.getStratigraphy().getUid(), 'png').success(function (data) {
+
+            });
+
+        };
         /**
          * Cette méthode met en évidence les infos de la strate sélectionnée
          */
