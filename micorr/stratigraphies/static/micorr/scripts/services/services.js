@@ -24,18 +24,9 @@ angular.module('micorrApp').factory('MiCorrService', function ($http, $q) {
          },
 
          getStratigraphyImageUrl: function(name, width, format){
-            return "node/exportStratigraphy?name="+name+"&width="+width+"&format="+format;
+            return "micorr/node/exportStratigraphy?name="+name+"&width="+width+"&format="+format;
         },
 
-
-        /* TEMPS
-         exportStratigraphy: function (svgdata, format) {
-         return $http.post('json/export', svgdata).error(function (data, status, headers, config) {
-         console.log('Could not download the ' + format +' file');
-         }).success(function (data, status, headers, config) {
-         console.log('loaded');
-         });
-         }, */
 
         getAllArtefacts: function () {
             return $http.get('json/getallartefacts').error(function () {
