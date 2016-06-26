@@ -151,6 +151,8 @@ angular.module('micorrApp').factory('StratigraphyData', function StratigraphyDat
         var submmicrostructureFamily = [];
         var submcompositionFamily = [];
 
+        var cmcpmicrostructureFamily = [];
+
 
         return {
 
@@ -276,8 +278,10 @@ angular.module('micorrApp').factory('StratigraphyData', function StratigraphyDat
                 this.cpcompositionFamily = parseCharasteristic('cpCompositionFamily');
                 this.cmcompositionFamily = parseCharasteristic('cmCompositionFamily');
                 this.mcompositionFamily = parseCharasteristic('mCompositionFamily');
+                this.cmcpaggregateCompositionFamily = parseCharasteristic('cmCpAggregatesCompositionFamily');
                 this.cmlevelofcorrosionFamily = parseCharasteristic('cmLevelOfCorrosionFamily');
                 this.cprimicrostructureFamily = parseCharasteristic('cpriMicrostructureFamily');
+                this.cmcpmicrostructureFamily = parseCharasteristic('cmCpMicrostructureFamily');
                 this.mmicrostructureFamily = parseCharasteristic('mMicrostructureFamily');
                 this.interfaceprofileFamily = parseCharasteristic('interfaceProfileFamily');
                 this.interfacetransitionFamily = parseCharasteristic('interfaceTransitionFamily');
@@ -554,6 +558,18 @@ angular.module('micorrApp').factory('StratigraphyData', function StratigraphyDat
             },
             getDirectionFamily: function () {
                 return this.directionFamily;
+            },
+            setCmcpmicrostructureFamily: function (cpcompositionextensionFamily) {
+                this.cmcpmicrostructureFamily = cpcompositionextensionFamily;
+            },
+            getCmcpmicrostructureFamily: function () {
+                return this.cmcpmicrostructureFamily;
+            },
+            setCmcpaggregateCompositionFamily: function (cmcpaggregateCompositionFamily) {
+                return this.cmcpaggregateCompositionFamily;
+            },
+            getCmcpaggregateCompositionFamily: function () {
+                return this.cmcpaggregateCompositionFamily;
             }
         }
     };
@@ -1023,6 +1039,7 @@ angular.module('micorrApp').factory('StrataData', function StrataDataFactory() {
             getDirectionFamily: function () {
                 return this.directionFamily;
             }
+
         }
     };
     return getStrataData();
