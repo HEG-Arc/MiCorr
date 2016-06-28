@@ -1,22 +1,41 @@
 (function (global, factory) {
     if (typeof define === "function" && define.amd) {
-        define(['exports', '../business/stratigraphy', '../business/characteristic', '../business/subCharacteristic', '../algorithms/poissonDisk'], factory);
+        define(['exports', '../business/stratigraphy', '../business/characteristic', '../business/subCharacteristic', '../algorithms/poissonDisk', '../nodeServices/nodeUtils.js'], factory);
     } else if (typeof exports !== "undefined") {
-        factory(exports, require('../business/stratigraphy'), require('../business/characteristic'), require('../business/subCharacteristic'), require('../algorithms/poissonDisk'));
+        factory(exports, require('../business/stratigraphy'), require('../business/characteristic'), require('../business/subCharacteristic'), require('../algorithms/poissonDisk'), require('../nodeServices/nodeUtils.js'));
     } else {
         var mod = {
             exports: {}
         };
-        factory(mod.exports, global.stratigraphy, global.characteristic, global.subCharacteristic, global.poissonDisk);
+        factory(mod.exports, global.stratigraphy, global.characteristic, global.subCharacteristic, global.poissonDisk, global.nodeUtils);
         global.graphGenerationUtil = mod.exports;
     }
-})(this, function (exports, _stratigraphy, _characteristic, _subCharacteristic, _poissonDisk) {
+})(this, function (exports, _stratigraphy, _characteristic, _subCharacteristic, _poissonDisk, _nodeUtils) {
     'use strict';
 
     Object.defineProperty(exports, "__esModule", {
         value: true
     });
     exports.GraphGenerationUtil = undefined;
+
+    var utils = _interopRequireWildcard(_nodeUtils);
+
+    function _interopRequireWildcard(obj) {
+        if (obj && obj.__esModule) {
+            return obj;
+        } else {
+            var newObj = {};
+
+            if (obj != null) {
+                for (var key in obj) {
+                    if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key];
+                }
+            }
+
+            newObj.default = obj;
+            return newObj;
+        }
+    }
 
     function _classCallCheck(instance, Constructor) {
         if (!(instance instanceof Constructor)) {
@@ -48,9 +67,10 @@
 
             if (win != null) {
                 this.window = win;
-                var drawer = require('svg.js')(win);
-                //var svgimport = require('../dependencies/svg.import.js')(win);
-                //var svgparser = require('../dependencies/svg.parser.js');
+                /*On appelle la librairie SVG.js depuis un module Node.js car celle ci
+                 n'est pas compatible avec ES2015 si l'on veut lui donner le paramètre window
+                 */
+                utils.getDrawer(win);
             }
             this.stratig = stratig;
         }
@@ -131,6 +151,7 @@
                 var interfaceWidth = strataWidth;
 
                 var draw = SVG(divID).size(interfaceWidth, interfaceHeight);
+
                 var nestedInterface = draw.nested();
                 nestedInterface.height(interfaceHeight);
                 nestedInterface.width(interfaceWidth);
@@ -229,6 +250,7 @@
                 var borderWidth = 8;
 
                 var draw = SVG(divID).size(width, height);
+
                 //on crée un groupe pour englober la strate et pour pouvoir la réutiliser
                 var nestedStrata = draw.nested();
                 nestedStrata.height(height);
@@ -372,16 +394,14 @@
 
                     switch (char) {
                         case 'slightlyPorousCharacteristic':
-                            var image = draw.image("../static/micorr/images/c/CP/Porosity/CP_SlightlyPorous_" + height + "x" + width + ".svg");
-                            image.size(width, height);
+                            this.addImage(draw, "../static/micorr/images/c/CP/Porosity/CP_SlightlyPorous_" + height + "x" + width + ".svg", width, height);
                             break;
                         case 'porousCharacteristic':
-                            var image = draw.image("../static/micorr/images/c/CP/Porosity/CP_Porous_" + height + "x" + width + ".svg");
-                            image.size(width, height);
+                            this.addImage(draw, "../static/micorr/images/c/CP/Porosity/CP_Porous_" + height + "x" + width + ".svg", width, height);
+
                             break;
                         case 'highlyPorousCharacteristic':
-                            var image = draw.image("../static/micorr/images/c/CP/Porosity/CP_HighlyPorous_" + height + "x" + width + ".svg");
-                            image.size(width, height);
+                            this.addImage(draw, "../static/micorr/images/c/CP/Porosity/CP_HighlyPorous_" + height + "x" + width + ".svg", width, height);
                             break;
                     }
                 }
@@ -396,8 +416,7 @@
                             break;
 
                         case "pseudomorphOfDendriticCharacteristic":
-                            var image = draw.image("../static/micorr/images/c/CP/Dendrite/CP_Dendrite_" + height + "x" + width + ".svg");
-                            image.size(width, height);
+                            this.addImage(draw, "../static/micorr/images/c/CP/Dendrite/CP_Dendrite_" + height + "x" + width + ".svg", width, height);
                             break;
 
                         case "hexagonalNetworkCharacteristic":
@@ -427,19 +446,16 @@
                 //subcprimicrostructure
                 if (strata.isSubCharacteristic('eutecticPhaseNoMicrostructureCpri') || strata.isSubCharacteristic('eutecticPhaseCristallineMicrostructureCpri') || strata.isSubCharacteristic('eutecticPhaseIsolatedAggregateMicrostructureCpri') || strata.isSubCharacteristic('eutecticPhaseScatteredAggregateMicrostructureCpri') || strata.isSubCharacteristic('eutecticPhaseAlternatingBandsCpri') || strata.isSubCharacteristic('eutecticPhaseHexagonalNetworkCpri') || strata.isSubCharacteristic('eutecticPhasePseudomorphOfDendriticCpri') || strata.isSubCharacteristic('eutecticPhasePseudomorphOfGranularCpri')) {
 
-                    var image = draw.image("../static/micorr/images/c/M/EutheticPhase/M_EutheticPhase_" + height + "x" + width + ".svg");
-                    image.size(width, height);
+                    this.addImage(draw, "../static/micorr/images/c/M/EutheticPhase/M_EutheticPhase_" + height + "x" + width + ".svg", width, height);
                 }
 
                 if (strata.isSubCharacteristic('twinLinesNoMicrostructureCpri') || strata.isSubCharacteristic('twinLinesCristallineMicrostructureCpri') || strata.isSubCharacteristic('twinLinesIsolatedAggregateMicrostructureCpri') || strata.isSubCharacteristic('twinLinesScatteredAggregateMicrostructureCpri') || strata.isSubCharacteristic('twinLinesAlternatingBandsCpri') || strata.isSubCharacteristic('twinLinesHexagonalNetworkCpri') || strata.isSubCharacteristic('twinLinesPseudomorphOfDendriticCpri') || strata.isSubCharacteristic('twinLinesPseudomorphOfGranularCpri')) {
 
-                    var image = draw.image("../static/micorr/images/c/CP/TwinLines/CP_TwinLinesGrainSmall_" + height + "x" + width + ".svg");
-                    image.size(width, height);
+                    this.addImage(draw, "./static/micorr/images/c/CP/TwinLines/CP_TwinLinesGrainSmall_" + height + "x" + width + ".svg", width, height);
                 }
                 if (strata.isSubCharacteristic('inclusionsNoMicrostructureCpri') || strata.isSubCharacteristic('inclusionsCristallineMicrostructureCpri') || strata.isSubCharacteristic('inclusionsIsolatedAggregateMicrostructureCpri') || strata.isSubCharacteristic('inclusionsScatteredAggregateMicrostructureCpri') || strata.isSubCharacteristic('inclusionsAlternatingBandsCpri') || strata.isSubCharacteristic('inclusionsHexagonalNetworkCpri') || strata.isSubCharacteristic('inclusionsPseudomorphOfDendriticCpri') || strata.isSubCharacteristic('inclusionsPseudomorphOfGranularCpri')) {
 
-                    var image = draw.image("../static/micorr/images/c/CP/Inclusion/CP_InclusionGrainSmall_" + height + "x" + width + ".svg");
-                    image.size(width, height);
+                    this.addImage(draw, "../static/micorr/images/c/CP/Inclusion/CP_InclusionGrainSmall_" + height + "x" + width + ".svg", width, height);
                 }
 
                 //MmicrostructureFamily
@@ -447,63 +463,47 @@
                     var char = strata.getCharacteristicsByFamily('mMicrostructureFamily')[0].getName();
                     switch (char) {
                         case "dendriticCharacteristic":
-                            var image = draw.image("../static/micorr/images/c/M/Dendrites/M_Dendrites_" + height + "x" + width + ".svg");
-                            image.size(width, height);
+                            this.addImage(draw, "../static/micorr/images/c/M/Dendrites/M_Dendrites_" + height + "x" + width + ".svg", width, height);
                             break;
                         case "deformedDendritesCharacteristic":
-                            var image = draw.image("../static/micorr/images/c/M/Dendrites/M_DeformedDendrites_" + height + "x" + width + ".svg");
-                            image.size(width, height);
+                            this.addImage(draw, "../static/micorr/images/c/M/Dendrites/M_DeformedDendrites_" + height + "x" + width + ".svg", width, height);
                             break;
                         case "grainSmallCharacteristic":
-                            var image = draw.image("../static/micorr/images/c/M/Grain/M_GrainSmall_" + height + "x" + width + ".svg");
-                            image.size(width, height);
+                            this.addImage(draw, "../static/micorr/images/c/M/Grain/M_GrainSmall_" + height + "x" + width + ".svg", width, height);
                             break;
                         case "grainLargeCharacteristic":
-                            var image = draw.image("../static/micorr/images/c/M/Grain/M_GrainLarge_" + height + "x" + width + ".svg");
-                            image.size(width, height);
+                            this.addImage(draw, "../static/micorr/images/c/M/Grain/M_GrainLarge_" + height + "x" + width + ".svg", width, height);
                             break;
                         case "grainElongatedCharacteristic":
-                            var image = draw.image("../static/micorr/images/c/M/Grain/M_GrainElongated_" + height + "x" + width + ".svg");
-                            image.size(width, height);
+                            this.addImage(draw, "../static/micorr/images/c/M/Grain/M_GrainElongated_" + height + "x" + width + ".svg", width, height);
                             break;
                     }
                 }
 
                 //SubmMicrostructure
                 if (strata.isSubCharacteristic('eutecticPhaseDendritic') || strata.isSubCharacteristic('eutecticPhaseGrainElongated') || strata.isSubCharacteristic('eutecticPhaseGrainLarge') || strata.isSubCharacteristic('eutecticPhaseGrainSmall')) {
-                    var image = draw.image("../static/micorr/images/c/M/EutheticPhase/M_EutheticPhase_" + height + "x" + width + ".svg");
-                    image.size(width, height);
+                    this.addImage(draw, "../static/micorr/images/c/M/EutheticPhase/M_EutheticPhase_" + height + "x" + width + ".svg", width, height);
                 }
                 if (strata.isSubCharacteristic('twinLinesDendritic') || strata.isSubCharacteristic('twinLinesGrainSmall')) {
-
-                    var image = draw.image("../static/micorr/images/c/M/TwinLines/M_TwinLinesGrainSmall_" + height + "x" + width + ".svg");
-                    image.size(width, height);
+                    this.addImage(draw, "../static/micorr/images/c/M/TwinLines/M_TwinLinesGrainSmall_" + height + "x" + width + ".svg", width, height);
                 } else if (strata.isSubCharacteristic('twinLinesGrainElongated')) {
-                    var image = draw.image("../static/micorr/images/c/M/TwinLines/M_TwinLinesGrainElongated_" + height + "x" + width + ".svg");
-                    image.size(width, height);
+                    this.addImage(draw, "../static/micorr/images/c/M/TwinLines/M_TwinLinesGrainElongated_" + height + "x" + width + ".svg", width, height);
                 } else if (strata.isSubCharacteristic('twinLinesGrainLarge')) {
-                    var image = draw.image("../static/micorr/images/c/M/TwinLines/M_TwinLinesGrainLarge_" + height + "x" + width + ".svg");
-                    image.size(width, height);
+                    this.addImage(draw, "../static/micorr/images/c/M/TwinLines/M_TwinLinesGrainLarge_" + height + "x" + width + ".svg", width, height);
                 }
 
                 if (strata.isSubCharacteristic('slipLinesDendritic') || strata.isSubCharacteristic('slipLinesGrainSmall')) {
-
-                    var image = draw.image("../static/micorr/images/c/M/SlipLines/M_SlipLinesGrainSmall_" + height + "x" + width + ".svg");
-                    image.size(width, height);
+                    this.addImage(draw, "./static/micorr/images/c/M/SlipLines/M_SlipLinesGrainSmall_" + height + "x" + width + ".svg", width, height);
                 } else if (strata.isSubCharacteristic('slipLinesGrainElongated')) {
-                    var image = draw.image("../static/micorr/images/c/M/SlipLines/M_SlipLinesGrainElongated_" + height + "x" + width + ".svg");
-                    image.size(width, height);
+                    this.addImage(draw, "../static/micorr/images/c/M/SlipLines/M_SlipLinesGrainElongated_" + height + "x" + width + ".svg", width, height);
                 } else if (strata.isSubCharacteristic('slipLinesGrainLarge')) {
-                    var image = draw.image("../static/micorr/images/c/M/SlipLines/M_SlipLinesGrainLarge_" + height + "x" + width + ".svg");
-                    image.size(width, height);
+                    this.addImage(draw, "../static/micorr/images/c/M/SlipLines/M_SlipLinesGrainLarge_" + height + "x" + width + ".svg", width, height);
                 }
 
                 if (strata.isSubCharacteristic('inclusionsDendritic') || strata.isSubCharacteristic('inclusionsGrainSmall') || strata.isSubCharacteristic('inclusionsGrainElongated')) {
-                    var image = draw.image("../static/micorr/images/c/M/Inclusion/M_InclusionGrainSmall_" + height + "x" + width + ".svg");
-                    image.size(width, height);
+                    this.addImage(draw, "../static/micorr/images/c/M/Inclusion/M_InclusionGrainSmall_" + height + "x" + width + ".svg", width, height);
                 } else if (strata.isSubCharacteristic('inclusionsGrainLarge')) {
-                    var image = draw.image("../static/micorr/images/c/M/Inclusion/M_InclusionGrainLarge_" + height + "x" + width + ".svg");
-                    image.size(width, height);
+                    this.addImage(draw, "../static/micorr/images/c/M/Inclusion/M_InclusionGrainLarge_" + height + "x" + width + ".svg", width, height);
                 }
 
                 //Fissures
@@ -511,18 +511,15 @@
                     var char = strata.getCharacteristicsByFamily('crackingFamily')[0].getName();
                     switch (char) {
                         case "simpleCracksCharacteristic":
-                            var image = draw.image("../static/micorr/images/c/CP/Cracking/Simple/CP_CrackingSimpleHorizontale_" + height + "x" + width + ".svg");
-                            image.size(width, height);
+                            this.addImage(draw, "../static/micorr/images/c/CP/Cracking/Simple/CP_CrackingSimpleHorizontale_" + height + "x" + width + ".svg", width, height);
                             break;
 
                         case "branchedCracksCharacteristic":
-                            var image = draw.image("../static/micorr/images/c/CP/Cracking/Branched/CP_CrackingBranched_" + height + "x" + width + ".svg");
-                            image.size(width, height);
+                            this.addImage(draw, "../static/micorr/images/c/CP/Cracking/Branched/CP_CrackingBranched_" + height + "x" + width + ".svg", width, height);
                             break;
 
                         case "networkCracksCharacteristic":
-                            var image = draw.image("../static/micorr/images/c/CP/Cracking/Network/CP_CrackingNetwork_" + height + "x" + width + ".svg");
-                            image.size(width, height);
+                            this.addImage(draw, "../static/micorr/images/c/CP/Cracking/Network/CP_CrackingNetwork_" + height + "x" + width + ".svg", width, height);
                             break;
                     }
                 }
@@ -530,8 +527,8 @@
                 if (strata.getCharacteristicsByFamily('cohesionFamily').length > 0) {
                     var char = strata.getCharacteristicsByFamily('cohesionFamily')[0].getName();
                     if (char == 'powderyCharacteristic') {
-                        var image = draw.image("../static/micorr/images/c/CP/Cohesion/CP_CohesionPowdery_" + height + "x" + width + ".svg");
-                        image.size(width, height);
+
+                        this.addImage(draw, "../static/micorr/images/c/CP/Cohesion/CP_CohesionPowdery_" + height + "x" + width + ".svg", width, height);
                     }
                 }
 
@@ -777,6 +774,31 @@
             key: 'getStratig',
             value: function getStratig() {
                 return this.stratig;
+            }
+        }, {
+            key: 'addImage',
+            value: function addImage(draw, url, width, height) {
+                var format = url.substr(url.length - 3);
+                console.log('format');
+
+                /*Pour le moment, vu que la librairie utilisée pour convertir en SVG ne fonctionne pas,
+                 on ajoute simplement l'image comme ça:
+                 */
+
+                if (this.window != undefined && format == 'svg') {
+
+                    //On récupère le contenu du fichier SVG et on l'absorbe dans notre SVG
+                    var svgContent = utils.getSvgFileContent(url);
+                    var nested = draw.nested();
+                    var imp = nested.absorb(svgContent);
+                    var box = nested.viewbox(0, 0, width, height);
+
+                    return box;
+                } else {
+                    var image = draw.image(url);
+                    image.size(width, height);
+                    return image;
+                }
             }
         }]);
 

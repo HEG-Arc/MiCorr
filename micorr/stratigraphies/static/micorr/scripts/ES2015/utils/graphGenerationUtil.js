@@ -8,13 +8,19 @@ import{Characteristic} from '../business/characteristic';
 import{SubCharacteristic} from '../business/subCharacteristic';
 import{PoissonDiskSampler} from '../algorithms/poissonDisk';
 
+import * as
+utils
+from
+'../nodeServices/nodeUtils.js';
+
 class GraphGenerationUtil {
     constructor(win, stratig) {
         if (win != null) {
             this.window = win;
-            //var drawer = require('svg.js')(win);
-            //var svgimport = require('../dependencies/svg.import.js')(win);
-            //var svgparser = require('../dependencies/svg.parser.js');
+            /*On appelle la librairie SVG.js depuis un module Node.js car celle ci
+             n'est pas compatible avec ES2015 si l'on veut lui donner le paramètre window
+             */
+            utils.getDrawer(win);
         }
         this.stratig = stratig;
     }
@@ -99,6 +105,7 @@ class GraphGenerationUtil {
         var interfaceWidth = strataWidth;
 
         var draw = SVG(divID).size(interfaceWidth, interfaceHeight);
+
         var nestedInterface = draw.nested();
         nestedInterface.height(interfaceHeight);
         nestedInterface.width(interfaceWidth);
@@ -211,6 +218,8 @@ class GraphGenerationUtil {
 
 
         var draw = SVG(divID).size(width, height);
+
+
         //on crée un groupe pour englober la strate et pour pouvoir la réutiliser
         var nestedStrata = draw.nested();
         nestedStrata.height(height);
@@ -303,13 +312,13 @@ class GraphGenerationUtil {
             var group = draw.group();
             this.fillStrata(group, upperStrata, width, height);
             //if (upperStrata.getCharacteristicsByFamily('colourFamily').length > 0) {
-                //upperStrataColor = upperStrata.getCharacteristicsByFamily('colourFamily')[0].getRealName();
+            //upperStrataColor = upperStrata.getCharacteristicsByFamily('colourFamily')[0].getRealName();
             //}
             var path = draw.path(pathString).attr({ fill: 'none' });
             group.clipWith(path);
         }
-        else{
-             draw.path(pathString).attr({ fill: 'white' });
+        else {
+            draw.path(pathString).attr({ fill: 'white' });
         }
 
     }
@@ -320,6 +329,7 @@ class GraphGenerationUtil {
      * @param strata
      */
         fillStrata(draw, strata, w, h) {
+
 
         //Création d'un groupe pour le contenu du fond de la strate pour pouvoir le réutiliser
         var group = draw.group;
@@ -369,16 +379,14 @@ class GraphGenerationUtil {
 
             switch (char) {
                 case 'slightlyPorousCharacteristic':
-                    var image = draw.image("../static/micorr/images/c/CP/Porosity/CP_SlightlyPorous_" + height + "x" + width + ".svg");
-                    image.size(width, height);
+                    this.addImage(draw, "../static/micorr/images/c/CP/Porosity/CP_SlightlyPorous_" + height + "x" + width + ".svg", width, height);
                     break;
                 case 'porousCharacteristic':
-                    var image = draw.image("../static/micorr/images/c/CP/Porosity/CP_Porous_" + height + "x" + width + ".svg");
-                    image.size(width, height);
+                    this.addImage(draw, "../static/micorr/images/c/CP/Porosity/CP_Porous_" + height + "x" + width + ".svg", width, height);
+
                     break;
                 case 'highlyPorousCharacteristic':
-                    var image = draw.image("../static/micorr/images/c/CP/Porosity/CP_HighlyPorous_" + height + "x" + width + ".svg");
-                    image.size(width, height);
+                    this.addImage(draw, "../static/micorr/images/c/CP/Porosity/CP_HighlyPorous_" + height + "x" + width + ".svg", width, height);
                     break;
             }
         }
@@ -394,8 +402,7 @@ class GraphGenerationUtil {
                     break;
 
                 case "pseudomorphOfDendriticCharacteristic":
-                    var image = draw.image("../static/micorr/images/c/CP/Dendrite/CP_Dendrite_" + height + "x" + width + ".svg");
-                    image.size(width, height);
+                    this.addImage(draw, "../static/micorr/images/c/CP/Dendrite/CP_Dendrite_" + height + "x" + width + ".svg", width, height);
                     break;
 
                 case "hexagonalNetworkCharacteristic":
@@ -429,8 +436,7 @@ class GraphGenerationUtil {
             strata.isSubCharacteristic('eutecticPhaseAlternatingBandsCpri') || strata.isSubCharacteristic('eutecticPhaseHexagonalNetworkCpri') ||
             strata.isSubCharacteristic('eutecticPhasePseudomorphOfDendriticCpri') || strata.isSubCharacteristic('eutecticPhasePseudomorphOfGranularCpri')) {
 
-            var image = draw.image("../static/micorr/images/c/M/EutheticPhase/M_EutheticPhase_" + height + "x" + width + ".svg");
-            image.size(width, height);
+            this.addImage(draw, "../static/micorr/images/c/M/EutheticPhase/M_EutheticPhase_" + height + "x" + width + ".svg", width, height);
         }
 
         if (strata.isSubCharacteristic('twinLinesNoMicrostructureCpri') || strata.isSubCharacteristic('twinLinesCristallineMicrostructureCpri') ||
@@ -438,16 +444,14 @@ class GraphGenerationUtil {
             strata.isSubCharacteristic('twinLinesAlternatingBandsCpri') || strata.isSubCharacteristic('twinLinesHexagonalNetworkCpri') ||
             strata.isSubCharacteristic('twinLinesPseudomorphOfDendriticCpri') || strata.isSubCharacteristic('twinLinesPseudomorphOfGranularCpri')) {
 
-            var image = draw.image("../static/micorr/images/c/CP/TwinLines/CP_TwinLinesGrainSmall_" + height + "x" + width + ".svg");
-            image.size(width, height);
+            this.addImage(draw, "./static/micorr/images/c/CP/TwinLines/CP_TwinLinesGrainSmall_" + height + "x" + width + ".svg", width, height);
         }
         if (strata.isSubCharacteristic('inclusionsNoMicrostructureCpri') || strata.isSubCharacteristic('inclusionsCristallineMicrostructureCpri') ||
             strata.isSubCharacteristic('inclusionsIsolatedAggregateMicrostructureCpri') || strata.isSubCharacteristic('inclusionsScatteredAggregateMicrostructureCpri') ||
             strata.isSubCharacteristic('inclusionsAlternatingBandsCpri') || strata.isSubCharacteristic('inclusionsHexagonalNetworkCpri') ||
             strata.isSubCharacteristic('inclusionsPseudomorphOfDendriticCpri') || strata.isSubCharacteristic('inclusionsPseudomorphOfGranularCpri')) {
 
-            var image = draw.image("../static/micorr/images/c/CP/Inclusion/CP_InclusionGrainSmall_" + height + "x" + width + ".svg");
-            image.size(width, height);
+            this.addImage(draw, "../static/micorr/images/c/CP/Inclusion/CP_InclusionGrainSmall_" + height + "x" + width + ".svg", width, height);
         }
 
 
@@ -456,24 +460,19 @@ class GraphGenerationUtil {
             var char = strata.getCharacteristicsByFamily('mMicrostructureFamily')[0].getName();
             switch (char) {
                 case "dendriticCharacteristic":
-                    var image = draw.image("../static/micorr/images/c/M/Dendrites/M_Dendrites_" + height + "x" + width + ".svg");
-                    image.size(width, height);
+                    this.addImage(draw, "../static/micorr/images/c/M/Dendrites/M_Dendrites_" + height + "x" + width + ".svg", width, height);
                     break;
                 case "deformedDendritesCharacteristic":
-                    var image = draw.image("../static/micorr/images/c/M/Dendrites/M_DeformedDendrites_" + height + "x" + width + ".svg");
-                    image.size(width, height);
+                    this.addImage(draw, "../static/micorr/images/c/M/Dendrites/M_DeformedDendrites_" + height + "x" + width + ".svg", width, height);
                     break;
                 case "grainSmallCharacteristic":
-                    var image = draw.image("../static/micorr/images/c/M/Grain/M_GrainSmall_" + height + "x" + width + ".svg");
-                    image.size(width, height);
+                    this.addImage(draw, "../static/micorr/images/c/M/Grain/M_GrainSmall_" + height + "x" + width + ".svg", width, height);
                     break;
                 case "grainLargeCharacteristic":
-                    var image = draw.image("../static/micorr/images/c/M/Grain/M_GrainLarge_" + height + "x" + width + ".svg");
-                    image.size(width, height);
+                    this.addImage(draw, "../static/micorr/images/c/M/Grain/M_GrainLarge_" + height + "x" + width + ".svg", width, height);
                     break;
                 case "grainElongatedCharacteristic":
-                    var image = draw.image("../static/micorr/images/c/M/Grain/M_GrainElongated_" + height + "x" + width + ".svg");
-                    image.size(width, height);
+                    this.addImage(draw, "../static/micorr/images/c/M/Grain/M_GrainElongated_" + height + "x" + width + ".svg", width, height);
                     break;
             }
 
@@ -483,44 +482,33 @@ class GraphGenerationUtil {
         //SubmMicrostructure
         if (strata.isSubCharacteristic('eutecticPhaseDendritic') || strata.isSubCharacteristic('eutecticPhaseGrainElongated') ||
             strata.isSubCharacteristic('eutecticPhaseGrainLarge') || strata.isSubCharacteristic('eutecticPhaseGrainSmall')) {
-            var image = draw.image("../static/micorr/images/c/M/EutheticPhase/M_EutheticPhase_" + height + "x" + width + ".svg");
-            image.size(width, height);
+            this.addImage(draw, "../static/micorr/images/c/M/EutheticPhase/M_EutheticPhase_" + height + "x" + width + ".svg", width, height);
         }
         if (strata.isSubCharacteristic('twinLinesDendritic') || strata.isSubCharacteristic('twinLinesGrainSmall')) {
-
-            var image = draw.image("../static/micorr/images/c/M/TwinLines/M_TwinLinesGrainSmall_" + height + "x" + width + ".svg");
-            image.size(width, height);
+            this.addImage(draw, "../static/micorr/images/c/M/TwinLines/M_TwinLinesGrainSmall_" + height + "x" + width + ".svg", width, height);
         }
         else if (strata.isSubCharacteristic('twinLinesGrainElongated')) {
-            var image = draw.image("../static/micorr/images/c/M/TwinLines/M_TwinLinesGrainElongated_" + height + "x" + width + ".svg");
-            image.size(width, height);
+            this.addImage(draw, "../static/micorr/images/c/M/TwinLines/M_TwinLinesGrainElongated_" + height + "x" + width + ".svg", width, height);
         }
         else if (strata.isSubCharacteristic('twinLinesGrainLarge')) {
-            var image = draw.image("../static/micorr/images/c/M/TwinLines/M_TwinLinesGrainLarge_" + height + "x" + width + ".svg");
-            image.size(width, height);
+            this.addImage(draw, "../static/micorr/images/c/M/TwinLines/M_TwinLinesGrainLarge_" + height + "x" + width + ".svg", width, height);
         }
 
         if (strata.isSubCharacteristic('slipLinesDendritic') || strata.isSubCharacteristic('slipLinesGrainSmall')) {
-
-            var image = draw.image("../static/micorr/images/c/M/SlipLines/M_SlipLinesGrainSmall_" + height + "x" + width + ".svg");
-            image.size(width, height);
+            this.addImage(draw, "./static/micorr/images/c/M/SlipLines/M_SlipLinesGrainSmall_" + height + "x" + width + ".svg", width, height);
         }
         else if (strata.isSubCharacteristic('slipLinesGrainElongated')) {
-            var image = draw.image("../static/micorr/images/c/M/SlipLines/M_SlipLinesGrainElongated_" + height + "x" + width + ".svg");
-            image.size(width, height);
+            this.addImage(draw, "../static/micorr/images/c/M/SlipLines/M_SlipLinesGrainElongated_" + height + "x" + width + ".svg", width, height);
         }
         else if (strata.isSubCharacteristic('slipLinesGrainLarge')) {
-            var image = draw.image("../static/micorr/images/c/M/SlipLines/M_SlipLinesGrainLarge_" + height + "x" + width + ".svg");
-            image.size(width, height);
+            this.addImage(draw, "../static/micorr/images/c/M/SlipLines/M_SlipLinesGrainLarge_" + height + "x" + width + ".svg", width, height);
         }
 
         if (strata.isSubCharacteristic('inclusionsDendritic') || strata.isSubCharacteristic('inclusionsGrainSmall') || strata.isSubCharacteristic('inclusionsGrainElongated')) {
-            var image = draw.image("../static/micorr/images/c/M/Inclusion/M_InclusionGrainSmall_" + height + "x" + width + ".svg");
-            image.size(width, height);
+            this.addImage(draw, "../static/micorr/images/c/M/Inclusion/M_InclusionGrainSmall_" + height + "x" + width + ".svg", width, height);
         }
         else if (strata.isSubCharacteristic('inclusionsGrainLarge')) {
-            var image = draw.image("../static/micorr/images/c/M/Inclusion/M_InclusionGrainLarge_" + height + "x" + width + ".svg");
-            image.size(width, height);
+            this.addImage(draw, "../static/micorr/images/c/M/Inclusion/M_InclusionGrainLarge_" + height + "x" + width + ".svg", width, height);
         }
 
 
@@ -529,18 +517,15 @@ class GraphGenerationUtil {
             var char = strata.getCharacteristicsByFamily('crackingFamily')[0].getName();
             switch (char) {
                 case "simpleCracksCharacteristic" :
-                    var image = draw.image("../static/micorr/images/c/CP/Cracking/Simple/CP_CrackingSimpleHorizontale_" + height + "x" + width + ".svg");
-                    image.size(width, height);
+                    this.addImage(draw, "../static/micorr/images/c/CP/Cracking/Simple/CP_CrackingSimpleHorizontale_" + height + "x" + width + ".svg", width, height);
                     break;
 
                 case "branchedCracksCharacteristic" :
-                    var image = draw.image("../static/micorr/images/c/CP/Cracking/Branched/CP_CrackingBranched_" + height + "x" + width + ".svg");
-                    image.size(width, height);
+                    this.addImage(draw, "../static/micorr/images/c/CP/Cracking/Branched/CP_CrackingBranched_" + height + "x" + width + ".svg", width, height);
                     break;
 
                 case "networkCracksCharacteristic" :
-                    var image = draw.image("../static/micorr/images/c/CP/Cracking/Network/CP_CrackingNetwork_" + height + "x" + width + ".svg");
-                    image.size(width, height);
+                    this.addImage(draw, "../static/micorr/images/c/CP/Cracking/Network/CP_CrackingNetwork_" + height + "x" + width + ".svg", width, height);
                     break;
             }
         }
@@ -548,8 +533,8 @@ class GraphGenerationUtil {
         if (strata.getCharacteristicsByFamily('cohesionFamily').length > 0) {
             var char = strata.getCharacteristicsByFamily('cohesionFamily')[0].getName();
             if (char == 'powderyCharacteristic') {
-                var image = draw.image("../static/micorr/images/c/CP/Cohesion/CP_CohesionPowdery_" + height + "x" + width + ".svg");
-                image.size(width, height);
+
+                this.addImage(draw, "../static/micorr/images/c/CP/Cohesion/CP_CohesionPowdery_" + height + "x" + width + ".svg", width, height);
             }
         }
 
@@ -816,6 +801,43 @@ class GraphGenerationUtil {
 
     getStratig() {
         return this.stratig;
+    }
+
+    /**
+     * Cette méthode permet d'ajouter des images
+     * Sur nodeJS on extrait le contenu des images SVG et on l'ajoute au SVG généré
+     * @param draw
+     * @param url
+     * @param width
+     * @param height
+     * @returns {*}
+     */
+        addImage(draw, url, width, height) {
+        var format = url.substr(url.length - 3);
+        console.log('format');
+
+        /*Pour le moment, vu que la librairie utilisée pour convertir en SVG ne fonctionne pas,
+         on ajoute simplement l'image comme ça:
+         */
+
+
+        if (this.window != undefined && format == 'svg') {
+
+            //On récupère le contenu du fichier SVG et on l'absorbe dans notre SVG
+            var svgContent = utils.getSvgFileContent(url);
+            var nested = draw.nested();
+            var imp = nested.absorb(svgContent);
+            var box = nested.viewbox(0, 0, width, height);
+
+            return box;
+        }
+        else {
+            var image = draw.image(url);
+            image.size(width, height);
+            return image;
+        }
+
+
     }
 
 

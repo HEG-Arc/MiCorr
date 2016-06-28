@@ -7,7 +7,7 @@
  * # ModalDelStratigraphyCtrl
  */
 angular.module('micorrApp')
-    .controller('ModalDelStratigraphyCtrl', function ($scope, $route, $modal, $log, StrataData, MiCorrService) {
+    .controller('ModalDelStratigraphyCtrl', function ($scope, $route, $modal, $log, MiCorrService) {
         $scope.open = function (size, strat) {
             var modalInstance = $modal.open({
                 templateUrl: 'delStratigraphyContent.html',

@@ -8,7 +8,7 @@
  * Contrôlleur qui s'occupe de l'onglet de la microstructure
  */
 angular.module('micorrApp')
-    .controller('StratMicrostructureCtrl', function ($scope, $route, $window, StrataData, StratigraphyData) {
+    .controller('StratMicrostructureCtrl', function ($scope, $route, $window, StratigraphyData) {
 
         //valeurs sélectionnées dans les champs de notre formulaire
         $scope.selectedCprimicrostructureFamily;

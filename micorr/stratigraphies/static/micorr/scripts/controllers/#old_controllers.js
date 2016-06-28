@@ -38,7 +38,7 @@ angular.module('MiCorr', ['ngRoute', 'ngResource', 'ui.bootstrap', 'fxpicklist',
 }]);
 
 // Controlleur qui est appelé lors de l'affichage d'une stratographie
-angular.module('MiCorr').controller('showStrat', function ($scope, $routeParams, $timeout, MiCorrService, StrataData) {
+angular.module('MiCorr').controller('showStrat', function ($scope, $routeParams, $timeout, MiCorrService) {
 
     // Variable mise a false à chaque fois qu'n ouvre une stratigraphie
     $scope.askLeave = false;

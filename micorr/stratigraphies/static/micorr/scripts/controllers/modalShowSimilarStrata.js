@@ -7,7 +7,7 @@
  * # ModalShowSimilarStrataCtrl
  */
 angular.module('micorrApp')
-    .controller('ModalShowSimilarStrataCtrl', function ($scope, $route, $modal, $log, StrataData, StratigraphyData, MiCorrService) {
+    .controller('ModalShowSimilarStrataCtrl', function ($scope, $route, $modal, $log, StratigraphyData, MiCorrService) {
         $scope.open = function (size) {
             var modalInstance = $modal.open({
                 templateUrl: 'showSimilarStrataContent.html',
@@ -31,6 +31,7 @@ angular.module('micorrApp')
                                     MiCorrService.getStratigraphySvg(stratigraphies.strats[0].name, 100).success(function (svgdata) {
                                         var test = $scope.results[index];
                                         $scope.results[index].svg = svgdata;
+                                        $scope.results[index].str_uid = stratigraphies.strats[0].name;
                                     });
                                 });
 

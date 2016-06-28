@@ -8,7 +8,7 @@
  * Controlleur qui est appelé lors de l'affichage d'une stratographie
  */
 angular.module('micorrApp')
-    .controller('ShowStratCtrl', function ($scope, $routeParams, $timeout, MiCorrService, StrataData, StratigraphyData, ngProgress) {
+    .controller('ShowStratCtrl', function ($scope, $routeParams, $timeout, MiCorrService, StratigraphyData, ngProgress) {
 
         // Variable mise a false à chaque fois qu'on ouvre une stratigraphie
         $scope.askLeave = false;
@@ -332,7 +332,7 @@ angular.module('micorrApp')
         MiCorrService.getAllCharacteristic().success(function (data) {
 
             if (typeof data !== "undefined") {
-                // StrataData.clear();
+
                 StratigraphyData.Fill(data);
 
             }

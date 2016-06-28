@@ -8,7 +8,7 @@
  * Contrôlleur qui s'occupe de l'onglet de la composition
  */
 angular.module('micorrApp')
-    .controller('StratCompositionCtrl', function ($scope, $route, $window, StrataData, StratigraphyData) {
+    .controller('StratCompositionCtrl', function ($scope, $route, $window, StratigraphyData) {
 
         //valeurs sélectionnées dans les champs de notre formulaire
         $scope.selectedScompositionFamily = null;

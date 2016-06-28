@@ -7,6 +7,8 @@
  * # ModalAddChildStrataInstanceCtrl
  * Instance du contrôlleur qui s'occupe d'ajouter une strate enfant
  */
+
+//PLUS UTILISE!!!!
 angular.module('micorrApp')
     .controller('ModalAddChildStrataInstanceCtrl', function ($scope, $route, $modalInstance, MiCorrService, arg1, StrataData) {
         $scope.route = $route;
