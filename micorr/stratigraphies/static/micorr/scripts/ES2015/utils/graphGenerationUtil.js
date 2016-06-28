@@ -8,10 +8,7 @@ import{Characteristic} from '../business/characteristic';
 import{SubCharacteristic} from '../business/subCharacteristic';
 import{PoissonDiskSampler} from '../algorithms/poissonDisk';
 
-import * as
-utils
-from
-'../nodeServices/nodeUtils.js';
+import * as utils from '../nodeServices/nodeUtils.js';
 
 class GraphGenerationUtil {
     constructor(win, stratig) {
