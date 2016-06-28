@@ -95,7 +95,7 @@
                                     <tbody>
                                     <tr ng-repeat='result in results'>
                                         <td><strong>{{$index + 1}}</strong></td>
-                                        <td><a href='/stratigraphy/{{ result.str_uid }}' target="_blank"><p
+                                        <td><a href='/stratigraphy/micorr/#/{{ result.str_uid }}' target="_blank"><p
                                                 bind-html-unsafe="result.svg"></p></a></td>
                                         <td><a href='/artefacts/{{ result.artefact_id }}'
                                                target="_blank">{{ result.matching100 }}</a></td>
@@ -129,7 +129,7 @@
                             </div>
                             <div class="modal-body">
                                 <p>Right click to download a strata.</p>
-                                <img src="/{{ imgUrl }}"/>
+                                <img ng-src="/{{ imgUrl }}"/>
                             </div>
                             <div class="modal-footer">
                                 <button class="btn btn-primary" ng-click="ok()">OK</button>
