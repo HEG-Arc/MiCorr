@@ -13,20 +13,7 @@ angular.module('micorrApp').factory('MiCorrService', function ($http, $q) {
             return 'Hello!';
         },
 
-        getStratigraphySvg: function (name, width) {
 
-            return $http.post('http://localhost:8080/getStratigraphySvg' + '?name=' + name + '&width=' + width).error(function () {
-                console.log('Problème de connexion avec le serveur pour récupérer le SVG');
-            });
-        },
-
-
-        getStratigraphyImageUrl: function(name, width, format){
-            return "http://localhost:8080/exportStratigraphy?name="+name+"&width="+width+"&format="+format;
-        },
-
-
-        /*
          getStratigraphySvg: function (name, width) {
 
          return $http.post('node/getStratigraphySvg' + '?name=' + name + '&width=' + width).error(function () {
@@ -38,7 +25,7 @@ angular.module('micorrApp').factory('MiCorrService', function ($http, $q) {
             return "micorr/node/exportStratigraphy?name="+name+"&width="+width+"&format="+format;
         },
 
-*/
+
         getAllArtefacts: function () {
             return $http.get('json/getallartefacts').error(function () {
                 console.log('Problème de connexion avec le serveur pour récupérer les artefacts');
