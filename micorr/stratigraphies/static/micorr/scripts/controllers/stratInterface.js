@@ -8,7 +8,7 @@
  * Contrôlleur qui s'occupe de l'onglet de l'interface
  */
 angular.module('micorrApp')
-    .controller('StratInterfaceCtrl', function ($scope, $route, $window, StrataData, StratigraphyData) {
+    .controller('StratInterfaceCtrl', function ($scope, $route, $window, StratigraphyData) {
 
         //valeurs sélectionnées dans les champs de notre formulaire
         $scope.selectedInterfaceprofileFamily;

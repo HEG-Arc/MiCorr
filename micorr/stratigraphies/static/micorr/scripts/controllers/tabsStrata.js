@@ -8,6 +8,6 @@
  * contrôlleur qui est le formulare qui contient les champs mais sans les onglets
  */
 angular.module('micorrApp')
-    .controller('TabsStrataCtrl', function ($scope, $route, $window, MiCorrService, StrataData) {
+    .controller('TabsStrataCtrl', function ($scope, $route, $window, MiCorrService) {
 
     });

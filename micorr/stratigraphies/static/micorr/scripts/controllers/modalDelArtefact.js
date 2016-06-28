@@ -7,7 +7,7 @@
  * # ModalDelArtefactCtrl
  */
 angular.module('micorrApp')
-    .controller('ModalDelArtefactCtrl', function ($scope, $route, $modal, $log, StrataData, MiCorrService) {
+    .controller('ModalDelArtefactCtrl', function ($scope, $route, $modal, $log, MiCorrService) {
         $scope.open = function (size, artefact) {
             $scope.artefact = artefact;
             var modalInstance = $modal.open({

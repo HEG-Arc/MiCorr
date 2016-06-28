@@ -8,7 +8,7 @@
  * Contrôlleur qui s'occupe de l'onglet de la morphologie
  */
 angular.module('micorrApp')
-    .controller('StratMorphologyCtrl', function ($scope, $route, $window, StrataData, StratigraphyData) {
+    .controller('StratMorphologyCtrl', function ($scope, $route, $window, StratigraphyData) {
 
         //valeurs sélectionnées dans les champs de notre formulaire
         $scope.selectedShapeFamily;

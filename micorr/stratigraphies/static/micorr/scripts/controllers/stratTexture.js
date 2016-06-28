@@ -8,7 +8,7 @@
  * Contrôlleur qui s'occupe de l'onglet de la texture
  */
 angular.module('micorrApp')
-    .controller('StratTextureCtrl', function ($scope, $route, $window, StrataData, StratigraphyData) {
+    .controller('StratTextureCtrl', function ($scope, $route, $window, StratigraphyData) {
 
         //valeurs sélectionnées dans les champs de notre formulaire
         $scope.selectedPorosityFamily;

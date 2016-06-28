@@ -8,7 +8,7 @@
  * Contrôlleur qui s'occupe de sauvegarder une stratigraphie
  */
 angular.module('micorrApp')
-    .controller('ModalSaveStrataCtrl', function ($scope, $route, $modal, $log, StrataData) {
+    .controller('ModalSaveStrataCtrl', function ($scope, $route, $modal, $log) {
         $scope.artefactName = $scope.$parent.artefactName;
 
          // appelle une méthode parent pour sauvegarder la stratigraphie qui se trouve dans le service

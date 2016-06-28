@@ -7,6 +7,7 @@
  * # ModalAddChildStrataCtrl
  * Contrôlleur qui s'occupe d'ajouter une strate enfant
  */
+//Plus utilisé !!!
 angular.module('micorrApp')
     .controller('ModalAddChildStrataCtrl', function ($scope, $modal, $log) {
         $scope.artefactName = $scope.$parent.artefactName;

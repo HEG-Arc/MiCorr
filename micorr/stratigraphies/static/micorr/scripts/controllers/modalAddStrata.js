@@ -8,7 +8,7 @@
  * Contrôlleur qui s'occupe d'ajouter une strate
  */
 angular.module('micorrApp')
-    .controller('ModalAddStrataCtrl', function ($scope, $rootScope, $route, $modal, MiCorrService, StrataData, StratigraphyData) {
+    .controller('ModalAddStrataCtrl', function ($scope, $rootScope, $route, $modal, MiCorrService, StratigraphyData) {
         $rootScope.route = $route;
         $rootScope.natures = natures;
         $scope.nature;

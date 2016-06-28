@@ -7,7 +7,7 @@
  * # ModalAddArtefactCtrl
  */
 angular.module('micorrApp')
-    .controller('ModalAddArtefactCtrl', function ($scope, $route, $modal, $log, StrataData, MiCorrService) {
+    .controller('ModalAddArtefactCtrl', function ($scope, $route, $modal, $log, MiCorrService) {
         $scope.open = function (size) {
             var modalInstance = $modal.open({
                 templateUrl: 'AddArtefactContent.html',

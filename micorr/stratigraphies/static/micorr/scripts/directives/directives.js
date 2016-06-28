@@ -60,29 +60,12 @@ angular.module('micorrApp').directive('strata', function ($compile, Stratigraphy
      * mettre le contenu de ce svg dans un canvas et ensuite créer un png téléchargeable
      * Ce png contient aussi les images qui se trouvaient sur le svg
      */
-}).directive('stratapng', function ($compile, StrataData) {
-    return {
-        restrict: 'EA',
-        replace: true,
-        transclude: true,
-        template: '<canvas></canvas>',
-        link: function (scope, element, attrs) {
-            // on récupère notre image
-            var index = attrs.index;
-            var images = StrataData.getImages();
-            var image = images[index];
-            // on convertir en svg avec la librairie raphael.export
-            var svg = image.toSVG();
-            // on convertit en image et on l'inscruste dans notre canvas
-            canvg(element[0], svg);
-        }
-    };
 })
     /* Cette directive définit la classification (nommage) de la strate (CP1, CP2, M1, M2, M3, M1)
      * en fonction des autres strates de la stratigraphie
      * L'affichage vient à gauche des dessins des strates
      */
-    .directive('stratainfo', function ($compile, StrataData, StratigraphyData) {
+    .directive('stratainfo', function ($compile, StratigraphyData) {
         return {
             restrict: 'EA',
             replace: true,
