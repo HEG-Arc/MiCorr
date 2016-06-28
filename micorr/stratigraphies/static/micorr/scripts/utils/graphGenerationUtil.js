@@ -483,7 +483,10 @@
                 //SubmMicrostructure
                 if (strata.isSubCharacteristic('eutecticPhaseDendritic') || strata.isSubCharacteristic('eutecticPhaseGrainElongated') || strata.isSubCharacteristic('eutecticPhaseGrainLarge') || strata.isSubCharacteristic('eutecticPhaseGrainSmall')) {
                     this.addImage(draw, "../static/micorr/images/c/M/EutheticPhase/M_EutheticPhase_" + height + "x" + width + ".svg", width, height);
+                } else if (strata.isSubCharacteristic('eutecticPhaseDeformedDendritic')) {
+                    this.addImage(draw, "../static/micorr/images/c/M/EutheticPhase/M_EutheticPhaseDeformedDendrite_" + height + "x" + width + ".svg", width, height);
                 }
+
                 if (strata.isSubCharacteristic('twinLinesDendritic') || strata.isSubCharacteristic('twinLinesGrainSmall')) {
                     this.addImage(draw, "../static/micorr/images/c/M/TwinLines/M_TwinLinesGrainSmall_" + height + "x" + width + ".svg", width, height);
                 } else if (strata.isSubCharacteristic('twinLinesGrainElongated')) {
@@ -779,7 +782,7 @@
             key: 'addImage',
             value: function addImage(draw, url, width, height) {
                 var format = url.substr(url.length - 3);
-                console.log('format');
+                console.log(format);
 
                 /*Pour le moment, vu que la librairie utilisée pour convertir en SVG ne fonctionne pas,
                  on ajoute simplement l'image comme ça:

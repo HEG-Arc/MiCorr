@@ -481,6 +481,10 @@ class GraphGenerationUtil {
             strata.isSubCharacteristic('eutecticPhaseGrainLarge') || strata.isSubCharacteristic('eutecticPhaseGrainSmall')) {
             this.addImage(draw, "../static/micorr/images/c/M/EutheticPhase/M_EutheticPhase_" + height + "x" + width + ".svg", width, height);
         }
+        else if(strata.isSubCharacteristic('eutecticPhaseDeformedDendritic')){
+            this.addImage(draw, "../static/micorr/images/c/M/EutheticPhase/M_EutheticPhaseDeformedDendrite_" + height + "x" + width + ".svg", width, height);
+        }
+
         if (strata.isSubCharacteristic('twinLinesDendritic') || strata.isSubCharacteristic('twinLinesGrainSmall')) {
             this.addImage(draw, "../static/micorr/images/c/M/TwinLines/M_TwinLinesGrainSmall_" + height + "x" + width + ".svg", width, height);
         }
@@ -490,6 +494,7 @@ class GraphGenerationUtil {
         else if (strata.isSubCharacteristic('twinLinesGrainLarge')) {
             this.addImage(draw, "../static/micorr/images/c/M/TwinLines/M_TwinLinesGrainLarge_" + height + "x" + width + ".svg", width, height);
         }
+
 
         if (strata.isSubCharacteristic('slipLinesDendritic') || strata.isSubCharacteristic('slipLinesGrainSmall')) {
             this.addImage(draw, "./static/micorr/images/c/M/SlipLines/M_SlipLinesGrainSmall_" + height + "x" + width + ".svg", width, height);
@@ -501,12 +506,14 @@ class GraphGenerationUtil {
             this.addImage(draw, "../static/micorr/images/c/M/SlipLines/M_SlipLinesGrainLarge_" + height + "x" + width + ".svg", width, height);
         }
 
+
         if (strata.isSubCharacteristic('inclusionsDendritic') || strata.isSubCharacteristic('inclusionsGrainSmall') || strata.isSubCharacteristic('inclusionsGrainElongated')) {
             this.addImage(draw, "../static/micorr/images/c/M/Inclusion/M_InclusionGrainSmall_" + height + "x" + width + ".svg", width, height);
         }
         else if (strata.isSubCharacteristic('inclusionsGrainLarge')) {
             this.addImage(draw, "../static/micorr/images/c/M/Inclusion/M_InclusionGrainLarge_" + height + "x" + width + ".svg", width, height);
         }
+
 
 
         //Fissures
@@ -811,7 +818,7 @@ class GraphGenerationUtil {
      */
         addImage(draw, url, width, height) {
         var format = url.substr(url.length - 3);
-        console.log('format');
+        console.log(format);
 
         /*Pour le moment, vu que la librairie utilisée pour convertir en SVG ne fonctionne pas,
          on ajoute simplement l'image comme ça:
