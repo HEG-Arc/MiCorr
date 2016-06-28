@@ -22,7 +22,6 @@ class Strata {
     }
 
 
-
     /**
      * Retourne une strate enfant de la nature en paramètres
      * @param nature la nature recherchée
@@ -258,18 +257,19 @@ class Strata {
     /**
      * Permet d'enregistrer le dessin SVG.JS d'une image pour éviter de la redessiner à chaque fois
      */
-    setStrataImage(strataImage){
+        setStrataImage(strataImage) {
         this.strataImage = strataImage;
     }
 
-    getStrataImage(){
+    getStrataImage() {
         return this.strataImage;
     }
 
-    setInterfaceImage(interfaceImage){
+    setInterfaceImage(interfaceImage) {
         this.interfaceImage = interfaceImage;
     }
-    getInterfaceImage(){
+
+    getInterfaceImage() {
         return this.interfaceImage;
     }
 
@@ -284,7 +284,11 @@ class Strata {
         this.dependencies.push('widthFamily');
         this.dependencies.push('continuityFamily');
         this.dependencies.push('directionFamily');
-        this.dependencies.push('interfaceprofileFamily');
+
+        //Les strates CM n'ont pas d'interface
+        if (this.nature != "Corroded metal") {
+            this.dependencies.push('interfaceprofileFamily');
+        }
 
         if (this.nature == "Soil") {
 

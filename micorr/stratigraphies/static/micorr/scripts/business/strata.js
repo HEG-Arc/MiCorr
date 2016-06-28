@@ -294,7 +294,11 @@
                 this.dependencies.push('widthFamily');
                 this.dependencies.push('continuityFamily');
                 this.dependencies.push('directionFamily');
-                this.dependencies.push('interfaceprofileFamily');
+
+                //Les strates CM n'ont pas d'interface
+                if (this.nature != "Corroded metal") {
+                    this.dependencies.push('interfaceprofileFamily');
+                }
 
                 if (this.nature == "Soil") {
 

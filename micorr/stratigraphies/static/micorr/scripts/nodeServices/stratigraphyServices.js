@@ -89,7 +89,8 @@ module.exports = {
     },
 
     /**
-     * Cette méthode exporte la stratigraphie au format spécifié en paramètres
+     * Cette méthode exporte la stratigraphie au format spécifié en paramètres elle ne fonctionne pas très bien
+     * car la librairie librsvg ne gère pas très bien les SVG complexes
      * @param svgdata
      * @param format
      * @param width
