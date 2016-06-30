@@ -62,7 +62,8 @@ module.exports = {
                 for (var j = 0; j < currentStrata.subcharacteristics.length; j++) {
                     var currentSubCharacteristic = currentStrata.subcharacteristics[j];
                     var subCharacteristic = new SubCharacteristic();
-                    subCharacteristic.setName(currentSubCharacteristic.name);
+                    subCharacteristic.setName(currentSubCharacteristic.real_name);
+                    subCharacteristic.setUid(currentSubCharacteristic.name);                        
                     strata.addSubCharacteristic(subCharacteristic);
                 }
                 stratigraphy.addStrata(strata);
@@ -88,36 +89,22 @@ module.exports = {
         return callback(result);
     },
 
-    /**
-     * Cette méthode exporte la stratigraphie au format spécifié en paramètres elle ne fonctionne pas très bien
-     * car la librairie librsvg ne gère pas très bien les SVG complexes
-     * @param svgdata
-     * @param format
-     * @param width
-     * @param callback
-     * @returns {*}
-     */
-    exportStratigraphy: function (svgdata, format, width, callback) {
-
-        var Rsvg = require('librsvg').Rsvg;
-        var fs = require('fs');
-        var util = require('util');
 
 
-        try {
-            var svg = new Rsvg(svgdata);
+        /*
+         var svg = new Rsvg(svgdata);
 
-            var fileContent = svg.render({
-                format: format,
-                width: svg.width,
-                height: svg.height
-            }).data;
-        }
-        catch(err) {
-            console.log('error while drawing');
-        }
-        return callback(fileContent);
-    }
+         var fileContent = svg.render({
+         format: format,
+         width: svg.width,
+         height: svg.height
+         }).data;
 
 
-};
+         console.log('error while drawing');
+
+         return callback(fileContent);
+         }
+         */
+
+    };
