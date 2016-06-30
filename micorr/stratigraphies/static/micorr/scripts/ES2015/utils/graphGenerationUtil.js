@@ -215,7 +215,7 @@ class GraphGenerationUtil {
             document.getElementById(divID).style.height = height + "px";
         }
         else{
-            this.window.getElementById(divID).style.height = height + "px";
+            this.window.document.getElementById(divID).style.height = height + "px";
         }
 
         var borderWidth = 8;
@@ -230,7 +230,6 @@ class GraphGenerationUtil {
         nestedStrata.width(width);
 
         this.fillStrata(nestedStrata, strata);
-
         //Strate CM
         if (strata.getCharacteristicsByFamily('natureFamily')[0].getName() == 'cmCharacteristic') {
             if (strata.getIndex() < this.stratig.getStratas().length - 1) {
