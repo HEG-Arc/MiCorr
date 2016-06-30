@@ -781,12 +781,9 @@
         }, {
             key: 'addImage',
             value: function addImage(draw, url, width, height) {
+                console.log('newImg' + url);
                 var format = url.substr(url.length - 3);
                 console.log(format);
-
-                /*Pour le moment, vu que la librairie utilisée pour convertir en SVG ne fonctionne pas,
-                 on ajoute simplement l'image comme ça:
-                 */
 
                 if (this.window != undefined && format == 'svg') {
 

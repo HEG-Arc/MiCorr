@@ -30,7 +30,7 @@ module.exports = {
         //On se place dynamiquement à la racine du projet
         process.chdir(__dirname);
         process.chdir("../../../../");
-
+        console.log(url);
         //On supprimer le ../ devant l'url
         var url = url.substring(3);
 

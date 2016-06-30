@@ -88,6 +88,10 @@ class GraphGenerationUtil {
             var interfaceDiv = document.getElementById(divID);
             interfaceDiv.style.height = interfaceHeight + "px";
         }
+        else{
+            var interfaceDiv = this.window.document.getElementById(divID);
+            interfaceDiv.style.height = interfaceHeight + "px";
+        }
 
 
         var borderWidth = 8;
@@ -209,6 +213,9 @@ class GraphGenerationUtil {
 
         if (this.window == undefined) {
             document.getElementById(divID).style.height = height + "px";
+        }
+        else{
+            this.window.getElementById(divID).style.height = height + "px";
         }
 
         var borderWidth = 8;
@@ -819,10 +826,6 @@ class GraphGenerationUtil {
         addImage(draw, url, width, height) {
         var format = url.substr(url.length - 3);
         console.log(format);
-
-        /*Pour le moment, vu que la librairie utilisée pour convertir en SVG ne fonctionne pas,
-         on ajoute simplement l'image comme ça:
-         */
 
 
         if (this.window != undefined && format == 'svg') {

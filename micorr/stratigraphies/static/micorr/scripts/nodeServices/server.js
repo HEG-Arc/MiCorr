@@ -78,23 +78,26 @@ dispatcher.onGet("/exportStratigraphy", function (req, res) {
     var params = querystring.parse(url.parse(req.url).query);
     var width = params['width'];
     var format = params['format'];
-    if(format != 'pdf'){
+    if (format != 'pdf') {
         format = 'png';
     }
     stratigraphyServices.getStratigraphyByName(params['name'], function (stratig) {
         console.log('ready to draw');
         if (stratig != undefined) {
             stratigraphyServices.drawStratigraphy(stratig, width, function (svgresult) {
-                stratigraphyServices.exportStratigraphy(svgresult, format, width, function (fileresult)
-                {
+
+                var Inkscape = require('inkscape')
+                if(format == 'png') {
+                    inkscape = new Inkscape(['-e']);
                     res.writeHead(200, {'Content-Type': 'image/png'});
-                    res.end(fileresult);
-                });
+                    inkscape.end(svgresult);
+                    inkscape.pipe(res);
+                }
+
             });
         }
         else {
-            //TODO: Gérer les exceptions
-            res.write('');
+            res.writeHead( 400, 'Stratigraphie non trouvée', {'content-type' : 'text/plain'});
             res.end();
         }
     });
