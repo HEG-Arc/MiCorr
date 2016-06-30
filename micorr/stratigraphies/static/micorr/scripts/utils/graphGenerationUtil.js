@@ -137,6 +137,9 @@
                 if (this.window == undefined) {
                     var interfaceDiv = document.getElementById(divID);
                     interfaceDiv.style.height = interfaceHeight + "px";
+                } else {
+                    var interfaceDiv = this.window.document.getElementById(divID);
+                    interfaceDiv.style.height = interfaceHeight + "px";
                 }
 
                 var borderWidth = 8;
@@ -245,6 +248,8 @@
 
                 if (this.window == undefined) {
                     document.getElementById(divID).style.height = height + "px";
+                } else {
+                    this.window.document.getElementById(divID).style.height = height + "px";
                 }
 
                 var borderWidth = 8;
@@ -257,7 +262,6 @@
                 nestedStrata.width(width);
 
                 this.fillStrata(nestedStrata, strata);
-
                 //Strate CM
                 if (strata.getCharacteristicsByFamily('natureFamily')[0].getName() == 'cmCharacteristic') {
                     if (strata.getIndex() < this.stratig.getStratas().length - 1) {
@@ -781,7 +785,6 @@
         }, {
             key: 'addImage',
             value: function addImage(draw, url, width, height) {
-                console.log('newImg' + url);
                 var format = url.substr(url.length - 3);
                 console.log(format);
 
