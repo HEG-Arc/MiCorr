@@ -400,8 +400,10 @@ class GraphGenerationUtil {
             var char = strata.getCharacteristicsByFamily('cpriMicrostructureFamily')[0].getName();
             switch (char) {
                 case "pseudomorphOfGranularCharacteristic":
-                    var image = draw.image("../static/micorr/images/c/grains/GrainsGris_" + height + "x" + width + ".png");
-                    image.size(width, height);
+                    if(this.window == undefined) {
+                        var image = draw.image("../static/micorr/images/c/grains/GrainsGris_" + height + "x" + width + ".png");
+                        image.size(width, height);
+                    }
                     break;
 
                 case "pseudomorphOfDendriticCharacteristic":
@@ -409,8 +411,10 @@ class GraphGenerationUtil {
                     break;
 
                 case "hexagonalNetworkCharacteristic":
-                    var image = draw.image("../static/micorr/images/c/hexagonal.png");
-                    image.size(width, height);
+                    if(this.window == undefined) {
+                        var image = draw.image("../static/micorr/images/c/hexagonal.png");
+                        image.size(width, height);
+                    }
                     break;
 
                 case "alternatingBandsCharacteristic":
@@ -447,7 +451,7 @@ class GraphGenerationUtil {
             strata.isSubCharacteristic('twinLinesAlternatingBandsCpri') || strata.isSubCharacteristic('twinLinesHexagonalNetworkCpri') ||
             strata.isSubCharacteristic('twinLinesPseudomorphOfDendriticCpri') || strata.isSubCharacteristic('twinLinesPseudomorphOfGranularCpri')) {
 
-            this.addImage(draw, "./static/micorr/images/c/CP/TwinLines/CP_TwinLinesGrainSmall_" + height + "x" + width + ".svg", width, height);
+            this.addImage(draw, "../static/micorr/images/c/CP/TwinLines/CP_TwinLinesGrainSmall_" + height + "x" + width + ".svg", width, height);
         }
         if (strata.isSubCharacteristic('inclusionsNoMicrostructureCpri') || strata.isSubCharacteristic('inclusionsCristallineMicrostructureCpri') ||
             strata.isSubCharacteristic('inclusionsIsolatedAggregateMicrostructureCpri') || strata.isSubCharacteristic('inclusionsScatteredAggregateMicrostructureCpri') ||
@@ -503,7 +507,7 @@ class GraphGenerationUtil {
 
 
         if (strata.isSubCharacteristic('slipLinesDendritic') || strata.isSubCharacteristic('slipLinesGrainSmall')) {
-            this.addImage(draw, "./static/micorr/images/c/M/SlipLines/M_SlipLinesGrainSmall_" + height + "x" + width + ".svg", width, height);
+            this.addImage(draw, "../static/micorr/images/c/M/SlipLines/M_SlipLinesGrainSmall_" + height + "x" + width + ".svg", width, height);
         }
         else if (strata.isSubCharacteristic('slipLinesGrainElongated')) {
             this.addImage(draw, "../static/micorr/images/c/M/SlipLines/M_SlipLinesGrainElongated_" + height + "x" + width + ".svg", width, height);
@@ -557,12 +561,16 @@ class GraphGenerationUtil {
         }
 
 
-        for (var i = 0; i < pds.pointList.length; i++) {
-            var image = draw.image("../static/micorr/images/c/" + pds.pointList[i].t + ".png");
-            image.size(pds.pointList[i].w, pds.pointList[i].h);
-            image.x(pds.pointList[i].x - pds.pointList[i].w / 2);
-            image.y(pds.pointList[i].y - pds.pointList[i].h / 2);
+        //On dessine les images pour les points dans le tableau PoissonDisk
+        //Pour l'instant ces images sont en png, il faudra les exporter en svg
+        if(this.window == undefined) {
+            for (var i = 0; i < pds.pointList.length; i++) {
+                var image = draw.image("../static/micorr/images/c/" + pds.pointList[i].t + ".png");
+                image.size(pds.pointList[i].w, pds.pointList[i].h);
+                image.x(pds.pointList[i].x - pds.pointList[i].w / 2);
+                image.y(pds.pointList[i].y - pds.pointList[i].h / 2);
 
+            }
         }
     }
 
