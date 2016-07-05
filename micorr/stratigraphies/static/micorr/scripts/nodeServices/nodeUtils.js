@@ -1,11 +1,8 @@
 /**
- * Created by thierry on 26.06.16.
+ * Created by Thierry Hubmann
+ * Module contenant des fonctions générales utiles à Node.js
  */
 module.exports = {
-
-    getHello: function(){
-        return 'hello';
-    },
 
     /**
      * Cette méthode permet d'appeller la libraire SVG.js pour node

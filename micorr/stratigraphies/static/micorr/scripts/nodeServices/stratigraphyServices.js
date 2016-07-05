@@ -1,5 +1,6 @@
-/*
- Ce fichier contient tous les services liés aux stratigraphies pour Node.js
+/**
+ * Created by Thierry Hubmann
+ * Ce fichier contient tous les services liés aux stratigraphies pour Node.js
  */
 var request = require("request");
 var Stratigraphy = require('../business/stratigraphy').Stratigraphy;
@@ -73,6 +74,13 @@ module.exports = {
         });
     },
 
+    /**
+     * Dessine la stratigraphie et retourne le SVG généré
+     * @param stratigraphy
+     * @param width
+     * @param callback
+     * @returns le SVG généré
+     */
     drawStratigraphy: function (stratigraphy, width, callback) {
 
         //drawer.drawStrata(stratigraphy.getStratas()[0], 'drawing');
@@ -87,24 +95,6 @@ module.exports = {
         var result = drawer.drawStratigraphy(width);
         console.log('stratigraphy drawed')
         return callback(result);
-    },
-
-
-
-        /*
-         var svg = new Rsvg(svgdata);
-
-         var fileContent = svg.render({
-         format: format,
-         width: svg.width,
-         height: svg.height
-         }).data;
-
-
-         console.log('error while drawing');
-
-         return callback(fileContent);
-         }
-         */
+    }
 
     };

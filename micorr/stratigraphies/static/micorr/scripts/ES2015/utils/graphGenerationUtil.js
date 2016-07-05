@@ -1,5 +1,7 @@
 /**
- * Created by thierry on 27.04.16.
+ * Created by Thierry Hubmann
+ * Cette classe utilise la librairie graphique SVG.js pour générer le SVG
+ * d'une stratigraphie ou d'une strate.
  */
 
 import{Stratigraphy} from '../business/stratigraphy';

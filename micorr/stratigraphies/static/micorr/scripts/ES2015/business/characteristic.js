@@ -1,7 +1,8 @@
 /**
- * Created by thierry on 27.04.16.
+ * Created by Thierry Hubmann
  *
  * Cette classe est développée en ES2015 et est recompilée avec Babel
+ * C'est la classe Business de la caractéristique
  */
 
 import {SubCharacteristic} from './subCharacteristic';
