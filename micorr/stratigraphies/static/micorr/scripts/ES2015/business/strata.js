@@ -1,7 +1,8 @@
 /**
- * Created by thierry on 27.04.16.
+ * Created by Thierry Hubmann
  *
  * Cette classe est développée en ES2015 et est recompilée avec Babel
+ * C'est la classe business de la Strate
  */
 import {Characteristic} from './characteristic';
 import {SubCharacteristic} from './subCharacteristic';

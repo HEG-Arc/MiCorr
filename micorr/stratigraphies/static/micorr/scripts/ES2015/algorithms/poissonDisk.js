@@ -1,5 +1,7 @@
 /**
- * Created by thierry on 14.06.16.
+ * Created by Thierry Hubmann
+ * Ré-implémentation de la classe PoissonDisk implémentée par Marcel en ES2015 pour la rendre
+ * compatible avec la nouvelle classe graphGenerationUtil.
  */
 class PoissonDiskSampler {
 
