@@ -185,52 +185,48 @@
 
 <div class="row-fluid" ng-show="showTabForms">
     <div class="col-md-7">
-        <blockquote>
-            <p>
-                Strata : {{ strataName }}
-            </p>
+        <h1 class="ng-binding minititle">
+            Strata : {{ strataName }}
+        </h1>
 
-            <div class="col-md-3 text-center" ng-controller="ModalAddChildStrataCtrl">
-                <script type="text/ng-template" id="modalAddChildStrata.html">
-                    <div class="modal-header">
-                        <h3 class="modal-title">Add a child strata</h3>
-                    </div>
-                    <div class="modal-body">
-                        <form>
-                            <div class="form-group">
-                                <label for="natureFamily">Nature Family</label>
-                                <select ng-model="nature" id="childNatureFamily" class="form-control">
-                                    <option ng-repeat="nature in natures.natures"
-                                            value="{{ nature.code }}">{{ nature.description }}</option>
-                                </select>
-                            </div>
-                        </form>
-                    </div>
+        <div class="col-md-3 text-center" ng-controller="ModalAddChildStrataCtrl">
+            <script type="text/ng-template" id="modalAddChildStrata.html">
+                <div class="modal-header">
+                    <h3 class="modal-title">Add a child strata</h3>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="natureFamily">Nature Family</label>
+                            <select ng-model="nature" id="childNatureFamily" class="form-control">
+                                <option ng-repeat="nature in natures.natures"
+                                        value="{{ nature.code }}">{{ nature.description }}</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
 
-                    <div class="modal-footer">
-                        <button class="btn btn-primary" ng-click="ok()">OK</button>
-                        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
-                    </div>
-                </script>
-                <!--
-                <button type="button" class="btn btn-primary" ng-click="open()">
-                        <span class="glyphicon glyphicon glyphicon-plus" aria-hidden="true"></span>
-                        Add a child strata
-                </button>
-                -->
-            </div>
-        </blockquote>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" ng-click="ok()">OK</button>
+                    <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+                </div>
+            </script>
+            <!--
+            <button type="button" class="btn btn-primary" ng-click="open()">
+                    <span class="glyphicon glyphicon glyphicon-plus" aria-hidden="true"></span>
+                    Add a child strata
+            </button>
+            -->
+        </div>
     </div>
     <div class="col-md-5">
-        <blockquote>
-            <p>
-                Nature family : {{ natureFamilyname }}
-            </p>
-        </blockquote>
+        <h1 class="ng-binding minititle">
+            Nature family : {{ natureFamilyname }}
+        </h1>
     </div>
 </div>
 
-<tabset ng-show="showTabForms" justified="true">
+<tabset ng-show="showTabForms" justified="true" class="clearfix">
 <tab heading="Morphology" ng-controller="StratMorphologyCtrl" active="activeMorphologyTab">
     <form>
         <div class="row-fluid">
@@ -645,7 +641,7 @@
 </div>
 <div id="hello" class="col-md-6">
     <div id="stratasvg" class="row-fluid">
-        <div class="col-md-11" ng-repeat="strata in stratas">
+        <div id="stratasvg_{{$index}}" class="col-md-11" ng-repeat="strata in stratas">
             <stratainfo index="{{$index}}"></stratainfo>
             <strata index="{{$index}}"></strata>
         </div>

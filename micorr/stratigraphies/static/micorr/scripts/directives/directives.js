@@ -43,15 +43,12 @@ angular.module('micorrApp').directive('strata', function ($compile, Stratigraphy
             $(element.children()[0]).bind('click', function () {
                 scope.update(index);
                 scope.setInterfaceTab(true);
-
             });
             // événement sur strate
             $(element.children()[1]).bind('click', function () {
                 scope.update(index);
                 scope.setInterfaceTab(false);
-
             });
-
         }
     };
 
@@ -100,7 +97,7 @@ angular.module('micorrApp').directive('strata', function ($compile, Stratigraphy
                 label = label + sameNature;
                 element.children()[0].id = 'info'+index;
 
-                element.children()[0].innerHTML = '<button class="btn btn-link btn-xs" ng-click="removeStrata(' + index + ')" title="delete this strata"><span class="glyphicon glyphicon-remove"></span></button></br>' + label;
+                element.children()[0].innerHTML = '<button class="btn btn-link btn-xs" ng-click="removeStrata(' + index + ')" title="delete this strata"><span class="glyphicon glyphicon-remove"></span></button>';
 
                 // on affiche les boutons pour bouger la strate
                 var btns = "";
@@ -110,6 +107,14 @@ angular.module('micorrApp').directive('strata', function ($compile, Stratigraphy
                     btns += '<button ng-click="movestratadown(' + index + ')" type="button" class="btn btn-link btn-xs" title="move down this strata"><span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span></button>';
 
                 $(element.children()[1]).append(btns);
+
+                $(element.children()[1]).append('<div class="labelinfo" >' + label + '</div>');
+
+                $(element.children()[1]).bind('click', function () {
+                    scope.update(index);
+                    scope.setInterfaceTab(false);
+                });
+
                 $compile(element.contents())(scope);
 
             }

@@ -650,6 +650,7 @@ angular.module('micorrApp')
                 $scope.$apply();
                 $scope.stratas = StratigraphyData.getStratigraphy().getStratas();
                 $scope.$apply();
+                //A MODIFIER!! pk on a des apply dans un controlleur? voir cycle digest...
 
                 $scope.highlightSelected();
             });
@@ -667,17 +668,14 @@ angular.module('micorrApp')
          */
         $scope.highlightSelected = function () {
             var index = StratigraphyData.getSelectedStrata();
-            /*
-             On met a blanc toutes les infos des strates et on change
-             la couleur de fond de la strate sélectionnée
-             */
+
             for (var i = 0; i < StratigraphyData.getStratigraphy().getStratas().length; i++) {
-                var thisDiv = document.getElementById('info' + i);
-                thisDiv.style.backgroundColor = "white";
+                var thisDiv = document.getElementById('stratasvg_' + i);
+                thisDiv.classList.remove('current_strata');
             }
-            var infoElement = document.getElementById('info' + index);
+            var infoElement = document.getElementById('stratasvg_' + index);
             if (infoElement != undefined) {
-                infoElement.style.backgroundColor = "#90EE90"; //On met en évidence les infos de la strate sélectionnée
+                infoElement.classList.add('current_strata');
             }
         };
         /*
