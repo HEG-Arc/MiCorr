@@ -38,7 +38,6 @@ module.exports = {
                     characteristic.setName(currentCharacteristic.name);
                     characteristic.setRealName(currentCharacteristic.real_name);
                     characteristic.setFamily(currentCharacteristic.family);
-                    characteristic.setDescription(currentCharacteristic.description);
                     strata.addCharacteristic(characteristic);
                 }
 
