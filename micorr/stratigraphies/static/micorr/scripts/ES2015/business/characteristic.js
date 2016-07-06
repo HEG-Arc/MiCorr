@@ -61,6 +61,14 @@ class Characteristic{
         this.realName = realName;
     }
 
+    getDescription(){
+        return this.description;
+    }
+
+    setDescription(description){
+        this.description = description;
+    }
+
     getFamily(){
         return this.family;
     }

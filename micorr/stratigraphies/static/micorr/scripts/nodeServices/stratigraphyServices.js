@@ -38,6 +38,7 @@ module.exports = {
                     characteristic.setName(currentCharacteristic.name);
                     characteristic.setRealName(currentCharacteristic.real_name);
                     characteristic.setFamily(currentCharacteristic.family);
+                    characteristic.setDescription(currentCharacteristic.description);
                     strata.addCharacteristic(characteristic);
                 }
 
@@ -64,7 +65,7 @@ module.exports = {
                     var currentSubCharacteristic = currentStrata.subcharacteristics[j];
                     var subCharacteristic = new SubCharacteristic();
                     subCharacteristic.setName(currentSubCharacteristic.real_name);
-                    subCharacteristic.setUid(currentSubCharacteristic.name);                        
+                    subCharacteristic.setUid(currentSubCharacteristic.name);
                     strata.addSubCharacteristic(subCharacteristic);
                 }
                 stratigraphy.addStrata(strata);

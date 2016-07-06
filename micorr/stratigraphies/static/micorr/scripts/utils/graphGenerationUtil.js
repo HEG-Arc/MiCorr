@@ -159,27 +159,71 @@
                 nestedInterface.height(interfaceHeight);
                 nestedInterface.width(interfaceWidth);
 
-                var upperInterfaceColor = "white"; // couleur de fond de la partie haute
-                var lowerInterfaceColor = "white"; // couleur de fond de la partie basse
+                if (index == 0) {
+                    var upperInterfaceColor = "white"; // couleur de fond de la partie haute
+                    var lowerInterfaceColor = "#fcf0be"; // couleur de fond de la partie basse
+                } else {
+                    var upperInterfaceColor = "#fcf0be"; // couleur de fond de la partie haute
+                    var lowerInterfaceColor = "#fcf0be"; // couleur de fond de la partie basse
+                }
+
 
                 // si on est pas à la première interface alors on change la couleur de fond du haut
                 if (index > 0) {
                     if (this.stratig.getStratas()[index - 1].getCharacteristicsByFamily('colourFamily').length > 0) {
                         var color = this.stratig.getStratas()[index - 1].getCharacteristicsByFamily('colourFamily')[0].getRealName();
-                        if (color != "" && color != "undefined" && color != "black") {
+                        // !!! A MODIFIER QUAND ON FERA LE REFACTORING DU DAO...
+                        if (color != "" && color != "undefined" && color != "black" && color != "dark red" && color != "white" && color != "ochre" && color != "dark green" && color != "medium green"  && color != "light green" && color != "dark blue" && color != "medium blue"  && color != "light blue") {
                             upperInterfaceColor = color;
                         } else if (color == "black") {
                             upperInterfaceColor = '#474747';
+                        } else if (color == 'dark red') {
+                            upperInterfaceColor = '#bc2c14';
+                        } else if (color == 'white') {
+                            upperInterfaceColor = '#fcf0be';
+                        } else if (color == 'ochre') {
+                            upperInterfaceColor = '#cab91d';
+                        } else if (color == 'dark green') {
+                            upperInterfaceColor = '#046424';
+                        } else if (color == 'medium green') {
+                            upperInterfaceColor = '#3cbc65';
+                        } else if (color == 'light green') {
+                            upperInterfaceColor = '#a2cfaf';
+                        } else if (color == 'dark blue') {
+                            upperInterfaceColor = '#441cb3';
+                        } else if (color == 'medium blue') {
+                            upperInterfaceColor = '#4cb3d4';
+                        } else if (color == 'light blue') {
+                            upperInterfaceColor = '#a0cedb';
                         }
                     }
                 }
 
                 if (strata.getCharacteristicsByFamily('colourFamily').length > 0) {
                     var color = strata.getCharacteristicsByFamily('colourFamily')[0].getRealName();
-                    if (color != "" && color != "undefined" && color != "black") {
+                    // !!! A MODIFIER QUAND ON FERA LE REFACTORING DU DAO...
+                    if (color != "" && color != "undefined" && color != "black" && color != "dark red" && color != "white" && color != "ochre" && color != "dark green" && color != "medium green"  && color != "light green" && color != "dark blue" && color != "medium blue"  && color != "light blue") {
                         lowerInterfaceColor = color;
                     } else if (color == "black") {
                         lowerInterfaceColor = "#474747";
+                    } else if (color == 'dark red') {
+                        lowerInterfaceColor = '#bc2c14';
+                    } else if (color == 'white') {
+                        lowerInterfaceColor = '#fcf0be';
+                    } else if (color == 'ochre') {
+                        lowerInterfaceColor = '#cab91d';
+                    } else if (color == 'dark green') {
+                        lowerInterfaceColor = '#046424';
+                    } else if (color == 'medium green') {
+                        lowerInterfaceColor = '#3cbc65';
+                    } else if (color == 'light green') {
+                        lowerInterfaceColor = '#a2cfaf';
+                    } else if (color == 'dark blue') {
+                        lowerInterfaceColor = '#441cb3';
+                    } else if (color == 'medium blue') {
+                        lowerInterfaceColor = '#4cb3d4';
+                    } else if (color == 'light blue') {
+                        lowerInterfaceColor = '#a0cedb';
                     }
                 }
 
@@ -387,8 +431,36 @@
                     color = strata.getCharacteristicsByFamily('colourFamily')[0].getRealName();
                 }
 
+                // !!! A MODIFIER QUAND ON FERA LE REFACTORING DU DAO...
                 if (color == 'black') {
                     color = '#474747';
+                }
+                if (color == 'dark red') {
+                    color = '#bc2c14';
+                }
+                if (color == 'white') {
+                    color = '#fcf0be';
+                }
+                if (color == 'ochre') {
+                    color = '#cab91d';
+                }
+                if (color == 'dark green') {
+                    color = '#046424';
+                }
+                if (color == 'medium green') {
+                    color = '#3cbc65';
+                }
+                if (color == 'light green') {
+                    color = '#a2cfaf';
+                }
+                if (color == 'dark blue') {
+                    color = '#441cb3';
+                }
+                if (color == 'medium blue') {
+                    color = '#4cb3d4';
+                }
+                if (color == 'light blue') {
+                    color = '#a0cedb';
                 }
 
                 var rect = draw.rect(width, height).attr({ fill: color });
