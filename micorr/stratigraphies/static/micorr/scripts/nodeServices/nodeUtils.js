@@ -1,4 +1,4 @@
-/**
+rm /**
  * Created by Thierry Hubmann
  * Module contenant des fonctions générales utiles à Node.js
  */

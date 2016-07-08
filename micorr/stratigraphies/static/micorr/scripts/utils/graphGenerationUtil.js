@@ -159,14 +159,8 @@
                 nestedInterface.height(interfaceHeight);
                 nestedInterface.width(interfaceWidth);
 
-                if (index == 0) {
-                    var upperInterfaceColor = "white"; // couleur de fond de la partie haute
-                    var lowerInterfaceColor = "#fcf0be"; // couleur de fond de la partie basse
-                } else {
-                    var upperInterfaceColor = "#fcf0be"; // couleur de fond de la partie haute
-                    var lowerInterfaceColor = "#fcf0be"; // couleur de fond de la partie basse
-                }
-
+                var upperInterfaceColor = "white";  // couleur de fond de la partie haute
+                var lowerInterfaceColor = "white";  // couleur de fond de la partie basse
 
                 // si on est pas à la première interface alors on change la couleur de fond du haut
                 if (index > 0) {
@@ -179,7 +173,7 @@
                             upperInterfaceColor = '#474747';
                         } else if (color == 'dark red') {
                             upperInterfaceColor = '#bc2c14';
-                        } else if (color == 'white') {
+                        } else if (color == 'light yellow') {
                             upperInterfaceColor = '#fcf0be';
                         } else if (color == 'ochre') {
                             upperInterfaceColor = '#cab91d';
@@ -208,7 +202,7 @@
                         lowerInterfaceColor = "#474747";
                     } else if (color == 'dark red') {
                         lowerInterfaceColor = '#bc2c14';
-                    } else if (color == 'white') {
+                    } else if (color == 'light yellow') {
                         lowerInterfaceColor = '#fcf0be';
                     } else if (color == 'ochre') {
                         lowerInterfaceColor = '#cab91d';
@@ -438,7 +432,7 @@
                 if (color == 'dark red') {
                     color = '#bc2c14';
                 }
-                if (color == 'white') {
+                if (color == 'light yellow') {
                     color = '#fcf0be';
                 }
                 if (color == 'ochre') {
