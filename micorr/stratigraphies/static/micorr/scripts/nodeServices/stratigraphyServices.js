@@ -9,7 +9,7 @@ var Characteristic = require('../business/characteristic').Characteristic;
 var SubCharacteristic = require('../business/subCharacteristic').SubCharacteristic;
 var GraphGenerationUtil = require('../utils/graphGenerationUtil').GraphGenerationUtil;
 
-var url = "https://localhost/micorr";
+var url = "http://localhost/micorr";
 
 module.exports = {
 
