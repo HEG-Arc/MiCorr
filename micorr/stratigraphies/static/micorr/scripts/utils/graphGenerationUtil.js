@@ -167,7 +167,7 @@
                     if (this.stratig.getStratas()[index - 1].getCharacteristicsByFamily('colourFamily').length > 0) {
                         var color = this.stratig.getStratas()[index - 1].getCharacteristicsByFamily('colourFamily')[0].getRealName();
                         // !!! A MODIFIER QUAND ON FERA LE REFACTORING DU DAO...
-                        if (color != "" && color != "undefined" && color != "black" && color != "dark red" && color != "white" && color != "ochre" && color != "dark green" && color != "medium green"  && color != "light green" && color != "dark blue" && color != "medium blue"  && color != "light blue") {
+                        if (color != "" && color != "undefined" && color != "black" && color != "dark red" && color != "light yellow" && color != "ochre" && color != "dark green" && color != "medium green"  && color != "light green" && color != "dark blue" && color != "medium blue"  && color != "light blue") {
                             upperInterfaceColor = color;
                         } else if (color == "black") {
                             upperInterfaceColor = '#474747';
@@ -196,7 +196,7 @@
                 if (strata.getCharacteristicsByFamily('colourFamily').length > 0) {
                     var color = strata.getCharacteristicsByFamily('colourFamily')[0].getRealName();
                     // !!! A MODIFIER QUAND ON FERA LE REFACTORING DU DAO...
-                    if (color != "" && color != "undefined" && color != "black" && color != "dark red" && color != "white" && color != "ochre" && color != "dark green" && color != "medium green"  && color != "light green" && color != "dark blue" && color != "medium blue"  && color != "light blue") {
+                    if (color != "" && color != "undefined" && color != "black" && color != "dark red" && color != "light yellow" && color != "ochre" && color != "dark green" && color != "medium green"  && color != "light green" && color != "dark blue" && color != "medium blue"  && color != "light blue") {
                         lowerInterfaceColor = color;
                     } else if (color == "black") {
                         lowerInterfaceColor = "#474747";
