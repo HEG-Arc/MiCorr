@@ -9695,7 +9695,7 @@ body.sticky-footer #footer {
 
 #banner {
   /*img[src$=".png"] { //crips logo
-    image-rendering: -moz-crisp-edges;  
+    image-rendering: -moz-crisp-edges;
     image-rendering: -webkit-optimize-contrast;
 
   }  */
@@ -10047,7 +10047,7 @@ button[disabled] {
 }
 
 /*
-inspired from http://codepen.io/Rowno/pen/Afykb 
+inspired from http://codepen.io/Rowno/pen/Afykb
 */
 .carousel-fade .carousel-inner .item {
   opacity: 0;
@@ -10989,6 +10989,14 @@ input[type="text"] {
   padding-left: 15px;
   padding-right: 15px;
 }
+
+.submit {
+  text-align: left;
+  min-height: 1px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
 @media (min-width: 768px) {
   .line {
     float: left;

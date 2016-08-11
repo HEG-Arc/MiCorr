@@ -45,12 +45,12 @@
         var head = document.getElementsByTagName("head")[0];
         head.appendChild(trial);
     })();
- 
+
 </script>
 
 <style type="text/css">#mfPreviewBar{display:none!important;}</style>
 
-  
+
   <!-- IE Fix for HTML5 Tags -->
   <!--[if lte IE 8]>
     <link rel="stylesheet" href="stylesheets/mystyle.css" media="all">
@@ -96,7 +96,7 @@
                <a href="#search"><i class="fa fa-search"></i>Search tool</a>
                <a href="#learn"><i class="fa fa-book"></i>Learn</a>
                <a href="#news"><i class="fa fa-calendar-o"></i>News</a>
-               <a href="#"><i class="fa fa-arrow-circle-up"></i>Submit new item</a>
+               <a href="#submit"><i class="fa fa-arrow-circle-up"></i>Submit new item</a>
 
          </div>
         </div>
@@ -240,7 +240,7 @@
               <div class="arrowbottom"></div>
 
           </div>
-      
+
     </div>
   </div>
 
@@ -324,7 +324,7 @@
     <div class="container">
       <div class="row center">
         <div class="line">
-          <h1>Learn</h1>      
+          <h1>Learn</h1>
         </div>
         <div class="c4">
           <i class="fa fa-compass disc fa-3x"></i>
@@ -356,7 +356,7 @@
 
       </div>
 
-    </div>  
+    </div>
   </div>
 
 
@@ -428,13 +428,40 @@
     </div>
   </div>
 
-  
-
-
-
-
-
-
+  <div id="submit" class="lightframe">
+    <div class="container">
+      <div class="row center">
+          <h1>Submit new item</h1>
+          <div class="submit">
+              <p>This page allows you to create a file that describes a corrosion form that you have observed on an artefact that you are examining.</p>
+              <p>For this you need to enter the following information:</p>
+              <br>
+              <ul>
+                  <li>the metadata related to the artefact</li>
+                  <li>the stratigraphy of the corrosion form observed (created with the search tool “By stratigraphy representation”</li>
+              </ul>
+              <br>
+              <p>You have the possibility to keep this file as a working document and to continue completing it (alone or through a collaborative work with other MiCorr contributors). Once complete you have several options:</p>
+              <br>
+              <ul>
+                <li>you keep it under your profile without sharing it</li>
+                <li>you share it with the MiCorr community (recommended)</li>
+              </ul>
+              <br>
+            <p>For the second option, your file will be reviewed by the MiCorr scientific committee.</p>
+            <p>If accepted it will be made available to the MiCorr community (from the search tools).</p>
+          </div>
+          <br>
+          <p class="right">
+            <a href="/artefacts/create">
+               <button type="button" class="btn btn-default btn-lg" data-toggle="modal">
+                <i class="fa fa-arrow-circle-up"></i> Create new item
+               </button>
+            </a>
+          </p>
+      </div>
+    </div>
+  </div>
 
   <div id="footer">
     <div class="container">
@@ -446,7 +473,7 @@
         <div class="c2">
           <img src="{% static 'stylesheets/logo-arc.png' %}" alt="" class="img-responsive">
         </div>
-      
+
       </div>
     </div>
   </div>
