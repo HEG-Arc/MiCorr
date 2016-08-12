@@ -9,7 +9,7 @@ from stratigraphies.ch.neo4jDaoImpl.Neo4JDAO import Neo4jDAO
 #from SPARQLWrapper import SPARQLWrapper, JSON
 
 from .models import Artefact, Document, Origin, ChronologyPeriod, Alloy, Technology, Environment, Microstructure, \
-    Metal, CorrosionForm, CorrosionType
+    Metal, CorrosionForm, CorrosionType, Section, SectionCategory
 from .forms import ArtefactsUpdateForm, ArtefactsCreateForm, DocumentUpdateForm, DocumentCreateForm, ArtefactFilter,\
     OriginCreateForm, ChronologyCreateForm, AlloyCreateForm, TechnologyCreateForm, EnvironmentCreateForm, \
     MicrostructureCreateForm, MetalCreateForm, CorrosionFormCreateForm, CorrosionTypeCreateForm
@@ -134,6 +134,40 @@ class ArtefactsUpdateView(generic.UpdateView):
     def get_object(self, queryset=None):
         obj = Artefact.objects.get(id=self.kwargs['pk'])
         return obj
+
+    def post(self, request, *args, **kwargs):
+        artefact = get_object_or_404(Artefact, pk=self.kwargs['pk'])
+        section_1 = Section.objects.get_or_create(order=1, artefact=artefact, section_category=SectionCategory.objects.get(name='AR'), title='The Object')[0]
+        artefact.section_set.add(section_1)
+        section_2 = Section.objects.get_or_create(order=2, artefact=artefact, section_category=SectionCategory.objects.get(name='AR'), title='Description and visual observation')[0]
+        section_2.complementary_information = request.POST['complementary_information']
+        artefact.section_set.add(section_2)
+        section_3 = Section.objects.get_or_create(order=3, artefact=artefact, section_category=SectionCategory.objects.get(name='SA'), title='Zones of the artefact submitted to visual observation and location of sampling areas')[0]
+        artefact.section_set.add(section_3)
+        section_4 = Section.objects.get_or_create(order=4, artefact=artefact, section_category=SectionCategory.objects.get(name='SA'), title='Macroscopic observation')[0]
+        section_4.content = request.POST['complementary_information']
+        artefact.section_set.add(section_4)
+        section_5 = Section.objects.get_or_create(order=5, artefact=artefact, section_category=SectionCategory.objects.get(name='SA'), title='Sample')[0]
+        artefact.section_set.add(section_5)
+        section_6 = Section.objects.get_or_create(order=6, artefact=artefact, section_category=SectionCategory.objects.get(name='AN'), title='Analyses and results')[0]
+        section_6.content = request.POST['complementary_information']
+        artefact.section_set.add(section_6)
+        section_7 = Section.objects.get_or_create(order=7, artefact=artefact, section_category=SectionCategory.objects.get(name='AN'), title='Metal')[0]
+        section_7.content = request.POST['complementary_information']
+        artefact.section_set.add(section_7)
+        section_8 = Section.objects.get_or_create(order=8, artefact=artefact, section_category=SectionCategory.objects.get(name='AN'), title='Corrosion layers')[0]
+        section_8.content = request.POST['complementary_information']
+        artefact.section_set.add(section_8)
+        section_9 = Section.objects.get_or_create(order=9, artefact=artefact, section_category=SectionCategory.objects.get(name='AN'), title='Synthesis of the macroscopic / microscopic observation of corrosion layers')[0]
+        section_9.content=request.POST['complementary_information']
+        artefact.section_set.add(section_9)
+        section_10 = Section.objects.get_or_create(order=10, artefact=artefact, section_category=SectionCategory.objects.get(name='CO'), title='Conclusion')[0]
+        section_10.content = request.POST['complementary_information']
+        artefact.section_set.add(section_10)
+        section_11 = Section.objects.get_or_create(order=11, artefact=artefact, section_category=SectionCategory.objects.get(name='RE'), title='References')[0]
+        section_11.content = request.POST['complementary_information']
+        artefact.section_set.add(section_11)
+        return super(ArtefactsUpdateView, self).post(request, **kwargs)
 
     def get_success_url(self):
         return reverse('artefacts:artefact-detail', kwargs={'pk': self.kwargs.get('pk', None)}, )

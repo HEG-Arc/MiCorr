@@ -1,4 +1,5 @@
 from django import forms
+from django.db.transaction import commit
 from django.forms import TextInput
 from .models import Artefact, Document, Metal, CorrosionForm, CorrosionType, Environment, Origin, ChronologyPeriod, \
     Alloy, Technology, Microstructure
