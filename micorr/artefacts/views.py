@@ -131,6 +131,10 @@ class ArtefactsUpdateView(generic.UpdateView):
     template_name_suffix = '_update_form'
     form_class = ArtefactsUpdateForm
 
+    def get_object(self, queryset=None):
+        obj = Artefact.objects.get(id=self.kwargs['pk'])
+        return obj
+
     def get_success_url(self):
         return reverse('artefacts:artefact-detail', kwargs={'pk': self.kwargs.get('pk', None)}, )
 
@@ -153,7 +157,9 @@ class ArtefactsCreateView(generic.CreateView):
     model = Artefact
     template_name_suffix = '_create_form'
     form_class = ArtefactsCreateForm
-    success_url = reverse_lazy('artefacts:artefact-list')
+
+    def get_success_url(self):
+        return reverse('artefacts:artefact-update', kwargs={'pk': self.object.id})
 
 
 class OriginCreateView(generic.CreateView):

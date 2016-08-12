@@ -11,16 +11,9 @@ class ArtefactsUpdateForm(forms.ModelForm):
     """
     Update an existing artefact
     """
-    description = forms.CharField(widget=TinyMCE(attrs={'cols': 20, 'rows': 30}))
 
-    class Meta:
-        model = Artefact
-        exclude = ['user']
+    complementary_information = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}))
 
-
-class ArtefactsCreateForm(forms.ModelForm):
-    """
-    Create a new artefact
     """
     object_image = forms.ImageField()
     zones_image = forms.ImageField()
@@ -36,6 +29,22 @@ class ArtefactsCreateForm(forms.ModelForm):
     conclusion_text = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}))
     conclusion_image = forms.ImageField()
     references_text = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}))
+    """
+
+    class Meta:
+        model = Artefact
+        exclude = ['user']
+
+    def save(self):
+        self.complementary_information = self.cleaned_data['complementary_information']
+        super(ArtefactsUpdateForm, self).save(commit=commit)
+
+
+
+class ArtefactsCreateForm(forms.ModelForm):
+    """
+    Create a new artefact
+    """
 
     class Meta:
         model = Artefact

@@ -1,36 +1,118 @@
 {% extends "base.html" %}
 
-{% block title %}MiCorr | Model {{ artefact.pk }} - update{% endblock %}
-
-{{ form.media }}
+    {% block sidemenu %}
+      <div class="c3" id="sidemenu"> <!-- no-active-hilight : do not highlight the "active" node of the menu. It is difficult for the affix to work when elements in the page are close one to the other (i.e. folded elements), therefore, it is less confusing to NOT hilight the .active nodes of the menu -->
+          <div class="sidemenu-container">
+              <ul class="nav smooth-scroll"> <!-- smooth-scroll to the element in the page instead of jumping -->
+                  <li><a href="#title1">The object</a></li>
+                  <li>
+                      <a href="#title2">Description and visual observation</a>
+                      <ul class="nav subnav">
+                          <li><a href="#title21">Zones of the artefact submitted to visual observation and location of sampling areas</a></li>
+                          <li><a href="#title22">Macroscopic observation</a></li>
+                      </ul>
+                  </li>
+                  <li><a href="#title3">Sample</a></li>
+                  <li>
+                       <a href="#title4">Analyses and results</a>
+                       <ul class="nav subnav"> <!-- subnav indicates that we will unfold the parent before jumping to a child to make sure that the element is visible -->
+                          <li><a href="#title41">Metal</a></li>
+                          <li><a href="#title42">Corrosion layers</a></li>
+                       </ul>
+                  </li>
+                  <li><a href="#title5">Synthesis of the macroscopic / microscopic observation of corrosion layers</a></li>
+                  <li><a href="#title6">Conclusion</a></li>
+                  <li><a href="#title7">References</a></li>
+              </ul>
+          </div>
+      </div>
+    {% endblock sidemenu %}
 
 {% block content %}
 
-<div class="container">
-
-    <div class="row">
-        <div class="col-xs-12">
-            <h2>{{ artefact }}</h2>
+      <h1>New artefact</h1>
+        <form action="{% url 'artefacts:artefact-update' form.instance.pk %}" method="post">{% csrf_token %}
+        <div class="row">
+          <div class="c3"><em>Author(s)</em></div>
+          <div class="c9"><a onmouseover="this.style.cursor='pointer'" onclick="window.open('{% url 'contacts:contact-create' %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><span class="glyphicon glyphicon-plus"></span></a> <p><i>{{ form.author.help_text }}</i></p></div>
         </div>
-    </div>
 
-    <br/>
+        <div  id="accordionN1" aria-multiselectable="true">
 
-    <div class="row">
-        <form action="{% url 'artefacts:artefact-update' artefact.pk %}" method="post">
-            {% csrf_token %}
-                {% for field in form %}
-                    <p>{{ field.label_tag }}</p>
-                    <p>{{ field }} {% if forloop.counter0 > 3 %}<a href=""><span class="glyphicon glyphicon-plus"></span></a></p>{% endif %}
-                    <p><i>{{ field.help_text }}</i></p>
-                    <br/>
-                {% endfor %}
-            <div class="col-xs-1 col-xs-offset-10">
-                <button type="submit" class="btn btn-primary">Update</button>
+        <!--THE OBJECT-->
+          <div class="row accordion-title1" id="title1">
+              <a class="line" data-toggle="collapse" data-parent="#accordionN1" href="#content1" aria-expanded="true" aria-controls="content1">The object</a>
+          </div>
+          <div class="row accordion-content1 collapse in" id="content1" aria-labelledby="title1">
+            <div class="line palebox">
+              <div class="row">
+                  <div class="c9"><p>{{ form.object_image }}</p></div>
+              </div>
+              {% for image in sections.4.image_set.all %}
+                  <div class="row">
+                    <div class="c6">
+                      <a href="{{ sections.0.image_set.all.0.image.url }}" class="image-popup"><img src="{{ sections.0.image_set.all.0.image.url }}" class="img-responsive"></a>
+                    </div>
+                    <div class="c6">
+                      <p><a name="fig1"></a>{{ sections.0.image_set.all.0.legend }}</p>
+                    </div>
+                  </div>
+              {% endfor %}
+                <p><i>General picture of the object should contain a scale and a chart colour. The caption gives the name of the artefact, the type of alloy and any relevant information.</i></p>
             </div>
-        </form>
-    </div>
+          </div>
 
-</div>
+        <!--DESCRIPTION-->
+          <div class="row accordion-title1" id="title2">
+              <a class="line"  data-toggle="collapse" data-parent="#accordionN1" href="#content2" aria-expanded="true" aria-controls="content2">Description and visual observation</a>
+          </div>
+          <div class="row accordion-content3 collapse in" id="content2"  aria-labelledby="title2">
+            <div class="line lightbox">
+              <div class="row">
+                <div class="c3"><em>Description of artefact</em></div>
+                <div class="c9"><p>{{ form.description }}</p> <p><i>{{ form.description.help_text }}</i></p></div>
+              </div>
+              <div class="row">
+                <div class="c3"><em>Type of artefact</em></div>
+                <div class="c9"><p>{{ form.type }}</p> <p><i>{{ form.type.help_text }}</i></p></div>
+              </div>
+              <div class="row">
+                <div class="c3"><em>Origin and date of recovering</em></div>
+                <div class="c9"><a onmouseover="this.style.cursor='pointer'" onclick="window.open('{% url 'artefacts:origin-create' %}', 'newwindow', 'height=450px, width=700px');"><span class="glyphicon glyphicon-plus"></span></a> <p><i>{{ form.origin.help_text }}</i></p> {{ form.recovering_date }} <i>{{ form.recovering_date.help_text }}</i></div>
+              </div>
+              <div class="row">
+                <div class="c3"><em>Dating of artefact (Tpq _ Taq)</em></div>
+                <div class="c9"><p>{{ form.chronology_period }}</p> <p><i>{{ form.chronology_period.help_text }}</i></p></div>
+              </div>
+              <div class="row">
+                <div class="c3"><em>Burial conditions / environment</em></div>
+                <div class="c9"><p>{{ form.environment }} <a onmouseover="this.style.cursor='pointer'" onclick="window.open('{% url 'artefacts:environment-create' %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><span class="glyphicon glyphicon-plus"></span></a></p> <p><i>{{ form.environment.help_text }}</i></p></div>
+              </div>
+              <div class="row">
+                <div class="c3"><em>Artefact location</em></div>
+                <div class="c9"><a onmouseover="this.style.cursor='pointer'" onclick="window.open('{% url 'contacts:contact-create' %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><span class="glyphicon glyphicon-plus"></span></a> <p><i>{{ form.location.help_text }}</i></p></div>
+              </div>
+              <div class="row">
+                <div class="c3"><em>Owner</em></div>
+                <div class="c9"><a onmouseover="this.style.cursor='pointer'" onclick="window.open('{% url 'contacts:contact-create' %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><span class="glyphicon glyphicon-plus"></span></a> <p><i>{{ form.owner.help_text }}</i></p></div>
+              </div>
+              <div class="row">
+                <div class="c3"><em>Inv. Number</em></div>
+                <div class="c9"><p>{{ form.inventory_number }}</p> <p><i>{{ form.inventory_number.help_text }}</i></p></div>
+              </div>
+              <div class="row">
+                <div class="c3"><em>Recorded conservation data</em></div>
+                <div class="c9"><p>{{ form.recorded_conservation_data }}</p> <p><i>{{ form.recorded_conservation_data.help_text }}</i></p></div>
+              </div>
+            </div>
+            <div class="line palebox">
+                <h4 class="underline">Complementary information</h4>
+                <textarea name="complementary_information">{{ complementary_information }}</textarea>
+                <p><i>Any important information that does not fit to the previous fields.</i></p>
+            </div>
+         </div>
+        </div>
+    <input type="submit" value="Next">
+    </form>
 
-{% endblock %}
+{% endblock content %}
