@@ -14,6 +14,7 @@ class ArtefactsUpdateForm(forms.ModelForm):
     """
 
     complementary_information = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}))
+    macroscopic_text = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}))
 
     """
     object_image = forms.ImageField()

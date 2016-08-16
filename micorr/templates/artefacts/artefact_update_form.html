@@ -110,7 +110,47 @@
                 <textarea name="complementary_information">{{ complementary_information }}</textarea>
                 <p><i>Any important information that does not fit to the previous fields.</i></p>
             </div>
+
+            <div class="line">
+                <div id="accordionN2" aria-multiselectable="true">
+                <!--ZONES-->
+                  <div class="row accordion-title2" id="title21">
+                      <a class="line" data-toggle="collapse" data-parent="#accordionN2" href="#content21" aria-expanded="true" aria-controls="content21">Zones of the artefact submitted to visual observation and location of sampling areas</a>
+                  </div>
+                  <div class="row accordion-content2 collapse in" id="content21" aria-labelledby="title21">
+                    <div class="line lightbox">
+                        <div class="row">
+                            <div class="c9"><p> form.zones_image </p></div>
+                        </div>
+                        <p><i>Picture of the object / element with arrows indicating the location of the sampling area. Pictures with details can be provided. Caption should be more or less the same as: Location of sampling area and sample selected.</i></p>
+                    </div>
+                  </div>
+
+                <!--MACROSCOPIC-->
+                  <div class="row accordion-title2" id="title22">
+                      <a class="line"  data-toggle="collapse" data-parent="#accordionN2" href="#content22" aria-expanded="true" aria-controls="content22">Macroscopic observation</a>
+                  </div>
+                  <div class="row accordion-content2 collapse in" id="content22"  aria-labelledby="title22">
+                    <div class="line palebox">
+                        <p><i>The schematic representation below gives an overview of the corrosion layers encountered on the object (to precise) from a first visual macroscopic observation.</i></p>
+                        <textarea name="macroscopic_text">{{ macroscopic_text }}</textarea>
+                    </div>
+                    <div class="line lightbox">
+                        <div class="row">
+                            <div class="c9">
+                                <p> form.macroscopic_image </p>
+                            </div>
+                        </div>
+                        <p><i>Stratigraphic representation of the object in cross-section by macroscopic observation. The schematic drawing should indicate the whole stratigraphy of layers using the encoded strata system developed within Bertholon schematic description of metal corrosion.</i></p>
+                    </div>
+                  </div>
+                </div>
+            </div>
          </div>
+
+
+
+
         </div>
     <input type="submit" value="Next">
     </form>

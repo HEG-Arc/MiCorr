@@ -135,6 +135,15 @@ class ArtefactsUpdateView(generic.UpdateView):
         obj = Artefact.objects.get(id=self.kwargs['pk'])
         return obj
 
+    def get(self, request, **kwargs):
+        artefact = Artefact.objects.get(id=self.kwargs['pk'])
+        self.object = artefact
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        complementary_information = Section.objects.get_or_create(order=2, artefact=artefact, section_category=SectionCategory.objects.get(name='AR'), title='Description and visual observation')[0].complementary_information
+        macroscopic_text = Section.objects.get_or_create(order=4, artefact=artefact, section_category=SectionCategory.objects.get(name='SA'), title='Macroscopic observation')[0].content
+        return self.render_to_response(self.get_context_data(form=form, complementary_information=complementary_information, macroscopic_text=macroscopic_text))
+
     def post(self, request, *args, **kwargs):
         artefact = get_object_or_404(Artefact, pk=self.kwargs['pk'])
         section_1 = Section.objects.get_or_create(order=1, artefact=artefact, section_category=SectionCategory.objects.get(name='AR'), title='The Object')[0]
@@ -145,7 +154,7 @@ class ArtefactsUpdateView(generic.UpdateView):
         section_3 = Section.objects.get_or_create(order=3, artefact=artefact, section_category=SectionCategory.objects.get(name='SA'), title='Zones of the artefact submitted to visual observation and location of sampling areas')[0]
         artefact.section_set.add(section_3)
         section_4 = Section.objects.get_or_create(order=4, artefact=artefact, section_category=SectionCategory.objects.get(name='SA'), title='Macroscopic observation')[0]
-        section_4.content = request.POST['complementary_information']
+        section_4.content = request.POST['macroscopic_text']
         artefact.section_set.add(section_4)
         section_5 = Section.objects.get_or_create(order=5, artefact=artefact, section_category=SectionCategory.objects.get(name='SA'), title='Sample')[0]
         artefact.section_set.add(section_5)
