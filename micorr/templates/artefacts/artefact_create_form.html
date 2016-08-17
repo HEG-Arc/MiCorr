@@ -17,7 +17,7 @@
     <h1>New artefact</h1>
 
     <!--DESCRIPTION-->
-    <form action="{% url 'artefacts:artefact-create' artefact.id %}" method="post">{% csrf_token %}
+    <form action="{% url 'artefacts:artefact-create' %}" method="post">{% csrf_token %}
       <div class="row accordion-title1" id="title2">
           <a class="line"  data-toggle="collapse" data-parent="#accordionN1" href="#content2" aria-expanded="true" aria-controls="content2">Description and visual observation</a>
       </div>

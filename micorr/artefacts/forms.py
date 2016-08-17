@@ -16,6 +16,14 @@ class ArtefactsUpdateForm(forms.ModelForm):
     complementary_information = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}))
     macroscopic_text = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}))
     sample_complementary_information = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}))
+    analyses_performed = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}))
+    metal_text = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}))
+    metal_complementary_information = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}))
+    corrosion_text = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}))
+    corrosion_complementary_information = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}))
+    synthesis_text = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}))
+    conclusion_text = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}))
+    references_text = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}))
 
     """
     object_image = forms.ImageField()

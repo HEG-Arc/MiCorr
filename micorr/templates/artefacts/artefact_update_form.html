@@ -1,204 +1,420 @@
 {% extends "base.html" %}
 
-    {% block sidemenu %}
-      <div class="c3" id="sidemenu"> <!-- no-active-hilight : do not highlight the "active" node of the menu. It is difficult for the affix to work when elements in the page are close one to the other (i.e. folded elements), therefore, it is less confusing to NOT hilight the .active nodes of the menu -->
-          <div class="sidemenu-container">
-              <ul class="nav smooth-scroll"> <!-- smooth-scroll to the element in the page instead of jumping -->
-                  <li><a href="#title1">The object</a></li>
-                  <li>
-                      <a href="#title2">Description and visual observation</a>
-                      <ul class="nav subnav">
-                          <li><a href="#title21">Zones of the artefact submitted to visual observation and location of sampling areas</a></li>
-                          <li><a href="#title22">Macroscopic observation</a></li>
-                      </ul>
-                  </li>
-                  <li><a href="#title3">Sample</a></li>
-                  <li>
-                       <a href="#title4">Analyses and results</a>
-                       <ul class="nav subnav"> <!-- subnav indicates that we will unfold the parent before jumping to a child to make sure that the element is visible -->
-                          <li><a href="#title41">Metal</a></li>
-                          <li><a href="#title42">Corrosion layers</a></li>
-                       </ul>
-                  </li>
-                  <li><a href="#title5">Synthesis of the macroscopic / microscopic observation of corrosion layers</a></li>
-                  <li><a href="#title6">Conclusion</a></li>
-                  <li><a href="#title7">References</a></li>
-              </ul>
-          </div>
-      </div>
-    {% endblock sidemenu %}
+{% block sidemenu %}
+    <div class="c3" id="sidemenu">
+        <!-- no-active-hilight : do not highlight the "active" node of the menu. It is difficult for the affix to work when elements in the page are close one to the other (i.e. folded elements), therefore, it is less confusing to NOT hilight the .active nodes of the menu -->
+        <div class="sidemenu-container">
+            <ul class="nav smooth-scroll"> <!-- smooth-scroll to the element in the page instead of jumping -->
+                <li><a href="#title1">The object</a></li>
+                <li>
+                    <a href="#title2">Description and visual observation</a>
+                    <ul class="nav subnav">
+                        <li><a href="#title21">Zones of the artefact submitted to visual observation and location of
+                            sampling areas</a></li>
+                        <li><a href="#title22">Macroscopic observation</a></li>
+                    </ul>
+                </li>
+                <li><a href="#title3">Sample</a></li>
+                <li>
+                    <a href="#title4">Analyses and results</a>
+                    <ul class="nav subnav">
+                        <!-- subnav indicates that we will unfold the parent before jumping to a child to make sure that the element is visible -->
+                        <li><a href="#title41">Metal</a></li>
+                        <li><a href="#title42">Corrosion layers</a></li>
+                    </ul>
+                </li>
+                <li><a href="#title5">Synthesis of the macroscopic / microscopic observation of corrosion layers</a>
+                </li>
+                <li><a href="#title6">Conclusion</a></li>
+                <li><a href="#title7">References</a></li>
+            </ul>
+        </div>
+    </div>
+{% endblock sidemenu %}
 
 {% block content %}
 
-      <h1>New artefact</h1>
-        <form action="{% url 'artefacts:artefact-update' form.instance.pk %}" method="post">{% csrf_token %}
+    <h1>New artefact</h1>
+    <form action="{% url 'artefacts:artefact-update' form.instance.pk %}" method="post">{% csrf_token %}
         <div class="row">
-          <div class="c3"><em>Author(s)</em></div>
-          <div class="c9"><a onmouseover="this.style.cursor='pointer'" onclick="window.open('{% url 'contacts:contact-create' %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><span class="glyphicon glyphicon-plus"></span></a> <p><i>{{ form.author.help_text }}</i></p></div>
+            <div class="c3"><em>Author(s)</em></div>
+            <div class="c9"><a onmouseover="this.style.cursor='pointer'"
+                               onclick="window.open('{% url 'contacts:contact-create' %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><span
+                    class="glyphicon glyphicon-plus"></span></a>
+                <p><i>{{ form.author.help_text }}</i></p></div>
         </div>
 
-        <div  id="accordionN1" aria-multiselectable="true">
+        <div id="accordionN1" aria-multiselectable="true">
 
-        <!--THE OBJECT-->
-          <div class="row accordion-title1" id="title1">
-              <a class="line" data-toggle="collapse" data-parent="#accordionN1" href="#content1" aria-expanded="true" aria-controls="content1">The object</a>
-          </div>
-          <div class="row accordion-content1 collapse in" id="content1" aria-labelledby="title1">
-            <div class="line palebox">
-              <div class="row">
-                  <div class="c9"><p>{{ form.object_image }}</p></div>
-              </div>
-              {% for image in sections.4.image_set.all %}
-                  <div class="row">
-                    <div class="c6">
-                      <a href="{{ sections.0.image_set.all.0.image.url }}" class="image-popup"><img src="{{ sections.0.image_set.all.0.image.url }}" class="img-responsive"></a>
-                    </div>
-                    <div class="c6">
-                      <p><a name="fig1"></a>{{ sections.0.image_set.all.0.legend }}</p>
-                    </div>
-                  </div>
-              {% endfor %}
-                <p><i>General picture of the object should contain a scale and a chart colour. The caption gives the name of the artefact, the type of alloy and any relevant information.</i></p>
+            <!--THE OBJECT-->
+            <div class="row accordion-title1" id="title1">
+                <a class="line" data-toggle="collapse" data-parent="#accordionN1" href="#content1" aria-expanded="true"
+                   aria-controls="content1">The object</a>
             </div>
-          </div>
-
-        <!--DESCRIPTION-->
-          <div class="row accordion-title1" id="title2">
-              <a class="line"  data-toggle="collapse" data-parent="#accordionN1" href="#content2" aria-expanded="true" aria-controls="content2">Description and visual observation</a>
-          </div>
-          <div class="row accordion-content3 collapse in" id="content2"  aria-labelledby="title2">
-            <div class="line lightbox">
-              <div class="row">
-                <div class="c3"><em>Description of artefact</em></div>
-                <div class="c9"><p>{{ form.description }}</p> <p><i>{{ form.description.help_text }}</i></p></div>
-              </div>
-              <div class="row">
-                <div class="c3"><em>Type of artefact</em></div>
-                <div class="c9"><p>{{ form.type }}</p> <p><i>{{ form.type.help_text }}</i></p></div>
-              </div>
-              <div class="row">
-                <div class="c3"><em>Origin and date of recovering</em></div>
-                <div class="c9"><a onmouseover="this.style.cursor='pointer'" onclick="window.open('{% url 'artefacts:origin-create' %}', 'newwindow', 'height=450px, width=700px');"><span class="glyphicon glyphicon-plus"></span></a> <p><i>{{ form.origin.help_text }}</i></p> {{ form.recovering_date }} <i>{{ form.recovering_date.help_text }}</i></div>
-              </div>
-              <div class="row">
-                <div class="c3"><em>Dating of artefact (Tpq _ Taq)</em></div>
-                <div class="c9"><p>{{ form.chronology_period }}</p> <p><i>{{ form.chronology_period.help_text }}</i></p></div>
-              </div>
-              <div class="row">
-                <div class="c3"><em>Burial conditions / environment</em></div>
-                <div class="c9"><p>{{ form.environment }} <a onmouseover="this.style.cursor='pointer'" onclick="window.open('{% url 'artefacts:environment-create' %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><span class="glyphicon glyphicon-plus"></span></a></p> <p><i>{{ form.environment.help_text }}</i></p></div>
-              </div>
-              <div class="row">
-                <div class="c3"><em>Artefact location</em></div>
-                <div class="c9"><a onmouseover="this.style.cursor='pointer'" onclick="window.open('{% url 'contacts:contact-create' %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><span class="glyphicon glyphicon-plus"></span></a> <p><i>{{ form.location.help_text }}</i></p></div>
-              </div>
-              <div class="row">
-                <div class="c3"><em>Owner</em></div>
-                <div class="c9"><a onmouseover="this.style.cursor='pointer'" onclick="window.open('{% url 'contacts:contact-create' %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><span class="glyphicon glyphicon-plus"></span></a> <p><i>{{ form.owner.help_text }}</i></p></div>
-              </div>
-              <div class="row">
-                <div class="c3"><em>Inv. Number</em></div>
-                <div class="c9"><p>{{ form.inventory_number }}</p> <p><i>{{ form.inventory_number.help_text }}</i></p></div>
-              </div>
-              <div class="row">
-                <div class="c3"><em>Recorded conservation data</em></div>
-                <div class="c9"><p>{{ form.recorded_conservation_data }}</p> <p><i>{{ form.recorded_conservation_data.help_text }}</i></p></div>
-              </div>
-            </div>
-            <div class="line palebox">
-                <h4 class="underline">Complementary information</h4>
-                <textarea name="complementary_information">{{ complementary_information }}</textarea>
-                <p><i>Any important information that does not fit to the previous fields.</i></p>
-            </div>
-
-            <div class="line">
-                <div id="accordionN2" aria-multiselectable="true">
-                <!--ZONES-->
-                  <div class="row accordion-title2" id="title21">
-                      <a class="line" data-toggle="collapse" data-parent="#accordionN2" href="#content21" aria-expanded="true" aria-controls="content21">Zones of the artefact submitted to visual observation and location of sampling areas</a>
-                  </div>
-                  <div class="row accordion-content2 collapse in" id="content21" aria-labelledby="title21">
-                    <div class="line lightbox">
-                        <div class="row">
-                            <div class="c9"><p> form.zones_image </p></div>
-                        </div>
-                        <p><i>Picture of the object / element with arrows indicating the location of the sampling area. Pictures with details can be provided. Caption should be more or less the same as: Location of sampling area and sample selected.</i></p>
+            <div class="row accordion-content1 collapse in" id="content1" aria-labelledby="title1">
+                <div class="line palebox">
+                    <div class="row">
+                        <div class="c9"><p> form.object_image </p></div>
                     </div>
-                  </div>
-
-                <!--MACROSCOPIC-->
-                  <div class="row accordion-title2" id="title22">
-                      <a class="line"  data-toggle="collapse" data-parent="#accordionN2" href="#content22" aria-expanded="true" aria-controls="content22">Macroscopic observation</a>
-                  </div>
-                  <div class="row accordion-content2 collapse in" id="content22"  aria-labelledby="title22">
-                    <div class="line palebox">
-                        <p><i>The schematic representation below gives an overview of the corrosion layers encountered on the object (to precise) from a first visual macroscopic observation.</i></p>
-                        <textarea name="macroscopic_text">{{ macroscopic_text }}</textarea>
-                    </div>
-                    <div class="line lightbox">
-                        <div class="row">
-                            <div class="c9">
-                                <p> form.macroscopic_image </p>
-                            </div>
-                        </div>
-                        <p><i>Stratigraphic representation of the object in cross-section by macroscopic observation. The schematic drawing should indicate the whole stratigraphy of layers using the encoded strata system developed within Bertholon schematic description of metal corrosion.</i></p>
-                    </div>
-                  </div>
+                    <p><i>General picture of the object should contain a scale and a chart colour. The caption gives the
+                        name of the artefact, the type of alloy and any relevant information.</i></p>
                 </div>
             </div>
-         </div>
+
+            <!--DESCRIPTION-->
+            <div class="row accordion-title1" id="title2">
+                <a class="line" data-toggle="collapse" data-parent="#accordionN1" href="#content2" aria-expanded="true"
+                   aria-controls="content2">Description and visual observation</a>
+            </div>
+            <div class="row accordion-content3 collapse in" id="content2" aria-labelledby="title2">
+                <div class="line lightbox">
+                    <div class="row">
+                        <div class="c3"><em>Description of artefact</em></div>
+                        <div class="c9"><p>{{ form.description }}</p>
+                            <p><i>{{ form.description.help_text }}</i></p></div>
+                    </div>
+                    <div class="row">
+                        <div class="c3"><em>Type of artefact</em></div>
+                        <div class="c9"><p>{{ form.type }}</p>
+                            <p><i>{{ form.type.help_text }}</i></p></div>
+                    </div>
+                    <div class="row">
+                        <div class="c3"><em>Origin and date of recovering</em></div>
+                        <div class="c9"><a onmouseover="this.style.cursor='pointer'"
+                                           onclick="window.open('{% url 'artefacts:origin-create' %}', 'newwindow', 'height=450px, width=700px');"><span
+                                class="glyphicon glyphicon-plus"></span></a>
+                            <p><i>{{ form.origin.help_text }}</i></p> {{ form.recovering_date }}
+                            <i>{{ form.recovering_date.help_text }}</i></div>
+                    </div>
+                    <div class="row">
+                        <div class="c3"><em>Dating of artefact (Tpq _ Taq)</em></div>
+                        <div class="c9"><p>{{ form.chronology_period }}</p>
+                            <p><i>{{ form.chronology_period.help_text }}</i></p></div>
+                    </div>
+                    <div class="row">
+                        <div class="c3"><em>Burial conditions / environment</em></div>
+                        <div class="c9"><p>{{ form.environment }} <a onmouseover="this.style.cursor='pointer'"
+                                                                     onclick="window.open('{% url 'artefacts:environment-create' %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><span
+                                class="glyphicon glyphicon-plus"></span></a></p>
+                            <p><i>{{ form.environment.help_text }}</i></p></div>
+                    </div>
+                    <div class="row">
+                        <div class="c3"><em>Artefact location</em></div>
+                        <div class="c9"><a onmouseover="this.style.cursor='pointer'"
+                                           onclick="window.open('{% url 'contacts:contact-create' %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><span
+                                class="glyphicon glyphicon-plus"></span></a>
+                            <p><i>{{ form.location.help_text }}</i></p></div>
+                    </div>
+                    <div class="row">
+                        <div class="c3"><em>Owner</em></div>
+                        <div class="c9"><a onmouseover="this.style.cursor='pointer'"
+                                           onclick="window.open('{% url 'contacts:contact-create' %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><span
+                                class="glyphicon glyphicon-plus"></span></a>
+                            <p><i>{{ form.owner.help_text }}</i></p></div>
+                    </div>
+                    <div class="row">
+                        <div class="c3"><em>Inv. Number</em></div>
+                        <div class="c9"><p>{{ form.inventory_number }}</p>
+                            <p><i>{{ form.inventory_number.help_text }}</i></p></div>
+                    </div>
+                    <div class="row">
+                        <div class="c3"><em>Recorded conservation data</em></div>
+                        <div class="c9"><p>{{ form.recorded_conservation_data }}</p>
+                            <p><i>{{ form.recorded_conservation_data.help_text }}</i></p></div>
+                    </div>
+                </div>
+                <div class="line palebox">
+                    <h4 class="underline">Complementary information</h4>
+                    <textarea name="complementary_information">{{ complementary_information }}</textarea>
+                    <p><i>Any important information that does not fit to the previous fields.</i></p>
+                </div>
+
+                <div class="line">
+                    <div id="accordionN2" aria-multiselectable="true">
+                        <!--ZONES-->
+                        <div class="row accordion-title2" id="title21">
+                            <a class="line" data-toggle="collapse" data-parent="#accordionN2" href="#content21"
+                               aria-expanded="true" aria-controls="content21">Zones of the artefact submitted to visual
+                                observation and location of sampling areas</a>
+                        </div>
+                        <div class="row accordion-content2 collapse in" id="content21" aria-labelledby="title21">
+                            <div class="line lightbox">
+                                <div class="row">
+                                    <div class="c9"><p> form.zones_image </p></div>
+                                </div>
+                                <p><i>Picture of the object / element with arrows indicating the location of the
+                                    sampling area. Pictures with details can be provided. Caption should be more or less
+                                    the same as: Location of sampling area and sample selected.</i></p>
+                            </div>
+                        </div>
+
+                        <!--MACROSCOPIC-->
+                        <div class="row accordion-title2" id="title22">
+                            <a class="line" data-toggle="collapse" data-parent="#accordionN2" href="#content22"
+                               aria-expanded="true" aria-controls="content22">Macroscopic observation</a>
+                        </div>
+                        <div class="row accordion-content2 collapse in" id="content22" aria-labelledby="title22">
+                            <div class="line palebox">
+                                <p><i>The schematic representation below gives an overview of the corrosion layers
+                                    encountered on the object (to precise) from a first visual macroscopic
+                                    observation.</i></p>
+                                <textarea name="macroscopic_text">{{ macroscopic_text }}</textarea>
+                            </div>
+                            <div class="line lightbox">
+                                <div class="row">
+                                    <div class="c9">
+                                        <p> form.macroscopic_image </p>
+                                    </div>
+                                </div>
+                                <p><i>Stratigraphic representation of the object in cross-section by macroscopic
+                                    observation. The schematic drawing should indicate the whole stratigraphy of layers
+                                    using the encoded strata system developed within Bertholon schematic description of
+                                    metal corrosion.</i></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <!--SAMPLE-->
             <div class="row accordion-title1" id="title3">
-              <a class="line"  data-toggle="collapse" data-parent="#accordionN1" href="#content3" aria-expanded="true" aria-controls="content3">Sample</a>
+                <a class="line" data-toggle="collapse" data-parent="#accordionN1" href="#content3" aria-expanded="true"
+                   aria-controls="content3">Sample</a>
             </div>
-            <div class="row accordion-content3 collapse in" id="content3"  aria-labelledby="title3">
-            <div class="line palebox">
-                <div class="row">
-                    <div class="c9"><p> form.sample_image </p></div>
-                </div>
+            <div class="row accordion-content3 collapse in" id="content3" aria-labelledby="title3">
+                <div class="line palebox">
+                    <div class="row">
+                        <div class="c9"><p> form.sample_image </p></div>
+                    </div>
 
-                <p><i>General picture of the unetched cross-section of an element / object in dark field with a scale and indication of other figures found below in the file. The caption should be more or less the same as: Micrograph of the cross-section showing the location of Fig.... Unetched, dark field, x (indication of the magnification). The next figure should be the MiCorr stratigraphy built using the MiCorr application.</i></p>
+                    <p><i>General picture of the unetched cross-section of an element / object in dark field with a
+                        scale and indication of other figures found below in the file. The caption should be more or
+                        less the same as: Micrograph of the cross-section showing the location of Fig.... Unetched, dark
+                        field, x (indication of the magnification). The next figure should be the MiCorr stratigraphy
+                        built using the MiCorr application.</i></p>
+                </div>
+                <div class="line lightbox">
+                    <div class="row">
+                        <div class="c3"><em>Description of sample</em></div>
+                        <div class="c9"><p>{{ form.sample_description }}</p>
+                            <p><i>{{ form.sample_description.help_text }}</i></p></div>
+                    </div>
+                    <div class="row">
+                        <div class="c3"><em>Alloy</em></div>
+                        <div class="c9"><p> form.alloy <a onmouseover="this.style.cursor='pointer'"
+                                                          onclick="window.open('{% url 'artefacts:alloy-create' %}', 'newwindow', 'height=450px, width=700px');"><span
+                                class="glyphicon glyphicon-plus"></span></a></p>
+                            <p><i>{{ form.alloy.help_text }}</i></p></div>
+                    </div>
+                    <div class="row">
+                        <div class="c3"><em>Technology</em></div>
+                        <div class="c9"><p> form.technology <a onmouseover="this.style.cursor='pointer'"
+                                                               onclick="window.open('{% url 'artefacts:technology-create' %}', 'newwindow', 'height=450px, width=700px');"><span
+                                class="glyphicon glyphicon-plus"></span></a></p>
+                            <p><i>{{ form.technology.help_text }}</i></p></div>
+                    </div>
+                    <div class="row">
+                        <div class="c3"><em>Lab number of sample</em></div>
+                        <div class="c9"><p>{{ form.sample_number }}</p>
+                            <p><i>{{ form.sample_number.help_text }}</i></p></div>
+                    </div>
+                    <div class="row">
+                        <div class="c3"><em>Sample location</em></div>
+                        <div class="c9"><a onmouseover="this.style.cursor='pointer'"
+                                           onclick="window.open('{% url 'contacts:contact-create' %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><span
+                                class="glyphicon glyphicon-plus"></span></a>
+                            <p><i>{{ form.sample_location.help_text }}</i></p></div>
+                    </div>
+                    <div class="row">
+                        <div class="c3"><em>Responsible institution</em></div>
+                        <div class="c9"><a onmouseover="this.style.cursor='pointer'"
+                                           onclick="window.open('{% url 'contacts:contact-create' %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><span
+                                class="glyphicon glyphicon-plus"></span></a>
+                            <p><i>{{ form.responsible_institution.help_text }}</i></p></div>
+                    </div>
+                    <div class="row">
+                        <div class="c3"><em>Date and aim of sampling</em></div>
+                        <div class="c9"><p>{{ form.date_aim_sampling }}</p>
+                            <p><i>{{ form.date_aim_sampling.help_text }}</i></p></div>
+                    </div>
+                </div>
+                <div class="line palebox">
+                    <h4 class="underline">Complementary information</h4>
+                    <textarea name="sample_complementary_information">{{ sample_complementary_information }}</textarea>
+                    <p><i>Any important information that does not fit to the previous fields.</i></p>
+                </div>
             </div>
-            <div class="line lightbox">
-              <div class="row">
-                <div class="c3"><em>Description of sample</em></div>
-                <div class="c9"><p>{{ form.sample_description }}</p> <p><i>{{ form.sample_description.help_text }}</i></p></div>
-              </div>
-              <div class="row">
-                <div class="c3"><em>Alloy</em></div>
-                <div class="c9"><p> form.alloy  <a onmouseover="this.style.cursor='pointer'" onclick="window.open('{% url 'artefacts:alloy-create' %}', 'newwindow', 'height=450px, width=700px');"><span class="glyphicon glyphicon-plus"></span></a></p> <p><i>{{ form.alloy.help_text }}</i></p></div>
-              </div>
-              <div class="row">
-                <div class="c3"><em>Technology</em></div>
-                <div class="c9"><p> form.technology  <a onmouseover="this.style.cursor='pointer'" onclick="window.open('{% url 'artefacts:technology-create' %}', 'newwindow', 'height=450px, width=700px');"><span class="glyphicon glyphicon-plus"></span></a></p> <p><i>{{ form.technology.help_text }}</i></p></div>
-              </div>
-              <div class="row">
-                <div class="c3"><em>Lab number of sample</em></div>
-                <div class="c9"><p>{{ form.sample_number }}</p> <p><i>{{ form.sample_number.help_text }}</i></p></div>
-              </div>
-              <div class="row">
-                <div class="c3"><em>Sample location</em></div>
-                <div class="c9"><a onmouseover="this.style.cursor='pointer'" onclick="window.open('{% url 'contacts:contact-create' %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><span class="glyphicon glyphicon-plus"></span></a> <p><i>{{ form.sample_location.help_text }}</i></p></div>
-              </div>
-              <div class="row">
-                <div class="c3"><em>Responsible institution</em></div>
-                <div class="c9"><a onmouseover="this.style.cursor='pointer'" onclick="window.open('{% url 'contacts:contact-create' %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><span class="glyphicon glyphicon-plus"></span></a> <p><i>{{ form.responsible_institution.help_text }}</i></p></div>
-              </div>
-              <div class="row">
-                <div class="c3"><em>Date and aim of sampling</em></div>
-                <div class="c9"><p>{{ form.date_aim_sampling }}</p> <p><i>{{ form.date_aim_sampling.help_text }}</i></p></div>
-              </div>
+
+            <!--ANALYSES AND RESULTS-->
+            <div class="row accordion-title1" id="title4">
+                <a class="line" data-toggle="collapse" data-parent="#accordionN1" href="#content4" aria-expanded="true"
+                   aria-controls="content4">Analyses and results</a>
             </div>
-            <div class="line palebox">
-                <h4 class="underline">Complementary information</h4>
-                <textarea name="sample_complementary_information">{{ sample_complementary_information }}</textarea>
-                 <p><i>Any important information that does not fit to the previous fields.</i></p>
+            <div class="row accordion-content3 collapse in" id="content4" aria-labelledby="title4">
+                <div class="line palebox">
+                    <p><em>Analyses performed</em></p>
+                    <p><i>List of the techniques used: Metallography (etched with ? reagent), SEM-EDS, FTIR, Raman
+                        spectroscopy, XRD, etc.</i></p>
+                    <textarea name="analyses_performed">{{ analyses_performed }}</textarea>
+                </div>
+                <div class="line">
+                    <div id="accordionAR" aria-multiselectable="true">
+
+                        <!--METAL-->
+                        <div class="row accordion-title2" id="title41">
+                            <a class="line" data-toggle="collapse" data-parent="#accordionAR" href="#content41"
+                               aria-expanded="true" aria-controls="content41">Metal</a>
+                        </div>
+                        <div class="row accordion-content2 collapse in" id="content41" aria-labelledby="title41">
+                            <div class="line palebox">
+                                <div class="row">
+                                    <div class="c9">
+                                        <textarea name="metal_text">{{ metal_text }}</textarea>
+                                        <p><i>A description of the metal: its composition, texture (porosity), hardness,
+                                            microstructure revealed by etching and specific features (figures and tables
+                                            are referred as Fig. 1, Table 1).</i></p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="c3"><em>Microstructure</em></div>
+                                    <div class="c9"><p> form.microstructure <a onmouseover="this.style.cursor='pointer'"
+                                                                               onclick="window.open('{% url 'artefacts:microstructure-create' %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><span
+                                            class="glyphicon glyphicon-plus"></span></a></p>
+                                        <p><i> form.microstructure.help_text </i></p></div>
+                                </div>
+                                <div class="row">
+                                    <div class="c3"><em>Major element(s) (conc. > 1 mass%)</em></div>
+                                    <div class="c9"><p> form.metal1 <a onmouseover="this.style.cursor='pointer'"
+                                                                       onclick="window.open('{% url 'artefacts:metal-create' %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><span
+                                            class="glyphicon glyphicon-plus"></span></a></p>
+                                        <p><i> form.metal1.help_text </i></p></div>
+                                </div>
+                                <div class="row">
+                                    <div class="c3"><em>Minor element(s) (conc. < 1 mass%)</em></div>
+                                    <div class="c9"><p> form.metalx <a onmouseover="this.style.cursor='pointer'"
+                                                                       onclick="window.open('{% url 'artefacts:metal-create' %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><span
+                                            class="glyphicon glyphicon-plus"></span></a></p>
+                                        <p><i> form.metalx.help_text </i></p></div>
+                                </div>
+                            </div>
+                            <div class="line lightbox">
+                                <div class="row">
+                                    <div class="c9"><p> form.metal_image </p></div>
+                                </div>
+                            </div>
+                            <div class="line palebox">
+                                <h4 class="underline">Complementary information</h4>
+                                <textarea
+                                        name="metal_complementary_information">{{ metal_complementary_information }}</textarea>
+                            </div>
+                        </div>
+
+                        <!--CORROSION LAYERS-->
+                        <div class="row accordion-title2" id="title42">
+                            <a class="line" data-toggle="collapse" data-parent="#accordionAR" href="#content42"
+                               aria-expanded="true" aria-controls="content42">Corrosion layers</a>
+                        </div>
+                        <div class="row accordion-content2 collapse in" id="content42" aria-labelledby="title42">
+                            <div class="line palebox">
+                                <div class="row">
+                                    <div class="c9">
+                                        <textarea name="corrosion_text">{{ corrosion_text }}</textarea>
+                                        <p><i>A description of the corrosion layers: their composition, texture
+                                            (porosity), microstructure if any and specific features (figures and tables
+                                            are referred as Fig. 1, Table 1). The corrosion form(s) and corrosion type
+                                            should be deduced.</i></p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="c3"><em>Corrosion form</em></div>
+                                    <div class="c9"><p> form.corrosion_form <a onmouseover="this.style.cursor='pointer'"
+                                                                               onclick="window.open('{% url 'artefacts:corrosionform-create' %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><span
+                                            class="glyphicon glyphicon-plus"></span></a></p>
+                                        <p><i> form.corrosion_form.help_text </i></p></div>
+                                </div>
+                                <div class="row">
+                                    <div class="c3"><em>Corrosion type</em></div>
+                                    <div class="c9"><p> form.corrosion_type <a onmouseover="this.style.cursor='pointer'"
+                                                                               onclick="window.open('{% url 'artefacts:corrosiontype-create' %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><span
+                                            class="glyphicon glyphicon-plus"></span></a></p>
+                                        <p><i> form.corrosion_type.help_text </i></p></div>
+                                </div>
+                            </div>
+                            <div class="line lightbox">
+                                <div class="row">
+                                    <div class="c9"><p> form.corrosion_image </p></div>
+                                </div>
+                            </div>
+                            <div class="line palebox">
+                                <h4 class="underline">Complementary information</h4>
+                                <textarea
+                                        name="corrosion_complementary_information">{{ corrosion_complementary_information }}</textarea>
+                            </div>
+                        </div>
+                    </div> <!--accordionAR -->
+                </div>
             </div>
+
+            <!--SYNTHESIS-->
+            <div class="row accordion-title1" id="title5">
+                <a class="line" data-toggle="collapse" data-parent="#accordionN3" href="#content5" aria-expanded="true"
+                   aria-controls="content5">Synthesis of the macroscopic / microscopic observation of corrosion
+                    layers</a>
+            </div>
+            <div class="row accordion-content3 collapse in" id="content5" aria-labelledby="title5">
+                <div class="line palebox">
+                    <div class="row">
+                        <p><i>Based on the analyses carried out, the schematic representation of the stratigraphy of the
+                            multi-layered pustule form has been corrected.</i></p>
+                    </div>
+                    <div class="row">
+                        <div class="c9">
+                            <textarea name="synthesis_text">{{ synthesis_text }}</textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="line lightbox">
+                    <div class="row">
+                        <div class="c9"><p> form.synthesis_image </p></div>
+                    </div>
+                </div>
+            </div>
+
+            <!--CONCLUSION-->
+            <div class="row accordion-title1" id="title6">
+                <a class="line" data-toggle="collapse" data-parent="#accordionN3" href="#content6" aria-expanded="true"
+                   aria-controls="content6">Conclusion</a>
+            </div>
+            <div class="row accordion-content3 collapse in" id="content6" aria-labelledby="title6">
+                <div class="line palebox">
+                    <div class="row">
+                        <div class="c9">
+                            <textarea name="conclusion_text">{{ conclusion_text }}</textarea>
+                            <p><i>A brief summary of all data collected: metal with composition and microstructure.
+                                Corrosion forms and type as well as description of the corrosion layers. Location of the
+                                limit of the original surface if any.</i></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--REFERENCES-->
+            <div class="row accordion-title1" id="title7">
+                <a class="line" data-toggle="collapse" data-parent="#accordionN3" href="#content7" aria-expanded="true"
+                   aria-controls="content7">References</a>
+            </div>
+            <div class="row accordion-content3 collapse in" id="content7" aria-labelledby="title7">
+                <div class="line palebox">
+                    <div class="row">
+                        <div class="c9">
+                            <textarea name="references_text">{{ references_text }}</textarea>
+                        </div>
+                    </div>
+                </div>
             </div>
 
         </div>
-    <input type="submit" value="Next">
+        <input type="submit" value="Next">
     </form>
 
 {% endblock content %}
