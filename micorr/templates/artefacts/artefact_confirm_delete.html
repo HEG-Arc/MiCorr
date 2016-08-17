@@ -1,7 +1,5 @@
 {% extends "base.html" %}
 
-{% block title %}MiCorr | Model {{ artefact.pk }} - delete{% endblock %}
-
 {% block content %}
 
 <div class="container">
@@ -17,7 +15,7 @@
             <form action="{% url 'artefacts:artefact-delete' artefact.pk %}" method="POST">
                 {% csrf_token %}
                     <button type="submit" class="btn btn-danger">Delete</button>
-                    <a href="{% url 'artefacts:artefact-detail' artefact.pk %}"><button type="button" class="btn btn-link">Cancel</button></a>
+                    <a href="{% url 'users:detail' user %}"><button type="button" class="btn btn-link">Cancel</button></a>
             </form>
         </div>
     </div>

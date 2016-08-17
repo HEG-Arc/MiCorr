@@ -31,7 +31,9 @@ class UserDetailView(LoginRequiredMixin, DetailView):
         context = super(UserDetailView, self).get_context_data(**kwargs)
         # Add the stratigraphies of the user
         stratigraphies = Neo4jDAO().getStratigraphiesByUser(self.request.user.id)
+        artefacts = self.request.user.artefact_set.all()
         context['stratigraphies'] = stratigraphies
+        context['artefacts'] = artefacts
         return context
 
 

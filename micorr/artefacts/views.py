@@ -193,7 +193,7 @@ class ArtefactsUpdateView(generic.UpdateView):
         return super(ArtefactsUpdateView, self).post(request, **kwargs)
 
     def get_success_url(self):
-        return reverse('artefacts:artefact-detail', kwargs={'pk': self.kwargs.get('pk', None)}, )
+        return reverse('users:detail', kwargs={'username': self.request.user})
 
 
 class ArtefactsDeleteView(generic.DeleteView):
@@ -203,7 +203,9 @@ class ArtefactsDeleteView(generic.DeleteView):
     """
     model = Artefact
     template_name_suffix = '_confirm_delete'
-    success_url = reverse_lazy('artefacts:artefact-list')
+
+    def get_success_url(self):
+        return reverse('users:detail', kwargs={'username': self.request.user})
 
 
 class ArtefactsCreateView(generic.CreateView):
@@ -214,6 +216,11 @@ class ArtefactsCreateView(generic.CreateView):
     model = Artefact
     template_name_suffix = '_create_form'
     form_class = ArtefactsCreateForm
+
+    def form_valid(self, form):
+        user = self.request.user
+        form.instance.user = user
+        return super(ArtefactsCreateView, self).form_valid(form)
 
     def get_success_url(self):
         return reverse('artefacts:artefact-update', kwargs={'pk': self.object.id})
