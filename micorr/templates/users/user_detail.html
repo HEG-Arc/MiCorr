@@ -62,9 +62,9 @@
                     <td>
                         <span class="editable" data-url="{% url 'artefacts:artefact-update' artefact.id %}">{{ artefact.description }}</span>
                     </td>
-                    <td>[ <a href="{% url 'artefacts:artefact-update' artefact.id %}"><i class="fa fa-pencil"></i> Edit</a> |
-                        <a href="/artefacts/{{ artefact.id }}"><i class="fa fa-eye"></i> Display </a> |
-                        <a href="{% url 'artefacts:artefact-delete' artefact.id %}"><i class="fa fa-trash"></i> Delete</a>]
+                    <td><a href="{% url 'artefacts:artefact-update' artefact.id %}"><i class="fa fa-pencil"></i></a> |
+                        <a href="/artefacts/{{ artefact.id }}"><i class="fa fa-eye"></i></a> |
+                        <a href="{% url 'artefacts:artefact-delete' artefact.id %}"><i class="fa fa-trash"></i></a>
                     </td>
                 </tr>
             {% endfor %}
