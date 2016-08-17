@@ -13,43 +13,21 @@ class ArtefactsUpdateForm(forms.ModelForm):
     Update an existing artefact
     """
 
-    complementary_information = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}))
-    macroscopic_text = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}))
-    sample_complementary_information = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}))
-    analyses_performed = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}))
-    metal_text = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}))
-    metal_complementary_information = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}))
-    corrosion_text = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}))
-    corrosion_complementary_information = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}))
-    synthesis_text = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}))
-    conclusion_text = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}))
-    references_text = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}))
-
-    """
-    object_image = forms.ImageField()
-    zones_image = forms.ImageField()
-    macroscopic_text = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}))
-    macroscopic_image = forms.ImageField()
-    sample_image = forms.ImageField()
-    metal_text = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}))
-    metal_image = forms.ImageField()
-    corrosion_text = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}))
-    corrosion_image = forms.ImageField()
-    synthesis_text = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}))
-    synthesis_image = forms.ImageField()
-    conclusion_text = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}))
-    conclusion_image = forms.ImageField()
-    references_text = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}))
-    """
+    complementary_information = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}), required=False)
+    macroscopic_text = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}), required=False)
+    sample_complementary_information = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}), required=False)
+    analyses_performed = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}), required=False)
+    metal_text = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}), required=False)
+    metal_complementary_information = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}),  required=False)
+    corrosion_text = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}), required=False)
+    corrosion_complementary_information = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}), required=False)
+    synthesis_text = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}), required=False)
+    conclusion_text = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}), required=False)
+    references_text = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}), required=False)
 
     class Meta:
         model = Artefact
         exclude = ['user']
-
-    def save(self):
-        self.complementary_information = self.cleaned_data['complementary_information']
-        super(ArtefactsUpdateForm, self).save(commit=commit)
-
 
 
 class ArtefactsCreateForm(forms.ModelForm):

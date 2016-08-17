@@ -36,6 +36,20 @@
 
     <h1>New artefact</h1>
     <form action="{% url 'artefacts:artefact-update' form.instance.pk %}" method="post">{% csrf_token %}
+        {% if form.errors %}
+            {% for field in form %}
+                {% for error in field.errors %}
+                    <div class="alert alert-error">
+                        <strong>{{ field.name }} {{ error|escape }}</strong>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+            {% for error in form.non_field_errors %}
+                <div class="alert alert-error">
+                    <strong>{{ field.name }} {{ error|escape }}</strong>
+                </div>
+            {% endfor %}
+        {% endif %}
         <div class="row">
             <div class="c3"><em>Author(s)</em></div>
             <div class="c9"><a onmouseover="this.style.cursor='pointer'"
