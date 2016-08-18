@@ -94,11 +94,12 @@
                     </div>
                     <div class="row">
                         <div class="c3"><em>Origin and date of recovering</em></div>
-                        <div class="c9"><a onmouseover="this.style.cursor='pointer'"
-                                           onclick="window.open('{% url 'artefacts:origin-create' %}', 'newwindow', 'height=450px, width=700px');"><span
-                                class="glyphicon glyphicon-plus"></span></a>
-                            <p><i>{{ form.origin.help_text }}</i></p> {{ form.recovering_date }}
-                            <i>{{ form.recovering_date.help_text }}</i></div>
+                        <div class="c9">
+                            {{ form.origin }}
+                            <p><i>{{ form.origin.help_text }}</i></p>
+                            {{ form.recovering_date }}
+                            <p><i>{{ form.recovering_date.help_text }}</i></p>
+                        </div>
                     </div>
                     <div class="row">
                         <div class="c3"><em>Dating of artefact (Tpq _ Taq)</em></div>
@@ -431,3 +432,7 @@
     </form>
 
 {% endblock content %}
+
+{% block custom_bottom_script %}
+    <script type="text/javascript" src="/static/admin/js/admin/RelatedObjectLookups.js"></script>
+{% endblock custom_bottom_script %}

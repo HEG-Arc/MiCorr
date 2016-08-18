@@ -1,11 +1,27 @@
 from django import forms
 from django.db.transaction import commit
 from django.forms import TextInput
+from django.template.loader import render_to_string
+
 from .models import Artefact, Document, Metal, CorrosionForm, CorrosionType, Environment, Origin, ChronologyPeriod, \
     Alloy, Technology, Microstructure
 from cities_light.models import Country
 from tinymce.widgets import TinyMCE
 import django_filters
+
+
+class SelectWithPop(forms.Select):
+    def render(self, name, *args, **kwargs):
+        html = super(SelectWithPop, self).render(name, *args, **kwargs)
+        popupplus = render_to_string("form/popupplus.html", {'field': name})
+        return html+popupplus
+
+
+class MultipleSelectWithPop(forms.SelectMultiple):
+    def render(self, name, *args, **kwargs):
+        html = super(MultipleSelectWithPop, self).render(name, *args, **kwargs)
+        popupplus = render_to_string("form/popupplus.html", {'field': name})
+        return html+popupplus
 
 
 class ArtefactsUpdateForm(forms.ModelForm):
@@ -24,6 +40,9 @@ class ArtefactsUpdateForm(forms.ModelForm):
     synthesis_text = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}), required=False)
     conclusion_text = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}), required=False)
     references_text = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}), required=False)
+
+    origin = forms.ModelChoiceField(Origin.objects, widget=SelectWithPop)
+
 
     class Meta:
         model = Artefact

@@ -1,5 +1,8 @@
+from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse, reverse_lazy
-from django.shortcuts import get_object_or_404, render, redirect
+from django.shortcuts import get_object_or_404, render, redirect, render_to_response
+from django.template import RequestContext
+from django.utils.html import escape
 from django.views import generic
 from haystack.forms import SearchForm
 from django.http import HttpResponse
@@ -7,7 +10,6 @@ from stratigraphies.ch.neo4jDaoImpl.Neo4JDAO import Neo4jDAO
 
 #import rdflib
 #from SPARQLWrapper import SPARQLWrapper, JSON
-
 from .models import Artefact, Document, Origin, ChronologyPeriod, Alloy, Technology, Environment, Microstructure, \
     Metal, CorrosionForm, CorrosionType, Section, SectionCategory
 from .forms import ArtefactsUpdateForm, ArtefactsCreateForm, DocumentUpdateForm, DocumentCreateForm, ArtefactFilter,\
@@ -226,13 +228,25 @@ class ArtefactsCreateView(generic.CreateView):
         return reverse('artefacts:artefact-update', kwargs={'pk': self.object.id})
 
 
-class OriginCreateView(generic.CreateView):
-    """
-    A view which allows the user to create an origin
-    """
-    model = Origin
-    template_name_suffix = '_create_form'
-    form_class = OriginCreateForm
+@login_required
+def newOrigin(request):
+    return handlePopAdd(request, OriginCreateForm, 'origin')
+
+
+def handlePopAdd(request, addForm, field):
+    if request.method == "POST":
+        form = addForm(request.POST)
+        if form.is_valid():
+            try:
+                newObject = form.save()
+            except forms.ValidationError, error:
+                newObject = None
+            if newObject:
+                return HttpResponse('<script type="text/javascript">opener.dismissAddAnotherPopup(window, "%s", "%s");</script>' % (escape(newObject._get_pk_val()), escape(newObject)))
+    else:
+        form = addForm()
+    pageContext = {'form': form, 'field': field}
+    return render_to_response("artefacts/popadd.html", pageContext, context_instance=RequestContext(request))
 
 
 class ChronologyCreateView(generic.CreateView):
