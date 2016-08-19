@@ -1,10 +1,10 @@
 from django import forms
-from django.db.transaction import commit
 from django.forms import TextInput
 from django.template.loader import render_to_string
 
+from contacts.models import Contact
 from .models import Artefact, Document, Metal, CorrosionForm, CorrosionType, Environment, Origin, ChronologyPeriod, \
-    Alloy, Technology, Microstructure
+    Alloy, Technology, Microstructure, RecoveringDate
 from cities_light.models import Country
 from tinymce.widgets import TinyMCE
 import django_filters
@@ -41,7 +41,22 @@ class ArtefactsUpdateForm(forms.ModelForm):
     conclusion_text = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}), required=False)
     references_text = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}), required=False)
 
+    author = forms.ModelMultipleChoiceField(Contact.objects, widget=MultipleSelectWithPop)
     origin = forms.ModelChoiceField(Origin.objects, widget=SelectWithPop)
+    recovering_date = forms.ModelChoiceField(RecoveringDate.objects, widget=SelectWithPop)
+    chronology_period = forms.ModelChoiceField(ChronologyPeriod.objects, widget=SelectWithPop)
+    environment = forms.ModelChoiceField(Environment.objects, widget=SelectWithPop)
+    location = forms.ModelChoiceField(Contact.objects, widget=SelectWithPop)
+    owner = forms.ModelChoiceField(Contact.objects, widget=SelectWithPop)
+    alloy = forms.ModelChoiceField(Alloy.objects, widget=SelectWithPop)
+    technology = forms.ModelChoiceField(Technology.objects, widget=SelectWithPop)
+    sample_location = forms.ModelChoiceField(Contact.objects, widget=SelectWithPop)
+    responsible_institution = forms.ModelChoiceField(Contact.objects, widget=SelectWithPop)
+    microstructure = forms.ModelChoiceField(Microstructure.objects, widget=SelectWithPop)
+    metal1 = forms.ModelChoiceField(Metal.objects, widget=SelectWithPop)
+    metalx = forms.ModelMultipleChoiceField(Metal.objects, widget=MultipleSelectWithPop)
+    corrosion_form = forms.ModelChoiceField(CorrosionForm.objects, widget=SelectWithPop)
+    corrosion_type = forms.ModelChoiceField(CorrosionType.objects, widget=SelectWithPop)
 
 
     class Meta:
@@ -73,13 +88,13 @@ class OriginCreateForm(forms.ModelForm):
         model = Origin
 
 
-class EnvironmentCreateForm(forms.ModelForm):
+class RecoveringDateCreateForm(forms.ModelForm):
     """
-    Create a new alloy
+    Create a new origin
     """
 
     class Meta:
-        model = Environment
+        model = RecoveringDate
 
 
 class ChronologyCreateForm(forms.ModelForm):
@@ -89,6 +104,15 @@ class ChronologyCreateForm(forms.ModelForm):
 
     class Meta:
         model = ChronologyPeriod
+
+
+class EnvironmentCreateForm(forms.ModelForm):
+    """
+    Create a new alloy
+    """
+
+    class Meta:
+        model = Environment
 
 
 class AlloyCreateForm(forms.ModelForm):

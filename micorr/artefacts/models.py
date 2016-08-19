@@ -272,10 +272,12 @@ class Artefact(TimeStampedModel):
         if self.alloy:
             artefact.append(self.alloy.name)
         if self.chronology_period:
-            artefact.append(self.chronology_period.chronology_category.name)
+            if self.chronology_period.chronology_category:
+                artefact.append(self.chronology_period.chronology_category.name)
         if self.origin:
             if self.origin.city:
-                artefact.append(self.origin.city.country.name)
+                if self.origin.country:
+                    artefact.append(self.origin.city.country.name)
         return " - ".join(artefact)
 
     def __unicode__(self):

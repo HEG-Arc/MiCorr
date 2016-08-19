@@ -1,20 +1,22 @@
 from django.contrib.auth.decorators import login_required
-from django.core.urlresolvers import reverse, reverse_lazy
+from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404, render, redirect, render_to_response
 from django.template import RequestContext
 from django.utils.html import escape
 from django.views import generic
 from haystack.forms import SearchForm
-from django.http import HttpResponse
+from django.http import HttpResponse, QueryDict
 from stratigraphies.ch.neo4jDaoImpl.Neo4JDAO import Neo4jDAO
 
 #import rdflib
 #from SPARQLWrapper import SPARQLWrapper, JSON
+from contacts.forms import ContactCreateForm
 from .models import Artefact, Document, Origin, ChronologyPeriod, Alloy, Technology, Environment, Microstructure, \
     Metal, CorrosionForm, CorrosionType, Section, SectionCategory
 from .forms import ArtefactsUpdateForm, ArtefactsCreateForm, DocumentUpdateForm, DocumentCreateForm, ArtefactFilter,\
     OriginCreateForm, ChronologyCreateForm, AlloyCreateForm, TechnologyCreateForm, EnvironmentCreateForm, \
-    MicrostructureCreateForm, MetalCreateForm, CorrosionFormCreateForm, CorrosionTypeCreateForm
+    MicrostructureCreateForm, MetalCreateForm, CorrosionFormCreateForm, CorrosionTypeCreateForm, \
+    RecoveringDateCreateForm
 
 """
 def displayOntology(request):
@@ -229,8 +231,83 @@ class ArtefactsCreateView(generic.CreateView):
 
 
 @login_required
+def newAuthor(request):
+    return handlePopAdd(request, ContactCreateForm, 'author')
+
+
+@login_required
 def newOrigin(request):
     return handlePopAdd(request, OriginCreateForm, 'origin')
+
+
+@login_required
+def newRecoveringDate(request):
+    return handlePopAdd(request, RecoveringDateCreateForm, 'recovering_date')
+
+
+@login_required
+def newChronologyPeriod(request):
+    return handlePopAdd(request, ChronologyCreateForm, 'chronology_period')
+
+
+@login_required
+def newEnvironment(request):
+    return handlePopAdd(request, EnvironmentCreateForm, 'environment')
+
+
+@login_required
+def newLocation(request):
+    return handlePopAdd(request, ContactCreateForm, 'location')
+
+
+@login_required
+def newOwner(request):
+    return handlePopAdd(request, ContactCreateForm, 'owner')
+
+
+@login_required
+def newAlloy(request):
+    return handlePopAdd(request, AlloyCreateForm, 'alloy')
+
+
+@login_required
+def newTechnology(request):
+    return handlePopAdd(request, TechnologyCreateForm, 'technology')
+
+
+@login_required
+def newSampleLocation(request):
+    return handlePopAdd(request, ContactCreateForm, 'sample_location')
+
+
+@login_required
+def newResponsibleInstitution(request):
+    return handlePopAdd(request, ContactCreateForm, 'responsible_institution')
+
+
+@login_required
+def newMicrostructure(request):
+    return handlePopAdd(request, MicrostructureCreateForm, 'microstructure')
+
+
+@login_required
+def newMetal1(request):
+    return handlePopAdd(request, MetalCreateForm, 'metal1')
+
+
+@login_required
+def newMetalX(request):
+    return handlePopAdd(request, MetalCreateForm, 'metalx')
+
+
+@login_required
+def newCorrosionForm(request):
+    return handlePopAdd(request, CorrosionFormCreateForm, 'corrosion_form')
+
+
+@login_required
+def newCorrosionType(request):
+    return handlePopAdd(request, CorrosionTypeCreateForm, 'corrosion_type')
 
 
 def handlePopAdd(request, addForm, field):
@@ -247,6 +324,9 @@ def handlePopAdd(request, addForm, field):
         form = addForm()
     pageContext = {'form': form, 'field': field}
     return render_to_response("artefacts/popadd.html", pageContext, context_instance=RequestContext(request))
+
+
+
 
 
 class ChronologyCreateView(generic.CreateView):

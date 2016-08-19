@@ -52,9 +52,8 @@
         {% endif %}
         <div class="row">
             <div class="c3"><em>Author(s)</em></div>
-            <div class="c9"><a onmouseover="this.style.cursor='pointer'"
-                               onclick="window.open('{% url 'contacts:contact-create' %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><span
-                    class="glyphicon glyphicon-plus"></span></a>
+            <div class="c9">
+                <p>{{ form.author }}</p>
                 <p><i>{{ form.author.help_text }}</i></p></div>
         </div>
 
@@ -108,23 +107,20 @@
                     </div>
                     <div class="row">
                         <div class="c3"><em>Burial conditions / environment</em></div>
-                        <div class="c9"><p>{{ form.environment }} <a onmouseover="this.style.cursor='pointer'"
-                                                                     onclick="window.open('{% url 'artefacts:environment-create' %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><span
-                                class="glyphicon glyphicon-plus"></span></a></p>
+                        <div class="c9">
+                            <p>{{ form.environment }}</p>
                             <p><i>{{ form.environment.help_text }}</i></p></div>
                     </div>
                     <div class="row">
                         <div class="c3"><em>Artefact location</em></div>
-                        <div class="c9"><a onmouseover="this.style.cursor='pointer'"
-                                           onclick="window.open('{% url 'contacts:contact-create' %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><span
-                                class="glyphicon glyphicon-plus"></span></a>
+                        <div class="c9">
+                            <p>{{ form.location }}</p>
                             <p><i>{{ form.location.help_text }}</i></p></div>
                     </div>
                     <div class="row">
                         <div class="c3"><em>Owner</em></div>
-                        <div class="c9"><a onmouseover="this.style.cursor='pointer'"
-                                           onclick="window.open('{% url 'contacts:contact-create' %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><span
-                                class="glyphicon glyphicon-plus"></span></a>
+                        <div class="c9">
+                            <p>{{ form.owner }}</p>
                             <p><i>{{ form.owner.help_text }}</i></p></div>
                     </div>
                     <div class="row">
@@ -216,16 +212,12 @@
                     </div>
                     <div class="row">
                         <div class="c3"><em>Alloy</em></div>
-                        <div class="c9"><p> form.alloy <a onmouseover="this.style.cursor='pointer'"
-                                                          onclick="window.open('{% url 'artefacts:alloy-create' %}', 'newwindow', 'height=450px, width=700px');"><span
-                                class="glyphicon glyphicon-plus"></span></a></p>
+                        <div class="c9"><p>{{ form.alloy }}</p>
                             <p><i>{{ form.alloy.help_text }}</i></p></div>
                     </div>
                     <div class="row">
                         <div class="c3"><em>Technology</em></div>
-                        <div class="c9"><p> form.technology <a onmouseover="this.style.cursor='pointer'"
-                                                               onclick="window.open('{% url 'artefacts:technology-create' %}', 'newwindow', 'height=450px, width=700px');"><span
-                                class="glyphicon glyphicon-plus"></span></a></p>
+                        <div class="c9"><p>{{ form.technology }}</p>
                             <p><i>{{ form.technology.help_text }}</i></p></div>
                     </div>
                     <div class="row">
@@ -235,16 +227,14 @@
                     </div>
                     <div class="row">
                         <div class="c3"><em>Sample location</em></div>
-                        <div class="c9"><a onmouseover="this.style.cursor='pointer'"
-                                           onclick="window.open('{% url 'contacts:contact-create' %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><span
-                                class="glyphicon glyphicon-plus"></span></a>
+                        <div class="c9">
+                            <p>{{ form.sample_location }}</p>
                             <p><i>{{ form.sample_location.help_text }}</i></p></div>
                     </div>
                     <div class="row">
                         <div class="c3"><em>Responsible institution</em></div>
-                        <div class="c9"><a onmouseover="this.style.cursor='pointer'"
-                                           onclick="window.open('{% url 'contacts:contact-create' %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><span
-                                class="glyphicon glyphicon-plus"></span></a>
+                        <div class="c9">
+                            <p>{{ form.responsible_institution }}</p>
                             <p><i>{{ form.responsible_institution.help_text }}</i></p></div>
                     </div>
                     <div class="row">
@@ -292,24 +282,21 @@
                                 </div>
                                 <div class="row">
                                     <div class="c3"><em>Microstructure</em></div>
-                                    <div class="c9"><p> form.microstructure <a onmouseover="this.style.cursor='pointer'"
-                                                                               onclick="window.open('{% url 'artefacts:microstructure-create' %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><span
-                                            class="glyphicon glyphicon-plus"></span></a></p>
+                                    <div class="c9">
+                                        <p>{{ form.microstructure }}</p>
                                         <p><i> form.microstructure.help_text </i></p></div>
                                 </div>
                                 <div class="row">
                                     <div class="c3"><em>Major element(s) (conc. > 1 mass%)</em></div>
-                                    <div class="c9"><p> form.metal1 <a onmouseover="this.style.cursor='pointer'"
-                                                                       onclick="window.open('{% url 'artefacts:metal-create' %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><span
-                                            class="glyphicon glyphicon-plus"></span></a></p>
-                                        <p><i> form.metal1.help_text </i></p></div>
+                                    <div class="c9">
+                                        <p>{{ form.metal1 }}</p>
+                                        <p><i>{{ form.metal1.help_text }}</i></p></div>
                                 </div>
                                 <div class="row">
                                     <div class="c3"><em>Minor element(s) (conc. < 1 mass%)</em></div>
-                                    <div class="c9"><p> form.metalx <a onmouseover="this.style.cursor='pointer'"
-                                                                       onclick="window.open('{% url 'artefacts:metal-create' %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><span
-                                            class="glyphicon glyphicon-plus"></span></a></p>
-                                        <p><i> form.metalx.help_text </i></p></div>
+                                    <div class="c9">
+                                        <p>{{ form.metalx }}</p>
+                                        <p><i>{{ form.metalx.help_text }}</i></p></div>
                                 </div>
                             </div>
                             <div class="line lightbox">
@@ -342,16 +329,14 @@
                                 </div>
                                 <div class="row">
                                     <div class="c3"><em>Corrosion form</em></div>
-                                    <div class="c9"><p> form.corrosion_form <a onmouseover="this.style.cursor='pointer'"
-                                                                               onclick="window.open('{% url 'artefacts:corrosionform-create' %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><span
-                                            class="glyphicon glyphicon-plus"></span></a></p>
+                                    <div class="c9">
+                                        <p>{{ form.corrosion_form }}</p>
                                         <p><i> form.corrosion_form.help_text </i></p></div>
                                 </div>
                                 <div class="row">
                                     <div class="c3"><em>Corrosion type</em></div>
-                                    <div class="c9"><p> form.corrosion_type <a onmouseover="this.style.cursor='pointer'"
-                                                                               onclick="window.open('{% url 'artefacts:corrosiontype-create' %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><span
-                                            class="glyphicon glyphicon-plus"></span></a></p>
+                                    <div class="c9">
+                                        <p>{{ form.corrosion_type }}</p>
                                         <p><i> form.corrosion_type.help_text </i></p></div>
                                 </div>
                             </div>
