@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block menu %}
+    <h1>Delete image</h1>
+{% endblock %}
+
+{% block content %}
+
+    <div class="container">
+
+    <div class="row">
+        <h2>Delete {{ image }}</h2>
+        <br/>
+        <p>Are you sure you want to delete the image <b>{{ image }}</b>?</p>
+
+        <div class="row">
+            <div class="col-xs-3 col-xs-offset-9">
+                <form action="{% url 'artefacts:image-delete' image.id %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+{% endblock %}
+
+{% block footer %}
+{% endblock footer %}

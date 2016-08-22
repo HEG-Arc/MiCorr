@@ -1,10 +1,10 @@
 from django.conf.urls import patterns, url
 from django.contrib.auth.decorators import login_required
+from django.views.generic import TemplateView
 
 from .views import ArtefactsListView, ArtefactsDetailView, ArtefactsUpdateView, ArtefactsDeleteView, \
-    ArtefactsCreateView, DocumentUpdateView, DocumentDeleteView, DocumentCreateView, \
-    ChronologyCreateView, AlloyCreateView, EnvironmentCreateView, TechnologyCreateView, \
-    MicrostructureCreateView, MetalCreateView, CorrosionFormCreateView, CorrosionTypeCreateView, searchStratigraphy
+    ArtefactsCreateView, DocumentUpdateView, DocumentDeleteView, DocumentCreateView, searchStratigraphy, \
+    ImageCreateView, ImageDeleteView
 
 urlpatterns = patterns('',
     url(r'^$', ArtefactsListView.as_view(), name='artefact-list'),
@@ -16,8 +16,9 @@ urlpatterns = patterns('',
        name='artefact-delete'),
     url(r'^create/$', login_required(ArtefactsCreateView.as_view()), name='artefact-create'),
 
-    url(r'^add/origin/?$', 'artefacts.views.newOrigin'),
     url(r'^add/author/?$', 'artefacts.views.newAuthor'),
+    url(r'^add/type/?$', 'artefacts.views.newType'),
+    url(r'^add/origin/?$', 'artefacts.views.newOrigin'),
     url(r'^add/recovering_date/?$', 'artefacts.views.newRecoveringDate'),
     url(r'^add/chronology_period/?$', 'artefacts.views.newChronologyPeriod'),
     url(r'^add/environment/?$', 'artefacts.views.newEnvironment'),
@@ -33,14 +34,9 @@ urlpatterns = patterns('',
     url(r'^add/corrosion_form/?$', 'artefacts.views.newCorrosionForm'),
     url(r'^add/corrosion_type/?$', 'artefacts.views.newCorrosionType'),
 
-    url(r'^create/chronology/$', login_required(ChronologyCreateView.as_view()), name='chronology-create'),
-    url(r'^create/alloy/$', login_required(AlloyCreateView.as_view()), name='alloy-create'),
-    url(r'^create/technology/$', login_required(TechnologyCreateView.as_view()), name='technology-create'),
-    url(r'^create/environment/$', login_required(EnvironmentCreateView.as_view()), name='environment-create'),
-    url(r'^create/microstructure/$', login_required(MicrostructureCreateView.as_view()), name='microstructure-create'),
-    url(r'^create/metal/$', login_required(MetalCreateView.as_view()), name='metal-create'),
-    url(r'^create/corrosionform/$', login_required(CorrosionFormCreateView.as_view()), name='corrosionform-create'),
-    url(r'^create/corrosiontype/$', login_required(CorrosionTypeCreateView.as_view()), name='corrosiontype-create'),
+    url(r'^(?P<section_id>\d+)/create/image/$', login_required(ImageCreateView.as_view()), name='image-create'),
+    url(r'^refresh/image/$', TemplateView.as_view(template_name='artefacts/refresh.html'), name='image-refresh'),
+    url(r'^/image/(?P<pk>\d+)/delete/$', login_required(ImageDeleteView.as_view()), name='image-delete'),
 
     url(r'^(?P<artefact_id>\d+)/document/(?P<pk>\d+)/update/$', login_required(DocumentUpdateView.as_view()),
        name='document-update'),

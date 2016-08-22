@@ -3,8 +3,9 @@ from django.forms import TextInput
 from django.template.loader import render_to_string
 
 from contacts.models import Contact
+
 from .models import Artefact, Document, Metal, CorrosionForm, CorrosionType, Environment, Origin, ChronologyPeriod, \
-    Alloy, Technology, Microstructure, RecoveringDate
+    Alloy, Technology, Microstructure, RecoveringDate, Image, Type
 from cities_light.models import Country
 from tinymce.widgets import TinyMCE
 import django_filters
@@ -41,22 +42,23 @@ class ArtefactsUpdateForm(forms.ModelForm):
     conclusion_text = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}), required=False)
     references_text = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}), required=False)
 
-    author = forms.ModelMultipleChoiceField(Contact.objects, widget=MultipleSelectWithPop)
-    origin = forms.ModelChoiceField(Origin.objects, widget=SelectWithPop)
-    recovering_date = forms.ModelChoiceField(RecoveringDate.objects, widget=SelectWithPop)
-    chronology_period = forms.ModelChoiceField(ChronologyPeriod.objects, widget=SelectWithPop)
-    environment = forms.ModelChoiceField(Environment.objects, widget=SelectWithPop)
-    location = forms.ModelChoiceField(Contact.objects, widget=SelectWithPop)
-    owner = forms.ModelChoiceField(Contact.objects, widget=SelectWithPop)
-    alloy = forms.ModelChoiceField(Alloy.objects, widget=SelectWithPop)
-    technology = forms.ModelChoiceField(Technology.objects, widget=SelectWithPop)
-    sample_location = forms.ModelChoiceField(Contact.objects, widget=SelectWithPop)
-    responsible_institution = forms.ModelChoiceField(Contact.objects, widget=SelectWithPop)
-    microstructure = forms.ModelChoiceField(Microstructure.objects, widget=SelectWithPop)
-    metal1 = forms.ModelChoiceField(Metal.objects, widget=SelectWithPop)
-    metalx = forms.ModelMultipleChoiceField(Metal.objects, widget=MultipleSelectWithPop)
-    corrosion_form = forms.ModelChoiceField(CorrosionForm.objects, widget=SelectWithPop)
-    corrosion_type = forms.ModelChoiceField(CorrosionType.objects, widget=SelectWithPop)
+    author = forms.ModelMultipleChoiceField(Contact.objects, widget=MultipleSelectWithPop, help_text='The author(s) of this file is (are) responsible for the information provided. Author(s) should provide their last name, initial of their first name and in brackets the abbreviation of their institutional affiliation, such as Degrigny C. (HE-Arc CR).', required=False)
+    type = forms.ModelChoiceField(Type.objects, widget=SelectWithPop, help_text='The name of the artefact, its typology', required=False)
+    origin = forms.ModelChoiceField(Origin.objects, widget=SelectWithPop, help_text='The place, city and country where the artefact comes from or the object to which the section considered belongs to', required=False)
+    recovering_date = forms.ModelChoiceField(RecoveringDate.objects, widget=SelectWithPop, help_text='The date of excavation for archaeological objects, of production and use for other artefacts', required=False)
+    chronology_period = forms.ModelChoiceField(ChronologyPeriod.objects, widget=SelectWithPop, help_text='The dating of the artefact', required=False)
+    environment = forms.ModelChoiceField(Environment.objects, widget=SelectWithPop, help_text='The environment where the artefact was found.', required=False)
+    location = forms.ModelChoiceField(Contact.objects, widget=SelectWithPop, help_text='The actual location of the artefact', required=False)
+    owner = forms.ModelChoiceField(Contact.objects, widget=SelectWithPop, help_text='The owner of the artefact', required=False)
+    alloy = forms.ModelChoiceField(Alloy.objects, widget=SelectWithPop, help_text='The alloy the artefact is made of', required=False)
+    technology = forms.ModelChoiceField(Technology.objects, widget=SelectWithPop, help_text='The manufacturing techniques used to produce the artefact', required=False)
+    sample_location = forms.ModelChoiceField(Contact.objects, widget=SelectWithPop, help_text='The actual location of the artefact sample', required=False)
+    responsible_institution = forms.ModelChoiceField(Contact.objects, widget=SelectWithPop, help_text='The responsible institution for the artefact sample', required=False)
+    microstructure = forms.ModelChoiceField(Microstructure.objects, widget=SelectWithPop, help_text='A description of the metal: its composition, texture (porosity), hardness, microstructure revealed by etching and specific features (figures and tables are referred as Fig. 1, Table 1)', required=False)
+    metal1 = forms.ModelChoiceField(Metal.objects, widget=SelectWithPop, help_text='The primary metal element of the artefact', required=False)
+    metalx = forms.ModelMultipleChoiceField(Metal.objects, widget=MultipleSelectWithPop, help_text='The other metal elements of the artefact.', required=False)
+    corrosion_form = forms.ModelChoiceField(CorrosionForm.objects, widget=SelectWithPop, required=False)
+    corrosion_type = forms.ModelChoiceField(CorrosionType.objects, widget=SelectWithPop, help_text='A description of the corrosion layers: their composition, texture (porosity), microstructure if any and specific features (figures and tables are referred as Fig. 1, Table 1). The corrosion form(s) and corrosion type should be deduced', required=False)
 
 
     class Meta:
@@ -77,6 +79,25 @@ class ArtefactsCreateForm(forms.ModelForm):
             'recovering_date': TextInput(),
             'chronology_period': TextInput(),
         }
+
+
+class ImageCreateForm(forms.ModelForm):
+    """
+    Create a new image
+    """
+
+    class Meta:
+        model = Image
+        exclude = ['section']
+
+
+class TypeCreateForm(forms.ModelForm):
+    """
+    Create a new type
+    """
+
+    class Meta:
+        model = Type
 
 
 class OriginCreateForm(forms.ModelForm):
