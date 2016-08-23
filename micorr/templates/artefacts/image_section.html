@@ -1,0 +1,10 @@
+{% for image in object_section.image_set.all %}
+  <div class="row">
+    <div class="c6">
+      <a href="{{ image.image.url }}" class="image-popup"><img src="{{ image.image.url }}" class="img-responsive"></a>
+    </div>
+    <div class="c6">
+      <p><a name="fig1"></a>{{ image.legend | safe }}<a onclick="window.open('{% url 'artefacts:image-delete' image.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><i class="fa fa-trash"></i></a></p>
+    </div>
+  </div>
+{% endfor %}

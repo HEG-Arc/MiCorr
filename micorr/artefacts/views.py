@@ -147,25 +147,22 @@ class ArtefactsUpdateView(generic.UpdateView):
         form_class = self.get_form_class()
         form = self.get_form(form_class)
         object_section = Section.objects.get_or_create(order=1, artefact=artefact, section_category=SectionCategory.objects.get(name='AR'), title='The Object')[0]
-        complementary_information = Section.objects.get_or_create(order=2, artefact=artefact, section_category=SectionCategory.objects.get(name='AR'), title='Description and visual observation')[0].complementary_information
-        Section.objects.get_or_create(order=3, artefact=artefact, section_category=SectionCategory.objects.get(name='SA'), title='Zones of the artefact submitted to visual observation and location of sampling areas')
-        macroscopic_text = Section.objects.get_or_create(order=4, artefact=artefact, section_category=SectionCategory.objects.get(name='SA'), title='Macroscopic observation')[0].content
-        sample_complementary_information = Section.objects.get_or_create(order=5, artefact=artefact, section_category=SectionCategory.objects.get(name='SA'), title='Sample')[0].complementary_information
+        description_section = Section.objects.get_or_create(order=2, artefact=artefact, section_category=SectionCategory.objects.get(name='AR'), title='Description and visual observation')[0]
+        zone_section = Section.objects.get_or_create(order=3, artefact=artefact, section_category=SectionCategory.objects.get(name='SA'), title='Zones of the artefact submitted to visual observation and location of sampling areas')[0]
+        macroscopic_section = Section.objects.get_or_create(order=4, artefact=artefact, section_category=SectionCategory.objects.get(name='SA'), title='Macroscopic observation')[0]
+        sample_section = Section.objects.get_or_create(order=5, artefact=artefact, section_category=SectionCategory.objects.get(name='SA'), title='Sample')[0]
         analyses_performed = Section.objects.get_or_create(order=6, artefact=artefact, section_category=SectionCategory.objects.get(name='AN'), title='Analyses and results')[0].content
-        metal_text = Section.objects.get_or_create(order=7, artefact=artefact, section_category=SectionCategory.objects.get(name='AN'), title='Metal')[0].content
-        metal_complementary_information = Section.objects.get_or_create(order=7, artefact=artefact, section_category=SectionCategory.objects.get(name='AN'), title='Metal')[0].complementary_information
-        corrosion_text = Section.objects.get_or_create(order=8, artefact=artefact, section_category=SectionCategory.objects.get(name='AN'), title='Corrosion layers')[0].content
-        corrosion_complementary_information = Section.objects.get_or_create(order=8, artefact=artefact, section_category=SectionCategory.objects.get(name='AN'), title='Corrosion layers')[0].complementary_information
-        synthesis_text = Section.objects.get_or_create(order=9, artefact=artefact, section_category=SectionCategory.objects.get(name='AN'), title='Synthesis of the macroscopic / microscopic observation of corrosion layers')[0].content
+        metal_section = Section.objects.get_or_create(order=7, artefact=artefact, section_category=SectionCategory.objects.get(name='AN'), title='Metal')[0]
+        corrosion_section = Section.objects.get_or_create(order=8, artefact=artefact, section_category=SectionCategory.objects.get(name='AN'), title='Corrosion layers')[0]
+        synthesis_section = Section.objects.get_or_create(order=9, artefact=artefact, section_category=SectionCategory.objects.get(name='AN'), title='Synthesis of the macroscopic / microscopic observation of corrosion layers')[0]
         conclusion_text = Section.objects.get_or_create(order=10, artefact=artefact, section_category=SectionCategory.objects.get(name='CO'), title='Conclusion')[0].content
         references_text = Section.objects.get_or_create(order=11, artefact=artefact, section_category=SectionCategory.objects.get(name='RE'), title='References')[0].content
-        return self.render_to_response(self.get_context_data(form=form, complementary_information=complementary_information, macroscopic_text=macroscopic_text, sample_complementary_information=sample_complementary_information, analyses_performed=analyses_performed, metal_text=metal_text, metal_complementary_information=metal_complementary_information, corrosion_text=corrosion_text, corrosion_complementary_information=corrosion_complementary_information, synthesis_text=synthesis_text, conclusion_text=conclusion_text, references_text=references_text, object_section=object_section))
+        return self.render_to_response(self.get_context_data(form=form, object_section=object_section, description_section=description_section, zone_section=zone_section, macroscopic_section=macroscopic_section, sample_section=sample_section, analyses_performed=analyses_performed, metal_section=metal_section, corrosion_section=corrosion_section, synthesis_section=synthesis_section, conclusion_text=conclusion_text, references_text=references_text))
 
     def post(self, request, *args, **kwargs):
         artefact = get_object_or_404(Artefact, pk=self.kwargs['pk'])
         section_1 = Section.objects.get_or_create(order=1, artefact=artefact, section_category=SectionCategory.objects.get(name='AR'), title='The Object')[0]
         artefact.section_set.add(section_1)
-        section_1.image_set.add = request.POST['object_image']
         section_2 = Section.objects.get_or_create(order=2, artefact=artefact, section_category=SectionCategory.objects.get(name='AR'), title='Description and visual observation')[0]
         section_2.complementary_information = request.POST['complementary_information']
         artefact.section_set.add(section_2)
@@ -353,14 +350,21 @@ class ImageCreateView(generic.CreateView):
         return super(ImageCreateView, self).form_valid(form)
 
     def get_success_url(self):
-        return reverse('artefacts:image-refresh')
+        return reverse('artefacts:image-refresh', kwargs={'section_id': self.kwargs['section_id']})
+
 
 class ImageDeleteView(generic.DeleteView):
     model = Image
     template_name_suffix = '_confirm_delete'
 
     def get_success_url(self):
-        return reverse('artefacts:image-refresh')
+        section_id = get_object_or_404(Image, pk=self.kwargs['pk']).section.id
+        return reverse('artefacts:image-refresh', kwargs={'section_id': section_id})
+
+
+def RefreshDivView(request, section_id):
+    object_section = get_object_or_404(Section, pk=section_id)
+    return render_to_response('artefacts/image_section.html', {'object_section': object_section})
 
 
 class DocumentUpdateView(generic.UpdateView):

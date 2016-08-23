@@ -4,7 +4,7 @@ from django.views.generic import TemplateView
 
 from .views import ArtefactsListView, ArtefactsDetailView, ArtefactsUpdateView, ArtefactsDeleteView, \
     ArtefactsCreateView, DocumentUpdateView, DocumentDeleteView, DocumentCreateView, searchStratigraphy, \
-    ImageCreateView, ImageDeleteView
+    ImageCreateView, ImageDeleteView, RefreshDivView
 
 urlpatterns = patterns('',
     url(r'^$', ArtefactsListView.as_view(), name='artefact-list'),
@@ -35,7 +35,8 @@ urlpatterns = patterns('',
     url(r'^add/corrosion_type/?$', 'artefacts.views.newCorrosionType'),
 
     url(r'^(?P<section_id>\d+)/create/image/$', login_required(ImageCreateView.as_view()), name='image-create'),
-    url(r'^refresh/image/$', TemplateView.as_view(template_name='artefacts/refresh.html'), name='image-refresh'),
+    url(r'^(?P<section_id>\d+)/refresh/image/$', TemplateView.as_view(template_name='artefacts/refresh.html'), name='image-refresh'),
+    url(r'^(?P<section_id>\d+)/refresh/div/$', 'artefacts.views.RefreshDivView', name='div-refresh'),
     url(r'^/image/(?P<pk>\d+)/delete/$', login_required(ImageDeleteView.as_view()), name='image-delete'),
 
     url(r'^(?P<artefact_id>\d+)/document/(?P<pk>\d+)/update/$', login_required(DocumentUpdateView.as_view()),
