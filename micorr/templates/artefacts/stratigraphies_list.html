@@ -9,7 +9,7 @@
     <div class="row">
         <div class="c6">
             {% for stratigraphy in stratigraphies %}
-                <p><a href="/artefacts/{{ artefact_id }}/add/stratigraphy/{{ stratigraphy.uid }}" ><img src="{{ stratigraphy.image.url }}" width="300" class="img-responsive"></a></p>
+                <p><a href="/artefacts/{{ artefact_id }}/add/stratigraphy/{{ stratigraphy.uid }}" ><img src="/micorr/node/exportStratigraphy?name={{ stratigraphy.uid }}&width=300&format=png" width="300" class="img-responsive"></a></p>
             {% empty %}
                 <p>You haven't created any stratigraphy</p>
             {% endfor %}
