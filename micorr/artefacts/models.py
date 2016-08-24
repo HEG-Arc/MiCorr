@@ -277,7 +277,7 @@ class Artefact(TimeStampedModel):
                 artefact.append(self.chronology_period.chronology_category.name)
         if self.origin:
             if self.origin.city:
-                if self.origin.country:
+                if self.origin.city.country:
                     artefact.append(self.origin.city.country.name)
         return " - ".join(artefact)
 
