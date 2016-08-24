@@ -14,7 +14,7 @@ from stratigraphies.ch.neo4jDaoImpl.Neo4JDAO import Neo4jDAO
 #from SPARQLWrapper import SPARQLWrapper, JSON
 from contacts.forms import ContactCreateForm
 from .models import Artefact, Document, Origin, ChronologyPeriod, Alloy, Technology, Environment, Microstructure, \
-    Metal, CorrosionForm, CorrosionType, Section, SectionCategory, Image
+    Metal, CorrosionForm, CorrosionType, Section, SectionCategory, Image, Stratigraphy
 from .forms import ArtefactsUpdateForm, ArtefactsCreateForm, DocumentUpdateForm, DocumentCreateForm, ArtefactFilter,\
     OriginCreateForm, ChronologyCreateForm, AlloyCreateForm, TechnologyCreateForm, EnvironmentCreateForm, \
     MicrostructureCreateForm, MetalCreateForm, CorrosionFormCreateForm, CorrosionTypeCreateForm, \
@@ -157,7 +157,8 @@ class ArtefactsUpdateView(generic.UpdateView):
         synthesis_section = Section.objects.get_or_create(order=9, artefact=artefact, section_category=SectionCategory.objects.get(name='AN'), title='Synthesis of the macroscopic / microscopic observation of corrosion layers')[0]
         conclusion_text = Section.objects.get_or_create(order=10, artefact=artefact, section_category=SectionCategory.objects.get(name='CO'), title='Conclusion')[0].content
         references_text = Section.objects.get_or_create(order=11, artefact=artefact, section_category=SectionCategory.objects.get(name='RE'), title='References')[0].content
-        return self.render_to_response(self.get_context_data(form=form, object_section=object_section, description_section=description_section, zone_section=zone_section, macroscopic_section=macroscopic_section, sample_section=sample_section, analyses_performed=analyses_performed, metal_section=metal_section, corrosion_section=corrosion_section, synthesis_section=synthesis_section, conclusion_text=conclusion_text, references_text=references_text))
+        stratigraphies = artefact.stratigraphy_set.all
+        return self.render_to_response(self.get_context_data(form=form, object_section=object_section, description_section=description_section, zone_section=zone_section, macroscopic_section=macroscopic_section, sample_section=sample_section, analyses_performed=analyses_performed, metal_section=metal_section, corrosion_section=corrosion_section, synthesis_section=synthesis_section, conclusion_text=conclusion_text, references_text=references_text, stratigraphies=stratigraphies))
 
     def post(self, request, *args, **kwargs):
         artefact = get_object_or_404(Artefact, pk=self.kwargs['pk'])
@@ -365,6 +366,31 @@ class ImageDeleteView(generic.DeleteView):
 def RefreshDivView(request, section_id):
     object_section = get_object_or_404(Section, pk=section_id)
     return render_to_response('artefacts/image_section.html', {'object_section': object_section})
+
+
+def StratigraphyListView(request, artefact_id):
+    stratigraphies = Neo4jDAO().getStratigraphiesByUser(request.user.id)
+    return render_to_response('artefacts/stratigraphies_list.html', {'stratigraphies': stratigraphies, 'artefact_id': artefact_id})
+
+
+def StratigraphyAddView(request, artefact_id, stratigraphy_uid):
+    stratigraphy = Stratigraphy.objects.get_or_create(uid=stratigraphy_uid, artefact=get_object_or_404(Artefact, id=artefact_id))[0]
+    stratigraphy.image = '/micorr/node/exportStratigraphy?name='+ stratigraphy_uid +'&width=300&format=png'
+    stratigraphy.save()
+    return render_to_response('artefacts/strat-refresh.html', {'artefact_id': artefact_id})
+
+class StratigraphyDeleteView(generic.DeleteView):
+    model = Stratigraphy
+    template_name_suffix = '_confirm_delete'
+
+    def get_success_url(self):
+        artefact_id = get_object_or_404(Stratigraphy, pk=self.kwargs['pk']).artefact.id
+        return reverse('artefacts:strat-refresh', kwargs={'artefact_id': artefact_id})
+
+
+def RefreshStratDivView(request, artefact_id):
+    artefact = get_object_or_404(Artefact, pk=artefact_id)
+    return render_to_response('artefacts/stratigraphy.html', {'artefact': artefact})
 
 
 class DocumentUpdateView(generic.UpdateView):

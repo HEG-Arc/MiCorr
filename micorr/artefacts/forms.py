@@ -5,7 +5,7 @@ from django.template.loader import render_to_string
 from contacts.models import Contact
 
 from .models import Artefact, Document, Metal, CorrosionForm, CorrosionType, Environment, Origin, ChronologyPeriod, \
-    Alloy, Technology, Microstructure, RecoveringDate, Image, Type
+    Alloy, Technology, Microstructure, RecoveringDate, Image, Type, Stratigraphy
 from cities_light.models import Country
 from tinymce.widgets import TinyMCE
 import django_filters

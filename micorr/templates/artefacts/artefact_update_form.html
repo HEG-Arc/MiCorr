@@ -155,6 +155,26 @@
                         <div class="c9"><p>{{ form.recorded_conservation_data }}</p>
                             <p><i>{{ form.recorded_conservation_data.help_text }}</i></p></div>
                     </div>
+                    <div class="row">
+                        <div class="c3"><em>Stratigraphies</em></div>
+                        <div class="c9">
+                            <div id="stratigraphy">
+                                {% for stratigraphy in artefact.stratigraphy_set.all %}
+                                    <p>
+                                        <a href="{% url 'stratigraphies:list' %}{{ stratigraphy.url }}" target="_blank"><img src="{{ stratigraphy.image.url }}" width="300" class="img-responsive"></a>
+                                        <a onclick="window.open('{% url 'artefacts:stratigraphy-delete' stratigraphy.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><i class="fa fa-trash"></i></a>
+                                    </p>
+
+                                {% endfor %}
+                            </div>
+                            <p> <!-- Upload Photos -->
+                                <a class="add-another" id="stratigraphy_add"
+                                   onclick="window.open('{% url 'artefacts:stratigraphy-list' artefact.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');">
+                                    <span class="glyphicon glyphicon-plus"></span>
+                                </a>
+                            </p>
+                        </div>
+                    </div>
                 </div>
                 <div class="line palebox">
                     <h4 class="underline">Complementary information</h4>
@@ -600,6 +620,14 @@
                 url: "/artefacts/" + sectionid + "/refresh/div/",
                 success: function (data) {
                     $('#image_section_' + sectionid).html(data);
+                }
+            });
+        }
+        function refreshStratigraphy(artefactid) {
+            $.ajax({
+                url: "/artefacts/" + artefactid + "/refresh/strat-div/",
+                success: function (data) {
+                    $('#stratigraphy').html(data);
                 }
             });
         }
