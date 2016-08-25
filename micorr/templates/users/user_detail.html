@@ -31,13 +31,13 @@
       {% if stratigraphies %}
           <table class="table table-bordered table-striped table-hover">
             <tr>
-                <th>Date</th><th>Description</th>
+                <th>Date</th><th>Stratigraphy</th><th>Description</th>
             </tr>
             {% for stratigraphy in stratigraphies %}
                 <tr>
                     <td>{% if stratigraphy.timestamp %}{{ stratigraphy.timestamp  }}{% else %}{{ stratigraphy.date }}{% endif %}</td>
                     <td>
-                        <img src="/micorr/node/exportStratigraphy?name={{ stratigraphy.uid }}&width=100&format=png">
+                        <img src="/micorr/node/getStratigraphySvg?name={{ stratigraphy.uid }}&width=100">
                     </td>
                     <td>
                         <span class="editable" data-url="{% url 'stratigraphies:update-description' stratigraphy.uid %}" data-attribute="description" data-activator="#edit-{{ stratigraphy.uid }}">{{ stratigraphy.description }}</span>
