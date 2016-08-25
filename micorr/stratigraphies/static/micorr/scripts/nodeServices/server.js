@@ -75,7 +75,7 @@ dispatcher.onPost("/getStratigraphySvg", function (req, res) {
 
 //Quick hack to support GET requests # TODO: Refactoring
 dispatcher.onGet("/getStratigraphySvg", function (req, res) {
-    res.writeHead(200, {'Content-Type': 'text/plain'});
+    res.writeHead(200, {'Content-Type': 'image/svg+xml'});
     var params = querystring.parse(url.parse(req.url).query);
     console.log('widthParam: ' + params['width']);
     if ('name' in params) {
