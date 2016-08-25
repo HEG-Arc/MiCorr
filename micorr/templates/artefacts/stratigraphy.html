@@ -1,6 +1,6 @@
 {% for stratigraphy in artefact.stratigraphy_set.all %}
     <p>
-        <a href="{% url 'stratigraphies:list' %}{{ stratigraphy.url }}" target="_blank"><img src="{{ stratigraphy.image.url }}" width="300" class="img-responsive"></a>
+        <a href="/micorr/#/stratigraphy/{{ stratigraphy.uid }}" target="_blank"><img src="/micorr/node/exportStratigraphy?name={{ stratigraphy.uid }}&width=300&format=png" width="300" class="img-responsive"></a>
         <a onclick="window.open('{% url 'artefacts:stratigraphy-delete' stratigraphy.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><i class="fa fa-trash"></i></a>
     </p>
 {% endfor %}
