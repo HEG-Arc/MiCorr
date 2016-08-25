@@ -1,5 +1,8 @@
 {% for stratigraphy in artefact.stratigraphy_set.all %}
-    <p>
-        <a href="/micorr/#/stratigraphy/{{ stratigraphy.uid }}" target="_blank"><img src="/micorr/node/getStratigraphySvg?name={{ stratigraphy.uid }}&width=200" class="img-responsive"></a><a onclick="window.open('{% url 'artefacts:stratigraphy-delete' stratigraphy.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><i class="fa fa-trash"></i></a>
-    </p>
+    <div class="c6">
+        <a href="/micorr/#/stratigraphy/{{ stratigraphy.uid }}" target="_blank"><img src="/micorr/node/getStratigraphySvg?name={{ stratigraphy.uid }}&width=200" class="img-responsive"></a>
+    </div>
+    <div class="c6">
+        <a onclick="window.open('{% url 'artefacts:stratigraphy-delete' stratigraphy.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><i class="fa fa-trash"></i></a>
+    </div>
 {% endfor %}
