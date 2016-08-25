@@ -215,7 +215,7 @@
                 <div class="c3"><em>Stratigraphies</em></div>
                 <div class="c9">
                     {% for stratigraphy in stratigraphies %}
-                        <p><a href="/micorr/#/stratigraphy/{{ stratigraphy.uid }}" target="_blank"><img src="/micorr/node/exportStratigraphy?name={{ stratigraphy.uid }}&width=300&format=png" width="300" class="img-responsive"></a></p>
+                        <p><a href="/micorr/#/stratigraphy/{{ stratigraphy.uid }}" target="_blank"><img src="/micorr/node/getStratigraphySvg?name={{ stratigraphy.uid }}&width=300" class="img-responsive"></a></p>
                     {% empty %}
                         <p>None</p>
                     {% endfor %}
@@ -240,8 +240,8 @@
                 {% filter replace_terms %}
                     <p>{{ sections.5.content|safe }}</p>
                 {% endfilter %}
-            </div>                    
-            <div class="line">                        
+            </div>
+            <div class="line">
                 <div id="accordionN2" aria-multiselectable="true">
 
                 <!--METAL-->
