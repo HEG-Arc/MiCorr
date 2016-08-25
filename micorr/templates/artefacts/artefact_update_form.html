@@ -155,26 +155,7 @@
                         <div class="c9"><p>{{ form.recorded_conservation_data }}</p>
                             <p><i>{{ form.recorded_conservation_data.help_text }}</i></p></div>
                     </div>
-                    <div class="row">
-                        <div class="c3"><em>Stratigraphies</em></div>
-                        <div class="c9">
-                            <div id="stratigraphy">
-                                {% for stratigraphy in artefact.stratigraphy_set.all %}
-                                    <p>
-                                        <a href="/micorr/#/stratigraphy/{{ stratigraphy.uid }}" target="_blank"><img src="/micorr/node/exportStratigraphy?name={{ stratigraphy.uid }}&width=300&format=png" width="300" class="img-responsive"></a>
-                                        <a onclick="window.open('{% url 'artefacts:stratigraphy-delete' stratigraphy.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><i class="fa fa-trash"></i></a>
-                                    </p>
 
-                                {% endfor %}
-                            </div>
-                            <p> <!-- Upload Photos -->
-                                <a class="add-another" id="stratigraphy_add"
-                                   onclick="window.open('{% url 'artefacts:stratigraphy-list' artefact.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');">
-                                    <span class="glyphicon glyphicon-plus"></span>
-                                </a>
-                            </p>
-                        </div>
-                    </div>
                 </div>
                 <div class="line palebox">
                     <h4 class="underline">Complementary information</h4>
@@ -318,6 +299,27 @@
                         less the same as: Micrograph of the cross-section showing the location of Fig.... Unetched, dark
                         field, x (indication of the magnification). The next figure should be the MiCorr stratigraphy
                         built using the MiCorr application.</i></p>
+
+                    <div class="row">
+                        <div class="c3"><em>Stratigraphies</em></div>
+                        <div class="c9">
+                            <div id="stratigraphy">
+                                {% for stratigraphy in artefact.stratigraphy_set.all %}
+                                    <p>
+                                        <a href="/micorr/#/stratigraphy/{{ stratigraphy.uid }}" target="_blank"><img src="/micorr/node/exportStratigraphy?name={{ stratigraphy.uid }}&width=300&format=png" width="300" class="img-responsive"></a>
+                                        <a onclick="window.open('{% url 'artefacts:stratigraphy-delete' stratigraphy.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><i class="fa fa-trash"></i></a>
+                                    </p>
+
+                                {% endfor %}
+                            </div>
+                            <p> <!-- Upload Photos -->
+                                <a class="add-another" id="stratigraphy_add"
+                                   onclick="window.open('{% url 'artefacts:stratigraphy-list' artefact.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');">
+                                    <span class="glyphicon glyphicon-plus"></span>
+                                </a>
+                            </p>
+                        </div>
+                    </div>
                 </div>
                 <div class="line lightbox">
                     <div class="row">
@@ -400,10 +402,10 @@
                                     <div class="c3"><em>Microstructure</em></div>
                                     <div class="c9">
                                         <p>{{ form.microstructure }}</p>
-                                        <p><i> form.microstructure.help_text </i></p></div>
+                                        <p><i>{{ form.microstructure.help_text }}</i></p></div>
                                 </div>
                                 <div class="row">
-                                    <div class="c3"><em>Major element(s) (conc. > 1 mass%)</em></div>
+                                    <div class="c3"><em>Main element (conc. > 1 mass%)</em></div>
                                     <div class="c9">
                                         <p>{{ form.metal1 }}</p>
                                         <p><i>{{ form.metal1.help_text }}</i></p></div>
