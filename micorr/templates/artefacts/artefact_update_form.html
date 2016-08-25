@@ -67,7 +67,29 @@
             <div class="row accordion-content1 collapse in" id="content1" aria-labelledby="title1">
                 <div class="line palebox">
                     <div class="row">
-                        <div class="c9"><p> form.object_image </p></div>
+                        <div id="image_section_{{ object_section.id }}" class="c6">
+                            {% for image in object_section.image_set.all %}
+                                <div class="row">
+                                    <div class="c6">
+                                        <a href="{{ image.image.url }}" class="image-popup"><img
+                                                src="{{ image.image.url }}" class="img-responsive"></a>
+                                    </div>
+                                    <div class="c6">
+                                        <p><a name="fig1"></a>{{ image.legend | safe }}<a
+                                                onclick="window.open('{% url 'artefacts:image-delete' image.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><i
+                                                class="fa fa-trash"></i></a></p>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="c9">
+                            <p> <!-- Upload Photos -->
+                                <a class="add-another" id="object_image_add"
+                                   onclick="window.open('{% url 'artefacts:image-create' section_id=object_section.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');">
+                                    <span class="glyphicon glyphicon-plus"></span>
+                                </a>
+                            </p>
+                        </div>
                     </div>
                     <p><i>General picture of the object should contain a scale and a chart colour. The caption gives the
                         name of the artefact, the type of alloy and any relevant information.</i></p>
@@ -133,10 +155,31 @@
                         <div class="c9"><p>{{ form.recorded_conservation_data }}</p>
                             <p><i>{{ form.recorded_conservation_data.help_text }}</i></p></div>
                     </div>
+                    <div class="row">
+                        <div class="c3"><em>Stratigraphies</em></div>
+                        <div class="c9">
+                            <div id="stratigraphy">
+                                {% for stratigraphy in artefact.stratigraphy_set.all %}
+                                    <p>
+                                        <a href="/micorr/#/stratigraphy/{{ stratigraphy.uid }}" target="_blank"><img src="/micorr/node/exportStratigraphy?name={{ stratigraphy.uid }}&width=300&format=png" width="300" class="img-responsive"></a>
+                                        <a onclick="window.open('{% url 'artefacts:stratigraphy-delete' stratigraphy.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><i class="fa fa-trash"></i></a>
+                                    </p>
+
+                                {% endfor %}
+                            </div>
+                            <p> <!-- Upload Photos -->
+                                <a class="add-another" id="stratigraphy_add"
+                                   onclick="window.open('{% url 'artefacts:stratigraphy-list' artefact.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');">
+                                    <span class="glyphicon glyphicon-plus"></span>
+                                </a>
+                            </p>
+                        </div>
+                    </div>
                 </div>
                 <div class="line palebox">
                     <h4 class="underline">Complementary information</h4>
-                    <textarea name="complementary_information">{{ complementary_information }}</textarea>
+                    <textarea
+                            name="complementary_information">{{ description_section.complementary_information }}</textarea>
                     <p><i>Any important information that does not fit to the previous fields.</i></p>
                 </div>
 
@@ -151,7 +194,31 @@
                         <div class="row accordion-content2 collapse in" id="content21" aria-labelledby="title21">
                             <div class="line lightbox">
                                 <div class="row">
-                                    <div class="c9"><p> form.zones_image </p></div>
+                                    <div class="c9">
+                                        <div id="image_section_{{ zone_section.id }}" class="c6">
+                                            {% for image in zone_section.image_set.all %}
+                                                <div class="row">
+                                                    <div class="c6">
+                                                        <a href="{{ image.image.url }}" class="image-popup"><img
+                                                                src="{{ image.image.url }}" class="img-responsive"></a>
+                                                    </div>
+                                                    <div class="c6">
+                                                        <p><a name="fig1"></a>{{ image.legend | safe }}<a
+                                                                onclick="window.open('{% url 'artefacts:image-delete' image.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><i
+                                                                class="fa fa-trash"></i></a></p>
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    <div class="c9">
+                                        <p> <!-- Upload Photos -->
+                                            <a class="add-another" id="zone_image_add"
+                                               onclick="window.open('{% url 'artefacts:image-create' section_id=zone_section.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');">
+                                                <span class="glyphicon glyphicon-plus"></span>
+                                            </a>
+                                        </p>
+                                    </div>
                                 </div>
                                 <p><i>Picture of the object / element with arrows indicating the location of the
                                     sampling area. Pictures with details can be provided. Caption should be more or less
@@ -169,12 +236,34 @@
                                 <p><i>The schematic representation below gives an overview of the corrosion layers
                                     encountered on the object (to precise) from a first visual macroscopic
                                     observation.</i></p>
-                                <textarea name="macroscopic_text">{{ macroscopic_text }}</textarea>
+                                <textarea name="macroscopic_text">{{ macroscopic_section.content }}</textarea>
                             </div>
                             <div class="line lightbox">
                                 <div class="row">
                                     <div class="c9">
-                                        <p> form.macroscopic_image </p>
+                                        <div id="image_section_{{ macroscopic_section.id }}" class="c6">
+                                            {% for image in macroscopic_section.image_set.all %}
+                                                <div class="row">
+                                                    <div class="c6">
+                                                        <a href="{{ image.image.url }}" class="image-popup"><img
+                                                                src="{{ image.image.url }}" class="img-responsive"></a>
+                                                    </div>
+                                                    <div class="c6">
+                                                        <p><a name="fig1"></a>{{ image.legend | safe }}<a
+                                                                onclick="window.open('{% url 'artefacts:image-delete' image.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><i
+                                                                class="fa fa-trash"></i></a></p>
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    <div class="c9">
+                                        <p> <!-- Upload Photos -->
+                                            <a class="add-another" id="zone_image_add"
+                                               onclick="window.open('{% url 'artefacts:image-create' section_id=macroscopic_section.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');">
+                                                <span class="glyphicon glyphicon-plus"></span>
+                                            </a>
+                                        </p>
                                     </div>
                                 </div>
                                 <p><i>Stratigraphic representation of the object in cross-section by macroscopic
@@ -195,7 +284,33 @@
             <div class="row accordion-content3 collapse in" id="content3" aria-labelledby="title3">
                 <div class="line palebox">
                     <div class="row">
-                        <div class="c9"><p> form.sample_image </p></div>
+                        <div class="c9">
+                            <div class="c9">
+                                <div id="image_section_{{ sample_section.id }}" class="c6">
+                                    {% for image in sample_section.image_set.all %}
+                                        <div class="row">
+                                            <div class="c6">
+                                                <a href="{{ image.image.url }}" class="image-popup"><img
+                                                        src="{{ image.image.url }}" class="img-responsive"></a>
+                                            </div>
+                                            <div class="c6">
+                                                <p><a name="fig1"></a>{{ image.legend | safe }}<a
+                                                        onclick="window.open('{% url 'artefacts:image-delete' image.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><i
+                                                        class="fa fa-trash"></i></a></p>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="c9">
+                                <p> <!-- Upload Photos -->
+                                    <a class="add-another" id="zone_image_add"
+                                       onclick="window.open('{% url 'artefacts:image-create' section_id=sample_section.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');">
+                                        <span class="glyphicon glyphicon-plus"></span>
+                                    </a>
+                                </p>
+                            </div>
+                        </div>
                     </div>
 
                     <p><i>General picture of the unetched cross-section of an element / object in dark field with a
@@ -245,7 +360,8 @@
                 </div>
                 <div class="line palebox">
                     <h4 class="underline">Complementary information</h4>
-                    <textarea name="sample_complementary_information">{{ sample_complementary_information }}</textarea>
+                    <textarea
+                            name="sample_complementary_information">{{ sample_section.complementary_information }}</textarea>
                     <p><i>Any important information that does not fit to the previous fields.</i></p>
                 </div>
             </div>
@@ -274,7 +390,7 @@
                             <div class="line palebox">
                                 <div class="row">
                                     <div class="c9">
-                                        <textarea name="metal_text">{{ metal_text }}</textarea>
+                                        <textarea name="metal_text">{{ metal_section.content }}</textarea>
                                         <p><i>A description of the metal: its composition, texture (porosity), hardness,
                                             microstructure revealed by etching and specific features (figures and tables
                                             are referred as Fig. 1, Table 1).</i></p>
@@ -301,13 +417,39 @@
                             </div>
                             <div class="line lightbox">
                                 <div class="row">
-                                    <div class="c9"><p> form.metal_image </p></div>
+                                    <div class="c9">
+                                        <div class="c9">
+                                            <div id="image_section_{{ metal_section.id }}" class="c6">
+                                                {% for image in metal_section.image_set.all %}
+                                                    <div class="row">
+                                                        <div class="c6">
+                                                            <a href="{{ image.image.url }}" class="image-popup"><img
+                                                                    src="{{ image.image.url }}" class="img-responsive"></a>
+                                                        </div>
+                                                        <div class="c6">
+                                                            <p><a name="fig1"></a>{{ image.legend | safe }}<a
+                                                                    onclick="window.open('{% url 'artefacts:image-delete' image.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><i
+                                                                    class="fa fa-trash"></i></a></p>
+                                                        </div>
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                        <div class="c9">
+                                            <p> <!-- Upload Photos -->
+                                                <a class="add-another" id="zone_image_add"
+                                                   onclick="window.open('{% url 'artefacts:image-create' section_id=metal_section.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');">
+                                                    <span class="glyphicon glyphicon-plus"></span>
+                                                </a>
+                                            </p>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="line palebox">
                                 <h4 class="underline">Complementary information</h4>
                                 <textarea
-                                        name="metal_complementary_information">{{ metal_complementary_information }}</textarea>
+                                        name="metal_complementary_information">{{ metal_section.complementary_information }}</textarea>
                             </div>
                         </div>
 
@@ -320,7 +462,7 @@
                             <div class="line palebox">
                                 <div class="row">
                                     <div class="c9">
-                                        <textarea name="corrosion_text">{{ corrosion_text }}</textarea>
+                                        <textarea name="corrosion_text">{{ corrosion_section.content }}</textarea>
                                         <p><i>A description of the corrosion layers: their composition, texture
                                             (porosity), microstructure if any and specific features (figures and tables
                                             are referred as Fig. 1, Table 1). The corrosion form(s) and corrosion type
@@ -331,24 +473,50 @@
                                     <div class="c3"><em>Corrosion form</em></div>
                                     <div class="c9">
                                         <p>{{ form.corrosion_form }}</p>
-                                        <p><i> form.corrosion_form.help_text </i></p></div>
+                                        <p><i>{{ form.corrosion_form.help_text }}</i></p></div>
                                 </div>
                                 <div class="row">
                                     <div class="c3"><em>Corrosion type</em></div>
                                     <div class="c9">
                                         <p>{{ form.corrosion_type }}</p>
-                                        <p><i> form.corrosion_type.help_text </i></p></div>
+                                        <p><i>{{ form.corrosion_type.help_text }}</i></p></div>
                                 </div>
                             </div>
                             <div class="line lightbox">
                                 <div class="row">
-                                    <div class="c9"><p> form.corrosion_image </p></div>
+                                    <div class="c9">
+                                        <div class="c9">
+                                            <div id="image_section_{{ corrosion_section.id }}" class="c6">
+                                                {% for image in corrosion_section.image_set.all %}
+                                                    <div class="row">
+                                                        <div class="c6">
+                                                            <a href="{{ image.image.url }}" class="image-popup"><img
+                                                                    src="{{ image.image.url }}" class="img-responsive"></a>
+                                                        </div>
+                                                        <div class="c6">
+                                                            <p><a name="fig1"></a>{{ image.legend | safe }}<a
+                                                                    onclick="window.open('{% url 'artefacts:image-delete' image.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><i
+                                                                    class="fa fa-trash"></i></a></p>
+                                                        </div>
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                        <div class="c9">
+                                            <p> <!-- Upload Photos -->
+                                                <a class="add-another" id="zone_image_add"
+                                                   onclick="window.open('{% url 'artefacts:image-create' section_id=corrosion_section.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');">
+                                                    <span class="glyphicon glyphicon-plus"></span>
+                                                </a>
+                                            </p>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="line palebox">
                                 <h4 class="underline">Complementary information</h4>
                                 <textarea
-                                        name="corrosion_complementary_information">{{ corrosion_complementary_information }}</textarea>
+                                        name="corrosion_complementary_information">{{ corrosion_section.complementary_information }}</textarea>
                             </div>
                         </div>
                     </div> <!--accordionAR -->
@@ -369,13 +537,39 @@
                     </div>
                     <div class="row">
                         <div class="c9">
-                            <textarea name="synthesis_text">{{ synthesis_text }}</textarea>
+                            <textarea name="synthesis_text">{{ synthesis_section.content }}</textarea>
                         </div>
                     </div>
                 </div>
                 <div class="line lightbox">
                     <div class="row">
-                        <div class="c9"><p> form.synthesis_image </p></div>
+                        <div class="c9">
+                            <div class="c9">
+                                <div id="image_section_{{ synthesis_section.id }}" class="c6">
+                                    {% for image in synthesis_section.image_set.all %}
+                                        <div class="row">
+                                            <div class="c6">
+                                                <a href="{{ image.image.url }}" class="image-popup"><img
+                                                        src="{{ image.image.url }}" class="img-responsive"></a>
+                                            </div>
+                                            <div class="c6">
+                                                <p><a name="fig1"></a>{{ image.legend | safe }}<a
+                                                        onclick="window.open('{% url 'artefacts:image-delete' image.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><i
+                                                        class="fa fa-trash"></i></a></p>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="c9">
+                                <p> <!-- Upload Photos -->
+                                    <a class="add-another" id="zone_image_add"
+                                       onclick="window.open('{% url 'artefacts:image-create' section_id=synthesis_section.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');">
+                                        <span class="glyphicon glyphicon-plus"></span>
+                                    </a>
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -420,4 +614,22 @@
 
 {% block custom_bottom_script %}
     <script type="text/javascript" src="/static/admin/js/admin/RelatedObjectLookups.js"></script>
+    <script type="text/javascript">
+        function refreshDiv(sectionid) {
+            $.ajax({
+                url: "/artefacts/" + sectionid + "/refresh/div/",
+                success: function (data) {
+                    $('#image_section_' + sectionid).html(data);
+                }
+            });
+        }
+        function refreshStratigraphy(artefactid) {
+            $.ajax({
+                url: "/artefacts/" + artefactid + "/refresh/strat-div/",
+                success: function (data) {
+                    $('#stratigraphy').html(data);
+                }
+            });
+        }
+    </script>
 {% endblock custom_bottom_script %}

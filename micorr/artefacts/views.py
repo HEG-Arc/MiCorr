@@ -1,9 +1,11 @@
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
+from django.forms import inlineformset_factory
 from django.shortcuts import get_object_or_404, render, redirect, render_to_response
 from django.template import RequestContext
 from django.utils.html import escape
 from django.views import generic
+from django.views.generic import View
 from haystack.forms import SearchForm
 from django.http import HttpResponse, QueryDict
 from stratigraphies.ch.neo4jDaoImpl.Neo4JDAO import Neo4jDAO
@@ -12,11 +14,11 @@ from stratigraphies.ch.neo4jDaoImpl.Neo4JDAO import Neo4jDAO
 #from SPARQLWrapper import SPARQLWrapper, JSON
 from contacts.forms import ContactCreateForm
 from .models import Artefact, Document, Origin, ChronologyPeriod, Alloy, Technology, Environment, Microstructure, \
-    Metal, CorrosionForm, CorrosionType, Section, SectionCategory
+    Metal, CorrosionForm, CorrosionType, Section, SectionCategory, Image, Stratigraphy
 from .forms import ArtefactsUpdateForm, ArtefactsCreateForm, DocumentUpdateForm, DocumentCreateForm, ArtefactFilter,\
     OriginCreateForm, ChronologyCreateForm, AlloyCreateForm, TechnologyCreateForm, EnvironmentCreateForm, \
     MicrostructureCreateForm, MetalCreateForm, CorrosionFormCreateForm, CorrosionTypeCreateForm, \
-    RecoveringDateCreateForm
+    RecoveringDateCreateForm, ImageCreateForm, TypeCreateForm
 
 """
 def displayOntology(request):
@@ -144,18 +146,19 @@ class ArtefactsUpdateView(generic.UpdateView):
         self.object = artefact
         form_class = self.get_form_class()
         form = self.get_form(form_class)
-        complementary_information = Section.objects.get_or_create(order=2, artefact=artefact, section_category=SectionCategory.objects.get(name='AR'), title='Description and visual observation')[0].complementary_information
-        macroscopic_text = Section.objects.get_or_create(order=4, artefact=artefact, section_category=SectionCategory.objects.get(name='SA'), title='Macroscopic observation')[0].content
-        sample_complementary_information = Section.objects.get_or_create(order=5, artefact=artefact, section_category=SectionCategory.objects.get(name='SA'), title='Sample')[0].complementary_information
+        object_section = Section.objects.get_or_create(order=1, artefact=artefact, section_category=SectionCategory.objects.get(name='AR'), title='The Object')[0]
+        description_section = Section.objects.get_or_create(order=2, artefact=artefact, section_category=SectionCategory.objects.get(name='AR'), title='Description and visual observation')[0]
+        zone_section = Section.objects.get_or_create(order=3, artefact=artefact, section_category=SectionCategory.objects.get(name='SA'), title='Zones of the artefact submitted to visual observation and location of sampling areas')[0]
+        macroscopic_section = Section.objects.get_or_create(order=4, artefact=artefact, section_category=SectionCategory.objects.get(name='SA'), title='Macroscopic observation')[0]
+        sample_section = Section.objects.get_or_create(order=5, artefact=artefact, section_category=SectionCategory.objects.get(name='SA'), title='Sample')[0]
         analyses_performed = Section.objects.get_or_create(order=6, artefact=artefact, section_category=SectionCategory.objects.get(name='AN'), title='Analyses and results')[0].content
-        metal_text = Section.objects.get_or_create(order=7, artefact=artefact, section_category=SectionCategory.objects.get(name='AN'), title='Metal')[0].content
-        metal_complementary_information = Section.objects.get_or_create(order=7, artefact=artefact, section_category=SectionCategory.objects.get(name='AN'), title='Metal')[0].complementary_information
-        corrosion_text = Section.objects.get_or_create(order=8, artefact=artefact, section_category=SectionCategory.objects.get(name='AN'), title='Corrosion layers')[0].content
-        corrosion_complementary_information = Section.objects.get_or_create(order=8, artefact=artefact, section_category=SectionCategory.objects.get(name='AN'), title='Corrosion layers')[0].complementary_information
-        synthesis_text = Section.objects.get_or_create(order=9, artefact=artefact, section_category=SectionCategory.objects.get(name='AN'), title='Synthesis of the macroscopic / microscopic observation of corrosion layers')[0].content
+        metal_section = Section.objects.get_or_create(order=7, artefact=artefact, section_category=SectionCategory.objects.get(name='AN'), title='Metal')[0]
+        corrosion_section = Section.objects.get_or_create(order=8, artefact=artefact, section_category=SectionCategory.objects.get(name='AN'), title='Corrosion layers')[0]
+        synthesis_section = Section.objects.get_or_create(order=9, artefact=artefact, section_category=SectionCategory.objects.get(name='AN'), title='Synthesis of the macroscopic / microscopic observation of corrosion layers')[0]
         conclusion_text = Section.objects.get_or_create(order=10, artefact=artefact, section_category=SectionCategory.objects.get(name='CO'), title='Conclusion')[0].content
         references_text = Section.objects.get_or_create(order=11, artefact=artefact, section_category=SectionCategory.objects.get(name='RE'), title='References')[0].content
-        return self.render_to_response(self.get_context_data(form=form, complementary_information=complementary_information, macroscopic_text=macroscopic_text, sample_complementary_information=sample_complementary_information, analyses_performed=analyses_performed, metal_text=metal_text, metal_complementary_information=metal_complementary_information, corrosion_text=corrosion_text, corrosion_complementary_information=corrosion_complementary_information, synthesis_text=synthesis_text, conclusion_text=conclusion_text, references_text=references_text))
+        stratigraphies = artefact.stratigraphy_set.all
+        return self.render_to_response(self.get_context_data(form=form, object_section=object_section, description_section=description_section, zone_section=zone_section, macroscopic_section=macroscopic_section, sample_section=sample_section, analyses_performed=analyses_performed, metal_section=metal_section, corrosion_section=corrosion_section, synthesis_section=synthesis_section, conclusion_text=conclusion_text, references_text=references_text, stratigraphies=stratigraphies))
 
     def post(self, request, *args, **kwargs):
         artefact = get_object_or_404(Artefact, pk=self.kwargs['pk'])
@@ -233,6 +236,11 @@ class ArtefactsCreateView(generic.CreateView):
 @login_required
 def newAuthor(request):
     return handlePopAdd(request, ContactCreateForm, 'author')
+
+
+@login_required
+def newType(request):
+    return handlePopAdd(request, TypeCreateForm, 'type')
 
 
 @login_required
@@ -326,79 +334,63 @@ def handlePopAdd(request, addForm, field):
     return render_to_response("artefacts/popadd.html", pageContext, context_instance=RequestContext(request))
 
 
-
-
-
-class ChronologyCreateView(generic.CreateView):
-    """
-    A view which allows the user to create a chronology
-    """
-    model = ChronologyPeriod
+class ImageCreateView(generic.CreateView):
+    model = Image
     template_name_suffix = '_create_form'
-    form_class = ChronologyCreateForm
+    form_class = ImageCreateForm
+
+    def get(self, request, **kwargs):
+        self.object = None
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        section_id = kwargs['section_id']
+        return self.render_to_response(self.get_context_data(form=form, section_id=section_id))
+
+    def form_valid(self, form):
+        form.instance.section = get_object_or_404(Section, pk=self.kwargs['section_id'])
+        return super(ImageCreateView, self).form_valid(form)
+
+    def get_success_url(self):
+        return reverse('artefacts:image-refresh', kwargs={'section_id': self.kwargs['section_id']})
 
 
-class AlloyCreateView(generic.CreateView):
-    """
-    A view which allows the user to create an alloy
-    """
-    model = Alloy
-    template_name_suffix = '_create_form'
-    form_class = AlloyCreateForm
+class ImageDeleteView(generic.DeleteView):
+    model = Image
+    template_name_suffix = '_confirm_delete'
+
+    def get_success_url(self):
+        section_id = get_object_or_404(Image, pk=self.kwargs['pk']).section.id
+        return reverse('artefacts:image-refresh', kwargs={'section_id': section_id})
 
 
-class EnvironmentCreateView(generic.CreateView):
-    """
-    A view which allows the user to create an environment
-    """
-    model = Environment
-    template_name_suffix = '_create_form'
-    form_class = EnvironmentCreateForm
+def RefreshDivView(request, section_id):
+    object_section = get_object_or_404(Section, pk=section_id)
+    return render_to_response('artefacts/image_section.html', {'object_section': object_section})
 
 
-class TechnologyCreateView(generic.CreateView):
-    """
-    A view which allows the user to create a technology
-    """
-    model = Technology
-    template_name_suffix = '_create_form'
-    form_class = TechnologyCreateForm
+def StratigraphyListView(request, artefact_id):
+    stratigraphies = Neo4jDAO().getStratigraphiesByUser(request.user.id)
+    return render_to_response('artefacts/stratigraphies_list.html', {'stratigraphies': stratigraphies, 'artefact_id': artefact_id})
 
 
-class MicrostructureCreateView(generic.CreateView):
-    """
-    A view which allows the user to create a microstructure
-    """
-    model = Microstructure
-    template_name_suffix = '_create_form'
-    form_class = MicrostructureCreateForm
+def StratigraphyAddView(request, artefact_id, stratigraphy_uid):
+    stratigraphy = Stratigraphy.objects.get_or_create(uid=stratigraphy_uid, artefact=get_object_or_404(Artefact, id=artefact_id))[0]
+    stratigraphy.image = '/micorr/node/exportStratigraphy?name='+ stratigraphy_uid +'&width=300&format=png'
+    stratigraphy.save()
+    return render_to_response('artefacts/strat-refresh.html', {'artefact_id': artefact_id})
+
+class StratigraphyDeleteView(generic.DeleteView):
+    model = Stratigraphy
+    template_name_suffix = '_confirm_delete'
+
+    def get_success_url(self):
+        artefact_id = get_object_or_404(Stratigraphy, pk=self.kwargs['pk']).artefact.id
+        return reverse('artefacts:strat-refresh', kwargs={'artefact_id': artefact_id})
 
 
-class MetalCreateView(generic.CreateView):
-    """
-    A view which allows the user to create a metal
-    """
-    model = Metal
-    template_name_suffix = '_create_form'
-    form_class = MetalCreateForm
-
-
-class CorrosionFormCreateView(generic.CreateView):
-    """
-    A view which allows the user to create a corrosion form
-    """
-    model = CorrosionForm
-    template_name_suffix = '_create_form'
-    form_class = CorrosionFormCreateForm
-
-
-class CorrosionTypeCreateView(generic.CreateView):
-    """
-    A view which allows the user to create a corrosion type
-    """
-    model = CorrosionType
-    template_name_suffix = '_create_form'
-    form_class = CorrosionTypeCreateForm
+def RefreshStratDivView(request, artefact_id):
+    artefact = get_object_or_404(Artefact, pk=artefact_id)
+    return render_to_response('artefacts/stratigraphy.html', {'artefact': artefact})
 
 
 class DocumentUpdateView(generic.UpdateView):
