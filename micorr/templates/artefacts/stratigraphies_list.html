@@ -8,11 +8,14 @@
 
     <div class="row">
         <div class="c6">
+            <table class="table table-bordered table-striped">
+                <tr><th></th><th>Name</th></tr>
             {% for stratigraphy in stratigraphies %}
-                <p><a href="/artefacts/{{ artefact_id }}/add/stratigraphy/{{ stratigraphy.uid }}" ><img src="/micorr/node/exportStratigraphy?name={{ stratigraphy.uid }}&width=300&format=png" width="300" class="img-responsive"></a></p>
+                <tr><a href="/artefacts/{{ artefact_id }}/add/stratigraphy/{{ stratigraphy.uid }}" ><img src="/micorr/node/getStratigraphySvg?name={{ stratigraphy.uid }}&width=100" class="img-responsive"></a><td>{{ stratigraphy.name }}</td></tr>
             {% empty %}
-                <p>You haven't created any stratigraphy</p>
+                <tr><td colspan="2">You haven't created any stratigraphy</td></tr>
             {% endfor %}
+            </table>
         </div>
     </div>
 
