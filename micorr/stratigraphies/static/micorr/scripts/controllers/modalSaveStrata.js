@@ -8,13 +8,22 @@
  * Contrôlleur qui s'occupe de sauvegarder une stratigraphie
  */
 angular.module('micorrApp')
-    .controller('ModalSaveStrataCtrl', function ($scope, $route, $modal, $log) {
+    .controller('ModalSaveStrataCtrl', function ($scope, $route, $modal, $log, $location, MiCorrService) {
         $scope.artefactName = $scope.$parent.artefactName;
+        $scope.email_to = 'alessio.desanto@he-arc.ch';
+
+        MiCorrService.isAuthenticated().success(function(data){
+            $scope.is_authenticated = data['is_authenticated'];
+        });
 
          // appelle une méthode parent pour sauvegarder la stratigraphie qui se trouve dans le service
         $scope.doSave = function () {
             $scope.$emit('save');
             $scope.$emit('updateDraw');
+        };
+
+        $scope.doSend = function () {
+            MiCorrService.sendEmail($scope.email_to, $location.url());
         };
 
         // ouvre la fenêtre et si l'utilisateur appuie sur ok alors on sauvegarde
@@ -26,6 +35,10 @@ angular.module('micorrApp')
                     function($scope, $modalInstance,scopeParent,id) {
                         $scope.ok = function() {
                             scopeParent.doSave();
+                            $modalInstance.close();
+                        };
+                        $scope.send = function() {
+                            scopeParent.doSend();
                             $modalInstance.close();
                         };
                         $scope.cancel = function() {

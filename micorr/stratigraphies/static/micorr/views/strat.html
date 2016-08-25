@@ -51,22 +51,39 @@
                 <div class="col-md-2 text-center">
                     <div ng-controller="ModalSaveStrataCtrl">
                         <script type="text/ng-template" id="saveStrataContent.html">
-                            <div class="modal-header">
-                                <h3 class="modal-title">Save this strata</h3>
+                            <div ng-show="is_authenticated">
+                                <div class="modal-header">
+                                    <h3 class="modal-title">Save this strata</h3>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Do you really want to save this strata ?</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button class="btn btn-primary" ng-click="ok()">OK</button>
+                                    <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+                                </div>
                             </div>
-                            <div class="modal-body">
-                                <p>Do you really want to save this strata ?</p>
+                            <div ng-show="!is_authenticated">
+                                <div class="modal-header">
+                                    <h3 class="modal-title">Save this strata</h3>
+                                </div>
+                                <div class="modal-body">
+                                    <p>You're not logged in! provide an email address to receive the link.</p>
+                                    <input ng-model="email_to" type="text" placeholder="john.doe@example.com"></input>
+                                </div>
+                                <div class="modal-footer">
+                                    <button class="btn btn-primary" ng-click="send()">Send</button>
+                                    <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+                                </div>
                             </div>
-                            <div class="modal-footer">
-                                <button class="btn btn-primary" ng-click="ok()">OK</button>
-                                <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
-                            </div>
+
                         </script>
 
                         <button ng-click="open('sm')" type="button" class="btn btn-primary">
                             <span class="glyphicon glyphicon-floppy-saved" aria-hidden="true"></span>
                             Save
                         </button>
+
                     </div>
                 </div>
                 <div class="col-md-2 text-center">

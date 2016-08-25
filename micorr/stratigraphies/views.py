@@ -1,3 +1,4 @@
+from django.core.mail import send_mail
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 import simplejson as json
@@ -62,6 +63,26 @@ def getStratigraphyByArtefact(request, artefact):
     for strat in ms.getStratigraphyByArtefact(artefact):
         strats['strats'].append({'name' : strat.name, 'description' : strat.description})
     return HttpResponse(json.dumps(strats), content_type='application/json')
+
+
+def isauthenticated(request):
+    if request.user.is_authenticated:
+        is_authenticated = False
+    else:
+        is_authenticated = True
+    return HttpResponse(json.dumps({'is_authenticated' : is_authenticated}), content_type='application/json')
+
+@csrf_exempt
+def sendEmail(request):
+    if request.method == 'POST':
+        send_mail(
+            'MiCorr saved Stratigraphy',
+            'Here is your stratigraphy : ',
+            'info@micorr.org',
+            ['alessio.desanto@gmail.com'],
+            fail_silently=False,
+        )
+    return HttpResponse('Email sent!')
 
 # retourne la liste de tous les artefacts
 # @ params
