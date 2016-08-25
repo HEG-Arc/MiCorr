@@ -208,6 +208,7 @@ class Artefact(TimeStampedModel):
     An artefact has many foreign keys, corresponding to its characteristics
     """
     # Own fields
+    name = models.CharField(max_length=100, verbose_name='name', blank=True, default='', help_text='Name of the artefact')
     description = tinymce_models.HTMLField(verbose_name='description of artefact', blank=True, help_text='A short description of the artefact. Can also include its general appearance (colour, presence or not of a corrosion layer, missing parts, large cracks, etc.)')
     inventory_number = models.CharField(max_length=100, verbose_name='inv. Number', blank=True, default='', help_text='The inventory number of the artefact')
     recorded_conservation_data = models.CharField(max_length=500, blank=True, default='', help_text='A brief description of the conservation treatment applied if any with literature references (Names of authors, year)')

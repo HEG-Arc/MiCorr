@@ -5,6 +5,7 @@ from django.shortcuts import get_object_or_404, render, redirect, render_to_resp
 from django.template import RequestContext
 from django.utils.html import escape
 from django.views import generic
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import View
 from haystack.forms import SearchForm
 from django.http import HttpResponse, QueryDict
@@ -378,6 +379,7 @@ def StratigraphyAddView(request, artefact_id, stratigraphy_uid):
     stratigraphy.image = '/micorr/node/exportStratigraphy?name='+ stratigraphy_uid +'&width=300&format=png'
     stratigraphy.save()
     return render_to_response('artefacts/strat-refresh.html', {'artefact_id': artefact_id})
+
 
 class StratigraphyDeleteView(generic.DeleteView):
     model = Stratigraphy

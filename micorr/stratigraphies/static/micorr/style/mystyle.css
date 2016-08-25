@@ -2550,7 +2550,8 @@ pre code {
   }
 
   .col-md-2 {
-    width: 16.6666666667%;
+    width: 20%;
+    max-height:50px;
   }
 
   .col-md-3 {

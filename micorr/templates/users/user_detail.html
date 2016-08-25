@@ -56,14 +56,14 @@
           <table class="table table-bordered table-striped table-hover">
             <tr>
                 <th>Date</th>
-                <th>Description</th>
+                <th>Name</th>
                 <th>Actions</th>
             </tr>
             {% for artefact in artefacts %}
                 <tr>
                     <td>{{ artefact.created|date:"Y/m/d"  }}</td>
                     <td>
-                        <span class="editable" data-url="{% url 'artefacts:artefact-update' artefact.id %}">{{ artefact.description }}</span>
+                        <span>{{ artefact.name }}</span>
                     </td>
                     <td><a href="{% url 'artefacts:artefact-update' artefact.id %}"><i class="fa fa-pencil"></i></a> |
                         <a href="/artefacts/{{ artefact.id }}"><i class="fa fa-eye"></i></a> |
