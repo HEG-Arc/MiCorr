@@ -37,7 +37,7 @@
                 <tr>
                     <td>{% if stratigraphy.timestamp %}{{ stratigraphy.timestamp  }}{% else %}{{ stratigraphy.date }}{% endif %}</td>
                     <td>
-                        <img src="/micorr/node/getStratigraphySvg?name={{ stratigraphy.uid }}&width=100">
+                        <img src="/micorr/node/exportStratigraphy?name={{ stratigraphy.uid }}&width=100&format=png">
                     </td>
                     <td>
                         <span class="editable" data-url="{% url 'stratigraphies:update-description' stratigraphy.uid %}" data-attribute="description" data-activator="#edit-{{ stratigraphy.uid }}">{{ stratigraphy.description }}</span>
