@@ -73,6 +73,34 @@ dispatcher.onPost("/getStratigraphySvg", function (req, res) {
     }
 });
 
+//Quick hack to support GET requests # TODO: Refactoring
+dispatcher.onGet("/getStratigraphySvg", function (req, res) {
+    res.writeHead(200, {'Content-Type': 'text/plain'});
+    var params = querystring.parse(url.parse(req.url).query);
+    console.log('widthParam: ' + params['width']);
+    if ('name' in params) {
+        var width = 250;
+        if ('width' in params) {
+            if (params['width'] != undefined) {
+                width = params['width'];
+            }
+        }
+        stratigraphyServices.getStratigraphyByName(params['name'], function (stratig) {
+            console.log('ready to draw');
+            if (stratig != undefined) {
+                stratigraphyServices.drawStratigraphy(stratig, width, function (svgresult) {
+                    res.write(svgresult);
+                    res.end();
+                });
+            }
+            else {
+                res.write('');
+                res.end();
+            }
+        });
+    }
+});
+
 
 //Export de la stratigraphie en PNG ou en PDF
 dispatcher.onGet("/exportStratigraphy", function (req, res) {
