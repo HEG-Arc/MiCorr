@@ -10,7 +10,6 @@
 angular.module('micorrApp')
     .controller('ModalSaveStrataCtrl', function ($scope, $route, $modal, $log, $location, MiCorrService) {
         $scope.artefactName = $scope.$parent.artefactName;
-        $scope.email_to = 'alessio.desanto@he-arc.ch';
 
         MiCorrService.isAuthenticated().success(function(data){
             $scope.is_authenticated = data['is_authenticated'];
@@ -22,8 +21,8 @@ angular.module('micorrApp')
             $scope.$emit('updateDraw');
         };
 
-        $scope.doSend = function () {
-            MiCorrService.sendEmail($scope.email_to, $location.url());
+        $scope.doSend = function (email_to) {
+            MiCorrService.sendEmail(email_to, $location.url());
         };
 
         // ouvre la fenêtre et si l'utilisateur appuie sur ok alors on sauvegarde
@@ -37,8 +36,34 @@ angular.module('micorrApp')
                             scopeParent.doSave();
                             $modalInstance.close();
                         };
+                        $scope.cancel = function() {
+                            $modalInstance.dismiss('cancel');
+                        };
+                    }
+                ],
+                resolve: {
+                    scopeParent: function() {
+                        return $scope; //On passe à la fenêtre modal une référence vers le scope parent.
+                    },
+                    id: function(){
+                        return $scope.id; // On passe en paramètre l'id de l'élément à supprimer.
+                    }
+                }
+            });
+
+        };
+
+        // ouvre la fenêtre et si l'utilisateur appuie sur ok alors on sauvegarde
+        $scope.open_send = function (size) {
+            var modalInstance = $modal.open({
+                templateUrl: 'sendStrataContent.html',
+                size: size,
+                controller: ['$scope', '$modalInstance','scopeParent', 'id',
+                    function($scope, $modalInstance,scopeParent,id) {
+                        $scope.email_to = ""
                         $scope.send = function() {
-                            scopeParent.doSend();
+                            scopeParent.doSave();
+                            scopeParent.doSend($scope.email_to);
                             $modalInstance.close();
                         };
                         $scope.cancel = function() {

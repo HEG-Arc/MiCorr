@@ -66,20 +66,16 @@ def getStratigraphyByArtefact(request, artefact):
 
 
 def isauthenticated(request):
-    if request.user.is_authenticated:
-        is_authenticated = False
-    else:
-        is_authenticated = True
-    return HttpResponse(json.dumps({'is_authenticated' : is_authenticated}), content_type='application/json')
+    return HttpResponse(json.dumps({'is_authenticated' : request.user.is_active}), content_type='application/json')
 
 @csrf_exempt
 def sendEmail(request):
     if request.method == 'POST':
         send_mail(
             'MiCorr saved Stratigraphy',
-            'Here is your stratigraphy : ',
+            'Here is your stratigraphy : ' + request.GET['stratigraphy'],
             'info@micorr.org',
-            ['alessio.desanto@gmail.com'],
+            [request.GET['email_to']],
             fail_silently=False,
         )
     return HttpResponse('Email sent!')

@@ -51,7 +51,7 @@
                 <div class="col-md-2 text-center">
                     <div ng-controller="ModalSaveStrataCtrl">
                         <script type="text/ng-template" id="saveStrataContent.html">
-                            <div ng-show="is_authenticated">
+                            <div>
                                 <div class="modal-header">
                                     <h3 class="modal-title">Save this strata</h3>
                                 </div>
@@ -63,7 +63,10 @@
                                     <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
                                 </div>
                             </div>
-                            <div ng-show="!is_authenticated">
+                        </script>
+
+                        <script type="text/ng-template" id="sendStrataContent.html">
+                            <div>
                                 <div class="modal-header">
                                     <h3 class="modal-title">Save this strata</h3>
                                 </div>
@@ -76,10 +79,14 @@
                                     <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
                                 </div>
                             </div>
-
                         </script>
 
-                        <button ng-click="open('sm')" type="button" class="btn btn-primary">
+                        <button ng-show="is_authenticated" ng-click="open('sm')" type="button" class="btn btn-primary">
+                            <span class="glyphicon glyphicon-floppy-saved" aria-hidden="true"></span>
+                            Save
+                        </button>
+
+                        <button ng-show="!is_authenticated" ng-click="open_send('sm')" type="button" class="btn btn-primary">
                             <span class="glyphicon glyphicon-floppy-saved" aria-hidden="true"></span>
                             Save
                         </button>

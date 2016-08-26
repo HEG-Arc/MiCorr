@@ -21,7 +21,7 @@ angular.module('micorrApp').factory('MiCorrService', function ($http, $q) {
         },
 
         sendEmail: function(email_to, stratigraphy) {
-            return $http.post('email' + '?email=' + email_to + '?stratigraphy=' + stratigraphy).error(function () {
+            return $http.post('email' + '?email=' + email_to + '&stratigraphy=' + stratigraphy).error(function () {
                 console.log('Problème de connexion avec le serveur');
                 alert('Erreur de chargement');
             });
