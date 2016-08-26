@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 
+{% block custom_header_script %}
+    {{ form.media }}
+{% endblock custom_header_script %}
+
 {% block sidemenu %}
     <div class="c3" id="sidemenu">
         <!-- no-active-hilight : do not highlight the "active" node of the menu. It is difficult for the affix to work when elements in the page are close one to the other (i.e. folded elements), therefore, it is less confusing to NOT hilight the .active nodes of the menu -->
