@@ -43,7 +43,7 @@
                         <span class="editable" data-url="{% url 'stratigraphies:update-description' stratigraphy.uid %}" data-attribute="description" data-activator="#edit-{{ stratigraphy.uid }}">{{ stratigraphy.description }}</span>
                         [<span id="edit-{{ stratigraphy.uid }}" class="button" onmouseover="this.style.cursor='pointer'"><i class="fa fa-pencil"></i> Rename</span> | <i class="fa fa-bars"></i>
                         <a href="/micorr/#/stratigraphy/{{ stratigraphy.uid }}">Display</a> |
-                        <i class="fa fa-trash"></i> <a href="{% url 'stratigraphies:delete-user' stratigraphy.uid %}">Delete</a>]
+                        <i class="fa fa-trash"></i> <a href="{% url 'stratigraphies:delete-user' stratigraphy.uid %}" onclick="return confirm('Are you sure you want to delete this stratigraphy?')">Delete</a>]
                     </td>
                 </tr>
             {% endfor %}
