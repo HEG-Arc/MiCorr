@@ -129,13 +129,6 @@ class Common(Configuration):
 
     # EMAIL CONFIGURATION
     EMAIL_BACKEND = values.Value('django.core.mail.backends.smtp.EmailBackend')
-    DEFAULT_FROM_EMAIL = 'micorr@he-arc.ch'
-    SERVER_EMAIL = 'micorr@he-arc.ch'
-    EMAIL_USE_TLS = True
-    EMAIL_HOST = 'webmail.he-arc.ch'
-    EMAIL_PORT = 443
-    EMAIL_HOST_USER = 'micorr@he-arc.ch'
-    EMAIL_HOST_PASSWORD = 'micorr7cool'
     # END EMAIL CONFIGURATION
 
     # MANAGER CONFIGURATION

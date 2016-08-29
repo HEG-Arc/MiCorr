@@ -75,7 +75,7 @@ def sendEmail(request):
             'MiCorr saved Stratigraphy',
             'Here is your stratigraphy : ' + request.GET['stratigraphy'],
             'info@micorr.org',
-            [request.GET['email_to']],
+            [request.GET['email']],
             fail_silently=False,
         )
     return HttpResponse('Email sent!')
