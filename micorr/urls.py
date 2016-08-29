@@ -4,6 +4,8 @@ from __future__ import unicode_literals
 from django.conf import settings
 from django.conf.urls import patterns, include, url
 from django.conf.urls.static import static
+from django.views.generic import TemplateView
+
 from views import HomePageView
 from django.contrib.sitemaps.views import sitemap
 from sitemaps import ArtefactsSitemap, HomePageSitemap
@@ -63,6 +65,10 @@ urlpatterns = patterns('',
 
     # Stratigraphies
     url(r'^micorr/', include('stratigraphies.urls', namespace="stratigraphies")),
+
+    # Learn
+    url(r'^manual/$', TemplateView.as_view(template_name='manual.html')),
+    url(r'^stratigraphy-construction/$', TemplateView.as_view(template_name='stratigraphy-construction.html')),
 
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
