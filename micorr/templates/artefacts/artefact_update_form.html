@@ -80,6 +80,7 @@
                         <div id="image_section_{{ object_section.id }}" class="c6">
                             {% for image in object_section.image_set.all %}
                                 <div class="row">
+                                {% if image.image %}
                                     <div class="c6">
                                         <a href="{{ image.image.url }}" class="image-popup"><img
                                                 src="{{ image.image.url }}" class="img-responsive"></a>
@@ -89,6 +90,7 @@
                                                 onclick="window.open('{% url 'artefacts:image-delete' image.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><i
                                                 class="fa fa-trash"></i></a></p>
                                     </div>
+                                {% endif %}
                                 </div>
                             {% endfor %}
                         </div>
@@ -189,6 +191,7 @@
                                         <div id="image_section_{{ zone_section.id }}" class="c6">
                                             {% for image in zone_section.image_set.all %}
                                                 <div class="row">
+                                                {% if image.image %}
                                                     <div class="c6">
                                                         <a href="{{ image.image.url }}" class="image-popup"><img
                                                                 src="{{ image.image.url }}" class="img-responsive"></a>
@@ -198,6 +201,7 @@
                                                                 onclick="window.open('{% url 'artefacts:image-delete' image.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><i
                                                                 class="fa fa-trash"></i></a></p>
                                                     </div>
+                                                {% endif %}
                                                 </div>
                                             {% endfor %}
                                         </div>
@@ -235,6 +239,7 @@
                                         <div id="image_section_{{ macroscopic_section.id }}" class="c6">
                                             {% for image in macroscopic_section.image_set.all %}
                                                 <div class="row">
+                                                {% if image.image %}
                                                     <div class="c6">
                                                         <a href="{{ image.image.url }}" class="image-popup"><img
                                                                 src="{{ image.image.url }}" class="img-responsive"></a>
@@ -244,6 +249,7 @@
                                                                 onclick="window.open('{% url 'artefacts:image-delete' image.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><i
                                                                 class="fa fa-trash"></i></a></p>
                                                     </div>
+                                                {% endif %}
                                                 </div>
                                             {% endfor %}
                                         </div>
@@ -280,6 +286,7 @@
                                 <div id="image_section_{{ sample_section.id }}" class="c6">
                                     {% for image in sample_section.image_set.all %}
                                         <div class="row">
+                                        {% if image.image %}
                                             <div class="c6">
                                                 <a href="{{ image.image.url }}" class="image-popup"><img
                                                         src="{{ image.image.url }}" class="img-responsive"></a>
@@ -289,6 +296,7 @@
                                                         onclick="window.open('{% url 'artefacts:image-delete' image.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><i
                                                         class="fa fa-trash"></i></a></p>
                                             </div>
+                                        {% endif %}
                                         </div>
                                     {% endfor %}
                                 </div>
@@ -438,6 +446,7 @@
                                             <div id="image_section_{{ metal_section.id }}" class="c6">
                                                 {% for image in metal_section.image_set.all %}
                                                     <div class="row">
+                                                    {% if image.image %}
                                                         <div class="c6">
                                                             <a href="{{ image.image.url }}" class="image-popup"><img
                                                                     src="{{ image.image.url }}" class="img-responsive"></a>
@@ -447,6 +456,7 @@
                                                                     onclick="window.open('{% url 'artefacts:image-delete' image.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><i
                                                                     class="fa fa-trash"></i></a></p>
                                                         </div>
+                                                    {% endif %}
                                                     </div>
                                                 {% endfor %}
                                             </div>
@@ -505,6 +515,7 @@
                                             <div id="image_section_{{ corrosion_section.id }}" class="c6">
                                                 {% for image in corrosion_section.image_set.all %}
                                                     <div class="row">
+                                                    {% if image.image %}
                                                         <div class="c6">
                                                             <a href="{{ image.image.url }}" class="image-popup"><img
                                                                     src="{{ image.image.url }}" class="img-responsive"></a>
@@ -514,6 +525,7 @@
                                                                     onclick="window.open('{% url 'artefacts:image-delete' image.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><i
                                                                     class="fa fa-trash"></i></a></p>
                                                         </div>
+                                                    {% endif %}
                                                     </div>
                                                 {% endfor %}
                                             </div>
@@ -564,6 +576,7 @@
                                 <div id="image_section_{{ synthesis_section.id }}" class="c6">
                                     {% for image in synthesis_section.image_set.all %}
                                         <div class="row">
+                                        {% if image.image %}
                                             <div class="c6">
                                                 <a href="{{ image.image.url }}" class="image-popup"><img
                                                         src="{{ image.image.url }}" class="img-responsive"></a>
@@ -573,6 +586,7 @@
                                                         onclick="window.open('{% url 'artefacts:image-delete' image.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><i
                                                         class="fa fa-trash"></i></a></p>
                                             </div>
+                                        {% endif %}
                                         </div>
                                     {% endfor %}
                                 </div>
