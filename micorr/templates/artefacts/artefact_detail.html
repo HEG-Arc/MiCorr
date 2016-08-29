@@ -55,12 +55,14 @@
                   {% if sections.0.image_set.all %}
                         {% for image in sections.0.image_set.all %}
                           <div class="row">
+                          {% if image.image %}
                             <div class="c6">
                               <a href="{{ image.image.url }}" class="image-popup"><img src="{{ image.image.url }}" class="img-responsive"></a>
                             </div>
                             <div class="c6">
                               <p><a name="fig1"></a>{{ image.legend }}</p>
                             </div>
+                          {% endif %}
                           </div>
                         {% endfor %}
                   {% endif %}
@@ -134,12 +136,14 @@
                     <div class="line lightbox">
                         {% for image in sections.2.image_set.all %}
                           <div class="row">
+                          {% if image.image %}
                             <div class="c6">
                               <a href="{{ image.image.url }}" class="image-popup"><img src="{{ image.image.url }}" class="img-responsive"></a>
                             </div>
                             <div class="c6">
                               <p><a name="fig1"></a>{{ image.legend }}</p>
                             </div>
+                          {% endif %}
                           </div>
                         {% endfor %}
                     </div>
@@ -158,12 +162,14 @@
                     <div class="line lightbox">
                         {% for image in sections.3.image_set.all %}
                           <div class="row">
+                          {% if image.image %}
                             <div class="c6">
                               <a href="{{ image.image.url }}" class="image-popup"><img src="{{ image.image.url }}" class="img-responsive"></a>
                             </div>
                             <div class="c6">
                               <p><a name="fig1"></a>{{ image.legend }}</p>
                             </div>
+                          {% endif %}
                           </div>
                         {% endfor %}
                     </div>
@@ -182,12 +188,14 @@
                 {% if sections.4.image_set.all %}
                     {% for image in sections.4.image_set.all %}
                       <div class="row">
+                      {% if image.image %}
                         <div class="c6">
                           <a href="{{ image.image.url }}" class="image-popup"><img src="{{ image.image.url }}" class="img-responsive"></a>
                         </div>
                         <div class="c6">
                           <p><a name="fig1"></a>{{ image.legend }}</p>
                         </div>
+                      {% endif %}
                       </div>
                     {% endfor %}
                 {% endif %}
@@ -268,12 +276,14 @@
                         {% if sections.6.image_set.all %}
                             {% for image in sections.6.image_set.all %}
                               <div class="row">
+                              {% if image.image %}
                                 <div class="c6">
                                   <a href="{{ image.image.url }}" class="image-popup"><img src="{{ image.image.url }}" class="img-responsive"></a>
                                 </div>
                                 <div class="c6">
                                   <p><a name="fig1"></a>{{ image.legend }}</p>
                                 </div>
+                              {% endif %}
                               </div>
                             {% endfor %}
                         {% endif %}
@@ -300,12 +310,14 @@
                         {% if sections.7.image_set.all %}
                             {% for image in sections.7.image_set.all %}
                               <div class="row">
+                              {% if image.image %}
                                 <div class="c6">
                                   <a href="{{ image.image.url }}" class="image-popup"><img src="{{ image.image.url }}" class="img-responsive"></a>
                                 </div>
                                 <div class="c6">
                                   <p><a name="fig1"></a>{{ image.legend }}</p>
                                 </div>
+                              {% endif %}
                               </div>
                             {% endfor %}
                         {% endif %}
@@ -335,12 +347,14 @@
             <div class="line lightbox">
                 {% for image in sections.8.image_set.all %}
                   <div class="row">
+                  {% if image.image %}
                     <div class="c6">
                       <a href="{{ image.image.url }}" class="image-popup"><img src="{{ image.image.url }}" class="img-responsive"></a>
                     </div>
                     <div class="c6">
                       <p><a name="fig1"></a>{{ image.legend }}</p>
                     </div>
+                  {% endif %}
                   </div>
                 {% endfor %}
             </div>
