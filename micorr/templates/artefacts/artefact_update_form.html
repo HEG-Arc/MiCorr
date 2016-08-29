@@ -2,7 +2,7 @@
 
 {% block custom_header_script %}
     <script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
-    <script>tinymce.init({ selector:'textarea', plugins: "table" });</script>
+    <script>tinymce.init({selector: 'textarea', plugins: "table"});</script>
 {% endblock custom_header_script %}
 
 {% block sidemenu %}
@@ -80,17 +80,20 @@
                         <div id="image_section_{{ object_section.id }}" class="c6">
                             {% for image in object_section.image_set.all %}
                                 <div class="row">
-                                {% if image.image %}
-                                    <div class="c6">
-                                        <a href="{{ image.image.url }}" class="image-popup"><img
-                                                src="{{ image.image.url }}" class="img-responsive"></a>
-                                    </div>
-                                    <div class="c6">
-                                        <p><a name="fig1"></a>{{ image.legend | safe }}<a
-                                                onclick="window.open('{% url 'artefacts:image-delete' image.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><i
-                                                class="fa fa-trash"></i></a></p>
-                                    </div>
-                                {% endif %}
+                                    {% if image.image %}
+                                        <div class="c6">
+                                            <a href="{{ image.image.url }}" class="image-popup"><img
+                                                    src="{{ image.image.url }}" class="img-responsive"></a>
+                                        </div>
+                                        <div class="c6">
+                                            <p><a name="fig1"></a>{{ image.legend | safe }} <a
+                                                    onclick="window.open('{% url 'artefacts:image-update' section_id=object_section.id pk=image.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><i
+                                                    class="fa fa-pencil"></i></a>
+                                                <a
+                                                        onclick="window.open('{% url 'artefacts:image-delete' image.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><i
+                                                        class="fa fa-trash"></i></a></p>
+                                        </div>
+                                    {% endif %}
                                 </div>
                             {% endfor %}
                         </div>
@@ -191,17 +194,20 @@
                                         <div id="image_section_{{ zone_section.id }}" class="c6">
                                             {% for image in zone_section.image_set.all %}
                                                 <div class="row">
-                                                {% if image.image %}
-                                                    <div class="c6">
-                                                        <a href="{{ image.image.url }}" class="image-popup"><img
-                                                                src="{{ image.image.url }}" class="img-responsive"></a>
-                                                    </div>
-                                                    <div class="c6">
-                                                        <p><a name="fig1"></a>{{ image.legend | safe }}<a
-                                                                onclick="window.open('{% url 'artefacts:image-delete' image.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><i
-                                                                class="fa fa-trash"></i></a></p>
-                                                    </div>
-                                                {% endif %}
+                                                    {% if image.image %}
+                                                        <div class="c6">
+                                                            <a href="{{ image.image.url }}" class="image-popup"><img
+                                                                    src="{{ image.image.url }}" class="img-responsive"></a>
+                                                        </div>
+                                                        <div class="c6">
+                                                            <p><a name="fig1"></a>{{ image.legend | safe }} <a
+                                                                    onclick="window.open('{% url 'artefacts:image-update' section_id=zone_section.id pk=image.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><i
+                                                                    class="fa fa-pencil"></i></a>
+                                                                <a
+                                                                        onclick="window.open('{% url 'artefacts:image-delete' image.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><i
+                                                                        class="fa fa-trash"></i></a></p>
+                                                        </div>
+                                                    {% endif %}
                                                 </div>
                                             {% endfor %}
                                         </div>
@@ -239,17 +245,20 @@
                                         <div id="image_section_{{ macroscopic_section.id }}" class="c6">
                                             {% for image in macroscopic_section.image_set.all %}
                                                 <div class="row">
-                                                {% if image.image %}
-                                                    <div class="c6">
-                                                        <a href="{{ image.image.url }}" class="image-popup"><img
-                                                                src="{{ image.image.url }}" class="img-responsive"></a>
-                                                    </div>
-                                                    <div class="c6">
-                                                        <p><a name="fig1"></a>{{ image.legend | safe }}<a
-                                                                onclick="window.open('{% url 'artefacts:image-delete' image.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><i
-                                                                class="fa fa-trash"></i></a></p>
-                                                    </div>
-                                                {% endif %}
+                                                    {% if image.image %}
+                                                        <div class="c6">
+                                                            <a href="{{ image.image.url }}" class="image-popup"><img
+                                                                    src="{{ image.image.url }}" class="img-responsive"></a>
+                                                        </div>
+                                                        <div class="c6">
+                                                            <p><a name="fig1"></a>{{ image.legend | safe }} <a
+                                                                    onclick="window.open('{% url 'artefacts:image-update' section_id=macroscopic_section.id pk=image.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><i
+                                                                    class="fa fa-pencil"></i></a>
+                                                                <a
+                                                                        onclick="window.open('{% url 'artefacts:image-delete' image.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><i
+                                                                        class="fa fa-trash"></i></a></p>
+                                                        </div>
+                                                    {% endif %}
                                                 </div>
                                             {% endfor %}
                                         </div>
@@ -281,34 +290,31 @@
             <div class="row accordion-content3 collapse in" id="content3" aria-labelledby="title3">
                 <div class="line palebox">
                     <div class="row">
-                        <div class="c9">
-                            <div class="c9">
-                                <div id="image_section_{{ sample_section.id }}" class="c6">
-                                    {% for image in sample_section.image_set.all %}
-                                        <div class="row">
-                                        {% if image.image %}
-                                            <div class="c6">
-                                                <a href="{{ image.image.url }}" class="image-popup"><img
-                                                        src="{{ image.image.url }}" class="img-responsive"></a>
-                                            </div>
-                                            <div class="c6">
-                                                <p><a name="fig1"></a>{{ image.legend | safe }}<a
+                        <div id="image_section_{{ sample_section.id }}" class="c6">
+                            {% for image in sample_section.image_set.all %}
+                                <div class="row">
+                                    {% if image.image %}
+                                        <div class="c6">
+                                            <a href="{{ image.image.url }}" class="image-popup"><img
+                                                    src="{{ image.image.url }}" class="img-responsive"></a>
+                                        </div>
+                                        <div class="c6">
+                                            <p><a name="fig1"></a>{{ image.legend | safe }} <a
+                                                    onclick="window.open('{% url 'artefacts:image-update' section_id=sample_section.id pk=image.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><i
+                                                    class="fa fa-pencil"></i></a>
+                                                <a
                                                         onclick="window.open('{% url 'artefacts:image-delete' image.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><i
                                                         class="fa fa-trash"></i></a></p>
-                                            </div>
-                                        {% endif %}
                                         </div>
-                                    {% endfor %}
+                                    {% endif %}
                                 </div>
-                            </div>
-                            <div class="c9">
-                                <p> <!-- Upload Photos -->
-                                    <a class="add-another" id="zone_image_add"
-                                       onclick="window.open('{% url 'artefacts:image-create' section_id=sample_section.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');">
-                                        <span class="glyphicon glyphicon-plus"></span>
-                                    </a>
-                                </p>
-                            </div>
+                            {% endfor %}
+                            <p> <!-- Upload Photos -->
+                                <a class="add-another" id="zone_image_add"
+                                   onclick="window.open('{% url 'artefacts:image-create' section_id=sample_section.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');">
+                                    <span class="glyphicon glyphicon-plus"></span>
+                                </a>
+                            </p>
                         </div>
                     </div>
 
@@ -324,10 +330,13 @@
                             <div id="stratigraphy">
                                 {% for stratigraphy in artefact.stratigraphy_set.all %}
                                     <div class="c6">
-                                        <a href="/micorr/#/stratigraphy/{{ stratigraphy.uid }}" target="_blank"><img src="/micorr/node/getStratigraphySvg?name={{ stratigraphy.uid }}&width=200" class="img-responsive"></a>
+                                        <a href="/micorr/#/stratigraphy/{{ stratigraphy.uid }}" target="_blank"><img
+                                                src="/micorr/node/getStratigraphySvg?name={{ stratigraphy.uid }}&width=200"
+                                                class="img-responsive"></a>
                                     </div>
                                     <div class="c6">
-                                        <a onclick="window.open('{% url 'artefacts:stratigraphy-delete' stratigraphy.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><i class="fa fa-trash"></i></a>
+                                        <a onclick="window.open('{% url 'artefacts:stratigraphy-delete' stratigraphy.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><i
+                                                class="fa fa-trash"></i></a>
                                     </div>
                                 {% endfor %}
                             </div>
@@ -441,34 +450,32 @@
                             </div>
                             <div class="line lightbox">
                                 <div class="row">
-                                    <div class="c9">
-                                        <div class="c9">
-                                            <div id="image_section_{{ metal_section.id }}" class="c6">
-                                                {% for image in metal_section.image_set.all %}
-                                                    <div class="row">
-                                                    {% if image.image %}
-                                                        <div class="c6">
-                                                            <a href="{{ image.image.url }}" class="image-popup"><img
-                                                                    src="{{ image.image.url }}" class="img-responsive"></a>
-                                                        </div>
-                                                        <div class="c6">
-                                                            <p><a name="fig1"></a>{{ image.legend | safe }}<a
+
+                                    <div id="image_section_{{ metal_section.id }}" class="c6">
+                                        {% for image in metal_section.image_set.all %}
+                                            <div class="row">
+                                                {% if image.image %}
+                                                    <div class="c6">
+                                                        <a href="{{ image.image.url }}" class="image-popup"><img
+                                                                src="{{ image.image.url }}" class="img-responsive"></a>
+                                                    </div>
+                                                    <div class="c6">
+                                                        <p><a name="fig1"></a>{{ image.legend | safe }} <a
+                                                                onclick="window.open('{% url 'artefacts:image-update' section_id=metal_section.id pk=image.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><i
+                                                                class="fa fa-pencil"></i></a>
+                                                            <a
                                                                     onclick="window.open('{% url 'artefacts:image-delete' image.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><i
                                                                     class="fa fa-trash"></i></a></p>
-                                                        </div>
-                                                    {% endif %}
                                                     </div>
-                                                {% endfor %}
+                                                {% endif %}
                                             </div>
-                                        </div>
-                                        <div class="c9">
-                                            <p> <!-- Upload Photos -->
-                                                <a class="add-another" id="zone_image_add"
-                                                   onclick="window.open('{% url 'artefacts:image-create' section_id=metal_section.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');">
-                                                    <span class="glyphicon glyphicon-plus"></span>
-                                                </a>
-                                            </p>
-                                        </div>
+                                        {% endfor %}
+                                        <p> <!-- Upload Photos -->
+                                            <a class="add-another" id="zone_image_add"
+                                               onclick="window.open('{% url 'artefacts:image-create' section_id=metal_section.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');">
+                                                <span class="glyphicon glyphicon-plus"></span>
+                                            </a>
+                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -510,34 +517,34 @@
                             </div>
                             <div class="line lightbox">
                                 <div class="row">
-                                    <div class="c9">
-                                        <div class="c9">
-                                            <div id="image_section_{{ corrosion_section.id }}" class="c6">
-                                                {% for image in corrosion_section.image_set.all %}
-                                                    <div class="row">
-                                                    {% if image.image %}
-                                                        <div class="c6">
-                                                            <a href="{{ image.image.url }}" class="image-popup"><img
-                                                                    src="{{ image.image.url }}" class="img-responsive"></a>
-                                                        </div>
-                                                        <div class="c6">
-                                                            <p><a name="fig1"></a>{{ image.legend | safe }}<a
+
+                                    <div id="image_section_{{ corrosion_section.id }}" class="c6">
+                                        {% for image in corrosion_section.image_set.all %}
+                                            <div class="row">
+                                                {% if image.image %}
+                                                    <div class="c6">
+                                                        <a href="{{ image.image.url }}" class="image-popup"><img
+                                                                src="{{ image.image.url }}" class="img-responsive"></a>
+                                                    </div>
+                                                    <div class="c6">
+                                                        <p><a name="fig1"></a>{{ image.legend | safe }}
+                                                            <a
+                                                                    onclick="window.open('{% url 'artefacts:image-update' section_id=corrosion_section.id pk=image.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><i
+                                                                    class="fa fa-pencil"></i></a>
+                                                            <a
                                                                     onclick="window.open('{% url 'artefacts:image-delete' image.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><i
                                                                     class="fa fa-trash"></i></a></p>
-                                                        </div>
-                                                    {% endif %}
                                                     </div>
-                                                {% endfor %}
+                                                {% endif %}
                                             </div>
-                                        </div>
-                                        <div class="c9">
-                                            <p> <!-- Upload Photos -->
-                                                <a class="add-another" id="zone_image_add"
-                                                   onclick="window.open('{% url 'artefacts:image-create' section_id=corrosion_section.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');">
-                                                    <span class="glyphicon glyphicon-plus"></span>
-                                                </a>
-                                            </p>
-                                        </div>
+                                        {% endfor %}
+                                        <p> <!-- Upload Photos -->
+                                            <a class="add-another" id="zone_image_add"
+                                               onclick="window.open('{% url 'artefacts:image-create' section_id=corrosion_section.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');">
+                                                <span class="glyphicon glyphicon-plus"></span>
+                                            </a>
+                                        </p>
+
                                     </div>
                                 </div>
                             </div>
@@ -576,17 +583,19 @@
                                 <div id="image_section_{{ synthesis_section.id }}" class="c6">
                                     {% for image in synthesis_section.image_set.all %}
                                         <div class="row">
-                                        {% if image.image %}
-                                            <div class="c6">
-                                                <a href="{{ image.image.url }}" class="image-popup"><img
-                                                        src="{{ image.image.url }}" class="img-responsive"></a>
-                                            </div>
-                                            <div class="c6">
-                                                <p><a name="fig1"></a>{{ image.legend | safe }}<a
-                                                        onclick="window.open('{% url 'artefacts:image-delete' image.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><i
-                                                        class="fa fa-trash"></i></a></p>
-                                            </div>
-                                        {% endif %}
+                                            {% if image.image %}
+                                                <div class="c6">
+                                                    <a href="{{ image.image.url }}" class="image-popup"><img
+                                                            src="{{ image.image.url }}" class="img-responsive"></a>
+                                                </div>
+                                                <div class="c6">
+                                                    <p><a onclick="window.open('{% url 'artefacts:image-update' section_id=synthesis_section.id pk=image.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><i
+                                                            class="fa fa-pencil"></i></a>
+                                                        <a name="fig1"></a>{{ image.legend | safe }}<a
+                                                                onclick="window.open('{% url 'artefacts:image-delete' image.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><i
+                                                                class="fa fa-trash"></i></a></p>
+                                                </div>
+                                            {% endif %}
                                         </div>
                                     {% endfor %}
                                 </div>

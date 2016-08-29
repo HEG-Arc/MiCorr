@@ -355,6 +355,23 @@ class ImageCreateView(generic.CreateView):
         return reverse('artefacts:image-refresh', kwargs={'section_id': self.kwargs['section_id']})
 
 
+class ImageUpdateView(generic.UpdateView):
+    model = Image
+    template_name_suffix = '_update_form'
+    form_class = ImageCreateForm
+
+    def get(self, request, **kwargs):
+        self.object = get_object_or_404(Image, id=self.kwargs['pk'])
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        section_id = kwargs['section_id']
+        image_id = kwargs['pk']
+        return self.render_to_response(self.get_context_data(form=form, section_id=section_id, image_id=image_id))
+
+    def get_success_url(self):
+        return reverse('artefacts:image-refresh', kwargs={'section_id': self.kwargs['section_id']})
+
+
 class ImageDeleteView(generic.DeleteView):
     model = Image
     template_name_suffix = '_confirm_delete'
