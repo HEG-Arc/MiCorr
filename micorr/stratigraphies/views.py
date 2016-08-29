@@ -73,8 +73,8 @@ def sendEmail(request):
     if request.method == 'POST':
         send_mail(
             'MiCorr saved Stratigraphy',
-            'Here is your stratigraphy : ' + request.GET['stratigraphy'],
-            'info@micorr.org',
+            'Here is your stratigraphy : ' + request.build_absolute_uri().split("email", 1)[0] + '#' + request.GET['stratigraphy'],
+            'micorr@he-arc.ch',
             [request.GET['email']],
             fail_silently=False,
         )
