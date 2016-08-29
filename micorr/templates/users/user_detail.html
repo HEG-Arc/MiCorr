@@ -5,82 +5,130 @@
 {% block title %}<title>MiCorr | {{ object.username }} User Profile</title>{% endblock %}
 
 {% block content %}
-<div class="container">
+    <div class="container">
 
-  <div class="row">
-    <div class="col-sm-12">
+        <div class="row">
+            <div class="col-sm-12">
 
-      <h2>{{ object.username }}</h2>
+                <h2>{{ object.username }}</h2>
+            </div>
+        </div>
+
+        {% if object == request.user %}
+            <!-- Action buttons -->
+            <div class="row">
+
+                <div class="col-sm-12 ">
+                    <a class="btn btn-primary" href="{% url 'users:update' %}">My Info</a>
+                    <a class="btn btn-primary" href="{% url 'account_email' %}">E-Mail</a>
+                    <a class="btn btn-info" href="{% url 'avatar_change' %}">Avatar</a>
+                    <!-- Your Stuff: Custom user template urls -->
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-sm-12 ">
+                    <div class="panel-group">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <span class="glyphicon glyphicon-plus"></span>
+                                    <a data-toggle="collapse" href="#stratigraphies">Stratigraphies</a>
+                                </h4>
+                            </div>
+                            <div id="stratigraphies" class="panel-collapse collapse">
+                                {% if stratigraphies %}
+                                    <table class="table table-bordered table-striped table-hover">
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Stratigraphy</th>
+                                            <th>Description</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                        {% for stratigraphy in stratigraphies %}
+                                            <tr>
+                                                <td>{% if stratigraphy.timestamp %}
+                                                    {{ stratigraphy.timestamp }}{% else %}
+                                                    {{ stratigraphy.date|date:"Y/m/d" }}{% endif %}</td>
+                                                <td>
+                                                    <img src="/micorr/node/getStratigraphySvg?name={{ stratigraphy.uid }}&width=100">
+                                                </td>
+                                                <td>
+                                                    <span class="editable"
+                                                          data-url="{% url 'stratigraphies:update-description' stratigraphy.uid %}"
+                                                          data-attribute="description"
+                                                          data-activator="#edit-{{ stratigraphy.uid }}">{{ stratigraphy.description }}</span>
+                                                </td>
+                                                <td>
+                                                    <span id="edit-{{ stratigraphy.uid }}" class="button" onmouseover="this.style.cursor='pointer'"><i class="fa fa-pencil"></i></span> |
+                                                    <a href="/micorr/#/stratigraphy/{{ stratigraphy.uid }}" target="_blank"><i class="fa fa-eye"></i></a> |
+                                                    <a href="{% url 'stratigraphies:delete-user' stratigraphy.uid %}" onclick="return confirm('Are you sure you want to delete this stratigraphy?')"><i class="fa fa-trash"></i></a>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </table>
+                                {% else %}
+                                    <p>There are no saved stratigraphies in your profile. Use the SAVE button to add
+                                        stratigraphies to your profile.</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <span class="glyphicon glyphicon-plus"></span>
+                                    <a data-toggle="collapse" href="#artefacts">Artefacts</a>
+                                </h4>
+                            </div>
+                            <div id="artefacts" class="panel-collapse collapse">
+                                {% if artefacts %}
+                                    <table class="table table-bordered table-striped table-hover">
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Name</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                        {% for artefact in artefacts %}
+                                            <tr>
+                                                <td>{{ artefact.created|date:"Y-m-d H:i:s" }}</td>
+                                                <td>
+                                                    <span>{{ artefact.name }}</span>
+                                                </td>
+                                                <td>
+                                                    <a href="{% url 'artefacts:artefact-update' artefact.id %}"><i
+                                                            class="fa fa-pencil"></i></a> |
+                                                    <a href="/artefacts/{{ artefact.id }}" target="_blank"><i class="fa fa-eye"></i></a>
+                                                    |
+                                                    <a href="{% url 'artefacts:artefact-delete' artefact.id %}"><i
+                                                            class="fa fa-trash"></i></a>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </table>
+                                {% else %}
+                                    <p>There are no saved artefacts in your profile. <a href="/#submit">Submit a new
+                                        item</a> to
+                                        create one</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <!-- End Action buttons -->
+        {% endif %}
+
+
     </div>
-  </div>
-
-{% if object == request.user %}
-<!-- Action buttons -->
-<div class="row">
-
-  <div class="col-sm-12 ">
-    <a class="btn btn-primary" href="{% url 'users:update' %}">My Info</a>
-    <a class="btn btn-primary" href="{% url 'account_email' %}">E-Mail</a>
-    <a class="btn btn-info" href="{% url 'avatar_change' %}">Avatar</a>
-    <!-- Your Stuff: Custom user template urls -->
-  </div>
-</div>
-<div class="row">
-  <div class="col-sm-12 ">
-    <h1>Stratigraphies</h1>
-      {% if stratigraphies %}
-          <table class="table table-bordered table-striped table-hover">
-            <tr>
-                <th>Date</th><th>Stratigraphy</th><th>Description</th>
-            </tr>
-            {% for stratigraphy in stratigraphies %}
-                <tr>
-                    <td>{% if stratigraphy.timestamp %}{{ stratigraphy.timestamp  }}{% else %}{{ stratigraphy.date }}{% endif %}</td>
-                    <td>
-                        <img src="/micorr/node/getStratigraphySvg?name={{ stratigraphy.uid }}&width=100">
-                    </td>
-                    <td>
-                        <span class="editable" data-url="{% url 'stratigraphies:update-description' stratigraphy.uid %}" data-attribute="description" data-activator="#edit-{{ stratigraphy.uid }}">{{ stratigraphy.description }}</span>
-                        [<span id="edit-{{ stratigraphy.uid }}" class="button" onmouseover="this.style.cursor='pointer'"><i class="fa fa-pencil"></i> Rename</span> | <i class="fa fa-bars"></i>
-                        <a href="/micorr/#/stratigraphy/{{ stratigraphy.uid }}">Display</a> |
-                        <i class="fa fa-trash"></i> <a href="{% url 'stratigraphies:delete-user' stratigraphy.uid %}" onclick="return confirm('Are you sure you want to delete this stratigraphy?')">Delete</a>]
-                    </td>
-                </tr>
-            {% endfor %}
-          </table>
-      {% else %}
-          <p>There are no saved stratigraphies in your profile. Use the SAVE button to add stratigraphies to your profile.</p>
-      {% endif %}
-    <h1>Artefacts</h1>
-      {% if artefacts %}
-          <table class="table table-bordered table-striped table-hover">
-            <tr>
-                <th>Date</th>
-                <th>Name</th>
-                <th>Actions</th>
-            </tr>
-            {% for artefact in artefacts %}
-                <tr>
-                    <td>{{ artefact.created|date:"Y/m/d"  }}</td>
-                    <td>
-                        <span>{{ artefact.name }}</span>
-                    </td>
-                    <td><a href="{% url 'artefacts:artefact-update' artefact.id %}"><i class="fa fa-pencil"></i></a> |
-                        <a href="/artefacts/{{ artefact.id }}"><i class="fa fa-eye"></i></a> |
-                        <a href="{% url 'artefacts:artefact-delete' artefact.id %}"><i class="fa fa-trash"></i></a>
-                    </td>
-                </tr>
-            {% endfor %}
-          </table>
-      {% else %}
-          <p>There are no saved artefacts in your profile. <a href="/#submit">Submit a new item</a> to create one</p>
-      {% endif %}
-  </div>
-
-</div>
-<!-- End Action buttons -->
-{% endif %}
-
-
-</div>
 {% endblock content %}
+
+{% block custom_bottom_script %}
+    <script type="text/javascript">
+        $('.collapse').on('shown.bs.collapse', function(){
+            $(this).parent().find(".glyphicon-plus").removeClass("glyphicon-plus").addClass("glyphicon-minus");
+            }).on('hidden.bs.collapse', function(){
+            $(this).parent().find(".glyphicon-minus").removeClass("glyphicon-minus").addClass("glyphicon-plus");
+        });
+    </script>
+{% endblock %}
