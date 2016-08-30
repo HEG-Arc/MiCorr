@@ -10,7 +10,7 @@
         <div class="row">
             <div class="col-sm-12">
 
-                <h2>{{ object.username }}</h2>
+                <h2>{{ object.username|capfirst }}</h2>
             </div>
         </div>
 
@@ -23,6 +23,13 @@
                     <a class="btn btn-primary" href="{% url 'account_email' %}">E-Mail</a>
                     <a class="btn btn-info" href="{% url 'avatar_change' %}">Avatar</a>
                     <!-- Your Stuff: Custom user template urls -->
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-sm-12 ">
+                    <a class="btn btn-success" href="{% url 'artefacts:searchStratigraphy' %}"><i class="fa fa-align-justify"></i> Create new stratigraphy</a>
+                    <a class="btn btn-success" href="{% url 'artefacts:artefact-create' %}"><i class="fa fa-pencil"></i> Create new artefact</a>
                 </div>
             </div>
             <br>
