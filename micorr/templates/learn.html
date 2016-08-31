@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>MiCorr | Manual</title>
+{% endblock title %}
+
+{% block content %}
+
+    <div id="learn" class="paleframe">
+    <div class="container">
+        <div class="row center">
+            <div class="line">
+                <h1>Learn</h1>
+                <br>
+            </div>
+            <div class="c4">
+                <i class="fa fa-compass disc fa-3x"></i>
+                <h3>Contextual help</h3>
+                <p></p>
+            </div>
+            <a href="./manual">
+                <div class="c4">
+                    <i class="fa fa-book disc fa-3x"></i>
+                    <h3>Manual</h3>
+                    <p>A guide to use properly the website</p>
+                </div>
+            </a>
+            <a href="./stratigraphy-construction">
+                <div class="c4">
+                    <i class="fa fa-bars disc fa-3x"></i>
+                    <h3>Stratigraphy construction</h3>
+                    <p>Learn how to construct schematically a stratigraphy</p>
+                </div>
+            </a>
+        </div>
+        <div class="row center">
+            <div class="c4 pre2" data-toggle="modal" data-target=".animation" onmouseover="this.style.cursor='pointer'">
+                <i class="fa fa-video-camera disc fa-3x"></i>
+                <h3>Tour</h3>
+                <p>An animated discovery of MiCorr</p>
+            </div>
+            <div class="c4">
+                <i class="fa fa-question disc fa-3x"></i>
+                <h3>FAQ and more information</h3>
+                <p>Help tool and responses to basic questions</p>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+{% endblock content %}
