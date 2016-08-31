@@ -99,11 +99,12 @@
                         </div>
                         <div class="c9">
                             <p> <!-- Upload Photos -->
-                                <a class="add-another" id="object_image_add"
+                                <a class="add-another" id="object_image_add" title="Add a picture, a figure or a table"
                                    onclick="window.open('{% url 'artefacts:image-create' section_id=object_section.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');">
                                     <span class="glyphicon glyphicon-plus"></span>
                                 </a>
                             </p>
+                            <p>Figures and tables are referred as Fig. 1, Table 1.</p>
                         </div>
                     </div>
                     <p><i>General picture of the object should contain a scale and a chart colour. The caption gives the
@@ -174,8 +175,7 @@
                 </div>
                 <div class="line palebox">
                     <h4 class="underline">Complementary information</h4>
-                    <textarea
-                            name="complementary_information">{{ description_section.complementary_information }}</textarea>
+                    <textarea name="complementary_information">{{ description_section.complementary_information }}</textarea>
                     <p><i>Any important information that does not fit to the previous fields.</i></p>
                 </div>
 
@@ -214,11 +214,12 @@
                                     </div>
                                     <div class="c9">
                                         <p> <!-- Upload Photos -->
-                                            <a class="add-another" id="zone_image_add"
+                                            <a class="add-another" id="zone_image_add" title="Add a picture, a figure or a table"
                                                onclick="window.open('{% url 'artefacts:image-create' section_id=zone_section.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');">
                                                 <span class="glyphicon glyphicon-plus"></span>
                                             </a>
                                         </p>
+                                        <p>Figures and tables are referred as Fig. 1, Table 1.</p>
                                     </div>
                                 </div>
                                 <p><i>Picture of the object / element with arrows indicating the location of the
@@ -234,10 +235,8 @@
                         </div>
                         <div class="row accordion-content2 collapse in" id="content22" aria-labelledby="title22">
                             <div class="line palebox">
-                                <p><i>The schematic representation below gives an overview of the corrosion layers
-                                    encountered on the object (to precise) from a first visual macroscopic
-                                    observation.</i></p>
                                 <textarea name="macroscopic_text">{{ macroscopic_section.content }}</textarea>
+                                <p><i>Except if specific, copy / paste the following text : The schematic representation below gives an overview of the corrosion layers encountered on the object from a first visual macroscopic observation.</i></p>
                             </div>
                             <div class="line lightbox">
                                 <div class="row">
@@ -265,11 +264,12 @@
                                     </div>
                                     <div class="c9">
                                         <p> <!-- Upload Photos -->
-                                            <a class="add-another" id="zone_image_add"
+                                            <a class="add-another" id="zone_image_add" title="Add a picture, a figure or a table"
                                                onclick="window.open('{% url 'artefacts:image-create' section_id=macroscopic_section.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');">
                                                 <span class="glyphicon glyphicon-plus"></span>
                                             </a>
                                         </p>
+                                        <p>Figures and tables are referred as Fig. 1, Table 1.</p>
                                     </div>
                                 </div>
                                 <p><i>Stratigraphic representation of the object in cross-section by macroscopic
@@ -309,12 +309,15 @@
                                     {% endif %}
                                 </div>
                             {% endfor %}
+                        </div>
+                        <div class="c9">
                             <p> <!-- Upload Photos -->
-                                <a class="add-another" id="zone_image_add"
+                                <a class="add-another" id="zone_image_add" title="Add a picture, a figure or a table"
                                    onclick="window.open('{% url 'artefacts:image-create' section_id=sample_section.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');">
                                     <span class="glyphicon glyphicon-plus"></span>
                                 </a>
                             </p>
+                            <p>Figures and tables are referred as Fig. 1, Table 1.</p>
                         </div>
                     </div>
 
@@ -393,8 +396,7 @@
                 </div>
                 <div class="line palebox">
                     <h4 class="underline">Complementary information</h4>
-                    <textarea
-                            name="sample_complementary_information">{{ sample_section.complementary_information }}</textarea>
+                    <textarea name="sample_complementary_information">{{ sample_section.complementary_information }}</textarea>
                     <p><i>Any important information that does not fit to the previous fields.</i></p>
                 </div>
             </div>
@@ -407,9 +409,8 @@
             <div class="row accordion-content3 collapse in" id="content4" aria-labelledby="title4">
                 <div class="line palebox">
                     <p><em>Analyses performed</em></p>
-                    <p><i>List of the techniques used: Metallography (etched with ? reagent), SEM-EDS, FTIR, Raman
-                        spectroscopy, XRD, etc.</i></p>
                     <textarea name="analyses_performed">{{ analyses_performed }}</textarea>
+                    <p><i>Add the list of the techniques used : Metallography (etched with ? reagent), SEM-EDS, FTIR, Raman spectroscopy. If the conditions of the analyses are specific (check with the information provided under the “Scientific bases” tab), please add them in your text.</i></p>
                 </div>
                 <div class="line">
                     <div id="accordionAR" aria-multiselectable="true">
@@ -425,8 +426,7 @@
                                     <div class="c9">
                                         <textarea name="metal_text">{{ metal_section.content }}</textarea>
                                         <p><i>A description of the metal: its composition, texture (porosity), hardness,
-                                            microstructure revealed by etching and specific features (figures and tables
-                                            are referred as Fig. 1, Table 1).</i></p>
+                                            microstructure revealed by etching and specific features.</i></p>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -470,19 +470,22 @@
                                                 {% endif %}
                                             </div>
                                         {% endfor %}
+                                    </div>
+                                    <div class="c9">
                                         <p> <!-- Upload Photos -->
-                                            <a class="add-another" id="zone_image_add"
+                                            <a class="add-another" id="zone_image_add" title="Add a picture, a figure or a table"
                                                onclick="window.open('{% url 'artefacts:image-create' section_id=metal_section.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');">
                                                 <span class="glyphicon glyphicon-plus"></span>
                                             </a>
                                         </p>
+                                        <p>Figures and tables are referred as Fig. 1, Table 1.</p>
                                     </div>
                                 </div>
                             </div>
                             <div class="line palebox">
                                 <h4 class="underline">Complementary information</h4>
-                                <textarea
-                                        name="metal_complementary_information">{{ metal_section.complementary_information }}</textarea>
+                                <textarea name="metal_complementary_information">{{ metal_section.complementary_information }}</textarea>
+                                <p><i>Any important information that does not fit to the previous fields.</i></p>
                             </div>
                         </div>
 
@@ -497,8 +500,7 @@
                                     <div class="c9">
                                         <textarea name="corrosion_text">{{ corrosion_section.content }}</textarea>
                                         <p><i>A description of the corrosion layers: their composition, texture
-                                            (porosity), microstructure if any and specific features (figures and tables
-                                            are referred as Fig. 1, Table 1). The corrosion form(s) and corrosion type
+                                            (porosity), microstructure if any and specific features. The corrosion form(s) and corrosion type
                                             should be deduced.</i></p>
                                     </div>
                                 </div>
@@ -538,20 +540,22 @@
                                                 {% endif %}
                                             </div>
                                         {% endfor %}
+                                    </div>
+                                    <div class="c9">
                                         <p> <!-- Upload Photos -->
-                                            <a class="add-another" id="zone_image_add"
+                                            <a class="add-another" id="zone_image_add" title="Add a picture, a figure or a table"
                                                onclick="window.open('{% url 'artefacts:image-create' section_id=corrosion_section.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');">
                                                 <span class="glyphicon glyphicon-plus"></span>
                                             </a>
                                         </p>
-
+                                        <p>Figures and tables are referred as Fig. 1, Table 1.</p>
                                     </div>
                                 </div>
                             </div>
                             <div class="line palebox">
                                 <h4 class="underline">Complementary information</h4>
-                                <textarea
-                                        name="corrosion_complementary_information">{{ corrosion_section.complementary_information }}</textarea>
+                                <textarea name="corrosion_complementary_information">{{ corrosion_section.complementary_information }}</textarea>
+                                <p><i>Any important information that does not fit to the previous fields.</i></p>
                             </div>
                         </div>
                     </div> <!--accordionAR -->
@@ -567,13 +571,10 @@
             <div class="row accordion-content3 collapse in" id="content5" aria-labelledby="title5">
                 <div class="line palebox">
                     <div class="row">
-                        <p><i>Based on the analyses carried out, the schematic representation of the stratigraphy of the
-                            multi-layered pustule form has been corrected.</i></p>
-                    </div>
-                    <div class="row">
                         <div class="c9">
                             <textarea name="synthesis_text">{{ synthesis_section.content }}</textarea>
                         </div>
+                        <p><i>The schematic representation of corrosion layers integrating additional information based on the analyses carried out.</i></p>
                     </div>
                 </div>
                 <div class="line lightbox">
@@ -602,11 +603,12 @@
                             </div>
                             <div class="c9">
                                 <p> <!-- Upload Photos -->
-                                    <a class="add-another" id="zone_image_add"
+                                    <a class="add-another" id="zone_image_add" title="Add a picture, a figure or a table"
                                        onclick="window.open('{% url 'artefacts:image-create' section_id=synthesis_section.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');">
                                         <span class="glyphicon glyphicon-plus"></span>
                                     </a>
                                 </p>
+                                <p>Figures and tables are referred as Fig. 1, Table 1.</p>
                             </div>
                         </div>
                     </div>

@@ -54,11 +54,11 @@ class ArtefactsUpdateForm(forms.ModelForm):
     technology = forms.ModelChoiceField(Technology.objects, widget=SelectWithPop, help_text='The manufacturing techniques used to produce the artefact', required=False)
     sample_location = forms.ModelChoiceField(Contact.objects, widget=SelectWithPop, help_text='The actual location of the artefact sample', required=False)
     responsible_institution = forms.ModelChoiceField(Contact.objects, widget=SelectWithPop, help_text='The responsible institution for the artefact sample', required=False)
-    microstructure = forms.ModelChoiceField(Microstructure.objects, widget=SelectWithPop, help_text='A description of the metal: its composition, texture (porosity), hardness, microstructure revealed by etching and specific features (figures and tables are referred as Fig. 1, Table 1)', required=False)
+    microstructure = forms.ModelChoiceField(Microstructure.objects, widget=SelectWithPop, help_text='Microstructure of the metal', required=False)
     metal1 = forms.ModelChoiceField(Metal.objects, widget=SelectWithPop, help_text='The primary metal element of the artefact', required=False)
     metalx = forms.ModelMultipleChoiceField(Metal.objects, widget=MultipleSelectWithPop, help_text='The other metal elements of the artefact.', required=False)
     corrosion_form = forms.ModelChoiceField(CorrosionForm.objects, widget=SelectWithPop, required=False)
-    corrosion_type = forms.ModelChoiceField(CorrosionType.objects, widget=SelectWithPop, help_text='A description of the corrosion layers: their composition, texture (porosity), microstructure if any and specific features (figures and tables are referred as Fig. 1, Table 1). The corrosion form(s) and corrosion type should be deduced', required=False)
+    corrosion_type = forms.ModelChoiceField(CorrosionType.objects, widget=SelectWithPop, help_text='', required=False)
 
 
     class Meta:
