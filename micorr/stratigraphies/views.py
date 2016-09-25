@@ -152,10 +152,11 @@ def save(request):
 
 # retourne les artefacts similaires
 # @ params stratigraphie au format urlencode
-def match (request, data):
+@csrf_exempt
+def match (request):
     ms = MiCorrService()
     #transformation de urlencode au format json
-    data = json.loads(data)
+    data = json.loads(request.body)
     response = ms.match(data)
     return HttpResponse(json.dumps(response), content_type='application/json')
 

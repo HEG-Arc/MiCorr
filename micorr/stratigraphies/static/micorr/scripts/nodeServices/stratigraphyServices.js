@@ -9,7 +9,7 @@ var Characteristic = require('../business/characteristic').Characteristic;
 var SubCharacteristic = require('../business/subCharacteristic').SubCharacteristic;
 var GraphGenerationUtil = require('../utils/graphGenerationUtil').GraphGenerationUtil;
 
-var url = "http://localhost/micorr";
+var url = "https://micorr.org/micorr";
 
 module.exports = {
 
@@ -25,6 +25,7 @@ module.exports = {
         request(url + "/json/getstratigraphydetails/" + name, function (error, response, body) {
             //On parse le JSON pour récupérer le contenu
             var jsonData = JSON.parse(body);
+            console.log(jsonData);
             //Boucle sur les strates
             for (var i = 0; i < jsonData.length; i++) {
                 var strata = new Strata();

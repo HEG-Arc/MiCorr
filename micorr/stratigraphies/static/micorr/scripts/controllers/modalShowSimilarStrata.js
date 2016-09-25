@@ -23,7 +23,7 @@ angular.module('micorrApp')
                          * Il est inutile de renseigner les nom d'artefact et de stratigraphie car on compare uniquement les couches de corrosion entre elles
                          * Une fois la requête effectuée, on ressort le résultat
                          */
-                        MiCorrService.matchStratigraphy(encodeURIComponent(JSON.stringify(StratigraphyData.getStratigraphy().toJson()))).success(function (data) {
+                        MiCorrService.matchStratigraphy(JSON.stringify(StratigraphyData.getStratigraphy().toJson())).success(function (data) {
                             $scope.results = data;
                         }).success(function () {
                             $scope.results.forEach(function (listItem, index) {

@@ -88,7 +88,7 @@ angular.module('micorrApp').factory('MiCorrService', function ($http, $q) {
         },
 
         matchStratigraphy: function (data) {
-            return $http.get('json/match/' + data).error(function () {
+            return $http.post('json/match', data, {headers: {'Content-Type': 'application/json'} }).error(function () {
                 console.log('Problème de connexion avec le serveur pour comparer la stratigraphie');
                 alert('Erreur de lors du match avec la stratigraphie');
             });
