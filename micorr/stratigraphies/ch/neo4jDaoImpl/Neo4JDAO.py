@@ -4,7 +4,10 @@ import datetime
 from py2neo import Node, Relationship
 import uuid
 from artefacts.models import Artefact
+import logging
 
+# Get an instance of a logger
+logger = logging.getLogger(__name__)
 
 class Neo4jDAO:
     # Initialisation de la connexion avec le serveur
@@ -460,7 +463,7 @@ class Neo4jDAO:
 
         nbChar = len(listChar) + len(listCharInt)
 
-        qry += "with a.uid as auid, a.artefact_id as artefact_id, count(st) as stratum, count(st)-" + str(
+        qry += "with a.uid as auid, a.artefact_id as artefact_id, s.uid as stratigraphy_uid, count(st) as stratum, count(st)-" + str(
             nbStrata) + " as DiffNombreStratum, "
 
         qry += "( "
@@ -481,22 +484,23 @@ class Neo4jDAO:
             cpt += 1
         qry += ") as TotalMatching "
 
-        qry += "MATCH (a:Artefact)-->(s:Stratigraphy)-->(st:Strata)-[r:IS_CONSTITUTED_BY]-(o) WHERE a.uid=auid and s.public = true "
-        qry += "with auid, artefact_id, stratum, DiffNombreStratum, TotalComparisonIndicator1, TotalMatching, count(r) as countrelations "
-        qry += "MATCH(a:Artefact)-->(s:Stratigraphy)-->(st:Strata)-[:HAS_UPPER_INTERFACE]->(i:Interface)-[r1:IS_CONSTITUTED_BY]->(o1) WHERE a.uid=auid and s.public = true "
-        qry += "with auid, artefact_id, stratum, DiffNombreStratum, TotalComparisonIndicator1, TotalMatching, count(r1) + countrelations as TotalRelations "
-        qry += "RETURN auid, artefact_id, stratum, DiffNombreStratum, TotalComparisonIndicator1, TotalMatching, TotalRelations, 100*TotalMatching/TotalRelations as Matching100 "
+        qry += "MATCH (a:Artefact)-->(s:Stratigraphy)-->(st:Strata)-[r:IS_CONSTITUTED_BY]-(o) WHERE a.uid=auid "
+        qry += "with auid, artefact_id, stratigraphy_uid, stratum, DiffNombreStratum, TotalComparisonIndicator1, TotalMatching, count(r) as countrelations "
+        qry += "MATCH(a:Artefact)-->(s:Stratigraphy)-->(st:Strata)-[:HAS_UPPER_INTERFACE]->(i:Interface)-[r1:IS_CONSTITUTED_BY]->(o1) WHERE a.uid=auid AND s.public=true "
+        qry += "with auid, artefact_id, stratigraphy_uid, stratum, DiffNombreStratum, TotalComparisonIndicator1, TotalMatching, count(r1) + countrelations as TotalRelations "
+        qry += "RETURN auid, artefact_id, stratigraphy_uid, stratum, DiffNombreStratum, TotalComparisonIndicator1, TotalMatching, TotalRelations, 100*TotalMatching/TotalRelations as Matching100 "
         qry += "ORDER BY Matching100 DESC, TotalComparisonIndicator1 DESC "
-
+        logger.debug("MATCHING QUERY: %s" % qry)
         old_list = []
 
         res = self.graph.cypher.execute(qry)
 
         for i in res:
-            line = {'artefact': '', 'artefact_id': '', 'stratum': '', 'diffnbstratum': '', 'tci': '',
+            line = {'artefact': '', 'artefact_id': '', 'stratigraphy_uid': '', 'stratum': '', 'diffnbstratum': '', 'tci': '',
                     'totalmatching': '', 'totalrelation': '', 'matching100': ''}
             line['artefact'] = i['auid']
             line['artefact_id'] = i['artefact_id']
+            line['stratigraphy_uid'] = i['stratigraphy_uid']
             line['stratum'] = i['stratum']
             line['diffnbstratum'] = i['DiffNombreStratum']
             line['tci'] = i['TotalComparisonIndicator1']
