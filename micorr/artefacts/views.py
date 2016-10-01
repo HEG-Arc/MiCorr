@@ -9,8 +9,6 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import View
 from haystack.forms import SearchForm
 from django.http import HttpResponse, QueryDict
-from stratigraphies.ch.neo4jDaoImpl.Neo4JDAO import Neo4jDAO
-
 from stratigraphies.neo4jdaoimpl.neo4jdao import Neo4jDAO
 #import rdflib
 #from SPARQLWrapper import SPARQLWrapper, JSON
