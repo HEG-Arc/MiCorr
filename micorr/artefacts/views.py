@@ -1,24 +1,19 @@
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
-from django.forms import inlineformset_factory
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect, render_to_response
 from django.template import RequestContext
 from django.utils.html import escape
 from django.views import generic
-from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import View
 from haystack.forms import SearchForm
-from django.http import HttpResponse, QueryDict
-from stratigraphies.neo4jdaoimpl.neo4jdao import Neo4jDAO
-#import rdflib
-#from SPARQLWrapper import SPARQLWrapper, JSON
+
 from contacts.forms import ContactCreateForm
-from .models import Artefact, Document, Origin, ChronologyPeriod, Alloy, Technology, Environment, Microstructure, \
-    Metal, CorrosionForm, CorrosionType, Section, SectionCategory, Image, Stratigraphy
+from stratigraphies.neo4jdao import Neo4jDAO
 from .forms import ArtefactsUpdateForm, ArtefactsCreateForm, DocumentUpdateForm, DocumentCreateForm, ArtefactFilter,\
     OriginCreateForm, ChronologyCreateForm, AlloyCreateForm, TechnologyCreateForm, EnvironmentCreateForm, \
     MicrostructureCreateForm, MetalCreateForm, CorrosionFormCreateForm, CorrosionTypeCreateForm, \
     RecoveringDateCreateForm, ImageCreateForm, TypeCreateForm
+from .models import Artefact, Document, Section, SectionCategory, Image, Stratigraphy
 
 """
 def displayOntology(request):

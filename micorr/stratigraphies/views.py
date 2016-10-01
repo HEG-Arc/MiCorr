@@ -1,14 +1,12 @@
-from django.core.mail import send_mail
-from django.shortcuts import render, redirect
-from django.http import HttpResponse
 import simplejson as json
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.core.mail import send_mail
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 
-from stratigraphies.service import micorrservice
+from stratigraphies import micorrservice
 from .forms import StratigraphyDescriptionUpdateForm
 
 

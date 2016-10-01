@@ -1,7 +1,7 @@
 from django.conf.urls import url
 from . import views
 
-urlpatterns = patterns['',
+urlpatterns = [
     url(r'^$', 'stratigraphies.views.home', name='list'),
     url(r'^test$', 'stratigraphies.views.test'),
     url(r'^json/isauthenticated', 'stratigraphies.views.isauthenticated'),

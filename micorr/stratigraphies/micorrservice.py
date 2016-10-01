@@ -1,6 +1,5 @@
-from stratigraphies.neo4jdaoimpl.neo4jdao import Neo4jDAO
+from stratigraphies.neo4jdao import Neo4jDAO
 
-import os
 
 class MiCorrService:
     db = None
