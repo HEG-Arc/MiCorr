@@ -98,6 +98,7 @@ class TypeCreateForm(forms.ModelForm):
 
     class Meta:
         model = Type
+        exclude = []
 
 
 class OriginCreateForm(forms.ModelForm):
@@ -137,6 +138,7 @@ class EnvironmentCreateForm(forms.ModelForm):
 
     class Meta:
         model = Environment
+        exclude = []
 
 
 class AlloyCreateForm(forms.ModelForm):
