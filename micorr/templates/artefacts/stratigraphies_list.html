@@ -11,7 +11,7 @@
             <table class="table table-bordered table-striped">
                 <tr><th></th><th>Date</th><th>Description</th></tr>
             {% for stratigraphy in stratigraphies %}
-                <tr><td><a href="/artefacts/{{ artefact_id }}/add/stratigraphy/{{ stratigraphy.uid }}" ><img src="/micorr/node/getStratigraphySvg?name={{ stratigraphy.uid }}&width=100" class="img-responsive"></a></td><td>{{ stratigraphy.date }}</td><td>{{ stratigraphy.description }}</td></tr>
+                <tr><td><a href="/artefacts/{{ artefact_id }}/add/stratigraphy/{{ stratigraphy.uid }}" ><img src="{{ node_base_url }}getStratigraphySvg?name={{ stratigraphy.uid }}&width=100" class="img-responsive"></a></td><td>{{ stratigraphy.date }}</td><td>{{ stratigraphy.description }}</td></tr>
             {% empty %}
                 <tr><td colspan="3">You haven't created any stratigraphy</td></tr>
             {% endfor %}

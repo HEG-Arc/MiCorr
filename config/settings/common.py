@@ -278,3 +278,5 @@ HAYSTACK_CONNECTIONS = {
         'ENGINE': 'haystack.backends.simple_backend.SimpleEngine',
     },
 }
+
+NODE_BASE_URL = '/micorr/node/'

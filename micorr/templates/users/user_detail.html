@@ -58,7 +58,7 @@
                                                     {{ stratigraphy.timestamp }}{% else %}
                                                     {{ stratigraphy.date|date:"Y/m/d" }}{% endif %}</td>
                                                 <td>
-                                                    <img src="/micorr/node/getStratigraphySvg?name={{ stratigraphy.uid }}&width=100">
+                                                    <img src="{{ node_base_url }}getStratigraphySvg?name={{ stratigraphy.uid }}&width=100">
                                                 </td>
                                                 <td>
                                                     <span class="editable"

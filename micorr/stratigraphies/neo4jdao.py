@@ -433,7 +433,7 @@ class Neo4jDAO:
         # pour savoir ce que fait exactement la requete cypher, il faut se referrer au document de
         # Vincent Rochat sur la creation du modele numerique de MiCorr
 
-
+        node_base_url = settings.NODE_BASE_URL
 
         nbStrata = len(data['stratas'])
 
@@ -498,8 +498,9 @@ class Neo4jDAO:
         res = self.graph.cypher.execute(qry)
 
         for i in res:
-            line = {'artefact': '', 'artefact_id': '', 'stratigraphy_uid': '', 'stratum': '', 'diffnbstratum': '', 'tci': '',
+            line = {'node_base_url': '', 'artefact': '', 'artefact_id': '', 'stratigraphy_uid': '', 'stratum': '', 'diffnbstratum': '', 'tci': '',
                     'totalmatching': '', 'totalrelation': '', 'matching100': ''}
+            line['node_base_url'] = node_base_url
             line['artefact'] = i['auid']
             line['artefact_id'] = i['artefact_id']
             line['stratigraphy_uid'] = i['stratigraphy_uid']

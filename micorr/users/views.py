@@ -4,6 +4,7 @@ from __future__ import absolute_import, unicode_literals
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.urlresolvers import reverse
 from django.views.generic import DetailView, ListView, RedirectView, UpdateView
+from django.conf import settings
 
 from stratigraphies.neo4jdao import Neo4jDAO
 from .models import User
@@ -23,6 +24,7 @@ class UserDetailView(LoginRequiredMixin, DetailView):
         artefacts = self.request.user.artefact_set.all().order_by('created')
         context['stratigraphies'] = stratigraphies
         context['artefacts'] = artefacts
+        context['node_base_url'] = settings.NODE_BASE_URL
         return context
 
 

@@ -155,7 +155,7 @@ def save(request):
 # @ params stratigraphie au format urlencode
 @csrf_exempt
 def match (request):
-    ms = MiCorrService()
+    ms = micorrservice.MiCorrService()
     data = json.loads(request.body)
     response = ms.match(data)
     return HttpResponse(json.dumps(response), content_type='application/json')
