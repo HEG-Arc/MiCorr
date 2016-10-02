@@ -1,18 +1,15 @@
 version: '2'
 
-volumes:
-  postgres_data_dev: {}
-  postgres_backup_dev: {}
-  neo4j_data_dev: {}
-
 services:
   postgres:
     build: ./compose/postgres
     volumes:
-      - postgres_data_dev:/var/lib/postgresql/data
-      - postgres_backup_dev:/backups
+      - ./data/psql:/var/lib/postgresql/data
+      - ./data/psql-backup:/backups
     environment:
       - POSTGRES_USER=micorr
+    ports:
+      - "5432:5432"
 
   neo4j:
     build: ./compose/neo4j
@@ -41,7 +38,7 @@ services:
     ports:
       - "8000:8000"
     links:
-      - postgres
+      - postgres:postgres
       - neo4j:neo4j
 
   pycharm:
@@ -56,5 +53,5 @@ services:
     volumes:
       - .:/app
     links:
-      - postgres
+      - postgres:postgres
       - neo4j:neo4j

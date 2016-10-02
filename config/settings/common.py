@@ -44,7 +44,7 @@ THIRD_PARTY_APPS = (
     'tinymce',
     'sorl.thumbnail',
     # 'newsletter',
-    'envelope',
+    #'envelope',
     'cities_light',
     'django_filters',
     'haystack',
@@ -135,7 +135,7 @@ MANAGERS = ADMINS
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#databases
 DATABASES = {
     # Raises ImproperlyConfigured exception if DATABASE_URL not in os.environ
-    'default': env.db('DATABASE_URL', default='postgres:///micorr'),
+    'default': env.db('DATABASE_URL', default='postgres://micorr@postgres:5432/micorr'),
 }
 DATABASES['default']['ATOMIC_REQUESTS'] = True
 
