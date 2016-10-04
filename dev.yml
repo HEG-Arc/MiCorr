@@ -22,6 +22,14 @@ services:
       - "7474:7474"
       - "7687:7687"
 
+  node:
+    build: ./compose/node
+    volumes:
+      - .:/app
+    ports:
+      - "3030:3000"
+      - "35729:35729"
+
   django:
     build:
       context: .
@@ -40,6 +48,7 @@ services:
     links:
       - postgres:postgres
       - neo4j:neo4j
+      - node:node
 
   pycharm:
     build:
