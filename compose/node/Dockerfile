@@ -1,21 +1,24 @@
 FROM node:6.7
-EXPOSE 8888
 
-RUN apt-get update -qq && apt-get install -y build-essential
-RUN apt-get install -y ruby
-RUN gem install sass
+EXPOSE 8080
 
-#RUN mkdir /src
+# TODO check if sass is needed?
+# RUN apt-get update -qq && apt-get install -y build-essential ruby
+# RUN gem install sass
 
-RUN npm install grunt-cli -g
+RUN mkdir /app
+RUN npm install -g grunt-cli forever
 
 WORKDIR /app
-#COPY package.json /src/package.json
-RUN npm install
 
+# For prod install and copy necessary files into image?
+#COPY package.json /app/package.json
+#RUN npm install
 #COPY Gruntfile.js /src/Gruntfile.js
+#missing js files
 
-EXPOSE 3000
-EXPOSE 35729
-
-CMD ["npm", "start"]
+# install dependencies
+# TODO compile ES2015 -> ES5 grunt babel, does not work!!!
+# TODO in dev start a sepearate container with a wath task?
+# start serveur
+CMD npm install && forever micorr/stratigraphies/static/micorr/scripts/nodeServices/server.js
