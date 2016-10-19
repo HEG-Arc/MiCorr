@@ -70,3 +70,9 @@ micorr/media/
 
 # Hitch directory
 tests/.hitch
+
+#docker-compose data
+data/neo4j/
+data/psql/
+data/psql-backup/
+data/node/
