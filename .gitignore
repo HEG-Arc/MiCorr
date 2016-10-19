@@ -68,6 +68,9 @@ node_modules/
 # User-uploaded media
 micorr/media/
 
+# django temp files
+staticfiles/
+
 # Hitch directory
 tests/.hitch
 
