@@ -9,6 +9,7 @@ dj-database-url
 django-environ==0.4.0
 whitenoise==3.2.2
 
+
 # Forms
 django-braces
 django-crispy-forms
@@ -49,7 +50,7 @@ django-compressor
 django-modelcluster
 django-taggit
 django-libsass
-wagtail
+wagtail==1.7
 django-treebeard
 Willow
 
