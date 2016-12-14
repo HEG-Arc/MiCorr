@@ -205,7 +205,7 @@ class CorrosionType(TimeStampedModel):
 
 class Artefact(TimeStampedModel):
     """
-    An artefact has many foreign keys, corresponding to its characteristics
+    An artefact has many foreign keys, corresponding to its characteristics55
     """
     # Own fields
     name = models.CharField(max_length=100, verbose_name='name', blank=True, default='', help_text='Name of the artefact')
