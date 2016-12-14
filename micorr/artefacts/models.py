@@ -250,7 +250,7 @@ class Artefact(TimeStampedModel):
     def get_authors(self):
         authors_list = []
         for author in self.author.all():
-            authors_list.append("{0}. {1} ({2}, {3})".format(author.name[0], author.surname,
+            authors_list.append("{0}. {1} ({2}, {3})".format(author.name, author.surname,
                                                                   author.organization_name,
                                                                   author.city))
         return " & ".join(authors_list)
