@@ -53,5 +53,6 @@ urlpatterns = [
        name='document-create'),
     url(r'^stratigraphy/$', artefacts_views.searchStratigraphy, name='searchStratigraphy'),
 
-    #url(r'^test-ontology/$', displayOntology),
+    url(r'^contact_author$', artefacts_views.contactAuthor, name='contact_author'),
+    # url(r'^test-ontology/$', displayOntology),
 ]

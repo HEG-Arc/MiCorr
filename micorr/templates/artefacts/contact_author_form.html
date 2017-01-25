@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block menu %}
+    <h1>Contact the author</h1>
+{% endblock %}
+
+{% block content %}
+    <div class="line lightbox">
+        <div class="c9">
+            <div class="row">
+                <form action="{% url 'artefacts:contact_author' %}" method="post">
+                    {% csrf_token %}
+                    {{ form }}
+                    <input type="submit" value="Submit" />
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block footer %}
+{% endblock footer %}
+

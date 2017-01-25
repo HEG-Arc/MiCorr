@@ -6,6 +6,7 @@ from django.conf import settings
 from django_extensions.db.models import TimeStampedModel
 from tinymce import models as tinymce_models
 from cities_light.models import City
+from django.core.mail import  send_mail
 
 
 class Metal(TimeStampedModel):
@@ -415,3 +416,32 @@ class Document(TimeStampedModel):
 
     def __unicode__(self):
         return self.name
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

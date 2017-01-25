@@ -1,7 +1,9 @@
 from django.contrib.auth.decorators import login_required
+from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse
-from django.shortcuts import get_object_or_404, render, redirect, render_to_response
+from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.template import RequestContext
 from django.utils.html import escape
 from django.views import generic
@@ -13,8 +15,9 @@ from stratigraphies.neo4jdao import Neo4jDAO
 from .forms import ArtefactsUpdateForm, ArtefactsCreateForm, DocumentUpdateForm, DocumentCreateForm, ArtefactFilter,\
     OriginCreateForm, ChronologyCreateForm, AlloyCreateForm, TechnologyCreateForm, EnvironmentCreateForm, \
     MicrostructureCreateForm, MetalCreateForm, CorrosionFormCreateForm, CorrosionTypeCreateForm, \
-    RecoveringDateCreateForm, ImageCreateForm, TypeCreateForm
+    RecoveringDateCreateForm, ImageCreateForm, TypeCreateForm, ContactAuthorForm
 from .models import Artefact, Document, Section, SectionCategory, Image, Stratigraphy
+
 
 """
 def displayOntology(request):
@@ -131,7 +134,6 @@ class ArtefactsUpdateView(generic.UpdateView):
     When the editing is finished, it redirects the user to the artefact detail page
     """
     model = Artefact
-    template_name_suffix = '_update_form'
     form_class = ArtefactsUpdateForm
 
     def get_object(self, queryset=None):
@@ -155,7 +157,7 @@ class ArtefactsUpdateView(generic.UpdateView):
         conclusion_text = Section.objects.get_or_create(order=10, artefact=artefact, section_category=SectionCategory.objects.get(name='CO'), title='Conclusion')[0].content
         references_text = Section.objects.get_or_create(order=11, artefact=artefact, section_category=SectionCategory.objects.get(name='RE'), title='References')[0].content
         stratigraphies = artefact.stratigraphy_set.all
-        return self.render_to_response(self.get_context_data(form=form, object_section=object_section, description_section=description_section,
+        return render(request, 'artefacts/artefact_update_form.html', self.get_context_data(form=form, object_section=object_section, description_section=description_section,
                                                              zone_section=zone_section, macroscopic_section=macroscopic_section,
                                                              sample_section=sample_section, analyses_performed=analyses_performed,
                                                              metal_section=metal_section, corrosion_section=corrosion_section,
@@ -334,12 +336,38 @@ def handlePopAdd(request, addForm, field):
     else:
         form = addForm()
     pageContext = {'form': form, 'field': field}
-    return render_to_response("artefacts/popadd.html", pageContext, context_instance=RequestContext(request))
+    return render(request, "artefacts/popadd.html", pageContext)
+
+
+def contactAuthor(request):
+    if request.method == 'POST':
+        form = ContactAuthorForm(request.POST)
+        if form.is_valid():
+            subject = form.cleaned_data['subject']
+            message = form.cleaned_data['message']
+            sender = form.cleaned_data['sender']
+            cc_myself = form.cleaned_data['cc_myself']
+            recipients = ['author@example.com']
+            """
+            Une fois fonctionnel, ajouter liste des auteurs comme destinataires
+            for author in self.get_authors():
+                authors_list.append(author)
+                    recipients.append(sender)
+            """
+            if cc_myself:
+                recipients.append(sender)
+
+            send_mail(subject, message, sender, recipients)
+        return HttpResponse('Email sent!')
+    else:
+        form = ContactAuthorForm()
+
+    pageContext = {'form': form}
+    return render(request, 'artefacts/contact_author_form.html', pageContext)
 
 
 class ImageCreateView(generic.CreateView):
     model = Image
-    template_name_suffix = '_create_form'
     form_class = ImageCreateForm
 
     def get(self, request, **kwargs):
@@ -347,7 +375,7 @@ class ImageCreateView(generic.CreateView):
         form_class = self.get_form_class()
         form = self.get_form(form_class)
         section_id = kwargs['section_id']
-        return self.render_to_response(self.get_context_data(form=form, section_id=section_id))
+        return render(request, "artefacts/artefact_create_form.html", self.get_context_data(form=form, section_id=section_id))
 
     def form_valid(self, form):
         form.instance.section = get_object_or_404(Section, pk=self.kwargs['section_id'])
@@ -359,7 +387,6 @@ class ImageCreateView(generic.CreateView):
 
 class ImageUpdateView(generic.UpdateView):
     model = Image
-    template_name_suffix = '_update_form'
     form_class = ImageCreateForm
 
     def get(self, request, **kwargs):
@@ -368,7 +395,7 @@ class ImageUpdateView(generic.UpdateView):
         form = self.get_form(form_class)
         section_id = kwargs['section_id']
         image_id = kwargs['pk']
-        return self.render_to_response(self.get_context_data(form=form, section_id=section_id, image_id=image_id))
+        return self.render(request, "artefacts/artefact_update_form.html", self.get_context_data(form=form, section_id=section_id, image_id=image_id))
 
     def get_success_url(self):
         return reverse('artefacts:image-refresh', kwargs={'section_id': self.kwargs['section_id']})
@@ -385,19 +412,19 @@ class ImageDeleteView(generic.DeleteView):
 
 def RefreshDivView(request, section_id):
     object_section = get_object_or_404(Section, pk=section_id)
-    return render_to_response('artefacts/image_section.html', {'object_section': object_section})
+    return render(request, 'artefacts/image_section.html', {'object_section': object_section})
 
 
 def StratigraphyListView(request, artefact_id):
     stratigraphies = Neo4jDAO().getStratigraphiesByUser(request.user.id)
-    return render_to_response('artefacts/stratigraphies_list.html', {'stratigraphies': stratigraphies, 'artefact_id': artefact_id})
+    return render(request, 'artefacts/stratigraphies_list.html', {'stratigraphies': stratigraphies, 'artefact_id': artefact_id})
 
 
 def StratigraphyAddView(request, artefact_id, stratigraphy_uid):
     stratigraphy = Stratigraphy.objects.get_or_create(uid=stratigraphy_uid, artefact=get_object_or_404(Artefact, id=artefact_id))[0]
     stratigraphy.image = settings.NODE_BASE_URL + 'exportStratigraphy?name='+ stratigraphy_uid +'&width=300&format=png'
     stratigraphy.save()
-    return render_to_response('artefacts/strat-refresh.html', {'artefact_id': artefact_id})
+    return render(request, 'artefacts/strat-refresh.html', {'artefact_id': artefact_id})
 
 
 class StratigraphyDeleteView(generic.DeleteView):
@@ -411,7 +438,7 @@ class StratigraphyDeleteView(generic.DeleteView):
 
 def RefreshStratDivView(request, artefact_id):
     artefact = get_object_or_404(Artefact, pk=artefact_id)
-    return render_to_response('artefacts/stratigraphy.html', {'artefact': artefact, 'node_base_url': settings.NODE_BASE_URL})
+    return render(request, 'artefacts/stratigraphy.html', {'artefact': artefact, 'node_base_url': settings.NODE_BASE_URL})
 
 
 class DocumentUpdateView(generic.UpdateView):
