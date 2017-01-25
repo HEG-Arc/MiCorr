@@ -339,6 +339,33 @@ def handlePopAdd(request, addForm, field):
     return render(request, "artefacts/popadd.html", pageContext)
 
 
+def contactAuthor(request, artefact_id):
+    if request.method == 'POST':
+        form = ContactAuthorForm(request.POST)
+        if form.is_valid():
+            subject = form.cleaned_data['subject']
+            message = form.cleaned_data['message']
+            sender = form.cleaned_data['sender']
+            cc_myself = form.cleaned_data['cc_myself']
+            recipients = ['author@example.com']
+            """
+            Une fois fonctionnel, ajouter liste des auteurs comme destinataires
+            for author in self.get_authors():
+                authors_list.append(author)
+                    recipients.append(sender)
+            """
+            if cc_myself:
+                recipients.append(sender)
+
+            send_mail(subject, message, sender, recipients)
+        return HttpResponse('Email sent!')
+    else:
+        form = ContactAuthorForm()
+
+    pageContext = {'form': form, 'artefact_id': artefact_id}
+    return render(request, 'artefacts/contact_author_form.html', pageContext)
+
+
 def contactAuthor(request):
     if request.method == 'POST':
         form = ContactAuthorForm(request.POST)
