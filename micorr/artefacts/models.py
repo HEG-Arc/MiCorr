@@ -256,6 +256,7 @@ class Artefact(TimeStampedModel):
                                                                   author.city))
         return " & ".join(authors_list)
 
+
     def artefact_verbose_description(self):
         artefact = []
         if self.inventory_number:

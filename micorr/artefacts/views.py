@@ -17,7 +17,9 @@ from .forms import ArtefactsUpdateForm, ArtefactsCreateForm, DocumentUpdateForm,
     MicrostructureCreateForm, MetalCreateForm, CorrosionFormCreateForm, CorrosionTypeCreateForm, \
     RecoveringDateCreateForm, ImageCreateForm, TypeCreateForm, ContactAuthorForm
 from .models import Artefact, Document, Section, SectionCategory, Image, Stratigraphy
+import logging
 
+logger = logging.getLogger(__name__)
 
 """
 def displayOntology(request):
@@ -341,55 +343,27 @@ def handlePopAdd(request, addForm, field):
 
 def contactAuthor(request, artefact_id):
     if request.method == 'POST':
+        artefact = get_object_or_404(Artefact, pk=artefact_id)
         form = ContactAuthorForm(request.POST)
         if form.is_valid():
-            subject = form.cleaned_data['subject']
+            subject = form.cleaned_data['subject']+" (about MiCorr artefact : "+artefact.name+")"
             message = form.cleaned_data['message']
             sender = form.cleaned_data['sender']
             cc_myself = form.cleaned_data['cc_myself']
-            recipients = ['author@example.com']
-            """
-            Une fois fonctionnel, ajouter liste des auteurs comme destinataires
-            for author in self.get_authors():
-                authors_list.append(author)
-                    recipients.append(sender)
-            """
+            recipients = []
+
+            for author in artefact.get_authors():
+                recipients.append(author) # mail?
             if cc_myself:
                 recipients.append(sender)
 
             send_mail(subject, message, sender, recipients)
+            print("envoi mail ok")
         return HttpResponse('Email sent!')
     else:
         form = ContactAuthorForm()
 
     pageContext = {'form': form, 'artefact_id': artefact_id}
-    return render(request, 'artefacts/contact_author_form.html', pageContext)
-
-
-def contactAuthor(request):
-    if request.method == 'POST':
-        form = ContactAuthorForm(request.POST)
-        if form.is_valid():
-            subject = form.cleaned_data['subject']
-            message = form.cleaned_data['message']
-            sender = form.cleaned_data['sender']
-            cc_myself = form.cleaned_data['cc_myself']
-            recipients = ['author@example.com']
-            """
-            Une fois fonctionnel, ajouter liste des auteurs comme destinataires
-            for author in self.get_authors():
-                authors_list.append(author)
-                    recipients.append(sender)
-            """
-            if cc_myself:
-                recipients.append(sender)
-
-            send_mail(subject, message, sender, recipients)
-        return HttpResponse('Email sent!')
-    else:
-        form = ContactAuthorForm()
-
-    pageContext = {'form': form}
     return render(request, 'artefacts/contact_author_form.html', pageContext)
 
 
