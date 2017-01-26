@@ -256,6 +256,11 @@ class Artefact(TimeStampedModel):
                                                                   author.city))
         return " & ".join(authors_list)
 
+    def get_authors_email(self):
+        email_list = []
+        for author in self.author.all():
+            email_list.append(author.email)
+        return email_list
 
     def artefact_verbose_description(self):
         artefact = []

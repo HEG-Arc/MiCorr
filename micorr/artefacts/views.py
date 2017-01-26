@@ -350,15 +350,13 @@ def contactAuthor(request, artefact_id):
             message = form.cleaned_data['message']
             sender = form.cleaned_data['sender']
             cc_myself = form.cleaned_data['cc_myself']
-            recipients = []
+            recipients = artefact.get_authors_email()
 
-            for author in artefact.get_authors():
-                recipients.append(author) # mail?
             if cc_myself:
                 recipients.append(sender)
 
             send_mail(subject, message, sender, recipients)
-            print("envoi mail ok")
+
         return HttpResponse('Email sent!')
     else:
         form = ContactAuthorForm()
