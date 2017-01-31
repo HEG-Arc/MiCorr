@@ -1,5 +1,7 @@
 # coding=utf-8
 import os
+import uuid
+
 from django.db import models
 from contacts.models import Contact
 from django.conf import settings
@@ -243,6 +245,7 @@ class Artefact(TimeStampedModel):
     corrosion_form = models.ForeignKey(CorrosionForm, blank=True, null=True)
     corrosion_type = models.ForeignKey(CorrosionType, blank=True, null=True, help_text='')
 
+
     class Meta:
         verbose_name = 'Artefact'
         verbose_name_plural = 'Artefacts'
@@ -422,6 +425,41 @@ class Document(TimeStampedModel):
 
     def __unicode__(self):
         return self.name
+
+
+class TokenManager(models.Manager):
+    def create_token(self, right, artefact):
+        token = self.create(right=right, artefact=artefact, uuid=str(uuid.uuid4()))
+        return token
+
+
+class Token(models.Model):
+    """
+    A token is used when sharing an artefact or a stratigraphy with read or write right
+    """
+    # Own fields
+    READ = 'R'
+    WRITE = 'W'
+    RIGHT_CHOICES = (
+        (READ, 'Read'),
+        (WRITE, 'Write'),
+    )
+    uuid = models.CharField(max_length=50)
+    right = models.CharField(max_length=50, choices=RIGHT_CHOICES, default=READ)
+
+    # Foreign Keys
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name="user's object", blank=True, null=True)
+    artefact = models.ForeignKey(Artefact, null=True, help_text='The shared artefact')
+
+    tokenManager = TokenManager()
+
+    class Meta:
+        verbose_name = 'Token'
+        verbose_name_plural = 'Tokens'
+
+    def __str__(self):
+        return "Token {} with {} rights, for artefact {} by user {}".format(
+            self.uuid, self.right, self.artefact.name, self.user.name)
 
 
 

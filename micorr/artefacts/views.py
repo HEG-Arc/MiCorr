@@ -1,10 +1,12 @@
 from django.contrib.auth.decorators import login_required
+from django.core.mail import EmailMultiAlternatives
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
 from django.template import RequestContext
+from django.template.loader import render_to_string
 from django.utils.html import escape
 from django.views import generic
 from haystack.forms import SearchForm
@@ -15,8 +17,8 @@ from stratigraphies.neo4jdao import Neo4jDAO
 from .forms import ArtefactsUpdateForm, ArtefactsCreateForm, DocumentUpdateForm, DocumentCreateForm, ArtefactFilter,\
     OriginCreateForm, ChronologyCreateForm, AlloyCreateForm, TechnologyCreateForm, EnvironmentCreateForm, \
     MicrostructureCreateForm, MetalCreateForm, CorrosionFormCreateForm, CorrosionTypeCreateForm, \
-    RecoveringDateCreateForm, ImageCreateForm, TypeCreateForm, ContactAuthorForm
-from .models import Artefact, Document, Section, SectionCategory, Image, Stratigraphy
+    RecoveringDateCreateForm, ImageCreateForm, TypeCreateForm, ContactAuthorForm, ShareArtefactForm
+from .models import Artefact, Document, Section, SectionCategory, Image, Stratigraphy, Token, TokenManager
 import logging
 
 logger = logging.getLogger(__name__)
@@ -363,6 +365,75 @@ def contactAuthor(request, artefact_id):
 
     pageContext = {'form': form, 'artefact_id': artefact_id}
     return render(request, 'artefacts/contact_author_form.html', pageContext)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def shareArtefact(request, artefact_id):
+    if request.method == 'POST':
+        artefact = get_object_or_404(Artefact, pk=artefact_id)
+        form = ShareArtefactForm(request.POST)
+        if form.is_valid():
+            subject = "Shared MiCorr artefact : "+artefact.name
+            recipients = [form.cleaned_data['recipient']]
+            right = form.cleaned_data['right']
+            cc_myself = form.cleaned_data['cc_myself']
+            sender = request.user.email
+
+            # create a link with a new generated token
+            # samples : 'localhost:8000/artefacts/110?token=8a21008e-383b-4c13-bd9e-9c8387bf29b0'
+            token = Token.tokenManager.create_token(right, artefact)
+            link = request.get_host() + '/artefacts/' + artefact_id + '?token='+token.uuid
+
+            # create text and html content to have a clickable link
+            text_message = "A MiCorr user shared an artefact with you. Please follow this link : "+link
+            html_message = '<p>A MiCorr user shared an artefact with you. ' \
+                           'Please follow this link : <a href="'+link+'">'+link+'.</p>'
+
+            if cc_myself:
+                recipients.append(sender)
+
+            msg = EmailMultiAlternatives(subject, text_message, sender, recipients)
+            msg.attach_alternative(html_message, "text/html")
+            msg.send()
+
+        return HttpResponse('Email sent!')
+    else:
+        form = ShareArtefactForm()
+
+    pageContext = {'form': form, 'artefact_id': artefact_id}
+    return render(request, 'artefacts/share_artefact_form.html', pageContext)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 class ImageCreateView(generic.CreateView):

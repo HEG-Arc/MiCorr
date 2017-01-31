@@ -5,7 +5,7 @@ from django.template.loader import render_to_string
 from contacts.models import Contact
 
 from .models import Artefact, Document, Metal, CorrosionForm, CorrosionType, Environment, Origin, ChronologyPeriod, \
-    Alloy, Technology, Microstructure, RecoveringDate, Image, Type, Stratigraphy
+    Alloy, Technology, Microstructure, RecoveringDate, Image, Type, Stratigraphy, Token
 from cities_light.models import Country
 from tinymce.widgets import TinyMCE
 import django_filters
@@ -253,4 +253,10 @@ class ContactAuthorForm(forms.Form):
     subject = forms.CharField(label='Subject')
     message = forms.CharField(label='Your message', widget=forms.Textarea)
     sender = forms.EmailField(label='Your email')
+    cc_myself = forms.BooleanField(label='Send a copy to myself', required=False)
+
+
+class ShareArtefactForm(forms.Form):
+    recipient = forms.EmailField(label='Share with (email)')
+    right = forms.ChoiceField(choices = Token.RIGHT_CHOICES)
     cc_myself = forms.BooleanField(label='Send a copy to myself', required=False)

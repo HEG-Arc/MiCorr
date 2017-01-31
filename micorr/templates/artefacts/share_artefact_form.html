@@ -1,16 +1,18 @@
 {% extends "base.html" %}
 
 {% block menu %}
-    <h1>Contact the author</h1>
+    <h1>Share the artefact</h1>
 {% endblock %}
 
 {% block content %}
     <div class="line lightbox">
         <div class="c9">
             <div class="row">
-                <form action="{% url 'artefacts:contact_author' artefact_id %}" method="post">
+                <form action="{% url 'artefacts:share_artefact' artefact_id %}" method="post">
                     {% csrf_token %}
-                    {{ form }}
+                    {{ form.recipient.label }} : {{ form.recipient }}<br><br>
+                    {{ form.right.label }} : {{ form.right }}<br><br>
+                    {{ form.cc_myself.label }} {{ form.cc_myself }}
                     <br><br>
                     <input type="submit" value="Send" />
                 </form>

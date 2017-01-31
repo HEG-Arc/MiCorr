@@ -54,5 +54,6 @@ urlpatterns = [
     url(r'^stratigraphy/$', artefacts_views.searchStratigraphy, name='searchStratigraphy'),
 
     url(r'^(?P<artefact_id>\d+)/contact_author/', artefacts_views.contactAuthor, name='contact_author'),
+    url(r'^(?P<artefact_id>\d+)/share/', artefacts_views.shareArtefact, name='share_artefact'),
     # url(r'^test-ontology/$', displayOntology),
 ]
