@@ -258,5 +258,6 @@ class ContactAuthorForm(forms.Form):
 
 class ShareArtefactForm(forms.Form):
     recipient = forms.EmailField(label='Share with (email)')
-    right = forms.ChoiceField(choices = Token.RIGHT_CHOICES)
+    right = forms.ChoiceField(choices=Token.RIGHT_CHOICES)
+    comment = forms.CharField(label='Personal comment', required=False)
     cc_myself = forms.BooleanField(label='Send a copy to myself', required=False)

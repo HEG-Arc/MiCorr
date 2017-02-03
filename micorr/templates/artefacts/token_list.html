@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load terms %}
+
+    {% block title %}
+        <title>MiCorr | List of existing links</title>
+    {% endblock title %}
+
+      {% block content %}
+
+      <h1>Tokens list for artefact : {{ artefact.name }}</h1>
+
+        <div class="row">
+            <div class="col-sm-12">
+              <a class="btn btn-success" href="{% url 'artefacts:share_artefact' artefact.id %}">
+                  <i class="fa fa-share-alt"></i> Add a new one</a>
+            </div>
+        </div>
+        <br>
+
+      <div class="row">
+          <div class="table-responsive">
+              <table class="table table-bordered table-striped table-hover">
+                  <tr>
+                      <th>Comment</th>
+                      <th>Right</th>
+                      <th>Token</th>
+                      <th>Already used</th>
+                      <th>Action</th>
+                  </tr>
+
+                  {% for token in artefact.token_set.all %}
+                      <tr>
+                          <td>{{ token.comment }}</td>
+                          <td>{{ token.get_right_display }}</td>
+                          <td>{{ token.uuid }}</td>
+                          <td>
+                              {% if token.alreadyUsed %}
+                                  <i class="fa fa-check"></i>
+                              {% else %}
+                                  <i class="fa fa-close"></i>
+                              {% endif %}
+                          </td>
+                          <td>
+                              <a href="{% url 'artefacts:delete_token' token.artefact.id token.id %}">
+                                  <i class="fa fa-trash"></i>
+                              </a>
+                          </td>
+
+                      </tr>
+                  {% empty %}
+                      <tr><td colspan="5">No results found</td></tr>
+                  {% endfor %}
+              </table>
+          </div>
+      </div>
+
+
+
+
+      {% endblock content %}

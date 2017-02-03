@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.core.mail import EmailMultiAlternatives
 from django.core.mail import send_mail
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, reverse_lazy
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
@@ -18,7 +18,7 @@ from .forms import ArtefactsUpdateForm, ArtefactsCreateForm, DocumentUpdateForm,
     OriginCreateForm, ChronologyCreateForm, AlloyCreateForm, TechnologyCreateForm, EnvironmentCreateForm, \
     MicrostructureCreateForm, MetalCreateForm, CorrosionFormCreateForm, CorrosionTypeCreateForm, \
     RecoveringDateCreateForm, ImageCreateForm, TypeCreateForm, ContactAuthorForm, ShareArtefactForm
-from .models import Artefact, Document, Section, SectionCategory, Image, Stratigraphy, Token, TokenManager
+from .models import Artefact, Document, Section, SectionCategory, Image, Stratigraphy, Token
 import logging
 
 logger = logging.getLogger(__name__)
@@ -367,19 +367,6 @@ def contactAuthor(request, artefact_id):
     return render(request, 'artefacts/contact_author_form.html', pageContext)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 def shareArtefact(request, artefact_id):
     if request.method == 'POST':
         artefact = get_object_or_404(Artefact, pk=artefact_id)
@@ -388,16 +375,18 @@ def shareArtefact(request, artefact_id):
             subject = "Shared MiCorr artefact : "+artefact.name
             recipients = [form.cleaned_data['recipient']]
             right = form.cleaned_data['right']
+            comment = form.cleaned_data['comment']
             cc_myself = form.cleaned_data['cc_myself']
             sender = request.user.email
 
-            # create a link with a new generated token
-            # samples : 'localhost:8000/artefacts/110?token=8a21008e-383b-4c13-bd9e-9c8387bf29b0'
-            token = Token.tokenManager.create_token(right, artefact)
+            # create a link with a new generated token. example :
+            # 'localhost:8000/artefacts/110?token=8a21008e-383b-4c13-bd9e-9c8387bf29b0'
+            token = Token.tokenManager.create_token(right, artefact, request.user, comment)
             link = request.get_host() + '/artefacts/' + artefact_id + '?token='+token.uuid
 
             # create text and html content to have a clickable link
-            text_message = "A MiCorr user shared an artefact with you. Please follow this link : "+link
+            text_message = "A MiCorr user shared an artefact with you. Please follow this " \
+                           "link : "+link
             html_message = '<p>A MiCorr user shared an artefact with you. ' \
                            'Please follow this link : <a href="'+link+'">'+link+'.</p>'
 
@@ -408,7 +397,8 @@ def shareArtefact(request, artefact_id):
             msg.attach_alternative(html_message, "text/html")
             msg.send()
 
-        return HttpResponse('Email sent!')
+        pageContext = {'artefact': artefact}
+        return render(request, 'artefacts/token_list.html', pageContext)
     else:
         form = ShareArtefactForm()
 
@@ -416,24 +406,19 @@ def shareArtefact(request, artefact_id):
     return render(request, 'artefacts/share_artefact_form.html', pageContext)
 
 
+def listToken(request, artefact_id):
+    artefact = get_object_or_404(Artefact, pk=artefact_id)
+    pageContext = {'artefact': artefact}
+    return render(request, 'artefacts/token_list.html', pageContext)
 
 
+class TokenDeleteView(generic.DeleteView):
+    model = Token
+    template_name_suffix = '_confirm_delete'
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    def get_success_url(self):
+        artefact_id = get_object_or_404(Token, pk=self.kwargs['pk']).artefact.id
+        return reverse('artefacts:list_tokens', kwargs={'artefact_id': artefact_id})
 
 
 class ImageCreateView(generic.CreateView):

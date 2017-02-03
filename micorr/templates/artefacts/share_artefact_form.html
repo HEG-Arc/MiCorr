@@ -12,6 +12,7 @@
                     {% csrf_token %}
                     {{ form.recipient.label }} : {{ form.recipient }}<br><br>
                     {{ form.right.label }} : {{ form.right }}<br><br>
+                    {{ form.comment.label }} : {{ form.comment }}<br><br>
                     {{ form.cc_myself.label }} {{ form.cc_myself }}
                     <br><br>
                     <input type="submit" value="Send" />

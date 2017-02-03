@@ -428,14 +428,18 @@ class Document(TimeStampedModel):
 
 
 class TokenManager(models.Manager):
-    def create_token(self, right, artefact):
-        token = self.create(right=right, artefact=artefact, uuid=str(uuid.uuid4()))
+    def create_token(self, right, artefact, user, comment):
+        token = self.create(right=right,
+                            artefact=artefact,
+                            uuid=str(uuid.uuid4()),
+                            user=user,
+                            comment=comment)
         return token
 
 
-class Token(models.Model):
+class Token(TimeStampedModel):
     """
-    A token is used when sharing an artefact or a stratigraphy with read or write right
+    A token is used to give a read or write right when you share an artefact
     """
     # Own fields
     READ = 'R'
@@ -445,11 +449,13 @@ class Token(models.Model):
         (WRITE, 'Write'),
     )
     uuid = models.CharField(max_length=50)
-    right = models.CharField(max_length=50, choices=RIGHT_CHOICES, default=READ)
+    right = models.CharField(max_length=1, choices=RIGHT_CHOICES, default=READ)
+    comment = models.CharField(max_length=100, null=True)
+    alreadyUsed = models.BooleanField(default=False)
 
     # Foreign Keys
     user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name="user's object", blank=True, null=True)
-    artefact = models.ForeignKey(Artefact, null=True, help_text='The shared artefact')
+    artefact = models.ForeignKey(Artefact, on_delete=models.CASCADE, null=True, help_text='The shared artefact')
 
     tokenManager = TokenManager()
 
@@ -460,32 +466,3 @@ class Token(models.Model):
     def __str__(self):
         return "Token {} with {} rights, for artefact {} by user {}".format(
             self.uuid, self.right, self.artefact.name, self.user.name)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
