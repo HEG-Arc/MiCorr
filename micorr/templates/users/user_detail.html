@@ -95,6 +95,7 @@
                                             <th>Name</th>
                                             <th>Actions</th>
                                             <th>Share</th>
+                                            <th>Validated</th>
                                         </tr>
                                         {% for artefact in artefacts %}
                                             <tr>
@@ -118,6 +119,13 @@
                                                         <a href="{% url 'artefacts:list_tokens' artefact.id %}" target="_blank">
                                                         <span>{{ artefact.token_set.count }} links</span>
                                                         </a>
+                                                    {% endif %}
+                                                </td>
+                                                <td>
+                                                    {% if artefact.validated %}
+                                                        <span>Public </span>
+                                                    {% else %}
+                                                        <span>Private </span>
                                                     {% endif %}
                                                 </td>
                                             </tr>

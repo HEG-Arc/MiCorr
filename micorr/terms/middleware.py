@@ -8,6 +8,7 @@ from .html import replace_terms
 class TermsMiddleware(object):
     def process_response(self, request, response):
         url = request.path
+
         try:
             app_name = resolve(url).app_name
             app_ignored = app_name in TERMS_IGNORED_APPS
