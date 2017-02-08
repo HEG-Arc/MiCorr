@@ -1,7 +1,8 @@
 # coding=utf-8
 import re
 
-from micorr.artefacts.views import hasWriteRight, hasReadRight
+# from micorr.artefacts.views import hasWriteRight, hasReadRight
+# from micorr.artefacts.views import sendFirstUseOfTokenEmail
 
 
 class artefactAccessControlMiddleware:
@@ -19,7 +20,9 @@ class artefactAccessControlMiddleware:
         # check if exist a token in the url
         if 'token' in request.GET:
             token_uuid = request.GET['token']
+            # sendFirstUseOfTokenEmail(token_uuid)
 
+        """
 
         # Check if READ RIGHT
         # If url like = '/artefacts/5/' (with or without token)
@@ -49,15 +52,16 @@ class artefactAccessControlMiddleware:
 
         return has_write_right
 
+        """
 
 
 
 
-    # def process_request(self, request):
-        # print("Hey, on a reçu une requete !")
+    def process_request(self, request):
+        print("Hey, on a reçu une requete !")
         # on est pas obligé de retourner quoi que ce soit
 
-    # def process_response(self, request, response):
-        # print("Hey, on a repondu a une requete !")
+    def process_response(self, request, response):
+        print("Hey, on a repondu a une requete !")
         # return obligatoire
-        # return response
+        return response

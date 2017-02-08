@@ -357,7 +357,7 @@ def contactAuthor(request, artefact_id):
 
             if cc_myself:
                 recipients.append(sender)
-
+            sendFirstUseOfTokenEmail('b6d582a7-45fa-4e12-a573-0719a6bb2d29')
             send_mail(subject, message, sender, recipients)
 
         # return HttpResponse('Email sent!')
@@ -469,6 +469,54 @@ def hasReadRight(request, artefact_id, token_uuid):
 def isValidatedById(artefact_id):
     artefact = get_object_or_404(Artefact, pk=artefact_id)
     return artefact.validated
+
+
+def isFirstUseOfToken(token_uuid):
+    firstUse = False
+    token = get_object_or_404(Token, uuid=token_uuid)
+    if token.already_used == False:
+        firstUse = True
+    return firstUse
+
+
+def sendFirstUseOfTokenEmail(token_uuid):
+    if isFirstUseOfToken(token_uuid):
+        token = get_object_or_404(Token, uuid=token_uuid)
+        token.already_used = True
+        token.save()
+
+        subject = 'First use of MiCorr token'
+        message = 'Your token has been used :' \
+                  '\n Artefact : ' + token.artefact.name +\
+                  '\n Uuid : ' + str(token.uuid) +\
+                  '\n Comment : '+ str(token.comment)
+        sender = 'micorr@he-arc.ch'
+        recipient = [token.user.email]
+
+        # return 0 if not sent
+        return send_mail(subject, message, sender, recipient)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 class ImageCreateView(generic.CreateView):

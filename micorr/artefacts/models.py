@@ -452,7 +452,7 @@ class Token(TimeStampedModel):
     uuid = models.CharField(max_length=50)
     right = models.CharField(max_length=1, choices=RIGHT_CHOICES, default=READ)
     comment = models.CharField(max_length=100, null=True)
-    alreadyUsed = models.BooleanField(default=False)
+    already_used = models.BooleanField(default=False)
 
     # Foreign Keys
     user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name="user's object", blank=True, null=True)
