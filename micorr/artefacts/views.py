@@ -357,7 +357,7 @@ def contactAuthor(request, artefact_id):
 
             if cc_myself:
                 recipients.append(sender)
-            sendFirstUseOfTokenEmail('b6d582a7-45fa-4e12-a573-0719a6bb2d29')
+
             send_mail(subject, message, sender, recipients)
 
         # return HttpResponse('Email sent!')
@@ -495,28 +495,6 @@ def sendFirstUseOfTokenEmail(token_uuid):
 
         # return 0 if not sent
         return send_mail(subject, message, sender, recipient)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 class ImageCreateView(generic.CreateView):
