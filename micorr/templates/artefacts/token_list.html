@@ -29,18 +29,18 @@
           <div class="table-responsive">
               <table class="table table-bordered table-striped table-hover">
                   <tr>
+                      <th>Share with</th>
                       <th>Comment</th>
                       <th>Right</th>
-                      <th>Token</th>
                       <th>Already used</th>
                       <th>Action</th>
                   </tr>
 
                   {% for token in artefact.token_set.all %}
                       <tr>
+                          <td width="250">{{ token.recipient }}</td>
                           <td>{{ token.comment }}</td>
                           <td>{{ token.get_right_display }}</td>
-                          <td>{{ token.uuid }}</td>
                           <td>
                               {% if token.already_used %}
                                   <i class="fa fa-check"></i>
@@ -49,11 +49,19 @@
                               {% endif %}
                           </td>
                           <td>
+                              <a data-toggle="collapse" href="#{{ token.id }}" aria-expanded="false" aria-controls="collapseExample">
+                                  <i class="fa fa-link"></i>
+                              </a>
                               <a href="{% url 'artefacts:delete_token' token.artefact.id token.id %}">
                                   <i class="fa fa-trash"></i>
                               </a>
                           </td>
+                      </tr>
 
+                      <tr id="{{ token.id }}" class="collapse" >
+                          <td  colspan="5">
+                              {{ token.link }}
+                          </td>
                       </tr>
                   {% empty %}
                       <tr><td colspan="5">No results found</td></tr>

@@ -4,10 +4,10 @@ import re
 
 from artefacts.views import hasWriteRight, hasReadRight
 from artefacts.views import sendFirstUseOfTokenEmail
+from django.http import Http404
 
 
 class artefactAccessControlMiddleware:
-
 
     def process_view(self, request, view_func, view_args, view_kwargs):
 
@@ -19,7 +19,7 @@ class artefactAccessControlMiddleware:
         # check if exist a token in the url
         if 'token' in request.GET:
             token_uuid = request.GET['token']
-
+            request.session['token_uuid'] = str(token_uuid)
 
         # Check if READ RIGHT
         # If url like = '/artefacts/5/' (with or without token)
@@ -33,12 +33,19 @@ class artefactAccessControlMiddleware:
                 if token_uuid != None:
                     sendFirstUseOfTokenEmail(token_uuid)
 
-            request.session['has_read_right'] = has_read_right
+            if not has_read_right:
+                raise Http404("Page not found")
 
         # Check if WRITE RIGHT
         # If url like = '/artefacts/5/update/' (with or without token)
         pattern_update = re.compile('^\/artefacts\/[0-9]+\/update\/$')
+
         if pattern_update.match(url):
+            # method POST after submit the update form
+            if request.method == 'POST':
+                if request.session.has_key('token_uuid'):
+                    token_uuid = request.session['token_uuid']
+
             artefact_id = view_kwargs.get('pk', None)
 
             artefact_right = hasWriteRight(request, artefact_id, token_uuid)
@@ -47,14 +54,16 @@ class artefactAccessControlMiddleware:
                 if token_uuid != None:
                     sendFirstUseOfTokenEmail(token_uuid)
 
-            request.session['has_write_right'] = has_write_right
+            if not has_write_right:
+                raise Http404("Page not found")
 
 
-    def process_request(self, request):
-        print("Hey, on a reçu une requete !")
+
+    # def process_request(self, request):
+        # print("Hey, on a reçu une requete !")
         # on est pas obligé de retourner quoi que ce soit
 
-    def process_response(self, request, response):
-        print("Hey, on a repondu a une requete !")
+    # def process_response(self, request, response):
+        # print("Hey, on a repondu a une requete !")
         # return obligatoire
-        return response
+        # return response

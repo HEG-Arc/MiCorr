@@ -429,12 +429,13 @@ class Document(TimeStampedModel):
 
 
 class TokenManager(models.Manager):
-    def create_token(self, right, artefact, user, comment):
+    def create_token(self, right, artefact, user, comment, recipient):
         token = self.create(right=right,
                             artefact=artefact,
                             uuid=str(uuid.uuid4()),
                             user=user,
-                            comment=comment)
+                            comment=comment,
+                            recipient=recipient)
         return token
 
 
@@ -453,6 +454,8 @@ class Token(TimeStampedModel):
     right = models.CharField(max_length=1, choices=RIGHT_CHOICES, default=READ)
     comment = models.CharField(max_length=100, null=True)
     already_used = models.BooleanField(default=False)
+    recipient = models.CharField(max_length=100)
+    link = models.CharField(max_length=200, null=True)
 
     # Foreign Keys
     user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name="user's object", blank=True, null=True)

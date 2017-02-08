@@ -378,7 +378,7 @@ def shareArtefact(request, artefact_id):
         form = ShareArtefactForm(request.POST)
         if form.is_valid():
             subject = "Shared MiCorr artefact : "+artefact.name
-            recipients = [form.cleaned_data['recipient']]
+            recipient = [form.cleaned_data['recipient']]
             right = form.cleaned_data['right']
             comment = form.cleaned_data['comment']
             cc_myself = form.cleaned_data['cc_myself']
@@ -386,12 +386,15 @@ def shareArtefact(request, artefact_id):
 
             # create a link with a new generated token. example :
             # 'localhost:8000/artefacts/110?token=8a21008e-383b-4c13-bd9e-9c8387bf29b0'
-            token = Token.tokenManager.create_token(right, artefact, request.user, comment)
+            token = Token.tokenManager.create_token(right, artefact, request.user, comment, '-'.join(recipient))
 
             if right == 'R':
                 link = request.get_host() + '/artefacts/' + artefact_id + '/?token='+token.uuid
             elif right == 'W':
                 link = request.get_host() + '/artefacts/' + artefact_id + '/update/?token='+token.uuid
+
+            token.link = link
+            token.save()
 
             # create text and html content to have a clickable link
             text_message = "A MiCorr user shared an artefact with you. Please follow this " \
@@ -399,9 +402,9 @@ def shareArtefact(request, artefact_id):
             html_message = '<p>A MiCorr user shared an artefact with you. ' \
                            'Please follow this link : <a href="'+link+'">'+link+'.</p>'
             if cc_myself:
-                recipients.append(sender)
+                recipient.append(sender)
 
-            msg = EmailMultiAlternatives(subject, text_message, sender, recipients)
+            msg = EmailMultiAlternatives(subject, text_message, sender, recipient)
             msg.attach_alternative(html_message, "text/html")
             msg.send()
             messages.add_message(request, messages.SUCCESS, 'New share added successfully')
@@ -431,8 +434,11 @@ class TokenDeleteView(generic.DeleteView):
 
 
 def getTokenRightByUuid(token_uuid):
-    token = get_object_or_404(Token, uuid=token_uuid)
-    return token.right
+    token_right = None
+    if token_uuid is not None:
+        token = get_object_or_404(Token, uuid=token_uuid)
+        token_right = token.right
+    return token_right
 
 
 def isArtefactOfConnectedUser(request, artefact_id):
@@ -460,7 +466,6 @@ def hasWriteRight(request, artefact_id, token_uuid):
 # artefact was validated by a micorr admin
 def hasReadRight(request, artefact_id, token_uuid):
     has_write_right = False
-
     if (isArtefactOfConnectedUser(request, artefact_id)) or (getTokenRightByUuid(token_uuid) == 'R') or isValidatedById(artefact_id):
         has_write_right = True
     return has_write_right
