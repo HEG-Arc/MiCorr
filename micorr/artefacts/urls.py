@@ -55,10 +55,13 @@ urlpatterns = [
 
     url(r'^(?P<artefact_id>\d+)/contact_author/', artefacts_views.contactAuthor, name='contact_author'),
     url(r'^(?P<artefact_id>\d+)/share/', artefacts_views.shareArtefact, name='share_artefact'),
+    url(r'^(?P<artefact_id>\d+)/share_with_a_friend/', artefacts_views.shareArtefactWithFriend, name='share_artefact_with_friend'),
 
     url(r'^(?P<artefact_id>\d+)/tokens/$', login_required(artefacts_views.listToken), name='list_tokens'),
     url(r'^(?P<artefact_id>\d+)/token/(?P<pk>\d+)/delete/$',
         login_required(artefacts_views.TokenDeleteView.as_view()), name='delete_token'),
+
+
 
     # url(r'^test-ontology/$', displayOntology),
 ]

@@ -18,7 +18,8 @@ from stratigraphies.neo4jdao import Neo4jDAO
 from .forms import ArtefactsUpdateForm, ArtefactsCreateForm, DocumentUpdateForm, DocumentCreateForm, ArtefactFilter,\
     OriginCreateForm, ChronologyCreateForm, AlloyCreateForm, TechnologyCreateForm, EnvironmentCreateForm, \
     MicrostructureCreateForm, MetalCreateForm, CorrosionFormCreateForm, CorrosionTypeCreateForm, \
-    RecoveringDateCreateForm, ImageCreateForm, TypeCreateForm, ContactAuthorForm, ShareArtefactForm
+    RecoveringDateCreateForm, ImageCreateForm, TypeCreateForm, ContactAuthorForm, ShareArtefactForm, \
+    ShareWithFriendForm
 from .models import Artefact, Document, Section, SectionCategory, Image, Stratigraphy, Token
 import logging
 
@@ -415,6 +416,43 @@ def shareArtefact(request, artefact_id):
 
     pageContext = {'form': form, 'artefact_id': artefact_id}
     return render(request, 'artefacts/share_artefact_form.html', pageContext)
+
+
+def shareArtefactWithFriend(request, artefact_id):
+    if request.method == 'POST':
+        artefact = get_object_or_404(Artefact, pk=artefact_id)
+        form = ShareWithFriendForm(request.POST)
+        if form.is_valid():
+            subject = "Shared MiCorr artefact : "+artefact.name
+            recipient = [form.cleaned_data['recipient']]
+            message = form.cleaned_data['message']
+
+            if request.user.is_anonymous():
+                sender = 'noreply@micorr.org'
+            else:
+                sender = request.user.email
+
+            link = request.get_host() + '/artefacts/' + artefact_id
+
+            # create text and html content to have a clickable link
+            text_message = "A MiCorr user shared an artefact with you. \n  " + message \
+                           + " \n \n To see the artefact, please follow this link : "+link
+            html_message = '<p>A MiCorr user shared an artefact with you.\n  ' + message \
+                           + ' \n \n Please follow this link : <a href="'+link+'">'+link+'.</p>'
+
+            msg = EmailMultiAlternatives(subject, text_message, sender, recipient)
+            msg.attach_alternative(html_message, "text/html")
+            msg.send()
+            messages.add_message(request, messages.SUCCESS, 'The artefact was shared successfully')
+
+        pageContext = {'artefact': artefact}
+        return render(request, 'artefacts/token_list.html', pageContext)
+
+    else:
+        form = ShareWithFriendForm()
+
+    pageContext = {'form': form, 'artefact_id': artefact_id}
+    return render(request, 'artefacts/share_artefact_with_friend_form.html', pageContext)
 
 
 def listToken(request, artefact_id):

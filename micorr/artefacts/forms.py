@@ -261,3 +261,8 @@ class ShareArtefactForm(forms.Form):
     right = forms.ChoiceField(choices=Token.RIGHT_CHOICES)
     comment = forms.CharField(label='Personal comment', required=False)
     cc_myself = forms.BooleanField(label='Send a copy to myself', required=False)
+
+
+class ShareWithFriendForm(forms.Form):
+    recipient = forms.EmailField(label='Share with (email)')
+    message = forms.CharField(label='Your message', required=False)
