@@ -360,7 +360,6 @@ def contactAuthor(request, artefact_id):
 
             send_mail(subject, message, sender, recipients)
 
-        # return HttpResponse('Email sent!')
         pageContext = {}
         messages.add_message(request, messages.SUCCESS, 'Your message has been sent!')
         return render(request, 'artefacts/contact_author_confirmation.html', pageContext)
@@ -491,10 +490,7 @@ def sendFirstUseOfTokenEmail(token_uuid):
         token.save()
 
         subject = 'First use of MiCorr token'
-        message = 'Your token has been used :' \
-                  '\n Artefact : ' + token.artefact.name +\
-                  '\n Uuid : ' + str(token.uuid) +\
-                  '\n Comment : '+ str(token.comment)
+        message = 'Your token has been used : \n Artefact : ' + token.artefact.name + '\n Comment : ' + str(token.comment) + '\n Link : ' + str(token.link)
         sender = 'micorr@he-arc.ch'
         recipient = [token.user.email]
 
