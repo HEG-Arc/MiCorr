@@ -285,6 +285,7 @@ class Migration(migrations.Migration):
                 ('created', django_extensions.db.fields.CreationDateTimeField(auto_now_add=True, verbose_name='created')),
                 ('modified', django_extensions.db.fields.ModificationDateTimeField(auto_now=True, verbose_name='modified')),
                 ('name', models.CharField(blank=True, help_text=b'What the artefact was used for', max_length=200)),
+
             ],
             options={
                 'ordering': ['name'],
@@ -301,5 +302,6 @@ class Migration(migrations.Migration):
             model_name='image',
             name='section',
             field=models.ForeignKey(blank=True, help_text=b'The corresponding section', null=True, on_delete=django.db.models.deletion.CASCADE, to='artefacts.Section'),
+
         ),
     ]
