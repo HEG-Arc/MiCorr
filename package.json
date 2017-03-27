@@ -1,7 +1,11 @@
 {
   "name": "micorr",
   "version": "0.1.0",
-  "dependencies": {},
+  "dependencies": {
+    "httpdispatcher": "^1.0.0",
+    "jsdom": "^9.8.0",
+    "svg.js": "^2.3.5"
+  },
   "devDependencies": {
     "connect-livereload": "~0.3.2",
     "grunt": "^1.0.0",

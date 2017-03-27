@@ -2,8 +2,16 @@
 #	production that isn't in development.
 -r base.txt
 
-#gunicorn==19.1.1 #remplace apache
-django-storages==1.1.8 #fichier static
+# WSGI Handler
+# ------------------------------------------------
+gevent==1.1.1
+gunicorn==19.6.0
+
+# Static and Media Storage
+# ------------------------------------------------
+django-storages-redux==1.3.2
 Collectfast==0.2.3
-#gevent==1.0.1
-#boto==2.32.1
+
+# Raven is the Sentry client
+# --------------------------
+raven==5.21.0

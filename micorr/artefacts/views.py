@@ -1,25 +1,20 @@
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
-from django.forms import inlineformset_factory
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect, render_to_response
 from django.template import RequestContext
 from django.utils.html import escape
 from django.views import generic
-from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import View
 from haystack.forms import SearchForm
-from django.http import HttpResponse, QueryDict
-from stratigraphies.ch.neo4jDaoImpl.Neo4JDAO import Neo4jDAO
+from django.conf import settings
 
-#import rdflib
-#from SPARQLWrapper import SPARQLWrapper, JSON
 from contacts.forms import ContactCreateForm
-from .models import Artefact, Document, Origin, ChronologyPeriod, Alloy, Technology, Environment, Microstructure, \
-    Metal, CorrosionForm, CorrosionType, Section, SectionCategory, Image, Stratigraphy
+from stratigraphies.neo4jdao import Neo4jDAO
 from .forms import ArtefactsUpdateForm, ArtefactsCreateForm, DocumentUpdateForm, DocumentCreateForm, ArtefactFilter,\
     OriginCreateForm, ChronologyCreateForm, AlloyCreateForm, TechnologyCreateForm, EnvironmentCreateForm, \
     MicrostructureCreateForm, MetalCreateForm, CorrosionFormCreateForm, CorrosionTypeCreateForm, \
     RecoveringDateCreateForm, ImageCreateForm, TypeCreateForm
+from .models import Artefact, Document, Section, SectionCategory, Image, Stratigraphy
 
 """
 def displayOntology(request):
@@ -102,7 +97,7 @@ class ArtefactsListView(generic.ListView):
                 filtered_artefacts_list.append(artefact)
         return render(request, "artefacts/artefact_list.html",
                       {'search': artefactssearch, 'results': filtered_artefacts_list, 'filter': artefactsfilter,
-                       'self': self})
+                       'self': self, 'node_base_url': settings.NODE_BASE_URL})
 
 
 class ArtefactsDetailView(generic.DetailView):
@@ -126,6 +121,7 @@ class ArtefactsDetailView(generic.DetailView):
         context['sections'] = sections
         context['documents'] = documents
         context['stratigraphies'] = stratigraphies
+        context['node_base_url'] = settings.NODE_BASE_URL
         return context
 
 
@@ -159,7 +155,13 @@ class ArtefactsUpdateView(generic.UpdateView):
         conclusion_text = Section.objects.get_or_create(order=10, artefact=artefact, section_category=SectionCategory.objects.get(name='CO'), title='Conclusion')[0].content
         references_text = Section.objects.get_or_create(order=11, artefact=artefact, section_category=SectionCategory.objects.get(name='RE'), title='References')[0].content
         stratigraphies = artefact.stratigraphy_set.all
-        return self.render_to_response(self.get_context_data(form=form, object_section=object_section, description_section=description_section, zone_section=zone_section, macroscopic_section=macroscopic_section, sample_section=sample_section, analyses_performed=analyses_performed, metal_section=metal_section, corrosion_section=corrosion_section, synthesis_section=synthesis_section, conclusion_text=conclusion_text, references_text=references_text, stratigraphies=stratigraphies))
+        return self.render_to_response(self.get_context_data(form=form, object_section=object_section, description_section=description_section,
+                                                             zone_section=zone_section, macroscopic_section=macroscopic_section,
+                                                             sample_section=sample_section, analyses_performed=analyses_performed,
+                                                             metal_section=metal_section, corrosion_section=corrosion_section,
+                                                             synthesis_section=synthesis_section, conclusion_text=conclusion_text,
+                                                             references_text=references_text, stratigraphies=stratigraphies,
+                                                             node_base_url=settings.NODE_BASE_URL))
 
     def post(self, request, *args, **kwargs):
         artefact = get_object_or_404(Artefact, pk=self.kwargs['pk'])
@@ -325,7 +327,7 @@ def handlePopAdd(request, addForm, field):
         if form.is_valid():
             try:
                 newObject = form.save()
-            except forms.ValidationError, error:
+            except form.ValidationError, error:
                 newObject = None
             if newObject:
                 return HttpResponse('<script type="text/javascript">opener.dismissAddAnotherPopup(window, "%s", "%s");</script>' % (escape(newObject._get_pk_val()), escape(newObject)))
@@ -393,7 +395,7 @@ def StratigraphyListView(request, artefact_id):
 
 def StratigraphyAddView(request, artefact_id, stratigraphy_uid):
     stratigraphy = Stratigraphy.objects.get_or_create(uid=stratigraphy_uid, artefact=get_object_or_404(Artefact, id=artefact_id))[0]
-    stratigraphy.image = '/micorr/node/exportStratigraphy?name='+ stratigraphy_uid +'&width=300&format=png'
+    stratigraphy.image = settings.NODE_BASE_URL + 'exportStratigraphy?name='+ stratigraphy_uid +'&width=300&format=png'
     stratigraphy.save()
     return render_to_response('artefacts/strat-refresh.html', {'artefact_id': artefact_id})
 
@@ -409,7 +411,7 @@ class StratigraphyDeleteView(generic.DeleteView):
 
 def RefreshStratDivView(request, artefact_id):
     artefact = get_object_or_404(Artefact, pk=artefact_id)
-    return render_to_response('artefacts/stratigraphy.html', {'artefact': artefact})
+    return render_to_response('artefacts/stratigraphy.html', {'artefact': artefact, 'node_base_url': settings.NODE_BASE_URL})
 
 
 class DocumentUpdateView(generic.UpdateView):

@@ -1,0 +1,55 @@
+version: '2'
+
+services:
+  postgres:
+    build: ./compose/postgres
+#    volumes:
+#      - ./data/psql:/var/lib/postgresql/data
+#      - ./data/psql-backup:/backups
+    environment:
+      - POSTGRES_USER=micorr
+    ports:
+      - "5432:5432"
+
+  neo4j:
+    build: ./compose/neo4j
+    volumes:
+      - ./data/neo4j:/data
+    environment:
+      - NEO4J_AUTH=neo4j/secret
+      - NEO4J_dbms_allowFormatMigration=true
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+
+  node:
+    build:
+      context: .
+      dockerfile: ./compose/node/Dockerfile
+    volumes_from:
+      - django
+    ports:
+      - "8080:8080"
+    depends_on:
+      - django
+
+  django:
+    build:
+      context: .
+      dockerfile: ./compose/django/Dockerfile-dev
+    command: sh -c "python /app/manage.py collectstatic --noinput && python /app/manage.py migrate && python /app/manage.py runserver_plus 0.0.0.0:8000"
+    depends_on:
+      - postgres
+      - neo4j
+    environment:
+      - POSTGRES_USER=micorr
+      - USE_DOCKER=yes
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+# TODO in v2 should use networks and not use link
+    links:
+      - postgres:postgres
+      - neo4j:neo4j
+

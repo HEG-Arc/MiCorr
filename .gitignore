@@ -1,6 +1,26 @@
+### OSX ###
+.DS_Store
+.AppleDouble
+.LSOverride
+
+### SublimeText ###
+# cache files for sublime text
+*.tmlanguage.cache
+*.tmPreferences.cache
+*.stTheme.cache
+
+# workspace files are user-specific
+*.sublime-workspace
+
+# project files should be checked into the repository, unless a significant
+# proportion of contributors will probably not be using SublimeText
+# *.sublime-project
+
+# sftp configuration file
+sftp-config.json
+
 # Basics
 *.py[cod]
-*.pyc
 __pycache__
 
 # Logs
@@ -11,16 +31,24 @@ pip-log.txt
 .coverage
 .tox
 nosetests.xml
+htmlcov
 
 # Translations
 *.mo
 *.pot
 
 # Pycharm
-.idea
+.idea/*
 
-#npm
-#node_modules
+# Provided default Pycharm Run/Debug Configurations should be tracked by git
+# In case of local modifications made by Pycharm, use update-index command
+# for each changed file, like this:
+# git update-index --assume-unchanged .idea/micorr.iml
+!.idea/runConfigurations/
+!.idea/micorr.iml
+!.idea/vcs.xml
+!.idea/webResources.xml
+
 
 # Vim
 
@@ -28,6 +56,26 @@ nosetests.xml
 *.swp
 *.swo
 
+# npm
+node_modules/
 
-# Campass
+# Compass
 .sass-cache
+
+# virtual environments
+.env
+
+# User-uploaded media
+micorr/media/
+
+# django temp files
+staticfiles/
+
+# Hitch directory
+tests/.hitch
+
+#docker-compose data
+data/neo4j/
+data/psql/
+data/psql-backup/
+data/node/
