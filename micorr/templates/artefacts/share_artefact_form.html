@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block menu %}
+    <h1>Share the artefact</h1>
+{% endblock %}
+
+{% block content %}
+    <div class="line lightbox">
+        <div class="c9">
+            <div class="row">
+                <form action="{% url 'artefacts:share_artefact' artefact_id %}" method="post">
+                    {% csrf_token %}
+                    {{ form.recipient.label }} : {{ form.recipient }}<br><br>
+                    {{ form.right.label }} : {{ form.right }}<br><br>
+                    {{ form.comment.label }} : {{ form.comment }}<br><br>
+                    {{ form.cc_myself.label }} {{ form.cc_myself }}
+                    <br><br>
+                    <input type="submit" value="Send" />
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block footer %}
+{% endblock footer %}
+

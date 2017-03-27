@@ -1,15 +1,14 @@
 from django import forms
-from django.forms import TextInput
+from django.forms import TextInput, Textarea
 from django.template.loader import render_to_string
 
 from contacts.models import Contact
 
 from .models import Artefact, Document, Metal, CorrosionForm, CorrosionType, Environment, Origin, ChronologyPeriod, \
-    Alloy, Technology, Microstructure, RecoveringDate, Image, Type, Stratigraphy
+    Alloy, Technology, Microstructure, RecoveringDate, Image, Type, Stratigraphy, Token
 from cities_light.models import Country
 from tinymce.widgets import TinyMCE
 import django_filters
-
 
 class SelectWithPop(forms.Select):
     def render(self, name, *args, **kwargs):
@@ -248,3 +247,22 @@ class ArtefactFilter(django_filters.FilterSet):
     class Meta:
         model = Artefact
         fields = ['origin__city__country', 'metal1', 'corrosion_form', 'environment']
+
+
+class ContactAuthorForm(forms.Form):
+    subject = forms.CharField(label='Subject')
+    message = forms.CharField(label='Your message', widget=forms.Textarea)
+    sender = forms.EmailField(label='Your email')
+    cc_myself = forms.BooleanField(label='Send a copy to myself', required=False)
+
+
+class ShareArtefactForm(forms.Form):
+    recipient = forms.EmailField(label='Share with (email)')
+    right = forms.ChoiceField(choices=Token.RIGHT_CHOICES)
+    comment = forms.CharField(label='Personal comment', required=False)
+    cc_myself = forms.BooleanField(label='Send a copy to myself', required=False)
+
+
+class ShareWithFriendForm(forms.Form):
+    recipient = forms.EmailField(label='Share with (email)')
+    message = forms.CharField(label='Your message', required=False)

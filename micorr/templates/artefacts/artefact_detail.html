@@ -35,12 +35,34 @@
 
       {% block content %}
 
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
       <h1>{{ artefact.artefact_verbose_description_short }}</h1>
 
         <div class="row">
           <div class="c2"><em>Authors</em></div>
           <div class="c10"><p>{{ artefact.get_authors }}</p></div>
+
         </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+              <a class="btn btn-success" href="contact_author">
+                  <i class="fa fa-envelope"></i> Contact the author</a>
+              <a class="btn btn-success" href="{% url 'artefacts:share_artefact_with_friend' artefact.id %}">
+                  <i class="fa fa-share-alt"></i> Share </a>
+            </div>
+        </div>
+
+
+
+        <br>
 
         <div  id="accordionN1" aria-multiselectable="true">
 

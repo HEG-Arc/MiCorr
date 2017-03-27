@@ -1,20 +1,29 @@
 from django.contrib.auth.decorators import login_required
-from django.core.urlresolvers import reverse
+from django.core.mail import EmailMultiAlternatives
+from django.core.mail import send_mail
+from django.core.urlresolvers import reverse, reverse_lazy
 from django.http import HttpResponse
-from django.shortcuts import get_object_or_404, render, redirect, render_to_response
+from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.template import RequestContext
+from django.template.loader import render_to_string
 from django.utils.html import escape
 from django.views import generic
 from haystack.forms import SearchForm
 from django.conf import settings
+from django.contrib import messages
 
 from contacts.forms import ContactCreateForm
 from stratigraphies.neo4jdao import Neo4jDAO
 from .forms import ArtefactsUpdateForm, ArtefactsCreateForm, DocumentUpdateForm, DocumentCreateForm, ArtefactFilter,\
     OriginCreateForm, ChronologyCreateForm, AlloyCreateForm, TechnologyCreateForm, EnvironmentCreateForm, \
     MicrostructureCreateForm, MetalCreateForm, CorrosionFormCreateForm, CorrosionTypeCreateForm, \
-    RecoveringDateCreateForm, ImageCreateForm, TypeCreateForm
-from .models import Artefact, Document, Section, SectionCategory, Image, Stratigraphy
+    RecoveringDateCreateForm, ImageCreateForm, TypeCreateForm, ContactAuthorForm, ShareArtefactForm, \
+    ShareWithFriendForm
+from .models import Artefact, Document, Section, SectionCategory, Image, Stratigraphy, Token
+import logging
+
+logger = logging.getLogger(__name__)
 
 """
 def displayOntology(request):
@@ -131,7 +140,6 @@ class ArtefactsUpdateView(generic.UpdateView):
     When the editing is finished, it redirects the user to the artefact detail page
     """
     model = Artefact
-    template_name_suffix = '_update_form'
     form_class = ArtefactsUpdateForm
 
     def get_object(self, queryset=None):
@@ -155,7 +163,7 @@ class ArtefactsUpdateView(generic.UpdateView):
         conclusion_text = Section.objects.get_or_create(order=10, artefact=artefact, section_category=SectionCategory.objects.get(name='CO'), title='Conclusion')[0].content
         references_text = Section.objects.get_or_create(order=11, artefact=artefact, section_category=SectionCategory.objects.get(name='RE'), title='References')[0].content
         stratigraphies = artefact.stratigraphy_set.all
-        return self.render_to_response(self.get_context_data(form=form, object_section=object_section, description_section=description_section,
+        return render(request, 'artefacts/artefact_update_form.html', self.get_context_data(form=form, object_section=object_section, description_section=description_section,
                                                              zone_section=zone_section, macroscopic_section=macroscopic_section,
                                                              sample_section=sample_section, analyses_performed=analyses_performed,
                                                              metal_section=metal_section, corrosion_section=corrosion_section,
@@ -334,12 +342,202 @@ def handlePopAdd(request, addForm, field):
     else:
         form = addForm()
     pageContext = {'form': form, 'field': field}
-    return render_to_response("artefacts/popadd.html", pageContext, context_instance=RequestContext(request))
+    return render(request, "artefacts/popadd.html", pageContext)
+
+
+def contactAuthor(request, artefact_id):
+    if request.method == 'POST':
+        artefact = get_object_or_404(Artefact, pk=artefact_id)
+        form = ContactAuthorForm(request.POST)
+        if form.is_valid():
+            subject = form.cleaned_data['subject']+" (about MiCorr artefact : "+artefact.name+")"
+            message = form.cleaned_data['message']
+            sender = form.cleaned_data['sender']
+            cc_myself = form.cleaned_data['cc_myself']
+            recipients = artefact.get_authors_email()
+
+            if cc_myself:
+                recipients.append(sender)
+
+            send_mail(subject, message, sender, recipients)
+
+        pageContext = {}
+        messages.add_message(request, messages.SUCCESS, 'Your message has been sent!')
+        return render(request, 'artefacts/contact_author_confirmation.html', pageContext)
+
+    else:
+        form = ContactAuthorForm()
+
+    pageContext = {'form': form, 'artefact_id': artefact_id}
+    return render(request, 'artefacts/contact_author_form.html', pageContext)
+
+
+def shareArtefact(request, artefact_id):
+    if request.method == 'POST':
+        artefact = get_object_or_404(Artefact, pk=artefact_id)
+        form = ShareArtefactForm(request.POST)
+        if form.is_valid():
+            subject = "Shared MiCorr artefact : "+artefact.name
+            recipient = [form.cleaned_data['recipient']]
+            right = form.cleaned_data['right']
+            comment = form.cleaned_data['comment']
+            cc_myself = form.cleaned_data['cc_myself']
+            sender = request.user.email
+
+            # create a link with a new generated token. example :
+            # 'localhost:8000/artefacts/110?token=8a21008e-383b-4c13-bd9e-9c8387bf29b0'
+            token = Token.tokenManager.create_token(right, artefact, request.user, comment, '-'.join(recipient))
+
+            if right == 'R':
+                link = request.get_host() + '/artefacts/' + artefact_id + '/?token='+token.uuid
+            elif right == 'W':
+                link = request.get_host() + '/artefacts/' + artefact_id + '/update/?token='+token.uuid
+
+            token.link = link
+            token.save()
+
+            # create text and html content to have a clickable link
+            text_message = "A MiCorr user shared an artefact with you. Please follow this " \
+                           "link : "+link
+            html_message = '<p>A MiCorr user shared an artefact with you. ' \
+                           'Please follow this link : <a href="'+link+'">'+link+'.</p>'
+            if cc_myself:
+                recipient.append(sender)
+
+            msg = EmailMultiAlternatives(subject, text_message, sender, recipient)
+            msg.attach_alternative(html_message, "text/html")
+            msg.send()
+            messages.add_message(request, messages.SUCCESS, 'New share added successfully')
+
+        pageContext = {'artefact': artefact}
+        return render(request, 'artefacts/token_list.html', pageContext)
+    else:
+        form = ShareArtefactForm()
+
+    pageContext = {'form': form, 'artefact_id': artefact_id}
+    return render(request, 'artefacts/share_artefact_form.html', pageContext)
+
+
+def shareArtefactWithFriend(request, artefact_id):
+    if request.method == 'POST':
+        artefact = get_object_or_404(Artefact, pk=artefact_id)
+        form = ShareWithFriendForm(request.POST)
+        if form.is_valid():
+            subject = "Shared MiCorr artefact : "+artefact.name
+            recipient = [form.cleaned_data['recipient']]
+            message = form.cleaned_data['message']
+
+            if request.user.is_anonymous():
+                sender = 'noreply@micorr.org'
+            else:
+                sender = request.user.email
+
+            link = request.get_host() + '/artefacts/' + artefact_id
+
+            # create text and html content to have a clickable link
+            text_message = "A MiCorr user shared an artefact with you. \n  " + message \
+                           + " \n \n To see the artefact, please follow this link : "+link
+            html_message = '<p>A MiCorr user shared an artefact with you.\n  ' + message \
+                           + ' \n \n Please follow this link : <a href="'+link+'">'+link+'.</p>'
+
+            msg = EmailMultiAlternatives(subject, text_message, sender, recipient)
+            msg.attach_alternative(html_message, "text/html")
+            msg.send()
+            messages.add_message(request, messages.SUCCESS, 'The artefact was shared successfully')
+
+        pageContext = {'artefact': artefact}
+        return render(request, 'artefacts/token_list.html', pageContext)
+
+    else:
+        form = ShareWithFriendForm()
+
+    pageContext = {'form': form, 'artefact_id': artefact_id}
+    return render(request, 'artefacts/share_artefact_with_friend_form.html', pageContext)
+
+
+def listToken(request, artefact_id):
+    artefact = get_object_or_404(Artefact, pk=artefact_id)
+    pageContext = {'artefact': artefact}
+    return render(request, 'artefacts/token_list.html', pageContext)
+
+
+class TokenDeleteView(generic.DeleteView):
+    model = Token
+    template_name_suffix = '_confirm_delete'
+
+    def get_success_url(self):
+        artefact_id = get_object_or_404(Token, pk=self.kwargs['pk']).artefact.id
+        return reverse('artefacts:list_tokens', kwargs={'artefact_id': artefact_id})
+
+
+def getTokenRightByUuid(token_uuid):
+    token_right = None
+    if token_uuid is not None:
+        token = get_object_or_404(Token, uuid=token_uuid)
+        token_right = token.right
+    return token_right
+
+
+def isArtefactOfConnectedUser(request, artefact_id):
+    artefact = get_object_or_404(Artefact, pk=artefact_id)
+    is_artefact_of_connected_user = False
+    if request.user.id == artefact.user.id:
+        is_artefact_of_connected_user = True
+    return is_artefact_of_connected_user
+
+
+# Write right when :
+# - artefact.user = logged user
+# - token.right = 'W'
+def hasWriteRight(request, artefact_id, token_uuid):
+    has_write_right = False
+
+    if (isArtefactOfConnectedUser(request, artefact_id)) or (getTokenRightByUuid(token_uuid) == 'W'):
+        has_write_right = True
+    return has_write_right
+
+
+# Read right when :
+# artefact.user = logged user
+# token.right = 'R'
+# artefact was validated by a micorr admin
+def hasReadRight(request, artefact_id, token_uuid):
+    has_write_right = False
+    if (isArtefactOfConnectedUser(request, artefact_id)) or (getTokenRightByUuid(token_uuid) == 'R') or isValidatedById(artefact_id):
+        has_write_right = True
+    return has_write_right
+
+
+def isValidatedById(artefact_id):
+    artefact = get_object_or_404(Artefact, pk=artefact_id)
+    return artefact.validated
+
+
+def isFirstUseOfToken(token_uuid):
+    firstUse = False
+    token = get_object_or_404(Token, uuid=token_uuid)
+    if token.already_used == False:
+        firstUse = True
+    return firstUse
+
+
+def sendFirstUseOfTokenEmail(token_uuid):
+    if isFirstUseOfToken(token_uuid):
+        token = get_object_or_404(Token, uuid=token_uuid)
+        token.already_used = True
+        token.save()
+
+        subject = 'First use of MiCorr token'
+        message = 'Your token has been used : \n Artefact : ' + token.artefact.name + '\n Comment : ' + str(token.comment) + '\n Link : ' + str(token.link)
+        sender = 'micorr@he-arc.ch'
+        recipient = [token.user.email]
+
+        # return 0 if not sent
+        return send_mail(subject, message, sender, recipient)
 
 
 class ImageCreateView(generic.CreateView):
     model = Image
-    template_name_suffix = '_create_form'
     form_class = ImageCreateForm
 
     def get(self, request, **kwargs):
@@ -347,7 +545,7 @@ class ImageCreateView(generic.CreateView):
         form_class = self.get_form_class()
         form = self.get_form(form_class)
         section_id = kwargs['section_id']
-        return self.render_to_response(self.get_context_data(form=form, section_id=section_id))
+        return render(request, "artefacts/artefact_create_form.html", self.get_context_data(form=form, section_id=section_id))
 
     def form_valid(self, form):
         form.instance.section = get_object_or_404(Section, pk=self.kwargs['section_id'])
@@ -359,7 +557,6 @@ class ImageCreateView(generic.CreateView):
 
 class ImageUpdateView(generic.UpdateView):
     model = Image
-    template_name_suffix = '_update_form'
     form_class = ImageCreateForm
 
     def get(self, request, **kwargs):
@@ -368,7 +565,7 @@ class ImageUpdateView(generic.UpdateView):
         form = self.get_form(form_class)
         section_id = kwargs['section_id']
         image_id = kwargs['pk']
-        return self.render_to_response(self.get_context_data(form=form, section_id=section_id, image_id=image_id))
+        return self.render(request, "artefacts/artefact_update_form.html", self.get_context_data(form=form, section_id=section_id, image_id=image_id))
 
     def get_success_url(self):
         return reverse('artefacts:image-refresh', kwargs={'section_id': self.kwargs['section_id']})
@@ -385,19 +582,19 @@ class ImageDeleteView(generic.DeleteView):
 
 def RefreshDivView(request, section_id):
     object_section = get_object_or_404(Section, pk=section_id)
-    return render_to_response('artefacts/image_section.html', {'object_section': object_section})
+    return render(request, 'artefacts/image_section.html', {'object_section': object_section})
 
 
 def StratigraphyListView(request, artefact_id):
     stratigraphies = Neo4jDAO().getStratigraphiesByUser(request.user.id)
-    return render_to_response('artefacts/stratigraphies_list.html', {'stratigraphies': stratigraphies, 'artefact_id': artefact_id})
+    return render(request, 'artefacts/stratigraphies_list.html', {'stratigraphies': stratigraphies, 'artefact_id': artefact_id})
 
 
 def StratigraphyAddView(request, artefact_id, stratigraphy_uid):
     stratigraphy = Stratigraphy.objects.get_or_create(uid=stratigraphy_uid, artefact=get_object_or_404(Artefact, id=artefact_id))[0]
     stratigraphy.image = settings.NODE_BASE_URL + 'exportStratigraphy?name='+ stratigraphy_uid +'&width=300&format=png'
     stratigraphy.save()
-    return render_to_response('artefacts/strat-refresh.html', {'artefact_id': artefact_id})
+    return render(request, 'artefacts/strat-refresh.html', {'artefact_id': artefact_id})
 
 
 class StratigraphyDeleteView(generic.DeleteView):
@@ -411,7 +608,7 @@ class StratigraphyDeleteView(generic.DeleteView):
 
 def RefreshStratDivView(request, artefact_id):
     artefact = get_object_or_404(Artefact, pk=artefact_id)
-    return render_to_response('artefacts/stratigraphy.html', {'artefact': artefact, 'node_base_url': settings.NODE_BASE_URL})
+    return render(request, 'artefacts/stratigraphy.html', {'artefact': artefact, 'node_base_url': settings.NODE_BASE_URL})
 
 
 class DocumentUpdateView(generic.UpdateView):

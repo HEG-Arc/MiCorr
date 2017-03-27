@@ -1,11 +1,14 @@
 # coding=utf-8
 import os
+import uuid
+
 from django.db import models
 from contacts.models import Contact
 from django.conf import settings
 from django_extensions.db.models import TimeStampedModel
 from tinymce import models as tinymce_models
 from cities_light.models import City
+from django.core.mail import  send_mail
 
 
 class Metal(TimeStampedModel):
@@ -205,7 +208,7 @@ class CorrosionType(TimeStampedModel):
 
 class Artefact(TimeStampedModel):
     """
-    An artefact has many foreign keys, corresponding to its characteristics.
+    An artefact has many foreign keys, corresponding to its characteristics55
     """
     # Own fields
     name = models.CharField(max_length=100, verbose_name='name', blank=True, default='', help_text='Name of the artefact')
@@ -215,6 +218,7 @@ class Artefact(TimeStampedModel):
     sample_description = tinymce_models.HTMLField(verbose_name='description of sample', blank=True, default='', help_text='Information on the sample, the way it was obtained, its condition (presence or not of corrosion layers) and dimensions')
     sample_number = models.CharField(max_length=100, verbose_name='lab number of sample', blank=True, default='', help_text='The inventory number of the artefact sample')
     date_aim_sampling = models.CharField(max_length=200, verbose_name='date and aim of sampling', blank=True, default='', help_text='The date and aim of sampling')
+    validated = models.BooleanField(default=False)
 
     # Foreign Keys
     user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name="user's object", blank=True, null=True,
@@ -242,6 +246,7 @@ class Artefact(TimeStampedModel):
     corrosion_form = models.ForeignKey(CorrosionForm, blank=True, null=True)
     corrosion_type = models.ForeignKey(CorrosionType, blank=True, null=True, help_text='')
 
+
     class Meta:
         verbose_name = 'Artefact'
         verbose_name_plural = 'Artefacts'
@@ -254,6 +259,12 @@ class Artefact(TimeStampedModel):
                                                                   author.organization_name,
                                                                   author.city))
         return " & ".join(authors_list)
+
+    def get_authors_email(self):
+        email_list = []
+        for author in self.author.all():
+            email_list.append(author.email)
+        return email_list
 
     def artefact_verbose_description(self):
         artefact = []
@@ -415,3 +426,47 @@ class Document(TimeStampedModel):
 
     def __unicode__(self):
         return self.name
+
+
+class TokenManager(models.Manager):
+    def create_token(self, right, artefact, user, comment, recipient):
+        token = self.create(right=right,
+                            artefact=artefact,
+                            uuid=str(uuid.uuid4()),
+                            user=user,
+                            comment=comment,
+                            recipient=recipient)
+        return token
+
+
+class Token(TimeStampedModel):
+    """
+    A token is used to give a read or write right when you share an artefact
+    """
+    # Own fields
+    READ = 'R'
+    WRITE = 'W'
+    RIGHT_CHOICES = (
+        (READ, 'Read'),
+        (WRITE, 'Write'),
+    )
+    uuid = models.CharField(max_length=50)
+    right = models.CharField(max_length=1, choices=RIGHT_CHOICES, default=READ)
+    comment = models.CharField(max_length=100, null=True)
+    already_used = models.BooleanField(default=False)
+    recipient = models.CharField(max_length=100)
+    link = models.CharField(max_length=200, null=True)
+
+    # Foreign Keys
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name="user's object", blank=True, null=True)
+    artefact = models.ForeignKey(Artefact, on_delete=models.CASCADE, null=True, help_text='The shared artefact')
+
+    tokenManager = TokenManager()
+
+    class Meta:
+        verbose_name = 'Token'
+        verbose_name_plural = 'Tokens'
+
+    def __str__(self):
+        return "Token {} with {} rights, for artefact {} by user {}".format(
+            self.uuid, self.right, self.artefact.name, self.user.name)

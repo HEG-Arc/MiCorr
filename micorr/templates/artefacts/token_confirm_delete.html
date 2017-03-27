@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block menu %}
+    <h1>MiCorr | {{ token.uuid }} - delete</h1>
+{% endblock %}
+
+
+{% block content %}
+
+<div class="container">
+
+    <div class="row">
+        <h2>Delete token</h2>
+        <br/>
+        <p>Are you sure you want to delete the link <b>{{ token.uuid }}</b>?</p>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-3 col-xs-offset-9">
+            <form action="{% url 'artefacts:delete_token' artefact_id=token.artefact.id pk=token.pk %}" method="POST">
+                {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                    <a href="{% url 'artefacts:list_tokens' artefact_id=token.artefact.id %}">
+                        <button type="button" class="btn btn-link">Cancel</button>
+                    </a>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
