@@ -3,9 +3,9 @@ version: '2'
 services:
   postgres:
     build: ./compose/postgres
-#    volumes:
-#      - ./data/psql:/var/lib/postgresql/data
-#      - ./data/psql-backup:/backups
+    volumes:
+      #- ./data/psql:/var/lib/postgresql/data
+      - ./data/psql-backup:/backups
     environment:
       - POSTGRES_USER=micorr
     ports:
