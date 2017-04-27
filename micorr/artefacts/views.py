@@ -102,7 +102,7 @@ class ArtefactsListView(generic.ListView):
                 if artefact.object in artefactsfilter:
                     filtered_artefacts_list.append(artefact.object)
         else:
-            for artefact in artefactsfilter:
+            for artefact in artefactsfilter.qs:
                 filtered_artefacts_list.append(artefact)
         return render(request, "artefacts/artefact_list.html",
                       {'search': artefactssearch, 'results': filtered_artefacts_list, 'filter': artefactsfilter,
