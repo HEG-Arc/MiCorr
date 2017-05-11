@@ -205,6 +205,18 @@ class CorrosionType(TimeStampedModel):
     def __unicode__(self):
         return self.type
 
+class Object(TimeStampedModel):
+    """
+    An object can be linked to more than one card (artefact)
+    """
+    name = models.CharField(max_length=100, verbose_name='name', blank=True, default='', help_text='Name of the object')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name="user's object", blank=True, null=True,
+                             help_text='The user who entered the object into the database')
+
+    class Meta:
+        ordering = ['name']
+        verbose_name = 'Object'
+        verbose_name_plural = 'Objects'
 
 class Artefact(TimeStampedModel):
     """
@@ -219,8 +231,10 @@ class Artefact(TimeStampedModel):
     sample_number = models.CharField(max_length=100, verbose_name='lab number of sample', blank=True, default='', help_text='The inventory number of the artefact sample')
     date_aim_sampling = models.CharField(max_length=200, verbose_name='date and aim of sampling', blank=True, default='', help_text='The date and aim of sampling')
     validated = models.BooleanField(default=False)
+    isPublished = models.BooleanField(default=False)
 
     # Foreign Keys
+    object = models.ForeignKey(Object, verbose_name='object described', blank=True, null=True, help_text='The object described by the card')
     user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name="user's object", blank=True, null=True,
                              help_text='The user who entered the artefact into the database')
     author = models.ManyToManyField(Contact, verbose_name='authors', blank=True, related_name='artefacts', help_text='The author(s) of this file is (are) responsible for the information provided. Author(s) should provide their last name, initial of their first name and in brackets the abbreviation of their institutional affiliation, such as Degrigny C. (HE-Arc CR).')
@@ -245,6 +259,7 @@ class Artefact(TimeStampedModel):
     microstructure = models.ForeignKey(Microstructure, blank=True, null=True, help_text='A description of the metal: its composition, texture (porosity), hardness, microstructure revealed by etching and specific features (figures and tables are referred as Fig. 1, Table 1)')
     corrosion_form = models.ForeignKey(CorrosionForm, blank=True, null=True)
     corrosion_type = models.ForeignKey(CorrosionType, blank=True, null=True, help_text='')
+    parent = models.ForeignKey('self', related_name='parent_card', blank=True, null=True, help_text='The card from which this card is the child')
 
 
     class Meta:
