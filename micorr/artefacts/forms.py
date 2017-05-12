@@ -4,7 +4,7 @@ from django.template.loader import render_to_string
 
 from contacts.models import Contact
 
-from .models import Artefact, Document, Metal, CorrosionForm, CorrosionType, Environment, Origin, ChronologyPeriod, \
+from .models import Artefact, Document, Metal, CorrosionForm, CorrosionType, Environment, Object, Origin, ChronologyPeriod, \
     Alloy, Technology, Microstructure, RecoveringDate, Image, Type, Stratigraphy, Token
 from cities_light.models import Country
 from tinymce.widgets import TinyMCE
@@ -40,6 +40,7 @@ class ArtefactsUpdateForm(forms.ModelForm):
     synthesis_text = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}), required=False)
     conclusion_text = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}), required=False)
     references_text = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}), required=False)
+    object = forms.CharField(required=False, help_text='Name of the artefact')
 
     author = forms.ModelMultipleChoiceField(Contact.objects, widget=MultipleSelectWithPop, help_text='The author(s) of this file is (are) responsible for the information provided. Author(s) should provide their last name, initial of their first name and in brackets the abbreviation of their institutional affiliation, such as Degrigny C. (HE-Arc CR).', required=False)
     type = forms.ModelChoiceField(Type.objects, widget=SelectWithPop, help_text='The name of the artefact, its typology', required=False)
@@ -64,7 +65,6 @@ class ArtefactsUpdateForm(forms.ModelForm):
         model = Artefact
         exclude = ['user']
 
-
 class ArtefactsCreateForm(forms.ModelForm):
     """
     Create a new artefact
@@ -78,7 +78,6 @@ class ArtefactsCreateForm(forms.ModelForm):
             'recovering_date': TextInput(),
             'chronology_period': TextInput(),
         }
-
 
 class ImageCreateForm(forms.ModelForm):
     """

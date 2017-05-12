@@ -20,7 +20,7 @@ from .forms import ArtefactsUpdateForm, ArtefactsCreateForm, DocumentUpdateForm,
     MicrostructureCreateForm, MetalCreateForm, CorrosionFormCreateForm, CorrosionTypeCreateForm, \
     RecoveringDateCreateForm, ImageCreateForm, TypeCreateForm, ContactAuthorForm, ShareArtefactForm, \
     ShareWithFriendForm
-from .models import Artefact, Document, Section, SectionCategory, Image, Stratigraphy, Token
+from .models import Artefact, Document, Object, Section, SectionCategory, Image, Stratigraphy, Token
 import logging
 
 logger = logging.getLogger(__name__)
@@ -139,6 +139,7 @@ class ArtefactsUpdateView(generic.UpdateView):
     A view which allows the user to edit an artefact
     When the editing is finished, it redirects the user to the artefact detail page
     """
+
     model = Artefact
     form_class = ArtefactsUpdateForm
 
@@ -148,9 +149,11 @@ class ArtefactsUpdateView(generic.UpdateView):
 
     def get(self, request, **kwargs):
         artefact = Artefact.objects.get(id=self.kwargs['pk'])
+
         self.object = artefact
         form_class = self.get_form_class()
         form = self.get_form(form_class)
+
         object_section = Section.objects.get_or_create(order=1, artefact=artefact, section_category=SectionCategory.objects.get(name='AR'), title='The object')[0]
         description_section = Section.objects.get_or_create(order=2, artefact=artefact, section_category=SectionCategory.objects.get(name='AR'), title='Description and visual observation')[0]
         zone_section = Section.objects.get_or_create(order=3, artefact=artefact, section_category=SectionCategory.objects.get(name='SA'), title='Zones of the artefact submitted to visual observation and location of sampling areas')[0]
@@ -224,7 +227,6 @@ class ArtefactsDeleteView(generic.DeleteView):
 
     def get_success_url(self):
         return reverse('users:detail', kwargs={'username': self.request.user})
-
 
 class ArtefactsCreateView(generic.CreateView):
     """
@@ -350,7 +352,7 @@ def contactAuthor(request, artefact_id):
         artefact = get_object_or_404(Artefact, pk=artefact_id)
         form = ContactAuthorForm(request.POST)
         if form.is_valid():
-            subject = form.cleaned_data['subject']+" (about MiCorr artefact : "+artefact.name+")"
+            subject = form.cleaned_data['subject']+" (about MiCorr artefact : "+artefact.object.name+")"
             message = form.cleaned_data['message']
             sender = form.cleaned_data['sender']
             cc_myself = form.cleaned_data['cc_myself']
@@ -377,7 +379,7 @@ def shareArtefact(request, artefact_id):
         artefact = get_object_or_404(Artefact, pk=artefact_id)
         form = ShareArtefactForm(request.POST)
         if form.is_valid():
-            subject = "Shared MiCorr artefact : "+artefact.name
+            subject = "Shared MiCorr artefact : "+artefact.object.name
             recipient = [form.cleaned_data['recipient']]
             right = form.cleaned_data['right']
             comment = form.cleaned_data['comment']
@@ -423,7 +425,7 @@ def shareArtefactWithFriend(request, artefact_id):
         artefact = get_object_or_404(Artefact, pk=artefact_id)
         form = ShareWithFriendForm(request.POST)
         if form.is_valid():
-            subject = "Shared MiCorr artefact : "+artefact.name
+            subject = "Shared MiCorr artefact : "+artefact.object.name
             recipient = [form.cleaned_data['recipient']]
             message = form.cleaned_data['message']
 
@@ -481,7 +483,7 @@ def getTokenRightByUuid(token_uuid):
 def isArtefactOfConnectedUser(request, artefact_id):
     artefact = get_object_or_404(Artefact, pk=artefact_id)
     is_artefact_of_connected_user = False
-    if request.user.id == artefact.user.id:
+    if request.user.id == artefact.object.user.id:
         is_artefact_of_connected_user = True
     return is_artefact_of_connected_user
 
@@ -528,7 +530,7 @@ def sendFirstUseOfTokenEmail(token_uuid):
         token.save()
 
         subject = 'First use of MiCorr token'
-        message = 'Your token has been used : \n Artefact : ' + token.artefact.name + '\n Comment : ' + str(token.comment) + '\n Link : ' + str(token.link)
+        message = 'Your token has been used : \n Artefact : ' + token.artefact.object.name + '\n Comment : ' + str(token.comment) + '\n Link : ' + str(token.link)
         sender = 'micorr@he-arc.ch'
         recipient = [token.user.email]
 
