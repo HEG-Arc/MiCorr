@@ -13,8 +13,11 @@ urlpatterns = [
        name='artefact-update'),
     url(r'^(?P<pk>\d+)/delete/$', login_required(artefacts_views.ArtefactsDeleteView.as_view()),
        name='artefact-delete'),
-    url(r'^create/$', login_required(artefacts_views.ArtefactsCreateView.as_view()), name='artefact-create'),
 
+    url(r'^create/$', login_required(artefacts_views.ObjectCreateView.as_view()), name='object-create'),
+    url(r'^createArtefact/$', login_required(artefacts_views.ArtefactsCreateView.as_view()), name='artefact-create'),
+
+    url(r'^add/object/?$', artefacts_views.newObject),
     url(r'^add/author/?$', artefacts_views.newAuthor),
     url(r'^add/type/?$', artefacts_views.newType),
     url(r'^add/origin/?$', artefacts_views.newOrigin),

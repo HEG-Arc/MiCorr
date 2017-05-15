@@ -17,7 +17,7 @@
     <h1>New artefact</h1>
 
     <!--DESCRIPTION-->
-    <form action="{% url 'artefacts:artefact-create' %}" method="post">{% csrf_token %}
+    <form action="{% url 'artefacts:object-create' %}" method="post">{% csrf_token %}
       <div class="row accordion-title1" id="title2">
           <a class="line"  data-toggle="collapse" data-parent="#accordionN1" href="#content2" aria-expanded="true" aria-controls="content2">Creation of the artefact</a>
       </div>
@@ -25,7 +25,7 @@
         <div class="line lightbox">
           <div class="row">
             <div class="c3"><em>Name of the artefact</em></div>
-            <div class="c9"><p>{{ form.object }}</p> <p><i>{{ form.object.help_text }}</i></p></div>
+            <div class="c9"><p>{{ form.name }}</p> <p><i>{{ form.name.help_text }}</i></p></div>
           </div>
             <input class="btn btn-default" type="submit" value="Next">
         </div>

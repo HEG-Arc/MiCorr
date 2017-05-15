@@ -19,7 +19,7 @@ from .forms import ArtefactsUpdateForm, ArtefactsCreateForm, DocumentUpdateForm,
     OriginCreateForm, ChronologyCreateForm, AlloyCreateForm, TechnologyCreateForm, EnvironmentCreateForm, \
     MicrostructureCreateForm, MetalCreateForm, CorrosionFormCreateForm, CorrosionTypeCreateForm, \
     RecoveringDateCreateForm, ImageCreateForm, TypeCreateForm, ContactAuthorForm, ShareArtefactForm, \
-    ShareWithFriendForm
+    ShareWithFriendForm, ObjectCreateForm
 from .models import Artefact, Document, Object, Section, SectionCategory, Image, Stratigraphy, Token
 import logging
 
@@ -237,14 +237,17 @@ class ArtefactsCreateView(generic.CreateView):
     template_name_suffix = '_create_form'
     form_class = ArtefactsCreateForm
 
-    def form_valid(self, form):
+    """def form_valid(self, form):
         user = self.request.user
         form.instance.user = user
-        return super(ArtefactsCreateView, self).form_valid(form)
+        return super(ArtefactsCreateView, self).form_valid(form)"""
 
     def get_success_url(self):
         return reverse('artefacts:artefact-update', kwargs={'pk': self.object.id})
 
+@login_required
+def newObject(request):
+    return handlePopAdd(request, ObjectForm, 'object')
 
 @login_required
 def newAuthor(request):
@@ -666,3 +669,16 @@ class DocumentCreateView(generic.CreateView):
 
     def get_success_url(self):
         return reverse('artefacts:artefact-detail', kwargs={'pk': self.kwargs.get('artefact_id', None)}, )
+
+class ObjectCreateView(generic.CreateView):
+    model = Object
+    template_name_suffix = '_create_form'
+    form_class = ObjectCreateForm
+
+    def form_valid(self, form):
+        user = self.request.user
+        form.instance.user = user
+        return super(ObjectCreateView, self).form_valid(form)
+
+    def get_success_url(self):
+        return reverse('artefacts:artefact-create')
