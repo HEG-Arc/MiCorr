@@ -3,6 +3,8 @@ import os
 import uuid
 
 from django.db import models
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 from contacts.models import Contact
 from users.models import User
 from django.conf import settings
@@ -490,8 +492,11 @@ class Publication(TimeStampedModel) :
     """
     An user can send an artefact for publication
     """
+
+    #Own field
     comment=models.CharField(max_length=500, blank=True, null=True, help_text='A comment from the analyzer of the artefact')
 
+    # Foreign keys
     user = models.ForeignKey(User, related_name='main_user', blank=True, help_text='User analyzing the artefact')
     artefact = models.ForeignKey(Artefact, blank=True, help_text='Artefact card sent for publication')
     delegated_user = models.ForeignKey(User, related_name='delegated_user', blank=True, null=True, help_text='Delegated user for the analyzis of the artefact')
@@ -500,13 +505,31 @@ class Publication(TimeStampedModel) :
         verbose_name='Publication'
         verbose_name_plural='Publications'
 
-class Collaboraton_comment(TimeStampedModel):
+class Field(TimeStampedModel):
+    """
+    A field is a part of an artefact
+    """
+    name = models.CharField(max_length=200, blank=True, help_text='A field of the artefact card')
 
-    comment = models.CharField(max_length=500, blank=True, help_text='A comment from the collaborator or author')
+    class Meta:
+        verbose_name = 'Field'
+        verbose_name_plural = 'Fields'
+
+class Collaboraton_comment(TimeStampedModel):
+    """
+    A comment allow author to collaborate with collaborators and discuss an artefact
+    """
+
+    #Own fields
+    comment = models.TextField()
     isSent = models.BooleanField(default=False)
 
-    token = models.ForeignKey(Token, blank=True, help_text='The token linked to the comments')
+    #Foreign keys
+    content_type = models.ForeignKey(ContentType, blank=True, null=True)
     parent = models.ForeignKey('self', blank=True, null=True, help_text='The comment from which this comment is the child')
+    field = models.ForeignKey(Field, blank=True, null=True, help_text='The field concerned by the comment')
+    object_model_id = models.PositiveIntegerField(blank=True, null=True)
+    content_object = GenericForeignKey('content_type', 'object_model_id')
 
     class Meta:
         verbose_name = 'Comment'
