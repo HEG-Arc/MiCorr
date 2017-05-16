@@ -40,7 +40,7 @@ class ArtefactsUpdateForm(forms.ModelForm):
     synthesis_text = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}), required=False)
     conclusion_text = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}), required=False)
     references_text = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}), required=False)
-    object = forms.CharField(required=False, help_text='Name of the artefact')
+    object_name = forms.CharField(required=False, help_text='Name of the artefact')
 
     name = forms.ModelChoiceField(Object.objects, widget=SelectWithPop)
     author = forms.ModelMultipleChoiceField(Contact.objects, widget=MultipleSelectWithPop, help_text='The author(s) of this file is (are) responsible for the information provided. Author(s) should provide their last name, initial of their first name and in brackets the abbreviation of their institutional affiliation, such as Degrigny C. (HE-Arc CR).', required=False)
@@ -64,7 +64,7 @@ class ArtefactsUpdateForm(forms.ModelForm):
 
     class Meta:
         model = Artefact
-        exclude = ['user']
+        exclude = ['object',]
 
 class ArtefactsCreateForm(forms.ModelForm):
     """

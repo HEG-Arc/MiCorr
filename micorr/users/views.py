@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 
+from collections import defaultdict
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.urlresolvers import reverse
 from django.views.generic import DetailView, ListView, RedirectView, UpdateView
@@ -21,11 +23,21 @@ class UserDetailView(LoginRequiredMixin, DetailView):
         context = super(UserDetailView, self).get_context_data(**kwargs)
         # Add the stratigraphies of the user
         stratigraphies = Neo4jDAO().getStratigraphiesByUser(self.request.user.id)
-        artefacts = self.request.user.object_set.all().order_by('created')
+        objects = self.request.user.object_set.all().order_by('created')
+        listKV = {}
+
+        for obj in objects :
+            objId = obj.id
+            artefacts = obj.artefact_set.all()
+            for artefact in artefacts :
+                listKV[objId] = artefact
+
         context['stratigraphies'] = stratigraphies
-        context['artefacts'] = artefacts
+        context['objects'] = objects
+        context['artefacts'] = listKV
         context['node_base_url'] = settings.NODE_BASE_URL
         return context
+
 
 
 class UserRedirectView(LoginRequiredMixin, RedirectView):

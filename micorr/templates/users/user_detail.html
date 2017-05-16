@@ -89,48 +89,46 @@
                             </div>
                             <div id="artefacts" class="panel-collapse collapse">
                                 {% if artefacts %}
-                                    <table class="table table-bordered table-striped table-hover">
-                                        <tr>
-                                            <th>Date</th>
-                                            <th>Name</th>
-                                            <th>Actions</th>
-                                            <th>Share</th>
-                                            <th>Validated</th>
-                                        </tr>
-                                        {% for artefact in artefacts %}
-                                            <tr>
-                                                <td>{{ artefact.created|date:"Y-m-d H:i:s" }}</td>
-                                                <td>
-                                                    <span>{{ artefact.name }}</span>
-                                                </td>
-                                                <td>
-                                                    <a href="{% url 'artefacts:artefact-update' artefact.id %}"><i
-                                                            class="fa fa-pencil"></i></a> |
-                                                    <a href="/artefacts/{{ artefact.id }}" target="_blank"><i class="fa fa-eye"></i></a>
-                                                    |
-                                                    <a href="/artefacts/{{ artefact.id }}/share/" target="_blank">
-                                                        <i class="fa fa-share-alt"></i></a>
-                                                    |
-                                                    <a href="{% url 'artefacts:artefact-delete' artefact.id %}"><i
-                                                            class="fa fa-trash"></i></a>
-                                                </td>
-                                                <td>
-                                                    {% if artefact.token_set.all %}
-                                                        <a href="{% url 'artefacts:list_tokens' artefact.id %}" target="_blank">
-                                                        <span>{{ artefact.token_set.count }} links</span>
-                                                        </a>
-                                                    {% endif %}
-                                                </td>
-                                                <td>
-                                                    {% if artefact.validated %}
-                                                        <span>Public </span>
-                                                    {% else %}
-                                                        <span>Private </span>
-                                                    {% endif %}
-                                                </td>
-                                            </tr>
-                                        {% endfor %}
-                                    </table>
+                                    {% for object in objects %}
+                                    <!-- Test -->
+                                        <div class="panel-heading" style="background-color: #E4E5E5">
+                                            <h4 class="panel-title">
+                                                <span class="glyphicon glyphicon-plus"></span>
+                                                <a data-toggle="collapse" href="#artefacts">{{ object.name }}</a>
+                                            </h4>
+                                        </div>
+                                        <div class="row">
+                                            <div class="c1">
+
+                                            </div>
+                                            <div class="c11">
+                                                <table class="table table-bordered table-striped table-hover">
+                                                    <tr>
+                                                        <th>Date</th>
+                                                        <th>Artefact</th>
+                                                        <th>Actions</th>
+                                                        <th>Share</th>
+                                                        <th>Validated</th>
+                                                    </tr>
+                                                    {% for key in artefacts %}
+                                                        {% if key == object.id %}
+                                                            <tr>
+                                                                <td>{{ key }}</td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                            </tr>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </table>
+                                            </div>
+                                        </div>
+
+                                    {% endfor %}
+                                    <!-- Test -->
+
+
                                 {% else %}
                                     <p>There are no saved artefacts in your profile. <a href="/#submit">Submit a new
                                         item</a> to

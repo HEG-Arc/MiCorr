@@ -237,17 +237,21 @@ class ArtefactsCreateView(generic.CreateView):
     template_name_suffix = '_create_form'
     form_class = ArtefactsCreateForm
 
-    """def form_valid(self, form):
-        user = self.request.user
-        form.instance.user = user
-        return super(ArtefactsCreateView, self).form_valid(form)"""
+    def get_context_data(self, **kwargs):
+        """
+        Allows the template to use the selected object
+        """
+        context = super(ArtefactsCreateView, self).get_context_data(**kwargs)
+        object = get_object_or_404(Object, pk=self.kwargs['pk'])
+        context['object'] = object
+        return context
+
+    def form_valid(self, form):
+        form.instance.object = get_object_or_404(Object, pk=self.kwargs['pk'])
+        return super(ArtefactsCreateView, self).form_valid(form)
 
     def get_success_url(self):
         return reverse('artefacts:artefact-update', kwargs={'pk': self.object.id})
-
-@login_required
-def newObject(request):
-    return handlePopAdd(request, ObjectForm, 'object')
 
 @login_required
 def newAuthor(request):
@@ -681,4 +685,4 @@ class ObjectCreateView(generic.CreateView):
         return super(ObjectCreateView, self).form_valid(form)
 
     def get_success_url(self):
-        return reverse('artefacts:artefact-create')
+        return reverse('artefacts:artefact-create', kwargs={'pk': self.object.id})
