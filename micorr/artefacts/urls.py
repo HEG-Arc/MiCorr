@@ -64,7 +64,5 @@ urlpatterns = [
     url(r'^(?P<artefact_id>\d+)/token/(?P<pk>\d+)/delete/$',
         login_required(artefacts_views.TokenDeleteView.as_view()), name='delete_token'),
 
-
-
     # url(r'^test-ontology/$', displayOntology),
 ]

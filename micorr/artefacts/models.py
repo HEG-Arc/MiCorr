@@ -234,7 +234,7 @@ class Artefact(TimeStampedModel):
     sample_number = models.CharField(max_length=100, verbose_name='lab number of sample', blank=True, default='', help_text='The inventory number of the artefact sample')
     date_aim_sampling = models.CharField(max_length=200, verbose_name='date and aim of sampling', blank=True, default='', help_text='The date and aim of sampling')
     validated = models.BooleanField(default=False)
-    isPublished = models.BooleanField(default=False)
+    published = models.BooleanField(default=False)
 
     # Foreign Keys
     object = models.ForeignKey(Object, verbose_name='object described', blank=True, null=True, help_text='Name of the artefact')
@@ -522,7 +522,7 @@ class Collaboraton_comment(TimeStampedModel):
 
     #Own fields
     comment = models.TextField()
-    isSent = models.BooleanField(default=False)
+    sent = models.BooleanField(default=False)
 
     #Foreign keys
     content_type = models.ForeignKey(ContentType, blank=True, null=True)

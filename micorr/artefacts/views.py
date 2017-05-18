@@ -15,11 +15,12 @@ from django.contrib import messages
 
 from contacts.forms import ContactCreateForm
 from stratigraphies.neo4jdao import Neo4jDAO
+
 from .forms import ArtefactsUpdateForm, ArtefactsCreateForm, DocumentUpdateForm, DocumentCreateForm, ArtefactFilter,\
     OriginCreateForm, ChronologyCreateForm, AlloyCreateForm, TechnologyCreateForm, EnvironmentCreateForm, \
     MicrostructureCreateForm, MetalCreateForm, CorrosionFormCreateForm, CorrosionTypeCreateForm, \
     RecoveringDateCreateForm, ImageCreateForm, TypeCreateForm, ContactAuthorForm, ShareArtefactForm, \
-    ShareWithFriendForm, ObjectCreateForm
+    ShareWithFriendForm, ObjectCreateForm, ObjectUpdateForm
 from .models import Artefact, Document, Object, Section, SectionCategory, Image, Stratigraphy, Token
 import logging
 
@@ -149,10 +150,15 @@ class ArtefactsUpdateView(generic.UpdateView):
 
     def get(self, request, **kwargs):
         artefact = Artefact.objects.get(id=self.kwargs['pk'])
+        obj = Object.objects.get(id=artefact.object.id)
+
 
         self.object = artefact
         form_class = self.get_form_class()
         form = self.get_form(form_class)
+
+        form_classObject = ObjectUpdateForm
+        formObject = ObjectUpdateForm(instance=obj)
 
         object_section = Section.objects.get_or_create(order=1, artefact=artefact, section_category=SectionCategory.objects.get(name='AR'), title='The object')[0]
         description_section = Section.objects.get_or_create(order=2, artefact=artefact, section_category=SectionCategory.objects.get(name='AR'), title='Description and visual observation')[0]
@@ -166,7 +172,7 @@ class ArtefactsUpdateView(generic.UpdateView):
         conclusion_text = Section.objects.get_or_create(order=10, artefact=artefact, section_category=SectionCategory.objects.get(name='CO'), title='Conclusion')[0].content
         references_text = Section.objects.get_or_create(order=11, artefact=artefact, section_category=SectionCategory.objects.get(name='RE'), title='References')[0].content
         stratigraphies = artefact.stratigraphy_set.all
-        return render(request, 'artefacts/artefact_update_form.html', self.get_context_data(form=form, object_section=object_section, description_section=description_section,
+        return render(request, 'artefacts/artefact_update_form.html', self.get_context_data(form=form, formObject=formObject, object_section=object_section, description_section=description_section,
                                                              zone_section=zone_section, macroscopic_section=macroscopic_section,
                                                              sample_section=sample_section, analyses_performed=analyses_performed,
                                                              metal_section=metal_section, corrosion_section=corrosion_section,
@@ -686,3 +692,24 @@ class ObjectCreateView(generic.CreateView):
 
     def get_success_url(self):
         return reverse('artefacts:artefact-create', kwargs={'pk': self.object.id})
+
+"""class PublicationDetailView(LoginRequiredMixin, DetailView):
+    model = User
+    # These next two lines tell the view to index lookups by username
+    slug_field = 'username'
+    slug_url_kwarg = 'username'
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super(PublicationDetailView, self).get_context_data(**kwargs)
+        # Add all the objects of the user in a variable
+        objects = self.request.user.object_set.all().order_by('created')
+        list1 = []
+
+        context['stratigraphies'] = stratigraphies
+        context['objects'] = objects
+        context['artefacts'] = list1
+        context['node_base_url'] = settings.NODE_BASE_URL
+        return context
+"""
+

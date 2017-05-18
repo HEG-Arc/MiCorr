@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}{% endblock %}
+
+{% block content %}
+<h1>Page Not found</h1>
+    {% for artefact in artefacts_collaboration %}
+        {{ artefact.id }}
+    {% endfor %}
+
+<p>This is not the page you were looking for.</p>
+{% endblock content %}

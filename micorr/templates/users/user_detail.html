@@ -27,9 +27,15 @@
             </div>
             <br>
             <div class="row">
-                <div class="col-sm-12 ">
+                <div class="col-sm-6 ">
                     <a class="btn btn-success" href="{% url 'artefacts:searchStratigraphy' %}"><i class="fa fa-align-justify"></i> Create new stratigraphy</a>
                     <a class="btn btn-success" href="{% url 'artefacts:object-create' %}"><i class="fa fa-pencil"></i> Create new artefact</a>
+                </div>
+                <div class="col-sm-6">
+                    <div class="pull-right">
+                        <!--<a class="btn btn-success" href="% url 'publication-menu' %}"><i class="fa fa-file-text-o"></i> Publication</a>-->
+                        <a class="btn btn-success" href="{% url 'users:collaboration-menu' %}"><i class="fa fa-users"></i> Collaboration</a>
+                    </div>
                 </div>
             </div>
             <br>
@@ -88,7 +94,7 @@
                                 </h4>
                             </div>
                             <div id="artefacts" class="panel-collapse collapse">
-                                {% if artefacts %}
+                                {% if objects %}
                                     {% for object in objects %}
                                     <!-- Test -->
                                         <div class="panel-heading" style="background-color: #E4E5E5">
@@ -104,27 +110,63 @@
                                             <div class="c11">
                                                 <table class="table table-bordered table-striped table-hover">
                                                     <tr>
-                                                        <th>Date</th>
-                                                        <th>Artefact</th>
+                                                        <th>Created</th>
+                                                        <th>Last modified</th>
                                                         <th>Actions</th>
                                                         <th>Share</th>
-                                                        <th>Validated</th>
+                                                        <th>Validated / Published</th>
                                                     </tr>
-                                                    {% for key in artefacts %}
-                                                        {% if key == object.id %}
+
+                                                    {% if artefacts %}
+                                                        {% for artefact in artefacts %}
+                                                            {% if artefact.object.id == object.id %}
                                                             <tr>
-                                                                <td>{{ key }}</td>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <td></td>
+                                                            <td>{{ artefact.created }} </td>
+                                                            <td>{{ artefact.modified }} </td>
+                                                            <td>
+                                                                <a href="{% url 'artefacts:artefact-update' artefact.id %}"><i
+                                                                        class="fa fa-pencil"></i></a> |
+                                                                <a href="/artefacts/{{ artefact.id }}" target="_blank"><i class="fa fa-eye"></i></a>
+                                                                |
+                                                                <a href="/artefacts/{{ artefact.id }}/share/" target="_blank">
+                                                                    <i class="fa fa-share-alt"></i></a>
+                                                                |
+                                                                <a href="{% url 'artefacts:artefact-delete' artefact.id %}"><i
+                                                                        class="fa fa-trash"></i></a>
+                                                            </td>
+                                                            <td>
+                                                                {% if artefact.token_set.all %}
+                                                                    <a href="{% url 'artefacts:list_tokens' artefact.id %}" target="_blank">
+                                                                    {% if artefact.token_set.count == 1 %}
+                                                                        <span>{{ artefact.token_set.count }} link</span>
+                                                                    {% else %}
+                                                                        <span>{{ artefact.token_set.count }} links</span>
+                                                                    </a>
+                                                                {% endif %}
+                                                                {% else %}
+                                                                    <span>No link</span>
+                                                                {% endif %}
+                                                            </td>
+                                                            {% if artefact.published %}
+                                                                <td>Published</td>
+                                                            {% else %}
+                                                                {% if artefact.validated %}
+                                                                    <td>Validated </td>
+                                                                {% else %}
+                                                                    <td>Not validated </td>
+                                                                {% endif %}
+                                                            {% endif %}
                                                             </tr>
-                                                        {% endif %}
-                                                    {% endfor %}
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    {% else %}
+                                                        <p>There is no saved artefact card for this artefact.</p>
+                                                    {% endif %}
                                                 </table>
                                             </div>
                                         </div>
-
+                                    <!--{ else %}
+                                        <p>There are no saved artefact cards in your profile.</p>-->
                                     {% endfor %}
                                     <!-- Test -->
 
