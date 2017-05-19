@@ -454,6 +454,9 @@ class TokenManager(models.Manager):
                             recipient=recipient)
         return token
 
+    def get_token(self, recipient):
+        token = self.get(recipient=recipient)
+
 
 class Token(TimeStampedModel):
     """

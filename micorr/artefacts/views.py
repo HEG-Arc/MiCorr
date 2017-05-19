@@ -157,7 +157,6 @@ class ArtefactsUpdateView(generic.UpdateView):
         form_class = self.get_form_class()
         form = self.get_form(form_class)
 
-        form_classObject = ObjectUpdateForm
         formObject = ObjectUpdateForm(instance=obj)
 
         object_section = Section.objects.get_or_create(order=1, artefact=artefact, section_category=SectionCategory.objects.get(name='AR'), title='The object')[0]
@@ -182,6 +181,9 @@ class ArtefactsUpdateView(generic.UpdateView):
 
     def post(self, request, *args, **kwargs):
         artefact = get_object_or_404(Artefact, pk=self.kwargs['pk'])
+        obj = get_object_or_404(Object, pk=artefact.object.id)
+        obj.name='Chercher valeur'
+        obj.save()
         section_1 = Section.objects.get_or_create(order=1, artefact=artefact, section_category=SectionCategory.objects.get(name='AR'), title='The object')[0]
         artefact.section_set.add(section_1)
         section_2 = Section.objects.get_or_create(order=2, artefact=artefact, section_category=SectionCategory.objects.get(name='AR'), title='Description and visual observation')[0]
@@ -694,10 +696,6 @@ class ObjectCreateView(generic.CreateView):
         return reverse('artefacts:artefact-create', kwargs={'pk': self.object.id})
 
 """class PublicationDetailView(LoginRequiredMixin, DetailView):
-    model = User
-    # These next two lines tell the view to index lookups by username
-    slug_field = 'username'
-    slug_url_kwarg = 'username'
 
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
@@ -712,4 +710,39 @@ class ObjectCreateView(generic.CreateView):
         context['node_base_url'] = settings.NODE_BASE_URL
         return context
 """
+
+class CollaborationDetailView(generic.ListView):
+    model = Token
+
+    template_name_suffix = '_collaboration_menu'
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super(CollaborationDetailView, self).get_context_data(**kwargs)
+        user = self.request.user
+
+        # Add all the objects of the user in a variable
+        allTokensShared = self.request.user.token_set.all().order_by('created')
+        tokensShared = []
+        tokensReceived = []
+
+
+        # Research token shared by the user
+        for token in allTokensShared :
+            if token.right == 'W':
+                tokensShared.append(token)
+
+        # Research
+        try :
+            token = Token.tokenManager.get(recipient=user.email)
+            if token.right == 'W' :
+                tokensReceived.append(token)
+
+        except :
+            tokensReceived = []
+
+        context['tokens_shared_by_me'] = tokensShared
+        context['tokens_shared_with_me'] = tokensReceived
+        context['user'] = user
+        return context
 

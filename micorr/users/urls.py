@@ -34,10 +34,4 @@ urlpatterns = [
         name='update'
     ),
 
-    url(
-        regex=r'^~collaboration/$',
-        view=views.CollaborationDetailView.as_view(),
-        name='collaboration-menu'
-    ),
-
 ]

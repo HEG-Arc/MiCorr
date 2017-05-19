@@ -10,6 +10,7 @@ from django.views import generic
 from django.conf import settings
 
 from stratigraphies.neo4jdao import Neo4jDAO
+
 from .models import User
 
 
@@ -74,28 +75,3 @@ class UserListView(LoginRequiredMixin, ListView):
     # These next two lines tell the view to index lookups by username
     slug_field = 'username'
     slug_url_kwarg = 'username'
-
-class CollaborationDetailView(LoginRequiredMixin, ListView):
-    model = User
-    # These next two lines tell the view to index lookups by username
-    slug_field = 'username'
-    slug_url_kwarg = 'username'
-
-    template_name_suffix = '_collaboration_menu'
-
-    def get_context_data(self, **kwargs):
-        # Call the base implementation first to get a context
-        context = super(CollaborationDetailView, self).get_context_data(**kwargs)
-
-        # Add all the objects of the user in a variable
-        allTokens = self.request.user.token_set.all().order_by('created')
-        artefacts = []
-
-        # Add artefacts card collaborated in a list
-        for token in allTokens :
-            if token.right == 'W':
-                artefacts.append(token.artefact)
-
-        context['artefacts_collaboration'] = artefacts
-        context['node_base_url'] = settings.NODE_BASE_URL
-        return context

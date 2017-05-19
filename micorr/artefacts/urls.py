@@ -64,5 +64,6 @@ urlpatterns = [
     url(r'^(?P<artefact_id>\d+)/token/(?P<pk>\d+)/delete/$',
         login_required(artefacts_views.TokenDeleteView.as_view()), name='delete_token'),
 
+    url(r'^collaboration/$', login_required(artefacts_views.CollaborationDetailView.as_view()), name='collaboration_menu')
     # url(r'^test-ontology/$', displayOntology),
 ]
