@@ -1,0 +1,863 @@
+{% extends "base.html" %}
+{% load terms %}
+{% block custom_header_script %}
+    <script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
+    <script>tinymce.init({selector: 'textarea', plugins: "table"});</script>
+{% endblock custom_header_script %}
+
+    {% block title %}
+        <title>MiCorr | {{ artefact.artefact_verbose_description_short }}</title>
+    {% endblock title %}
+
+      {% block sidemenu %}
+      <div class="c3" id="sidemenu"> <!-- no-active-hilight : do not highlight the "active" node of the menu. It is difficult for the affix to work when elements in the page are close one to the other (i.e. folded elements), therefore, it is less confusing to NOT hilight the .active nodes of the menu -->
+          <div class="sidemenu-container">
+              <ul class="nav smooth-scroll"> <!-- smooth-scroll to the element in the page instead of jumping -->
+                  <li><a href="#title1">{{ sections.0.title }}</a></li>
+                  <li>
+                      <a href="#title2">{{ sections.1.title }}</a>
+                      <ul class="nav subnav">
+                          <li><a href="#title21">{{ sections.2.title }}</a></li>
+                          <li><a href="#title22">{{ sections.3.title }}</a></li>
+                      </ul>
+                  </li>
+                  <li><a href="#title3">{{ sections.4.title }}</a></li>
+                  <li>
+                       <a href="#title4">{{ sections.5.title }}</a>
+                       <ul class="nav subnav"> <!-- subnav indicates that we will unfold the parent before jumping to a child to make sure that the element is visible -->
+                          <li><a href="#title41">{{ sections.6.title }}</a></li>
+                          <li><a href="#title42">{{ sections.7.title }}</a></li>
+                       </ul>
+                  </li>
+                  <li><a href="#title5">{{ sections.8.title }}</a></li>
+                  <li><a href="#title6">{{ sections.9.title }}</a></li>
+                  <li><a href="#title7">{{ sections.10.title }}</a></li>
+              </ul>
+          </div>
+      </div>
+      {% endblock sidemenu %}
+
+      {% block content %}
+
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+      <h1>{{ artefact.artefact_verbose_description_short }}</h1>
+
+        <div class="row">
+          <div class="c2"><em>Authors</em></div>
+          <div class="c10"><p>{{ artefact.get_authors }}</p></div>
+
+        </div>
+
+        <br>
+
+        <div  id="accordionN1" aria-multiselectable="true">
+
+        <!--THE OBJECT-->
+          <div class="row accordion-title1" id="title1">
+              <a class="line" data-toggle="collapse" data-parent="#accordionN1" href="#content1" aria-expanded="true" aria-controls="content1">{{ sections.0.title }}</a>
+          </div>
+          <div class="row accordion-content1 collapse in" id="content1" aria-labelledby="title1">
+            <div class="line palebox">
+              <div class="row">
+                <div class="c6">
+                  {% if sections.0.image_set.all %}
+                        {% for image in sections.0.image_set.all %}
+                          <div class="row">
+                          {% if image.image %}
+                            <div class="c6">
+                              <a href="{{ image.image.url }}" class="image-popup"><img src="{{ image.image.url }}" class="img-responsive"></a>
+                            </div>
+                            <div class="c6">
+                              <p><a name="fig1"></a>{{ image.legend }}</p>
+                            </div>
+                          {% endif %}
+                          </div>
+                        {% endfor %}
+                  {% endif %}
+                </div>
+                <div class="c6">
+                    <div class="pull-right">
+                        <div class="pull-right">
+                            <a href="#field"><i class="fa fa-comment"></i></a>
+                        </div>
+                    </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        <!--DESCRIPTION-->
+          <div class="row accordion-title1" id="title2">
+              <a class="line"  data-toggle="collapse" data-parent="#accordionN1" href="#content2" aria-expanded="true" aria-controls="content2">{{ sections.1.title }}</a>
+          </div>
+          <div class="row accordion-content3 collapse in" id="content2"  aria-labelledby="title2">
+            <div class="line lightbox">
+              <form action="{% url 'artefacts:collaboration-comment' 40 %}" method="post">{% csrf_token %}
+                  <div class="row">
+                    <div class="c3"><em>Description of artefact</em></div>
+                    <div class="c8"><p>{{ artefact.description|safe }}</p></div>
+                    <div class="c1">
+                        <div class="pull-right">
+                            <a href="#commentDescription" data-toggle="collapse" aria-expanded="false" aria-controls="commentDescription"><i class="fa fa-comment"></i></a>
+                        </div>
+                    </div>
+                  </div>
+                  <div class="row collapse" id="commentDescription" aria-expanded="false">
+                        <div class="c11">
+                            <hr>
+                            <h3>Your comment</h3>
+                            {{ form.comment }}
+                            <br>
+                            <div class="pull-right">
+                                <a href="" class="btn btn-primary btn-md">Save comment</a>
+                            </div>
+                            <br>
+                            <hr>
+                        </div>
+
+                  </div>
+                  <br>
+              </form>
+
+              <form action="{% url 'artefacts:collaboration-comment' 40 %}" method="post">{% csrf_token %}
+                  <div class="row">
+                    <div class="c3"><em>Type of artefact</em></div>
+                    <div class="c8"><p>{{ artefact.type }}</p></div>
+                    <div class="c1">
+                        <div class="pull-right">
+                            <a href="#commentArtefactType" data-toggle="collapse" aria-expanded="false" aria-controls="commentArtefactType"><i class="fa fa-comment"></i></a>
+                        </div>
+                    </div>
+                  </div>
+
+                  <div class="row collapse" id="commentArtefactType" aria-expanded="false">
+                        <div class="c11">
+                            <hr>
+                            <h3>Your comment</h3>
+                            {{ form.comment }}
+                            <br>
+                            <div class="pull-right">
+                                <a href="" class="btn btn-primary btn-md">Save comment</a>
+                            </div>
+                            <br>
+                            <hr>
+                        </div>
+                  </div>
+                  <br>
+              </form>
+
+              <!--Origin -->
+              <div class="row">
+                <div class="c3"><em>Origin and date of recovering</em></div>
+                <div class="c8"><p>{{ artefact.origin }}. {{ artefact.recovering_date }}</p></div>
+                <div class="c1">
+                    <div class="pull-right">
+                        <a href="#commentOrigin" data-toggle="collapse" aria-expanded="false" aria-controls="commentOrigin"><i class="fa fa-comment"></i></a>
+                    </div>
+                </div>
+              </div>
+
+              <div class="row collapse" id="commentOrigin" aria-expanded="false">
+                    <div class="c11">
+                        <hr>
+                        <h3>Your comment</h3>
+                        {{ form.comment }}
+                        <br>
+                        <div class="pull-right">
+                            <a href="" class="btn btn-primary btn-md">Save comment</a>
+                        </div>
+                        <br>
+                        <hr>
+                    </div>
+              </div>
+
+              <!--ArtefactDate -->
+              <div class="row">
+                <div class="c3"><em>Dating of artefact (Tpq _ Taq)</em></div>
+                <div class="c8"><p>{{ artefact.chronology_period }}</p></div>
+                <div class="c1">
+                    <div class="pull-right">
+                        <a href="#commentArtefactDate" data-toggle="collapse" aria-expanded="false" aria-controls="commentArtefactDate"><i class="fa fa-comment"></i></a>
+                    </div>
+                </div>
+              </div>
+
+              <div class="row collapse" id="commentArtefactDate" aria-expanded="false">
+                    <div class="c11">
+                        <hr>
+                        <h3>Your comment</h3>
+                        {{ form.comment }}
+                        <br>
+                        <div class="pull-right">
+                            <a href="" class="btn btn-primary btn-md">Save comment</a>
+                        </div>
+                        <br>
+                        <hr>
+                    </div>
+              </div>
+
+              <!-- Chronology -->
+              <div class="row">
+                <div class="c3"><em>Chronology</em></div>
+                <div class="c8"><p>{{ artefact.chronology_period.chronology_category }}</p></div>
+                <div class="c1">
+                    <div class="pull-right">
+                        <a href="#commentChronology" data-toggle="collapse" aria-expanded="false" aria-controls="commentChronology"><i class="fa fa-comment"></i></a>
+                    </div>
+                </div>
+              </div>
+
+              <div class="row collapse" id="commentChronology" aria-expanded="false">
+                    <div class="c11">
+                        <hr>
+                        <h3>Your comment</h3>
+                        {{ form.comment }}
+                        <br>
+                        <div class="pull-right">
+                            <a href="" class="btn btn-primary btn-md">Save comment</a>
+                        </div>
+                        <br>
+                        <hr>
+                    </div>
+              </div>
+
+              <!-- Burial conditions / environment -->
+              <div class="row">
+                <div class="c3"><em>Burial conditions / environment</em></div>
+                <div class="c8"><p>{{ artefact.environment }}</p></div>
+                <div class="c1">
+                    <div class="pull-right">
+                        <a href="#commentEnvironment" data-toggle="collapse" aria-expanded="false" aria-controls="commentEnvironment"><i class="fa fa-comment"></i></a>
+                    </div>
+                </div>
+              </div>
+
+              <div class="row collapse" id="commentEnvironment" aria-expanded="false">
+                    <div class="c11">
+                        <hr>
+                        <h3>Your comment</h3>
+                        {{ form.comment }}
+                        <br>
+                        <div class="pull-right">
+                            <a href="" class="btn btn-primary btn-md">Save comment</a>
+                        </div>
+                        <br>
+                        <hr>
+                    </div>
+              </div>
+
+              <!-- Artefact location -->
+              <div class="row">
+                <div class="c3"><em>Artefact location</em></div>
+                <div class="c8"><p>{{ artefact.location }}</p></div>
+                <div class="c1">
+                    <div class="pull-right">
+                        <a href="#commentLocation" data-toggle="collapse" aria-expanded="false" aria-controls="commentLocation"><i class="fa fa-comment"></i></a>
+                    </div>
+                </div>
+              </div>
+
+              <div class="row collapse" id="commentLocation" aria-expanded="false">
+                    <div class="c11">
+                        <hr>
+                        <h3>Your comment</h3>
+                        {{ form.comment }}
+                        <br>
+                        <div class="pull-right">
+                            <a href="" class="btn btn-primary btn-md">Save comment</a>
+                        </div>
+                        <br>
+                        <hr>
+                    </div>
+              </div>
+
+              <!-- Owner -->
+              <div class="row">
+                <div class="c3"><em>Owner</em></div>
+                <div class="c8"><p>{{ artefact.owner }}</p></div>
+                <div class="c1">
+                    <div class="pull-right">
+                        <a href="#commentOwner" data-toggle="collapse" aria-expanded="false" aria-controls="commentOwner"><i class="fa fa-comment"></i></a>
+                    </div>
+                </div>
+              </div>
+
+              <div class="row collapse" id="commentOwner" aria-expanded="false">
+                    <div class="c11">
+                        <hr>
+                        <h3>Your comment</h3>
+                        {{ form.comment }}
+                        <br>
+                        <div class="pull-right">
+                            <a href="" class="btn btn-primary btn-md">Save comment</a>
+                        </div>
+                        <br>
+                        <hr>
+                    </div>
+              </div>
+
+              <!-- Inv. Number -->
+              <div class="row">
+                <div class="c3"><em>Inv. Number</em></div>
+                <div class="c8"><p>{{ artefact.inventory_number }}</p></div>
+                <div class="c1">
+                    <div class="pull-right">
+                        <a href="#commentNumber" data-toggle="collapse" aria-expanded="false" aria-controls="commentNumber"><i class="fa fa-comment"></i></a>
+                    </div>
+                </div>
+              </div>
+
+              <div class="row collapse" id="commentNumber" aria-expanded="false">
+                    <div class="c11">
+                        <hr>
+                        <h3>Your comment</h3>
+                        {{ form.comment }}
+                        <br>
+                        <div class="pull-right">
+                            <a href="" class="btn btn-primary btn-md">Save comment</a>
+                        </div>
+                        <br>
+                        <hr>
+                    </div>
+              </div>
+
+              <div class="row">
+                <div class="c3"><em>Recorded conservation data</em></div>
+                <div class="c8"><p>{{ artefact.recorded_conservation_data }}</p></div>
+                <div class="c1">
+                    <div class="pull-right">
+                        <a href="#commentRecConsData" data-toggle="collapse" aria-expanded="false" aria-controls="commentRecConsData"><i class="fa fa-comment"></i></a>
+                    </div>
+                </div>
+              </div>
+
+              <div class="row collapse" id="commentRecConsData" aria-expanded="false">
+                    <div class="c11">
+                        <hr>
+                        <h3>Your comment</h3>
+                        {{ form.comment }}
+                        <br>
+                        <div class="pull-right">
+                            <a href="" class="btn btn-primary btn-md">Save comment</a>
+                        </div>
+                        <br>
+                        <hr>
+                    </div>
+              </div>
+
+            </div>
+            {% if sections.1.complementary_information != '' %}
+                <div class="line palebox">
+                    <h4 class="underline">Complementary information</h4>
+                        <p>{{ sections.1.complementary_information|safe }}</p>
+                </div>
+            {% endif %}
+            <div class="line">
+                <div id="accordionN2" aria-multiselectable="true">
+
+                <!--ZONES-->
+                  <div class="row accordion-title2" id="title21">
+                      <a class="line" data-toggle="collapse" data-parent="#accordionN2" href="#content21" aria-expanded="true" aria-controls="content21">{{ sections.2.title }}</a>
+                  </div>
+                  <div class="row accordion-content2 collapse in" id="content21" aria-labelledby="title21">
+                    {% if sections.2.image_set.all %}
+                        <div class="line lightbox">
+                            {% for image in sections.2.image_set.all %}
+                              <div class="row">
+                              {% if image.image %}
+                                <div class="c6">
+                                  <a href="{{ image.image.url }}" class="image-popup"><img src="{{ image.image.url }}" class="img-responsive"></a>
+                                </div>
+                                <div class="c6">
+                                  <p><a name="fig1"></a>{{ image.legend }}</p>
+                                </div>
+                              {% endif %}
+                              </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                  </div>
+
+                <!--MACROSCOPIC-->
+                  <div class="row accordion-title2" id="title22">
+                      <a class="line"  data-toggle="collapse" data-parent="#accordionN2" href="#content22" aria-expanded="true" aria-controls="content22">{{ sections.3.title }}</a>
+                  </div>
+                  <div class="row accordion-content2 collapse in" id="content22"  aria-labelledby="title22">
+                    <div class="line palebox">
+                        <p>{{ sections.3.content|safe }}</p>
+                    </div>
+                    {% if sections.3.image_set.all %}
+                    <div class="line lightbox">
+                        {% for image in sections.3.image_set.all %}
+                          <div class="row">
+                          {% if image.image %}
+                            <div class="c6">
+                              <a href="{{ image.image.url }}" class="image-popup"><img src="{{ image.image.url }}" class="img-responsive"></a>
+                            </div>
+                            <div class="c6">
+                              <p><a name="fig1"></a>{{ image.legend }}</p>
+                            </div>
+                          {% endif %}
+                          </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                  </div>
+                </div>
+            </div>
+          </div>
+
+        <!--SAMPLE-->
+          <div class="row accordion-title1" id="title3">
+              <a class="line"  data-toggle="collapse" data-parent="#accordionN1" href="#content3" aria-expanded="true" aria-controls="content3">{{ sections.4.title }}</a>
+          </div>
+          <div class="row accordion-content3 collapse in" id="content3"  aria-labelledby="title3">
+            <div class="line palebox">
+                {% if sections.4.image_set.all %}
+                    {% for image in sections.4.image_set.all %}
+                      <div class="row">
+                      {% if image.image %}
+                        <div class="c6">
+                          <a href="{{ image.image.url }}" class="image-popup"><img src="{{ image.image.url }}" class="img-responsive"></a>
+                        </div>
+                        <div class="c6">
+                          <p><a name="fig1"></a>{{ image.legend }}</p>
+                        </div>
+                      {% endif %}
+                      </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+
+          <!-- Description of sample -->
+            <div class="line lightbox">
+              <div class="row">
+                <div class="c3"><em>Description of sample</em></div>
+                <div class="c8"><p>{{ artefact.sample_description|safe }}</p></div>
+                <div class="c1">
+                    <div class="pull-right">
+                        <a href="#commentSampleDescription" data-toggle="collapse" aria-expanded="false" aria-controls="commentSampleDescription"><i class="fa fa-comment"></i></a>
+                    </div>
+                </div>
+              </div>
+
+              <div class="row collapse" id="commentSampleDescription" aria-expanded="false">
+                    <div class="c11">
+                        <hr>
+                        <h3>Your comment</h3>
+                        {{ form.comment }}
+                        <br>
+                        <div class="pull-right">
+                            <a href="" class="btn btn-primary btn-md">Save comment</a>
+                        </div>
+                        <br>
+                        <hr>
+                    </div>
+              </div>
+
+            <!-- Alloy -->
+              <div class="row">
+                <div class="c3"><em>Alloy</em></div>
+                <div class="c8"><p>{{ artefact.alloy }}</p></div>
+                <div class="c1">
+                    <div class="pull-right">
+                        <a href="#commentAlloy" data-toggle="collapse" aria-expanded="false" aria-controls="commentAlloy"><i class="fa fa-comment"></i></a>
+                    </div>
+                </div>
+              </div>
+
+              <div class="row collapse" id="commentAlloy" aria-expanded="false">
+                    <div class="c11">
+                        <hr>
+                        <h3>Your comment</h3>
+                        {{ form.comment }}
+                        <br>
+                        <div class="pull-right">
+                            <a href="" class="btn btn-primary btn-md">Save comment</a>
+                        </div>
+                        <br>
+                        <hr>
+                    </div>
+              </div>
+
+            <!-- Technology -->
+              <div class="row">
+                <div class="c3"><em>Technology</em></div>
+                <div class="c8"><p>{{ artefact.technology }}</p></div>
+                <div class="c1">
+                    <div class="pull-right">
+                        <a href="#commentTechnology" data-toggle="collapse" aria-expanded="false" aria-controls="commentTechnology"><i class="fa fa-comment"></i></a>
+                    </div>
+                </div>
+              </div>
+
+              <div class="row collapse" id="commentTechnology" aria-expanded="false">
+                    <div class="c11">
+                        <hr>
+                        <h3>Your comment</h3>
+                        {{ form.comment }}
+                        <br>
+                        <div class="pull-right">
+                            <a href="" class="btn btn-primary btn-md">Save comment</a>
+                        </div>
+                        <br>
+                        <hr>
+                    </div>
+              </div>
+
+            <!-- Lab number of sample -->
+              <div class="row">
+                <div class="c3"><em>Lab number of sample</em></div>
+                <div class="c8"><p>{{ artefact.sample_number }}</p></div>
+                <div class="c1">
+                    <div class="pull-right">
+                        <a href="#commentSampleNumber" data-toggle="collapse" aria-expanded="false" aria-controls="commentSampleNumber"><i class="fa fa-comment"></i></a>
+                    </div>
+                </div>
+              </div>
+
+              <div class="row collapse" id="commentSampleNumber" aria-expanded="false">
+                    <div class="c11">
+                        <hr>
+                        <h3>Your comment</h3>
+                        {{ form.comment }}
+                        <br>
+                        <div class="pull-right">
+                            <a href="" class="btn btn-primary btn-md">Save comment</a>
+                        </div>
+                        <br>
+                        <hr>
+                    </div>
+              </div>
+
+              <div class="row">
+                <div class="c3"><em>Sample location</em></div>
+                <div class="c8"><p>{{ artefact.sample_location }}</p></div>
+                <div class="c1">
+                    <div class="pull-right">
+                        <a href="#commentSampleLocation" data-toggle="collapse" aria-expanded="false" aria-controls="commentSampleLocation"><i class="fa fa-comment"></i></a>
+                    </div>
+                </div>
+              </div>
+
+              <div class="row collapse" id="commentSampleLocation" aria-expanded="false">
+                    <div class="c11">
+                        <hr>
+                        <h3>Your comment</h3>
+                        {{ form.comment }}
+                        <br>
+                        <div class="pull-right">
+                            <a href="" class="btn btn-primary btn-md">Save comment</a>
+                        </div>
+                        <br>
+                        <hr>
+                    </div>
+              </div>
+
+            <!-- Responsible institution -->
+              <div class="row">
+                <div class="c3"><em>Responsible institution</em></div>
+                <div class="c8"><p>{{ artefact.responsible_institution }}</p></div>
+                <div class="c1">
+                    <div class="pull-right">
+                        <a href="#commentRespInst" data-toggle="collapse" aria-expanded="false" aria-controls="commentRespInst"><i class="fa fa-comment"></i></a>
+                    </div>
+                </div>
+              </div>
+
+              <div class="row collapse" id="commentRespInst" aria-expanded="false">
+                    <div class="c11">
+                        <hr>
+                        <h3>Your comment</h3>
+                        {{ form.comment }}
+                        <br>
+                        <div class="pull-right">
+                            <a href="" class="btn btn-primary btn-md">Save comment</a>
+                        </div>
+                        <br>
+                        <hr>
+                    </div>
+              </div>
+
+            <!-- Date and aim of sampling -->
+              <div class="row">
+                <div class="c3"><em>Date and aim of sampling</em></div>
+                <div class="c8"><p>{{ artefact.date_aim_sampling }}</p></div>
+                <div class="c1">
+                    <div class="pull-right">
+                       <a href="#commentDateAimSampling" data-toggle="collapse" aria-expanded="false" aria-controls="commentDateAimSampling"><i class="fa fa-comment"></i></a>
+                    </div>
+                </div>
+              </div>
+
+              <div class="row collapse" id="commentDateAimSampling" aria-expanded="false">
+                    <div class="c11">
+                        <hr>
+                        <h3>Your comment</h3>
+                        {{ form.comment }}
+                        <br>
+                        <div class="pull-right">
+                            <a href="" class="btn btn-primary btn-md">Save comment</a>
+                        </div>
+                        <br>
+                        <hr>
+                    </div>
+              </div>
+
+              <div class="row">
+                <div class="c3"><em>Stratigraphies</em></div>
+                <div class="c8">
+                    {% for stratigraphy in stratigraphies %}
+                        <p><a href="/micorr/#/stratigraphy/{{ stratigraphy.uid }}" target="_blank"><img src="{{ node_base_url }}getStratigraphySvg?name={{ stratigraphy.uid }}&width=300" class="img-responsive"></a></p>
+                    {% empty %}
+                        <p>None</p>
+                    {% endfor %}
+                </div>
+                <div class="c1">
+                    <div class="pull-right">
+                        <a href="#commentStratigraphies" data-toggle="collapse" aria-expanded="false" aria-controls="commentDateAimSampling"><i class="fa fa-comment"></i></a>
+                    </div>
+                </div>
+              </div>
+
+              <div class="row collapse" id="commentDateAimSampling" aria-expanded="false">
+                    <div class="c11">
+                        <hr>
+                        <h3>Your comment</h3>
+                        {{ form.comment }}
+                        <br>
+                        <div class="pull-right">
+                            <a href="" class="btn btn-primary btn-md">Save comment</a>
+                        </div>
+                        <br>
+                        <hr>
+                    </div>
+              </div>
+
+            </div>
+            {% if sections.4.complementary_information != '' %}
+              <div class="line palebox">
+                <h4 class="underline">Complementary information</h4>
+                    <p>{{ sections.4.complementary_information|safe }}</p>
+              </div>
+            {% endif %}
+          </div>
+
+
+        <!--ANALYSES AND RESULTS-->
+          <div class="row accordion-title1" id="title4">
+              <a class="line"  data-toggle="collapse" data-parent="#accordionN1" href="#content4" aria-expanded="true" aria-controls="content4">{{ sections.5.title }}</a>
+          </div>
+          <div class="row accordion-content3 collapse in" id="content4"  aria-labelledby="title4">
+            <div class="line palebox">
+                <div class="row">
+                    <div class="c11">
+                        {% filter replace_terms %}
+                            <p>{{ sections.5.content|safe }}</p>
+                        {% endfilter %}
+                    </div>
+                    <div class="c1">
+                        <div class="pull-right">
+                            <a href="#field"><i class="fa fa-comment"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="line">
+                <div id="accordionN2" aria-multiselectable="true">
+
+                <!--METAL-->
+                  <div class="row accordion-title2" id="title41">
+                      <a class="line" data-toggle="collapse" data-parent="#accordionN2" href="#content41" aria-expanded="true" aria-controls="content41">{{ sections.6.title }}</a>
+                  </div>
+                  <div class="row accordion-content2 collapse in" id="content41" aria-labelledby="title41">
+                    <div class="line palebox">
+                        <div class="row">
+                            <div class="c11">
+                                {% filter replace_terms %}
+                                    <p>{{ sections.6.content|safe }}</p>
+                                {% endfilter %}
+                            </div>
+                            <div class="c1">
+                                <div class="pull-right">
+                                    <a href="#field"><i class="fa fa-comment"></i></a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="line lightbox">
+                        <div class="row">
+                            <div class="c11">
+                                {% if sections.6.image_set.all %}
+                                    {% for image in sections.6.image_set.all %}
+                                      <div class="row">
+                                      {% if image.image %}
+                                        <div class="c6">
+                                          <a href="{{ image.image.url }}" class="image-popup"><img src="{{ image.image.url }}" class="img-responsive"></a>
+                                        </div>
+                                        <div class="c6">
+                                          <p><a name="fig1"></a>{{ image.legend }}</p>
+                                        </div>
+                                      {% endif %}
+                                      </div>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                            <div class="c1">
+                                <div class="pull-right">
+                                    <a href="#field"><i class="fa fa-comment"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% if sections.6.complementary_information != '' %}
+                        <div class="line palebox">
+                            <h4 class="underline">Complementary information</h4>
+                                <p>{{ sections.6.complementary_information|safe }}</p>
+                        </div>
+                    {% endif %}
+                  </div>
+
+                <!--CORROSION LAYERS-->
+                  <div class="row accordion-title2" id="title42">
+                      <a class="line"  data-toggle="collapse" data-parent="#accordionN2" href="#content42" aria-expanded="true" aria-controls="content42">{{ sections.7.title }}</a>
+                  </div>
+                  <div class="row accordion-content2 collapse in" id="content42"  aria-labelledby="title42">
+                    <div class="line palebox">
+                        <div class="row">
+                            <div class="c11">
+                                {% filter replace_terms %}
+                                    <p>{{ sections.7.content|safe }}</p>
+                                {% endfilter %}
+                            </div>
+                            <div class="c1">
+                                <div class="pull-right">
+                                    <a href="#field"><i class="fa fa-comment"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="line lightbox">
+                        <div class="row">
+                            <div class="c11">
+                               {% if sections.7.image_set.all %}
+                                    {% for image in sections.7.image_set.all %}
+                                      <div class="row">
+                                      {% if image.image %}
+                                        <div class="c6">
+                                          <a href="{{ image.image.url }}" class="image-popup"><img src="{{ image.image.url }}" class="img-responsive"></a>
+                                        </div>
+                                        <div class="c6">
+                                          <p><a name="fig1"></a>{{ image.legend }}</p>
+                                        </div>
+                                      {% endif %}
+                                      </div>
+                                    {% endfor %}
+                               {% endif %}
+                            </div>
+                            <div class="c1">
+                                <div class="pull-right">
+                                    <a href="#field"><i class="fa fa-comment"></i></a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    {% if sections.7.complementary_information != '' %}
+                        <div class="line palebox">
+                            <h4 class="underline">Complementary information</h4>
+                                <p>{{ sections.7.complementary_information|safe }}</p>
+                        </div>
+                    {% endif %}
+                  </div>
+                </div> <!--accordionN2 -->
+            </div>
+          </div>
+
+        <!--SYNTHESIS-->
+          <div class="row accordion-title1" id="title5">
+              <a class="line" data-toggle="collapse" data-parent="#accordionN3" href="#content5" aria-expanded="true" aria-controls="content5">{{ sections.8.title }}</a>
+          </div>
+          <div class="row accordion-content3 collapse in" id="content5"  aria-labelledby="title5">
+            <div class="line palebox">
+                {% filter replace_terms %}
+                    <p>{{ sections.8.content|safe }}</p>
+                {% endfilter %}
+            </div>
+            {% if sections.8.image_set.all %}
+            <div class="line lightbox">
+                {% for image in sections.8.image_set.all %}
+                  <div class="row">
+                  {% if image.image %}
+                    <div class="c6">
+                      <a href="{{ image.image.url }}" class="image-popup"><img src="{{ image.image.url }}" class="img-responsive"></a>
+                    </div>
+                    <div class="c5">
+                      <p><a name="fig1"></a>{{ image.legend }}</p>
+                    </div>
+                    <div class="c1">
+                        <div class="pull-right">
+                            <a href="#field"><i class="fa fa-comment"></i></a>
+                        </div>
+                    </div>
+                  {% endif %}
+                  </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+          </div>
+
+        <!--CONCLUSION-->
+          <div class="row accordion-title1" id="title6">
+              <a class="line" data-toggle="collapse" data-parent="#accordionN3" href="#content6" aria-expanded="true" aria-controls="content6">{{ sections.9.title }}</a>
+          </div>
+          <div class="row accordion-content3 collapse in" id="content6"  aria-labelledby="title6">
+            <div class="line palebox">
+                <div class="row">
+                    <div class="c11">
+                        {% filter replace_terms %}
+                            <p>{{ sections.9.content|safe }}</p>
+                        {% endfilter %}
+                    </div>
+                    <div class="c1">
+                        <div class="pull-right">
+                            <a href="#field"><i class="fa fa-comment"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          </div>
+
+        <!--REFERENCES-->
+          <div class="row accordion-title1" id="title7">
+              <a class="line" data-toggle="collapse" data-parent="#accordionN3" href="#content7" aria-expanded="true" aria-controls="content7">{{ sections.10.title }}</a>
+          </div>
+          <div class="row accordion-content3 collapse in" id="content7"  aria-labelledby="title7">
+            <div class="line palebox">
+                <div class="row">
+                    <div class="c12">
+                        <div class="pull-right">
+                           <a href="#field"><i class="fa fa-comment"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="c12">
+                        <p>{{ sections.10.content|safe }}</p>
+                    </div>
+                </div>
+            </div>
+          </div>
+
+          <!-- content for accordion 3 -->
+
+         </div>
+      {% endblock content %}

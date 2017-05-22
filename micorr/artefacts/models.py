@@ -518,7 +518,7 @@ class Field(TimeStampedModel):
         verbose_name = 'Field'
         verbose_name_plural = 'Fields'
 
-class Collaboraton_comment(TimeStampedModel):
+class Collaboration_comment(TimeStampedModel):
     """
     A comment allow author to collaborate with collaborators and discuss an artefact
     """

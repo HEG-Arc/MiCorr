@@ -10465,6 +10465,10 @@ img.mfp-img {
   cursor: pointer;
 }
 
+hr {
+  border-color : #4D4D4D;
+}
+
 @media screen and (max-width: 800px) and (orientation: landscape), screen and (max-height: 300px) {
   /**
    * Remove all paddings around the image on small screen

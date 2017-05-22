@@ -5,7 +5,7 @@ from django.template.loader import render_to_string
 from contacts.models import Contact
 
 from .models import Artefact, Document, Metal, CorrosionForm, CorrosionType, Environment, Object, Origin, ChronologyPeriod, \
-    Alloy, Technology, Microstructure, RecoveringDate, Image, Type, Stratigraphy, Token
+    Alloy, Technology, Microstructure, RecoveringDate, Image, Type, Stratigraphy, Token, Collaboration_comment
 from cities_light.models import Country
 from tinymce.widgets import TinyMCE
 import django_filters
@@ -278,3 +278,11 @@ class ObjectUpdateForm(forms.ModelForm) :
     class Meta:
         model = Object
         exclude = ['user']
+
+class CollaborationCommentForm(forms.ModelForm):
+    name = forms.CharField(widget = TinyMCE(attrs={'cols': 10, 'rows': 10}), required = False)
+
+    class Meta:
+        model = Collaboration_comment
+        fields = ['comment']
+

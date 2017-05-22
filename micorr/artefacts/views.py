@@ -20,8 +20,8 @@ from .forms import ArtefactsUpdateForm, ArtefactsCreateForm, DocumentUpdateForm,
     OriginCreateForm, ChronologyCreateForm, AlloyCreateForm, TechnologyCreateForm, EnvironmentCreateForm, \
     MicrostructureCreateForm, MetalCreateForm, CorrosionFormCreateForm, CorrosionTypeCreateForm, \
     RecoveringDateCreateForm, ImageCreateForm, TypeCreateForm, ContactAuthorForm, ShareArtefactForm, \
-    ShareWithFriendForm, ObjectCreateForm, ObjectUpdateForm
-from .models import Artefact, Document, Object, Section, SectionCategory, Image, Stratigraphy, Token
+    ShareWithFriendForm, ObjectCreateForm, ObjectUpdateForm, CollaborationCommentForm
+from .models import Artefact, Document, Collaboration_comment, Object, Section, SectionCategory, Image, Stratigraphy, Token
 import logging
 
 logger = logging.getLogger(__name__)
@@ -695,30 +695,14 @@ class ObjectCreateView(generic.CreateView):
     def get_success_url(self):
         return reverse('artefacts:artefact-create', kwargs={'pk': self.object.id})
 
-"""class PublicationDetailView(LoginRequiredMixin, DetailView):
-
-    def get_context_data(self, **kwargs):
-        # Call the base implementation first to get a context
-        context = super(PublicationDetailView, self).get_context_data(**kwargs)
-        # Add all the objects of the user in a variable
-        objects = self.request.user.object_set.all().order_by('created')
-        list1 = []
-
-        context['stratigraphies'] = stratigraphies
-        context['objects'] = objects
-        context['artefacts'] = list1
-        context['node_base_url'] = settings.NODE_BASE_URL
-        return context
-"""
-
-class CollaborationDetailView(generic.ListView):
+class CollaborationListView(generic.ListView):
     model = Token
 
     template_name_suffix = '_collaboration_menu'
 
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
-        context = super(CollaborationDetailView, self).get_context_data(**kwargs)
+        context = super(CollaborationListView, self).get_context_data(**kwargs)
         user = self.request.user
 
         # Add all the objects of the user in a variable
@@ -727,12 +711,12 @@ class CollaborationDetailView(generic.ListView):
         tokensReceived = []
 
 
-        # Research token shared by the user
+        # Research tokens shared by the user
         for token in allTokensShared :
             if token.right == 'W':
                 tokensShared.append(token)
 
-        # Research
+        # Research tokens shared with the user
         try :
             token = Token.tokenManager.get(recipient=user.email)
             if token.right == 'W' :
@@ -746,3 +730,116 @@ class CollaborationDetailView(generic.ListView):
         context['user'] = user
         return context
 
+class CollaborationUpdateView(generic.UpdateView):
+
+    model = Artefact
+    template_name = 'token_collaboration_update'
+    """
+    A detail view of a selected artefact
+    """
+    form_class = ArtefactsUpdateForm
+
+    def get_object(self, queryset=None):
+        obj = Artefact.objects.get(id=self.kwargs['artefact_id'])
+        return obj
+
+    def get(self, request, **kwargs):
+        artefact = Artefact.objects.get(id=self.kwargs['artefact_id'])
+        obj = Object.objects.get(id=artefact.object.id)
+
+
+        self.object = artefact
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+
+
+        object_section = Section.objects.get_or_create(order=1, artefact=artefact, section_category=SectionCategory.objects.get(name='AR'), title='The object')[0]
+        description_section = Section.objects.get_or_create(order=2, artefact=artefact, section_category=SectionCategory.objects.get(name='AR'), title='Description and visual observation')[0]
+        zone_section = Section.objects.get_or_create(order=3, artefact=artefact, section_category=SectionCategory.objects.get(name='SA'), title='Zones of the artefact submitted to visual observation and location of sampling areas')[0]
+        macroscopic_section = Section.objects.get_or_create(order=4, artefact=artefact, section_category=SectionCategory.objects.get(name='SA'), title='Macroscopic observation')[0]
+        sample_section = Section.objects.get_or_create(order=5, artefact=artefact, section_category=SectionCategory.objects.get(name='SA'), title='Sample')[0]
+        analyses_performed = Section.objects.get_or_create(order=6, artefact=artefact, section_category=SectionCategory.objects.get(name='AN'), title='Analyses and results')[0].content
+        metal_section = Section.objects.get_or_create(order=7, artefact=artefact, section_category=SectionCategory.objects.get(name='AN'), title='Metal')[0]
+        corrosion_section = Section.objects.get_or_create(order=8, artefact=artefact, section_category=SectionCategory.objects.get(name='AN'), title='Corrosion layers')[0]
+        synthesis_section = Section.objects.get_or_create(order=9, artefact=artefact, section_category=SectionCategory.objects.get(name='AN'), title='Synthesis of the macroscopic / microscopic observation of corrosion layers')[0]
+        conclusion_text = Section.objects.get_or_create(order=10, artefact=artefact, section_category=SectionCategory.objects.get(name='CO'), title='Conclusion')[0].content
+        references_text = Section.objects.get_or_create(order=11, artefact=artefact, section_category=SectionCategory.objects.get(name='RE'), title='References')[0].content
+        stratigraphies = artefact.stratigraphy_set.all
+        return render(request, 'artefacts/token_collaboration_update.html', self.get_context_data(artefact=artefact, form=form, object_section=object_section, description_section=description_section,
+                                                             zone_section=zone_section, macroscopic_section=macroscopic_section,
+                                                             sample_section=sample_section, analyses_performed=analyses_performed,
+                                                             metal_section=metal_section, corrosion_section=corrosion_section,
+                                                             synthesis_section=synthesis_section, conclusion_text=conclusion_text,
+                                                             references_text=references_text, stratigraphies=stratigraphies,
+                                                             node_base_url=settings.NODE_BASE_URL))
+
+    def post(self, request, *args, **kwargs):
+        artefact = get_object_or_404(Artefact, pk=self.kwargs['artefact_id'])
+        section_1 = Section.objects.get_or_create(order=1, artefact=artefact, section_category=SectionCategory.objects.get(name='AR'), title='The object')[0]
+        artefact.section_set.add(section_1)
+        section_2 = Section.objects.get_or_create(order=2, artefact=artefact, section_category=SectionCategory.objects.get(name='AR'), title='Description and visual observation')[0]
+        section_2.complementary_information = request.POST['complementary_information']
+        artefact.section_set.add(section_2)
+        section_3 = Section.objects.get_or_create(order=3, artefact=artefact, section_category=SectionCategory.objects.get(name='SA'), title='Zones of the artefact submitted to visual observation and location of sampling areas')[0]
+        artefact.section_set.add(section_3)
+        section_4 = Section.objects.get_or_create(order=4, artefact=artefact, section_category=SectionCategory.objects.get(name='SA'), title='Macroscopic observation')[0]
+        section_4.content = request.POST['macroscopic_text']
+        artefact.section_set.add(section_4)
+        section_5 = Section.objects.get_or_create(order=5, artefact=artefact, section_category=SectionCategory.objects.get(name='SA'), title='Sample')[0]
+        section_5.complementary_information = request.POST['sample_complementary_information']
+        # images sample
+        artefact.section_set.add(section_5)
+        section_6 = Section.objects.get_or_create(order=6, artefact=artefact, section_category=SectionCategory.objects.get(name='AN'), title='Analyses and results')[0]
+        section_6.content = request.POST['analyses_performed']
+        artefact.section_set.add(section_6)
+        section_7 = Section.objects.get_or_create(order=7, artefact=artefact, section_category=SectionCategory.objects.get(name='AN'), title='Metal')[0]
+        section_7.content = request.POST['metal_text']
+        section_7.complementary_information = request.POST['metal_complementary_information']
+        # images metal
+        artefact.section_set.add(section_7)
+        section_8 = Section.objects.get_or_create(order=8, artefact=artefact, section_category=SectionCategory.objects.get(name='AN'), title='Corrosion layers')[0]
+        section_8.content = request.POST['corrosion_text']
+        section_8.complementary_information = request.POST['corrosion_complementary_information']
+        artefact.section_set.add(section_8)
+        section_9 = Section.objects.get_or_create(order=9, artefact=artefact, section_category=SectionCategory.objects.get(name='AN'), title='Synthesis of the macroscopic / microscopic observation of corrosion layers')[0]
+        section_9.content=request.POST['synthesis_text']
+        artefact.section_set.add(section_9)
+        section_10 = Section.objects.get_or_create(order=10, artefact=artefact, section_category=SectionCategory.objects.get(name='CO'), title='Conclusion')[0]
+        section_10.content = request.POST['conclusion_text']
+        artefact.section_set.add(section_10)
+        section_11 = Section.objects.get_or_create(order=11, artefact=artefact, section_category=SectionCategory.objects.get(name='RE'), title='References')[0]
+        section_11.content = request.POST['references_text']
+        artefact.section_set.add(section_11)
+        return super(CollaborationUpdateView, self).post(request, **kwargs)
+
+    def get_success_url(self):
+        return reverse('artefacts:collaboration_menu')
+
+class CollaborationCommentView(generic.UpdateView):
+
+    model = Collaboration_comment
+    template_name_suffix = '_collaboration_comment'
+    form_class = CollaborationCommentForm
+
+    """
+    A detail view of a selected artefact
+    """
+    queryset = Artefact.objects.select_related('alloy', 'type', 'origin', 'recovering_date', 'chronology_period',
+                                               'environment', 'location', 'owner', 'technology', 'sample_location',
+                                               'responsible_institution', 'microstructure', 'corrosion_form', 'corrosion_type')
+
+    def get_context_data(self, **kwargs):
+        """
+        Allows the template to use the selected artefact as well as its foreign keys pointers
+        """
+        context = super(CollaborationCommentView, self).get_context_data(**kwargs)
+        artefact = get_object_or_404(Artefact, pk=self.kwargs['pk'])
+        sections = artefact.section_set.all()
+        documents = artefact.document_set.all()
+        stratigraphies = artefact.stratigraphy_set.all()
+        context['artefact'] = artefact
+        context['sections'] = sections
+        context['documents'] = documents
+        context['stratigraphies'] = stratigraphies
+        context['node_base_url'] = settings.NODE_BASE_URL
+        return context
