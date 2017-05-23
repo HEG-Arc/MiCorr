@@ -513,6 +513,7 @@ class Field(TimeStampedModel):
     A field is a part of an artefact
     """
     name = models.CharField(max_length=200, blank=True, help_text='A field of the artefact card')
+    title = models.CharField(max_length=200, blank=True, help_text='A field for the name without spaces')
 
     class Meta:
         verbose_name = 'Field'
@@ -533,6 +534,7 @@ class Collaboration_comment(TimeStampedModel):
     field = models.ForeignKey(Field, blank=True, null=True, help_text='The field concerned by the comment')
     object_model_id = models.PositiveIntegerField(blank=True, null=True)
     content_object = GenericForeignKey('content_type', 'object_model_id')
+    user = models.ForeignKey(User, related_name='user_commenting', blank=True, null=True, help_text='The user who wrote the comment')
 
     class Meta:
         verbose_name = 'Comment'

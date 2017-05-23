@@ -369,18 +369,40 @@
                   <div class="row accordion-content2 collapse in" id="content21" aria-labelledby="title21">
                     {% if sections.2.image_set.all %}
                         <div class="line lightbox">
-                            {% for image in sections.2.image_set.all %}
-                              <div class="row">
-                              {% if image.image %}
-                                <div class="c6">
-                                  <a href="{{ image.image.url }}" class="image-popup"><img src="{{ image.image.url }}" class="img-responsive"></a>
+                            <div class="row">
+                                <div class="c11">
+                                    {% for image in sections.2.image_set.all %}
+                                      <div class="row">
+                                      {% if image.image %}
+                                        <div class="c6">
+                                          <a href="{{ image.image.url }}" class="image-popup"><img src="{{ image.image.url }}" class="img-responsive"></a>
+                                        </div>
+                                        <div class="c6">
+                                          <p><a name="fig1"></a>{{ image.legend }}</p>
+                                        </div>
+                                      {% endif %}
+                                      </div>
+                                    {% endfor %}
                                 </div>
-                                <div class="c6">
-                                  <p><a name="fig1"></a>{{ image.legend }}</p>
+                                <div class="c1">
+                                    <div class="pull-right">
+                                        <a href="#commentZones" data-toggle="collapse" aria-expanded="false" aria-controls="commentZones"><i class="fa fa-comment"></i></a>
+                                    </div>
                                 </div>
-                              {% endif %}
-                              </div>
-                            {% endfor %}
+                            </div>
+                            <div class="row collapse" id="commentZones" aria-expanded="false">
+                                <div class="c11">
+                                    <hr>
+                                    <h3>Your comment</h3>
+                                    {{ form.comment }}
+                                    <br>
+                                    <div class="pull-right">
+                                        <a href="" class="btn btn-primary btn-md">Save comment</a>
+                                    </div>
+                                    <br>
+                                    <hr>
+                                </div>
+                            </div>
                         </div>
                     {% endif %}
                   </div>
@@ -394,20 +416,29 @@
                         <p>{{ sections.3.content|safe }}</p>
                     </div>
                     {% if sections.3.image_set.all %}
-                    <div class="line lightbox">
-                        {% for image in sections.3.image_set.all %}
-                          <div class="row">
-                          {% if image.image %}
-                            <div class="c6">
-                              <a href="{{ image.image.url }}" class="image-popup"><img src="{{ image.image.url }}" class="img-responsive"></a>
+                        <div class="line lightbox">
+                            <div class="row">
+                                <div class="c11">
+                                    {% for image in sections.3.image_set.all %}
+                                      <div class="row">
+                                      {% if image.image %}
+                                        <div class="c6">
+                                          <a href="{{ image.image.url }}" class="image-popup"><img src="{{ image.image.url }}" class="img-responsive"></a>
+                                        </div>
+                                        <div class="c6">
+                                          <p><a name="fig1"></a>{{ image.legend }}</p>
+                                        </div>
+                                      {% endif %}
+                                      </div>
+                                    {% endfor %}
+                                </div>
+                                <div class="c1">
+                                    <div class="pull-right">
+                                        <a href="#commentMacroscopic" data-toggle="collapse" aria-expanded="false" aria-controls="commentMacroscopic"><i class="fa fa-comment"></i></a>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="c6">
-                              <p><a name="fig1"></a>{{ image.legend }}</p>
-                            </div>
-                          {% endif %}
-                          </div>
-                        {% endfor %}
-                    </div>
+                        </div>
                     {% endif %}
                   </div>
                 </div>
@@ -421,18 +452,40 @@
           <div class="row accordion-content3 collapse in" id="content3"  aria-labelledby="title3">
             <div class="line palebox">
                 {% if sections.4.image_set.all %}
-                    {% for image in sections.4.image_set.all %}
-                      <div class="row">
-                      {% if image.image %}
-                        <div class="c6">
-                          <a href="{{ image.image.url }}" class="image-popup"><img src="{{ image.image.url }}" class="img-responsive"></a>
+                    <div class="row">
+                        <div class="c11">
+                            {% for image in sections.4.image_set.all %}
+                              <div class="row">
+                              {% if image.image %}
+                                <div class="c6">
+                                  <a href="{{ image.image.url }}" class="image-popup"><img src="{{ image.image.url }}" class="img-responsive"></a>
+                                </div>
+                                <div class="c6">
+                                  <p><a name="fig1"></a>{{ image.legend }}</p>
+                                </div>
+                              {% endif %}
+                              </div>
+                            {% endfor %}
                         </div>
-                        <div class="c6">
-                          <p><a name="fig1"></a>{{ image.legend }}</p>
+                        <div class="c1">
+                            <div class="pull-right">
+                                <a href="#commentSample" data-toggle="collapse" aria-expanded="false" aria-controls="commentSample"><i class="fa fa-comment"></i></a>
+                            </div>
                         </div>
-                      {% endif %}
-                      </div>
-                    {% endfor %}
+                    </div>
+                    <div class="row collapse" id="commentSample" aria-expanded="false">
+                        <div class="c11">
+                            <hr>
+                            <h3>Your comment</h3>
+                            {{ form.comment }}
+                            <br>
+                            <div class="pull-right">
+                                <a href="" class="btn btn-primary btn-md">Save comment</a>
+                            </div>
+                            <br>
+                            <hr>
+                        </div>
+                    </div>
                 {% endif %}
             </div>
 
@@ -537,6 +590,7 @@
                     </div>
               </div>
 
+            <!-- Sample location -->
               <div class="row">
                 <div class="c3"><em>Sample location</em></div>
                 <div class="c8"><p>{{ artefact.sample_location }}</p></div>
@@ -611,6 +665,7 @@
                     </div>
               </div>
 
+            <!-- Stratigraphies -->
               <div class="row">
                 <div class="c3"><em>Stratigraphies</em></div>
                 <div class="c8">
@@ -627,7 +682,7 @@
                 </div>
               </div>
 
-              <div class="row collapse" id="commentDateAimSampling" aria-expanded="false">
+              <div class="row collapse" id="commentStratigraphies" aria-expanded="false">
                     <div class="c11">
                         <hr>
                         <h3>Your comment</h3>
@@ -640,8 +695,8 @@
                         <hr>
                     </div>
               </div>
-
             </div>
+
             {% if sections.4.complementary_information != '' %}
               <div class="line palebox">
                 <h4 class="underline">Complementary information</h4>
@@ -665,11 +720,26 @@
                     </div>
                     <div class="c1">
                         <div class="pull-right">
-                            <a href="#field"><i class="fa fa-comment"></i></a>
+                            <a href="#commentAnaResults" data-toggle="collapse" aria-expanded="false" aria-controls="commentAnaResults"><i class="fa fa-comment"></i></a>
                         </div>
                     </div>
                 </div>
+
+                <div class="row collapse" id="commentAnaResults" aria-expanded="false">
+                    <div class="c11">
+                        <hr>
+                        <h3>Your comment</h3>
+                        {{ form.comment }}
+                        <br>
+                        <div class="pull-right">
+                            <a href="" class="btn btn-primary btn-md">Save comment</a>
+                        </div>
+                        <br>
+                        <hr>
+                    </div>
+                </div>
             </div>
+
             <div class="line">
                 <div id="accordionN2" aria-multiselectable="true">
 
@@ -687,16 +757,29 @@
                             </div>
                             <div class="c1">
                                 <div class="pull-right">
-                                    <a href="#field"><i class="fa fa-comment"></i></a>
+                                    <a href="#commentMetal" data-toggle="collapse" aria-expanded="false" aria-controls="commentMetal"><i class="fa fa-comment"></i></a>
                                 </div>
                             </div>
                         </div>
 
+                        <div class="row collapse" id="commentMetal" aria-expanded="false">
+                            <div class="c11">
+                                <hr>
+                                <h3>Your comment</h3>
+                                {{ form.comment }}
+                                <br>
+                                <div class="pull-right">
+                                    <a href="" class="btn btn-primary btn-md">Save comment</a>
+                                </div>
+                                <br>
+                                <hr>
+                            </div>
+                        </div>
                     </div>
                     <div class="line lightbox">
-                        <div class="row">
-                            <div class="c11">
-                                {% if sections.6.image_set.all %}
+                        {% if sections.6.image_set.all %}
+                            <div class="row">
+                                <div class="c11">
                                     {% for image in sections.6.image_set.all %}
                                       <div class="row">
                                       {% if image.image %}
@@ -709,14 +792,14 @@
                                       {% endif %}
                                       </div>
                                     {% endfor %}
-                                {% endif %}
-                            </div>
-                            <div class="c1">
-                                <div class="pull-right">
-                                    <a href="#field"><i class="fa fa-comment"></i></a>
                                 </div>
+                                <!--<div class="c1">
+                                    <div class="pull-right">
+                                        <a href="#commentMetalFig" data-toggle="collapse" aria-expanded="false" aria-controls="commentMetalFig"><i class="fa fa-comment"></i></a>
+                                    </div>
+                                </div>-->
                             </div>
-                        </div>
+                        {% endif %}
                     </div>
                     {% if sections.6.complementary_information != '' %}
                         <div class="line palebox">
@@ -740,15 +823,28 @@
                             </div>
                             <div class="c1">
                                 <div class="pull-right">
-                                    <a href="#field"><i class="fa fa-comment"></i></a>
+                                    <a href="#commentCorrLayers" data-toggle="collapse" aria-expanded="false" aria-controls="commentCorrLayers"><i class="fa fa-comment"></i></a>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="row collapse" id="commentCorrLayers" aria-expanded="false">
+                            <div class="c11">
+                                <hr>
+                                <h3>Your comment</h3>
+                                {{ form.comment }}
+                                <br>
+                                <div class="pull-right">
+                                    <a href="" class="btn btn-primary btn-md">Save comment</a>
+                                </div>
+                                <br>
+                                <hr>
                             </div>
                         </div>
                     </div>
                     <div class="line lightbox">
-                        <div class="row">
-                            <div class="c11">
-                               {% if sections.7.image_set.all %}
+                        {% if sections.7.image_set.all %}
+                            <div class="row">
+                                <div class="c11">
                                     {% for image in sections.7.image_set.all %}
                                       <div class="row">
                                       {% if image.image %}
@@ -761,15 +857,14 @@
                                       {% endif %}
                                       </div>
                                     {% endfor %}
-                               {% endif %}
-                            </div>
-                            <div class="c1">
-                                <div class="pull-right">
-                                    <a href="#field"><i class="fa fa-comment"></i></a>
                                 </div>
+                                <!--<div class="c1">
+                                    <div class="pull-right">
+                                        <a href="#commentCorrLayersFig" data-toggle="collapse" aria-expanded="false" aria-controls="commentCorrLayersFig"><i class="fa fa-comment"></i></a>
+                                    </div>
+                                </div>-->
                             </div>
-                        </div>
-
+                        {% endif %}
                     </div>
                     {% if sections.7.complementary_information != '' %}
                         <div class="line palebox">
@@ -793,25 +888,42 @@
                 {% endfilter %}
             </div>
             {% if sections.8.image_set.all %}
-            <div class="line lightbox">
-                {% for image in sections.8.image_set.all %}
-                  <div class="row">
-                  {% if image.image %}
-                    <div class="c6">
-                      <a href="{{ image.image.url }}" class="image-popup"><img src="{{ image.image.url }}" class="img-responsive"></a>
-                    </div>
-                    <div class="c5">
-                      <p><a name="fig1"></a>{{ image.legend }}</p>
-                    </div>
-                    <div class="c1">
-                        <div class="pull-right">
-                            <a href="#field"><i class="fa fa-comment"></i></a>
+                <div class="line lightbox">
+                    <div class="row">
+                        <div class="c11">
+                            {% for image in sections.8.image_set.all %}
+                              <div class="row">
+                              {% if image.image %}
+                                <div class="c6">
+                                  <a href="{{ image.image.url }}" class="image-popup"><img src="{{ image.image.url }}" class="img-responsive"></a>
+                                </div>
+                                <div class="c6">
+                                  <p><a name="fig1"></a>{{ image.legend }}</p>
+                                </div>
+                              {% endif %}
+                              </div>
+                            {% endfor %}
+                        </div>
+                        <div class="c1">
+                            <div class="pull-right">
+                                <a href="#commentSynthesis" data-toggle="collapse" aria-expanded="false" aria-controls="commentSynthesis"><i class="fa fa-comment"></i></a>
+                            </div>
                         </div>
                     </div>
-                  {% endif %}
-                  </div>
-                {% endfor %}
-            </div>
+                    <div class="row collapse" id="commentSynthesis" aria-expanded="false">
+                        <div class="c11">
+                            <hr>
+                            <h3>Your comment</h3>
+                            {{ form.comment }}
+                            <br>
+                            <div class="pull-right">
+                                <a href="" class="btn btn-primary btn-md">Save comment</a>
+                            </div>
+                            <br>
+                            <hr>
+                        </div>
+                    </div>
+                </div>
             {% endif %}
           </div>
 
@@ -829,8 +941,21 @@
                     </div>
                     <div class="c1">
                         <div class="pull-right">
-                            <a href="#field"><i class="fa fa-comment"></i></a>
+                            <a href="#commentConclusion" data-toggle="collapse" aria-expanded="false" aria-controls="commentConclusion"><i class="fa fa-comment"></i></a>
                         </div>
+                    </div>
+                </div>
+                <div class="row collapse" id="commentConclusion" aria-expanded="false">
+                    <div class="c11">
+                        <hr>
+                        <h3>Your comment</h3>
+                        {{ form.comment }}
+                        <br>
+                        <div class="pull-right">
+                            <a href="" class="btn btn-primary btn-md">Save comment</a>
+                        </div>
+                        <br>
+                        <hr>
                     </div>
                 </div>
             </div>
@@ -845,7 +970,7 @@
                 <div class="row">
                     <div class="c12">
                         <div class="pull-right">
-                           <a href="#field"><i class="fa fa-comment"></i></a>
+                           <a href="#commentReferences" data-toggle="collapse" aria-expanded="false" aria-controls="commentReferences"><i class="fa fa-comment"></i></a>
                         </div>
                     </div>
                 </div>
@@ -854,10 +979,21 @@
                         <p>{{ sections.10.content|safe }}</p>
                     </div>
                 </div>
+                <div class="row collapse" id="commentReferences" aria-expanded="false">
+                    <div class="c11">
+                        <hr>
+                        <h3>Your comment</h3>
+                        {{ form.comment }}
+                        <br>
+                        <div class="pull-right">
+                            <a href="" class="btn btn-primary btn-md">Save comment</a>
+                        </div>
+                        <br>
+                        <hr>
+                    </div>
+                </div>
+              </div>
             </div>
-          </div>
-
           <!-- content for accordion 3 -->
-
          </div>
       {% endblock content %}
