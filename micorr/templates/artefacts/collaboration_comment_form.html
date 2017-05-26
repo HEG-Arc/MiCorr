@@ -85,11 +85,46 @@
                 <div class="c6">
                     <div class="pull-right">
                         <div class="pull-right">
-                            <a href="#field"><i class="fa fa-comment"></i></a>
+                            <a href="#theObject" data-toggle="collapse" aria-expanded="false" aria-controls="theObject"><i class="fa fa-comment"></i></a>
                         </div>
                     </div>
                 </div>
               </div>
+              <form action="{% url 'artefacts:collaboration-comment' pk=token.id field='object' %}" method="post">{% csrf_token %}
+                  <div class="row collapse" id="theObject" aria-expanded="false">
+                    <div class="c11">
+                        <hr>
+                        <h3>Your comment</h3>
+                        {{ form.comment }}
+                        <br>
+                        <div class="pull-right">
+                            <input class="btn btn-primary btn-sm" type="submit" value="Save comment">
+                        </div>
+                        <br><br>
+                        <hr>
+                    <!-- TEEEEEEEST -->
+                        <h3>Token comments</h3><br>
+                        {% for k, vs in testToken.items %}
+                            <b>{{ k }} :</b><br>
+
+                            {% for v in vs %}
+                                {{ v.comment }}<br>
+                            {% endfor %}
+                            <br>
+                        {% endfor %}
+                        <br><br>
+                        <h3>Section comments</h3><br>
+                        {% for k, vs in testSection.items %}
+                            <b>{{ k }} :</b><br>
+
+                            {% for v in vs %}
+                                {{ v.comment }}<br>
+                            {% endfor %}
+                            <br>
+                        {% endfor %}
+                    </div>
+                  </div>
+              </form>
             </div>
           </div>
 
@@ -99,16 +134,16 @@
           </div>
           <div class="row accordion-content3 collapse in" id="content2"  aria-labelledby="title2">
             <div class="line lightbox">
-              <form action="{% url 'artefacts:collaboration-comment' 40 %}" method="post">{% csrf_token %}
-                  <div class="row">
-                    <div class="c3"><em>Description of artefact</em></div>
-                    <div class="c8"><p>{{ artefact.description|safe }}</p></div>
-                    <div class="c1">
-                        <div class="pull-right">
-                            <a href="#commentDescription" data-toggle="collapse" aria-expanded="false" aria-controls="commentDescription"><i class="fa fa-comment"></i></a>
-                        </div>
+              <div class="row">
+                <div class="c3"><em>Description of artefact</em></div>
+                <div class="c8"><p>{{ artefact.description|safe }}</p></div>
+                <div class="c1">
+                    <div class="pull-right">
+                        <a href="#commentDescription" data-toggle="collapse" aria-expanded="false" aria-controls="commentDescription"><i class="fa fa-comment"></i></a>
                     </div>
-                  </div>
+                </div>
+              </div>
+              <form action="{% url 'artefacts:collaboration-comment' pk=token.id field='descriptionArtefact' %}" method="post">{% csrf_token %}
                   <div class="row collapse" id="commentDescription" aria-expanded="false">
                         <div class="c11">
                             <hr>
@@ -116,27 +151,37 @@
                             {{ form.comment }}
                             <br>
                             <div class="pull-right">
-                                <a href="" class="btn btn-primary btn-md">Save comment</a>
+                                <!--<a class="btn btn-primary btn-md" type="submit">Save comment</a>-->
+                                <input class="btn btn-primary btn-sm" type="submit" value="Save comment">
                             </div>
-                            <br>
+                            <br><br>
                             <hr>
                         </div>
-
                   </div>
-                  <br>
               </form>
+              <br>
+                <!--
+                { for v in tokenComments %}
+                    { v.comment }}
+                { endfor %}
+                <br><br><br>
 
-              <form action="{% url 'artefacts:collaboration-comment' 40 %}" method="post">{% csrf_token %}
-                  <div class="row">
-                    <div class="c3"><em>Type of artefact</em></div>
-                    <div class="c8"><p>{{ artefact.type }}</p></div>
-                    <div class="c1">
-                        <div class="pull-right">
-                            <a href="#commentArtefactType" data-toggle="collapse" aria-expanded="false" aria-controls="commentArtefactType"><i class="fa fa-comment"></i></a>
-                        </div>
+
+                { for commentSection in sectionComments %}
+                    { commentSection.comment }}
+                { endfor %}
+                -->
+
+              <div class="row">
+                <div class="c3"><em>Type of artefact</em></div>
+                <div class="c8"><p>{{ artefact.type }}</p></div>
+                <div class="c1">
+                    <div class="pull-right">
+                        <a href="#commentArtefactType" data-toggle="collapse" aria-expanded="false" aria-controls="commentArtefactType"><i class="fa fa-comment"></i></a>
                     </div>
-                  </div>
-
+                </div>
+              </div>
+              <form action="{% url 'artefacts:collaboration-comment' pk=token.id field='typeArtefact' %}" method="post">{% csrf_token %}
                   <div class="row collapse" id="commentArtefactType" aria-expanded="false">
                         <div class="c11">
                             <hr>
@@ -144,14 +189,14 @@
                             {{ form.comment }}
                             <br>
                             <div class="pull-right">
-                                <a href="" class="btn btn-primary btn-md">Save comment</a>
+                                <input class="btn btn-primary btn-sm" type="submit" value="Save comment">
                             </div>
-                            <br>
+                            <br><br>
                             <hr>
                         </div>
                   </div>
-                  <br>
               </form>
+              <br>
 
               <!--Origin -->
               <div class="row">
@@ -163,20 +208,21 @@
                     </div>
                 </div>
               </div>
-
-              <div class="row collapse" id="commentOrigin" aria-expanded="false">
-                    <div class="c11">
-                        <hr>
-                        <h3>Your comment</h3>
-                        {{ form.comment }}
-                        <br>
-                        <div class="pull-right">
-                            <a href="" class="btn btn-primary btn-md">Save comment</a>
+              <form action="{% url 'artefacts:collaboration-comment' pk=token.id field='originArtefact' %}" method="post">{% csrf_token %}
+                  <div class="row collapse" id="commentOrigin" aria-expanded="false">
+                        <div class="c11">
+                            <hr>
+                            <h3>Your comment</h3>
+                            {{ form.comment }}
+                            <br>
+                            <div class="pull-right">
+                                <input class="btn btn-primary btn-sm" type="submit" value="Save comment">
+                            </div>
+                            <br><br>
+                            <hr>
                         </div>
-                        <br>
-                        <hr>
-                    </div>
-              </div>
+                  </div>
+              </form>
 
               <!--ArtefactDate -->
               <div class="row">
@@ -188,20 +234,21 @@
                     </div>
                 </div>
               </div>
-
-              <div class="row collapse" id="commentArtefactDate" aria-expanded="false">
-                    <div class="c11">
-                        <hr>
-                        <h3>Your comment</h3>
-                        {{ form.comment }}
-                        <br>
-                        <div class="pull-right">
-                            <a href="" class="btn btn-primary btn-md">Save comment</a>
+              <form action="{% url 'artefacts:collaboration-comment' pk=token.id field='dateArtefact' %}" method="post">{% csrf_token %}
+                  <div class="row collapse" id="commentArtefactDate" aria-expanded="false">
+                        <div class="c11">
+                            <hr>
+                            <h3>Your comment</h3>
+                            {{ form.comment }}
+                            <br>
+                            <div class="pull-right">
+                                <input class="btn btn-primary btn-sm" type="submit" value="Save comment">
+                            </div>
+                            <br><br>
+                            <hr>
                         </div>
-                        <br>
-                        <hr>
-                    </div>
-              </div>
+                  </div>
+              </form>
 
               <!-- Chronology -->
               <div class="row">
@@ -213,20 +260,21 @@
                     </div>
                 </div>
               </div>
-
-              <div class="row collapse" id="commentChronology" aria-expanded="false">
-                    <div class="c11">
-                        <hr>
-                        <h3>Your comment</h3>
-                        {{ form.comment }}
-                        <br>
-                        <div class="pull-right">
-                            <a href="" class="btn btn-primary btn-md">Save comment</a>
+              <form action="{% url 'artefacts:collaboration-comment' pk=token.id field='chronologyArtefact' %}" method="post">{% csrf_token %}
+                  <div class="row collapse" id="commentChronology" aria-expanded="false">
+                        <div class="c11">
+                            <hr>
+                            <h3>Your comment</h3>
+                            {{ form.comment }}
+                            <br>
+                            <div class="pull-right">
+                                <input class="btn btn-primary btn-sm" type="submit" value="Save comment">
+                            </div>
+                            <br><br>
+                            <hr>
                         </div>
-                        <br>
-                        <hr>
-                    </div>
-              </div>
+                  </div>
+              </form>
 
               <!-- Burial conditions / environment -->
               <div class="row">
@@ -238,20 +286,21 @@
                     </div>
                 </div>
               </div>
-
-              <div class="row collapse" id="commentEnvironment" aria-expanded="false">
-                    <div class="c11">
-                        <hr>
-                        <h3>Your comment</h3>
-                        {{ form.comment }}
-                        <br>
-                        <div class="pull-right">
-                            <a href="" class="btn btn-primary btn-md">Save comment</a>
+              <form action="{% url 'artefacts:collaboration-comment' pk=token.id field='environmentArtefact' %}" method="post">{% csrf_token %}
+                  <div class="row collapse" id="commentEnvironment" aria-expanded="false">
+                        <div class="c11">
+                            <hr>
+                            <h3>Your comment</h3>
+                            {{ form.comment }}
+                            <br>
+                            <div class="pull-right">
+                                <input class="btn btn-primary btn-sm" type="submit" value="Save comment">
+                            </div>
+                            <br><br>
+                            <hr>
                         </div>
-                        <br>
-                        <hr>
-                    </div>
-              </div>
+                  </div>
+              </form>
 
               <!-- Artefact location -->
               <div class="row">
@@ -263,20 +312,21 @@
                     </div>
                 </div>
               </div>
-
-              <div class="row collapse" id="commentLocation" aria-expanded="false">
-                    <div class="c11">
-                        <hr>
-                        <h3>Your comment</h3>
-                        {{ form.comment }}
-                        <br>
-                        <div class="pull-right">
-                            <a href="" class="btn btn-primary btn-md">Save comment</a>
+              <form action="{% url 'artefacts:collaboration-comment' pk=token.id field='locationArtefact' %}" method="post">{% csrf_token %}
+                  <div class="row collapse" id="commentLocation" aria-expanded="false">
+                        <div class="c11">
+                            <hr>
+                            <h3>Your comment</h3>
+                            {{ form.comment }}
+                            <br>
+                            <div class="pull-right">
+                                <input class="btn btn-primary btn-sm" type="submit" value="Save comment">
+                            </div>
+                            <br><br>
+                            <hr>
                         </div>
-                        <br>
-                        <hr>
-                    </div>
-              </div>
+                  </div>
+              </form>
 
               <!-- Owner -->
               <div class="row">
@@ -288,20 +338,21 @@
                     </div>
                 </div>
               </div>
-
-              <div class="row collapse" id="commentOwner" aria-expanded="false">
-                    <div class="c11">
-                        <hr>
-                        <h3>Your comment</h3>
-                        {{ form.comment }}
-                        <br>
-                        <div class="pull-right">
-                            <a href="" class="btn btn-primary btn-md">Save comment</a>
+              <form action="{% url 'artefacts:collaboration-comment' pk=token.id field='ownerArtefact' %}" method="post">{% csrf_token %}
+                  <div class="row collapse" id="commentOwner" aria-expanded="false">
+                        <div class="c11">
+                            <hr>
+                            <h3>Your comment</h3>
+                            {{ form.comment }}
+                            <br>
+                            <div class="pull-right">
+                                <input class="btn btn-primary btn-sm" type="submit" value="Save comment">
+                            </div>
+                            <br><br>
+                            <hr>
                         </div>
-                        <br>
-                        <hr>
-                    </div>
-              </div>
+                  </div>
+              </form>
 
               <!-- Inv. Number -->
               <div class="row">
@@ -313,20 +364,21 @@
                     </div>
                 </div>
               </div>
-
-              <div class="row collapse" id="commentNumber" aria-expanded="false">
-                    <div class="c11">
-                        <hr>
-                        <h3>Your comment</h3>
-                        {{ form.comment }}
-                        <br>
-                        <div class="pull-right">
-                            <a href="" class="btn btn-primary btn-md">Save comment</a>
+              <form action="{% url 'artefacts:collaboration-comment' pk=token.id field='invNumberArtefact' %}" method="post">{% csrf_token %}
+                  <div class="row collapse" id="commentNumber" aria-expanded="false">
+                        <div class="c11">
+                            <hr>
+                            <h3>Your comment</h3>
+                            {{ form.comment }}
+                            <br>
+                            <div class="pull-right">
+                                <input class="btn btn-primary btn-sm" type="submit" value="Save comment">
+                            </div>
+                            <br><br>
+                            <hr>
                         </div>
-                        <br>
-                        <hr>
-                    </div>
-              </div>
+                  </div>
+              </form>
 
               <div class="row">
                 <div class="c3"><em>Recorded conservation data</em></div>
@@ -337,20 +389,21 @@
                     </div>
                 </div>
               </div>
-
-              <div class="row collapse" id="commentRecConsData" aria-expanded="false">
-                    <div class="c11">
-                        <hr>
-                        <h3>Your comment</h3>
-                        {{ form.comment }}
-                        <br>
-                        <div class="pull-right">
-                            <a href="" class="btn btn-primary btn-md">Save comment</a>
+              <form action="{% url 'artefacts:collaboration-comment' pk=token.id field='recConsDataArtefact' %}" method="post">{% csrf_token %}
+                  <div class="row collapse" id="commentRecConsData" aria-expanded="false">
+                        <div class="c11">
+                            <hr>
+                            <h3>Your comment</h3>
+                            {{ form.comment }}
+                            <br>
+                            <div class="pull-right">
+                                <input class="btn btn-primary btn-sm" type="submit" value="Save comment">
+                            </div>
+                            <br><br>
+                            <hr>
                         </div>
-                        <br>
-                        <hr>
-                    </div>
-              </div>
+                  </div>
+              </form>
 
             </div>
             {% if sections.1.complementary_information != '' %}
@@ -390,19 +443,21 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row collapse" id="commentZones" aria-expanded="false">
-                                <div class="c11">
-                                    <hr>
-                                    <h3>Your comment</h3>
-                                    {{ form.comment }}
-                                    <br>
-                                    <div class="pull-right">
-                                        <a href="" class="btn btn-primary btn-md">Save comment</a>
+                            <form action="{% url 'artefacts:collaboration-comment' pk=token.id field='zones' %}" method="post">{% csrf_token %}
+                                <div class="row collapse" id="commentZones" aria-expanded="false">
+                                    <div class="c11">
+                                        <hr>
+                                        <h3>Your comment</h3>
+                                        {{ form.comment }}
+                                        <br>
+                                        <div class="pull-right">
+                                            <input class="btn btn-primary btn-sm" type="submit" value="Save comment">
+                                        </div>
+                                        <br><br>
+                                        <hr>
                                     </div>
-                                    <br>
-                                    <hr>
                                 </div>
-                            </div>
+                            </form>
                         </div>
                     {% endif %}
                   </div>
@@ -438,6 +493,21 @@
                                     </div>
                                 </div>
                             </div>
+                            <form action="{% url 'artefacts:collaboration-comment' pk=token.id field='macroscopic' %}" method="post">{% csrf_token %}
+                                <div class="row collapse" id="commentMacroscopic" aria-expanded="false">
+                                    <div class="c11">
+                                        <hr>
+                                        <h3>Your comment</h3>
+                                        {{ form.comment }}
+                                        <br>
+                                        <div class="pull-right">
+                                            <input class="btn btn-primary btn-sm" type="submit" value="Save comment">
+                                        </div>
+                                        <br><br>
+                                        <hr>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
                     {% endif %}
                   </div>
@@ -473,19 +543,21 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row collapse" id="commentSample" aria-expanded="false">
-                        <div class="c11">
-                            <hr>
-                            <h3>Your comment</h3>
-                            {{ form.comment }}
-                            <br>
-                            <div class="pull-right">
-                                <a href="" class="btn btn-primary btn-md">Save comment</a>
+                    <form action="{% url 'artefacts:collaboration-comment' pk=token.id field='sample' %}" method="post">{% csrf_token %}
+                        <div class="row collapse" id="commentSample" aria-expanded="false">
+                            <div class="c11">
+                                <hr>
+                                <h3>Your comment</h3>
+                                {{ form.comment }}
+                                <br>
+                                <div class="pull-right">
+                                    <input class="btn btn-primary btn-sm" type="submit" value="Save comment">
+                                </div>
+                                <br><br>
+                                <hr>
                             </div>
-                            <br>
-                            <hr>
                         </div>
-                    </div>
+                    </form>
                 {% endif %}
             </div>
 
@@ -500,20 +572,21 @@
                     </div>
                 </div>
               </div>
-
-              <div class="row collapse" id="commentSampleDescription" aria-expanded="false">
-                    <div class="c11">
-                        <hr>
-                        <h3>Your comment</h3>
-                        {{ form.comment }}
-                        <br>
-                        <div class="pull-right">
-                            <a href="" class="btn btn-primary btn-md">Save comment</a>
+              <form action="{% url 'artefacts:collaboration-comment' pk=token.id field='descriptionSample' %}" method="post">{% csrf_token %}
+                  <div class="row collapse" id="commentSampleDescription" aria-expanded="false">
+                        <div class="c11">
+                            <hr>
+                            <h3>Your comment</h3>
+                            {{ form.comment }}
+                            <br>
+                            <div class="pull-right">
+                                <input class="btn btn-primary btn-sm" type="submit" value="Save comment">
+                            </div>
+                            <br><br>
+                            <hr>
                         </div>
-                        <br>
-                        <hr>
-                    </div>
-              </div>
+                  </div>
+              </form>
 
             <!-- Alloy -->
               <div class="row">
@@ -525,20 +598,21 @@
                     </div>
                 </div>
               </div>
-
-              <div class="row collapse" id="commentAlloy" aria-expanded="false">
-                    <div class="c11">
-                        <hr>
-                        <h3>Your comment</h3>
-                        {{ form.comment }}
-                        <br>
-                        <div class="pull-right">
-                            <a href="" class="btn btn-primary btn-md">Save comment</a>
+              <form action="{% url 'artefacts:collaboration-comment' pk=token.id field='alloySample' %}" method="post">{% csrf_token %}
+                  <div class="row collapse" id="commentAlloy" aria-expanded="false">
+                        <div class="c11">
+                            <hr>
+                            <h3>Your comment</h3>
+                            {{ form.comment }}
+                            <br>
+                            <div class="pull-right">
+                                <input class="btn btn-primary btn-sm" type="submit" value="Save comment">
+                            </div>
+                            <br><br>
+                            <hr>
                         </div>
-                        <br>
-                        <hr>
-                    </div>
-              </div>
+                  </div>
+              </form>
 
             <!-- Technology -->
               <div class="row">
@@ -550,20 +624,21 @@
                     </div>
                 </div>
               </div>
-
-              <div class="row collapse" id="commentTechnology" aria-expanded="false">
-                    <div class="c11">
-                        <hr>
-                        <h3>Your comment</h3>
-                        {{ form.comment }}
-                        <br>
-                        <div class="pull-right">
-                            <a href="" class="btn btn-primary btn-md">Save comment</a>
+              <form action="{% url 'artefacts:collaboration-comment' pk=token.id field='technologySample' %}" method="post">{% csrf_token %}
+                  <div class="row collapse" id="commentTechnology" aria-expanded="false">
+                        <div class="c11">
+                            <hr>
+                            <h3>Your comment</h3>
+                            {{ form.comment }}
+                            <br>
+                            <div class="pull-right">
+                                <input class="btn btn-primary btn-sm" type="submit" value="Save comment">
+                            </div>
+                            <br><br>
+                            <hr>
                         </div>
-                        <br>
-                        <hr>
-                    </div>
-              </div>
+                  </div>
+              </form>
 
             <!-- Lab number of sample -->
               <div class="row">
@@ -575,20 +650,21 @@
                     </div>
                 </div>
               </div>
-
-              <div class="row collapse" id="commentSampleNumber" aria-expanded="false">
-                    <div class="c11">
-                        <hr>
-                        <h3>Your comment</h3>
-                        {{ form.comment }}
-                        <br>
-                        <div class="pull-right">
-                            <a href="" class="btn btn-primary btn-md">Save comment</a>
+              <form action="{% url 'artefacts:collaboration-comment' pk=token.id field='labNumberSample' %}" method="post">{% csrf_token %}
+                  <div class="row collapse" id="commentSampleNumber" aria-expanded="false">
+                        <div class="c11">
+                            <hr>
+                            <h3>Your comment</h3>
+                            {{ form.comment }}
+                            <br>
+                            <div class="pull-right">
+                                <input class="btn btn-primary btn-sm" type="submit" value="Save comment">
+                            </div>
+                            <br><br>
+                            <hr>
                         </div>
-                        <br>
-                        <hr>
-                    </div>
-              </div>
+                  </div>
+              </form>
 
             <!-- Sample location -->
               <div class="row">
@@ -600,20 +676,21 @@
                     </div>
                 </div>
               </div>
-
-              <div class="row collapse" id="commentSampleLocation" aria-expanded="false">
-                    <div class="c11">
-                        <hr>
-                        <h3>Your comment</h3>
-                        {{ form.comment }}
-                        <br>
-                        <div class="pull-right">
-                            <a href="" class="btn btn-primary btn-md">Save comment</a>
+              <form action="{% url 'artefacts:collaboration-comment' pk=token.id field='locationSample' %}" method="post">{% csrf_token %}
+                  <div class="row collapse" id="commentSampleLocation" aria-expanded="false">
+                        <div class="c11">
+                            <hr>
+                            <h3>Your comment</h3>
+                            {{ form.comment }}
+                            <br>
+                            <div class="pull-right">
+                                <input class="btn btn-primary btn-sm" type="submit" value="Save comment">
+                            </div>
+                            <br><br>
+                            <hr>
                         </div>
-                        <br>
-                        <hr>
-                    </div>
-              </div>
+                  </div>
+              </form>
 
             <!-- Responsible institution -->
               <div class="row">
@@ -625,20 +702,21 @@
                     </div>
                 </div>
               </div>
-
-              <div class="row collapse" id="commentRespInst" aria-expanded="false">
-                    <div class="c11">
-                        <hr>
-                        <h3>Your comment</h3>
-                        {{ form.comment }}
-                        <br>
-                        <div class="pull-right">
-                            <a href="" class="btn btn-primary btn-md">Save comment</a>
+              <form action="{% url 'artefacts:collaboration-comment' pk=token.id field='respInstSample' %}" method="post">{% csrf_token %}
+                  <div class="row collapse" id="commentRespInst" aria-expanded="false">
+                        <div class="c11">
+                            <hr>
+                            <h3>Your comment</h3>
+                            {{ form.comment }}
+                            <br>
+                            <div class="pull-right">
+                                <input class="btn btn-primary btn-sm" type="submit" value="Save comment">
+                            </div>
+                            <br><br>
+                            <hr>
                         </div>
-                        <br>
-                        <hr>
-                    </div>
-              </div>
+                  </div>
+              </form>
 
             <!-- Date and aim of sampling -->
               <div class="row">
@@ -650,20 +728,21 @@
                     </div>
                 </div>
               </div>
-
-              <div class="row collapse" id="commentDateAimSampling" aria-expanded="false">
-                    <div class="c11">
-                        <hr>
-                        <h3>Your comment</h3>
-                        {{ form.comment }}
-                        <br>
-                        <div class="pull-right">
-                            <a href="" class="btn btn-primary btn-md">Save comment</a>
+              <form action="{% url 'artefacts:collaboration-comment' pk=token.id field='dateAimSamplingSample' %}" method="post">{% csrf_token %}
+                  <div class="row collapse" id="commentDateAimSampling" aria-expanded="false">
+                        <div class="c11">
+                            <hr>
+                            <h3>Your comment</h3>
+                            {{ form.comment }}
+                            <br>
+                            <div class="pull-right">
+                                <input class="btn btn-primary btn-sm" type="submit" value="Save comment">
+                            </div>
+                            <br><br>
+                            <hr>
                         </div>
-                        <br>
-                        <hr>
-                    </div>
-              </div>
+                  </div>
+              </form>
 
             <!-- Stratigraphies -->
               <div class="row">
@@ -681,20 +760,21 @@
                     </div>
                 </div>
               </div>
-
-              <div class="row collapse" id="commentStratigraphies" aria-expanded="false">
-                    <div class="c11">
-                        <hr>
-                        <h3>Your comment</h3>
-                        {{ form.comment }}
-                        <br>
-                        <div class="pull-right">
-                            <a href="" class="btn btn-primary btn-md">Save comment</a>
+              <form action="{% url 'artefacts:collaboration-comment' pk=token.id field='stratigraphiesSample' %}" method="post">{% csrf_token %}
+                  <div class="row collapse" id="commentStratigraphies" aria-expanded="false">
+                        <div class="c11">
+                            <hr>
+                            <h3>Your comment</h3>
+                            {{ form.comment }}
+                            <br>
+                            <div class="pull-right">
+                                <input class="btn btn-primary btn-sm" type="submit" value="Save comment">
+                            </div>
+                            <br><br>
+                            <hr>
                         </div>
-                        <br>
-                        <hr>
-                    </div>
-              </div>
+                  </div>
+              </form>
             </div>
 
             {% if sections.4.complementary_information != '' %}
@@ -724,20 +804,21 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="row collapse" id="commentAnaResults" aria-expanded="false">
-                    <div class="c11">
-                        <hr>
-                        <h3>Your comment</h3>
-                        {{ form.comment }}
-                        <br>
-                        <div class="pull-right">
-                            <a href="" class="btn btn-primary btn-md">Save comment</a>
+                <form action="{% url 'artefacts:collaboration-comment' pk=token.id field='anaResults' %}" method="post">{% csrf_token %}
+                    <div class="row collapse" id="commentAnaResults" aria-expanded="false">
+                        <div class="c11">
+                            <hr>
+                            <h3>Your comment</h3>
+                            {{ form.comment }}
+                            <br>
+                            <div class="pull-right">
+                                <input class="btn btn-primary btn-sm" type="submit" value="Save comment">
+                            </div>
+                            <br><br>
+                            <hr>
                         </div>
-                        <br>
-                        <hr>
                     </div>
-                </div>
+                </form>
             </div>
 
             <div class="line">
@@ -761,20 +842,21 @@
                                 </div>
                             </div>
                         </div>
-
-                        <div class="row collapse" id="commentMetal" aria-expanded="false">
-                            <div class="c11">
-                                <hr>
-                                <h3>Your comment</h3>
-                                {{ form.comment }}
-                                <br>
-                                <div class="pull-right">
-                                    <a href="" class="btn btn-primary btn-md">Save comment</a>
+                        <form action="{% url 'artefacts:collaboration-comment' pk=token.id field='metal' %}" method="post">{% csrf_token %}
+                            <div class="row collapse" id="commentMetal" aria-expanded="false">
+                                <div class="c11">
+                                    <hr>
+                                    <h3>Your comment</h3>
+                                    {{ form.comment }}
+                                    <br>
+                                    <div class="pull-right">
+                                        <input class="btn btn-primary btn-sm" type="submit" value="Save comment">
+                                    </div>
+                                    <br><br>
+                                    <hr>
                                 </div>
-                                <br>
-                                <hr>
                             </div>
-                        </div>
+                        </form>
                     </div>
                     <div class="line lightbox">
                         {% if sections.6.image_set.all %}
@@ -827,19 +909,21 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row collapse" id="commentCorrLayers" aria-expanded="false">
-                            <div class="c11">
-                                <hr>
-                                <h3>Your comment</h3>
-                                {{ form.comment }}
-                                <br>
-                                <div class="pull-right">
-                                    <a href="" class="btn btn-primary btn-md">Save comment</a>
+                        <form action="{% url 'artefacts:collaboration-comment' pk=token.id field='corrLayers' %}" method="post">{% csrf_token %}
+                            <div class="row collapse" id="commentCorrLayers" aria-expanded="false">
+                                <div class="c11">
+                                    <hr>
+                                    <h3>Your comment</h3>
+                                    {{ form.comment }}
+                                    <br>
+                                    <div class="pull-right">
+                                        <input class="btn btn-primary btn-sm" type="submit" value="Save comment">
+                                    </div>
+                                    <br><br>
+                                    <hr>
                                 </div>
-                                <br>
-                                <hr>
                             </div>
-                        </div>
+                        </form>
                     </div>
                     <div class="line lightbox">
                         {% if sections.7.image_set.all %}
@@ -910,19 +994,21 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row collapse" id="commentSynthesis" aria-expanded="false">
-                        <div class="c11">
-                            <hr>
-                            <h3>Your comment</h3>
-                            {{ form.comment }}
-                            <br>
-                            <div class="pull-right">
-                                <a href="" class="btn btn-primary btn-md">Save comment</a>
+                    <form action="{% url 'artefacts:collaboration-comment' pk=token.id field='synthesis' %}" method="post">{% csrf_token %}
+                        <div class="row collapse" id="commentSynthesis" aria-expanded="false">
+                            <div class="c11">
+                                <hr>
+                                <h3>Your comment</h3>
+                                {{ form.comment }}
+                                <br>
+                                <div class="pull-right">
+                                    <input class="btn btn-primary btn-sm" type="submit" value="Save comment">
+                                </div>
+                                <br><br>
+                                <hr>
                             </div>
-                            <br>
-                            <hr>
                         </div>
-                    </div>
+                    </form>
                 </div>
             {% endif %}
           </div>
@@ -945,19 +1031,21 @@
                         </div>
                     </div>
                 </div>
-                <div class="row collapse" id="commentConclusion" aria-expanded="false">
-                    <div class="c11">
-                        <hr>
-                        <h3>Your comment</h3>
-                        {{ form.comment }}
-                        <br>
-                        <div class="pull-right">
-                            <a href="" class="btn btn-primary btn-md">Save comment</a>
+                <form action="{% url 'artefacts:collaboration-comment' pk=token.id field='conclusion' %}" method="post">{% csrf_token %}
+                    <div class="row collapse" id="commentConclusion" aria-expanded="false">
+                        <div class="c11">
+                            <hr>
+                            <h3>Your comment</h3>
+                            {{ form.comment }}
+                            <br>
+                            <div class="pull-right">
+                                <input class="btn btn-primary btn-sm" type="submit" value="Save comment">
+                            </div>
+                            <br><br>
+                            <hr>
                         </div>
-                        <br>
-                        <hr>
                     </div>
-                </div>
+                </form>
             </div>
           </div>
 
@@ -979,19 +1067,21 @@
                         <p>{{ sections.10.content|safe }}</p>
                     </div>
                 </div>
-                <div class="row collapse" id="commentReferences" aria-expanded="false">
-                    <div class="c11">
-                        <hr>
-                        <h3>Your comment</h3>
-                        {{ form.comment }}
-                        <br>
-                        <div class="pull-right">
-                            <a href="" class="btn btn-primary btn-md">Save comment</a>
+                <form action="{% url 'artefacts:collaboration-comment' pk=token.id field='references' %}" method="post">{% csrf_token %}
+                    <div class="row collapse" id="commentReferences" aria-expanded="false">
+                        <div class="c11">
+                            <hr>
+                            <h3>Your comment</h3>
+                            {{ form.comment }}
+                            <br>
+                            <div class="pull-right">
+                                <input class="btn btn-primary btn-sm" type="submit" value="Save comment">
+                            </div>
+                            <br><br>
+                            <hr>
                         </div>
-                        <br>
-                        <hr>
                     </div>
-                </div>
+                </form>
               </div>
             </div>
           <!-- content for accordion 3 -->

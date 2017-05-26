@@ -3,7 +3,7 @@ import os
 import uuid
 
 from django.db import models
-from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from contacts.models import Contact
 from users.models import User
@@ -479,6 +479,7 @@ class Token(TimeStampedModel):
     # Foreign Keys
     user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name="user's object", blank=True, null=True)
     artefact = models.ForeignKey(Artefact, on_delete=models.CASCADE, null=True, help_text='The shared artefact')
+
 
     tokenManager = TokenManager()
 
