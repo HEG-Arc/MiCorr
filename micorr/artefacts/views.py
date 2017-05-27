@@ -838,6 +838,7 @@ class CollaborationCommentView(generic.CreateView):
         """
         Allows the template to use the selected artefact as well as its foreign keys pointers
         """
+        user = self.request.user
         context = super(CollaborationCommentView, self).get_context_data(**kwargs)
         token = get_object_or_404(Token, pk=self.kwargs['pk'])
         artefact = token.artefact
@@ -853,8 +854,27 @@ class CollaborationCommentView(generic.CreateView):
             # Get all comments for the current token
             allTokenComments = Collaboration_comment.objects.filter(content_type_id=token_type.id, object_model_id = token.id)
 
+            # Get first comments of all fields
+            firstTokenComments = []
             for tokenComm in allTokenComments :
-                # Filter only sent comments or comments from user connected
+                if not tokenComm.parent :
+                    firstTokenComments.append(tokenComm)
+
+            # Sort comments using parent_id
+            allTokenCommentsSorted = []
+            for firstToken in firstTokenComments :
+                idToken = firstToken.id
+                allTokenCommentsSorted.append(firstToken)
+                while idToken != 0 :
+                    try :
+                        currentToken = allTokenComments.get(parent_id=idToken)
+                        allTokenCommentsSorted.append(currentToken)
+                        idToken = currentToken.id
+                    except :
+                        idToken = 0
+
+            # Filter only sent comments or comments from user connected
+            for tokenComm in allTokenCommentsSorted :
                 if tokenComm.sent or self.request.user == tokenComm.user :
                     tokenComments.append(tokenComm)
 
@@ -866,52 +886,52 @@ class CollaborationCommentView(generic.CreateView):
             pass
 
         section_type = ContentType.objects.get(model='section')
-
+        allSectionsComments = []
 
         for section in sections :
             # Get all comments from each section
             comments = Collaboration_comment.objects.filter(content_type_id=section_type.id, object_model_id = section.id)
             for comment in comments :
-                # Filter only sent comments or comments from user connected
-                if comment.sent or self.request.user == comment.user :
-                    sectionComments.append(comment)
-                    sectionShortTitle = self.getSectionShortName(section.title)
-                    sectionDict[sectionShortTitle].append(comment)
+                allSectionsComments.append(comment)
 
+        # Get first comments of all sections
+        firstSectionComments = []
+        for sectionComm in allSectionsComments:
+            if not sectionComm.parent:
+                firstSectionComments.append(sectionComm)
 
-        """for sal in salut :
-            if sal.content_type_id :
-                """
+        # Sort comments using parent_id
+        allSectionCommentsSorted = []
+        for firstSection in firstSectionComments:
+            idSection = firstSection.id
+            allSectionCommentsSorted.append(firstSection)
+            isFound = None
+            while idSection != 0:
+                for comm in allSectionsComments :
+                    isFound = 0
+                    if comm.parent_id == idSection :
+                        allSectionCommentsSorted.append(comm)
+                        idSection = comm.id
+                        isFound = 1
+                if isFound==0 :
+                    idSection=0
 
-        try :
-            pass
-            """aComment = Collaboration_comment.objects.get(content_object=token)
-            for comment in aComment :
-                #tokenComments[comment.field.id].append(comment)
-                tokenComments.append(comment)"""
-        except :
-            pass
+        for commentSectionSorted in allSectionCommentsSorted :
+            # Filter only sent comments or comments from user connected
+            if commentSectionSorted.sent or self.request.user == commentSectionSorted.user :
+                sectionComments.append(commentSectionSorted)
+                section = get_object_or_404(Section, pk=commentSectionSorted.object_model_id)
+                sectionShortTitle = self.getSectionShortName(section.title)
+                sectionDict[sectionShortTitle].append(commentSectionSorted)
 
-        """sectionsComments = []
-
-
-        for section in sections :
-            try :
-                commentsForSection = Collaboration_comment.objects.get(content_object=section)
-                for comment in commentsForSection :
-                    sectionsComments.append(comment)
-            except :
-                pass"""
-
+        context['user'] = user
         context['token'] = token
         context['artefact'] = artefact
         context['sections'] = sections
         context['documents'] = documents
         context['stratigraphies'] = stratigraphies
-        context['tokenComments'] = tokenComments
-        context['sectionComments'] = sectionComments
-        context['testToken'] = dict(tokenDict)
-        context['testSection'] = dict(sectionDict)
+        context['tokenComments'] = dict(tokenDict)
+        context['sectionComments'] = dict(sectionDict)
         context['node_base_url'] = settings.NODE_BASE_URL
         return context
 
@@ -959,12 +979,41 @@ class CollaborationCommentView(generic.CreateView):
         elif sectionTitle == 'References' :
             return 'references'
 
+    def get_field_last_comment_id(self, token, field, model):
+        try :
+            commentsExisting = Collaboration_comment.objects.filter(content_type_id=model.id, object_model_id=token.id, field_id=field.id)
+            lastId = 0
+            isFound = 0
+            idComm = 0
+            for comment in commentsExisting:
+                if not comment.parent:
+                    idComm = comment.id
+
+            while lastId == 0:
+                for comment in commentsExisting:
+                    isFound = 0
+                    if comment.parent_id == idComm:
+                        idComm = comment.id
+                        isFound = 1
+                if isFound == 0:
+                    lastId = idComm
+            return lastId
+
+        except :
+            return 0
+
     def form_valid(self, form):
         try :
             token = Token.tokenManager.get(pk=self.kwargs['pk'])
             field = get_object_or_404(Field, title=self.kwargs['field'])
             form.instance.field = field
             form.instance.content_object = token
+            token_type = ContentType.objects.get(model='token')
+
+            """if self.get_field_last_comment_id(token, field, token_type) != 0 :
+                lastId = self.get_field_last_comment_id(token, field, token_type)
+                form.instance.parent_id = lastId"""
+
         except :
             token = Token.tokenManager.get(pk=self.kwargs['pk'])
             sectionTitle = self.getSectionCompleteName(self.kwargs['field'])
@@ -977,5 +1026,6 @@ class CollaborationCommentView(generic.CreateView):
         return super(CollaborationCommentView, self).form_valid(form)
 
     def get_success_url(self):
+
         return reverse('artefacts:collaboration-comment', kwargs={'pk' : self.kwargs['pk'], 'field' : 'none'})
 
