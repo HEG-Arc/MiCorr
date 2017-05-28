@@ -92,52 +92,51 @@
               </div>
               <form action="{% url 'artefacts:collaboration-comment' pk=token.id field='object' %}" method="post">{% csrf_token %}
                   <div class="row collapse" id="theObject" aria-expanded="false">
+                    <div class="line lightboxDark">
                       {% for key, values in sectionComments.items %}
                         {% if 'object' == key %}
-                          {% for value in values %}
+                            {% for value in values %}
                               {% if not value.parent %}
-                                  <div class="c12">
-                                    {{ value.comment }}
+                                  <div class="row">
+                                      <div class="c11">
+                                        {% if value.user == user %}
+                                            <div class="user_name_comment">You</div>
+                                        {% else %}
+                                            <div class="user_name_comment">{{ value.user.username }}</div>
+                                        {% endif %}
+                                        <div class="comments">{{ value.comment|safe }}</div>
+                                      <hr class="comment">
+                                      </div>
                                   </div>
                               {% else %}
-                                  <div class="c1">
-                                  </div>
-                                  <div class="c11">
-                                    {{ value.comment }}
+                                  <div class="row">
+                                      <div class="c1">
+                                      </div>
+                                      <div class="c10">
+                                        {% if value.user == user %}
+                                            <div class="user_name_comment">You</div>
+                                        {% else %}
+                                            <div class="user_name_comment">{{ value.user.username }}</div>
+                                        {% endif %}
+                                        <div class="comments">{{ value.comment|safe }}</div>
+                                        <hr class="comment">
+                                      </div>
                                   </div>
                               {% endif %}
-                          {% endfor %}
-                          <div class="row">
-                            <div class="c1">
-                            </div>
-                            <div class="c10">
-                                <hr>
-                                <h3>Your comment</h3>
-                                {{ form.comment }}
-                                <br>
-                                <div class="pull-right">
-                                    <input class="btn btn-primary btn-sm" type="submit" value="Save comment">
-                                </div>
-                                <br><br>
-                                <hr>
-                            </div>
-                          </div>
+                            {% endfor %}
                         {% endif %}
-                      {% empty %}
-                          <div class="row">
-                            <div class="c11">
-                                <hr>
-                                <h3>Your comment</h3>
-                                {{ form.comment }}
-                                <br>
-                                <div class="pull-right">
-                                    <input class="btn btn-primary btn-sm" type="submit" value="Save comment">
-                                </div>
-                                <br><br>
-                                <hr>
-                            </div>
-                          </div>
                       {% endfor %}
+                      <div class="row">
+                        <div class="c11">
+                            <h3>Your comment</h3>
+                            {{ form.comment }}
+                            <br>
+                            <div class="pull-right">
+                                <input class="btn btn-primary btn-sm" type="submit" value="Save comment">
+                            </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
               </form>
             </div>
@@ -283,17 +282,52 @@
               </div>
               <form action="{% url 'artefacts:collaboration-comment' pk=token.id field='originArtefact' %}" method="post">{% csrf_token %}
                   <div class="row collapse" id="commentOrigin" aria-expanded="false">
+                    <div class="line lightboxDark">
+                      {% for key, values in tokenComments.items %}
+                        {% if 'originArtefact' == key %}
+                            {% for value in values %}
+                              {% if not value.parent %}
+                                  <div class="row">
+                                      <div class="c11">
+                                        {% if value.user == user %}
+                                            <div class="user_name_comment">You</div>
+                                        {% else %}
+                                            <div class="user_name_comment">{{ value.user.username }}</div>
+                                        {% endif %}
+                                        <div class="comments">{{ value.comment|safe }}</div>
+                                      <hr class="comment">
+                                      </div>
+                                  </div>
+                              {% else %}
+                                  <div class="row">
+                                      <div class="c1">
+                                      </div>
+                                      <div class="c10">
+                                        {% if value.user == user %}
+                                            <div class="user_name_comment">You</div>
+                                        {% else %}
+                                            <div class="user_name_comment">{{ value.user.username }}</div>
+                                        {% endif %}
+                                        <div class="comments">{{ value.comment|safe }}</div>
+                                        <hr class="comment">
+                                      </div>
+                                  </div>
+                              {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                      {% endfor %}
+                      <div class="row">
                         <div class="c11">
-                            <hr>
                             <h3>Your comment</h3>
                             {{ form.comment }}
                             <br>
                             <div class="pull-right">
                                 <input class="btn btn-primary btn-sm" type="submit" value="Save comment">
                             </div>
-                            <br><br>
-                            <hr>
+                            <br>
                         </div>
+                      </div>
+                    </div>
                   </div>
               </form>
 
@@ -309,17 +343,52 @@
               </div>
               <form action="{% url 'artefacts:collaboration-comment' pk=token.id field='dateArtefact' %}" method="post">{% csrf_token %}
                   <div class="row collapse" id="commentArtefactDate" aria-expanded="false">
+                    <div class="line lightboxDark">
+                      {% for key, values in tokenComments.items %}
+                        {% if 'dateArtefact' == key %}
+                            {% for value in values %}
+                              {% if not value.parent %}
+                                  <div class="row">
+                                      <div class="c11">
+                                        {% if value.user == user %}
+                                            <div class="user_name_comment">You</div>
+                                        {% else %}
+                                            <div class="user_name_comment">{{ value.user.username }}</div>
+                                        {% endif %}
+                                        <div class="comments">{{ value.comment|safe }}</div>
+                                      <hr class="comment">
+                                      </div>
+                                  </div>
+                              {% else %}
+                                  <div class="row">
+                                      <div class="c1">
+                                      </div>
+                                      <div class="c10">
+                                        {% if value.user == user %}
+                                            <div class="user_name_comment">You</div>
+                                        {% else %}
+                                            <div class="user_name_comment">{{ value.user.username }}</div>
+                                        {% endif %}
+                                        <div class="comments">{{ value.comment|safe }}</div>
+                                        <hr class="comment">
+                                      </div>
+                                  </div>
+                              {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                      {% endfor %}
+                      <div class="row">
                         <div class="c11">
-                            <hr>
                             <h3>Your comment</h3>
                             {{ form.comment }}
                             <br>
                             <div class="pull-right">
                                 <input class="btn btn-primary btn-sm" type="submit" value="Save comment">
                             </div>
-                            <br><br>
-                            <hr>
+                            <br>
                         </div>
+                      </div>
+                    </div>
                   </div>
               </form>
 
@@ -335,17 +404,52 @@
               </div>
               <form action="{% url 'artefacts:collaboration-comment' pk=token.id field='chronologyArtefact' %}" method="post">{% csrf_token %}
                   <div class="row collapse" id="commentChronology" aria-expanded="false">
+                    <div class="line lightboxDark">
+                      {% for key, values in tokenComments.items %}
+                        {% if 'chronologyArtefact' == key %}
+                            {% for value in values %}
+                              {% if not value.parent %}
+                                  <div class="row">
+                                      <div class="c11">
+                                        {% if value.user == user %}
+                                            <div class="user_name_comment">You</div>
+                                        {% else %}
+                                            <div class="user_name_comment">{{ value.user.username }}</div>
+                                        {% endif %}
+                                        <div class="comments">{{ value.comment|safe }}</div>
+                                      <hr class="comment">
+                                      </div>
+                                  </div>
+                              {% else %}
+                                  <div class="row">
+                                      <div class="c1">
+                                      </div>
+                                      <div class="c10">
+                                        {% if value.user == user %}
+                                            <div class="user_name_comment">You</div>
+                                        {% else %}
+                                            <div class="user_name_comment">{{ value.user.username }}</div>
+                                        {% endif %}
+                                        <div class="comments">{{ value.comment|safe }}</div>
+                                        <hr class="comment">
+                                      </div>
+                                  </div>
+                              {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                      {% endfor %}
+                      <div class="row">
                         <div class="c11">
-                            <hr>
                             <h3>Your comment</h3>
                             {{ form.comment }}
                             <br>
                             <div class="pull-right">
                                 <input class="btn btn-primary btn-sm" type="submit" value="Save comment">
                             </div>
-                            <br><br>
-                            <hr>
+                            <br>
                         </div>
+                      </div>
+                    </div>
                   </div>
               </form>
 
@@ -361,17 +465,52 @@
               </div>
               <form action="{% url 'artefacts:collaboration-comment' pk=token.id field='environmentArtefact' %}" method="post">{% csrf_token %}
                   <div class="row collapse" id="commentEnvironment" aria-expanded="false">
+                    <div class="line lightboxDark">
+                      {% for key, values in tokenComments.items %}
+                        {% if 'environmentArtefact' == key %}
+                            {% for value in values %}
+                              {% if not value.parent %}
+                                  <div class="row">
+                                      <div class="c11">
+                                        {% if value.user == user %}
+                                            <div class="user_name_comment">You</div>
+                                        {% else %}
+                                            <div class="user_name_comment">{{ value.user.username }}</div>
+                                        {% endif %}
+                                        <div class="comments">{{ value.comment|safe }}</div>
+                                      <hr class="comment">
+                                      </div>
+                                  </div>
+                              {% else %}
+                                  <div class="row">
+                                      <div class="c1">
+                                      </div>
+                                      <div class="c10">
+                                        {% if value.user == user %}
+                                            <div class="user_name_comment">You</div>
+                                        {% else %}
+                                            <div class="user_name_comment">{{ value.user.username }}</div>
+                                        {% endif %}
+                                        <div class="comments">{{ value.comment|safe }}</div>
+                                        <hr class="comment">
+                                      </div>
+                                  </div>
+                              {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                      {% endfor %}
+                      <div class="row">
                         <div class="c11">
-                            <hr>
                             <h3>Your comment</h3>
                             {{ form.comment }}
                             <br>
                             <div class="pull-right">
                                 <input class="btn btn-primary btn-sm" type="submit" value="Save comment">
                             </div>
-                            <br><br>
-                            <hr>
+                            <br>
                         </div>
+                      </div>
+                    </div>
                   </div>
               </form>
 
@@ -387,17 +526,52 @@
               </div>
               <form action="{% url 'artefacts:collaboration-comment' pk=token.id field='locationArtefact' %}" method="post">{% csrf_token %}
                   <div class="row collapse" id="commentLocation" aria-expanded="false">
+                    <div class="line lightboxDark">
+                      {% for key, values in tokenComments.items %}
+                        {% if 'locationArtefact' == key %}
+                            {% for value in values %}
+                              {% if not value.parent %}
+                                  <div class="row">
+                                      <div class="c11">
+                                        {% if value.user == user %}
+                                            <div class="user_name_comment">You</div>
+                                        {% else %}
+                                            <div class="user_name_comment">{{ value.user.username }}</div>
+                                        {% endif %}
+                                        <div class="comments">{{ value.comment|safe }}</div>
+                                      <hr class="comment">
+                                      </div>
+                                  </div>
+                              {% else %}
+                                  <div class="row">
+                                      <div class="c1">
+                                      </div>
+                                      <div class="c10">
+                                        {% if value.user == user %}
+                                            <div class="user_name_comment">You</div>
+                                        {% else %}
+                                            <div class="user_name_comment">{{ value.user.username }}</div>
+                                        {% endif %}
+                                        <div class="comments">{{ value.comment|safe }}</div>
+                                        <hr class="comment">
+                                      </div>
+                                  </div>
+                              {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                      {% endfor %}
+                      <div class="row">
                         <div class="c11">
-                            <hr>
                             <h3>Your comment</h3>
                             {{ form.comment }}
                             <br>
                             <div class="pull-right">
                                 <input class="btn btn-primary btn-sm" type="submit" value="Save comment">
                             </div>
-                            <br><br>
-                            <hr>
+                            <br>
                         </div>
+                      </div>
+                    </div>
                   </div>
               </form>
 
@@ -413,17 +587,52 @@
               </div>
               <form action="{% url 'artefacts:collaboration-comment' pk=token.id field='ownerArtefact' %}" method="post">{% csrf_token %}
                   <div class="row collapse" id="commentOwner" aria-expanded="false">
+                    <div class="line lightboxDark">
+                      {% for key, values in tokenComments.items %}
+                        {% if 'ownerArtefact' == key %}
+                            {% for value in values %}
+                              {% if not value.parent %}
+                                  <div class="row">
+                                      <div class="c11">
+                                        {% if value.user == user %}
+                                            <div class="user_name_comment">You</div>
+                                        {% else %}
+                                            <div class="user_name_comment">{{ value.user.username }}</div>
+                                        {% endif %}
+                                        <div class="comments">{{ value.comment|safe }}</div>
+                                      <hr class="comment">
+                                      </div>
+                                  </div>
+                              {% else %}
+                                  <div class="row">
+                                      <div class="c1">
+                                      </div>
+                                      <div class="c10">
+                                        {% if value.user == user %}
+                                            <div class="user_name_comment">You</div>
+                                        {% else %}
+                                            <div class="user_name_comment">{{ value.user.username }}</div>
+                                        {% endif %}
+                                        <div class="comments">{{ value.comment|safe }}</div>
+                                        <hr class="comment">
+                                      </div>
+                                  </div>
+                              {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                      {% endfor %}
+                      <div class="row">
                         <div class="c11">
-                            <hr>
                             <h3>Your comment</h3>
                             {{ form.comment }}
                             <br>
                             <div class="pull-right">
                                 <input class="btn btn-primary btn-sm" type="submit" value="Save comment">
                             </div>
-                            <br><br>
-                            <hr>
+                            <br>
                         </div>
+                      </div>
+                    </div>
                   </div>
               </form>
 
@@ -439,17 +648,52 @@
               </div>
               <form action="{% url 'artefacts:collaboration-comment' pk=token.id field='invNumberArtefact' %}" method="post">{% csrf_token %}
                   <div class="row collapse" id="commentNumber" aria-expanded="false">
+                    <div class="line lightboxDark">
+                      {% for key, values in tokenComments.items %}
+                        {% if 'invNumberArtefact' == key %}
+                            {% for value in values %}
+                              {% if not value.parent %}
+                                  <div class="row">
+                                      <div class="c11">
+                                        {% if value.user == user %}
+                                            <div class="user_name_comment">You</div>
+                                        {% else %}
+                                            <div class="user_name_comment">{{ value.user.username }}</div>
+                                        {% endif %}
+                                        <div class="comments">{{ value.comment|safe }}</div>
+                                      <hr class="comment">
+                                      </div>
+                                  </div>
+                              {% else %}
+                                  <div class="row">
+                                      <div class="c1">
+                                      </div>
+                                      <div class="c10">
+                                        {% if value.user == user %}
+                                            <div class="user_name_comment">You</div>
+                                        {% else %}
+                                            <div class="user_name_comment">{{ value.user.username }}</div>
+                                        {% endif %}
+                                        <div class="comments">{{ value.comment|safe }}</div>
+                                        <hr class="comment">
+                                      </div>
+                                  </div>
+                              {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                      {% endfor %}
+                      <div class="row">
                         <div class="c11">
-                            <hr>
                             <h3>Your comment</h3>
                             {{ form.comment }}
                             <br>
                             <div class="pull-right">
                                 <input class="btn btn-primary btn-sm" type="submit" value="Save comment">
                             </div>
-                            <br><br>
-                            <hr>
+                            <br>
                         </div>
+                      </div>
+                    </div>
                   </div>
               </form>
 
@@ -464,17 +708,52 @@
               </div>
               <form action="{% url 'artefacts:collaboration-comment' pk=token.id field='recConsDataArtefact' %}" method="post">{% csrf_token %}
                   <div class="row collapse" id="commentRecConsData" aria-expanded="false">
+                    <div class="line lightboxDark">
+                      {% for key, values in tokenComments.items %}
+                        {% if 'recConsDataArtefact' == key %}
+                            {% for value in values %}
+                              {% if not value.parent %}
+                                  <div class="row">
+                                      <div class="c11">
+                                        {% if value.user == user %}
+                                            <div class="user_name_comment">You</div>
+                                        {% else %}
+                                            <div class="user_name_comment">{{ value.user.username }}</div>
+                                        {% endif %}
+                                        <div class="comments">{{ value.comment|safe }}</div>
+                                      <hr class="comment">
+                                      </div>
+                                  </div>
+                              {% else %}
+                                  <div class="row">
+                                      <div class="c1">
+                                      </div>
+                                      <div class="c10">
+                                        {% if value.user == user %}
+                                            <div class="user_name_comment">You</div>
+                                        {% else %}
+                                            <div class="user_name_comment">{{ value.user.username }}</div>
+                                        {% endif %}
+                                        <div class="comments">{{ value.comment|safe }}</div>
+                                        <hr class="comment">
+                                      </div>
+                                  </div>
+                              {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                      {% endfor %}
+                      <div class="row">
                         <div class="c11">
-                            <hr>
                             <h3>Your comment</h3>
                             {{ form.comment }}
                             <br>
                             <div class="pull-right">
                                 <input class="btn btn-primary btn-sm" type="submit" value="Save comment">
                             </div>
-                            <br><br>
-                            <hr>
+                            <br>
                         </div>
+                      </div>
+                    </div>
                   </div>
               </form>
 
@@ -518,16 +797,51 @@
                             </div>
                             <form action="{% url 'artefacts:collaboration-comment' pk=token.id field='zones' %}" method="post">{% csrf_token %}
                                 <div class="row collapse" id="commentZones" aria-expanded="false">
-                                    <div class="c11">
-                                        <hr>
-                                        <h3>Your comment</h3>
-                                        {{ form.comment }}
-                                        <br>
-                                        <div class="pull-right">
-                                            <input class="btn btn-primary btn-sm" type="submit" value="Save comment">
+                                    <div class="line lightboxDark">
+                                      {% for key, values in sectionComments.items %}
+                                        {% if 'zones' == key %}
+                                            {% for value in values %}
+                                              {% if not value.parent %}
+                                                  <div class="row">
+                                                      <div class="c11">
+                                                        {% if value.user == user %}
+                                                            <div class="user_name_comment">You</div>
+                                                        {% else %}
+                                                            <div class="user_name_comment">{{ value.user.username }}</div>
+                                                        {% endif %}
+                                                        <div class="comments">{{ value.comment|safe }}</div>
+                                                      <hr class="comment">
+                                                      </div>
+                                                  </div>
+                                              {% else %}
+                                                  <div class="row">
+                                                      <div class="c1">
+                                                      </div>
+                                                      <div class="c10">
+                                                        {% if value.user == user %}
+                                                            <div class="user_name_comment">You</div>
+                                                        {% else %}
+                                                            <div class="user_name_comment">{{ value.user.username }}</div>
+                                                        {% endif %}
+                                                        <div class="comments">{{ value.comment|safe }}</div>
+                                                        <hr class="comment">
+                                                      </div>
+                                                  </div>
+                                              {% endif %}
+                                            {% endfor %}
+                                        {% endif %}
+                                      {% endfor %}
+                                      <div class="row">
+                                        <div class="c11">
+                                            <h3>Your comment</h3>
+                                            {{ form.comment }}
+                                            <br>
+                                            <div class="pull-right">
+                                                <input class="btn btn-primary btn-sm" type="submit" value="Save comment">
+                                            </div>
+                                            <br>
                                         </div>
-                                        <br><br>
-                                        <hr>
+                                      </div>
                                     </div>
                                 </div>
                             </form>
@@ -568,16 +882,51 @@
                             </div>
                             <form action="{% url 'artefacts:collaboration-comment' pk=token.id field='macroscopic' %}" method="post">{% csrf_token %}
                                 <div class="row collapse" id="commentMacroscopic" aria-expanded="false">
-                                    <div class="c11">
-                                        <hr>
-                                        <h3>Your comment</h3>
-                                        {{ form.comment }}
-                                        <br>
-                                        <div class="pull-right">
-                                            <input class="btn btn-primary btn-sm" type="submit" value="Save comment">
+                                    <div class="line lightboxDark">
+                                      {% for key, values in sectionComments.items %}
+                                        {% if 'macroscopic' == key %}
+                                            {% for value in values %}
+                                              {% if not value.parent %}
+                                                  <div class="row">
+                                                      <div class="c11">
+                                                        {% if value.user == user %}
+                                                            <div class="user_name_comment">You</div>
+                                                        {% else %}
+                                                            <div class="user_name_comment">{{ value.user.username }}</div>
+                                                        {% endif %}
+                                                        <div class="comments">{{ value.comment|safe }}</div>
+                                                      <hr class="comment">
+                                                      </div>
+                                                  </div>
+                                              {% else %}
+                                                  <div class="row">
+                                                      <div class="c1">
+                                                      </div>
+                                                      <div class="c10">
+                                                        {% if value.user == user %}
+                                                            <div class="user_name_comment">You</div>
+                                                        {% else %}
+                                                            <div class="user_name_comment">{{ value.user.username }}</div>
+                                                        {% endif %}
+                                                        <div class="comments">{{ value.comment|safe }}</div>
+                                                        <hr class="comment">
+                                                      </div>
+                                                  </div>
+                                              {% endif %}
+                                            {% endfor %}
+                                        {% endif %}
+                                      {% endfor %}
+                                      <div class="row">
+                                        <div class="c11">
+                                            <h3>Your comment</h3>
+                                            {{ form.comment }}
+                                            <br>
+                                            <div class="pull-right">
+                                                <input class="btn btn-primary btn-sm" type="submit" value="Save comment">
+                                            </div>
+                                            <br>
                                         </div>
-                                        <br><br>
-                                        <hr>
+                                      </div>
                                     </div>
                                 </div>
                             </form>
@@ -618,16 +967,51 @@
                     </div>
                     <form action="{% url 'artefacts:collaboration-comment' pk=token.id field='sample' %}" method="post">{% csrf_token %}
                         <div class="row collapse" id="commentSample" aria-expanded="false">
-                            <div class="c11">
-                                <hr>
-                                <h3>Your comment</h3>
-                                {{ form.comment }}
-                                <br>
-                                <div class="pull-right">
-                                    <input class="btn btn-primary btn-sm" type="submit" value="Save comment">
+                            <div class="line lightboxDark">
+                              {% for key, values in sectionComments.items %}
+                                {% if 'sample' == key %}
+                                    {% for value in values %}
+                                      {% if not value.parent %}
+                                          <div class="row">
+                                              <div class="c11">
+                                                {% if value.user == user %}
+                                                    <div class="user_name_comment">You</div>
+                                                {% else %}
+                                                    <div class="user_name_comment">{{ value.user.username }}</div>
+                                                {% endif %}
+                                                <div class="comments">{{ value.comment|safe }}</div>
+                                              <hr class="comment">
+                                              </div>
+                                          </div>
+                                      {% else %}
+                                          <div class="row">
+                                              <div class="c1">
+                                              </div>
+                                              <div class="c10">
+                                                {% if value.user == user %}
+                                                    <div class="user_name_comment">You</div>
+                                                {% else %}
+                                                    <div class="user_name_comment">{{ value.user.username }}</div>
+                                                {% endif %}
+                                                <div class="comments">{{ value.comment|safe }}</div>
+                                                <hr class="comment">
+                                              </div>
+                                          </div>
+                                      {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+                              {% endfor %}
+                              <div class="row">
+                                <div class="c11">
+                                    <h3>Your comment</h3>
+                                    {{ form.comment }}
+                                    <br>
+                                    <div class="pull-right">
+                                        <input class="btn btn-primary btn-sm" type="submit" value="Save comment">
+                                    </div>
+                                    <br>
                                 </div>
-                                <br><br>
-                                <hr>
+                              </div>
                             </div>
                         </div>
                     </form>
@@ -647,17 +1031,52 @@
               </div>
               <form action="{% url 'artefacts:collaboration-comment' pk=token.id field='descriptionSample' %}" method="post">{% csrf_token %}
                   <div class="row collapse" id="commentSampleDescription" aria-expanded="false">
+                    <div class="line lightboxDark">
+                      {% for key, values in tokenComments.items %}
+                        {% if 'descriptionSample' == key %}
+                            {% for value in values %}
+                              {% if not value.parent %}
+                                  <div class="row">
+                                      <div class="c11">
+                                        {% if value.user == user %}
+                                            <div class="user_name_comment">You</div>
+                                        {% else %}
+                                            <div class="user_name_comment">{{ value.user.username }}</div>
+                                        {% endif %}
+                                        <div class="comments">{{ value.comment|safe }}</div>
+                                      <hr class="comment">
+                                      </div>
+                                  </div>
+                              {% else %}
+                                  <div class="row">
+                                      <div class="c1">
+                                      </div>
+                                      <div class="c10">
+                                        {% if value.user == user %}
+                                            <div class="user_name_comment">You</div>
+                                        {% else %}
+                                            <div class="user_name_comment">{{ value.user.username }}</div>
+                                        {% endif %}
+                                        <div class="comments">{{ value.comment|safe }}</div>
+                                        <hr class="comment">
+                                      </div>
+                                  </div>
+                              {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                      {% endfor %}
+                      <div class="row">
                         <div class="c11">
-                            <hr>
                             <h3>Your comment</h3>
                             {{ form.comment }}
                             <br>
                             <div class="pull-right">
                                 <input class="btn btn-primary btn-sm" type="submit" value="Save comment">
                             </div>
-                            <br><br>
-                            <hr>
+                            <br>
                         </div>
+                      </div>
+                    </div>
                   </div>
               </form>
 
@@ -673,17 +1092,52 @@
               </div>
               <form action="{% url 'artefacts:collaboration-comment' pk=token.id field='alloySample' %}" method="post">{% csrf_token %}
                   <div class="row collapse" id="commentAlloy" aria-expanded="false">
+                    <div class="line lightboxDark">
+                      {% for key, values in tokenComments.items %}
+                        {% if 'alloySample' == key %}
+                            {% for value in values %}
+                              {% if not value.parent %}
+                                  <div class="row">
+                                      <div class="c11">
+                                        {% if value.user == user %}
+                                            <div class="user_name_comment">You</div>
+                                        {% else %}
+                                            <div class="user_name_comment">{{ value.user.username }}</div>
+                                        {% endif %}
+                                        <div class="comments">{{ value.comment|safe }}</div>
+                                      <hr class="comment">
+                                      </div>
+                                  </div>
+                              {% else %}
+                                  <div class="row">
+                                      <div class="c1">
+                                      </div>
+                                      <div class="c10">
+                                        {% if value.user == user %}
+                                            <div class="user_name_comment">You</div>
+                                        {% else %}
+                                            <div class="user_name_comment">{{ value.user.username }}</div>
+                                        {% endif %}
+                                        <div class="comments">{{ value.comment|safe }}</div>
+                                        <hr class="comment">
+                                      </div>
+                                  </div>
+                              {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                      {% endfor %}
+                      <div class="row">
                         <div class="c11">
-                            <hr>
                             <h3>Your comment</h3>
                             {{ form.comment }}
                             <br>
                             <div class="pull-right">
                                 <input class="btn btn-primary btn-sm" type="submit" value="Save comment">
                             </div>
-                            <br><br>
-                            <hr>
+                            <br>
                         </div>
+                      </div>
+                    </div>
                   </div>
               </form>
 
@@ -699,17 +1153,52 @@
               </div>
               <form action="{% url 'artefacts:collaboration-comment' pk=token.id field='technologySample' %}" method="post">{% csrf_token %}
                   <div class="row collapse" id="commentTechnology" aria-expanded="false">
+                    <div class="line lightboxDark">
+                      {% for key, values in tokenComments.items %}
+                        {% if 'technologySample' == key %}
+                            {% for value in values %}
+                              {% if not value.parent %}
+                                  <div class="row">
+                                      <div class="c11">
+                                        {% if value.user == user %}
+                                            <div class="user_name_comment">You</div>
+                                        {% else %}
+                                            <div class="user_name_comment">{{ value.user.username }}</div>
+                                        {% endif %}
+                                        <div class="comments">{{ value.comment|safe }}</div>
+                                      <hr class="comment">
+                                      </div>
+                                  </div>
+                              {% else %}
+                                  <div class="row">
+                                      <div class="c1">
+                                      </div>
+                                      <div class="c10">
+                                        {% if value.user == user %}
+                                            <div class="user_name_comment">You</div>
+                                        {% else %}
+                                            <div class="user_name_comment">{{ value.user.username }}</div>
+                                        {% endif %}
+                                        <div class="comments">{{ value.comment|safe }}</div>
+                                        <hr class="comment">
+                                      </div>
+                                  </div>
+                              {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                      {% endfor %}
+                      <div class="row">
                         <div class="c11">
-                            <hr>
                             <h3>Your comment</h3>
                             {{ form.comment }}
                             <br>
                             <div class="pull-right">
                                 <input class="btn btn-primary btn-sm" type="submit" value="Save comment">
                             </div>
-                            <br><br>
-                            <hr>
+                            <br>
                         </div>
+                      </div>
+                    </div>
                   </div>
               </form>
 
@@ -725,17 +1214,52 @@
               </div>
               <form action="{% url 'artefacts:collaboration-comment' pk=token.id field='labNumberSample' %}" method="post">{% csrf_token %}
                   <div class="row collapse" id="commentSampleNumber" aria-expanded="false">
+                    <div class="line lightboxDark">
+                      {% for key, values in tokenComments.items %}
+                        {% if 'labNumberSample' == key %}
+                            {% for value in values %}
+                              {% if not value.parent %}
+                                  <div class="row">
+                                      <div class="c11">
+                                        {% if value.user == user %}
+                                            <div class="user_name_comment">You</div>
+                                        {% else %}
+                                            <div class="user_name_comment">{{ value.user.username }}</div>
+                                        {% endif %}
+                                        <div class="comments">{{ value.comment|safe }}</div>
+                                      <hr class="comment">
+                                      </div>
+                                  </div>
+                              {% else %}
+                                  <div class="row">
+                                      <div class="c1">
+                                      </div>
+                                      <div class="c10">
+                                        {% if value.user == user %}
+                                            <div class="user_name_comment">You</div>
+                                        {% else %}
+                                            <div class="user_name_comment">{{ value.user.username }}</div>
+                                        {% endif %}
+                                        <div class="comments">{{ value.comment|safe }}</div>
+                                        <hr class="comment">
+                                      </div>
+                                  </div>
+                              {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                      {% endfor %}
+                      <div class="row">
                         <div class="c11">
-                            <hr>
                             <h3>Your comment</h3>
                             {{ form.comment }}
                             <br>
                             <div class="pull-right">
                                 <input class="btn btn-primary btn-sm" type="submit" value="Save comment">
                             </div>
-                            <br><br>
-                            <hr>
+                            <br>
                         </div>
+                      </div>
+                    </div>
                   </div>
               </form>
 
@@ -751,17 +1275,52 @@
               </div>
               <form action="{% url 'artefacts:collaboration-comment' pk=token.id field='locationSample' %}" method="post">{% csrf_token %}
                   <div class="row collapse" id="commentSampleLocation" aria-expanded="false">
+                    <div class="line lightboxDark">
+                      {% for key, values in tokenComments.items %}
+                        {% if 'locationSample' == key %}
+                            {% for value in values %}
+                              {% if not value.parent %}
+                                  <div class="row">
+                                      <div class="c11">
+                                        {% if value.user == user %}
+                                            <div class="user_name_comment">You</div>
+                                        {% else %}
+                                            <div class="user_name_comment">{{ value.user.username }}</div>
+                                        {% endif %}
+                                        <div class="comments">{{ value.comment|safe }}</div>
+                                      <hr class="comment">
+                                      </div>
+                                  </div>
+                              {% else %}
+                                  <div class="row">
+                                      <div class="c1">
+                                      </div>
+                                      <div class="c10">
+                                        {% if value.user == user %}
+                                            <div class="user_name_comment">You</div>
+                                        {% else %}
+                                            <div class="user_name_comment">{{ value.user.username }}</div>
+                                        {% endif %}
+                                        <div class="comments">{{ value.comment|safe }}</div>
+                                        <hr class="comment">
+                                      </div>
+                                  </div>
+                              {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                      {% endfor %}
+                      <div class="row">
                         <div class="c11">
-                            <hr>
                             <h3>Your comment</h3>
                             {{ form.comment }}
                             <br>
                             <div class="pull-right">
                                 <input class="btn btn-primary btn-sm" type="submit" value="Save comment">
                             </div>
-                            <br><br>
-                            <hr>
+                            <br>
                         </div>
+                      </div>
+                    </div>
                   </div>
               </form>
 
@@ -777,17 +1336,52 @@
               </div>
               <form action="{% url 'artefacts:collaboration-comment' pk=token.id field='respInstSample' %}" method="post">{% csrf_token %}
                   <div class="row collapse" id="commentRespInst" aria-expanded="false">
+                    <div class="line lightboxDark">
+                      {% for key, values in tokenComments.items %}
+                        {% if 'respInstSample' == key %}
+                            {% for value in values %}
+                              {% if not value.parent %}
+                                  <div class="row">
+                                      <div class="c11">
+                                        {% if value.user == user %}
+                                            <div class="user_name_comment">You</div>
+                                        {% else %}
+                                            <div class="user_name_comment">{{ value.user.username }}</div>
+                                        {% endif %}
+                                        <div class="comments">{{ value.comment|safe }}</div>
+                                      <hr class="comment">
+                                      </div>
+                                  </div>
+                              {% else %}
+                                  <div class="row">
+                                      <div class="c1">
+                                      </div>
+                                      <div class="c10">
+                                        {% if value.user == user %}
+                                            <div class="user_name_comment">You</div>
+                                        {% else %}
+                                            <div class="user_name_comment">{{ value.user.username }}</div>
+                                        {% endif %}
+                                        <div class="comments">{{ value.comment|safe }}</div>
+                                        <hr class="comment">
+                                      </div>
+                                  </div>
+                              {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                      {% endfor %}
+                      <div class="row">
                         <div class="c11">
-                            <hr>
                             <h3>Your comment</h3>
                             {{ form.comment }}
                             <br>
                             <div class="pull-right">
                                 <input class="btn btn-primary btn-sm" type="submit" value="Save comment">
                             </div>
-                            <br><br>
-                            <hr>
+                            <br>
                         </div>
+                      </div>
+                    </div>
                   </div>
               </form>
 
@@ -803,17 +1397,52 @@
               </div>
               <form action="{% url 'artefacts:collaboration-comment' pk=token.id field='dateAimSamplingSample' %}" method="post">{% csrf_token %}
                   <div class="row collapse" id="commentDateAimSampling" aria-expanded="false">
+                    <div class="line lightboxDark">
+                      {% for key, values in sectionComments.items %}
+                        {% if 'dateAimSamplingSample' == key %}
+                            {% for value in values %}
+                              {% if not value.parent %}
+                                  <div class="row">
+                                      <div class="c11">
+                                        {% if value.user == user %}
+                                            <div class="user_name_comment">You</div>
+                                        {% else %}
+                                            <div class="user_name_comment">{{ value.user.username }}</div>
+                                        {% endif %}
+                                        <div class="comments">{{ value.comment|safe }}</div>
+                                      <hr class="comment">
+                                      </div>
+                                  </div>
+                              {% else %}
+                                  <div class="row">
+                                      <div class="c1">
+                                      </div>
+                                      <div class="c10">
+                                        {% if value.user == user %}
+                                            <div class="user_name_comment">You</div>
+                                        {% else %}
+                                            <div class="user_name_comment">{{ value.user.username }}</div>
+                                        {% endif %}
+                                        <div class="comments">{{ value.comment|safe }}</div>
+                                        <hr class="comment">
+                                      </div>
+                                  </div>
+                              {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                      {% endfor %}
+                      <div class="row">
                         <div class="c11">
-                            <hr>
                             <h3>Your comment</h3>
                             {{ form.comment }}
                             <br>
                             <div class="pull-right">
                                 <input class="btn btn-primary btn-sm" type="submit" value="Save comment">
                             </div>
-                            <br><br>
-                            <hr>
+                            <br>
                         </div>
+                      </div>
+                    </div>
                   </div>
               </form>
 
@@ -835,17 +1464,52 @@
               </div>
               <form action="{% url 'artefacts:collaboration-comment' pk=token.id field='stratigraphiesSample' %}" method="post">{% csrf_token %}
                   <div class="row collapse" id="commentStratigraphies" aria-expanded="false">
+                    <div class="line lightboxDark">
+                      {% for key, values in tokenComments.items %}
+                        {% if 'stratigraphiesSample' == key %}
+                            {% for value in values %}
+                              {% if not value.parent %}
+                                  <div class="row">
+                                      <div class="c11">
+                                        {% if value.user == user %}
+                                            <div class="user_name_comment">You</div>
+                                        {% else %}
+                                            <div class="user_name_comment">{{ value.user.username }}</div>
+                                        {% endif %}
+                                        <div class="comments">{{ value.comment|safe }}</div>
+                                      <hr class="comment">
+                                      </div>
+                                  </div>
+                              {% else %}
+                                  <div class="row">
+                                      <div class="c1">
+                                      </div>
+                                      <div class="c10">
+                                        {% if value.user == user %}
+                                            <div class="user_name_comment">You</div>
+                                        {% else %}
+                                            <div class="user_name_comment">{{ value.user.username }}</div>
+                                        {% endif %}
+                                        <div class="comments">{{ value.comment|safe }}</div>
+                                        <hr class="comment">
+                                      </div>
+                                  </div>
+                              {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                      {% endfor %}
+                      <div class="row">
                         <div class="c11">
-                            <hr>
                             <h3>Your comment</h3>
                             {{ form.comment }}
                             <br>
                             <div class="pull-right">
                                 <input class="btn btn-primary btn-sm" type="submit" value="Save comment">
                             </div>
-                            <br><br>
-                            <hr>
+                            <br>
                         </div>
+                      </div>
+                    </div>
                   </div>
               </form>
             </div>
@@ -879,16 +1543,51 @@
                 </div>
                 <form action="{% url 'artefacts:collaboration-comment' pk=token.id field='anaResults' %}" method="post">{% csrf_token %}
                     <div class="row collapse" id="commentAnaResults" aria-expanded="false">
-                        <div class="c11">
-                            <hr>
-                            <h3>Your comment</h3>
-                            {{ form.comment }}
-                            <br>
-                            <div class="pull-right">
-                                <input class="btn btn-primary btn-sm" type="submit" value="Save comment">
+                        <div class="line lightboxDark">
+                              {% for key, values in sectionComments.items %}
+                                {% if 'anaResults' == key %}
+                                    {% for value in values %}
+                                      {% if not value.parent %}
+                                          <div class="row">
+                                              <div class="c11">
+                                                {% if value.user == user %}
+                                                    <div class="user_name_comment">You</div>
+                                                {% else %}
+                                                    <div class="user_name_comment">{{ value.user.username }}</div>
+                                                {% endif %}
+                                                <div class="comments">{{ value.comment|safe }}</div>
+                                              <hr class="comment">
+                                              </div>
+                                          </div>
+                                      {% else %}
+                                          <div class="row">
+                                              <div class="c1">
+                                              </div>
+                                              <div class="c10">
+                                                {% if value.user == user %}
+                                                    <div class="user_name_comment">You</div>
+                                                {% else %}
+                                                    <div class="user_name_comment">{{ value.user.username }}</div>
+                                                {% endif %}
+                                                <div class="comments">{{ value.comment|safe }}</div>
+                                                <hr class="comment">
+                                              </div>
+                                          </div>
+                                      {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+                              {% endfor %}
+                            <div class="row">
+                            <div class="c11">
+                                <h3>Your comment</h3>
+                                {{ form.comment }}
+                                <br>
+                                <div class="pull-right">
+                                    <input class="btn btn-primary btn-sm" type="submit" value="Save comment">
+                                </div>
+                                <br>
                             </div>
-                            <br><br>
-                            <hr>
+                          </div>
                         </div>
                     </div>
                 </form>
@@ -917,16 +1616,51 @@
                         </div>
                         <form action="{% url 'artefacts:collaboration-comment' pk=token.id field='metal' %}" method="post">{% csrf_token %}
                             <div class="row collapse" id="commentMetal" aria-expanded="false">
-                                <div class="c11">
-                                    <hr>
-                                    <h3>Your comment</h3>
-                                    {{ form.comment }}
-                                    <br>
-                                    <div class="pull-right">
-                                        <input class="btn btn-primary btn-sm" type="submit" value="Save comment">
+                                <div class="line lightboxDark">
+                                  {% for key, values in sectionComments.items %}
+                                    {% if 'metal' == key %}
+                                        {% for value in values %}
+                                          {% if not value.parent %}
+                                              <div class="row">
+                                                  <div class="c11">
+                                                    {% if value.user == user %}
+                                                        <div class="user_name_comment">You</div>
+                                                    {% else %}
+                                                        <div class="user_name_comment">{{ value.user.username }}</div>
+                                                    {% endif %}
+                                                    <div class="comments">{{ value.comment|safe }}</div>
+                                                  <hr class="comment">
+                                                  </div>
+                                              </div>
+                                          {% else %}
+                                              <div class="row">
+                                                  <div class="c1">
+                                                  </div>
+                                                  <div class="c10">
+                                                    {% if value.user == user %}
+                                                        <div class="user_name_comment">You</div>
+                                                    {% else %}
+                                                        <div class="user_name_comment">{{ value.user.username }}</div>
+                                                    {% endif %}
+                                                    <div class="comments">{{ value.comment|safe }}</div>
+                                                    <hr class="comment">
+                                                  </div>
+                                              </div>
+                                          {% endif %}
+                                        {% endfor %}
+                                    {% endif %}
+                                  {% endfor %}
+                                  <div class="row">
+                                    <div class="c11">
+                                        <h3>Your comment</h3>
+                                        {{ form.comment }}
+                                        <br>
+                                        <div class="pull-right">
+                                            <input class="btn btn-primary btn-sm" type="submit" value="Save comment">
+                                        </div>
+                                        <br>
                                     </div>
-                                    <br><br>
-                                    <hr>
+                                  </div>
                                 </div>
                             </div>
                         </form>
@@ -948,11 +1682,6 @@
                                       </div>
                                     {% endfor %}
                                 </div>
-                                <!--<div class="c1">
-                                    <div class="pull-right">
-                                        <a href="#commentMetalFig" data-toggle="collapse" aria-expanded="false" aria-controls="commentMetalFig"><i class="fa fa-comment"></i></a>
-                                    </div>
-                                </div>-->
                             </div>
                         {% endif %}
                     </div>
@@ -984,16 +1713,51 @@
                         </div>
                         <form action="{% url 'artefacts:collaboration-comment' pk=token.id field='corrLayers' %}" method="post">{% csrf_token %}
                             <div class="row collapse" id="commentCorrLayers" aria-expanded="false">
-                                <div class="c11">
-                                    <hr>
-                                    <h3>Your comment</h3>
-                                    {{ form.comment }}
-                                    <br>
-                                    <div class="pull-right">
-                                        <input class="btn btn-primary btn-sm" type="submit" value="Save comment">
+                                <div class="line lightboxDark">
+                                  {% for key, values in sectionComments.items %}
+                                    {% if 'corrLayers' == key %}
+                                        {% for value in values %}
+                                          {% if not value.parent %}
+                                              <div class="row">
+                                                  <div class="c11">
+                                                    {% if value.user == user %}
+                                                        <div class="user_name_comment">You</div>
+                                                    {% else %}
+                                                        <div class="user_name_comment">{{ value.user.username }}</div>
+                                                    {% endif %}
+                                                    <div class="comments">{{ value.comment|safe }}</div>
+                                                  <hr class="comment">
+                                                  </div>
+                                              </div>
+                                          {% else %}
+                                              <div class="row">
+                                                  <div class="c1">
+                                                  </div>
+                                                  <div class="c10">
+                                                    {% if value.user == user %}
+                                                        <div class="user_name_comment">You</div>
+                                                    {% else %}
+                                                        <div class="user_name_comment">{{ value.user.username }}</div>
+                                                    {% endif %}
+                                                    <div class="comments">{{ value.comment|safe }}</div>
+                                                    <hr class="comment">
+                                                  </div>
+                                              </div>
+                                          {% endif %}
+                                        {% endfor %}
+                                    {% endif %}
+                                  {% endfor %}
+                                  <div class="row">
+                                    <div class="c11">
+                                        <h3>Your comment</h3>
+                                        {{ form.comment }}
+                                        <br>
+                                        <div class="pull-right">
+                                            <input class="btn btn-primary btn-sm" type="submit" value="Save comment">
+                                        </div>
+                                        <br>
                                     </div>
-                                    <br><br>
-                                    <hr>
+                                  </div>
                                 </div>
                             </div>
                         </form>
@@ -1015,11 +1779,6 @@
                                       </div>
                                     {% endfor %}
                                 </div>
-                                <!--<div class="c1">
-                                    <div class="pull-right">
-                                        <a href="#commentCorrLayersFig" data-toggle="collapse" aria-expanded="false" aria-controls="commentCorrLayersFig"><i class="fa fa-comment"></i></a>
-                                    </div>
-                                </div>-->
                             </div>
                         {% endif %}
                     </div>
@@ -1069,16 +1828,51 @@
                     </div>
                     <form action="{% url 'artefacts:collaboration-comment' pk=token.id field='synthesis' %}" method="post">{% csrf_token %}
                         <div class="row collapse" id="commentSynthesis" aria-expanded="false">
-                            <div class="c11">
-                                <hr>
-                                <h3>Your comment</h3>
-                                {{ form.comment }}
-                                <br>
-                                <div class="pull-right">
-                                    <input class="btn btn-primary btn-sm" type="submit" value="Save comment">
+                            <div class="line lightboxDark">
+                              {% for key, values in sectionComments.items %}
+                                {% if 'synthesis' == key %}
+                                    {% for value in values %}
+                                      {% if not value.parent %}
+                                          <div class="row">
+                                              <div class="c11">
+                                                {% if value.user == user %}
+                                                    <div class="user_name_comment">You</div>
+                                                {% else %}
+                                                    <div class="user_name_comment">{{ value.user.username }}</div>
+                                                {% endif %}
+                                                <div class="comments">{{ value.comment|safe }}</div>
+                                              <hr class="comment">
+                                              </div>
+                                          </div>
+                                      {% else %}
+                                          <div class="row">
+                                              <div class="c1">
+                                              </div>
+                                              <div class="c10">
+                                                {% if value.user == user %}
+                                                    <div class="user_name_comment">You</div>
+                                                {% else %}
+                                                    <div class="user_name_comment">{{ value.user.username }}</div>
+                                                {% endif %}
+                                                <div class="comments">{{ value.comment|safe }}</div>
+                                                <hr class="comment">
+                                              </div>
+                                          </div>
+                                      {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+                              {% endfor %}
+                              <div class="row">
+                                <div class="c11">
+                                    <h3>Your comment</h3>
+                                    {{ form.comment }}
+                                    <br>
+                                    <div class="pull-right">
+                                        <input class="btn btn-primary btn-sm" type="submit" value="Save comment">
+                                    </div>
+                                    <br>
                                 </div>
-                                <br><br>
-                                <hr>
+                              </div>
                             </div>
                         </div>
                     </form>
@@ -1106,16 +1900,51 @@
                 </div>
                 <form action="{% url 'artefacts:collaboration-comment' pk=token.id field='conclusion' %}" method="post">{% csrf_token %}
                     <div class="row collapse" id="commentConclusion" aria-expanded="false">
-                        <div class="c11">
-                            <hr>
-                            <h3>Your comment</h3>
-                            {{ form.comment }}
-                            <br>
-                            <div class="pull-right">
-                                <input class="btn btn-primary btn-sm" type="submit" value="Save comment">
+                        <div class="line lightboxDark">
+                          {% for key, values in sectionComments.items %}
+                            {% if 'conclusion' == key %}
+                                {% for value in values %}
+                                  {% if not value.parent %}
+                                      <div class="row">
+                                          <div class="c11">
+                                            {% if value.user == user %}
+                                                <div class="user_name_comment">You</div>
+                                            {% else %}
+                                                <div class="user_name_comment">{{ value.user.username }}</div>
+                                            {% endif %}
+                                            <div class="comments">{{ value.comment|safe }}</div>
+                                          <hr class="comment">
+                                          </div>
+                                      </div>
+                                  {% else %}
+                                      <div class="row">
+                                          <div class="c1">
+                                          </div>
+                                          <div class="c10">
+                                            {% if value.user == user %}
+                                                <div class="user_name_comment">You</div>
+                                            {% else %}
+                                                <div class="user_name_comment">{{ value.user.username }}</div>
+                                            {% endif %}
+                                            <div class="comments">{{ value.comment|safe }}</div>
+                                            <hr class="comment">
+                                          </div>
+                                      </div>
+                                  {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                          {% endfor %}
+                          <div class="row">
+                            <div class="c11">
+                                <h3>Your comment</h3>
+                                {{ form.comment }}
+                                <br>
+                                <div class="pull-right">
+                                    <input class="btn btn-primary btn-sm" type="submit" value="Save comment">
+                                </div>
+                                <br>
                             </div>
-                            <br><br>
-                            <hr>
+                          </div>
                         </div>
                     </div>
                 </form>
@@ -1142,16 +1971,51 @@
                 </div>
                 <form action="{% url 'artefacts:collaboration-comment' pk=token.id field='references' %}" method="post">{% csrf_token %}
                     <div class="row collapse" id="commentReferences" aria-expanded="false">
-                        <div class="c11">
-                            <hr>
-                            <h3>Your comment</h3>
-                            {{ form.comment }}
-                            <br>
-                            <div class="pull-right">
-                                <input class="btn btn-primary btn-sm" type="submit" value="Save comment">
+                        <div class="line lightboxDark">
+                          {% for key, values in sectionComments.items %}
+                            {% if 'references' == key %}
+                                {% for value in values %}
+                                  {% if not value.parent %}
+                                      <div class="row">
+                                          <div class="c11">
+                                            {% if value.user == user %}
+                                                <div class="user_name_comment">You</div>
+                                            {% else %}
+                                                <div class="user_name_comment">{{ value.user.username }}</div>
+                                            {% endif %}
+                                            <div class="comments">{{ value.comment|safe }}</div>
+                                          <hr class="comment">
+                                          </div>
+                                      </div>
+                                  {% else %}
+                                      <div class="row">
+                                          <div class="c1">
+                                          </div>
+                                          <div class="c10">
+                                            {% if value.user == user %}
+                                                <div class="user_name_comment">You</div>
+                                            {% else %}
+                                                <div class="user_name_comment">{{ value.user.username }}</div>
+                                            {% endif %}
+                                            <div class="comments">{{ value.comment|safe }}</div>
+                                            <hr class="comment">
+                                          </div>
+                                      </div>
+                                  {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                          {% endfor %}
+                          <div class="row">
+                            <div class="c11">
+                                <h3>Your comment</h3>
+                                {{ form.comment }}
+                                <br>
+                                <div class="pull-right">
+                                    <input class="btn btn-primary btn-sm" type="submit" value="Save comment">
+                                </div>
+                                <br>
                             </div>
-                            <br><br>
-                            <hr>
+                          </div>
                         </div>
                     </div>
                 </form>

@@ -980,25 +980,52 @@ class CollaborationCommentView(generic.CreateView):
             return 'references'
 
     def get_field_last_comment_id(self, token, field, model):
+        lastId = 0
         try :
             commentsExisting = Collaboration_comment.objects.filter(content_type_id=model.id, object_model_id=token.id, field_id=field.id)
-            lastId = 0
-            isFound = 0
-            idComm = 0
-            for comment in commentsExisting:
-                if not comment.parent:
-                    idComm = comment.id
-
-            while lastId == 0:
+            if commentsExisting:
+                lastId = 0
+                idComm = 0
                 for comment in commentsExisting:
-                    isFound = 0
-                    if comment.parent_id == idComm:
+                    if not comment.parent:
                         idComm = comment.id
-                        isFound = 1
-                if isFound == 0:
-                    lastId = idComm
-            return lastId
 
+                while lastId == 0:
+                    isFound = 0
+                    for comment in commentsExisting:
+                        if comment.parent_id == idComm:
+                            idComm = comment.id
+                            isFound = 1
+                    if isFound == 0:
+                        lastId = idComm
+                return lastId
+            else :
+                return lastId
+        except :
+            return 0
+
+    def get_section_last_comment_id(self, section, model):
+        lastId = 0
+        try :
+            commentsExisting = Collaboration_comment.objects.filter(content_type_id=model.id, object_model_id=section.id)
+            if commentsExisting:
+                lastId = 0
+                idComm = 0
+                for comment in commentsExisting:
+                    if not comment.parent:
+                        idComm = comment.id
+
+                while lastId == 0:
+                    isFound = 0
+                    for comment in commentsExisting:
+                        if comment.parent_id == idComm:
+                            idComm = comment.id
+                            isFound = 1
+                    if isFound == 0:
+                        lastId = idComm
+                return lastId
+            else :
+                return lastId
         except :
             return 0
 
@@ -1010,15 +1037,20 @@ class CollaborationCommentView(generic.CreateView):
             form.instance.content_object = token
             token_type = ContentType.objects.get(model='token')
 
-            """if self.get_field_last_comment_id(token, field, token_type) != 0 :
+            if self.get_field_last_comment_id(token, field, token_type) != 0 :
                 lastId = self.get_field_last_comment_id(token, field, token_type)
-                form.instance.parent_id = lastId"""
+                form.instance.parent_id = lastId
 
         except :
             token = Token.tokenManager.get(pk=self.kwargs['pk'])
             sectionTitle = self.getSectionCompleteName(self.kwargs['field'])
             section = Section.objects.get(title=sectionTitle, artefact=token.artefact)
             form.instance.content_object = section
+            section_type = ContentType.objects.get(model='section')
+
+            if self.get_section_last_comment_id(section, section_type) != 0 :
+                lastId = self.get_section_last_comment_id(section, section_type)
+                form.instance.parent_id = lastId
 
         user = self.request.user
         form.instance.user = user
