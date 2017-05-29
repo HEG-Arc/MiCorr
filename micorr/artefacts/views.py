@@ -837,7 +837,7 @@ class CollaborationUpdateView(generic.UpdateView):
             if commentSectionSorted.sent or self.request.user == commentSectionSorted.user:
                 sectionComments.append(commentSectionSorted)
                 section = get_object_or_404(Section, pk=commentSectionSorted.object_model_id)
-                sectionShortTitle = self.getSectionShortName(section.title)
+                sectionShortTitle = getSectionShortName(section.title)
                 sectionDict[sectionShortTitle].append(commentSectionSorted)
 
 
@@ -1006,7 +1006,7 @@ class CollaborationCommentView(generic.CreateView):
             if commentSectionSorted.sent or self.request.user == commentSectionSorted.user :
                 sectionComments.append(commentSectionSorted)
                 section = get_object_or_404(Section, pk=commentSectionSorted.object_model_id)
-                sectionShortTitle = self.getSectionShortName(section.title)
+                sectionShortTitle = getSectionShortName(section.title)
                 sectionDict[sectionShortTitle].append(commentSectionSorted)
 
         context['user'] = user
@@ -1020,7 +1020,7 @@ class CollaborationCommentView(generic.CreateView):
         context['node_base_url'] = settings.NODE_BASE_URL
         return context
 
-    def getSectionCompleteName(self, sectionTitle):
+    """def getSectionCompleteName(self, sectionTitle):
         if sectionTitle == 'object' :
             return 'The object'
         elif sectionTitle == 'zones' :
@@ -1062,7 +1062,7 @@ class CollaborationCommentView(generic.CreateView):
         elif sectionTitle == 'Conclusion' :
             return 'conclusion'
         elif sectionTitle == 'References' :
-            return 'references'
+            return 'references'"""
 
     def get_field_last_comment_id(self, token, field, model):
         lastId = 0
@@ -1128,7 +1128,7 @@ class CollaborationCommentView(generic.CreateView):
 
         except :
             token = Token.tokenManager.get(pk=self.kwargs['pk'])
-            sectionTitle = self.getSectionCompleteName(self.kwargs['field'])
+            sectionTitle = getSectionCompleteName(self.kwargs['field'])
             section = Section.objects.get(title=sectionTitle, artefact=token.artefact)
             form.instance.content_object = section
             section_type = ContentType.objects.get(model='section')
@@ -1145,6 +1145,50 @@ class CollaborationCommentView(generic.CreateView):
     def get_success_url(self):
 
         return reverse('artefacts:collaboration-comment', kwargs={'pk' : self.kwargs['pk'], 'field' : 'none'})
+
+def getSectionCompleteName(sectionTitle):
+    if sectionTitle == 'object' :
+        return 'The object'
+    elif sectionTitle == 'zones' :
+        return 'Zones of the artefact submitted to visual observation and location of sampling areas'
+    elif sectionTitle == 'macroscopic' :
+        return 'Macroscopic observation'
+    elif sectionTitle == 'sample' :
+        return 'Sample'
+    elif sectionTitle == 'anaResults' :
+        return 'Analyses and results'
+    elif sectionTitle == 'metal' :
+        return 'Metal'
+    elif sectionTitle == 'corrLayers' :
+        return 'Corrosion layers'
+    elif sectionTitle == 'synthesis' :
+        return 'Synthesis of the macroscopic / microscopic observation of corrosion layers'
+    elif sectionTitle == 'conclusion' :
+        return 'Conclusion'
+    elif sectionTitle == 'references' :
+        return 'References'
+
+def getSectionShortName(sectionTitle):
+    if sectionTitle == 'The object' :
+        return 'object'
+    elif sectionTitle == 'Zones of the artefact submitted to visual observation and location of sampling areas' :
+        return 'zones'
+    elif sectionTitle == 'Macroscopic observation' :
+        return 'macroscopic'
+    elif sectionTitle == 'Sample' :
+        return 'sample'
+    elif sectionTitle == 'Analyses and results' :
+        return 'anaResults'
+    elif sectionTitle == 'Metal' :
+        return 'metal'
+    elif sectionTitle == 'Corrosion layers' :
+        return 'corrLayers'
+    elif sectionTitle == 'Synthesis of the macroscopic / microscopic observation of corrosion layers' :
+        return 'synthesis'
+    elif sectionTitle == 'Conclusion' :
+        return 'conclusion'
+    elif sectionTitle == 'References' :
+        return 'references'
 
 def deleteComment(request, comment_id, artefact_id) :
     comment = get_object_or_404(Collaboration_comment, pk=comment_id)

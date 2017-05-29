@@ -1,0 +1,35 @@
+<div class="c12">
+    <div class="line lightboxDark">
+      <h3>Comments</h3>
+      <br>
+      {% for value in values %}
+          {% if not value.parent %}
+              <div class="row">
+                  <div class="c11">
+                    {% if value.user == user %}
+                        <div class="user_name_comment">You</div>
+                    {% else %}
+                        <div class="user_name_comment">{{ value.user.username }}</div>
+                    {% endif %}
+                    <div class="comments">{{ value.comment|safe }}</div>
+                  <hr class="comment">
+                  </div>
+              </div>
+          {% else %}
+              <div class="row">
+                  <div class="c1">
+                  </div>
+                  <div class="c10">
+                    {% if value.user == user %}
+                        <div class="user_name_comment">You</div>
+                    {% else %}
+                        <div class="user_name_comment">{{ value.user.username }}</div>
+                    {% endif %}
+                    <div class="comments">{{ value.comment|safe }}</div>
+                    <hr class="comment">
+                  </div>
+              </div>
+          {% endif %}
+      {% endfor %}
+    </div>
+</div>

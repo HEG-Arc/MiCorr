@@ -99,46 +99,23 @@
                         </div>
                         <div class="c6">
                             <div class="pull-right">
-                                <a href="#theObject" data-toggle="collapse" aria-expanded="false" aria-controls="theObject"><i class="fa fa-comment"></i></a>
+                                {% for key, values in sectionComments.items %}
+                                    {% if 'object' == key %}
+                                        {{ values|length }}
+                                        <a href="#theObject" data-toggle="collapse" aria-expanded="false" aria-controls="theObject">
+                                            <i class="fa fa-comment"></i>
+                                        </a>
+                                    {% endif %}
+                                {% endfor %}
                             </div>
                         </div>
-                        <div class="row collapse" id="theObject" aria-expanded="false">
-                            <div class="line middlebox">
-                              {% for key, values in tokenComments.items %}
-                                {% if 'descriptionArtefact' == key %}
-                                    {% for value in values %}
-                                      {% if not value.parent %}
-                                          <div class="row">
-                                              <div class="c11">
-                                                {% if value.user == user %}
-                                                    <div class="user_name_comment">You</div>
-                                                {% else %}
-                                                    <div class="user_name_comment">{{ value.user.username }}</div>
-                                                {% endif %}
-                                                <div class="comments">{{ value.comment|safe }}</div>
-                                              <hr class="comment">
-                                              </div>
-                                          </div>
-                                      {% else %}
-                                          <div class="row">
-                                              <div class="c1">
-                                              </div>
-                                              <div class="c10">
-                                                {% if value.user == user %}
-                                                    <div class="user_name_comment">You</div>
-                                                {% else %}
-                                                    <div class="user_name_comment">{{ value.user.username }}</div>
-                                                {% endif %}
-                                                <div class="comments">{{ value.comment|safe }}</div>
-                                                <hr class="comment">
-                                              </div>
-                                          </div>
-                                      {% endif %}
-                                    {% endfor %}
-                                {% endif %}
-                              {% endfor %}
-                            </div>
-                        </div>
+                        {% for key, values in sectionComments.items %}
+                            {% if 'object' == key %}
+                                <div class="row collapse" id="theObject" aria-expanded="false">
+                                    {% include "./comments_section_show_update_artefact.html" %}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
 
                         <div class="c9">
                             <p> <!-- Upload Photos -->
@@ -166,96 +143,254 @@
                         <div class="c3"><em>Description of artefact</em></div>
                         <div class="c8"><p>{{ form.description }}</p>
                             <p><i>{{ form.description.help_text }}</i></p></div>
-                        <div class="c1"><a href="#theObject" data-toggle="collapse" aria-expanded="false" aria-controls="commentDescription"><i class="fa fa-comment"></i></a></div>
-
-                        <div class="row collapse" id="commentDescription" aria-expanded="false">
-                            <div class="line middlebox">
-                              {% for key, values in tokenComments.items %}
+                        <div class="c1">
+                            {% for key, values in tokenComments.items %}
                                 {% if 'descriptionArtefact' == key %}
-                                    {% for value in values %}
-                                      {% if not value.parent %}
-                                          <div class="row">
-                                              <div class="c11">
-                                                {% if value.user == user %}
-                                                    <div class="user_name_comment">You</div>
-                                                {% else %}
-                                                    <div class="user_name_comment">{{ value.user.username }}</div>
-                                                {% endif %}
-                                                <div class="comments">{{ value.comment|safe }}</div>
-                                              <hr class="comment">
-                                              </div>
-                                          </div>
-                                      {% else %}
-                                          <div class="row">
-                                              <div class="c1">
-                                              </div>
-                                              <div class="c10">
-                                                {% if value.user == user %}
-                                                    <div class="user_name_comment">You</div>
-                                                {% else %}
-                                                    <div class="user_name_comment">{{ value.user.username }}</div>
-                                                {% endif %}
-                                                <div class="comments">{{ value.comment|safe }}</div>
-                                                <hr class="comment">
-                                              </div>
-                                          </div>
-                                      {% endif %}
-                                    {% endfor %}
+                                    {{ values|length }}
+                                    <a href="#commentDescription" data-toggle="collapse" aria-expanded="false" aria-controls="commentDescription">
+                                        <i class="fa fa-comment"></i>
+                                    </a>
                                 {% endif %}
-                              {% endfor %}
-                            </div>
+                            {% endfor %}
                         </div>
-
+                        {% for key, values in tokenComments.items %}
+                            {% if 'descriptionArtefact' == key %}
+                                <div class="row collapse" id="commentDescription" aria-expanded="false">
+                                    {% include "./comments_show_update_artefact.html" %}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
                     </div>
                     <div class="row">
                         <div class="c3"><em>Type of artefact</em></div>
-                        <div class="c9"><p>{{ form.type }}</p>
+                        <div class="c8"><p>{{ form.type }}</p>
                             <p><i>{{ form.type.help_text }}</i></p></div>
+                        <div class="c1">
+                            <div class="pull-right">
+                                {% for key, values in tokenComments.items %}
+                                    {% if 'typeArtefact' == key %}
+                                        {{ values|length }}
+                                        <a href="#commentArtefactType" data-toggle="collapse" aria-expanded="false" aria-controls="commentArtefactType">
+                                            <i class="fa fa-comment"></i>
+                                        </a>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% for key, values in tokenComments.items %}
+                            {% if 'typeArtefact' == key %}
+                                <div class="row collapse" id="commentArtefactType" aria-expanded="false">
+                                    {% include "./comments_show_update_artefact.html" %}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
                     </div>
                     <div class="row">
                         <div class="c3"><em>Origin and date of recovering</em></div>
-                        <div class="c9">
+                        <div class="c8">
                             {{ form.origin }}
                             <p><i>{{ form.origin.help_text }}</i></p>
-                            {{ form.recovering_date }}
+                        </div>
+                        <div class="c1">
+                            <div class="pull-right">
+                                {% for key, values in tokenComments.items %}
+                                    {% if 'originArtefact' == key %}
+                                        {{ values|length }}
+                                        <a href="#commentOrigin" data-toggle="collapse" aria-expanded="false" aria-controls="commentOrigin">
+                                            <i class="fa fa-comment"></i>
+                                        </a>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    {% for key, values in tokenComments.items %}
+                        {% if 'originArtefact' == key %}
+                            <div class="row collapse" id="commentOrigin" aria-expanded="false">
+                                {% include "./comments_show_update_artefact.html" %}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+
+                    <div class="row">
+                        <div class="c3"></div>
+                        <div class="c8">
+                                {{ form.recovering_date }}
                             <p><i>{{ form.recovering_date.help_text }}</i></p>
                         </div>
+                        <div class="c1">
+                            <div class="pull-right">
+                                {% for key, values in tokenComments.items %}
+                                    {% if 'recoveringDateArtefact' == key %}
+                                        {{ values|length }}
+                                        <a href="#commentRecovDate" data-toggle="collapse" aria-expanded="false" aria-controls="commentRecovDate">
+                                            <i class="fa fa-comment"></i>
+                                        </a>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% for key, values in tokenComments.items %}
+                            {% if 'recoveringDateArtefact' == key %}
+                                <div class="row collapse" id="commentRecovDate" aria-expanded="false">
+                                    {% include "./comments_show_update_artefact.html" %}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
                     </div>
                     <div class="row">
                         <div class="c3"><em>Dating of artefact (Tpq _ Taq)</em></div>
-                        <div class="c9"><p>{{ form.chronology_period }}</p>
+                        <div class="c8"><p>{{ form.chronology_period }}</p>
                             <p><i>{{ form.chronology_period.help_text }}</i></p></div>
+                        <div class="c1">
+                            <div class="pull-right">
+                                {% for key, values in tokenComments.items %}
+                                    {% if 'dateArtefact' == key %}
+                                        {{ values|length }}
+                                        <a href="#commentArtefactDate" data-toggle="collapse" aria-expanded="false" aria-controls="commentArtefactDate">
+                                            <i class="fa fa-comment"></i>
+                                        </a>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% for key, values in tokenComments.items %}
+                            {% if 'dateArtefact' == key %}
+                                <div class="row collapse" id="commentArtefactDate" aria-expanded="false">
+                                    {% include "./comments_show_update_artefact.html" %}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
                     </div>
                     <div class="row">
                         <div class="c3"><em>Burial conditions / environment</em></div>
-                        <div class="c9">
+                        <div class="c8">
                             <p>{{ form.environment }}</p>
                             <p><i>{{ form.environment.help_text }}</i></p></div>
-                    </div>
-                    <div class="row">
-                        <div class="c3"><em>Artefact location</em></div>
-                        <div class="c9">
-                            <p>{{ form.location }}</p>
-                            <p><i>{{ form.location.help_text }}</i></p></div>
-                    </div>
-                    <div class="row">
-                        <div class="c3"><em>Owner</em></div>
-                        <div class="c9">
-                            <p>{{ form.owner }}</p>
-                            <p><i>{{ form.owner.help_text }}</i></p></div>
-                    </div>
-                    <div class="row">
-                        <div class="c3"><em>Inv. Number</em></div>
-                        <div class="c9"><p>{{ form.inventory_number }}</p>
-                            <p><i>{{ form.inventory_number.help_text }}</i></p></div>
-                    </div>
-                    <div class="row">
-                        <div class="c3"><em>Recorded conservation data</em></div>
-                        <div class="c9"><p>{{ form.recorded_conservation_data }}</p>
-                            <p><i>{{ form.recorded_conservation_data.help_text }}</i></p></div>
+                        <div class="c1">
+                            <div class="pull-right">
+                                {% for key, values in tokenComments.items %}
+                                    {% if 'environmentArtefact' == key %}
+                                        {{ values|length }}
+                                        <a href="#commentEnvironment" data-toggle="collapse" aria-expanded="false" aria-controls="commentEnvironment">
+                                            <i class="fa fa-comment"></i>
+                                        </a>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% for key, values in tokenComments.items %}
+                            {% if 'environmentArtefact' == key %}
+                                <div class="row collapse" id="commentEnvironment" aria-expanded="false">
+                                    {% include "./comments_show_update_artefact.html" %}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
                     </div>
 
+                    <div class="row">
+                        <div class="c3"><em>Artefact location</em></div>
+                        <div class="c8">
+                            <p>{{ form.location }}</p>
+                            <p><i>{{ form.location.help_text }}</i></p></div>
+                        <div class="c1">
+                            <div class="pull-right">
+                                {% for key, values in tokenComments.items %}
+                                    {% if 'locationArtefact' == key %}
+                                        {{ values|length }}
+                                        <a href="#commentLocation" data-toggle="collapse" aria-expanded="false" aria-controls="commentLocation">
+                                            <i class="fa fa-comment"></i>
+                                        </a>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% for key, values in tokenComments.items %}
+                            {% if 'locationArtefact' == key %}
+                                <div class="row collapse" id="commentLocation" aria-expanded="false">
+                                    {% include "./comments_show_update_artefact.html" %}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+
+                    <div class="row">
+                        <div class="c3"><em>Owner</em></div>
+                        <div class="c8">
+                            <p>{{ form.owner }}</p>
+                            <p><i>{{ form.owner.help_text }}</i></p></div>
+                        <div class="c1">
+                            <div class="pull-right">
+                                {% for key, values in tokenComments.items %}
+                                    {% if 'ownerArtefact' == key %}
+                                        {{ values|length }}
+                                        <a href="#commentOwner" data-toggle="collapse" aria-expanded="false" aria-controls="commentOwner">
+                                            <i class="fa fa-comment"></i>
+                                        </a>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% for key, values in tokenComments.items %}
+                            {% if 'ownerArtefact' == key %}
+                                <div class="row collapse" id="commentOwner" aria-expanded="false">
+                                    {% include "./comments_show_update_artefact.html" %}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+
+                    <div class="row">
+                        <div class="c3"><em>Inv. Number</em></div>
+                        <div class="c8"><p>{{ form.inventory_number }}</p>
+                            <p><i>{{ form.inventory_number.help_text }}</i></p></div>
+                        <div class="c1">
+                            <div class="pull-right">
+                                {% for key, values in tokenComments.items %}
+                                    {% if 'invNumberArtefact' == key %}
+                                        {{ values|length }}
+                                        <a href="#commentNumber" data-toggle="collapse" aria-expanded="false" aria-controls="commentNumber">
+                                            <i class="fa fa-comment"></i>
+                                        </a>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% for key, values in tokenComments.items %}
+                            {% if 'invNumberArtefact' == key %}
+                                <div class="row collapse" id="commentNumber" aria-expanded="false">
+                                    {% include "./comments_show_update_artefact.html" %}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+
+                    <div class="row">
+                        <div class="c3"><em>Recorded conservation data</em></div>
+                        <div class="c8"><p>{{ form.recorded_conservation_data }}</p>
+                            <p><i>{{ form.recorded_conservation_data.help_text }}</i></p></div>
+                        <div class="c1">
+                            <div class="pull-right">
+                                {% for key, values in tokenComments.items %}
+                                    {% if 'recConsDataArtefact' == key %}
+                                        {{ values|length }}
+                                        <a href="#commentRecConsData" data-toggle="collapse" aria-expanded="false" aria-controls="commentRecConsData">
+                                            <i class="fa fa-comment"></i>
+                                        </a>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% for key, values in tokenComments.items %}
+                            {% if 'recConsDataArtefact' == key %}
+                                <div class="row collapse" id="commentRecConsData" aria-expanded="false">
+                                    {% include "./comments_show_update_artefact.html" %}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
                 </div>
+
                 <div class="line palebox">
                     <h4 class="underline">Complementary information</h4>
                     <textarea name="complementary_information">{{ description_section.complementary_information }}</textarea>
@@ -295,6 +430,26 @@
                                             {% endfor %}
                                         </div>
                                     </div>
+                                    <div class="c3">
+                                        <div class="pull-right">
+                                            {% for key, values in sectionComments.items %}
+                                                {% if 'zones' == key %}
+                                                    {{ values|length }}
+                                                    <a href="#commentZones" data-toggle="collapse" aria-expanded="false" aria-controls="commentZones">
+                                                        <i class="fa fa-comment"></i>
+                                                    </a>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    {% for key, values in sectionComments.items %}
+                                        {% if 'zones' == key %}
+                                            <div class="row collapse" id="commentZones" aria-expanded="false">
+                                                {% include "./comments_show_update_artefact.html" %}
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
+
                                     <div class="c9">
                                         <p> <!-- Upload Photos -->
                                             <a class="add-another" id="zone_image_add" title="Add a picture, a figure or a table"
@@ -318,8 +473,31 @@
                         </div>
                         <div class="row accordion-content2 collapse in" id="content22" aria-labelledby="title22">
                             <div class="line palebox">
-                                <textarea name="macroscopic_text">{{ macroscopic_section.content }}</textarea>
-                                <p><i>Except if specific, copy / paste the following text : The schematic representation below gives an overview of the corrosion layers encountered on the object from a first visual macroscopic observation.</i></p>
+                                <div class="row">
+                                    <div class="c11">
+                                        <textarea name="macroscopic_text">{{ macroscopic_section.content }}</textarea>
+                                        <p><i>Except if specific, copy / paste the following text : The schematic representation below gives an overview of the corrosion layers encountered on the object from a first visual macroscopic observation.</i></p>
+                                    </div>
+                                    <div class="c1">
+                                        <div class="pull-right">
+                                            {% for key, values in sectionComments.items %}
+                                                {% if 'macroscopic' == key %}
+                                                    {{ values|length }}
+                                                    <a href="#commentMacroscopic" data-toggle="collapse" aria-expanded="false" aria-controls="commentMacroscopic">
+                                                        <i class="fa fa-comment"></i>
+                                                    </a>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    {% for key, values in sectionComments.items %}
+                                        {% if 'macroscopic' == key %}
+                                            <div class="row collapse" id="commentMacroscopic" aria-expanded="false">
+                                                {% include "./comments_section_show_update_artefact.html" %}
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
                             </div>
                             <div class="line lightbox">
                                 <div class="row">
@@ -345,6 +523,7 @@
                                             {% endfor %}
                                         </div>
                                     </div>
+
                                     <div class="c9">
                                         <p> <!-- Upload Photos -->
                                             <a class="add-another" id="zone_image_add" title="Add a picture, a figure or a table"
@@ -393,6 +572,26 @@
                                 </div>
                             {% endfor %}
                         </div>
+                        <div class="c6">
+                            <div class="pull-right">
+                                {% for key, values in sectionComments.items %}
+                                    {% if 'sample' == key %}
+                                        {{ values|length }}
+                                        <a href="#commentSample" data-toggle="collapse" aria-expanded="false" aria-controls="commentSample">
+                                            <i class="fa fa-comment"></i>
+                                        </a>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% for key, values in sectionComments.items %}
+                            {% if 'sample' == key %}
+                                <div class="row collapse" id="commentSample" aria-expanded="false">
+                                    {% include "./comments_section_show_update_artefact.html" %}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+
                         <div class="c9">
                             <p> <!-- Upload Photos -->
                                 <a class="add-another" id="zone_image_add" title="Add a picture, a figure or a table"
@@ -412,7 +611,7 @@
                     <br>
                     <div class="row">
                         <div class="c3"><em>Stratigraphies</em></div>
-                        <div class="c9">
+                        <div class="c8">
                             <div id="stratigraphy">
                                 {% for stratigraphy in artefact.stratigraphy_set.all %}
                                     <div class="c6">
@@ -426,6 +625,30 @@
                                     </div>
                                 {% endfor %}
                             </div>
+                        </div>
+                        <div class="c1">
+                            <div class="pull-right">
+                                {% for key, values in tokenComments.items %}
+                                    {% if 'stratigraphiesSample' == key %}
+                                        {{ values|length }}
+                                        <a href="#commentStratigraphies" data-toggle="collapse" aria-expanded="false" aria-controls="commentStratigraphies">
+                                            <i class="fa fa-comment"></i>
+                                        </a>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% for key, values in tokenComments.items %}
+                            {% if 'stratigraphiesSample' == key %}
+                                <div class="row collapse" id="commentStratigraphies" aria-expanded="false">
+                                    {% include "./comments_section_show_update_artefact.html" %}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    <div class="row">
+                        <div class="c3"></div>
+                        <div class="c9">
                             <div class="c9">
                                 <p> <!-- Upload Photos -->
                                     <a class="add-another" id="stratigraphy_add"
@@ -434,47 +657,185 @@
                                     </a>
                                 </p>
                             </div>
-
                         </div>
                     </div>
                 </div>
                 <div class="line lightbox">
                     <div class="row">
                         <div class="c3"><em>Description of sample</em></div>
-                        <div class="c9"><p>{{ form.sample_description }}</p>
+                        <div class="c8"><p>{{ form.sample_description }}</p>
                             <p><i>{{ form.sample_description.help_text }}</i></p></div>
+                        <div class="c1">
+                            <div class="pull-right">
+                                {% for key, values in tokenComments.items %}
+                                    {% if 'descriptionSample' == key %}
+                                        {{ values|length }}
+                                        <a href="#commentSampleDescription" data-toggle="collapse" aria-expanded="false" aria-controls="commentSampleDescription">
+                                            <i class="fa fa-comment"></i>
+                                        </a>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% for key, values in tokenComments.items %}
+                            {% if 'descriptionSample' == key %}
+                                <div class="row collapse" id="commentSampleDescription" aria-expanded="false">
+                                    {% include "./comments_show_update_artefact.html" %}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
                     </div>
+
                     <div class="row">
                         <div class="c3"><em>Alloy</em></div>
-                        <div class="c9"><p>{{ form.alloy }}</p>
+                        <div class="c8"><p>{{ form.alloy }}</p>
                             <p><i>{{ form.alloy.help_text }}</i></p></div>
+                        <div class="c1">
+                            <div class="pull-right">
+                                {% for key, values in tokenComments.items %}
+                                    {% if 'alloySample' == key %}
+                                        {{ values|length }}
+                                        <a href="#commentAlloy" data-toggle="collapse" aria-expanded="false" aria-controls="commentAlloy">
+                                            <i class="fa fa-comment"></i>
+                                        </a>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% for key, values in tokenComments.items %}
+                            {% if 'alloySample' == key %}
+                                <div class="row collapse" id="commentAlloy" aria-expanded="false">
+                                    {% include "./comments_show_update_artefact.html" %}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
                     </div>
+
                     <div class="row">
                         <div class="c3"><em>Technology</em></div>
-                        <div class="c9"><p>{{ form.technology }}</p>
+                        <div class="c8"><p>{{ form.technology }}</p>
                             <p><i>{{ form.technology.help_text }}</i></p></div>
+                        <div class="c1">
+                            <div class="pull-right">
+                                {% for key, values in tokenComments.items %}
+                                    {% if 'technologySample' == key %}
+                                        {{ values|length }}
+                                        <a href="#commentTechnology" data-toggle="collapse" aria-expanded="false" aria-controls="commentTechnology">
+                                            <i class="fa fa-comment"></i>
+                                        </a>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% for key, values in tokenComments.items %}
+                            {% if 'technologySample' == key %}
+                                <div class="row collapse" id="commentTechnology" aria-expanded="false">
+                                    {% include "./comments_show_update_artefact.html" %}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
                     </div>
+
                     <div class="row">
                         <div class="c3"><em>Lab number of sample</em></div>
-                        <div class="c9"><p>{{ form.sample_number }}</p>
+                        <div class="c8"><p>{{ form.sample_number }}</p>
                             <p><i>{{ form.sample_number.help_text }}</i></p></div>
+                        <div class="c1">
+                            <div class="pull-right">
+                                {% for key, values in tokenComments.items %}
+                                    {% if 'labNumberSample' == key %}
+                                        {{ values|length }}
+                                        <a href="#commentSampleNumber" data-toggle="collapse" aria-expanded="false" aria-controls="commentSampleNumber">
+                                            <i class="fa fa-comment"></i>
+                                        </a>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% for key, values in tokenComments.items %}
+                            {% if 'labNumberSample' == key %}
+                                <div class="row collapse" id="commentSampleNumber" aria-expanded="false">
+                                    {% include "./comments_show_update_artefact.html" %}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
                     </div>
+
                     <div class="row">
                         <div class="c3"><em>Sample location</em></div>
-                        <div class="c9">
+                        <div class="c8">
                             <p>{{ form.sample_location }}</p>
                             <p><i>{{ form.sample_location.help_text }}</i></p></div>
+                        <div class="c1">
+                            <div class="pull-right">
+                                {% for key, values in tokenComments.items %}
+                                    {% if 'locationSample' == key %}
+                                        {{ values|length }}
+                                        <a href="#commentSampleLocation" data-toggle="collapse" aria-expanded="false" aria-controls="commentSampleLocation">
+                                            <i class="fa fa-comment"></i>
+                                        </a>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% for key, values in tokenComments.items %}
+                            {% if 'locationSample' == key %}
+                                <div class="row collapse" id="commentSampleLocation" aria-expanded="false">
+                                    {% include "./comments_show_update_artefact.html" %}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
                     </div>
+
                     <div class="row">
                         <div class="c3"><em>Responsible institution</em></div>
-                        <div class="c9">
+                        <div class="c8">
                             <p>{{ form.responsible_institution }}</p>
                             <p><i>{{ form.responsible_institution.help_text }}</i></p></div>
+                        <div class="c1">
+                            <div class="pull-right">
+                                {% for key, values in tokenComments.items %}
+                                    {% if 'respInstSample' == key %}
+                                        {{ values|length }}
+                                        <a href="#commentRespInst" data-toggle="collapse" aria-expanded="false" aria-controls="commentRespInst">
+                                            <i class="fa fa-comment"></i>
+                                        </a>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% for key, values in tokenComments.items %}
+                            {% if 'respInstSample' == key %}
+                                <div class="row collapse" id="commentRespInst" aria-expanded="false">
+                                    {% include "./comments_show_update_artefact.html" %}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
                     </div>
+
                     <div class="row">
                         <div class="c3"><em>Date and aim of sampling</em></div>
-                        <div class="c9"><p>{{ form.date_aim_sampling }}</p>
+                        <div class="c8"><p>{{ form.date_aim_sampling }}</p>
                             <p><i>{{ form.date_aim_sampling.help_text }}</i></p></div>
+                        <div class="c1">
+                            <div class="pull-right">
+                                {% for key, values in tokenComments.items %}
+                                    {% if 'dateAimSamplingSample' == key %}
+                                        {{ values|length }}
+                                        <a href="#commentDateAimSampling" data-toggle="collapse" aria-expanded="false" aria-controls="commentDateAimSampling">
+                                            <i class="fa fa-comment"></i>
+                                        </a>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% for key, values in tokenComments.items %}
+                            {% if 'dateAimSamplingSample' == key %}
+                                <div class="row collapse" id="commentDateAimSampling" aria-expanded="false">
+                                    {% include "./comments_show_update_artefact.html" %}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
                     </div>
                 </div>
                 <div class="line palebox">
@@ -491,9 +852,32 @@
             </div>
             <div class="row accordion-content3 collapse in" id="content4" aria-labelledby="title4">
                 <div class="line palebox">
-                    <p><em>Analyses performed</em></p>
-                    <textarea name="analyses_performed">{{ analyses_performed }}</textarea>
-                    <p><i>Add the list of the techniques used : Metallography (etched with ? reagent), SEM-EDS, FTIR, Raman spectroscopy. If the conditions of the analyses are specific (check with the information provided under the “Scientific bases” tab), please add them in your text.</i></p>
+                    <div class="row">
+                        <div class="c11">
+                            <p><em>Analyses performed</em></p>
+                            <textarea name="analyses_performed">{{ analyses_performed }}</textarea>
+                            <p><i>Add the list of the techniques used : Metallography (etched with ? reagent), SEM-EDS, FTIR, Raman spectroscopy. If the conditions of the analyses are specific (check with the information provided under the “Scientific bases” tab), please add them in your text.</i></p>
+                        </div>
+                        <div class="c1">
+                            <div class="pull-right">
+                                {% for key, values in sectionComments.items %}
+                                    {% if 'anaResults' == key %}
+                                        {{ values|length }}
+                                        <a href="#commentAnaResults" data-toggle="collapse" aria-expanded="false" aria-controls="commentAnaResults">
+                                            <i class="fa fa-comment"></i>
+                                        </a>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% for key, values in sectionComments.items %}
+                            {% if 'anaResults' == key %}
+                                <div class="row collapse" id="commentAnaResults" aria-expanded="false">
+                                    {% include "./comments_section_show_update_artefact.html" %}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
                 </div>
                 <div class="line">
                     <div id="accordionAR" aria-multiselectable="true">
@@ -505,9 +889,33 @@
                         </div>
                         <div class="row accordion-content2 collapse in" id="content41" aria-labelledby="title41">
                             <div class="line palebox">
-                                <textarea name="metal_text">{{ metal_section.content }}</textarea>
-                                <p><i>A description of the metal: its composition, texture (porosity), hardness,
-                                    microstructure revealed by etching and specific features.</i></p>
+                                <div class="row">
+                                    <div class="c11">
+                                    <textarea name="metal_text">{{ metal_section.content }}</textarea>
+                                    <p><i>A description of the metal: its composition, texture (porosity), hardness,
+                                        microstructure revealed by etching and specific features.</i></p>
+                                    </div>
+                                    <div class="c1">
+                                        <div class="pull-right">
+                                            {% for key, values in sectionComments.items %}
+                                                {% if 'metal' == key %}
+                                                    {{ values|length }}
+                                                    <a href="#commentMetal" data-toggle="collapse" aria-expanded="false" aria-controls="commentMetal">
+                                                        <i class="fa fa-comment"></i>
+                                                    </a>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    {% for key, values in sectionComments.items %}
+                                        {% if 'metal' == key %}
+                                            <div class="row collapse" id="commentMetal" aria-expanded="false">
+                                                {% include "./comments_section_show_update_artefact.html" %}
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+
                                 <div class="row">
                                     <div class="c3"><em>Microstructure</em></div>
                                     <div class="c9">
@@ -575,10 +983,34 @@
                         </div>
                         <div class="row accordion-content2 collapse in" id="content42" aria-labelledby="title42">
                             <div class="line palebox">
-                                <textarea name="corrosion_text">{{ corrosion_section.content }}</textarea>
-                                <p><i>A description of the corrosion layers: their composition, texture
-                                    (porosity), microstructure if any and specific features. The corrosion form(s) and corrosion type
-                                    should be deduced.</i></p>
+                                <div class="row">
+                                    <div class="c11">
+                                        <textarea name="corrosion_text">{{ corrosion_section.content }}</textarea>
+                                        <p><i>A description of the corrosion layers: their composition, texture
+                                            (porosity), microstructure if any and specific features. The corrosion form(s) and corrosion type
+                                            should be deduced.</i></p>
+                                    </div>
+                                    <div class="c1">
+                                        <div class="pull-right">
+                                            {% for key, values in sectionComments.items %}
+                                                {% if 'corrLayers' == key %}
+                                                    {{ values|length }}
+                                                    <a href="#commentCorrLayers" data-toggle="collapse" aria-expanded="false" aria-controls="commentCorrLayers">
+                                                        <i class="fa fa-comment"></i>
+                                                    </a>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    {% for key, values in sectionComments.items %}
+                                        {% if 'corrLayers' == key %}
+                                            <div class="row collapse" id="commentCorrLayers" aria-expanded="false">
+                                                {% include "./comments_section_show_update_artefact.html" %}
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+
                                 <div class="row">
                                     <div class="c3"><em>Corrosion form</em></div>
                                     <div class="c9">
@@ -645,8 +1077,32 @@
             </div>
             <div class="row accordion-content3 collapse in" id="content5" aria-labelledby="title5">
                 <div class="line palebox">
-                    <textarea name="synthesis_text">{{ synthesis_section.content }}</textarea>
-                    <p><i>The schematic representation of corrosion layers integrating additional information based on the analyses carried out.</i></p>
+                    <div class="row">
+                        <div class="c11">
+                            <textarea name="synthesis_text">{{ synthesis_section.content }}</textarea>
+                            <p><i>The schematic representation of corrosion layers integrating additional information based on the analyses carried out.</i></p>
+                        </div>
+                        <div class="c1">
+                            <div class="pull-right">
+                                {% for key, values in sectionComments.items %}
+                                    {% if 'synthesis' == key %}
+                                        {{ values|length }}
+                                        <a href="#commentSynthesis" data-toggle="collapse" aria-expanded="false" aria-controls="commentSynthesis">
+                                            <i class="fa fa-comment"></i>
+                                        </a>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% for key, values in sectionComments.items %}
+                            {% if 'synthesis' == key %}
+                                <div class="row collapse" id="commentSynthesis" aria-expanded="false">
+                                    {% include "./comments_section_show_update_artefact.html" %}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+
                 </div>
                 <div class="line lightbox">
                     <div class="row">
@@ -693,10 +1149,33 @@
             </div>
             <div class="row accordion-content3 collapse in" id="content6" aria-labelledby="title6">
                 <div class="line palebox">
-                    <textarea name="conclusion_text">{{ conclusion_text }}</textarea>
-                    <p><i>A brief summary of all data collected: metal with composition and microstructure.
-                        Corrosion forms and type as well as description of the corrosion layers. Location of the
-                        limit of the original surface if any.</i></p>
+                    <div class="row">
+                        <div class="c11">
+                            <textarea name="conclusion_text">{{ conclusion_text }}</textarea>
+                            <p><i>A brief summary of all data collected: metal with composition and microstructure.
+                                Corrosion forms and type as well as description of the corrosion layers. Location of the
+                                limit of the original surface if any.</i></p>
+                        </div>
+                        <div class="c1">
+                            <div class="pull-right">
+                                {% for key, values in sectionComments.items %}
+                                    {% if 'conclusion' == key %}
+                                        {{ values|length }}
+                                        <a href="#commentConclusion" data-toggle="collapse" aria-expanded="false" aria-controls="commentConclusion">
+                                            <i class="fa fa-comment"></i>
+                                        </a>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% for key, values in sectionComments.items %}
+                            {% if 'conclusion' == key %}
+                                <div class="row collapse" id="commentConclusion" aria-expanded="false">
+                                    {% include "./comments_section_show_update_artefact.html" %}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
                 </div>
             </div>
 
@@ -707,7 +1186,32 @@
             </div>
             <div class="row accordion-content3 collapse in" id="content7" aria-labelledby="title7">
                 <div class="line palebox">
-                    <textarea name="references_text">{{ references_text }}</textarea>
+                    <div class="row">
+                        <div class="c12">
+                            <div class="pull-right">
+                                {% for key, values in sectionComments.items %}
+                                    {% if 'references' == key %}
+                                        {{ values|length }}
+                                        <a href="#commentReferences" data-toggle="collapse" aria-expanded="false" aria-controls="commentReferences">
+                                            <i class="fa fa-comment"></i>
+                                        </a>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <textarea name="references_text">{{ references_text }}</textarea><br>
+
+                    <div class="row">
+                        {% for key, values in sectionComments.items %}
+                            {% if 'references' == key %}
+                                <div class="row collapse" id="commentReferences" aria-expanded="false">
+                                    {% include "./comments_section_show_update_artefact.html" %}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
                 </div>
                 <input class="btn btn-default btn-lg" type="submit" value="Save">
             </div>

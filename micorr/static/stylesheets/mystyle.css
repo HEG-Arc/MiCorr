@@ -11123,3 +11123,7 @@ input[type="text"] {
 @media (max-width: 991px) {
   /*#menuside {display:none;}*/
 }
+
+#date_recovering {
+  width : 10px;
+}
