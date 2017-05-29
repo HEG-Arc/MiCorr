@@ -280,7 +280,7 @@ class ObjectUpdateForm(forms.ModelForm) :
         exclude = ['user']
 
 class CollaborationCommentForm(forms.ModelForm):
-    name = forms.CharField(widget = TinyMCE(attrs={'cols': 10, 'rows': 10}), required = False)
+    comment = forms.CharField(widget = TinyMCE(attrs={'cols': 10, 'rows': 10}), required = False)
 
     class Meta:
         model = Collaboration_comment

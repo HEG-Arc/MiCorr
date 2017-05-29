@@ -9440,6 +9440,12 @@ img {
   padding-bottom: 1em;
 }
 
+.middlebox {
+  background-color: #c8c8c8;
+  padding-top: 1em;
+  padding-bottom: 1em;
+}
+
 .palebox {
   background-color: #e0e0e0;
   padding-top: 1em;

@@ -44,7 +44,7 @@
                                                     <!--<a href="{ url 'artefacts:collaboration-update' token.artefact.id %}"><i class="fa fa-pencil"></i></a> |
                                                     <a href="{ url 'artefacts:artefact-delete' token.artefact.id %}"><i class="fa fa-trash"></i></a>-->
 
-                                                    <a href="{% url 'artefacts:collaboration-update' tokenSha.artefact.id %}"><i class="fa fa-pencil"></i></a> |
+                                                    <a href="{% url 'artefacts:collaboration-update' tokenSha.id %}"><i class="fa fa-pencil"></i></a> |
                                                     <a href="{% url 'artefacts:collaboration-comment' pk=tokenSha.id field='none' %}"><i class="fa fa-comment"></i></a> |
                                                     <a href=""><i class="fa fa-trash"></i></a>
                                                 </td>

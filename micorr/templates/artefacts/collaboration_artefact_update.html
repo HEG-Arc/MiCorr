@@ -39,7 +39,7 @@
 
 {% block content %}
 
-    <h1>New artefact</h1>
+    <h1>Update artefact</h1>
     <form action="{% url 'artefacts:artefact-update' form.instance.pk %}" method="post">{% csrf_token %}
         {% if form.errors %}
             {% for field in form %}
@@ -97,6 +97,49 @@
                                 </div>
                             {% endfor %}
                         </div>
+                        <div class="c6">
+                            <div class="pull-right">
+                                <a href="#theObject" data-toggle="collapse" aria-expanded="false" aria-controls="theObject"><i class="fa fa-comment"></i></a>
+                            </div>
+                        </div>
+                        <div class="row collapse" id="theObject" aria-expanded="false">
+                            <div class="line middlebox">
+                              {% for key, values in tokenComments.items %}
+                                {% if 'descriptionArtefact' == key %}
+                                    {% for value in values %}
+                                      {% if not value.parent %}
+                                          <div class="row">
+                                              <div class="c11">
+                                                {% if value.user == user %}
+                                                    <div class="user_name_comment">You</div>
+                                                {% else %}
+                                                    <div class="user_name_comment">{{ value.user.username }}</div>
+                                                {% endif %}
+                                                <div class="comments">{{ value.comment|safe }}</div>
+                                              <hr class="comment">
+                                              </div>
+                                          </div>
+                                      {% else %}
+                                          <div class="row">
+                                              <div class="c1">
+                                              </div>
+                                              <div class="c10">
+                                                {% if value.user == user %}
+                                                    <div class="user_name_comment">You</div>
+                                                {% else %}
+                                                    <div class="user_name_comment">{{ value.user.username }}</div>
+                                                {% endif %}
+                                                <div class="comments">{{ value.comment|safe }}</div>
+                                                <hr class="comment">
+                                              </div>
+                                          </div>
+                                      {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+                              {% endfor %}
+                            </div>
+                        </div>
+
                         <div class="c9">
                             <p> <!-- Upload Photos -->
                                 <a class="add-another" id="object_image_add" title="Add a picture, a figure or a table"
@@ -121,8 +164,48 @@
                 <div class="line lightbox">
                     <div class="row">
                         <div class="c3"><em>Description of artefact</em></div>
-                        <div class="c9"><p>{{ form.description }}</p>
+                        <div class="c8"><p>{{ form.description }}</p>
                             <p><i>{{ form.description.help_text }}</i></p></div>
+                        <div class="c1"><a href="#theObject" data-toggle="collapse" aria-expanded="false" aria-controls="commentDescription"><i class="fa fa-comment"></i></a></div>
+
+                        <div class="row collapse" id="commentDescription" aria-expanded="false">
+                            <div class="line middlebox">
+                              {% for key, values in tokenComments.items %}
+                                {% if 'descriptionArtefact' == key %}
+                                    {% for value in values %}
+                                      {% if not value.parent %}
+                                          <div class="row">
+                                              <div class="c11">
+                                                {% if value.user == user %}
+                                                    <div class="user_name_comment">You</div>
+                                                {% else %}
+                                                    <div class="user_name_comment">{{ value.user.username }}</div>
+                                                {% endif %}
+                                                <div class="comments">{{ value.comment|safe }}</div>
+                                              <hr class="comment">
+                                              </div>
+                                          </div>
+                                      {% else %}
+                                          <div class="row">
+                                              <div class="c1">
+                                              </div>
+                                              <div class="c10">
+                                                {% if value.user == user %}
+                                                    <div class="user_name_comment">You</div>
+                                                {% else %}
+                                                    <div class="user_name_comment">{{ value.user.username }}</div>
+                                                {% endif %}
+                                                <div class="comments">{{ value.comment|safe }}</div>
+                                                <hr class="comment">
+                                              </div>
+                                          </div>
+                                      {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+                              {% endfor %}
+                            </div>
+                        </div>
+
                     </div>
                     <div class="row">
                         <div class="c3"><em>Type of artefact</em></div>

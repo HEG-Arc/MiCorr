@@ -738,24 +738,107 @@ class CollaborationListView(generic.ListView):
 class CollaborationUpdateView(generic.UpdateView):
 
     model = Artefact
-    template_name = 'token_collaboration_update'
+    template_name_suffix = '_collaboration_update'
     """
     A detail view of a selected artefact
     """
     form_class = ArtefactsUpdateForm
 
     def get_object(self, queryset=None):
-        obj = Artefact.objects.get(id=self.kwargs['artefact_id'])
+        token = Token.tokenManager.get(id=self.kwargs['token_id'])
+        obj = Artefact.objects.get(id=token.artefact.id)
         return obj
 
     def get(self, request, **kwargs):
-        artefact = Artefact.objects.get(id=self.kwargs['artefact_id'])
-        obj = Object.objects.get(id=artefact.object.id)
 
+        token = Token.tokenManager.get(id=self.kwargs['token_id'])
+        artefact = Artefact.objects.get(id=token.artefact.id)
+        sections = artefact.section_set.all()
+        obj = Object.objects.get(id=artefact.object.id)
 
         self.object = artefact
         form_class = self.get_form_class()
         form = self.get_form(form_class)
+
+        sectionComments = []
+        sectionDict = defaultdict(list)
+        tokenComments = []
+        tokenDict = defaultdict(list)
+        token_type = ContentType.objects.get(model='token')
+        allTokenCommentsSorted = None
+        try:
+            # Get all comments for the current token
+            allTokenComments = Collaboration_comment.objects.filter(content_type_id=token_type.id, object_model_id=token.id)
+
+            # Get first comments of all fields
+            firstTokenComments = []
+            for tokenComm in allTokenComments:
+                if not tokenComm.parent:
+                    firstTokenComments.append(tokenComm)
+
+            # Sort comments using parent_id
+            allTokenCommentsSorted = []
+            for firstToken in firstTokenComments:
+                idToken = firstToken.id
+                allTokenCommentsSorted.append(firstToken)
+                while idToken != 0:
+                    try:
+                        currentToken = allTokenComments.get(parent_id=idToken)
+                        allTokenCommentsSorted.append(currentToken)
+                        idToken = currentToken.id
+                    except:
+                        idToken = 0
+
+            # Filter only sent comments or comments from user connected
+            for tokenComm in allTokenCommentsSorted:
+                if tokenComm.sent or self.request.user == tokenComm.user:
+                    tokenComments.append(tokenComm)
+
+            # Create a dictonary 'key-list' with field title as a key
+            for tokenComment in tokenComments:
+                tokenDict[tokenComment.field.title].append(tokenComment)
+
+        except:
+            pass
+
+        section_type = ContentType.objects.get(model='section')
+        allSectionsComments = []
+
+        for section in sections:
+            # Get all comments from each section
+            comments = Collaboration_comment.objects.filter(content_type_id=section_type.id, object_model_id=section.id)
+            for comment in comments:
+                allSectionsComments.append(comment)
+
+        # Get first comments of all sections
+        firstSectionComments = []
+        for sectionComm in allSectionsComments:
+            if not sectionComm.parent:
+                firstSectionComments.append(sectionComm)
+
+        # Sort comments using parent_id
+        allSectionCommentsSorted = []
+        for firstSection in firstSectionComments:
+            idSection = firstSection.id
+            allSectionCommentsSorted.append(firstSection)
+            isFound = None
+            while idSection != 0:
+                for comm in allSectionsComments:
+                    isFound = 0
+                    if comm.parent_id == idSection:
+                        allSectionCommentsSorted.append(comm)
+                        idSection = comm.id
+                        isFound = 1
+                if isFound == 0:
+                    idSection = 0
+
+        for commentSectionSorted in allSectionCommentsSorted:
+            # Filter only sent comments or comments from user connected
+            if commentSectionSorted.sent or self.request.user == commentSectionSorted.user:
+                sectionComments.append(commentSectionSorted)
+                section = get_object_or_404(Section, pk=commentSectionSorted.object_model_id)
+                sectionShortTitle = self.getSectionShortName(section.title)
+                sectionDict[sectionShortTitle].append(commentSectionSorted)
 
 
         object_section = Section.objects.get_or_create(order=1, artefact=artefact, section_category=SectionCategory.objects.get(name='AR'), title='The object')[0]
@@ -770,16 +853,18 @@ class CollaborationUpdateView(generic.UpdateView):
         conclusion_text = Section.objects.get_or_create(order=10, artefact=artefact, section_category=SectionCategory.objects.get(name='CO'), title='Conclusion')[0].content
         references_text = Section.objects.get_or_create(order=11, artefact=artefact, section_category=SectionCategory.objects.get(name='RE'), title='References')[0].content
         stratigraphies = artefact.stratigraphy_set.all
-        return render(request, 'artefacts/token_collaboration_update.html', self.get_context_data(artefact=artefact, form=form, object_section=object_section, description_section=description_section,
+        return render(request, 'artefacts/collaboration_artefact_update.html', self.get_context_data(artefact=artefact, form=form, object_section=object_section, description_section=description_section,
                                                              zone_section=zone_section, macroscopic_section=macroscopic_section,
                                                              sample_section=sample_section, analyses_performed=analyses_performed,
                                                              metal_section=metal_section, corrosion_section=corrosion_section,
                                                              synthesis_section=synthesis_section, conclusion_text=conclusion_text,
                                                              references_text=references_text, stratigraphies=stratigraphies,
+                                                             tokenComments=dict(tokenDict), sectionComments=dict(sectionDict),
                                                              node_base_url=settings.NODE_BASE_URL))
 
     def post(self, request, *args, **kwargs):
-        artefact = get_object_or_404(Artefact, pk=self.kwargs['artefact_id'])
+        token = get_object_or_404(Token, pk=self.kwargs['token_id'])
+        artefact = get_object_or_404(Artefact, pk=token.artefact.id)
         section_1 = Section.objects.get_or_create(order=1, artefact=artefact, section_category=SectionCategory.objects.get(name='AR'), title='The object')[0]
         artefact.section_set.add(section_1)
         section_2 = Section.objects.get_or_create(order=2, artefact=artefact, section_category=SectionCategory.objects.get(name='AR'), title='Description and visual observation')[0]
@@ -1061,3 +1146,9 @@ class CollaborationCommentView(generic.CreateView):
 
         return reverse('artefacts:collaboration-comment', kwargs={'pk' : self.kwargs['pk'], 'field' : 'none'})
 
+def deleteComment(request, comment_id, artefact_id) :
+    comment = get_object_or_404(Collaboration_comment, pk=comment_id)
+    comment.delete()
+    """pageContext = {'pk': artefact_id, 'field' : 'none'}
+    return render(request, 'artefacts/collaboration_comment_form.html', pageContext)
+    return HttpResponse('OK')"""
