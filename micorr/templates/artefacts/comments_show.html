@@ -10,6 +10,11 @@
             <div class="comments">{{ value.comment|safe }}</div>
           <hr class="comment">
           </div>
+          <div class="c1">
+              {% if not value.sent and value.user == user %}
+                <a href="{% url 'artefacts:delete-comment' token_id=token.id comment_id=value.id %}"><i class="fa fa-trash"></i></a>
+              {% endif %}
+          </div>
       </div>
   {% else %}
       <div class="row">
@@ -23,6 +28,11 @@
             {% endif %}
             <div class="comments">{{ value.comment|safe }}</div>
             <hr class="comment">
+          </div>
+          <div class="c1">
+              {% if not value.sent and value.user == user %}
+                <a href="{% url 'artefacts:delete-comment' token_id=token.id comment_id=value.id %}"><i class="fa fa-trash"></i></a>
+              {% endif %}
           </div>
       </div>
   {% endif %}

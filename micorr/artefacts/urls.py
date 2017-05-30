@@ -69,6 +69,6 @@ urlpatterns = [
     url(r'^(?P<pk>\d+)/collaboration/comment/(?P<field>\w+)/$', login_required(artefacts_views.CollaborationCommentView.as_view()), name='collaboration-comment'),
 
     url(r'^(?P<token_id>\d+)/collaboration/send/$', login_required(artefacts_views.sendComments), name='send-comments'),
-    url(r'^(?P<artefact_id>\d+)/collaboration/comment/(?P<comment_id>\d+)/$', login_required(artefacts_views.deleteComment), name='delete-comment'),
+    url(r'^(?P<token_id>\d+)/collaboration/comment/(?P<comment_id>\d+)/$', login_required(artefacts_views.deleteComment), name='delete-comment'),
     # url(r'^test-ontology/$', displayOntology),
 ]

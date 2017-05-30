@@ -1176,9 +1176,9 @@ def sendComments(request, token_id) :
         return redirect('artefacts:collaboration_menu')
 
 
-def deleteComment(request, comment_id, artefact_id) :
-    comment = get_object_or_404(Collaboration_comment, pk=comment_id)
-    comment.delete()
-    """pageContext = {'pk': artefact_id, 'field' : 'none'}
-    return render(request, 'artefacts/collaboration_comment_form.html', pageContext)
-    return HttpResponse('OK')"""
+def deleteComment(request, comment_id, token_id) :
+        comment = get_object_or_404(Collaboration_comment, pk=comment_id)
+        comment.sent = True
+        comment.save()
+        pageContext = {'pk': token_id, 'field': 'none'}
+        return reverse('artefacts:collaboration_comment', pageContext)

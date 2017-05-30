@@ -9461,8 +9461,44 @@ img {
   width : 500px;
 }
 
+@media (min-width: 992px) and (max-width: 1200px) {
+  #select_list_size_limit {
+     width : 400px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 992px) {
+  #select_list_size_limit {
+     width : 300px;
+  }
+}
+
+@media (max-width: 768px) {
+  #select_list_size_limit {
+    width: 500px;
+  }
+}
+
 #select_list_size_limit option {
   width : 500px;
+}
+
+@media (min-width: 992px) and (max-width: 1200px) {
+  #select_list_size_limit option {
+     width : 400px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 992px) {
+  #select_list_size_limit option {
+     width : 300px;
+  }
+}
+
+@media (max-width: 768px) {
+  #select_list_size_limit option {
+     width : 500px;
+  }
 }
 
 .disc {
