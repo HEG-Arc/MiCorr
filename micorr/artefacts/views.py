@@ -765,7 +765,6 @@ class CollaborationUpdateView(generic.UpdateView):
         tokenComments = []
         tokenDict = defaultdict(list)
         token_type = ContentType.objects.get(model='token')
-        allTokenCommentsSorted = None
         try:
             # Get all comments for the current token
             allTokenComments = Collaboration_comment.objects.filter(content_type_id=token_type.id, object_model_id=token.id)
@@ -1020,50 +1019,6 @@ class CollaborationCommentView(generic.CreateView):
         context['node_base_url'] = settings.NODE_BASE_URL
         return context
 
-    """def getSectionCompleteName(self, sectionTitle):
-        if sectionTitle == 'object' :
-            return 'The object'
-        elif sectionTitle == 'zones' :
-            return 'Zones of the artefact submitted to visual observation and location of sampling areas'
-        elif sectionTitle == 'macroscopic' :
-            return 'Macroscopic observation'
-        elif sectionTitle == 'sample' :
-            return 'Sample'
-        elif sectionTitle == 'anaResults' :
-            return 'Analyses and results'
-        elif sectionTitle == 'metal' :
-            return 'Metal'
-        elif sectionTitle == 'corrLayers' :
-            return 'Corrosion layers'
-        elif sectionTitle == 'synthesis' :
-            return 'Synthesis of the macroscopic / microscopic observation of corrosion layers'
-        elif sectionTitle == 'conclusion' :
-            return 'Conclusion'
-        elif sectionTitle == 'references' :
-            return 'References'
-
-    def getSectionShortName(self, sectionTitle):
-        if sectionTitle == 'The object' :
-            return 'object'
-        elif sectionTitle == 'Zones of the artefact submitted to visual observation and location of sampling areas' :
-            return 'zones'
-        elif sectionTitle == 'Macroscopic observation' :
-            return 'macroscopic'
-        elif sectionTitle == 'Sample' :
-            return 'sample'
-        elif sectionTitle == 'Analyses and results' :
-            return 'anaResults'
-        elif sectionTitle == 'Metal' :
-            return 'metal'
-        elif sectionTitle == 'Corrosion layers' :
-            return 'corrLayers'
-        elif sectionTitle == 'Synthesis of the macroscopic / microscopic observation of corrosion layers' :
-            return 'synthesis'
-        elif sectionTitle == 'Conclusion' :
-            return 'conclusion'
-        elif sectionTitle == 'References' :
-            return 'references'"""
-
     def get_field_last_comment_id(self, token, field, model):
         lastId = 0
         try :
@@ -1189,6 +1144,37 @@ def getSectionShortName(sectionTitle):
         return 'conclusion'
     elif sectionTitle == 'References' :
         return 'references'
+
+def sendComments(request, token_id) :
+    if request.method == 'POST':
+        token = get_object_or_404(Token, pk=token_id)
+        artefact = get_object_or_404(Artefact, pk=token.artefact.id)
+        sections = artefact.section_set.all()
+        token_type = ContentType.objects.get(model='token')
+        section_type = ContentType.objects.get(model='section')
+
+        try :
+            commentsTokenAll = Collaboration_comment.objects.filter(content_type_id=token_type.id, object_model_id=token.id)
+            for comment in commentsTokenAll:
+                if comment.user == request.user and comment.sent == False:
+                    comment.sent = True
+                    comment.save()
+        except:
+            pass
+
+        try :
+            for section in sections :
+                commentsSectionEach = Collaboration_comment.objects.filter(content_type_id=section_type.id, object_model_id=section.id)
+
+                for comment in commentsSectionEach :
+                    if comment.user == request.user and comment.sent == False:
+                        comment.sent = True
+                        comment.save()
+        except:
+            pass
+
+        return redirect('artefacts:collaboration_menu')
+
 
 def deleteComment(request, comment_id, artefact_id) :
     comment = get_object_or_404(Collaboration_comment, pk=comment_id)
