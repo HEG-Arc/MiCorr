@@ -9457,6 +9457,14 @@ img {
   padding: 1em;
 }
 
+#select_list_size_limit {
+  width : 500px;
+}
+
+#select_list_size_limit option {
+  width : 500px;
+}
+
 .disc {
   background: #e78115;
   border-radius: 50%;
