@@ -286,3 +286,8 @@ class CollaborationCommentForm(forms.ModelForm):
         model = Collaboration_comment
         fields = ['comment']
 
+class TokenHideForm(forms.ModelForm):
+
+    class Meta:
+        model = Token
+        fields = ['recipient']

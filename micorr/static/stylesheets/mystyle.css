@@ -9457,6 +9457,10 @@ img {
   padding: 1em;
 }
 
+.redicon {
+  color: #E30000;
+}
+
 #select_list_size_limit {
   width : 500px;
 }

@@ -23,7 +23,7 @@ from .forms import ArtefactsUpdateForm, ArtefactsCreateForm, DocumentUpdateForm,
     OriginCreateForm, ChronologyCreateForm, AlloyCreateForm, TechnologyCreateForm, EnvironmentCreateForm, \
     MicrostructureCreateForm, MetalCreateForm, CorrosionFormCreateForm, CorrosionTypeCreateForm, \
     RecoveringDateCreateForm, ImageCreateForm, TypeCreateForm, ContactAuthorForm, ShareArtefactForm, \
-    ShareWithFriendForm, ObjectCreateForm, ObjectUpdateForm, CollaborationCommentForm
+    ShareWithFriendForm, ObjectCreateForm, ObjectUpdateForm, CollaborationCommentForm, TokenHideForm
 from .models import Artefact, Document, Collaboration_comment, Field, Object, Section, SectionCategory, Image, Stratigraphy, Token
 import logging
 
@@ -700,6 +700,56 @@ class ObjectCreateView(generic.CreateView):
     def get_success_url(self):
         return reverse('artefacts:artefact-create', kwargs={'pk': self.object.id})
 
+class CollaborationHideView(generic.UpdateView):
+    model = Token
+    template_name_suffix = '_collaboration_hide'
+    form_class = TokenHideForm
+
+    """def get_object(self, queryset=None):
+        obj = Token.tokenManager.get(id=self.kwargs['pk'])
+        return obj
+
+    def get(self, request, **kwargs):
+        token = Token.tokenManager.get(id=self.kwargs['pk'])
+
+
+        self.object = token
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+
+        return render(request, 'artefacts/token_collaboration_hide.html',
+                      self.get_context_data(form=form, node_base_url=settings.NODE_BASE_URL))
+
+    def post(self, request, *args, **kwargs):
+        token = Token.tokenManager.get(id=self.kwargs['pk'])
+        form = TokenHideForm(request.POST, instance=token)
+        form.hidden_by_author = True
+        if token.user == self.request.user :
+            token.hidden_by_author = True
+        else:
+            token.hidden_by_recipient = True
+
+        return super(CollaborationHideView, self).post(request, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super(CollaborationHideView, self).get_context_data(**kwargs)
+        token=Token.tokenManager.get(id=self.kwargs['pk'])
+        context['token'] = token
+        return context
+
+    def form_valid(self, form):
+        token = Token.tokenManager.get(pk=self.kwargs['pk'])
+        form.instance = token
+        if form.user == self.request.user :
+            form.hidden_by_author = True
+        else :
+            form.hidden_by_recipient = True
+
+        return super(CollaborationHideView, self).form_valid(form)"""
+
+    def get_success_url(self):
+        return reverse('artefacts:collaboration_menu')
+
 class CollaborationListView(generic.ListView):
     model = Token
 
@@ -718,14 +768,15 @@ class CollaborationListView(generic.ListView):
 
         # Research tokens shared by the user
         for token in allTokensShared :
-            if token.right == 'W':
+            if token.right == 'W' and not token.hidden_by_author :
                 tokensShared.append(token)
 
         # Research tokens shared with the user
         try :
-            token = Token.tokenManager.get(recipient=user.email)
-            if token.right == 'W' :
-                tokensReceived.append(token)
+            tokens = Token.tokenManager.filter(recipient=user.email)
+            for token in tokens :
+                if token.right == 'W' and not token.hidden_by_recipient :
+                    tokensReceived.append(token)
 
         except :
             tokensReceived = []
@@ -739,9 +790,6 @@ class CollaborationUpdateView(generic.UpdateView):
 
     model = Artefact
     template_name_suffix = '_collaboration_update'
-    """
-    A detail view of a selected artefact
-    """
     form_class = ArtefactsUpdateForm
 
     def get_object(self, queryset=None):
@@ -1097,6 +1145,7 @@ class CollaborationCommentView(generic.CreateView):
 
         return super(CollaborationCommentView, self).form_valid(form)
 
+
     def get_success_url(self):
 
         return reverse('artefacts:collaboration-comment', kwargs={'pk' : self.kwargs['pk'], 'field' : 'none'})
@@ -1176,9 +1225,48 @@ def sendComments(request, token_id) :
         return redirect('artefacts:collaboration_menu')
 
 
-def deleteComment(request, comment_id, token_id) :
-        comment = get_object_or_404(Collaboration_comment, pk=comment_id)
-        comment.sent = True
-        comment.save()
-        pageContext = {'pk': token_id, 'field': 'none'}
-        return reverse('artefacts:collaboration_comment', pageContext)
+"""def deleteComment(self, pk, token_id) :
+    comment = get_object_or_404(Collaboration_comment, pk=pk)
+    pageContext = {'pk': token_id, 'field': 'none'}
+    comment.delete()
+    return redirect('artefacts:collaboration-comment', pageContext)"""
+
+class CommentDeleteView(generic.DeleteView):
+    model = Collaboration_comment
+    template_name_suffix = '_confirm_delete'
+
+    def get_context_data(self, **kwargs):
+
+        context = super(CommentDeleteView, self).get_context_data(**kwargs)
+        comment = get_object_or_404(Collaboration_comment, pk=self.kwargs['pk'])
+
+        token = get_object_or_404(Token, pk=self.kwargs['token_id'])
+        context['token'] = token
+        context['comment'] = comment
+        return context
+
+    def form_valid(self, form):
+
+        comment = get_object_or_404(Collaboration_comment, pk=self.kwargs['pk'])
+        comment_child = None
+        try:
+            comment_child = Collaboration_comment.objects.get(parent_id=comment.id)
+        except:
+            pass
+
+        comment_parent = None
+        if comment.parent:
+            comment_parent = Collaboration_comment.objects.get(pk=comment.parent_id)
+
+        if comment_child != None:
+            if comment_parent == None:
+                comment_child.parent_id = None
+                comment_child.save()
+
+            else:
+                comment_child.parent_id = comment_parent.id
+                comment_child.save()
+
+    def get_success_url(self):
+        token = get_object_or_404(Token, pk=self.kwargs['token_id'])
+        return reverse('artefacts:collaboration-comment', kwargs={'pk': token.id, 'field': 'none'})
