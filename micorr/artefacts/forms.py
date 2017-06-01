@@ -288,6 +288,8 @@ class CollaborationCommentForm(forms.ModelForm):
 
 class TokenHideForm(forms.ModelForm):
 
+    comment = forms.CharField(widget = TinyMCE(attrs={'cols': 10, 'rows': 10}), required = False)
+
     class Meta:
         model = Token
-        fields = ['recipient']
+        fields=['comment']

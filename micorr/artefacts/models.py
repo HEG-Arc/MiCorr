@@ -233,7 +233,7 @@ class Artefact(TimeStampedModel):
     sample_description = tinymce_models.HTMLField(verbose_name='description of sample', blank=True, default='', help_text='Information on the sample, the way it was obtained, its condition (presence or not of corrosion layers) and dimensions')
     sample_number = models.CharField(max_length=100, verbose_name='lab number of sample', blank=True, default='', help_text='The inventory number of the artefact sample')
     date_aim_sampling = models.CharField(max_length=200, verbose_name='date and aim of sampling', blank=True, default='', help_text='The date and aim of sampling')
-    validated = models.BooleanField(default=False)
+    validated = models.NullBooleanField(default=None, blank=True, null=True)
     published = models.BooleanField(default=False)
 
     # Foreign Keys
@@ -500,7 +500,9 @@ class Publication(TimeStampedModel) :
     """
 
     #Own field
-    comment=models.CharField(max_length=500, blank=True, null=True, help_text='A comment from the analyzer of the artefact')
+    comment_to_user=models.TextField(blank=True, null=True, help_text='A comment send to the user from the analyzer of the artefact')
+    comment_delegation=models.TextField(blank=True, null=True, help_text='A comment from the main administrator to the delegated administrator')
+    decision_taken=models.BooleanField(default=False)
 
     # Foreign keys
     user = models.ForeignKey(User, related_name='main_user', blank=True, help_text='User analyzing the artefact')

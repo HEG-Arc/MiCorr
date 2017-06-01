@@ -9,15 +9,14 @@
         <br/>
         <p>Are you sure you want to delete the collaborated artefact <b>{{ token.artefact.object.name }}</b>?</p>
         <br>
-        <i>(You won't be able to see its comments but the contributor or author will always be able to see them.)
-        {{ form.recipient }}</i>
-        <br>
+        <i>(You won't be able to see its comments but the contributor or author will always be able to see them.)</i>
     </div>
     <br><br>
 
     <div class="row">
         <div class="col-xs-3 col-xs-offset-9">
-            <form action="{% url 'artefacts:collaboration-hide' pk=form.instance.id %}" method="POST">
+            <!--<form action="{ url 'artefacts:collaboration-hide' form.instance.id %}" method="POST">-->
+            <form action="{{ action }}" method="POST">
                 {% csrf_token %}
                     <button type="submit" class="btn btn-danger">Delete</button>
                     <a href="{% url 'artefacts:collaboration_menu' %}"><button type="button" class="btn btn-link">Cancel</button></a>

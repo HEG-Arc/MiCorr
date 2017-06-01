@@ -26,20 +26,20 @@ class UserDetailView(generic.DetailView):
         # Add the stratigraphies of the user
         stratigraphies = Neo4jDAO().getStratigraphiesByUser(self.request.user.id)
         # Add all the objects of the user in a variable
-        objects = self.request.user.object_set.all().order_by('created')
-        list1 = []
+        objects = self.request.user.object_set.all().order_by('name')
+        artefactsList = []
 
         # Add all artefacts card in a list
         for obj in objects :
-            artefacts = obj.artefact_set.all()
+            artefacts = obj.artefact_set.all().order_by('modified')
             for artefact in artefacts :
-                list1.append(artefact)
+                artefactsList.append(artefact)
 
 
 
         context['stratigraphies'] = stratigraphies
         context['objects'] = objects
-        context['artefacts'] = list1
+        context['artefacts'] = artefactsList
         context['node_base_url'] = settings.NODE_BASE_URL
         return context
 
