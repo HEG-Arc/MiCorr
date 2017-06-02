@@ -15,6 +15,10 @@ from django.views import generic
 from haystack.forms import SearchForm
 from django.conf import settings
 from django.contrib import messages
+from django.db import connection
+connection._rollback()
+from django.db import transaction
+transaction.rollback()
 
 from contacts.forms import ContactCreateForm
 from stratigraphies.neo4jdao import Neo4jDAO
@@ -23,7 +27,8 @@ from .forms import ArtefactsUpdateForm, ArtefactsCreateForm, DocumentUpdateForm,
     OriginCreateForm, ChronologyCreateForm, AlloyCreateForm, TechnologyCreateForm, EnvironmentCreateForm, \
     MicrostructureCreateForm, MetalCreateForm, CorrosionFormCreateForm, CorrosionTypeCreateForm, \
     RecoveringDateCreateForm, ImageCreateForm, TypeCreateForm, ContactAuthorForm, ShareArtefactForm, \
-    ShareWithFriendForm, ObjectCreateForm, ObjectUpdateForm, CollaborationCommentForm, TokenHideForm
+    ShareWithFriendForm, ObjectCreateForm, ObjectUpdateForm, CollaborationCommentForm, TokenHideForm, \
+    CollaborationCommentUpdateForm
 from .models import Artefact, Document, Collaboration_comment, Field, Object, Section, SectionCategory, Image, Stratigraphy, Token, \
     Publication
 import logging
@@ -732,7 +737,6 @@ class CollaborationHideView(generic.UpdateView):
 
 class CollaborationListView(generic.ListView):
     model = Token
-
     template_name_suffix = '_collaboration_menu'
 
     def get_context_data(self, **kwargs):
@@ -744,7 +748,9 @@ class CollaborationListView(generic.ListView):
         allTokensShared = self.request.user.token_set.all().order_by('created')
         tokensShared = []
         tokensReceived = []
-
+        artefactsNotRead = {}
+        modelToken = ContentType.objects.get(model='token')
+        modelSection = ContentType.objects.get(model='section')
 
         # Research tokens shared by the user
         for token in allTokensShared :
@@ -833,7 +839,7 @@ class CollaborationUpdateView(generic.UpdateView):
 
         for section in sections:
             # Get all comments from each section
-            comments = Collaboration_comment.objects.filter(content_type_id=section_type.id, object_model_id=section.id)
+            comments = Collaboration_comment.objects.filter(content_type_id=section_type.id, object_model_id=section.id, token_for_section_id=token.id)
             for comment in comments:
                 allSectionsComments.append(comment)
 
@@ -861,11 +867,12 @@ class CollaborationUpdateView(generic.UpdateView):
 
         for commentSectionSorted in allSectionCommentsSorted:
             # Filter only sent comments or comments from user connected
-            if commentSectionSorted.sent or self.request.user == commentSectionSorted.user:
-                sectionComments.append(commentSectionSorted)
-                section = get_object_or_404(Section, pk=commentSectionSorted.object_model_id)
-                sectionShortTitle = getSectionShortName(section.title)
-                sectionDict[sectionShortTitle].append(commentSectionSorted)
+            if commentSectionSorted.token_for_section == token:
+                if commentSectionSorted.sent or self.request.user == commentSectionSorted.user:
+                    sectionComments.append(commentSectionSorted)
+                    section = get_object_or_404(Section, pk=commentSectionSorted.object_model_id)
+                    sectionShortTitle = getSectionShortName(section.title)
+                    sectionDict[sectionShortTitle].append(commentSectionSorted)
 
 
         object_section = Section.objects.get_or_create(order=1, artefact=artefact, section_category=SectionCategory.objects.get(name='AR'), title='The object')[0]
@@ -1002,7 +1009,7 @@ class CollaborationCommentView(generic.CreateView):
 
         for section in sections :
             # Get all comments from each section
-            comments = Collaboration_comment.objects.filter(content_type_id=section_type.id, object_model_id = section.id)
+            comments = Collaboration_comment.objects.filter(content_type_id=section_type.id, object_model_id=section.id, token_for_section_id = token.id)
             for comment in comments :
                 allSectionsComments.append(comment)
 
@@ -1030,6 +1037,7 @@ class CollaborationCommentView(generic.CreateView):
 
         for commentSectionSorted in allSectionCommentsSorted :
             # Filter only sent comments or comments from user connected
+            #if commentSectionSorted.token_for_section == token :
             if commentSectionSorted.sent or self.request.user == commentSectionSorted.user :
                 sectionComments.append(commentSectionSorted)
                 section = get_object_or_404(Section, pk=commentSectionSorted.object_model_id)
@@ -1072,10 +1080,10 @@ class CollaborationCommentView(generic.CreateView):
         except :
             return 0
 
-    def get_section_last_comment_id(self, section, model):
+    def get_section_last_comment_id(self, section, model, token):
         lastId = 0
         try :
-            commentsExisting = Collaboration_comment.objects.filter(content_type_id=model.id, object_model_id=section.id)
+            commentsExisting = Collaboration_comment.objects.filter(content_type_id=model.id, object_model_id=section.id, token_for_section_id=token.id)
             if commentsExisting:
                 lastId = 0
                 idComm = 0
@@ -1099,10 +1107,6 @@ class CollaborationCommentView(generic.CreateView):
 
     def form_valid(self, form, **kwargs):
 
-        """context = self.get_context_data(**kwargs)
-        testToken = context['tokenComments']
-        testSection = context['sectionComments']"""
-
         try :
             token = Token.tokenManager.get(pk=self.kwargs['pk'])
             field = get_object_or_404(Field, title=self.kwargs['field'])
@@ -1121,25 +1125,18 @@ class CollaborationCommentView(generic.CreateView):
             field = getSectionCompleteName(self.kwargs['field'])
             section = Section.objects.get(title=field, artefact=token.artefact)
             form.instance.content_object = section
+            form.instance.token_for_section = token
             section_type = ContentType.objects.get(model='section')
 
-            if self.get_section_last_comment_id(section, section_type) != 0 :
-                lastId = self.get_section_last_comment_id(section, section_type)
+            if self.get_section_last_comment_id(section, section_type, token) != 0 :
+                lastId = self.get_section_last_comment_id(section, section_type, token)
                 form.instance.parent_id = lastId
 
-            #testSection[field] = form.instance
+            form.instance.token_for_section = token
 
         user = self.request.user
         form.instance.user = user
 
-        """try :
-            testToken[field] = form.instance
-        except:
-            testSection[field] = form.instance
-        context['tokenComments'] = dict(testToken)
-        context['sectionComments'] = dict(testSection)"""
-
-        #return render(self.request, 'artefacts/collaboration_comment_form.html', context)
         return super(CollaborationCommentView, self).form_valid(form)
 
 
@@ -1210,7 +1207,7 @@ def sendComments(request, token_id) :
 
         try :
             for section in sections :
-                commentsSectionEach = Collaboration_comment.objects.filter(content_type_id=section_type.id, object_model_id=section.id)
+                commentsSectionEach = Collaboration_comment.objects.filter(content_type_id=section_type.id, object_model_id=section.id, token_for_section_id=token.id)
 
                 for comment in commentsSectionEach :
                     if comment.user == request.user and comment.sent == False:
@@ -1231,35 +1228,93 @@ class CommentDeleteView(generic.DeleteView):
         comment = get_object_or_404(Collaboration_comment, pk=self.kwargs['pk'])
 
         token = get_object_or_404(Token, pk=self.kwargs['token_id'])
+        parent = 0
+        child = 0
+
+        try :
+            parentComm = get_object_or_404(Collaboration_comment, pk=comment.parent_id)
+            parent = parentComm.id
+        except:
+            pass
+
+        try :
+            childComm = get_object_or_404(Collaboration_comment, parent_id=comment.id)
+            child = childComm.id
+        except:
+            pass
+
         context['token'] = token
         context['comment'] = comment
+        context['parent_id'] = parent
+        context['child_id'] = child
         return context
 
     def form_valid(self, form):
 
         comment = get_object_or_404(Collaboration_comment, pk=self.kwargs['pk'])
-        comment_child = None
-        try:
-            comment_child = Collaboration_comment.objects.get(parent_id=comment.id)
+
+    def get_success_url(self):
+
+        parent = 0
+        child = 0
+        token = get_object_or_404(Token, pk=self.kwargs['token_id'])
+        try :
+            parent = self.kwargs['parent_id']
+        except:
+            pass
+        try :
+            child = self.kwargs['child_id']
         except:
             pass
 
-        comment_parent = None
-        if comment.parent:
-            comment_parent = Collaboration_comment.objects.get(pk=comment.parent_id)
+        if child!=0 :
+            childComm = get_object_or_404(Collaboration_comment, pk=child)
+            if parent!=0 :
+                childComm.parent_id = parent
+                childComm.save()
 
-        if comment_child != None:
-            if comment_parent == None:
-                comment_child.parent_id = None
-                comment_child.save()
+            else :
+                childComm.parent_id = None
+                childComm.save()
 
-            else:
-                comment_child.parent_id = comment_parent.id
-                comment_child.save()
+        return reverse('artefacts:collaboration-comment', kwargs={'pk': self.kwargs['token_id'], 'field': 'none'})
+
+
+"""class CommentUpdateAfterDeleteView(generic.UpdateView):
+    model = Collaboration_comment
+    template_name_suffix = '_update_for_delete'
+    form_class = CollaborationCommentForm
+
+    def post(self, request, *args, **kwargs):
+        pkParent = self.kwargs['parent_id']
+        pkChild = self.kwargs['pk']
+
+        commentChild = get_object_or_404(Collaboration_comment, pk=pkChild)
+        commentChild.parent_id = pkParent
+        commentChild.save()
+
+        return super(CommentUpdateAfterDeleteView, self).post(request, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super(CommentUpdateAfterDeleteView, self).get_context_data(**kwargs)
+        pkParent = 0
+        pkChild = self.kwargs['pk']
+
+        try :
+            pkParent = self.kwargs['parent_id']
+        except:
+            pass
+
+        token = get_object_or_404(Token, pk=self.kwargs['token_id'])
+        #context['action'] = reverse('artefacts:comment-update-parent', kwargs={'pk': self.get_object().id})
+        context['token'] = token
+        context['parent_id'] = pkParent
+        context['child_id'] = pkChild
+
+        return context
 
     def get_success_url(self):
-        token = get_object_or_404(Token, pk=self.kwargs['token_id'])
-        return reverse('artefacts:collaboration-comment', kwargs={'pk': token.id, 'field': 'none'})
+        return reverse('artefacts:collaboration-comment', kwargs={'pk': self.kwargs['token_id'], 'field': 'none'})"""
 
 class PublicationListView(generic.ListView):
     model = Publication

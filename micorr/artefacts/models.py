@@ -532,14 +532,16 @@ class Collaboration_comment(TimeStampedModel):
     #Own fields
     comment = models.TextField()
     sent = models.BooleanField(default=False)
+    read = models.BooleanField(default=False)
 
     #Foreign keys
     content_type = models.ForeignKey(ContentType, blank=True, null=True)
-    parent = models.ForeignKey('self', blank=True, null=True, help_text='The comment from which this comment is the child')
+    parent = models.ForeignKey('self', on_delete=models.SET_NULL, blank=True, null=True, help_text='The comment from which this comment is the child')
     field = models.ForeignKey(Field, blank=True, null=True, help_text='The field concerned by the comment')
     object_model_id = models.PositiveIntegerField(blank=True, null=True)
     content_object = GenericForeignKey('content_type', 'object_model_id')
     user = models.ForeignKey(User, related_name='user_commenting', blank=True, null=True, help_text='The user who wrote the comment')
+    token_for_section = models.ForeignKey(Token, related_name="token_for_section", blank=True, null=True, help_text='The token that allow to filter comments for a section from differents tokens')
 
     class Meta:
         verbose_name = 'Comment'

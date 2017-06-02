@@ -134,7 +134,7 @@
                     </div>
                 </div>
               </div>
-              <!--<form action="% url 'artefacts:collaboration-comment' pk=token.id field='descriptionArtefact' %}" method="post">% csrf_token %}-->
+              <form action="{% url 'artefacts:collaboration-comment' pk=token.id field='descriptionArtefact' %}" method="post">{% csrf_token %}
                 <div id="descriptionComments">
                     <div class="row collapse" id="commentDescription" aria-expanded="false">
                         <div class="line lightboxDark">
@@ -143,13 +143,13 @@
                                 {% include "./comments_show.html" %}
                             {% endif %}
                           {% endfor %}
-                          <form action="{% url 'artefacts:collaboration-comment' pk=token.id field='descriptionArtefact' %}" method="post">{% csrf_token %}
+
                           {% include "./comment_form.html" %}
-                          </form>
+
                         </div>
                       </div>
                   </div>
-              <!--</form>-->
+              </form>
               <br>
 
               <div class="row">
@@ -1135,7 +1135,7 @@
                     </div>
                 </div>
 
-                <form id="conclusion" name="conclusion" method="post">{% csrf_token %}
+                <form action="{% url 'artefacts:collaboration-comment' pk=token.id field='conclusion' %}" method="post">{% csrf_token %}
                     <div class="row collapse" id="commentConclusion" aria-expanded="false">
                         <div class="line middlebox">
                           {% for key, values in sectionComments.items %}
