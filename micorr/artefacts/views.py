@@ -27,8 +27,7 @@ from .forms import ArtefactsUpdateForm, ArtefactsCreateForm, DocumentUpdateForm,
     OriginCreateForm, ChronologyCreateForm, AlloyCreateForm, TechnologyCreateForm, EnvironmentCreateForm, \
     MicrostructureCreateForm, MetalCreateForm, CorrosionFormCreateForm, CorrosionTypeCreateForm, \
     RecoveringDateCreateForm, ImageCreateForm, TypeCreateForm, ContactAuthorForm, ShareArtefactForm, \
-    ShareWithFriendForm, ObjectCreateForm, ObjectUpdateForm, CollaborationCommentForm, TokenHideForm, \
-    CollaborationCommentUpdateForm
+    ShareWithFriendForm, ObjectCreateForm, ObjectUpdateForm, CollaborationCommentForm, TokenHideForm
 from .models import Artefact, Document, Collaboration_comment, Field, Object, Section, SectionCategory, Image, Stratigraphy, Token, \
     Publication
 import logging
@@ -1279,42 +1278,45 @@ class CommentDeleteView(generic.DeleteView):
 
         return reverse('artefacts:collaboration-comment', kwargs={'pk': self.kwargs['token_id'], 'field': 'none'})
 
-
-"""class CommentUpdateAfterDeleteView(generic.UpdateView):
-    model = Collaboration_comment
-    template_name_suffix = '_update_for_delete'
-    form_class = CollaborationCommentForm
-
-    def post(self, request, *args, **kwargs):
-        pkParent = self.kwargs['parent_id']
-        pkChild = self.kwargs['pk']
-
-        commentChild = get_object_or_404(Collaboration_comment, pk=pkChild)
-        commentChild.parent_id = pkParent
-        commentChild.save()
-
-        return super(CommentUpdateAfterDeleteView, self).post(request, **kwargs)
+class CollaborationDeletedListView (generic.ListView):
+    model = Token
+    template_name_suffix = '_deleted_collaboration_menu'
 
     def get_context_data(self, **kwargs):
-        context = super(CommentUpdateAfterDeleteView, self).get_context_data(**kwargs)
-        pkParent = 0
-        pkChild = self.kwargs['pk']
+        # Call the base implementation first to get a context
+        context = super(CollaborationDeletedListView, self).get_context_data(**kwargs)
+        user = self.request.user
 
+        # Add all the objects of the user in a variable
+        allTokensShared = self.request.user.token_set.all().order_by('created')
+        tokensShared = []
+        tokensReceived = []
+        artefactsNotRead = {}
+        modelToken = ContentType.objects.get(model='token')
+        modelSection = ContentType.objects.get(model='section')
+
+        # Research tokens shared by the user
+        for token in allTokensShared :
+            if token.right == 'W' and token.hidden_by_author :
+                tokensShared.append(token)
+
+        # Research tokens shared with the user
         try :
-            pkParent = self.kwargs['parent_id']
-        except:
-            pass
+            tokens = Token.tokenManager.filter(recipient=user.email)
+            for token in tokens :
+                if token.right == 'W' and token.hidden_by_recipient :
+                    tokensReceived.append(token)
 
-        token = get_object_or_404(Token, pk=self.kwargs['token_id'])
-        #context['action'] = reverse('artefacts:comment-update-parent', kwargs={'pk': self.get_object().id})
-        context['token'] = token
-        context['parent_id'] = pkParent
-        context['child_id'] = pkChild
+        except :
+            tokensReceived = []
 
+        context['tokens_shared_by_me'] = tokensShared
+        context['tokens_shared_with_me'] = tokensReceived
+        context['user'] = user
         return context
 
-    def get_success_url(self):
-        return reverse('artefacts:collaboration-comment', kwargs={'pk': self.kwargs['token_id'], 'field': 'none'})"""
+def retrieveDeletedCollaborations(request, token_id) :
+    return None
 
 class PublicationListView(generic.ListView):
     model = Publication

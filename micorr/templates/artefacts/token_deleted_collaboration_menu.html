@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}<title>MiCorr | {{ user.username }} Collaboration</title>{% endblock %}
+{% block title %}<title>MiCorr | {{ user.username }} Deleted collaboration</title>{% endblock %}
 
 {% block content %}
     <div class="container">
@@ -9,7 +9,7 @@
             <div class="col-sm-12">
 
                 <h2>{{ user.username|capfirst }}</h2>
-                <h3>Collaborations</h3>
+                <h3>Deleted collaborations</h3>
                 <br>
             </div>
         </div>
@@ -23,7 +23,7 @@
                             <div class="panel-heading">
                                 <h4 class="panel-title">
                                     <span class="glyphicon glyphicon-plus"></span>
-                                    <a data-toggle="collapse" href="#artefacts_shared">Artefacts shared with contributors</a>
+                                    <a data-toggle="collapse" href="#artefacts_shared">Deleted artefacts shared with contributors</a>
                                 </h4>
                             </div>
                             <div id="artefacts_shared" class="panel-collapse collapse">
@@ -60,12 +60,7 @@
                             <div class="panel-heading">
                                 <h4 class="panel-title">
                                     <span class="glyphicon glyphicon-plus"></span>
-                                    <a data-toggle="collapse" href="#artefacts_received">Artefacts shared with me</a>
-                                    <div class="pull-right">
-                                        <div id="moncercle">
-                                            <center>1</center>
-                                        </div>
-                                    </div>
+                                    <a data-toggle="collapse" href="#artefacts_received">Deleted artefacts shared with me</a>
                                 </h4>
                             </div>
                             <div id="artefacts_received" class="panel-collapse collapse">
@@ -96,9 +91,7 @@
                         </div>
                     </div>
                     <br>
-                    <div class="pull-right">
-                        <a href="{% url 'artefacts:collaboration_deleted_menu' %}" class="btn btn-primary btn-md"><i class="fa fa-recycle"></i> Retrieve deleted collaborations</a>
-                    </div>
+                        <a href="{% url 'artefacts:collaboration_menu' %}" class="btn btn-primary btn-md"> Return to collaboration menu</a>
                 </div>
             </div>
         {% endif %}

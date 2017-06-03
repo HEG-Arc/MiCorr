@@ -286,12 +286,6 @@ class CollaborationCommentForm(forms.ModelForm):
         model = Collaboration_comment
         fields = ['comment']
 
-class CollaborationCommentUpdateForm(forms.ModelForm):
-
-    class Meta:
-        model = Collaboration_comment
-        exclude = []
-
 class TokenHideForm(forms.ModelForm):
 
     comment = forms.CharField(widget = TinyMCE(attrs={'cols': 10, 'rows': 10}), required = False)
