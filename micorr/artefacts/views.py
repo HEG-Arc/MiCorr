@@ -707,33 +707,6 @@ class ObjectCreateView(generic.CreateView):
     def get_success_url(self):
         return reverse('artefacts:artefact-create', kwargs={'pk': self.object.id})
 
-class CollaborationHideView(generic.UpdateView):
-    model = Token
-    template_name_suffix = '_collaboration_hide'
-    form_class = TokenHideForm
-
-    def post(self, request, *args, **kwargs):
-        token = Token.tokenManager.get(id=self.kwargs['pk'])
-
-        if token.user == self.request.user :
-            token.hidden_by_author = True
-            token.save()
-        else:
-            token.hidden_by_recipient = True
-            token.save()
-
-        return super(CollaborationHideView, self).post(request, **kwargs)
-
-    def get_context_data(self, **kwargs):
-        context = super(CollaborationHideView, self).get_context_data(**kwargs)
-        context['action'] = reverse('artefacts:collaboration-hide',
-                                    kwargs={'pk': self.get_object().id})
-
-        return context
-
-    def get_success_url(self):
-        return reverse('artefacts:collaboration_menu')
-
 class CollaborationListView(generic.ListView):
     model = Token
     template_name_suffix = '_collaboration_menu'
@@ -744,7 +717,7 @@ class CollaborationListView(generic.ListView):
         user = self.request.user
 
         # Add all the objects of the user in a variable
-        allTokensShared = self.request.user.token_set.all().order_by('created')
+        allTokensShared = self.request.user.token_set.all().order_by('-modified')
         tokensShared = []
         tokensReceived = []
         artefactsNotRead = {}
@@ -1278,6 +1251,33 @@ class CommentDeleteView(generic.DeleteView):
 
         return reverse('artefacts:collaboration-comment', kwargs={'pk': self.kwargs['token_id'], 'field': 'none'})
 
+class CollaborationHideView(generic.UpdateView):
+    model = Token
+    template_name_suffix = '_collaboration_hide'
+    form_class = TokenHideForm
+
+    def post(self, request, *args, **kwargs):
+        token = Token.tokenManager.get(id=self.kwargs['pk'])
+
+        if token.user == self.request.user :
+            token.hidden_by_author = True
+            token.save()
+        else:
+            token.hidden_by_recipient = True
+            token.save()
+
+        return super(CollaborationHideView, self).post(request, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super(CollaborationHideView, self).get_context_data(**kwargs)
+        context['action'] = reverse('artefacts:collaboration-hide',
+                                    kwargs={'pk': self.get_object().id})
+
+        return context
+
+    def get_success_url(self):
+        return reverse('artefacts:collaboration_menu')
+
 class CollaborationDeletedListView (generic.ListView):
     model = Token
     template_name_suffix = '_deleted_collaboration_menu'
@@ -1288,7 +1288,7 @@ class CollaborationDeletedListView (generic.ListView):
         user = self.request.user
 
         # Add all the objects of the user in a variable
-        allTokensShared = self.request.user.token_set.all().order_by('created')
+        allTokensShared = self.request.user.token_set.all().order_by('-modified')
         tokensShared = []
         tokensReceived = []
         artefactsNotRead = {}
@@ -1302,7 +1302,7 @@ class CollaborationDeletedListView (generic.ListView):
 
         # Research tokens shared with the user
         try :
-            tokens = Token.tokenManager.filter(recipient=user.email)
+            tokens = Token.tokenManager.filter(recipient=user.email).order_by('-modified')
             for token in tokens :
                 if token.right == 'W' and token.hidden_by_recipient :
                     tokensReceived.append(token)
@@ -1315,8 +1315,19 @@ class CollaborationDeletedListView (generic.ListView):
         context['user'] = user
         return context
 
-def retrieveDeletedCollaborations(request, token_id) :
-    return None
+def retrieveDeletedCollaboration(request, token_id) :
+    #if request.method == 'POST':
+    token = get_object_or_404(Token, pk=token_id)
+
+    if token.user == request.user :
+        token.hidden_by_author = False
+        token.save()
+
+    else :
+        token.hidden_by_recipient = False
+        token.save()
+
+    return redirect('artefacts:collaboration_deleted_menu')
 
 class PublicationListView(generic.ListView):
     model = Publication

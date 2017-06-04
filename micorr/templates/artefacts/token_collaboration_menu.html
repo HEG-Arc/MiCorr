@@ -41,9 +41,9 @@
                                                 <td>{{ tokenSha.artefact.object.name }}</td>
                                                 <td>{{ tokenSha.recipient }}</td>
                                                 <td>
-                                                    <a href="{% url 'artefacts:collaboration-update' tokenSha.id %}"><i class="fa fa-pencil"></i></a> |
-                                                    <a href="{% url 'artefacts:collaboration-comment' pk=tokenSha.id field='none' %}"><i class="fa fa-comment"></i></a> |
-                                                    <a href="{% url 'artefacts:collaboration-hide' pk=tokenSha.id %}"><i class="fa fa-trash"></i></a>
+                                                    <a href="{% url 'artefacts:collaboration-update' tokenSha.id %}" title="Modify artefact"><i class="fa fa-pencil"></i></a> |
+                                                    <a href="{% url 'artefacts:collaboration-comment' pk=tokenSha.id field='none' %}" title="Comment artefact"><i class="fa fa-comment"></i></a> |
+                                                    <a href="{% url 'artefacts:collaboration-hide' pk=tokenSha.id %}" title="Delete collaboration"><i class="fa fa-trash"></i></a>
                                                 </td>
                                             </tr>
                                         {% endfor %}
@@ -83,8 +83,8 @@
                                                 <td>{{ tokenRec.artefact.object.name }}</td>
                                                 <td>{{ tokenRec.user.username }}</td>
                                                 <td>
-                                                    <a href="{% url 'artefacts:collaboration-comment' pk=tokenRec.id field='none' %}"><i class="fa fa-comment"></i></a> |
-                                                    <a href="{% url 'artefacts:collaboration-hide' pk=tokenRec.id %}"><i class="fa fa-trash"></i></a>
+                                                    <a href="{% url 'artefacts:collaboration-comment' pk=tokenRec.id field='none' %}" title="Comment artefact"><i class="fa fa-comment"></i></a> |
+                                                    <a href="{% url 'artefacts:collaboration-hide' pk=tokenRec.id %}" title="Delete collaboration"><i class="fa fa-trash"></i></a>
                                                 </td>
                                             </tr>
                                         {% endfor %}

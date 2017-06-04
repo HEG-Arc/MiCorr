@@ -33,7 +33,7 @@
                                             <th>Last modification</th>
                                             <th>Object</th>
                                             <th>Shared with</th>
-                                            <th>Actions</th>
+                                            <th>Action</th>
                                         </tr>
                                         {% for tokenSha in tokens_shared_by_me %}
                                             <tr>
@@ -41,9 +41,7 @@
                                                 <td>{{ tokenSha.artefact.object.name }}</td>
                                                 <td>{{ tokenSha.recipient }}</td>
                                                 <td>
-                                                    <a href="{% url 'artefacts:collaboration-update' tokenSha.id %}"><i class="fa fa-pencil"></i></a> |
-                                                    <a href="{% url 'artefacts:collaboration-comment' pk=tokenSha.id field='none' %}"><i class="fa fa-comment"></i></a> |
-                                                    <a href="{% url 'artefacts:collaboration-hide' pk=tokenSha.id %}"><i class="fa fa-trash"></i></a>
+                                                    <center><a href="{% url 'artefacts:collaboration-retrieve' token_id=tokenSha.id %}" onclick="return confirm('Are you sure you want to retrieve this collaboration ? It will appear in your collaboration menu again')" title="Retrieve collaboration"><i class="fa fa-reply"></i></a></center>
                                                 </td>
                                             </tr>
                                         {% endfor %}
@@ -78,8 +76,7 @@
                                                 <td>{{ tokenRec.artefact.object.name }}</td>
                                                 <td>{{ tokenRec.user.username }}</td>
                                                 <td>
-                                                    <a href="{% url 'artefacts:collaboration-comment' pk=tokenRec.id field='none' %}"><i class="fa fa-comment"></i></a> |
-                                                    <a href="{% url 'artefacts:collaboration-hide' pk=tokenRec.id %}"><i class="fa fa-trash"></i></a>
+                                                    <center><a href="{% url 'artefacts:collaboration-retrieve' token_id=tokenRec.id %}" onclick="return confirm('Are you sure you want to retrieve this collaboration ? It will appear in your collaboration menu again')" title="Retrieve collaboration"><i class="fa fa-reply"></i></a></center>
                                                 </td>
                                             </tr>
                                         {% endfor %}

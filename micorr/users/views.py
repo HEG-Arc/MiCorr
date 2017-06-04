@@ -31,7 +31,7 @@ class UserDetailView(generic.DetailView):
 
         # Add all artefacts card in a list
         for obj in objects :
-            artefacts = obj.artefact_set.all().order_by('modified')
+            artefacts = obj.artefact_set.all().order_by('-modified')
             for artefact in artefacts :
                 artefactsList.append(artefact)
 
