@@ -1733,6 +1733,21 @@ p {
   font-size : 18px;
 }
 
+.commentsNotRead {
+  margin-top : 0px;
+  margin-bottom: 0px;
+  font-size : 18px;
+  color : #E30000;
+}
+
+.commentsNotReadInfo {
+  margin-top : 3px;
+  margin-bottom: 0px;
+  font-size : 15px;
+  font-style: italic;
+  color : #E30000;
+}
+
 .lead {
   margin-bottom: 16px;
   font-size: 16px;
@@ -9457,7 +9472,6 @@ img {
   padding: 1em;
 }
 
-
 #moncercle{
   background:#E30000;
   border-radius:50%;
@@ -9470,6 +9484,11 @@ img {
 
 .redicon {
   color: #E30000;
+}
+
+.newCommentsRed {
+  color: #E30000;
+  font-weight: bolder;
 }
 
 #select_list_size_limit {

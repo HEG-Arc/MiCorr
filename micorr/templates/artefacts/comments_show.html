@@ -8,24 +8,42 @@
                     <div class="user_name_comment">{ value.user.username }}</div>
                 { endif %}-->
                 <div class="user_name_comment">{{ value.user.username }}</div>
-                <div class="comments">{{ value.comment|safe }}</div>
+                {% if value.user != user and not value.read %}
+                    <div class="commentsNotRead"><i>{{ value.comment|safe }}</i></div>
+                {% else %}
+                    <div class="comments">{{ value.comment|safe }}</div>
+                {% endif %}
                 <hr class="comment">
               </div>
               <div class="c1">
                   {% if not value.sent and value.user == user %}
                     <a href="{% url 'artefacts:delete-comment' token_id=token.id pk=value.id parent_id=0 child_id=0 %}"><i class="fa fa-trash"></i></a>
                   {% endif %}
+                  {% if value.user != user and not value.read %}
+                      <div class="commentsNotReadInfo">
+                        Unread
+                      </div>
+                  {% endif %}
               </div>
           {% else %}
               <div class="c1"></div>
               <div class="c10">
                 <div class="user_name_comment">{{ value.user.username }}</div>
-                <div class="comments">{{ value.comment|safe }}</div>
+                {% if value.user != user and not value.read %}
+                    <div class="commentsNotRead"><i>{{ value.comment|safe }}</i></div>
+                {% else %}
+                    <div class="comments">{{ value.comment|safe }}</div>
+                {% endif %}
                 <hr class="comment">
               </div>
               <div class="c1">
                   {% if not value.sent and value.user == user %}
                     <a href="{% url 'artefacts:delete-comment' token_id=token.id pk=value.id parent_id=0 child_id=0 %}"><i class="fa fa-trash"></i></a>
+                  {% endif %}
+                  {% if value.user != user and not value.read %}
+                      <div class="commentsNotReadInfo">
+                        Unread
+                      </div>
                   {% endif %}
               </div>
           {% endif %}

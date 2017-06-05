@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container">
+
+    <div class="row">
+        <h2>Comments read </h2>
+        <br/>
+        <p>Have you read all comments of the collaboration ? They will be considered as 'read'</p>
+    </div>
+    <br><br>
+
+    <div class="row">
+        <div class="col-xs-3 col-xs-offset-6">
+            <div class="pull-right">
+                <form action="{% url 'artefacts:read-comments' pk=token.id %}" method="POST">{% csrf_token %}
+                    <button type="submit" class="btn btn-md btn-danger">Validate</button>
+                </form>
+            </div>
+        </div>
+        <div class="col-xs-1">
+            <div class="pull-right">
+                <a href="{% url 'artefacts:collaboration-comment' pk=token.id field='none' %}"><button type="button" class="btn btn-md btn-primary">Cancel</button></a>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

@@ -72,6 +72,7 @@ urlpatterns = [
     url(r'^(?P<token_id>\d+)/collaboration/retrieve/$', login_required(artefacts_views.retrieveDeletedCollaboration), name='collaboration-retrieve'),
 
     url(r'^(?P<token_id>\d+)/collaboration/send/$', login_required(artefacts_views.sendComments), name='send-comments'),
+    url(r'^(?P<pk>\d+)/collaboration/read/$', login_required(artefacts_views.CommentReadView.as_view()), name='read-comments'),
     url(r'^collaboration/(?P<pk>\d+)/delete/(?P<token_id>\d+)/$', login_required(artefacts_views.CommentDeleteView.as_view()), name='delete-comment-without-relation'),
     url(r'^collaboration/(?P<pk>\d+)/delete/(?P<token_id>\d+)/(?P<child_id>\d+)/$', login_required(artefacts_views.CommentDeleteView.as_view()), name='delete-comment-without-parent'),
     url(r'^collaboration/(?P<pk>\d+)/delete/(?P<token_id>\d+)/(?P<parent_id>\d+)/(?P<child_id>\d+)/$', login_required(artefacts_views.CommentDeleteView.as_view()), name='delete-comment'),

@@ -15,10 +15,6 @@ from django.views import generic
 from haystack.forms import SearchForm
 from django.conf import settings
 from django.contrib import messages
-from django.db import connection
-connection._rollback()
-from django.db import transaction
-transaction.rollback()
 
 from contacts.forms import ContactCreateForm
 from stratigraphies.neo4jdao import Neo4jDAO
@@ -28,6 +24,7 @@ from .forms import ArtefactsUpdateForm, ArtefactsCreateForm, DocumentUpdateForm,
     MicrostructureCreateForm, MetalCreateForm, CorrosionFormCreateForm, CorrosionTypeCreateForm, \
     RecoveringDateCreateForm, ImageCreateForm, TypeCreateForm, ContactAuthorForm, ShareArtefactForm, \
     ShareWithFriendForm, ObjectCreateForm, ObjectUpdateForm, CollaborationCommentForm, TokenHideForm
+
 from .models import Artefact, Document, Collaboration_comment, Field, Object, Section, SectionCategory, Image, Stratigraphy, Token, \
     Publication
 import logging
@@ -717,28 +714,53 @@ class CollaborationListView(generic.ListView):
         user = self.request.user
 
         # Add all the objects of the user in a variable
-        allTokensShared = self.request.user.token_set.all().order_by('-modified')
         tokensShared = []
         tokensReceived = []
-        artefactsNotRead = {}
         modelToken = ContentType.objects.get(model='token')
         modelSection = ContentType.objects.get(model='section')
 
         # Research tokens shared by the user
-        for token in allTokensShared :
-            if token.right == 'W' and not token.hidden_by_author :
-                tokensShared.append(token)
+        nbTotSha = 0
+        newCommentsForTokenSha = {}
+        try :
+            allTokensShared = self.request.user.token_set.all().order_by('-modified')
+            for token in allTokensShared :
+                nbCommSha = 0
+                if token.right == 'W' and not token.hidden_by_author :
+                    tokensShared.append(token)
+                    commentsToken = Collaboration_comment.objects.filter(content_type_id=modelToken.id, object_model_id=token.id, sent=True, read=False).exclude(user=self.request.user)
+                    nbCommSha = nbCommSha + len(commentsToken)
+                    commentsSection = Collaboration_comment.objects.filter(content_type_id=modelSection.id, token_for_section=token, sent=True, read=False).exclude(user=self.request.user)
+                    nbCommSha = nbCommSha + len(commentsSection)
+                    newCommentsForTokenSha[token.id] = nbCommSha
+                    nbTotSha = nbTotSha+nbCommSha
+        except:
+            pass
 
         # Research tokens shared with the user
+        nbTotRec=0
+        newCommentsForTokenRec = {}
         try :
-            tokens = Token.tokenManager.filter(recipient=user.email)
-            for token in tokens :
+            allTokensReceived = Token.tokenManager.filter(recipient=user.email)
+            for token in allTokensReceived :
+                nbCommRec=0
                 if token.right == 'W' and not token.hidden_by_recipient :
                     tokensReceived.append(token)
+                    commentsToken = Collaboration_comment.objects.filter(content_type_id=modelToken.id, object_model_id=token.id, sent=True, read=False).exclude(user=self.request.user)
+                    nbCommRec = nbCommRec + len(commentsToken)
+                    commentsSection = Collaboration_comment.objects.filter(content_type_id=modelSection.id, token_for_section=token, sent=True, read=False).exclude(user=self.request.user)
+                    nbCommRec = nbCommRec + len(commentsSection)
+                    newCommentsForTokenRec[token.id] = nbCommRec
+                    nbTotRec = nbTotRec+nbCommRec
 
         except :
-            tokensReceived = []
+            pass
 
+
+        context['newCommentsSha'] = nbTotSha
+        context['newCommentsRec'] = nbTotRec
+        context['commentsForEachTokenSha'] = newCommentsForTokenSha
+        context['commentsForEachTokenRec'] = newCommentsForTokenRec
         context['tokens_shared_by_me'] = tokensShared
         context['tokens_shared_with_me'] = tokensReceived
         context['user'] = user
@@ -941,6 +963,9 @@ class CollaborationCommentView(generic.CreateView):
         tokenComments = []
         tokenDict = defaultdict(list)
         token_type = ContentType.objects.get(model='token')
+        unreadCommentsField = {}
+        unreadCommentsSection = {}
+        fields = Field.objects.all()
         try :
             # Get all comments for the current token
             allTokenComments = Collaboration_comment.objects.filter(content_type_id=token_type.id, object_model_id = token.id)
@@ -966,12 +991,21 @@ class CollaborationCommentView(generic.CreateView):
 
             # Filter only sent comments or comments from user connected
             for tokenComm in allTokenCommentsSorted :
-                if tokenComm.sent or self.request.user == tokenComm.user :
+                if tokenComm.sent or user == tokenComm.user :
                     tokenComments.append(tokenComm)
 
             # Create a dictonary 'key-list' with field title as a key
             for tokenComment in tokenComments :
                 tokenDict[tokenComment.field.title].append(tokenComment)
+
+            # Research fields with unread comments
+            for field in fields :
+                unreadCommentsField[field.title] = False
+
+            for tokenComment in tokenComments :
+                if tokenComment.read == False and tokenComment.user != user :
+                    unreadCommentsField[tokenComment.field.title] = True
+
 
         except :
             pass
@@ -984,6 +1018,10 @@ class CollaborationCommentView(generic.CreateView):
             comments = Collaboration_comment.objects.filter(content_type_id=section_type.id, object_model_id=section.id, token_for_section_id = token.id)
             for comment in comments :
                 allSectionsComments.append(comment)
+
+            sectionShortTitle = getSectionShortName(section.title)
+
+            unreadCommentsSection[sectionShortTitle] = False
 
         # Get first comments of all sections
         firstSectionComments = []
@@ -1009,12 +1047,14 @@ class CollaborationCommentView(generic.CreateView):
 
         for commentSectionSorted in allSectionCommentsSorted :
             # Filter only sent comments or comments from user connected
-            #if commentSectionSorted.token_for_section == token :
             if commentSectionSorted.sent or self.request.user == commentSectionSorted.user :
                 sectionComments.append(commentSectionSorted)
                 section = get_object_or_404(Section, pk=commentSectionSorted.object_model_id)
                 sectionShortTitle = getSectionShortName(section.title)
                 sectionDict[sectionShortTitle].append(commentSectionSorted)
+                if commentSectionSorted.read == False and commentSectionSorted.user != user :
+                    unreadCommentsSection[sectionShortTitle] = True
+
 
         context['user'] = user
         context['token'] = token
@@ -1022,6 +1062,8 @@ class CollaborationCommentView(generic.CreateView):
         context['sections'] = sections
         context['documents'] = documents
         context['stratigraphies'] = stratigraphies
+        context['unreadCommentsField'] = unreadCommentsField
+        context['unreadCommentsSection'] = unreadCommentsSection
         context['tokenComments'] = dict(tokenDict)
         context['sectionComments'] = dict(sectionDict)
         context['node_base_url'] = settings.NODE_BASE_URL
@@ -1190,6 +1232,86 @@ def sendComments(request, token_id) :
 
         return redirect('artefacts:collaboration_menu')
 
+
+def readComments(request, pk):
+    if request.method == 'POST':
+        token = Token.tokenManager.get(id=pk)
+        artefact = get_object_or_404(Artefact, pk=token.artefact.id)
+        sections = artefact.section_set.all()
+        token_type = ContentType.objects.get(model='token')
+        section_type = ContentType.objects.get(model='section')
+
+        try:
+            commentsTokenAll = Collaboration_comment.objects.filter(content_type_id=token_type.id,
+                                                                    object_model_id=token.id)
+            for comment in commentsTokenAll:
+                if comment.user != request.user and comment.sent == True and comment.read == False:
+                    comment.read = True
+                    comment.save()
+        except:
+            pass
+
+        try:
+            for section in sections:
+                commentsSectionEach = Collaboration_comment.objects.filter(content_type_id=section_type.id,
+                                                                           object_model_id=section.id,
+                                                                           token_for_section_id=token.id)
+
+                for comment in commentsSectionEach:
+                    if comment.user != request.user and comment.sent == True and comment.read == False:
+                        comment.read = True
+                        comment.save()
+        except:
+            pass
+
+        return redirect('artefacts:collaboration_menu')
+
+class CommentReadView(generic.UpdateView):
+    model = Token
+    template_name_suffix = '_confirm_read'
+    form_class = TokenHideForm
+
+    def get_context_data(self, **kwargs):
+        context = super(CommentReadView, self).get_context_data(**kwargs)
+        token = Token.tokenManager.get(id=self.kwargs['pk'])
+        context['token'] = token
+        return context
+
+    def post(self, request, *args, **kwargs):
+        token = Token.tokenManager.get(id=self.kwargs['pk'])
+        artefact = get_object_or_404(Artefact, pk=token.artefact.id)
+        sections = artefact.section_set.all()
+        token_type = ContentType.objects.get(model='token')
+        section_type = ContentType.objects.get(model='section')
+
+        try:
+            commentsTokenAll = Collaboration_comment.objects.filter(content_type_id=token_type.id,
+                                                                    object_model_id=token.id)
+            for comment in commentsTokenAll:
+                if comment.user != request.user and comment.sent == True and comment.read == False:
+                    comment.read = True
+                    comment.save()
+        except:
+            pass
+
+        try:
+            for section in sections:
+                commentsSectionEach = Collaboration_comment.objects.filter(content_type_id=section_type.id,
+                                                                           object_model_id=section.id,
+                                                                           token_for_section_id=token.id)
+
+                for comment in commentsSectionEach:
+                    if comment.user != request.user and comment.sent == True and comment.read == False:
+                        comment.read = True
+                        comment.save()
+        except:
+            pass
+
+        return super(CommentReadView, self).post(request, **kwargs)
+
+    def get_success_url(self):
+        return reverse('artefacts:collaboration-comment', kwargs={'pk': self.kwargs['pk'], 'field': 'none'})
+
 class CommentDeleteView(generic.DeleteView):
     model = Collaboration_comment
     template_name_suffix = '_confirm_delete'
@@ -1278,7 +1400,7 @@ class CollaborationHideView(generic.UpdateView):
     def get_success_url(self):
         return reverse('artefacts:collaboration_menu')
 
-class CollaborationDeletedListView (generic.ListView):
+class CollaborationDeletedListView(generic.ListView):
     model = Token
     template_name_suffix = '_deleted_collaboration_menu'
 
@@ -1291,9 +1413,6 @@ class CollaborationDeletedListView (generic.ListView):
         allTokensShared = self.request.user.token_set.all().order_by('-modified')
         tokensShared = []
         tokensReceived = []
-        artefactsNotRead = {}
-        modelToken = ContentType.objects.get(model='token')
-        modelSection = ContentType.objects.get(model='section')
 
         # Research tokens shared by the user
         for token in allTokensShared :
@@ -1316,7 +1435,6 @@ class CollaborationDeletedListView (generic.ListView):
         return context
 
 def retrieveDeletedCollaboration(request, token_id) :
-    #if request.method == 'POST':
     token = get_object_or_404(Token, pk=token_id)
 
     if token.user == request.user :

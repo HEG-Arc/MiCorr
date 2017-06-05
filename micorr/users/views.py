@@ -11,6 +11,7 @@ from django.conf import settings
 
 from stratigraphies.neo4jdao import Neo4jDAO
 
+from django.contrib.contenttypes.models import ContentType
 from .models import User
 
 
@@ -34,8 +35,6 @@ class UserDetailView(generic.DetailView):
             artefacts = obj.artefact_set.all().order_by('-modified')
             for artefact in artefacts :
                 artefactsList.append(artefact)
-
-
 
         context['stratigraphies'] = stratigraphies
         context['objects'] = objects
