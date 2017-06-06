@@ -1748,6 +1748,13 @@ p {
   color : #E30000;
 }
 
+.commentsNotSentInfo {
+  margin-top : 3px;
+  margin-bottom: 0px;
+  font-size : 15px;
+  font-style: italic;
+}
+
 .lead {
   margin-bottom: 16px;
   font-size: 16px;

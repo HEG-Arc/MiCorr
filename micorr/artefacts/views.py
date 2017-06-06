@@ -728,12 +728,15 @@ class CollaborationListView(generic.ListView):
                 nbCommSha = 0
                 if token.right == 'W' and not token.hidden_by_author :
                     tokensShared.append(token)
+
                     commentsToken = Collaboration_comment.objects.filter(content_type_id=modelToken.id, object_model_id=token.id, sent=True, read=False).exclude(user=self.request.user)
                     nbCommSha = nbCommSha + len(commentsToken)
                     commentsSection = Collaboration_comment.objects.filter(content_type_id=modelSection.id, token_for_section=token, sent=True, read=False).exclude(user=self.request.user)
                     nbCommSha = nbCommSha + len(commentsSection)
                     newCommentsForTokenSha[token.id] = nbCommSha
                     nbTotSha = nbTotSha+nbCommSha
+
+
         except:
             pass
 
@@ -783,6 +786,7 @@ class CollaborationUpdateView(generic.UpdateView):
         artefact = Artefact.objects.get(id=token.artefact.id)
         sections = artefact.section_set.all()
         obj = Object.objects.get(id=artefact.object.id)
+        user=self.request.user
 
         self.object = artefact
         form_class = self.get_form_class()
@@ -793,6 +797,9 @@ class CollaborationUpdateView(generic.UpdateView):
         tokenComments = []
         tokenDict = defaultdict(list)
         token_type = ContentType.objects.get(model='token')
+        unreadCommentsField = {}
+        unreadCommentsSection = {}
+        fields = Field.objects.all()
         try:
             # Get all comments for the current token
             allTokenComments = Collaboration_comment.objects.filter(content_type_id=token_type.id, object_model_id=token.id)
@@ -825,6 +832,14 @@ class CollaborationUpdateView(generic.UpdateView):
             for tokenComment in tokenComments:
                 tokenDict[tokenComment.field.title].append(tokenComment)
 
+            # Research fields with unread comments
+            for field in fields :
+                unreadCommentsField[field.title] = False
+
+            for tokenComment in tokenComments :
+                if tokenComment.read == False and tokenComment.user != self.request.user :
+                    unreadCommentsField[tokenComment.field.title] = True
+
         except:
             pass
 
@@ -836,6 +851,9 @@ class CollaborationUpdateView(generic.UpdateView):
             comments = Collaboration_comment.objects.filter(content_type_id=section_type.id, object_model_id=section.id, token_for_section_id=token.id)
             for comment in comments:
                 allSectionsComments.append(comment)
+
+            sectionShortTitle = getSectionShortName(section.title)
+            unreadCommentsSection[sectionShortTitle] = False
 
         # Get first comments of all sections
         firstSectionComments = []
@@ -867,6 +885,8 @@ class CollaborationUpdateView(generic.UpdateView):
                     section = get_object_or_404(Section, pk=commentSectionSorted.object_model_id)
                     sectionShortTitle = getSectionShortName(section.title)
                     sectionDict[sectionShortTitle].append(commentSectionSorted)
+                    if commentSectionSorted.read == False and commentSectionSorted.user != user:
+                        unreadCommentsSection[sectionShortTitle] = True
 
 
         object_section = Section.objects.get_or_create(order=1, artefact=artefact, section_category=SectionCategory.objects.get(name='AR'), title='The object')[0]
@@ -888,7 +908,8 @@ class CollaborationUpdateView(generic.UpdateView):
                                                              synthesis_section=synthesis_section, conclusion_text=conclusion_text,
                                                              references_text=references_text, stratigraphies=stratigraphies,
                                                              tokenComments=dict(tokenDict), sectionComments=dict(sectionDict),
-                                                             node_base_url=settings.NODE_BASE_URL))
+                                                             unreadCommentsField=unreadCommentsField, unreadCommentsSection=unreadCommentsSection,
+                                                             user=user, node_base_url=settings.NODE_BASE_URL))
 
     def post(self, request, *args, **kwargs):
         token = get_object_or_404(Token, pk=self.kwargs['token_id'])
@@ -1020,7 +1041,6 @@ class CollaborationCommentView(generic.CreateView):
                 allSectionsComments.append(comment)
 
             sectionShortTitle = getSectionShortName(section.title)
-
             unreadCommentsSection[sectionShortTitle] = False
 
         # Get first comments of all sections

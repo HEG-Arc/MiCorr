@@ -1,15 +1,54 @@
-<div class="c12">
-    <div class="line lightboxDark">
-      <h3>Comments</h3>
-      <br>
-      {% for value in values %}
-          <div class="row">
-              <div class="c11">
+<h3>Comments</h3>
+<br>
+{% for value in values %}
+  {% if not value.parent %}
+      <div class="row">
+          <div class="c11">
                 <div class="user_name_comment">{{ value.user.username }}</div>
-                <div class="comments">{{ value.comment|safe }}</div>
-              <hr class="comment">
-              </div>
+                {% if value.user != user and not value.read %}
+                    <div class="commentsNotRead"><i>{{ value.comment|safe }}</i></div>
+                {% else %}
+                    <div class="comments">{{ value.comment|safe }}</div>
+                {% endif %}
+                <hr class="comment">
           </div>
-      {% endfor %}
-    </div>
-</div>
+          <div class="c1">
+              {% if not value.sent and value.user == user %}
+                  <div class="commentsNotSentInfo">
+                    Not sent
+                  </div>
+              {% endif %}
+              {% if value.user != user and not value.read %}
+                  <div class="commentsNotReadInfo">
+                    Unread
+                  </div>
+              {% endif %}
+          </div>
+      </div>
+  {% else %}
+      <div class="row">
+          <div class="c1"></div>
+          <div class="c10">
+            <div class="user_name_comment">{{ value.user.username }}</div>
+            {% if value.user != user and not value.read %}
+                <div class="commentsNotRead"><i>{{ value.comment|safe }}</i></div>
+            {% else %}
+                <div class="comments">{{ value.comment|safe }}</div>
+            {% endif %}
+            <hr class="comment">
+          </div>
+          <div class="c1">
+              {% if not value.sent and value.user == user %}
+                  <div class="commentsNotSentInfo">
+                    Not sent
+                  </div>
+              {% endif %}
+              {% if value.user != user and not value.read %}
+                  <div class="commentsNotReadInfo">
+                    Unread
+                  </div>
+              {% endif %}
+          </div>
+      </div>
+  {% endif %}
+{% endfor %}
