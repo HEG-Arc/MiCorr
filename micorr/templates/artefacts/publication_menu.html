@@ -38,7 +38,7 @@
                                             <tr>
                                                 <td>{{ artPub.created }}</td>
                                                 <td>{{ artPub.object.name }}</td>
-                                                <td><a href="#"><i class="fa fa-eye"></i></a></td>
+                                                <td><a href="{% url 'artefacts:publication-artefact-detail' pk=artPub.id %}" target="_blank"><i class="fa fa-eye"></i></a></td>
                                             </tr>
                                         {% endfor %}
                                     </table>
@@ -118,9 +118,6 @@
                             </div>
                         </div>
                     </div>
-                {% for obj in objects %}
-                    {{ obj.description }}
-                {% endfor %}
                 </div>
             </div>
         {% endif %}

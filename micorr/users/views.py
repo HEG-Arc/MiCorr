@@ -29,13 +29,20 @@ class UserDetailView(generic.DetailView):
         # Add all the objects of the user in a variable
         objects = self.request.user.object_set.all().order_by('name')
         artefactsList = []
+        isTherePubValArtForObj = {}
+
+        for obj in objects :
+            isTherePubValArtForObj[obj.id] = False
 
         # Add all artefacts card in a list
         for obj in objects :
             artefacts = obj.artefact_set.all().order_by('-modified')
             for artefact in artefacts :
                 artefactsList.append(artefact)
+                if artefact.parent and artefact.validated :
+                    isTherePubValArtForObj[obj.id] = True
 
+        context['pubValArtForObj'] = isTherePubValArtForObj
         context['stratigraphies'] = stratigraphies
         context['objects'] = objects
         context['artefacts'] = artefactsList

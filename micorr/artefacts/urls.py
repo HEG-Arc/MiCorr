@@ -15,8 +15,7 @@ urlpatterns = [
        name='artefact-delete'),
 
     url(r'^create/$', login_required(artefacts_views.ObjectCreateView.as_view()), name='object-create'),
-    url(r'^(?P<pk>\d+)/createArtefact/$', login_required(artefacts_views.ArtefactsCreateView.as_view()),
-        name='artefact-create'),
+
 
     url(r'^add/author/?$', artefacts_views.newAuthor),
     url(r'^add/type/?$', artefacts_views.newType),
@@ -78,5 +77,7 @@ urlpatterns = [
     url(r'^collaboration/(?P<pk>\d+)/delete/(?P<token_id>\d+)/(?P<parent_id>\d+)/(?P<child_id>\d+)/$', login_required(artefacts_views.CommentDeleteView.as_view()), name='delete-comment'),
 
     url(r'^publication/$', login_required(artefacts_views.PublicationListView.as_view()), name='publication-menu'),
+    url(r'^publication/create/(?P<pk>\d+)/$', login_required(artefacts_views.PublicationCreateView.as_view()), name='publication-create'),
+    url(r'^publication/artefact/(?P<pk>\d+)/$', artefacts_views.PublicationArtefactDetailView.as_view(), name='publication-artefact-detail'),
     # url(r'^test-ontology/$', displayOntology),
 ]

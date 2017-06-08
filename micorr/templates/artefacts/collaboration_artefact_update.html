@@ -1495,14 +1495,6 @@
                 }
             });
         }
-        function saveComment(pk, field) {
-            $.ajax({
-                url: "/artefacts/" + pk + "/collaboration/comment/" + field + "/",
-                success: function (data) {
-                    $('#image_section_' + pk).html(data);
-                }
-            });
-        }
     </script>
 
 {% endblock custom_bottom_script %}

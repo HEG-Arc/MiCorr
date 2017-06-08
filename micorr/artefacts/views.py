@@ -17,7 +17,9 @@ from django.conf import settings
 from django.contrib import messages
 
 from contacts.forms import ContactCreateForm
+from contacts.models import Contact
 from stratigraphies.neo4jdao import Neo4jDAO
+from users.models import User
 
 from .forms import ArtefactsUpdateForm, ArtefactsCreateForm, DocumentUpdateForm, DocumentCreateForm, ArtefactFilter,\
     OriginCreateForm, ChronologyCreateForm, AlloyCreateForm, TechnologyCreateForm, EnvironmentCreateForm, \
@@ -243,19 +245,39 @@ class ArtefactsDeleteView(generic.DeleteView):
     def get_success_url(self):
         return reverse('users:detail', kwargs={'username': self.request.user})
 
-class ArtefactsCreateView(generic.CreateView):
-    """
+class ObjectCreateView(generic.CreateView):
+    model = Object
+    template_name_suffix = '_create_form'
+    form_class = ObjectCreateForm
+
+    def form_valid(self, form):
+        user = self.request.user
+        form.instance.user = user
+        newObject = form.save()
+        newArtefact = Artefact()
+        newArtefact.object = newObject
+        newArtefact.save()
+        form.save()
+        return super(ObjectCreateView, self).form_valid(form)
+
+    def get_success_url(self):
+        object=get_object_or_404(Object, pk=self.object.id)
+        artefact=get_object_or_404(Artefact, object_id=object.id)
+        return reverse('artefacts:artefact-update', kwargs={'pk': artefact.id})
+
+"""class ArtefactsCreateView(generic.CreateView):
+
     A view which allows the user to create an artefact
     When the artefact is created, it redirects the user to the artefact list
-    """
+
     model = Artefact
     template_name_suffix = '_create_form'
     form_class = ArtefactsCreateForm
 
     def get_context_data(self, **kwargs):
-        """
+
         Allows the template to use the selected object
-        """
+
         context = super(ArtefactsCreateView, self).get_context_data(**kwargs)
         object = get_object_or_404(Object, pk=self.kwargs['pk'])
         context['object'] = object
@@ -266,7 +288,7 @@ class ArtefactsCreateView(generic.CreateView):
         return super(ArtefactsCreateView, self).form_valid(form)
 
     def get_success_url(self):
-        return reverse('artefacts:artefact-update', kwargs={'pk': self.object.id})
+        return reverse('artefacts:artefact-update', kwargs={'pk': self.object.id})"""
 
 @login_required
 def newAuthor(request):
@@ -690,19 +712,6 @@ class DocumentCreateView(generic.CreateView):
 
     def get_success_url(self):
         return reverse('artefacts:artefact-detail', kwargs={'pk': self.kwargs.get('artefact_id', None)}, )
-
-class ObjectCreateView(generic.CreateView):
-    model = Object
-    template_name_suffix = '_create_form'
-    form_class = ObjectCreateForm
-
-    def form_valid(self, form):
-        user = self.request.user
-        form.instance.user = user
-        return super(ObjectCreateView, self).form_valid(form)
-
-    def get_success_url(self):
-        return reverse('artefacts:artefact-create', kwargs={'pk': self.object.id})
 
 class CollaborationListView(generic.ListView):
     model = Token
@@ -1495,7 +1504,7 @@ class PublicationListView(generic.ListView):
             objects = user.object_set.all().order_by('name')
 
             for object in objects :
-                artefacts = object.artefact_set.all().order_by('modified')
+                artefacts = object.artefact_set.all().order_by('-modified')
                 for artefact in artefacts :
                     if artefact.published :
                         artefactsPublished.append(artefact)
@@ -1506,5 +1515,112 @@ class PublicationListView(generic.ListView):
         context['artefactsPublished'] = artefactsPublished
         context['artefactsHistory'] = artefactsHistory
         context['user'] = user
-        context['objects'] = artefactsPublished
         return context
+
+class PublicationArtefactDetailView(generic.DetailView):
+
+    model = Artefact
+    template_name_suffix = '_publication_detail'
+
+    queryset = Artefact.objects.select_related('alloy', 'type', 'origin', 'recovering_date', 'chronology_period',
+                                               'environment', 'location', 'owner', 'technology', 'sample_location',
+                                               'responsible_institution', 'microstructure', 'corrosion_form', 'corrosion_type')
+
+    def get_context_data(self, **kwargs):
+        """
+        Allows the template to use the selected artefact as well as its foreign keys pointers
+        """
+        context = super(PublicationArtefactDetailView, self).get_context_data(**kwargs)
+        artefact = get_object_or_404(Artefact, pk=self.kwargs['pk'])
+        sections = artefact.section_set.all()
+        documents = artefact.document_set.all()
+        stratigraphies = artefact.stratigraphy_set.all()
+        context['artefact'] = artefact
+        context['sections'] = sections
+        context['documents'] = documents
+        context['stratigraphies'] = stratigraphies
+        context['node_base_url'] = settings.NODE_BASE_URL
+        return context
+
+def get_app(app_label) :
+    try:
+        from django.apps import apps
+    except ImportError:
+        from django.db import models
+        return models.get_app(app_label)
+    else:
+        return apps.get_app_config(app_label).models_module
+
+class PublicationCreateView(generic.CreateView):
+    model = Artefact
+    template_name_suffix = '_publication_create'
+    form_class = ArtefactsCreateForm
+
+    def get_context_data(self, **kwargs):
+
+        artefact = get_object_or_404(Artefact, pk=self.kwargs['pk'])
+        sections = artefact.section_set.all()
+        documents = artefact.document_set.all()
+        stratigraphies = artefact.stratigraphy_set.all()
+        user = self.request.user
+
+        context = super(PublicationCreateView, self).get_context_data(**kwargs)
+
+        context['artefact'] = artefact
+        context['sections'] = sections
+        context['documents'] = documents
+        context['stratigraphies'] = stratigraphies
+        context['user'] = user
+        context['node_base_url'] = settings.NODE_BASE_URL
+
+        return context
+
+    def form_valid(self, form):
+        artefact = Artefact.objects.get(pk=self.kwargs['pk'])
+        artefact.parent_id = artefact.id
+        artefact.pk = None
+        form.instance = artefact
+        form.save()
+        return super(PublicationCreateView, self).form_valid(form)
+
+    def get_success_url(self):
+        artefact = get_object_or_404(Artefact, pk=self.kwargs['pk'])
+        sections = artefact.section_set.all()
+        documents = artefact.document_set.all()
+        stratigraphies = artefact.stratigraphy_set.all()
+        #authors = artefact.contact_set.all()
+        childArtefacts = Artefact.objects.filter(parent_id=artefact.id).order_by('-modified')
+        newArtefact = childArtefacts[0]
+
+        """for section in sections :
+            images = section.image_set.all()
+            section.pk = None
+            section.artefact = newArtefact
+            section.save()
+            for image in images :
+                image.pk = None
+                image.section = section
+                image.save()"""
+
+        """for author in authors :
+            author.pk = None
+            author.artefact = newArtefact
+            author.save()"""
+
+        """for document in documents :
+            document.pk = None
+            document.artefact = newArtefact
+            document.save()
+
+        for stratigraphie in stratigraphies :
+            stratigraphie.pk = None
+            stratigraphie.artefact = newArtefact
+            stratigraphie.save()"""
+
+        mainAdmin = User.objects.get(pk=2)
+
+        publication = Publication(artefact=newArtefact, user=mainAdmin)
+        publication.save()
+
+
+        return reverse('users:detail', kwargs={'username': self.request.user})

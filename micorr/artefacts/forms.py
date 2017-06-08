@@ -5,7 +5,8 @@ from django.template.loader import render_to_string
 from contacts.models import Contact
 
 from .models import Artefact, Document, Metal, CorrosionForm, CorrosionType, Environment, Object, Origin, ChronologyPeriod, \
-    Alloy, Technology, Microstructure, RecoveringDate, Image, Type, Stratigraphy, Token, Collaboration_comment
+    Alloy, Technology, Microstructure, RecoveringDate, Image, Type, Stratigraphy, Token, Collaboration_comment, \
+    Publication
 from cities_light.models import Country
 from tinymce.widgets import TinyMCE
 import django_filters
@@ -293,3 +294,9 @@ class TokenHideForm(forms.ModelForm):
     class Meta:
         model = Token
         fields=['comment']
+
+class PublicationForm(forms.ModelForm):
+
+    class Meta:
+        model = Publication
+        exclude=[]
