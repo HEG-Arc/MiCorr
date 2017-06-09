@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+
+{% block title %}<title>MiCorr | {{ user.username }} Publication</title>{% endblock %}
+
+{% block content %}
+    <div class="container">
+
+        <div class="row">
+            <div class="col-sm-12">
+
+                <h2>{{ user.username|capfirst }}</h2>
+                <h3>Administration
+                    {% if isAdmin %}
+                        <div class="pull-right" style="margin-top: 0px">
+                            <a href="#" class="btn btn-primary btn-md"><i class="fa fa-wrench"></i>&nbsp;&nbsp;Administration</a>
+                        </div>
+                    {% endif %}
+                </h3>
+                <br>
+            </div>
+        </div>
+
+        {% if user == request.user %}
+
+            <div class="row">
+                <div class="col-sm-12 ">
+                    {% if adminType == 'Main' %}
+                        <div class="panel-group">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <span class="glyphicon glyphicon-plus"></span>
+                                        <a data-toggle="collapse" href="#requestsforpublications">Requests for publications</a>
+                                    </h4>
+                                </div>
+                                <div id="requestsforpublications" class="panel-collapse collapse">
+                                    {% if artefactsPublished %}
+                                        <table class="table table-bordered table-striped table-hover">
+                                            <tr>
+                                                <th>Date of the request</th>
+                                                <th>Artefact</th>
+                                                <th>Artefact author</th>
+                                                <th>Action</th>
+                                            </tr>
+                                            {% for request in requestsPub %}
+                                                <tr>
+                                                    <td>{{ request.created }}</td>
+                                                    <td>{{ request.artefact.object.name }}</td>
+                                                    <td>{{ request.artefact.object.user.username }}</td>
+                                                    <td><a href="#" target="_blank"><i class="fa fa-eye"></i></a></td>
+                                                </tr>
+                                            {% endfor %}
+                                        </table>
+                                    {% else %}
+                                        There is no request for publications.
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel-group">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <span class="glyphicon glyphicon-plus"></span>
+                                        <a data-toggle="collapse" href="#delegatedrequeststoconfirm">Delegated requests to confirm</a>
+                                    </h4>
+                                </div>
+                                <div id="delegatedrequeststoconfirm" class="panel-collapse collapse">
+                                    {% if delegPubConfirm %}
+                                        <table class="table table-bordered table-striped table-hover">
+                                            <tr>
+                                                <th>Date of the request</th>
+                                                <th>Artefact</th>
+                                                <th>Decision of the delegated administrator</th>
+                                                <th>Action</th>
+                                            </tr>
+                                            {% for delegPubConf in delegPubConfirm %}
+                                                <tr>
+                                                    <td>{{ delegPubConf.created }}</td>
+                                                    <td>{{ delegPubConf.artefact.object.name }}</td>
+                                                    {% if delegPubConf.decision_delegated_user == True %}
+                                                        <td><i class="fa fa-check" style="color: green"></i></td>
+                                                    {% else %}
+                                                        <td><i class="fa fa-times" style="color: red"></i></td>
+                                                    {% endif %}
+                                                    <td><a href="#" target="_blank"><i class="fa fa-eye"></i></a></td>
+                                                </tr>
+                                            {% endfor %}
+                                        </table>
+                                    {% else %}
+                                        There is no delegated request to confirm.
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel-group">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <span class="glyphicon glyphicon-plus"></span>
+                                        <a data-toggle="collapse" href="#delegatedrequestsinprogress">Delegated requests in progress</a>
+                                    </h4>
+                                </div>
+                                <div id="delegatedrequestsinprogress" class="panel-collapse collapse">
+                                    {% if delegPubProgress %}
+                                        <table class="table table-bordered table-striped table-hover">
+                                            <tr>
+                                                <th>Date of the request</th>
+                                                <th>Artefact</th>
+                                                <th>Delegated administrator</th>
+                                                <th>Action</th>
+                                            </tr>
+                                            {% for delegPubProg in delegPubProgress %}
+                                                <tr>
+                                                    <td>{{ delegPubProg.created }}</td>
+                                                    <td>{{ delegPubProg.artefact.object.name }}</td>
+                                                    <td>{{ delegPubProg.delegated_user.username }}</td>
+                                                    <td><a href="#"><i class="fa fa-eye"></i></a></td>
+                                                </tr>
+                                            {% endfor %}
+                                        </table>
+                                    {% else %}
+                                        There is no delegated requests in progress.
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% else %}
+
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+{% endblock content %}
+
+{% block custom_bottom_script %}
+    <script type="text/javascript">
+        $('.collapse').on('shown.bs.collapse', function(){
+            $(this).parent().find(".glyphicon-plus").removeClass("glyphicon-plus").addClass("glyphicon-minus");
+            }).on('hidden.bs.collapse', function(){
+            $(this).parent().find(".glyphicon-minus").removeClass("glyphicon-minus").addClass("glyphicon-plus");
+        });
+    </script>
+{% endblock %}

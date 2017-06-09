@@ -9,7 +9,13 @@
             <div class="col-sm-12">
 
                 <h2>{{ user.username|capfirst }}</h2>
-                <h3>Publications</h3>
+                <h3>Publications
+                    {% if isAdmin %}
+                        <div class="pull-right" style="margin-top: 0px">
+                            <a href="#" class="btn btn-primary btn-md"><i class="fa fa-wrench"></i>&nbsp;&nbsp;Administration</a>
+                        </div>
+                    {% endif %}
+                </h3>
                 <br>
             </div>
         </div>
@@ -48,7 +54,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="panel-group">
                         <div class="panel panel-default">
                             <div class="panel-heading">
@@ -69,7 +74,7 @@
                                             <tr>
                                                 <td>{{ publi.modified }}</td>
                                                 <td>{{ publi.artefact.object.name }}</td>
-                                                <td><a href="#"><i class="fa fa-eye"></i></a></td>
+                                                <td><a href="{% url 'artefacts:publication-artefact-detail' pk=publi.artefact.id %}" target="_blank"><i class="fa fa-eye"></i></a></td>
                                             </tr>
                                         {% endfor %}
                                     </table>
@@ -79,7 +84,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="panel-group">
                         <div class="panel panel-default">
                             <div class="panel-heading">
@@ -104,11 +108,11 @@
                                                 <td>{{ pubHist.artefact.object.name }}</td>
                                                 <td>{{ pubHist.comment_to_user }}</td>
                                                 {% if publiHist.artefact.validated %}
-                                                    <i class="fa fa-check" style="color: green"></i>
+                                                    <td><i class="fa fa-check" style="color: green"></i></td>
                                                 {% else %}
-                                                    <i class="fa fa-times" style="color: red"></i>
+                                                    <td><i class="fa fa-times" style="color: red"></i></td>
                                                 {% endif %}
-                                                <td><a href="#"><i class="fa fa-eye"></i></a></td>
+                                                <td><a href="{% url 'artefacts:publication-artefact-detail' pk=pubHist.artefact.id %}"><i class="fa fa-eye"></i></a></td>
                                             </tr>
                                         {% endfor %}
                                     </table>

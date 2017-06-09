@@ -17,7 +17,6 @@ from django.conf import settings
 from django.contrib import messages
 
 from contacts.forms import ContactCreateForm
-from contacts.models import Contact
 from stratigraphies.neo4jdao import Neo4jDAO
 from users.models import User
 
@@ -1485,6 +1484,7 @@ class PublicationListView(generic.ListView):
         # Call the base implementation first to get a context
         context = super(PublicationListView, self).get_context_data(**kwargs)
         user = self.request.user
+        isAdmin = False
         publicationsUser = []
         artefactsHistory = []
         try :
@@ -1511,6 +1511,15 @@ class PublicationListView(generic.ListView):
         except:
             pass
 
+        try :
+            groups = user.groups.all()
+            for group in groups :
+                if group.name == 'Main administrator' or group.name == 'Delegated administrator':
+                    isAdmin = True
+        except:
+            pass
+
+        context['isAdmin'] = isAdmin
         context['publications'] = publicationsUser
         context['artefactsPublished'] = artefactsPublished
         context['artefactsHistory'] = artefactsHistory
@@ -1535,6 +1544,7 @@ class PublicationArtefactDetailView(generic.DetailView):
         sections = artefact.section_set.all()
         documents = artefact.document_set.all()
         stratigraphies = artefact.stratigraphy_set.all()
+
         context['artefact'] = artefact
         context['sections'] = sections
         context['documents'] = documents
@@ -1588,11 +1598,12 @@ class PublicationCreateView(generic.CreateView):
         sections = artefact.section_set.all()
         documents = artefact.document_set.all()
         stratigraphies = artefact.stratigraphy_set.all()
-        #authors = artefact.contact_set.all()
+        authors = artefact.author.all()
+        metX = artefact.metalx.all()
         childArtefacts = Artefact.objects.filter(parent_id=artefact.id).order_by('-modified')
         newArtefact = childArtefacts[0]
 
-        """for section in sections :
+        for section in sections :
             images = section.image_set.all()
             section.pk = None
             section.artefact = newArtefact
@@ -1600,14 +1611,15 @@ class PublicationCreateView(generic.CreateView):
             for image in images :
                 image.pk = None
                 image.section = section
-                image.save()"""
+                image.save()
 
-        """for author in authors :
-            author.pk = None
-            author.artefact = newArtefact
-            author.save()"""
+        for auth in authors :
+            newArtefact.author.add(auth)
 
-        """for document in documents :
+        for met in metX :
+            newArtefact.metalx.add(met)
+
+        for document in documents :
             document.pk = None
             document.artefact = newArtefact
             document.save()
@@ -1615,12 +1627,67 @@ class PublicationCreateView(generic.CreateView):
         for stratigraphie in stratigraphies :
             stratigraphie.pk = None
             stratigraphie.artefact = newArtefact
-            stratigraphie.save()"""
+            stratigraphie.save()
 
-        mainAdmin = User.objects.get(pk=2)
+        mainAdmins = []
+        users = User.objects.all()
+
+        for user in users :
+            groups = user.groups.all()
+            for group in groups :
+                if group.name=='Main administrator' :
+                    mainAdmins.append(user)
+
+        mainAdmin = mainAdmins[0]
 
         publication = Publication(artefact=newArtefact, user=mainAdmin)
         publication.save()
 
-
         return reverse('users:detail', kwargs={'username': self.request.user})
+
+class AdministrationListView(generic.ListView):
+    model = Publication
+
+    template_name = 'administration_menu'
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super(AdministrationListView, self).get_context_data(**kwargs)
+        user = self.request.user
+        adminType = 'Delegated'
+        publications = None
+
+        groups = user.groups.all()
+        for group in groups :
+            if group.name == 'Main administrator' :
+                adminType = 'Main'
+
+        if adminType == 'Main' :
+            try :
+                requestsPub = Publication.objects.filter(delegated_user=None, decision_taken=False)
+                context['requestsPub'] = requestsPub
+            except:
+                context['requestsPub'] = None
+
+            try:
+                delegPubConfirm = Publication.objects.filter(decision_taken=False).exclude(decision_delegated_user=None)
+                context['delegPubConfirm'] = delegPubConfirm
+            except:
+                context['delegPubConfirm'] = None
+
+            try :
+                delegPubProgress = Publication.objects.filter(decision_taken=False, decision_delegated_user=None).exclude(delegated_user=None)
+                context['delegPubProgress'] = delegPubProgress
+            except:
+                context['delegPubProgress'] = None
+
+        else :
+            try:
+                delegPub = Publication.objects.filter(decision_delegated_user=None, delegated_user=user)
+                context['delegPub'] = delegPub
+            except:
+                context['delegPub'] = None
+
+        context['adminType'] = adminType
+        context['user'] = user
+        return context

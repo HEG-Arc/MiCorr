@@ -31,11 +31,29 @@
                     <a class="btn btn-success" href="{% url 'artefacts:searchStratigraphy' %}"><i class="fa fa-align-justify"></i> Create new stratigraphy</a>
                     <a class="btn btn-success" href="{% url 'artefacts:object-create' %}"><i class="fa fa-pencil"></i> Create new artefact</a>
                 </div>
-                <div class="col-sm-6">
+                <div class="col-sm-3">
                     <div class="pull-right">
                          <a class="btn btn-success" href="{% url 'artefacts:publication-menu' %}"><i class="fa fa-file-text"></i> Publication</a>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="pull-right">
                         <a class="btn btn-success" href="{% url 'artefacts:collaboration_menu' %}"><i class="fa fa-users"></i> Collaboration</a>
                     </div>
+                    {% if newComments != 0 %}
+                        <br><br>
+                        <div class="pull-right">
+                           {% if newComments == 1 %}
+                               <div class="notifComm">
+                                   <b style="color: #E30000">{{ newComments }}</b> new comment
+                               </div>
+                           {% else %}
+                               <div class="notifComm">
+                                   <b style="color: #E30000">{{ newComments }}</b> new comments
+                               </div>
+                           {% endif %}
+                        </div>
+                    {% endif %}
                 </div>
             </div>
             <br>

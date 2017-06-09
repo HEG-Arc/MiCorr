@@ -50,7 +50,7 @@
         Send a request of publication for this artefact will allow the main administrator of Micorr to visualize it and take a decision.
         If the request is accepted, the current version of this artefact will be published and visitors will be able to see it.
         <br><br>
-        The publication menu of your profile allow you to see informations about your publications and requests.
+        The publication menu of your profile allow you to see informations about your publications and requests.<br>
         <br><br>
         <div class="pull-right">
             <form action="{% url 'artefacts:publication-create' pk=artefact.id %}" method="post">{% csrf_token %}

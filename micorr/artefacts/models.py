@@ -503,6 +503,7 @@ class Publication(TimeStampedModel) :
     comment_to_user=models.TextField(blank=True, null=True, help_text='A comment send to the user from the analyzer of the artefact')
     comment_delegation=models.TextField(blank=True, null=True, help_text='A comment from the main administrator to the delegated administrator')
     decision_taken=models.BooleanField(default=False)
+    decision_delegated_user = models.NullBooleanField(default=None, blank=True, null=True)
 
     # Foreign keys
     user = models.ForeignKey(User, related_name='main_user', blank=True, help_text='User analyzing the artefact')
