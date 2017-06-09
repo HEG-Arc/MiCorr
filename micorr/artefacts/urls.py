@@ -15,8 +15,7 @@ urlpatterns = [
        name='artefact-delete'),
 
     url(r'^create/$', login_required(artefacts_views.ObjectCreateView.as_view()), name='object-create'),
-    url(r'^(?P<pk>\d+)/createArtefact/$', login_required(artefacts_views.ArtefactsCreateView.as_view()),
-        name='artefact-create'),
+
 
     url(r'^add/author/?$', artefacts_views.newAuthor),
     url(r'^add/type/?$', artefacts_views.newType),
@@ -65,9 +64,21 @@ urlpatterns = [
         login_required(artefacts_views.TokenDeleteView.as_view()), name='delete_token'),
 
     url(r'^collaboration/$', login_required(artefacts_views.CollaborationListView.as_view()), name='collaboration_menu'),
+    url(r'^collaboration/deleted/$', login_required(artefacts_views.CollaborationDeletedListView.as_view()), name='collaboration_deleted_menu'),
     url(r'^(?P<token_id>\d+)/collaboration/update/$', login_required(artefacts_views.CollaborationUpdateView.as_view()), name='collaboration-update'),
     url(r'^(?P<pk>\d+)/collaboration/comment/(?P<field>\w+)/$', login_required(artefacts_views.CollaborationCommentView.as_view()), name='collaboration-comment'),
+    url(r'^(?P<pk>\d+)/collaboration/hide/$', login_required(artefacts_views.CollaborationHideView.as_view()), name='collaboration-hide'),
+    url(r'^(?P<token_id>\d+)/collaboration/retrieve/$', login_required(artefacts_views.retrieveDeletedCollaboration), name='collaboration-retrieve'),
 
-    url(r'^(?P<artefact_id>\d+)/collaboration/comment/(?P<comment_id>\d+)/$', login_required(artefacts_views.deleteComment), name='delete-comment'),
+    url(r'^(?P<token_id>\d+)/collaboration/send/$', login_required(artefacts_views.sendComments), name='send-comments'),
+    url(r'^(?P<pk>\d+)/collaboration/read/$', login_required(artefacts_views.CommentReadView.as_view()), name='read-comments'),
+    url(r'^collaboration/(?P<pk>\d+)/delete/(?P<token_id>\d+)/$', login_required(artefacts_views.CommentDeleteView.as_view()), name='delete-comment-without-relation'),
+    url(r'^collaboration/(?P<pk>\d+)/delete/(?P<token_id>\d+)/(?P<child_id>\d+)/$', login_required(artefacts_views.CommentDeleteView.as_view()), name='delete-comment-without-parent'),
+    url(r'^collaboration/(?P<pk>\d+)/delete/(?P<token_id>\d+)/(?P<parent_id>\d+)/(?P<child_id>\d+)/$', login_required(artefacts_views.CommentDeleteView.as_view()), name='delete-comment'),
+
+    url(r'^publication/$', login_required(artefacts_views.PublicationListView.as_view()), name='publication-menu'),
+    url(r'^publication/create/(?P<pk>\d+)/$', login_required(artefacts_views.PublicationCreateView.as_view()), name='publication-create'),
+    url(r'^publication/artefact/(?P<pk>\d+)/$', artefacts_views.PublicationArtefactDetailView.as_view(), name='publication-artefact-detail'),
+    url(r'^publication/administration/$', artefacts_views.AdministrationListView.as_view(), name='publication-administration-menu'),
     # url(r'^test-ontology/$', displayOntology),
 ]

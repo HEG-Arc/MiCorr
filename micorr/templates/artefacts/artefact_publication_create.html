@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% load terms %}
+
+    {% block title %}
+        <title>MiCorr | {{ artefact.artefact_verbose_description_short }}</title>
+    {% endblock title %}
+
+      {% block sidemenu %}
+      <div class="c3" id="sidemenu"> <!-- no-active-hilight : do not highlight the "active" node of the menu. It is difficult for the affix to work when elements in the page are close one to the other (i.e. folded elements), therefore, it is less confusing to NOT hilight the .active nodes of the menu -->
+          <div class="sidemenu-container">
+              <ul class="nav smooth-scroll"> <!-- smooth-scroll to the element in the page instead of jumping -->
+                  <li><a href="#title1">{{ sections.0.title }}</a></li>
+                  <li>
+                      <a href="#title2">{{ sections.1.title }}</a>
+                      <ul class="nav subnav">
+                          <li><a href="#title21">{{ sections.2.title }}</a></li>
+                          <li><a href="#title22">{{ sections.3.title }}</a></li>
+                      </ul>
+                  </li>
+                  <li><a href="#title3">{{ sections.4.title }}</a></li>
+                  <li>
+                       <a href="#title4">{{ sections.5.title }}</a>
+                       <ul class="nav subnav"> <!-- subnav indicates that we will unfold the parent before jumping to a child to make sure that the element is visible -->
+                          <li><a href="#title41">{{ sections.6.title }}</a></li>
+                          <li><a href="#title42">{{ sections.7.title }}</a></li>
+                       </ul>
+                  </li>
+                  <li><a href="#title5">{{ sections.8.title }}</a></li>
+                  <li><a href="#title6">{{ sections.9.title }}</a></li>
+                  <li><a href="#title7">{{ sections.10.title }}</a></li>
+              </ul>
+          </div>
+      </div>
+      {% endblock sidemenu %}
+
+      {% block content %}
+
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+      <h1>{{ artefact.artefact_verbose_description_short }}</h1>
+      <div class="row">
+        <hr>
+        <h2>Informations about the publication requests</h2>
+        Send a request of publication for this artefact will allow the main administrator of Micorr to visualize it and take a decision.
+        If the request is accepted, the current version of this artefact will be published and visitors will be able to see it.
+        <br><br>
+        The publication menu of your profile allow you to see informations about your publications and requests.<br>
+        <br><br>
+        <div class="pull-right">
+            <form action="{% url 'artefacts:publication-create' pk=artefact.id %}" method="post">{% csrf_token %}
+                <button class="btn btn-primary btn-lg" type="submit"><i class="fa fa-paper-plane"></i>&nbsp;&nbsp;Send for publication</button>
+            </form>
+        </div>
+        <br><br>
+        <hr>
+        <h2>Visualization of your artefact</h2>
+        <br>
+      </div>
+      {% include "./artefact_detail_body.html" %}
+
+      {% endblock content %}

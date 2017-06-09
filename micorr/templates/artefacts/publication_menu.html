@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+
+{% block title %}<title>MiCorr | {{ user.username }} Publication</title>{% endblock %}
+
+{% block content %}
+    <div class="container">
+
+        <div class="row">
+            <div class="col-sm-12">
+
+                <h2>{{ user.username|capfirst }}</h2>
+                <h3>Publications
+                    {% if isAdmin %}
+                        <div class="pull-right" style="margin-top: 0px">
+                            <a href="#" class="btn btn-primary btn-md"><i class="fa fa-wrench"></i>&nbsp;&nbsp;Administration</a>
+                        </div>
+                    {% endif %}
+                </h3>
+                <br>
+            </div>
+        </div>
+
+        {% if user == request.user %}
+
+            <div class="row">
+                <div class="col-sm-12 ">
+                    <div class="panel-group">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <span class="glyphicon glyphicon-plus"></span>
+                                    <a data-toggle="collapse" href="#mypublications">My publicated artefacts</a>
+                                </h4>
+                            </div>
+                            <div id="mypublications" class="panel-collapse collapse">
+                                {% if artefactsPublished %}
+                                    <table class="table table-bordered table-striped table-hover">
+                                        <tr>
+                                            <th>Publication date</th>
+                                            <th>Artefact</th>
+                                            <th>Action</th>
+                                        </tr>
+                                        {% for artPub in artefactsPublished %}
+                                            <tr>
+                                                <td>{{ artPub.created }}</td>
+                                                <td>{{ artPub.object.name }}</td>
+                                                <td><a href="{% url 'artefacts:publication-artefact-detail' pk=artPub.id %}" target="_blank"><i class="fa fa-eye"></i></a></td>
+                                            </tr>
+                                        {% endfor %}
+                                    </table>
+                                {% else %}
+                                    There is no publicated artefact.
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-group">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <span class="glyphicon glyphicon-plus"></span>
+                                    <a data-toggle="collapse" href="#myrequestsforpublications">Current requests for publications</a>
+                                </h4>
+                            </div>
+                            <div id="myrequestsforpublications" class="panel-collapse collapse">
+                                {% if publications %}
+                                    <table class="table table-bordered table-striped table-hover">
+                                        <tr>
+                                            <th>Request date</th>
+                                            <th>Artefact</th>
+                                            <th>Action</th>
+                                        </tr>
+                                        {% for publi in publications %}
+                                            <tr>
+                                                <td>{{ publi.modified }}</td>
+                                                <td>{{ publi.artefact.object.name }}</td>
+                                                <td><a href="{% url 'artefacts:publication-artefact-detail' pk=publi.artefact.id %}" target="_blank"><i class="fa fa-eye"></i></a></td>
+                                            </tr>
+                                        {% endfor %}
+                                    </table>
+                                {% else %}
+                                    There is no current request for publication.
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-group">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <span class="glyphicon glyphicon-plus"></span>
+                                    <a data-toggle="collapse" href="#decisionsformypublications">Decisions for publications</a>
+                                </h4>
+                            </div>
+                            <div id="decisionsformypublications" class="panel-collapse collapse">
+                                {% if artefactsHistory %}
+                                    <table class="table table-bordered table-striped table-hover">
+                                        <tr>
+                                            <th>Decision date</th>
+                                            <th>Artefact</th>
+                                            <th>Comment</th>
+                                            <th>Decision</th>
+                                            <th>Action</th>
+                                        </tr>
+                                        {% for pubHist in artefactsHistory %}
+                                            <tr>
+                                                <td>{{ pubHist.modified }}</td>
+                                                <td>{{ pubHist.artefact.object.name }}</td>
+                                                <td>{{ pubHist.comment_to_user }}</td>
+                                                {% if publiHist.artefact.validated %}
+                                                    <td><i class="fa fa-check" style="color: green"></i></td>
+                                                {% else %}
+                                                    <td><i class="fa fa-times" style="color: red"></i></td>
+                                                {% endif %}
+                                                <td><a href="{% url 'artefacts:publication-artefact-detail' pk=pubHist.artefact.id %}"><i class="fa fa-eye"></i></a></td>
+                                            </tr>
+                                        {% endfor %}
+                                    </table>
+                                {% else %}
+                                    There is no decision about your publications.
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+{% endblock content %}
+
+{% block custom_bottom_script %}
+    <script type="text/javascript">
+        $('.collapse').on('shown.bs.collapse', function(){
+            $(this).parent().find(".glyphicon-plus").removeClass("glyphicon-plus").addClass("glyphicon-minus");
+            }).on('hidden.bs.collapse', function(){
+            $(this).parent().find(".glyphicon-minus").removeClass("glyphicon-minus").addClass("glyphicon-plus");
+        });
+    </script>
+{% endblock %}

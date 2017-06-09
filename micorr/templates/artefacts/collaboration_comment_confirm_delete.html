@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container">
+
+    <div class="row">
+        <h2>Delete comment </h2>
+        <br/>
+        <p>Are you sure you want to delete this comment ?</p>
+        <br>
+        <b>Comment :</b>
+        <br>
+        <i>{{ comment.comment|safe }}</i>
+    </div>
+    <br><br>
+
+    <div class="row">
+        <div class="col-xs-3 col-xs-offset-6">
+            <div class="pull-right">
+                {% if child_id != 0 %}
+                    {% if parent_id != 0 %}
+                        <form action="{% url 'artefacts:delete-comment' token_id=token.id pk=comment.id parent_id=parent_id child_id=child_id %}" method="POST">{% csrf_token %}
+                            <button type="submit" class="btn btn-md btn-danger">Delete</button>
+                        </form>
+                    {% else %}
+                        <form action="{% url 'artefacts:delete-comment-without-parent' token_id=token.id pk=comment.id child_id=child_id %}" method="POST">{% csrf_token %}
+                            <button type="submit" class="btn btn-md btn-danger">Delete</button>
+                        </form>
+                    {% endif %}
+                {% else %}
+                    <form action="{% url 'artefacts:delete-comment-without-relation' token_id=token.id pk=comment.id %}" method="POST">{% csrf_token %}
+                        <button type="submit" class="btn btn-md btn-danger">Delete</button>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-xs-1">
+            <div class="pull-right">
+                <a href="{% url 'artefacts:collaboration-comment' pk=token.id field='none' %}"><button type="button" class="btn btn-md btn-primary">Cancel</button></a>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

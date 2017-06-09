@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block title %}<title>MiCorr | {{ user.username }} Deleted collaboration</title>{% endblock %}
+
+{% block content %}
+    <div class="container">
+
+        <div class="row">
+            <div class="col-sm-12">
+
+                <h2>{{ user.username|capfirst }}</h2>
+                <h3>Deleted collaborations</h3>
+                <br>
+            </div>
+        </div>
+
+        {% if user == request.user %}
+
+            <div class="row">
+                <div class="col-sm-12 ">
+                    <div class="panel-group">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <span class="glyphicon glyphicon-plus"></span>
+                                    <a data-toggle="collapse" href="#artefacts_shared">Deleted artefacts shared with contributors</a>
+                                </h4>
+                            </div>
+                            <div id="artefacts_shared" class="panel-collapse collapse">
+                                {% if tokens_shared_by_me %}
+                                    <table class="table table-bordered table-striped table-hover">
+                                        <tr>
+                                            <th>Last modification</th>
+                                            <th>Object</th>
+                                            <th>Shared with</th>
+                                            <th>Action</th>
+                                        </tr>
+                                        {% for tokenSha in tokens_shared_by_me %}
+                                            <tr>
+                                                <td>{{ tokenSha.modified }}</td>
+                                                <td>{{ tokenSha.artefact.object.name }}</td>
+                                                <td>{{ tokenSha.recipient }}</td>
+                                                <td>
+                                                    <center><a href="{% url 'artefacts:collaboration-retrieve' token_id=tokenSha.id %}" onclick="return confirm('Are you sure you want to retrieve this collaboration ? It will appear in your collaboration menu again')" title="Retrieve collaboration"><i class="fa fa-reply"></i></a></center>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </table>
+                                {% else %}
+                                    There is no shared artefact deleted
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel-group">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <span class="glyphicon glyphicon-plus"></span>
+                                    <a data-toggle="collapse" href="#artefacts_received">Deleted artefacts shared with me</a>
+                                </h4>
+                            </div>
+                            <div id="artefacts_received" class="panel-collapse collapse">
+                                {% if tokens_shared_with_me %}
+                                    <table class="table table-bordered table-striped table-hover">
+                                        <tr>
+                                            <th>Last modification date</th>
+                                            <th>Object</th>
+                                            <th>Author (username)</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                        {% for tokenRec in tokens_shared_with_me %}
+                                            <tr>
+                                                <td>{{ tokenRec.modified }}</td>
+                                                <td>{{ tokenRec.artefact.object.name }}</td>
+                                                <td>{{ tokenRec.user.username }}</td>
+                                                <td>
+                                                    <center><a href="{% url 'artefacts:collaboration-retrieve' token_id=tokenRec.id %}" onclick="return confirm('Are you sure you want to retrieve this collaboration ? It will appear in your collaboration menu again')" title="Retrieve collaboration"><i class="fa fa-reply"></i></a></center>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </table>
+                                {% else %}
+                                    There is no received artefact deleted
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                        <a href="{% url 'artefacts:collaboration_menu' %}" class="btn btn-primary btn-md"> Return to collaboration menu</a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+{% endblock content %}
+
+{% block custom_bottom_script %}
+    <script type="text/javascript">
+        $('.collapse').on('shown.bs.collapse', function(){
+            $(this).parent().find(".glyphicon-plus").removeClass("glyphicon-plus").addClass("glyphicon-minus");
+            }).on('hidden.bs.collapse', function(){
+            $(this).parent().find(".glyphicon-minus").removeClass("glyphicon-minus").addClass("glyphicon-plus");
+        });
+    </script>
+{% endblock %}

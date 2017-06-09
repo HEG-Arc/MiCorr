@@ -1733,6 +1733,28 @@ p {
   font-size : 18px;
 }
 
+.commentsNotRead {
+  margin-top : 0px;
+  margin-bottom: 0px;
+  font-size : 18px;
+  color : #E30000;
+}
+
+.commentsNotReadInfo {
+  margin-top : 3px;
+  margin-bottom: 0px;
+  font-size : 15px;
+  font-style: italic;
+  color : #E30000;
+}
+
+.commentsNotSentInfo {
+  margin-top : 3px;
+  margin-bottom: 0px;
+  font-size : 15px;
+  font-style: italic;
+}
+
 .lead {
   margin-bottom: 16px;
   font-size: 16px;
@@ -9455,6 +9477,74 @@ img {
 .lightframe {
   background-color: #f2f2f2;
   padding: 1em;
+}
+
+#moncercle{
+  background:#E30000;
+  border-radius:50%;
+  width:21px;
+  height:21px;
+  border:2px solid #E30000;
+  color: white;
+  font-weight: bolder;
+}
+
+.redicon {
+  color: #E30000;
+}
+
+.newCommentsRed {
+  color: #E30000;
+  font-weight: bolder;
+}
+
+.notifComm {
+  font-size: 15px;
+  font-style: italic;
+}
+
+#select_list_size_limit {
+  width : 500px;
+}
+
+@media (min-width: 992px) and (max-width: 1200px) {
+  #select_list_size_limit {
+     width : 400px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 992px) {
+  #select_list_size_limit {
+     width : 300px;
+  }
+}
+
+@media (max-width: 768px) {
+  #select_list_size_limit {
+    width: 500px;
+  }
+}
+
+#select_list_size_limit option {
+  width : 500px;
+}
+
+@media (min-width: 992px) and (max-width: 1200px) {
+  #select_list_size_limit option {
+     width : 400px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 992px) {
+  #select_list_size_limit option {
+     width : 300px;
+  }
+}
+
+@media (max-width: 768px) {
+  #select_list_size_limit option {
+     width : 500px;
+  }
 }
 
 .disc {

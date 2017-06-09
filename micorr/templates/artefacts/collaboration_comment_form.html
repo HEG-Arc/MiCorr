@@ -52,11 +52,13 @@
         <div class="row">
           <div class="c2"><em>Authors</em></div>
           <div class="c10"><p>{{ artefact.get_authors }}</p></div>
-
         </div>
-
+            <div class="row">
+                <div class="pull-right">
+                    <a href="{% url 'artefacts:read-comments' pk=token.id %}" class="btn btn-primary btn-md"><i class="fa fa-eye"></i>&nbsp;&nbsp;I have read all comments</a>
+                </div>
+            </div>
         <br>
-
         <div  id="accordionN1" aria-multiselectable="true">
 
         <!--THE OBJECT-->
@@ -91,7 +93,11 @@
                                 {% endif %}
                             {% endfor %}
                             <a href="#theObject" data-toggle="collapse" aria-expanded="false" aria-controls="theObject">
-                                <i class="fa fa-comment"></i>
+                                {% for key, value in unreadCommentsSection.items %}
+                                  {% if key == 'object' %}
+                                      {% include "./comment_icon.html" %}
+                                  {% endif %}
+                                {% endfor %}
                             </a>
                         </div>
                     </div>
@@ -129,21 +135,27 @@
                             {% endif %}
                         {% endfor %}
                         <a href="#commentDescription" data-toggle="collapse" aria-expanded="false" aria-controls="commentDescription">
-                            <i class="fa fa-comment"></i>
+                            {% for key, value in unreadCommentsField.items %}
+                              {% if key == 'descriptionArtefact' %}
+                                  {% include "./comment_icon.html" %}
+                              {% endif %}
+                            {% endfor %}
                         </a>
                     </div>
                 </div>
               </div>
               <form action="{% url 'artefacts:collaboration-comment' pk=token.id field='descriptionArtefact' %}" method="post">{% csrf_token %}
-                  <div class="row collapse" id="commentDescription" aria-expanded="false">
-                    <div class="line lightboxDark">
-                      {% for key, values in tokenComments.items %}
-                        {% if 'descriptionArtefact' == key %}
-                            {% include "./comments_show.html" %}
-                        {% endif %}
-                      {% endfor %}
-                      {% include "./comment_form.html" %}
-                    </div>
+                <div id="descriptionComments">
+                    <div class="row collapse" id="commentDescription" aria-expanded="false">
+                        <div class="line lightboxDark">
+                          {% for key, values in tokenComments.items %}
+                            {% if 'descriptionArtefact' == key %}
+                                {% include "./comments_show.html" %}
+                            {% endif %}
+                          {% endfor %}
+                          {% include "./comment_form.html" %}
+                        </div>
+                      </div>
                   </div>
               </form>
               <br>
@@ -159,7 +171,11 @@
                             {% endif %}
                         {% endfor %}
                         <a href="#commentArtefactType" data-toggle="collapse" aria-expanded="false" aria-controls="commentArtefactType">
-                            <i class="fa fa-comment"></i>
+                            {% for key, value in unreadCommentsField.items %}
+                              {% if key == 'typeArtefact' %}
+                                  {% include "./comment_icon.html" %}
+                              {% endif %}
+                            {% endfor %}
                         </a>
                     </div>
                 </div>
@@ -190,7 +206,11 @@
                             {% endif %}
                         {% endfor %}
                         <a href="#commentOrigin" data-toggle="collapse" aria-expanded="false" aria-controls="commentOrigin">
-                            <i class="fa fa-comment"></i>
+                            {% for key, value in unreadCommentsField.items %}
+                              {% if key == 'originArtefact' %}
+                                  {% include "./comment_icon.html" %}
+                              {% endif %}
+                            {% endfor %}
                         </a>
                     </div>
                 </div>
@@ -220,7 +240,11 @@
                             {% endif %}
                         {% endfor %}
                         <a href="#commentRecovDate" data-toggle="collapse" aria-expanded="false" aria-controls="commentRecovDate">
-                            <i class="fa fa-comment"></i>
+                            {% for key, value in unreadCommentsField.items %}
+                              {% if key == 'recoveringDateArtefact' %}
+                                  {% include "./comment_icon.html" %}
+                              {% endif %}
+                            {% endfor %}
                         </a>
                     </div>
                   </div>
@@ -250,7 +274,11 @@
                             {% endif %}
                         {% endfor %}
                         <a href="#commentArtefactDate" data-toggle="collapse" aria-expanded="false" aria-controls="commentArtefactDate">
-                            <i class="fa fa-comment"></i>
+                            {% for key, value in unreadCommentsField.items %}
+                              {% if key == 'dateArtefact' %}
+                                  {% include "./comment_icon.html" %}
+                              {% endif %}
+                            {% endfor %}
                         </a>
                     </div>
                 </div>
@@ -280,7 +308,11 @@
                             {% endif %}
                         {% endfor %}
                         <a href="#commentChronology" data-toggle="collapse" aria-expanded="false" aria-controls="commentChronology">
-                            <i class="fa fa-comment"></i>
+                            {% for key, value in unreadCommentsField.items %}
+                              {% if key == 'chronologyArtefact' %}
+                                  {% include "./comment_icon.html" %}
+                              {% endif %}
+                            {% endfor %}
                         </a>
                     </div>
                 </div>
@@ -310,7 +342,11 @@
                             {% endif %}
                         {% endfor %}
                         <a href="#commentEnvironment" data-toggle="collapse" aria-expanded="false" aria-controls="commentEnvironment">
-                            <i class="fa fa-comment"></i>
+                            {% for key, value in unreadCommentsField.items %}
+                              {% if key == 'environmentArtefact' %}
+                                  {% include "./comment_icon.html" %}
+                              {% endif %}
+                            {% endfor %}
                         </a>
                     </div>
                 </div>
@@ -340,7 +376,11 @@
                             {% endif %}
                         {% endfor %}
                         <a href="#commentLocation" data-toggle="collapse" aria-expanded="false" aria-controls="commentLocation">
-                            <i class="fa fa-comment"></i>
+                            {% for key, value in unreadCommentsField.items %}
+                              {% if key == 'locationArtefact' %}
+                                  {% include "./comment_icon.html" %}
+                              {% endif %}
+                            {% endfor %}
                         </a>
                     </div>
                 </div>
@@ -370,7 +410,11 @@
                             {% endif %}
                         {% endfor %}
                         <a href="#commentOwner" data-toggle="collapse" aria-expanded="false" aria-controls="commentOwner">
-                            <i class="fa fa-comment"></i>
+                            {% for key, value in unreadCommentsField.items %}
+                              {% if key == 'ownerArtefact' %}
+                                  {% include "./comment_icon.html" %}
+                              {% endif %}
+                            {% endfor %}
                         </a>
                     </div>
                 </div>
@@ -400,7 +444,11 @@
                             {% endif %}
                         {% endfor %}
                         <a href="#commentNumber" data-toggle="collapse" aria-expanded="false" aria-controls="commentNumber">
-                            <i class="fa fa-comment"></i>
+                            {% for key, value in unreadCommentsField.items %}
+                              {% if key == 'invNumberArtefact' %}
+                                  {% include "./comment_icon.html" %}
+                              {% endif %}
+                            {% endfor %}
                         </a>
                     </div>
                 </div>
@@ -429,7 +477,11 @@
                             {% endif %}
                         {% endfor %}
                         <a href="#commentRecConsData" data-toggle="collapse" aria-expanded="false" aria-controls="commentRecConsData">
-                            <i class="fa fa-comment"></i>
+                            {% for key, value in unreadCommentsField.items %}
+                              {% if key == 'recConsDataArtefact' %}
+                                  {% include "./comment_icon.html" %}
+                              {% endif %}
+                            {% endfor %}
                         </a>
                     </div>
                 </div>
@@ -487,7 +539,11 @@
                                             {% endif %}
                                         {% endfor %}
                                         <a href="#commentZones" data-toggle="collapse" aria-expanded="false" aria-controls="commentZones">
-                                            <i class="fa fa-comment"></i>
+                                            {% for key, value in unreadCommentsSection.items %}
+                                              {% if key == 'zones' %}
+                                                  {% include "./comment_icon.html" %}
+                                              {% endif %}
+                                            {% endfor %}
                                         </a>
                                     </div>
                                 </div>
@@ -541,7 +597,11 @@
                                             {% endif %}
                                         {% endfor %}
                                         <a href="#commentMacroscopic" data-toggle="collapse" aria-expanded="false" aria-controls="commentMacroscopic">
-                                            <i class="fa fa-comment"></i>
+                                            {% for key, value in unreadCommentsSection.items %}
+                                              {% if key == 'macroscopic' %}
+                                                  {% include "./comment_icon.html" %}
+                                              {% endif %}
+                                            {% endfor %}
                                         </a>
                                     </div>
                                 </div>
@@ -595,7 +655,11 @@
                                     {% endif %}
                                 {% endfor %}
                                 <a href="#commentSample" data-toggle="collapse" aria-expanded="false" aria-controls="commentSample">
-                                    <i class="fa fa-comment"></i>
+                                    {% for key, value in unreadCommentsSection.items %}
+                                      {% if key == 'sample' %}
+                                          {% include "./comment_icon.html" %}
+                                      {% endif %}
+                                    {% endfor %}
                                 </a>
                             </div>
                         </div>
@@ -628,7 +692,11 @@
                             {% endif %}
                         {% endfor %}
                         <a href="#commentSampleDescription" data-toggle="collapse" aria-expanded="false" aria-controls="commentSampleDescription">
-                            <i class="fa fa-comment"></i>
+                            {% for key, value in unreadCommentsField.items %}
+                              {% if key == 'descriptionSample' %}
+                                  {% include "./comment_icon.html" %}
+                              {% endif %}
+                            {% endfor %}
                         </a>
                     </div>
                 </div>
@@ -658,7 +726,11 @@
                             {% endif %}
                         {% endfor %}
                         <a href="#commentAlloy" data-toggle="collapse" aria-expanded="false" aria-controls="commentAlloy">
-                            <i class="fa fa-comment"></i>
+                            {% for key, value in unreadCommentsField.items %}
+                              {% if key == 'alloySample' %}
+                                  {% include "./comment_icon.html" %}
+                              {% endif %}
+                            {% endfor %}
                         </a>
                     </div>
                 </div>
@@ -688,7 +760,11 @@
                             {% endif %}
                         {% endfor %}
                         <a href="#commentTechnology" data-toggle="collapse" aria-expanded="false" aria-controls="commentTechnology">
-                            <i class="fa fa-comment"></i>
+                            {% for key, value in unreadCommentsField.items %}
+                              {% if key == 'technologySample' %}
+                                  {% include "./comment_icon.html" %}
+                              {% endif %}
+                            {% endfor %}
                         </a>
                     </div>
                 </div>
@@ -718,7 +794,11 @@
                             {% endif %}
                         {% endfor %}
                         <a href="#commentSampleNumber" data-toggle="collapse" aria-expanded="false" aria-controls="commentSampleNumber">
-                            <i class="fa fa-comment"></i>
+                            {% for key, value in unreadCommentsField.items %}
+                              {% if key == 'labNumberSample' %}
+                                  {% include "./comment_icon.html" %}
+                              {% endif %}
+                            {% endfor %}
                         </a>
                     </div>
                 </div>
@@ -748,7 +828,11 @@
                             {% endif %}
                         {% endfor %}
                         <a href="#commentSampleLocation" data-toggle="collapse" aria-expanded="false" aria-controls="commentSampleLocation">
-                            <i class="fa fa-comment"></i>
+                            {% for key, value in unreadCommentsField.items %}
+                              {% if key == 'locationSample' %}
+                                  {% include "./comment_icon.html" %}
+                              {% endif %}
+                            {% endfor %}
                         </a>
                     </div>
                 </div>
@@ -778,7 +862,11 @@
                             {% endif %}
                         {% endfor %}
                         <a href="#commentRespInst" data-toggle="collapse" aria-expanded="false" aria-controls="commentRespInst">
-                            <i class="fa fa-comment"></i>
+                            {% for key, value in unreadCommentsField.items %}
+                              {% if key == 'respInstSample' %}
+                                  {% include "./comment_icon.html" %}
+                              {% endif %}
+                            {% endfor %}
                         </a>
                     </div>
                 </div>
@@ -808,14 +896,18 @@
                             {% endif %}
                         {% endfor %}
                         <a href="#commentDateAimSampling" data-toggle="collapse" aria-expanded="false" aria-controls="commentDateAimSampling">
-                           <i class="fa fa-comment"></i>
+                           {% for key, value in unreadCommentsField.items %}
+                              {% if key == 'dateAimSamplingSample' %}
+                                  {% include "./comment_icon.html" %}
+                              {% endif %}
+                            {% endfor %}
                        </a>
                     </div>
                 </div>
               </div>
               <form action="{% url 'artefacts:collaboration-comment' pk=token.id field='dateAimSamplingSample' %}" method="post">{% csrf_token %}
                   <div class="row collapse" id="commentDateAimSampling" aria-expanded="false">
-                    <div class="line middlebox">
+                    <div class="line lightboxDark">
                       {% for key, values in tokenComments.items %}
                         {% if 'dateAimSamplingSample' == key %}
                             {% include "./comments_show.html" %}
@@ -844,7 +936,11 @@
                             {% endif %}
                         {% endfor %}
                         <a href="#commentStratigraphies" data-toggle="collapse" aria-expanded="false" aria-controls="commentDateAimSampling">
-                            <i class="fa fa-comment"></i>
+                            {% for key, value in unreadCommentsField.items %}
+                              {% if key == 'stratigraphiesSample' %}
+                                  {% include "./comment_icon.html" %}
+                              {% endif %}
+                            {% endfor %}
                         </a>
                     </div>
                 </div>
@@ -892,7 +988,11 @@
                                 {% endif %}
                             {% endfor %}
                             <a href="#commentAnaResults" data-toggle="collapse" aria-expanded="false" aria-controls="commentAnaResults">
-                                <i class="fa fa-comment"></i>
+                                {% for key, value in unreadCommentsSection.items %}
+                                  {% if key == 'anaResults' %}
+                                      {% include "./comment_icon.html" %}
+                                  {% endif %}
+                                {% endfor %}
                             </a>
                         </div>
                     </div>
@@ -934,7 +1034,11 @@
                                         {% endif %}
                                     {% endfor %}
                                     <a href="#commentMetal" data-toggle="collapse" aria-expanded="false" aria-controls="commentMetal">
-                                        <i class="fa fa-comment"></i>
+                                        {% for key, value in unreadCommentsSection.items %}
+                                          {% if key == 'metal' %}
+                                              {% include "./comment_icon.html" %}
+                                          {% endif %}
+                                        {% endfor %}
                                     </a>
                                 </div>
                             </div>
@@ -1000,7 +1104,11 @@
                                         {% endif %}
                                     {% endfor %}
                                     <a href="#commentCorrLayers" data-toggle="collapse" aria-expanded="false" aria-controls="commentCorrLayers">
-                                        <i class="fa fa-comment"></i>
+                                        {% for key, value in unreadCommentsSection.items %}
+                                          {% if key == 'corrLayers' %}
+                                              {% include "./comment_icon.html" %}
+                                          {% endif %}
+                                        {% endfor %}
                                     </a>
                                 </div>
                             </div>
@@ -1084,7 +1192,11 @@
                                     {% endif %}
                                 {% endfor %}
                                 <a href="#commentSynthesis" data-toggle="collapse" aria-expanded="false" aria-controls="commentSynthesis">
-                                    <i class="fa fa-comment"></i>
+                                    {% for key, value in unreadCommentsSection.items %}
+                                      {% if key == 'synthesis' %}
+                                          {% include "./comment_icon.html" %}
+                                      {% endif %}
+                                    {% endfor %}
                                 </a>
                             </div>
                         </div>
@@ -1125,11 +1237,16 @@
                                 {% endif %}
                             {% endfor %}
                             <a href="#commentConclusion" data-toggle="collapse" aria-expanded="false" aria-controls="commentConclusion">
-                                <i class="fa fa-comment"></i>
+                                {% for key, value in unreadCommentsSection.items %}
+                                  {% if key == 'conclusion' %}
+                                      {% include "./comment_icon.html" %}
+                                  {% endif %}
+                                {% endfor %}
                             </a>
                         </div>
                     </div>
                 </div>
+
                 <form action="{% url 'artefacts:collaboration-comment' pk=token.id field='conclusion' %}" method="post">{% csrf_token %}
                     <div class="row collapse" id="commentConclusion" aria-expanded="false">
                         <div class="line middlebox">
@@ -1138,7 +1255,9 @@
                                 {% include "./comments_show.html" %}
                             {% endif %}
                           {% endfor %}
+                        <!--<form action="{ url 'artefacts:collaboration-comment' pk=token.id field='conclusion' %}" method="post">{ csrf_token %}-->
                           {% include "./comment_form.html" %}
+                        <!--</form>-->
                         </div>
                     </div>
                 </form>
@@ -1160,7 +1279,11 @@
                                {% endif %}
                            {% endfor %}
                             <a href="#commentReferences" data-toggle="collapse" aria-expanded="false" aria-controls="commentReferences">
-                               <i class="fa fa-comment"></i>
+                               {% for key, value in unreadCommentsSection.items %}
+                                  {% if key == 'references' %}
+                                      {% include "./comment_icon.html" %}
+                                  {% endif %}
+                               {% endfor %}
                            </a>
                         </div>
                     </div>
@@ -1185,5 +1308,30 @@
               </div>
             </div>
           <!-- content for accordion 3 -->
-         </div>
+        </div>
+        <br>
+        <form action="{% url 'artefacts:send-comments' token_id=token.id %}" method="post">{% csrf_token %}
+            <div class="row">
+                <div class="pull-right">
+                    <button class="btn btn-primary btn-lg" type="submit" onclick="return confirm('Are you sure you want to send comments? You will not be allowed to delete sent comments')"><i class="fa fa-paper-plane"></i>&nbsp;&nbsp;Send comments</button>
+                </div>
+            </div>
+        </form>
+        <br>
+
       {% endblock content %}
+
+{% block custom_bottom_script %}
+    <script type="text/javascript" src="/static/admin/js/admin/RelatedObjectLookups.js"></script>
+    <script type="text/javascript">
+        function saveComment(pk, field) {
+            $.ajax({
+                url: "/artefacts/" + pk + "/collaboration/comment/" + field + "/",
+                success: function (data) {
+                    $('#commentConclusion').html(data);
+                }
+            });
+        }
+    </script>
+
+{% endblock custom_bottom_script %}

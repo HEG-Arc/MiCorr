@@ -24,6 +24,13 @@
                                 <h4 class="panel-title">
                                     <span class="glyphicon glyphicon-plus"></span>
                                     <a data-toggle="collapse" href="#artefacts_shared">Artefacts shared with contributors</a>
+                                    {% if newCommentsSha != 0 %}
+                                        <div class="pull-right">
+                                            <div id="moncercle">
+                                                <center>{{ newCommentsSha }}</center>
+                                            </div>
+                                        </div>
+                                    {% endif %}
                                 </h4>
                             </div>
                             <div id="artefacts_shared" class="panel-collapse collapse">
@@ -38,15 +45,26 @@
                                         {% for tokenSha in tokens_shared_by_me %}
                                             <tr>
                                                 <td>{{ tokenSha.modified }}</td>
-                                                <td>{{ tokenSha.artefact.object.name }}</td>
+
+                                                <td>
+                                                    {% for key, value in commentsForEachTokenSha.items %}
+                                                        {% if key == tokenSha.id %}
+                                                         {% if value != 0 %}
+                                                             <div class="newCommentsRed">
+                                                                ({{ value }})
+                                                                {{ tokenSha.artefact.object.name }}
+                                                             </div>
+                                                         {% else %}
+                                                            {{ tokenSha.artefact.object.name }}
+                                                         {% endif %}
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </td>
                                                 <td>{{ tokenSha.recipient }}</td>
                                                 <td>
-                                                    <!--<a href="{ url 'artefacts:collaboration-update' token.artefact.id %}"><i class="fa fa-pencil"></i></a> |
-                                                    <a href="{ url 'artefacts:artefact-delete' token.artefact.id %}"><i class="fa fa-trash"></i></a>-->
-
-                                                    <a href="{% url 'artefacts:collaboration-update' tokenSha.id %}"><i class="fa fa-pencil"></i></a> |
-                                                    <a href="{% url 'artefacts:collaboration-comment' pk=tokenSha.id field='none' %}"><i class="fa fa-comment"></i></a> |
-                                                    <a href=""><i class="fa fa-trash"></i></a>
+                                                    <a href="{% url 'artefacts:collaboration-update' tokenSha.id %}" title="Modify artefact"><i class="fa fa-pencil"></i></a> |
+                                                    <a href="{% url 'artefacts:collaboration-comment' pk=tokenSha.id field='none' %}" title="Comment artefact"><i class="fa fa-comment"></i></a> |
+                                                    <a href="{% url 'artefacts:collaboration-hide' pk=tokenSha.id %}" title="Delete collaboration"><i class="fa fa-trash"></i></a>
                                                 </td>
                                             </tr>
                                         {% endfor %}
@@ -64,6 +82,13 @@
                                 <h4 class="panel-title">
                                     <span class="glyphicon glyphicon-plus"></span>
                                     <a data-toggle="collapse" href="#artefacts_received">Artefacts shared with me</a>
+                                    {% if newCommentsRec != 0 %}
+                                        <div class="pull-right">
+                                            <div id="moncercle">
+                                                <center>{{ newCommentsRec }}</center>
+                                            </div>
+                                        </div>
+                                    {% endif %}
                                 </h4>
                             </div>
                             <div id="artefacts_received" class="panel-collapse collapse">
@@ -78,14 +103,24 @@
                                         {% for tokenRec in tokens_shared_with_me %}
                                             <tr>
                                                 <td>{{ tokenRec.modified }}</td>
-                                                <td>{{ tokenRec.artefact.object.name }}</td>
+                                                <td>
+                                                    {% for key, value in commentsForEachTokenRec.items %}
+                                                        {% if key == tokenRec.id %}
+                                                         {% if value != 0 %}
+                                                             <div class="newCommentsRed">
+                                                                ({{ value }})
+                                                                {{ tokenRec.artefact.object.name }}
+                                                             </div>
+                                                         {% else %}
+                                                            {{ tokenRec.artefact.object.name }}
+                                                         {% endif %}
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </td>
                                                 <td>{{ tokenRec.user.username }}</td>
                                                 <td>
-                                                    <!--<a href="{ url 'artefacts:collaboration-update' token.artefact.id %}"><i class="fa fa-pencil"></i></a> |
-                                                    <a href="{ url 'artefacts:artefact-delete' token.artefact.id %}"><i class="fa fa-trash"></i></a>-->
-
-                                                    <a href=""><i class="fa fa-comment"></i></a> |
-                                                    <a href=""><i class="fa fa-trash"></i></a>
+                                                    <a href="{% url 'artefacts:collaboration-comment' pk=tokenRec.id field='none' %}" title="Comment artefact"><i class="fa fa-comment"></i></a> |
+                                                    <a href="{% url 'artefacts:collaboration-hide' pk=tokenRec.id %}" title="Delete collaboration"><i class="fa fa-trash"></i></a>
                                                 </td>
                                             </tr>
                                         {% endfor %}
@@ -95,6 +130,10 @@
                                 {% endif %}
                             </div>
                         </div>
+                    </div>
+                    <br>
+                    <div class="pull-right">
+                        <a href="{% url 'artefacts:collaboration_deleted_menu' %}" class="btn btn-primary btn-md"><i class="fa fa-recycle"></i> Retrieve deleted collaborations</a>
                     </div>
                 </div>
             </div>

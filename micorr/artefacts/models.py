@@ -233,7 +233,7 @@ class Artefact(TimeStampedModel):
     sample_description = tinymce_models.HTMLField(verbose_name='description of sample', blank=True, default='', help_text='Information on the sample, the way it was obtained, its condition (presence or not of corrosion layers) and dimensions')
     sample_number = models.CharField(max_length=100, verbose_name='lab number of sample', blank=True, default='', help_text='The inventory number of the artefact sample')
     date_aim_sampling = models.CharField(max_length=200, verbose_name='date and aim of sampling', blank=True, default='', help_text='The date and aim of sampling')
-    validated = models.BooleanField(default=False)
+    validated = models.NullBooleanField(default=None, blank=True, null=True)
     published = models.BooleanField(default=False)
 
     # Foreign Keys
@@ -475,6 +475,8 @@ class Token(TimeStampedModel):
     already_used = models.BooleanField(default=False)
     recipient = models.CharField(max_length=100)
     link = models.CharField(max_length=200, null=True)
+    hidden_by_author = models.BooleanField(default=False)
+    hidden_by_recipient = models.BooleanField(default=False)
 
     # Foreign Keys
     user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name="user's object", blank=True, null=True)
@@ -498,7 +500,10 @@ class Publication(TimeStampedModel) :
     """
 
     #Own field
-    comment=models.CharField(max_length=500, blank=True, null=True, help_text='A comment from the analyzer of the artefact')
+    comment_to_user=models.TextField(blank=True, null=True, help_text='A comment send to the user from the analyzer of the artefact')
+    comment_delegation=models.TextField(blank=True, null=True, help_text='A comment from the main administrator to the delegated administrator')
+    decision_taken=models.BooleanField(default=False)
+    decision_delegated_user = models.NullBooleanField(default=None, blank=True, null=True)
 
     # Foreign keys
     user = models.ForeignKey(User, related_name='main_user', blank=True, help_text='User analyzing the artefact')
@@ -528,14 +533,16 @@ class Collaboration_comment(TimeStampedModel):
     #Own fields
     comment = models.TextField()
     sent = models.BooleanField(default=False)
+    read = models.BooleanField(default=False)
 
     #Foreign keys
     content_type = models.ForeignKey(ContentType, blank=True, null=True)
-    parent = models.ForeignKey('self', blank=True, null=True, help_text='The comment from which this comment is the child')
+    parent = models.ForeignKey('self', on_delete=models.SET_NULL, blank=True, null=True, help_text='The comment from which this comment is the child')
     field = models.ForeignKey(Field, blank=True, null=True, help_text='The field concerned by the comment')
     object_model_id = models.PositiveIntegerField(blank=True, null=True)
     content_object = GenericForeignKey('content_type', 'object_model_id')
     user = models.ForeignKey(User, related_name='user_commenting', blank=True, null=True, help_text='The user who wrote the comment')
+    token_for_section = models.ForeignKey(Token, related_name="token_for_section", blank=True, null=True, help_text='The token that allow to filter comments for a section from differents tokens')
 
     class Meta:
         verbose_name = 'Comment'
