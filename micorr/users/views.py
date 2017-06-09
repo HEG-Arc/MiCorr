@@ -1,16 +1,20 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 
+from collections import defaultdict
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.urlresolvers import reverse
 from django.views.generic import DetailView, ListView, RedirectView, UpdateView
+from django.views import generic
 from django.conf import settings
 
 from stratigraphies.neo4jdao import Neo4jDAO
+
 from .models import User
 
 
-class UserDetailView(LoginRequiredMixin, DetailView):
+class UserDetailView(generic.DetailView):
     model = User
     # These next two lines tell the view to index lookups by username
     slug_field = 'username'
@@ -21,11 +25,24 @@ class UserDetailView(LoginRequiredMixin, DetailView):
         context = super(UserDetailView, self).get_context_data(**kwargs)
         # Add the stratigraphies of the user
         stratigraphies = Neo4jDAO().getStratigraphiesByUser(self.request.user.id)
-        artefacts = self.request.user.artefact_set.all().order_by('created')
+        # Add all the objects of the user in a variable
+        objects = self.request.user.object_set.all().order_by('created')
+        list1 = []
+
+        # Add all artefacts card in a list
+        for obj in objects :
+            artefacts = obj.artefact_set.all()
+            for artefact in artefacts :
+                list1.append(artefact)
+
+
+
         context['stratigraphies'] = stratigraphies
-        context['artefacts'] = artefacts
+        context['objects'] = objects
+        context['artefacts'] = list1
         context['node_base_url'] = settings.NODE_BASE_URL
         return context
+
 
 
 class UserRedirectView(LoginRequiredMixin, RedirectView):

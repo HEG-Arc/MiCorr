@@ -17,17 +17,18 @@
     <h1>New artefact</h1>
 
     <!--DESCRIPTION-->
-    <form action="{% url 'artefacts:artefact-create' %}" method="post">{% csrf_token %}
+    <form action="{% url 'artefacts:artefact-create' object.id %}" method="post">{% csrf_token %}
       <div class="row accordion-title1" id="title2">
           <a class="line"  data-toggle="collapse" data-parent="#accordionN1" href="#content2" aria-expanded="true" aria-controls="content2">Creation of the artefact</a>
       </div>
       <div class="row accordion-content3 collapse in" id="content2"  aria-labelledby="title2">
         <div class="line lightbox">
           <div class="row">
-            <div class="c3"><em>Name of the artefact</em></div>
-            <div class="c9"><p>{{ form.name }}</p> <p><i>{{ form.name.help_text }}</i></p></div>
+              <br>
+              <div class="c12"><p>The artefact <em><i>{{ object.name }}</i></em> has been successfully created.</p></div>
+              <br>
           </div>
-            <input class="btn btn-default" type="submit" value="Next">
+            <input class="btn btn-default" type="submit" value="Create a new artefact card">
         </div>
       </div>
     </form>

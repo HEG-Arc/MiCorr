@@ -13,7 +13,10 @@ urlpatterns = [
        name='artefact-update'),
     url(r'^(?P<pk>\d+)/delete/$', login_required(artefacts_views.ArtefactsDeleteView.as_view()),
        name='artefact-delete'),
-    url(r'^create/$', login_required(artefacts_views.ArtefactsCreateView.as_view()), name='artefact-create'),
+
+    url(r'^create/$', login_required(artefacts_views.ObjectCreateView.as_view()), name='object-create'),
+    url(r'^(?P<pk>\d+)/createArtefact/$', login_required(artefacts_views.ArtefactsCreateView.as_view()),
+        name='artefact-create'),
 
     url(r'^add/author/?$', artefacts_views.newAuthor),
     url(r'^add/type/?$', artefacts_views.newType),
@@ -61,7 +64,10 @@ urlpatterns = [
     url(r'^(?P<artefact_id>\d+)/token/(?P<pk>\d+)/delete/$',
         login_required(artefacts_views.TokenDeleteView.as_view()), name='delete_token'),
 
+    url(r'^collaboration/$', login_required(artefacts_views.CollaborationListView.as_view()), name='collaboration_menu'),
+    url(r'^(?P<token_id>\d+)/collaboration/update/$', login_required(artefacts_views.CollaborationUpdateView.as_view()), name='collaboration-update'),
+    url(r'^(?P<pk>\d+)/collaboration/comment/(?P<field>\w+)/$', login_required(artefacts_views.CollaborationCommentView.as_view()), name='collaboration-comment'),
 
-
+    url(r'^(?P<artefact_id>\d+)/collaboration/comment/(?P<comment_id>\d+)/$', login_required(artefacts_views.deleteComment), name='delete-comment'),
     # url(r'^test-ontology/$', displayOntology),
 ]

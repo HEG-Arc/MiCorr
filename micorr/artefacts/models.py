@@ -3,7 +3,10 @@ import os
 import uuid
 
 from django.db import models
+from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
+from django.contrib.contenttypes.models import ContentType
 from contacts.models import Contact
+from users.models import User
 from django.conf import settings
 from django_extensions.db.models import TimeStampedModel
 from tinymce import models as tinymce_models
@@ -205,13 +208,25 @@ class CorrosionType(TimeStampedModel):
     def __unicode__(self):
         return self.type
 
+class Object(TimeStampedModel):
+    """
+    An object can be linked to more than one card (artefact)
+    """
+    name = models.CharField(max_length=100, verbose_name='name', blank=True, default='', help_text='Name of the object')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name="user's object", blank=True, null=True,
+                             help_text='The user who entered the object into the database')
+
+    class Meta:
+        ordering = ['name']
+        verbose_name = 'Object'
+        verbose_name_plural = 'Objects'
 
 class Artefact(TimeStampedModel):
     """
     An artefact has many foreign keys, corresponding to its characteristics55
     """
     # Own fields
-    name = models.CharField(max_length=100, verbose_name='name', blank=True, default='', help_text='Name of the artefact')
+    """name = models.CharField(max_length=100, verbose_name='name', blank=True, default='', help_text='Name of the artefact')"""
     description = tinymce_models.HTMLField(verbose_name='description of artefact', blank=True, help_text='A short description of the artefact. Can also include its general appearance (colour, presence or not of a corrosion layer, missing parts, large cracks, etc.)')
     inventory_number = models.CharField(max_length=100, verbose_name='inv. Number', blank=True, default='', help_text='The inventory number of the artefact')
     recorded_conservation_data = models.CharField(max_length=500, blank=True, default='', help_text='A brief description of the conservation treatment applied if any with literature references (Names of authors, year)')
@@ -219,10 +234,10 @@ class Artefact(TimeStampedModel):
     sample_number = models.CharField(max_length=100, verbose_name='lab number of sample', blank=True, default='', help_text='The inventory number of the artefact sample')
     date_aim_sampling = models.CharField(max_length=200, verbose_name='date and aim of sampling', blank=True, default='', help_text='The date and aim of sampling')
     validated = models.BooleanField(default=False)
+    published = models.BooleanField(default=False)
 
     # Foreign Keys
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name="user's object", blank=True, null=True,
-                             help_text='The user who entered the artefact into the database')
+    object = models.ForeignKey(Object, verbose_name='object described', blank=True, null=True, help_text='Name of the artefact')
     author = models.ManyToManyField(Contact, verbose_name='authors', blank=True, related_name='artefacts', help_text='The author(s) of this file is (are) responsible for the information provided. Author(s) should provide their last name, initial of their first name and in brackets the abbreviation of their institutional affiliation, such as Degrigny C. (HE-Arc CR).')
     metal1 = models.ForeignKey(Metal, verbose_name='1st metal element', blank=True, null=True, related_name='first_metal_artefacts', help_text='The primary metal element of the artefact')
     metalx = models.ManyToManyField(Metal, verbose_name='other metal elements', blank=True, related_name='other_metal_artefacts', help_text='The other metal elements of the artefact.')
@@ -245,6 +260,7 @@ class Artefact(TimeStampedModel):
     microstructure = models.ForeignKey(Microstructure, blank=True, null=True, help_text='A description of the metal: its composition, texture (porosity), hardness, microstructure revealed by etching and specific features (figures and tables are referred as Fig. 1, Table 1)')
     corrosion_form = models.ForeignKey(CorrosionForm, blank=True, null=True)
     corrosion_type = models.ForeignKey(CorrosionType, blank=True, null=True, help_text='')
+    parent = models.ForeignKey('self', blank=True, null=True, help_text='The card from which this card is the child')
 
 
     class Meta:
@@ -438,6 +454,9 @@ class TokenManager(models.Manager):
                             recipient=recipient)
         return token
 
+    def get_token(self, recipient):
+        token = self.get(recipient=recipient)
+
 
 class Token(TimeStampedModel):
     """
@@ -461,6 +480,7 @@ class Token(TimeStampedModel):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name="user's object", blank=True, null=True)
     artefact = models.ForeignKey(Artefact, on_delete=models.CASCADE, null=True, help_text='The shared artefact')
 
+
     tokenManager = TokenManager()
 
     class Meta:
@@ -469,4 +489,54 @@ class Token(TimeStampedModel):
 
     def __str__(self):
         return "Token {} with {} rights, for artefact {} by user {}".format(
-            self.uuid, self.right, self.artefact.name, self.user.name)
+            self.uuid, self.right, self.artefact.object.name, self.user.name)
+
+
+class Publication(TimeStampedModel) :
+    """
+    An user can send an artefact for publication
+    """
+
+    #Own field
+    comment=models.CharField(max_length=500, blank=True, null=True, help_text='A comment from the analyzer of the artefact')
+
+    # Foreign keys
+    user = models.ForeignKey(User, related_name='main_user', blank=True, help_text='User analyzing the artefact')
+    artefact = models.ForeignKey(Artefact, blank=True, help_text='Artefact card sent for publication')
+    delegated_user = models.ForeignKey(User, related_name='delegated_user', blank=True, null=True, help_text='Delegated user for the analyzis of the artefact')
+
+    class Meta:
+        verbose_name='Publication'
+        verbose_name_plural='Publications'
+
+class Field(TimeStampedModel):
+    """
+    A field is a part of an artefact
+    """
+    name = models.CharField(max_length=200, blank=True, help_text='A field of the artefact card')
+    title = models.CharField(max_length=200, blank=True, help_text='A field for the name without spaces')
+
+    class Meta:
+        verbose_name = 'Field'
+        verbose_name_plural = 'Fields'
+
+class Collaboration_comment(TimeStampedModel):
+    """
+    A comment allow author to collaborate with collaborators and discuss an artefact
+    """
+
+    #Own fields
+    comment = models.TextField()
+    sent = models.BooleanField(default=False)
+
+    #Foreign keys
+    content_type = models.ForeignKey(ContentType, blank=True, null=True)
+    parent = models.ForeignKey('self', blank=True, null=True, help_text='The comment from which this comment is the child')
+    field = models.ForeignKey(Field, blank=True, null=True, help_text='The field concerned by the comment')
+    object_model_id = models.PositiveIntegerField(blank=True, null=True)
+    content_object = GenericForeignKey('content_type', 'object_model_id')
+    user = models.ForeignKey(User, related_name='user_commenting', blank=True, null=True, help_text='The user who wrote the comment')
+
+    class Meta:
+        verbose_name = 'Comment'
+        verbose_name_plural = 'Comments'

@@ -4,8 +4,8 @@ from django.template.loader import render_to_string
 
 from contacts.models import Contact
 
-from .models import Artefact, Document, Metal, CorrosionForm, CorrosionType, Environment, Origin, ChronologyPeriod, \
-    Alloy, Technology, Microstructure, RecoveringDate, Image, Type, Stratigraphy, Token
+from .models import Artefact, Document, Metal, CorrosionForm, CorrosionType, Environment, Object, Origin, ChronologyPeriod, \
+    Alloy, Technology, Microstructure, RecoveringDate, Image, Type, Stratigraphy, Token, Collaboration_comment
 from cities_light.models import Country
 from tinymce.widgets import TinyMCE
 import django_filters
@@ -40,7 +40,9 @@ class ArtefactsUpdateForm(forms.ModelForm):
     synthesis_text = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}), required=False)
     conclusion_text = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}), required=False)
     references_text = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 10}), required=False)
+    #object_name = forms.CharField(required=False, help_text='Name of the artefact')
 
+    #name = forms.ModelChoiceField(Object.objects, widget=SelectWithPop)
     author = forms.ModelMultipleChoiceField(Contact.objects, widget=MultipleSelectWithPop, help_text='The author(s) of this file is (are) responsible for the information provided. Author(s) should provide their last name, initial of their first name and in brackets the abbreviation of their institutional affiliation, such as Degrigny C. (HE-Arc CR).', required=False)
     type = forms.ModelChoiceField(Type.objects, widget=SelectWithPop, help_text='The name of the artefact, its typology', required=False)
     origin = forms.ModelChoiceField(Origin.objects, widget=SelectWithPop, help_text='The place, city and country where the artefact comes from or the object to which the section considered belongs to', required=False)
@@ -62,8 +64,7 @@ class ArtefactsUpdateForm(forms.ModelForm):
 
     class Meta:
         model = Artefact
-        exclude = ['user']
-
+        exclude = ['object',]
 
 class ArtefactsCreateForm(forms.ModelForm):
     """
@@ -72,13 +73,12 @@ class ArtefactsCreateForm(forms.ModelForm):
 
     class Meta:
         model = Artefact
-        exclude = ['user']
+        exclude = []
         widgets = {
             'type': TextInput(),
             'recovering_date': TextInput(),
             'chronology_period': TextInput(),
         }
-
 
 class ImageCreateForm(forms.ModelForm):
     """
@@ -266,3 +266,23 @@ class ShareArtefactForm(forms.Form):
 class ShareWithFriendForm(forms.Form):
     recipient = forms.EmailField(label='Share with (email)')
     message = forms.CharField(label='Your message', required=False)
+
+class ObjectCreateForm(forms.ModelForm) :
+
+    class Meta:
+        model = Object
+        exclude = ['user']
+
+class ObjectUpdateForm(forms.ModelForm) :
+
+    class Meta:
+        model = Object
+        exclude = ['user']
+
+class CollaborationCommentForm(forms.ModelForm):
+    comment = forms.CharField(widget = TinyMCE(attrs={'cols': 10, 'rows': 10}), required = False)
+
+    class Meta:
+        model = Collaboration_comment
+        fields = ['comment']
+

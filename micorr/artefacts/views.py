@@ -1,4 +1,7 @@
+from collections import defaultdict
+
 from django.contrib.auth.decorators import login_required
+from django.contrib.contenttypes.models import ContentType
 from django.core.mail import EmailMultiAlternatives
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse, reverse_lazy
@@ -15,12 +18,13 @@ from django.contrib import messages
 
 from contacts.forms import ContactCreateForm
 from stratigraphies.neo4jdao import Neo4jDAO
+
 from .forms import ArtefactsUpdateForm, ArtefactsCreateForm, DocumentUpdateForm, DocumentCreateForm, ArtefactFilter,\
     OriginCreateForm, ChronologyCreateForm, AlloyCreateForm, TechnologyCreateForm, EnvironmentCreateForm, \
     MicrostructureCreateForm, MetalCreateForm, CorrosionFormCreateForm, CorrosionTypeCreateForm, \
     RecoveringDateCreateForm, ImageCreateForm, TypeCreateForm, ContactAuthorForm, ShareArtefactForm, \
-    ShareWithFriendForm
-from .models import Artefact, Document, Section, SectionCategory, Image, Stratigraphy, Token
+    ShareWithFriendForm, ObjectCreateForm, ObjectUpdateForm, CollaborationCommentForm
+from .models import Artefact, Document, Collaboration_comment, Field, Object, Section, SectionCategory, Image, Stratigraphy, Token
 import logging
 
 logger = logging.getLogger(__name__)
@@ -139,6 +143,7 @@ class ArtefactsUpdateView(generic.UpdateView):
     A view which allows the user to edit an artefact
     When the editing is finished, it redirects the user to the artefact detail page
     """
+
     model = Artefact
     form_class = ArtefactsUpdateForm
 
@@ -148,9 +153,15 @@ class ArtefactsUpdateView(generic.UpdateView):
 
     def get(self, request, **kwargs):
         artefact = Artefact.objects.get(id=self.kwargs['pk'])
+        obj = Object.objects.get(id=artefact.object.id)
+
+
         self.object = artefact
         form_class = self.get_form_class()
         form = self.get_form(form_class)
+
+        formObject = ObjectUpdateForm(instance=obj)
+
         object_section = Section.objects.get_or_create(order=1, artefact=artefact, section_category=SectionCategory.objects.get(name='AR'), title='The object')[0]
         description_section = Section.objects.get_or_create(order=2, artefact=artefact, section_category=SectionCategory.objects.get(name='AR'), title='Description and visual observation')[0]
         zone_section = Section.objects.get_or_create(order=3, artefact=artefact, section_category=SectionCategory.objects.get(name='SA'), title='Zones of the artefact submitted to visual observation and location of sampling areas')[0]
@@ -163,7 +174,7 @@ class ArtefactsUpdateView(generic.UpdateView):
         conclusion_text = Section.objects.get_or_create(order=10, artefact=artefact, section_category=SectionCategory.objects.get(name='CO'), title='Conclusion')[0].content
         references_text = Section.objects.get_or_create(order=11, artefact=artefact, section_category=SectionCategory.objects.get(name='RE'), title='References')[0].content
         stratigraphies = artefact.stratigraphy_set.all
-        return render(request, 'artefacts/artefact_update_form.html', self.get_context_data(form=form, object_section=object_section, description_section=description_section,
+        return render(request, 'artefacts/artefact_update_form.html', self.get_context_data(form=form, formObject=formObject, object_section=object_section, description_section=description_section,
                                                              zone_section=zone_section, macroscopic_section=macroscopic_section,
                                                              sample_section=sample_section, analyses_performed=analyses_performed,
                                                              metal_section=metal_section, corrosion_section=corrosion_section,
@@ -173,6 +184,11 @@ class ArtefactsUpdateView(generic.UpdateView):
 
     def post(self, request, *args, **kwargs):
         artefact = get_object_or_404(Artefact, pk=self.kwargs['pk'])
+        # Save updates for the object name (4 following lines)
+        obj = get_object_or_404(Object, pk=artefact.object.id)
+        objForm = ObjectUpdateForm(request.POST, instance=obj)
+        if objForm.is_valid():
+            objForm.save()
         section_1 = Section.objects.get_or_create(order=1, artefact=artefact, section_category=SectionCategory.objects.get(name='AR'), title='The object')[0]
         artefact.section_set.add(section_1)
         section_2 = Section.objects.get_or_create(order=2, artefact=artefact, section_category=SectionCategory.objects.get(name='AR'), title='Description and visual observation')[0]
@@ -225,7 +241,6 @@ class ArtefactsDeleteView(generic.DeleteView):
     def get_success_url(self):
         return reverse('users:detail', kwargs={'username': self.request.user})
 
-
 class ArtefactsCreateView(generic.CreateView):
     """
     A view which allows the user to create an artefact
@@ -235,14 +250,21 @@ class ArtefactsCreateView(generic.CreateView):
     template_name_suffix = '_create_form'
     form_class = ArtefactsCreateForm
 
+    def get_context_data(self, **kwargs):
+        """
+        Allows the template to use the selected object
+        """
+        context = super(ArtefactsCreateView, self).get_context_data(**kwargs)
+        object = get_object_or_404(Object, pk=self.kwargs['pk'])
+        context['object'] = object
+        return context
+
     def form_valid(self, form):
-        user = self.request.user
-        form.instance.user = user
+        form.instance.object = get_object_or_404(Object, pk=self.kwargs['pk'])
         return super(ArtefactsCreateView, self).form_valid(form)
 
     def get_success_url(self):
         return reverse('artefacts:artefact-update', kwargs={'pk': self.object.id})
-
 
 @login_required
 def newAuthor(request):
@@ -350,7 +372,7 @@ def contactAuthor(request, artefact_id):
         artefact = get_object_or_404(Artefact, pk=artefact_id)
         form = ContactAuthorForm(request.POST)
         if form.is_valid():
-            subject = form.cleaned_data['subject']+" (about MiCorr artefact : "+artefact.name+")"
+            subject = form.cleaned_data['subject']+" (about MiCorr artefact : "+artefact.object.name+")"
             message = form.cleaned_data['message']
             sender = form.cleaned_data['sender']
             cc_myself = form.cleaned_data['cc_myself']
@@ -377,7 +399,7 @@ def shareArtefact(request, artefact_id):
         artefact = get_object_or_404(Artefact, pk=artefact_id)
         form = ShareArtefactForm(request.POST)
         if form.is_valid():
-            subject = "Shared MiCorr artefact : "+artefact.name
+            subject = "Shared MiCorr artefact : "+artefact.object.name
             recipient = [form.cleaned_data['recipient']]
             right = form.cleaned_data['right']
             comment = form.cleaned_data['comment']
@@ -423,7 +445,7 @@ def shareArtefactWithFriend(request, artefact_id):
         artefact = get_object_or_404(Artefact, pk=artefact_id)
         form = ShareWithFriendForm(request.POST)
         if form.is_valid():
-            subject = "Shared MiCorr artefact : "+artefact.name
+            subject = "Shared MiCorr artefact : "+artefact.object.name
             recipient = [form.cleaned_data['recipient']]
             message = form.cleaned_data['message']
 
@@ -481,7 +503,7 @@ def getTokenRightByUuid(token_uuid):
 def isArtefactOfConnectedUser(request, artefact_id):
     artefact = get_object_or_404(Artefact, pk=artefact_id)
     is_artefact_of_connected_user = False
-    if request.user.id == artefact.user.id:
+    if request.user.id == artefact.object.user.id:
         is_artefact_of_connected_user = True
     return is_artefact_of_connected_user
 
@@ -528,7 +550,7 @@ def sendFirstUseOfTokenEmail(token_uuid):
         token.save()
 
         subject = 'First use of MiCorr token'
-        message = 'Your token has been used : \n Artefact : ' + token.artefact.name + '\n Comment : ' + str(token.comment) + '\n Link : ' + str(token.link)
+        message = 'Your token has been used : \n Artefact : ' + token.artefact.object.name + '\n Comment : ' + str(token.comment) + '\n Link : ' + str(token.link)
         sender = 'micorr@he-arc.ch'
         recipient = [token.user.email]
 
@@ -664,3 +686,513 @@ class DocumentCreateView(generic.CreateView):
 
     def get_success_url(self):
         return reverse('artefacts:artefact-detail', kwargs={'pk': self.kwargs.get('artefact_id', None)}, )
+
+class ObjectCreateView(generic.CreateView):
+    model = Object
+    template_name_suffix = '_create_form'
+    form_class = ObjectCreateForm
+
+    def form_valid(self, form):
+        user = self.request.user
+        form.instance.user = user
+        return super(ObjectCreateView, self).form_valid(form)
+
+    def get_success_url(self):
+        return reverse('artefacts:artefact-create', kwargs={'pk': self.object.id})
+
+class CollaborationListView(generic.ListView):
+    model = Token
+
+    template_name_suffix = '_collaboration_menu'
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super(CollaborationListView, self).get_context_data(**kwargs)
+        user = self.request.user
+
+        # Add all the objects of the user in a variable
+        allTokensShared = self.request.user.token_set.all().order_by('created')
+        tokensShared = []
+        tokensReceived = []
+
+
+        # Research tokens shared by the user
+        for token in allTokensShared :
+            if token.right == 'W':
+                tokensShared.append(token)
+
+        # Research tokens shared with the user
+        try :
+            token = Token.tokenManager.get(recipient=user.email)
+            if token.right == 'W' :
+                tokensReceived.append(token)
+
+        except :
+            tokensReceived = []
+
+        context['tokens_shared_by_me'] = tokensShared
+        context['tokens_shared_with_me'] = tokensReceived
+        context['user'] = user
+        return context
+
+class CollaborationUpdateView(generic.UpdateView):
+
+    model = Artefact
+    template_name_suffix = '_collaboration_update'
+    """
+    A detail view of a selected artefact
+    """
+    form_class = ArtefactsUpdateForm
+
+    def get_object(self, queryset=None):
+        token = Token.tokenManager.get(id=self.kwargs['token_id'])
+        obj = Artefact.objects.get(id=token.artefact.id)
+        return obj
+
+    def get(self, request, **kwargs):
+
+        token = Token.tokenManager.get(id=self.kwargs['token_id'])
+        artefact = Artefact.objects.get(id=token.artefact.id)
+        sections = artefact.section_set.all()
+        obj = Object.objects.get(id=artefact.object.id)
+
+        self.object = artefact
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+
+        sectionComments = []
+        sectionDict = defaultdict(list)
+        tokenComments = []
+        tokenDict = defaultdict(list)
+        token_type = ContentType.objects.get(model='token')
+        allTokenCommentsSorted = None
+        try:
+            # Get all comments for the current token
+            allTokenComments = Collaboration_comment.objects.filter(content_type_id=token_type.id, object_model_id=token.id)
+
+            # Get first comments of all fields
+            firstTokenComments = []
+            for tokenComm in allTokenComments:
+                if not tokenComm.parent:
+                    firstTokenComments.append(tokenComm)
+
+            # Sort comments using parent_id
+            allTokenCommentsSorted = []
+            for firstToken in firstTokenComments:
+                idToken = firstToken.id
+                allTokenCommentsSorted.append(firstToken)
+                while idToken != 0:
+                    try:
+                        currentToken = allTokenComments.get(parent_id=idToken)
+                        allTokenCommentsSorted.append(currentToken)
+                        idToken = currentToken.id
+                    except:
+                        idToken = 0
+
+            # Filter only sent comments or comments from user connected
+            for tokenComm in allTokenCommentsSorted:
+                if tokenComm.sent or self.request.user == tokenComm.user:
+                    tokenComments.append(tokenComm)
+
+            # Create a dictonary 'key-list' with field title as a key
+            for tokenComment in tokenComments:
+                tokenDict[tokenComment.field.title].append(tokenComment)
+
+        except:
+            pass
+
+        section_type = ContentType.objects.get(model='section')
+        allSectionsComments = []
+
+        for section in sections:
+            # Get all comments from each section
+            comments = Collaboration_comment.objects.filter(content_type_id=section_type.id, object_model_id=section.id)
+            for comment in comments:
+                allSectionsComments.append(comment)
+
+        # Get first comments of all sections
+        firstSectionComments = []
+        for sectionComm in allSectionsComments:
+            if not sectionComm.parent:
+                firstSectionComments.append(sectionComm)
+
+        # Sort comments using parent_id
+        allSectionCommentsSorted = []
+        for firstSection in firstSectionComments:
+            idSection = firstSection.id
+            allSectionCommentsSorted.append(firstSection)
+            isFound = None
+            while idSection != 0:
+                for comm in allSectionsComments:
+                    isFound = 0
+                    if comm.parent_id == idSection:
+                        allSectionCommentsSorted.append(comm)
+                        idSection = comm.id
+                        isFound = 1
+                if isFound == 0:
+                    idSection = 0
+
+        for commentSectionSorted in allSectionCommentsSorted:
+            # Filter only sent comments or comments from user connected
+            if commentSectionSorted.sent or self.request.user == commentSectionSorted.user:
+                sectionComments.append(commentSectionSorted)
+                section = get_object_or_404(Section, pk=commentSectionSorted.object_model_id)
+                sectionShortTitle = getSectionShortName(section.title)
+                sectionDict[sectionShortTitle].append(commentSectionSorted)
+
+
+        object_section = Section.objects.get_or_create(order=1, artefact=artefact, section_category=SectionCategory.objects.get(name='AR'), title='The object')[0]
+        description_section = Section.objects.get_or_create(order=2, artefact=artefact, section_category=SectionCategory.objects.get(name='AR'), title='Description and visual observation')[0]
+        zone_section = Section.objects.get_or_create(order=3, artefact=artefact, section_category=SectionCategory.objects.get(name='SA'), title='Zones of the artefact submitted to visual observation and location of sampling areas')[0]
+        macroscopic_section = Section.objects.get_or_create(order=4, artefact=artefact, section_category=SectionCategory.objects.get(name='SA'), title='Macroscopic observation')[0]
+        sample_section = Section.objects.get_or_create(order=5, artefact=artefact, section_category=SectionCategory.objects.get(name='SA'), title='Sample')[0]
+        analyses_performed = Section.objects.get_or_create(order=6, artefact=artefact, section_category=SectionCategory.objects.get(name='AN'), title='Analyses and results')[0].content
+        metal_section = Section.objects.get_or_create(order=7, artefact=artefact, section_category=SectionCategory.objects.get(name='AN'), title='Metal')[0]
+        corrosion_section = Section.objects.get_or_create(order=8, artefact=artefact, section_category=SectionCategory.objects.get(name='AN'), title='Corrosion layers')[0]
+        synthesis_section = Section.objects.get_or_create(order=9, artefact=artefact, section_category=SectionCategory.objects.get(name='AN'), title='Synthesis of the macroscopic / microscopic observation of corrosion layers')[0]
+        conclusion_text = Section.objects.get_or_create(order=10, artefact=artefact, section_category=SectionCategory.objects.get(name='CO'), title='Conclusion')[0].content
+        references_text = Section.objects.get_or_create(order=11, artefact=artefact, section_category=SectionCategory.objects.get(name='RE'), title='References')[0].content
+        stratigraphies = artefact.stratigraphy_set.all
+        return render(request, 'artefacts/collaboration_artefact_update.html', self.get_context_data(artefact=artefact, form=form, object_section=object_section, description_section=description_section,
+                                                             zone_section=zone_section, macroscopic_section=macroscopic_section,
+                                                             sample_section=sample_section, analyses_performed=analyses_performed,
+                                                             metal_section=metal_section, corrosion_section=corrosion_section,
+                                                             synthesis_section=synthesis_section, conclusion_text=conclusion_text,
+                                                             references_text=references_text, stratigraphies=stratigraphies,
+                                                             tokenComments=dict(tokenDict), sectionComments=dict(sectionDict),
+                                                             node_base_url=settings.NODE_BASE_URL))
+
+    def post(self, request, *args, **kwargs):
+        token = get_object_or_404(Token, pk=self.kwargs['token_id'])
+        artefact = get_object_or_404(Artefact, pk=token.artefact.id)
+        section_1 = Section.objects.get_or_create(order=1, artefact=artefact, section_category=SectionCategory.objects.get(name='AR'), title='The object')[0]
+        artefact.section_set.add(section_1)
+        section_2 = Section.objects.get_or_create(order=2, artefact=artefact, section_category=SectionCategory.objects.get(name='AR'), title='Description and visual observation')[0]
+        section_2.complementary_information = request.POST['complementary_information']
+        artefact.section_set.add(section_2)
+        section_3 = Section.objects.get_or_create(order=3, artefact=artefact, section_category=SectionCategory.objects.get(name='SA'), title='Zones of the artefact submitted to visual observation and location of sampling areas')[0]
+        artefact.section_set.add(section_3)
+        section_4 = Section.objects.get_or_create(order=4, artefact=artefact, section_category=SectionCategory.objects.get(name='SA'), title='Macroscopic observation')[0]
+        section_4.content = request.POST['macroscopic_text']
+        artefact.section_set.add(section_4)
+        section_5 = Section.objects.get_or_create(order=5, artefact=artefact, section_category=SectionCategory.objects.get(name='SA'), title='Sample')[0]
+        section_5.complementary_information = request.POST['sample_complementary_information']
+        # images sample
+        artefact.section_set.add(section_5)
+        section_6 = Section.objects.get_or_create(order=6, artefact=artefact, section_category=SectionCategory.objects.get(name='AN'), title='Analyses and results')[0]
+        section_6.content = request.POST['analyses_performed']
+        artefact.section_set.add(section_6)
+        section_7 = Section.objects.get_or_create(order=7, artefact=artefact, section_category=SectionCategory.objects.get(name='AN'), title='Metal')[0]
+        section_7.content = request.POST['metal_text']
+        section_7.complementary_information = request.POST['metal_complementary_information']
+        # images metal
+        artefact.section_set.add(section_7)
+        section_8 = Section.objects.get_or_create(order=8, artefact=artefact, section_category=SectionCategory.objects.get(name='AN'), title='Corrosion layers')[0]
+        section_8.content = request.POST['corrosion_text']
+        section_8.complementary_information = request.POST['corrosion_complementary_information']
+        artefact.section_set.add(section_8)
+        section_9 = Section.objects.get_or_create(order=9, artefact=artefact, section_category=SectionCategory.objects.get(name='AN'), title='Synthesis of the macroscopic / microscopic observation of corrosion layers')[0]
+        section_9.content=request.POST['synthesis_text']
+        artefact.section_set.add(section_9)
+        section_10 = Section.objects.get_or_create(order=10, artefact=artefact, section_category=SectionCategory.objects.get(name='CO'), title='Conclusion')[0]
+        section_10.content = request.POST['conclusion_text']
+        artefact.section_set.add(section_10)
+        section_11 = Section.objects.get_or_create(order=11, artefact=artefact, section_category=SectionCategory.objects.get(name='RE'), title='References')[0]
+        section_11.content = request.POST['references_text']
+        artefact.section_set.add(section_11)
+        return super(CollaborationUpdateView, self).post(request, **kwargs)
+
+    def get_success_url(self):
+        return reverse('artefacts:collaboration_menu')
+
+class CollaborationCommentView(generic.CreateView):
+
+    model = Collaboration_comment
+    template_name_suffix = '_form'
+    form_class = CollaborationCommentForm
+
+    """
+    A detail view of a selected artefact
+    """
+    queryset = Artefact.objects.select_related('alloy', 'type', 'origin', 'recovering_date', 'chronology_period',
+                                               'environment', 'location', 'owner', 'technology', 'sample_location',
+                                               'responsible_institution', 'microstructure', 'corrosion_form', 'corrosion_type')
+
+
+    def get_context_data(self, **kwargs):
+        """
+        Allows the template to use the selected artefact as well as its foreign keys pointers
+        """
+        user = self.request.user
+        context = super(CollaborationCommentView, self).get_context_data(**kwargs)
+        token = get_object_or_404(Token, pk=self.kwargs['pk'])
+        artefact = token.artefact
+        sections = artefact.section_set.all()
+        documents = artefact.document_set.all()
+        stratigraphies = artefact.stratigraphy_set.all()
+        sectionComments = []
+        sectionDict = defaultdict(list)
+        tokenComments = []
+        tokenDict = defaultdict(list)
+        token_type = ContentType.objects.get(model='token')
+        try :
+            # Get all comments for the current token
+            allTokenComments = Collaboration_comment.objects.filter(content_type_id=token_type.id, object_model_id = token.id)
+
+            # Get first comments of all fields
+            firstTokenComments = []
+            for tokenComm in allTokenComments :
+                if not tokenComm.parent :
+                    firstTokenComments.append(tokenComm)
+
+            # Sort comments using parent_id
+            allTokenCommentsSorted = []
+            for firstToken in firstTokenComments :
+                idToken = firstToken.id
+                allTokenCommentsSorted.append(firstToken)
+                while idToken != 0 :
+                    try :
+                        currentToken = allTokenComments.get(parent_id=idToken)
+                        allTokenCommentsSorted.append(currentToken)
+                        idToken = currentToken.id
+                    except :
+                        idToken = 0
+
+            # Filter only sent comments or comments from user connected
+            for tokenComm in allTokenCommentsSorted :
+                if tokenComm.sent or self.request.user == tokenComm.user :
+                    tokenComments.append(tokenComm)
+
+            # Create a dictonary 'key-list' with field title as a key
+            for tokenComment in tokenComments :
+                tokenDict[tokenComment.field.title].append(tokenComment)
+
+        except :
+            pass
+
+        section_type = ContentType.objects.get(model='section')
+        allSectionsComments = []
+
+        for section in sections :
+            # Get all comments from each section
+            comments = Collaboration_comment.objects.filter(content_type_id=section_type.id, object_model_id = section.id)
+            for comment in comments :
+                allSectionsComments.append(comment)
+
+        # Get first comments of all sections
+        firstSectionComments = []
+        for sectionComm in allSectionsComments:
+            if not sectionComm.parent:
+                firstSectionComments.append(sectionComm)
+
+        # Sort comments using parent_id
+        allSectionCommentsSorted = []
+        for firstSection in firstSectionComments:
+            idSection = firstSection.id
+            allSectionCommentsSorted.append(firstSection)
+            isFound = None
+            while idSection != 0:
+                for comm in allSectionsComments :
+                    isFound = 0
+                    if comm.parent_id == idSection :
+                        allSectionCommentsSorted.append(comm)
+                        idSection = comm.id
+                        isFound = 1
+                if isFound==0 :
+                    idSection=0
+
+        for commentSectionSorted in allSectionCommentsSorted :
+            # Filter only sent comments or comments from user connected
+            if commentSectionSorted.sent or self.request.user == commentSectionSorted.user :
+                sectionComments.append(commentSectionSorted)
+                section = get_object_or_404(Section, pk=commentSectionSorted.object_model_id)
+                sectionShortTitle = getSectionShortName(section.title)
+                sectionDict[sectionShortTitle].append(commentSectionSorted)
+
+        context['user'] = user
+        context['token'] = token
+        context['artefact'] = artefact
+        context['sections'] = sections
+        context['documents'] = documents
+        context['stratigraphies'] = stratigraphies
+        context['tokenComments'] = dict(tokenDict)
+        context['sectionComments'] = dict(sectionDict)
+        context['node_base_url'] = settings.NODE_BASE_URL
+        return context
+
+    """def getSectionCompleteName(self, sectionTitle):
+        if sectionTitle == 'object' :
+            return 'The object'
+        elif sectionTitle == 'zones' :
+            return 'Zones of the artefact submitted to visual observation and location of sampling areas'
+        elif sectionTitle == 'macroscopic' :
+            return 'Macroscopic observation'
+        elif sectionTitle == 'sample' :
+            return 'Sample'
+        elif sectionTitle == 'anaResults' :
+            return 'Analyses and results'
+        elif sectionTitle == 'metal' :
+            return 'Metal'
+        elif sectionTitle == 'corrLayers' :
+            return 'Corrosion layers'
+        elif sectionTitle == 'synthesis' :
+            return 'Synthesis of the macroscopic / microscopic observation of corrosion layers'
+        elif sectionTitle == 'conclusion' :
+            return 'Conclusion'
+        elif sectionTitle == 'references' :
+            return 'References'
+
+    def getSectionShortName(self, sectionTitle):
+        if sectionTitle == 'The object' :
+            return 'object'
+        elif sectionTitle == 'Zones of the artefact submitted to visual observation and location of sampling areas' :
+            return 'zones'
+        elif sectionTitle == 'Macroscopic observation' :
+            return 'macroscopic'
+        elif sectionTitle == 'Sample' :
+            return 'sample'
+        elif sectionTitle == 'Analyses and results' :
+            return 'anaResults'
+        elif sectionTitle == 'Metal' :
+            return 'metal'
+        elif sectionTitle == 'Corrosion layers' :
+            return 'corrLayers'
+        elif sectionTitle == 'Synthesis of the macroscopic / microscopic observation of corrosion layers' :
+            return 'synthesis'
+        elif sectionTitle == 'Conclusion' :
+            return 'conclusion'
+        elif sectionTitle == 'References' :
+            return 'references'"""
+
+    def get_field_last_comment_id(self, token, field, model):
+        lastId = 0
+        try :
+            commentsExisting = Collaboration_comment.objects.filter(content_type_id=model.id, object_model_id=token.id, field_id=field.id)
+            if commentsExisting:
+                lastId = 0
+                idComm = 0
+                for comment in commentsExisting:
+                    if not comment.parent:
+                        idComm = comment.id
+
+                while lastId == 0:
+                    isFound = 0
+                    for comment in commentsExisting:
+                        if comment.parent_id == idComm:
+                            idComm = comment.id
+                            isFound = 1
+                    if isFound == 0:
+                        lastId = idComm
+                return lastId
+            else :
+                return lastId
+        except :
+            return 0
+
+    def get_section_last_comment_id(self, section, model):
+        lastId = 0
+        try :
+            commentsExisting = Collaboration_comment.objects.filter(content_type_id=model.id, object_model_id=section.id)
+            if commentsExisting:
+                lastId = 0
+                idComm = 0
+                for comment in commentsExisting:
+                    if not comment.parent:
+                        idComm = comment.id
+
+                while lastId == 0:
+                    isFound = 0
+                    for comment in commentsExisting:
+                        if comment.parent_id == idComm:
+                            idComm = comment.id
+                            isFound = 1
+                    if isFound == 0:
+                        lastId = idComm
+                return lastId
+            else :
+                return lastId
+        except :
+            return 0
+
+    def form_valid(self, form):
+        try :
+            token = Token.tokenManager.get(pk=self.kwargs['pk'])
+            field = get_object_or_404(Field, title=self.kwargs['field'])
+            form.instance.field = field
+            form.instance.content_object = token
+            token_type = ContentType.objects.get(model='token')
+
+            if self.get_field_last_comment_id(token, field, token_type) != 0 :
+                lastId = self.get_field_last_comment_id(token, field, token_type)
+                form.instance.parent_id = lastId
+
+        except :
+            token = Token.tokenManager.get(pk=self.kwargs['pk'])
+            sectionTitle = getSectionCompleteName(self.kwargs['field'])
+            section = Section.objects.get(title=sectionTitle, artefact=token.artefact)
+            form.instance.content_object = section
+            section_type = ContentType.objects.get(model='section')
+
+            if self.get_section_last_comment_id(section, section_type) != 0 :
+                lastId = self.get_section_last_comment_id(section, section_type)
+                form.instance.parent_id = lastId
+
+        user = self.request.user
+        form.instance.user = user
+
+        return super(CollaborationCommentView, self).form_valid(form)
+
+    def get_success_url(self):
+
+        return reverse('artefacts:collaboration-comment', kwargs={'pk' : self.kwargs['pk'], 'field' : 'none'})
+
+def getSectionCompleteName(sectionTitle):
+    if sectionTitle == 'object' :
+        return 'The object'
+    elif sectionTitle == 'zones' :
+        return 'Zones of the artefact submitted to visual observation and location of sampling areas'
+    elif sectionTitle == 'macroscopic' :
+        return 'Macroscopic observation'
+    elif sectionTitle == 'sample' :
+        return 'Sample'
+    elif sectionTitle == 'anaResults' :
+        return 'Analyses and results'
+    elif sectionTitle == 'metal' :
+        return 'Metal'
+    elif sectionTitle == 'corrLayers' :
+        return 'Corrosion layers'
+    elif sectionTitle == 'synthesis' :
+        return 'Synthesis of the macroscopic / microscopic observation of corrosion layers'
+    elif sectionTitle == 'conclusion' :
+        return 'Conclusion'
+    elif sectionTitle == 'references' :
+        return 'References'
+
+def getSectionShortName(sectionTitle):
+    if sectionTitle == 'The object' :
+        return 'object'
+    elif sectionTitle == 'Zones of the artefact submitted to visual observation and location of sampling areas' :
+        return 'zones'
+    elif sectionTitle == 'Macroscopic observation' :
+        return 'macroscopic'
+    elif sectionTitle == 'Sample' :
+        return 'sample'
+    elif sectionTitle == 'Analyses and results' :
+        return 'anaResults'
+    elif sectionTitle == 'Metal' :
+        return 'metal'
+    elif sectionTitle == 'Corrosion layers' :
+        return 'corrLayers'
+    elif sectionTitle == 'Synthesis of the macroscopic / microscopic observation of corrosion layers' :
+        return 'synthesis'
+    elif sectionTitle == 'Conclusion' :
+        return 'conclusion'
+    elif sectionTitle == 'References' :
+        return 'references'
+
+def deleteComment(request, comment_id, artefact_id) :
+    comment = get_object_or_404(Collaboration_comment, pk=comment_id)
+    comment.delete()
+    """pageContext = {'pk': artefact_id, 'field' : 'none'}
+    return render(request, 'artefacts/collaboration_comment_form.html', pageContext)
+    return HttpResponse('OK')"""
