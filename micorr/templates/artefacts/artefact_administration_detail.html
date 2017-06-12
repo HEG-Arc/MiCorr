@@ -47,6 +47,7 @@
               <div class="row">
                 <hr>
                 <h2>Informations about the available options</h2>
+                <br>
                 As a main administrator, you have 2 options about requests sent :
                 <br><br>
                 1. You can delegate the request to a delegated administrator which will be able to take a decision for it.
@@ -55,23 +56,56 @@
                 be able to see the decision and read the comment (facultative)<br><br>
                 2. You can take the decision yourself (validate or refuse). If you validate the request, the artefact will
                 be published on the public part of MiCorr. You're decision will be sent to the author of the artefact. A
-                comment can be added.
-                <br><br>
+                comment can be added.<br><br>
+              </div>
+              <div class="row">
+                <hr>
+                <h2>Informations about the request</h2>
+                <br>
+                <div class="c4">
+                    <b>Date of the request :</b>
+                </div>
+                <div class="c8">
+                    {{ publication.created }}
+                </div>
+                <div class="c4">
+                    <b>Object analyzed :</b>
+                </div>
+                <div class="c8">
+                    {{ publication.artefact.object.name }}
+                </div>
+                <div class="c4">
+                    <b>Author of the artefact :</b>
+                </div>
+                <div class="c8">
+                    {{ publication.artefact.object.user.username }}
+                    {% if publication.artefact.object.user.first_name != '' and publication.artefact.object.user.last_name != '' %}
+                        ({{ publication.artefact.object.user.first_name }} {{ publication.artefact.object.user.last_name }})
+                    {% endif %}
+                </div>
                 <div class="pull-right">
+                    <br><br>
                     <a href="#" class="btn btn-primary btn-md">Delegate</a>
                     <a href="#" class="btn btn-primary btn-md">Take a decision</a>
+                    <br>
                 </div>
-                <br><br>
               </div>
 
           {% elif accessType == 'confirm' %}
               <div class="row">
                 <hr>
                 <h2>Informations about the available options</h2>
-                You've delegated this request and a decision has been taken by the delegated administrator.
-                <br><br>
+                <br>
+                You've delegated this request and a decision has been taken by the delegated administrator. You have to
+                confirm it before it is sent to the author of the artefact. If the request is validated by the delegated
+                administrator, your confirmation will publish the artefact on the public part of MiCorr.
+              </div>
+              <div class="row">
+                <hr>
+                <h2>Informations about the request</h2>
+                <br>
                 <div class="c4">
-                    Delegated administrator :
+                    <b>Delegated administrator :</b>
                 </div>
                 <div class="c8">
                     {{ publication.delegated_user.username }}
@@ -79,9 +113,8 @@
                         ({{ publicaiton.delegated_user.first_name }} {{ publication.delegated_user.last_name }})
                     {% endif %}
                 </div>
-                <br><br>
                 <div class="c4">
-                    Decision :
+                    <b>Decision :</b>
                 </div>
                 <div class="c8">
                     {% if publication.decision_delegated_user == True %}
@@ -90,34 +123,14 @@
                         Refused
                     {% endif %}
                 </div>
-                <br><br>
-                {% if publication.comment_to_user != None %}
-                    <div class="c12">
-                        Comment from the delegated administrator to the author :<br>
-                        {{ publication.comment_to_user|safe }}
-                    </div>
-                {% endif %}
-                <div class="pull-right">
-                    {% if publication.decision_delegated_user == True %}
-                        <a href="#" class="btn btn-primary btn-md">Confirm decision and publish</a>
-                    {% else %}
-                        <a href="#" class="btn btn-primary btn-md">Confirm decision</a>
-                    {% endif %}
-                    <br>
-                </div>
-                <br><br>
-              </div>
-
-          {% elif accessType == 'answerdeleg' %}
-              <div class="row">
-                <hr>
-                <h2>Informations about the available options</h2>
-                The main administrator delegated this request to you. You'll have to analyze it and take a decision.<br><br>
-                Then, the main administrator will have to confirm your decision. If you choose to validate the request, it
-                will be published on the public part of MiCorr after the main administrator confirmation.
-                <br><br>
                 <div class="c4">
-                    Request author :
+                    <b>Object analyzed :</b>
+                </div>
+                <div class="c8">
+                    {{ publication.artefact.object.name }}
+                </div>
+                <div class="c4">
+                    <b>Author of the artefact :</b>
                 </div>
                 <div class="c8">
                     {{ publication.artefact.object.user.username }}
@@ -125,29 +138,64 @@
                         ({{ publicaiton.artefact.object.user.first_name }} {{ publication.artefact.object.user.last_name }})
                     {% endif %}
                 </div>
-                <!--<br><br>
-                <div class="c4">
-                    Decision :
-                </div>
-                <div class="c8">
-                    { if publication.decision_delegated_user == True %}
-                        Accepted
-                    { else %}
-                        Refused
-                    { endif %}
-                </div>-->
-                <br><br>
-                {% if publication.comment_delegation != None %}
+                {% if publication.comment_to_user != None %}
                     <div class="c12">
-                        Comment from the main administator to you :<br>
-                        {{ publication.comment_delegation|safe }}
+                        <b>Comment from the delegated administrator to the author :</b>
+                        <br>
+                        <i>{{ publication.comment_to_user|safe }}</i>
                     </div>
                 {% endif %}
                 <div class="pull-right">
+                    <br><br>
+                    {% if publication.decision_delegated_user == True %}
+                        <a href="#" class="btn btn-primary btn-md">Confirm decision and publish</a>
+                    {% else %}
+                        <a href="#" class="btn btn-primary btn-md">Confirm decision</a>
+                    {% endif %}
+                    <br>
+                </div>
+              </div>
+
+          {% elif accessType == 'answerdeleg' %}
+              <div class="row">
+                <hr>
+                <h2>Informations about the available options</h2>
+                  <br>
+                The main administrator delegated this request to you. You'll have to analyze it and take a decision.<br><br>
+                Then, the main administrator will have to confirm your decision. If you choose to validate the request, it
+                will be published on the public part of MiCorr after the main administrator confirmation.
+              </div>
+              <div class="row">
+                <hr>
+                <h2>Informations about the request</h2>
+                <br>
+                <div class="c4">
+                    <b>Object analyzed :</b>
+                </div>
+                <div class="c8">
+                    {{ publication.artefact.object.name }}
+                </div>
+                <div class="c4">
+                    <b>Author of the artefact :</b>
+                </div>
+                <div class="c8">
+                    {{ publication.artefact.object.user.username }}
+                    {% if publication.artefact.object.user.first_name != '' and publication.artefact.object.user.last_name != '' %}
+                        ({{ publicaiton.artefact.object.user.first_name }} {{ publication.artefact.object.user.last_name }})
+                    {% endif %}
+                </div>
+                {% if publication.comment_delegation != None %}
+                    <div class="c12">
+                        <b>Comment from the main administator to you :</b>
+                        <br>
+                        <i>{{ publication.comment_delegation|safe }}</i>
+                    </div>
+                {% endif %}
+                <div class="pull-right">
+                    <br>
                     <a href="#" class="btn btn-primary btn-md">Take a decision</a>
                     <br>
                 </div>
-                <br><br>
               </div>
           {% endif %}
           <div class="row">

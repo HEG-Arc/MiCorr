@@ -1675,13 +1675,13 @@ def accessAdministration(publication_id, user, accessType) :
 
     if publication.decision_taken == True :
         raise Http404
-    if accessType=='answerMain' :
+    if accessType=='answermain' :
         if publication.user != user or publication.delegated_user != None :
             raise Http404
     elif accessType=='confirm' :
         if publication.user != user or publication.decision_delegated_user == None :
             raise Http404
-    elif accessType=='answerDeleg' :
+    elif accessType=='answerdeleg' :
         if publication.delegated_user != user or publication.decision_delegated_user != None :
             raise Http404
 
