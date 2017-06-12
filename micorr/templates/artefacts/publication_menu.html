@@ -12,7 +12,7 @@
                 <h3>Publications
                     {% if isAdmin %}
                         <div class="pull-right" style="margin-top: 0px">
-                            <a href="#" class="btn btn-primary btn-md"><i class="fa fa-wrench"></i>&nbsp;&nbsp;Administration</a>
+                            <a href="{% url 'artefacts:publication-administration-menu' %}" class="btn btn-primary btn-md"><i class="fa fa-wrench"></i>&nbsp;&nbsp;Administration</a>
                         </div>
                     {% endif %}
                 </h3>
@@ -44,7 +44,7 @@
                                             <tr>
                                                 <td>{{ artPub.created }}</td>
                                                 <td>{{ artPub.object.name }}</td>
-                                                <td><a href="{% url 'artefacts:publication-artefact-detail' pk=artPub.id %}" target="_blank"><i class="fa fa-eye"></i></a></td>
+                                                <td><a href="{% url 'artefacts:artefact-detail' pk=artPub.id %}" target="_blank"><i class="fa fa-eye"></i></a></td>
                                             </tr>
                                         {% endfor %}
                                     </table>
@@ -74,7 +74,7 @@
                                             <tr>
                                                 <td>{{ publi.modified }}</td>
                                                 <td>{{ publi.artefact.object.name }}</td>
-                                                <td><a href="{% url 'artefacts:publication-artefact-detail' pk=publi.artefact.id %}" target="_blank"><i class="fa fa-eye"></i></a></td>
+                                                <td><a href="{% url 'artefacts:publication-artefact-detail' pk=publi.id %}" target="_blank"><i class="fa fa-eye"></i></a></td>
                                             </tr>
                                         {% endfor %}
                                     </table>
@@ -112,7 +112,7 @@
                                                 {% else %}
                                                     <td><i class="fa fa-times" style="color: red"></i></td>
                                                 {% endif %}
-                                                <td><a href="{% url 'artefacts:publication-artefact-detail' pk=pubHist.artefact.id %}"><i class="fa fa-eye"></i></a></td>
+                                                <td><a href="{% url 'artefacts:publication-artefact-detail' pk=pubHist.id %}"><i class="fa fa-eye"></i></a></td>
                                             </tr>
                                         {% endfor %}
                                     </table>

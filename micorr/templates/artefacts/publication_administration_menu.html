@@ -34,7 +34,7 @@
                                     </h4>
                                 </div>
                                 <div id="requestsforpublications" class="panel-collapse collapse">
-                                    {% if artefactsPublished %}
+                                    {% if requestsPub %}
                                         <table class="table table-bordered table-striped table-hover">
                                             <tr>
                                                 <th>Date of the request</th>
@@ -47,7 +47,7 @@
                                                     <td>{{ request.created }}</td>
                                                     <td>{{ request.artefact.object.name }}</td>
                                                     <td>{{ request.artefact.object.user.username }}</td>
-                                                    <td><a href="#" target="_blank"><i class="fa fa-eye"></i></a></td>
+                                                    <td><a href="{% url 'artefacts:publication-administration-detail' pk=request.id accessType='answermain' %}" target="_blank"><i class="fa fa-eye"></i></a></td>
                                                 </tr>
                                             {% endfor %}
                                         </table>
@@ -84,7 +84,7 @@
                                                     {% else %}
                                                         <td><i class="fa fa-times" style="color: red"></i></td>
                                                     {% endif %}
-                                                    <td><a href="#" target="_blank"><i class="fa fa-eye"></i></a></td>
+                                                    <td><a href="{% url 'artefacts:publication-administration-detail' pk=delegPubConf.id accessType='confirm' %}" target="_blank"><i class="fa fa-eye"></i></a></td>
                                                 </tr>
                                             {% endfor %}
                                         </table>
@@ -117,7 +117,7 @@
                                                     <td>{{ delegPubProg.created }}</td>
                                                     <td>{{ delegPubProg.artefact.object.name }}</td>
                                                     <td>{{ delegPubProg.delegated_user.username }}</td>
-                                                    <td><a href="#"><i class="fa fa-eye"></i></a></td>
+                                                    <td><a href="{% url 'artefacts:publication-artefact-detail' pk=delegPubProg.id %}" target="_blank"><i class="fa fa-eye"></i></a></td>
                                                 </tr>
                                             {% endfor %}
                                         </table>
@@ -127,8 +127,39 @@
                                 </div>
                             </div>
                         </div>
-                    {% else %}
-
+                    {% elif adminType == 'Delegated' %}
+                        <div class="panel-group">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <span class="glyphicon glyphicon-plus"></span>
+                                        <a data-toggle="collapse" href="#requestsforpublicationsdeleg">Requests for publications</a>
+                                    </h4>
+                                </div>
+                                <div id="requestsforpublicationsdeleg" class="panel-collapse collapse">
+                                    {% if delegPub %}
+                                        <table class="table table-bordered table-striped table-hover">
+                                            <tr>
+                                                <th>Date of the request</th>
+                                                <th>Artefact</th>
+                                                <th>Artefact author</th>
+                                                <th>Action</th>
+                                            </tr>
+                                            {% for delegrequest in delegPub %}
+                                                <tr>
+                                                    <td>{{ delegrequest.created }}</td>
+                                                    <td>{{ delegrequest.artefact.object.name }}</td>
+                                                    <td>{{ delegrequest.artefact.object.user.username }}</td>
+                                                    <td><a href="{% url 'artefacts:publication-administration-detail' pk=delegrequest.id accessType='answerdeleg' %}" target="_blank"><i class="fa fa-eye"></i></a></td>
+                                                </tr>
+                                            {% endfor %}
+                                        </table>
+                                    {% else %}
+                                        There is no request for publications.
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
                     {% endif %}
                 </div>
             </div>

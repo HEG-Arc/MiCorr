@@ -15,6 +15,7 @@ from django.views import generic
 from haystack.forms import SearchForm
 from django.conf import settings
 from django.contrib import messages
+from django.http import Http404
 
 from contacts.forms import ContactCreateForm
 from stratigraphies.neo4jdao import Neo4jDAO
@@ -158,6 +159,8 @@ class ArtefactsUpdateView(generic.UpdateView):
         artefact = Artefact.objects.get(id=self.kwargs['pk'])
         obj = Object.objects.get(id=artefact.object.id)
 
+        #if user want to update an artefact with parent (= artefact for publication), raise 404
+        errorUpdatePublicationArtefact(self.kwargs['pk'])
 
         self.object = artefact
         form_class = self.get_form_class()
@@ -712,6 +715,16 @@ class DocumentCreateView(generic.CreateView):
     def get_success_url(self):
         return reverse('artefacts:artefact-detail', kwargs={'pk': self.kwargs.get('artefact_id', None)}, )
 
+def errorUpdatePublicationArtefact(artefact_id) :
+    artefact = get_object_or_404(Artefact, pk=artefact_id)
+    if artefact.parent :
+        raise Http404
+
+def errorAccessToken(token_id, user) :
+    token = get_object_or_404(Token, pk=token_id)
+    if token.user != user and token.recipient != user.email :
+        raise Http404
+
 class CollaborationListView(generic.ListView):
     model = Token
     template_name_suffix = '_collaboration_menu'
@@ -789,6 +802,8 @@ class CollaborationUpdateView(generic.UpdateView):
         return obj
 
     def get(self, request, **kwargs):
+
+        errorAccessToken(self.kwargs['token_id'], self.request.user)
 
         token = Token.tokenManager.get(id=self.kwargs['token_id'])
         artefact = Artefact.objects.get(id=token.artefact.id)
@@ -977,10 +992,9 @@ class CollaborationCommentView(generic.CreateView):
 
 
     def get_context_data(self, **kwargs):
-        """
-        Allows the template to use the selected artefact as well as its foreign keys pointers
-        """
+
         user = self.request.user
+        errorAccessToken(self.kwargs['pk'], self.request.user)
         context = super(CollaborationCommentView, self).get_context_data(**kwargs)
         token = get_object_or_404(Token, pk=self.kwargs['pk'])
         artefact = token.artefact
@@ -1233,6 +1247,7 @@ def getSectionShortName(sectionTitle):
 def sendComments(request, token_id) :
     if request.method == 'POST':
         token = get_object_or_404(Token, pk=token_id)
+        errorAccessToken(token_id, request.user)
         artefact = get_object_or_404(Artefact, pk=token.artefact.id)
         sections = artefact.section_set.all()
         token_type = ContentType.objects.get(model='token')
@@ -1260,40 +1275,6 @@ def sendComments(request, token_id) :
 
         return redirect('artefacts:collaboration_menu')
 
-
-def readComments(request, pk):
-    if request.method == 'POST':
-        token = Token.tokenManager.get(id=pk)
-        artefact = get_object_or_404(Artefact, pk=token.artefact.id)
-        sections = artefact.section_set.all()
-        token_type = ContentType.objects.get(model='token')
-        section_type = ContentType.objects.get(model='section')
-
-        try:
-            commentsTokenAll = Collaboration_comment.objects.filter(content_type_id=token_type.id,
-                                                                    object_model_id=token.id)
-            for comment in commentsTokenAll:
-                if comment.user != request.user and comment.sent == True and comment.read == False:
-                    comment.read = True
-                    comment.save()
-        except:
-            pass
-
-        try:
-            for section in sections:
-                commentsSectionEach = Collaboration_comment.objects.filter(content_type_id=section_type.id,
-                                                                           object_model_id=section.id,
-                                                                           token_for_section_id=token.id)
-
-                for comment in commentsSectionEach:
-                    if comment.user != request.user and comment.sent == True and comment.read == False:
-                        comment.read = True
-                        comment.save()
-        except:
-            pass
-
-        return redirect('artefacts:collaboration_menu')
-
 class CommentReadView(generic.UpdateView):
     model = Token
     template_name_suffix = '_confirm_read'
@@ -1302,6 +1283,7 @@ class CommentReadView(generic.UpdateView):
     def get_context_data(self, **kwargs):
         context = super(CommentReadView, self).get_context_data(**kwargs)
         token = Token.tokenManager.get(id=self.kwargs['pk'])
+        errorAccessToken(self.kwargs['pk'], self.request.user)
         context['token'] = token
         return context
 
@@ -1350,6 +1332,7 @@ class CommentDeleteView(generic.DeleteView):
         comment = get_object_or_404(Collaboration_comment, pk=self.kwargs['pk'])
 
         token = get_object_or_404(Token, pk=self.kwargs['token_id'])
+        errorAccessToken(self.kwargs['token_id'], self.request.user)
         parent = 0
         child = 0
 
@@ -1419,6 +1402,7 @@ class CollaborationHideView(generic.UpdateView):
         return super(CollaborationHideView, self).post(request, **kwargs)
 
     def get_context_data(self, **kwargs):
+        errorAccessToken(self.kwargs['pk'], self.request.user)
         context = super(CollaborationHideView, self).get_context_data(**kwargs)
         context['action'] = reverse('artefacts:collaboration-hide',
                                     kwargs={'pk': self.get_object().id})
@@ -1464,6 +1448,7 @@ class CollaborationDeletedListView(generic.ListView):
 
 def retrieveDeletedCollaboration(request, token_id) :
     token = get_object_or_404(Token, pk=token_id)
+    errorAccessToken(token_id, request.user)
 
     if token.user == request.user :
         token.hidden_by_author = False
@@ -1536,11 +1521,12 @@ class PublicationArtefactDetailView(generic.DetailView):
                                                'responsible_institution', 'microstructure', 'corrosion_form', 'corrosion_type')
 
     def get_context_data(self, **kwargs):
-        """
-        Allows the template to use the selected artefact as well as its foreign keys pointers
-        """
+
         context = super(PublicationArtefactDetailView, self).get_context_data(**kwargs)
-        artefact = get_object_or_404(Artefact, pk=self.kwargs['pk'])
+        publication = get_object_or_404(Publication, pk=self.kwargs['pk'])
+        artefact = publication.artefact
+        if artefact.object.user != self.request.user :
+            raise Http404
         sections = artefact.section_set.all()
         documents = artefact.document_set.all()
         stratigraphies = artefact.stratigraphy_set.all()
@@ -1552,23 +1538,15 @@ class PublicationArtefactDetailView(generic.DetailView):
         context['node_base_url'] = settings.NODE_BASE_URL
         return context
 
-def get_app(app_label) :
-    try:
-        from django.apps import apps
-    except ImportError:
-        from django.db import models
-        return models.get_app(app_label)
-    else:
-        return apps.get_app_config(app_label).models_module
-
 class PublicationCreateView(generic.CreateView):
     model = Artefact
     template_name_suffix = '_publication_create'
     form_class = ArtefactsCreateForm
 
     def get_context_data(self, **kwargs):
-
         artefact = get_object_or_404(Artefact, pk=self.kwargs['pk'])
+        if artefact.object.user != self.request.user :
+            raise Http404
         sections = artefact.section_set.all()
         documents = artefact.document_set.all()
         stratigraphies = artefact.stratigraphy_set.all()
@@ -1648,10 +1626,10 @@ class PublicationCreateView(generic.CreateView):
 class AdministrationListView(generic.ListView):
     model = Publication
 
-    template_name = 'administration_menu'
+    template_name_suffix = '_administration_menu'
 
     def get_context_data(self, **kwargs):
-        # Call the base implementation first to get a context
+
         context = super(AdministrationListView, self).get_context_data(**kwargs)
         user = self.request.user
         adminType = 'Delegated'
@@ -1690,4 +1668,54 @@ class AdministrationListView(generic.ListView):
 
         context['adminType'] = adminType
         context['user'] = user
+        return context
+
+def accessAdministration(publication_id, user, accessType) :
+    publication = get_object_or_404(Publication, pk=publication_id)
+
+    if publication.decision_taken == True :
+        raise Http404
+    if accessType=='answerMain' :
+        if publication.user != user or publication.delegated_user != None :
+            raise Http404
+    elif accessType=='confirm' :
+        if publication.user != user or publication.decision_delegated_user == None :
+            raise Http404
+    elif accessType=='answerDeleg' :
+        if publication.delegated_user != user or publication.decision_delegated_user != None :
+            raise Http404
+
+def accessAdministrationDeleg(publication_id, user) :
+    publication = get_object_or_404(Publication, pk=publication_id)
+    if publication.delegated_user != user :
+        raise Http404
+
+class AdministrationArtefactDetailView(generic.DetailView):
+
+    model = Artefact
+    template_name_suffix = '_administration_detail'
+
+    queryset = Artefact.objects.select_related('alloy', 'type', 'origin', 'recovering_date', 'chronology_period',
+                                               'environment', 'location', 'owner', 'technology', 'sample_location',
+                                               'responsible_institution', 'microstructure', 'corrosion_form', 'corrosion_type')
+
+    def get_context_data(self, **kwargs):
+
+        context = super(AdministrationArtefactDetailView, self).get_context_data(**kwargs)
+        publication = get_object_or_404(Publication, pk=self.kwargs['pk'])
+
+        accessAdministration(publication.id, self.request.user, self.kwargs['accessType'])
+
+        artefact = publication.artefact
+        sections = artefact.section_set.all()
+        documents = artefact.document_set.all()
+        stratigraphies = artefact.stratigraphy_set.all()
+
+        context['publication'] = publication
+        context['accessType'] = self.kwargs['accessType']
+        context['artefact'] = artefact
+        context['sections'] = sections
+        context['documents'] = documents
+        context['stratigraphies'] = stratigraphies
+        context['node_base_url'] = settings.NODE_BASE_URL
         return context
