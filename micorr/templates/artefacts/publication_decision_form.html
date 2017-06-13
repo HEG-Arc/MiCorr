@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block custom_header_script %}
+    <script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
+    <script>tinymce.init({selector: 'textarea', plugins: "table"});</script>
+{% endblock custom_header_script %}
+
+{% block title %}<title>MiCorr | {{ user.username }} Publication</title>{% endblock %}
+
+{% block content %}
+    <div class="container">
+
+        <div class="row">
+            <div class="col-sm-12">
+                <h2>Decision for the request</h2>
+            </div>
+        </div>
+
+        {% if user == request.user %}
+            <form action="{% url 'artefacts:publication-administration-decision' pk=form.instance.pk %}" method="post">{% csrf_token %}
+                <div class="row">
+                    <div class="col-sm-2">
+                        <h3>Date of request :</h3>
+                    </div>
+                    <div class="col-sm-10">
+                        <h3>{{ publication.created }}</h3>
+                    </div>
+                    <div class="col-sm-2">
+                        <h3>Object submitted :</h3>
+                    </div>
+                    <div class="col-sm-10">
+                        <h3>{{ publication.artefact.object.name }}</h3>
+                    </div>
+                    <div class="col-sm-2">
+                        <h3>Author :</h3>
+                    </div>
+                    <div class="col-sm-10">
+                        <h3>{{ publication.artefact.object.user.username }}
+                            {% if publication.artefact.object.user.first_name != '' and publication.artefact.object.user.last_name != ''%}
+                                ({{ publication.artefact.object.user.first_name }} {{ publication.artefact.object.user.last_name }})
+                            {% endif %}
+                        </h3>
+                    </div>
+                    <div class="col-sm-12">
+                        <h3>Comment to user (facultative)</h3>
+                        {{ form.comment_to_user }}
+                    </div>
+                </div>
+                <div class="row">
+                    <br>
+                    <div class="col-sm-1 col-sm-offset-9">
+                        <div class="pull-right">
+                            <button class="btn btn-danger btn-md" type="submit" name="refuse" onclick="return confirm('Are you sure you want to refuse the request?')"><i class="fa fa-times"></i> Refuse</button>
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="pull-right">
+                            <button class="btn btn-danger btn-md" type="submit" name="validate" onclick="return confirm('Are you sure you want to validate the request?')"><i class="fa fa-check"></i>
+                                {% if typeAdmin == 'Main' %}
+                                    &nbsp;Validate and publish
+                                {% elif typeAdmin == 'Delegated' %}
+                                    &nbsp;Validate
+                                {% endif %}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        {% endif %}
+    </div>
+
+{% endblock content %}

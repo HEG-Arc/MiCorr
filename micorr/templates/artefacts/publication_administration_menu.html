@@ -31,6 +31,13 @@
                                     <h4 class="panel-title">
                                         <span class="glyphicon glyphicon-plus"></span>
                                         <a data-toggle="collapse" href="#requestsforpublications">Requests for publications</a>
+                                        {% if nbPubliReq != 0 %}
+                                            <div class="pull-right">
+                                                <div id="moncercle">
+                                                    <center>{{ nbPubliReq }}</center>
+                                                </div>
+                                            </div>
+                                        {% endif %}
                                     </h4>
                                 </div>
                                 <div id="requestsforpublications" class="panel-collapse collapse">
@@ -64,6 +71,13 @@
                                     <h4 class="panel-title">
                                         <span class="glyphicon glyphicon-plus"></span>
                                         <a data-toggle="collapse" href="#delegatedrequeststoconfirm">Delegated requests to confirm</a>
+                                        {% if nbPubliConf != 0 %}
+                                            <div class="pull-right">
+                                                <div id="moncercle">
+                                                    <center>{{ nbPubliConf }}</center>
+                                                </div>
+                                            </div>
+                                        {% endif %}
                                     </h4>
                                 </div>
                                 <div id="delegatedrequeststoconfirm" class="panel-collapse collapse">

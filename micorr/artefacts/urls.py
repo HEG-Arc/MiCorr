@@ -81,5 +81,7 @@ urlpatterns = [
     url(r'^publication/artefact/(?P<pk>\d+)/$', login_required(artefacts_views.PublicationArtefactDetailView.as_view()), name='publication-artefact-detail'),
     url(r'^publication/administration/$', login_required(artefacts_views.AdministrationListView.as_view()), name='publication-administration-menu'),
     url(r'^publication/administration/artefact/(?P<pk>\d+)/(?P<accessType>\w+)/$', login_required(artefacts_views.AdministrationArtefactDetailView.as_view()), name='publication-administration-detail'),
+    url(r'^publication/administration/(?P<pk>\d+)/decision/$', login_required(artefacts_views.PublicationUpdateDecision.as_view()), name='publication-administration-decision'),
+    url(r'^publication/administration/(?P<publication_id>\d+)/confirm/$', login_required(artefacts_views.confirmDecisionDelegatedAdmin), name='publication-administration-confirm'),
     # url(r'^test-ontology/$', displayOntology),
 ]

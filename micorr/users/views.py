@@ -10,7 +10,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.views import generic
 from django.conf import settings
 
-from artefacts.models import Collaboration_comment, Token
+from artefacts.models import Collaboration_comment, Publication, Token
 from stratigraphies.neo4jdao import Neo4jDAO
 
 from django.contrib.contenttypes.models import ContentType
@@ -85,6 +85,17 @@ class UserDetailView(generic.DetailView):
         context['node_base_url'] = settings.NODE_BASE_URL
         return context
 
+def adminType(user) :
+    adminType = None
+    groups = user.groups.all()
+    for group in groups:
+        if group.name == 'Delegated administrator':
+                adminType = 'Delegated'
+
+        for group in groups:
+            if group.name == 'Main administrator':
+                adminType = 'Main'
+    return adminType
 
 
 class UserRedirectView(LoginRequiredMixin, RedirectView):

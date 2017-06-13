@@ -295,8 +295,10 @@ class TokenHideForm(forms.ModelForm):
         model = Token
         fields=['comment']
 
-class PublicationForm(forms.ModelForm):
+class PublicationDecisionForm(forms.ModelForm):
+
+    comment_to_user = forms.CharField(widget = TinyMCE(attrs={'cols': 10, 'rows': 5}), required = False)
 
     class Meta:
         model = Publication
-        exclude=[]
+        fields=['comment_to_user']

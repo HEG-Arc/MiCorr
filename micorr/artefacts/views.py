@@ -25,7 +25,8 @@ from .forms import ArtefactsUpdateForm, ArtefactsCreateForm, DocumentUpdateForm,
     OriginCreateForm, ChronologyCreateForm, AlloyCreateForm, TechnologyCreateForm, EnvironmentCreateForm, \
     MicrostructureCreateForm, MetalCreateForm, CorrosionFormCreateForm, CorrosionTypeCreateForm, \
     RecoveringDateCreateForm, ImageCreateForm, TypeCreateForm, ContactAuthorForm, ShareArtefactForm, \
-    ShareWithFriendForm, ObjectCreateForm, ObjectUpdateForm, CollaborationCommentForm, TokenHideForm
+    ShareWithFriendForm, ObjectCreateForm, ObjectUpdateForm, CollaborationCommentForm, TokenHideForm, \
+    PublicationDecisionForm
 
 from .models import Artefact, Document, Collaboration_comment, Field, Object, Section, SectionCategory, Image, Stratigraphy, Token, \
     Publication
@@ -1174,8 +1175,6 @@ class CollaborationCommentView(generic.CreateView):
                 lastId = self.get_field_last_comment_id(token, field, token_type)
                 form.instance.parent_id = lastId
 
-            #testToken[field] = form.instance
-
         except :
             token = Token.tokenManager.get(pk=self.kwargs['pk'])
             field = getSectionCompleteName(self.kwargs['field'])
@@ -1504,6 +1503,24 @@ class PublicationListView(generic.ListView):
         except:
             pass
 
+        typeUser = adminType(user)
+        newPublicationsAdmin = 0
+        if typeUser == 'Main':
+            publications = Publication.objects.filter(user=user, decision_taken=False)
+            for publication in publications:
+                if publication.delegated_user == None:
+                    newPublicationsAdmin = newPublicationsAdmin + 1
+                else:
+                    if publication.decision_delegated_user != None:
+                        newPublicationsAdmin = newPublicationsAdmin + 1
+
+        elif typeUser == 'Delegated':
+            publications = Publication.objects.filter(delegated_user=user, decision_taken=False)
+            for publication in publications:
+                if publication.decision_delegated_user == None:
+                    newPublicationsAdmin = newPublicationsAdmin + 1
+
+        context['newPublications'] = newPublicationsAdmin
         context['isAdmin'] = isAdmin
         context['publications'] = publicationsUser
         context['artefactsPublished'] = artefactsPublished
@@ -1625,48 +1642,58 @@ class PublicationCreateView(generic.CreateView):
 
 class AdministrationListView(generic.ListView):
     model = Publication
-
     template_name_suffix = '_administration_menu'
 
     def get_context_data(self, **kwargs):
 
         context = super(AdministrationListView, self).get_context_data(**kwargs)
         user = self.request.user
-        adminType = 'Delegated'
-        publications = None
+        typeUser = adminType(user)
 
-        groups = user.groups.all()
-        for group in groups :
-            if group.name == 'Main administrator' :
-                adminType = 'Main'
-
-        if adminType == 'Main' :
+        if typeUser == 'Main' :
             try :
-                requestsPub = Publication.objects.filter(delegated_user=None, decision_taken=False)
+                requestsPub = Publication.objects.filter(delegated_user=None, decision_taken=False).order_by('-modified')
                 context['requestsPub'] = requestsPub
             except:
                 context['requestsPub'] = None
 
             try:
-                delegPubConfirm = Publication.objects.filter(decision_taken=False).exclude(decision_delegated_user=None)
+                delegPubConfirm = Publication.objects.filter(decision_taken=False).exclude(decision_delegated_user=None).order_by('-modified')
                 context['delegPubConfirm'] = delegPubConfirm
             except:
                 context['delegPubConfirm'] = None
 
             try :
-                delegPubProgress = Publication.objects.filter(decision_taken=False, decision_delegated_user=None).exclude(delegated_user=None)
+                delegPubProgress = Publication.objects.filter(decision_taken=False, decision_delegated_user=None).exclude(delegated_user=None).order_by('-modified')
                 context['delegPubProgress'] = delegPubProgress
             except:
                 context['delegPubProgress'] = None
 
-        else :
+        elif typeUser == 'Delegated' :
             try:
-                delegPub = Publication.objects.filter(decision_delegated_user=None, delegated_user=user)
+                delegPub = Publication.objects.filter(decision_delegated_user=None, delegated_user=user).order_by('-modified')
                 context['delegPub'] = delegPub
             except:
                 context['delegPub'] = None
+        else :
+            raise Http404
 
-        context['adminType'] = adminType
+        if typeUser == 'Main':
+            try :
+                publiReq = Publication.objects.filter(user=user, decision_taken=False,delegated_user=None)
+                context['nbPubliReq'] = len(publiReq)
+            except:
+                context['nbPubliReq'] = 0
+
+            try :
+                publiConf = Publication.objects.filter(user=user, decision_taken=False).exclude(delegated_user=None).exclude(decision_delegated_user=None)
+                context['nbPubliConf'] = len(publiConf)
+            except:
+                context['nbPubliConf'] = 0
+        else:
+            pass
+
+        context['adminType'] = typeUser
         context['user'] = user
         return context
 
@@ -1684,11 +1711,6 @@ def accessAdministration(publication_id, user, accessType) :
     elif accessType=='answerdeleg' :
         if publication.delegated_user != user or publication.decision_delegated_user != None :
             raise Http404
-
-def accessAdministrationDeleg(publication_id, user) :
-    publication = get_object_or_404(Publication, pk=publication_id)
-    if publication.delegated_user != user :
-        raise Http404
 
 class AdministrationArtefactDetailView(generic.DetailView):
 
@@ -1719,3 +1741,116 @@ class AdministrationArtefactDetailView(generic.DetailView):
         context['stratigraphies'] = stratigraphies
         context['node_base_url'] = settings.NODE_BASE_URL
         return context
+
+def adminType(user) :
+    adminType = None
+    groups = user.groups.all()
+    for group in groups:
+        if group.name == 'Delegated administrator':
+                adminType = 'Delegated'
+
+        for group in groups:
+            if group.name == 'Main administrator':
+                adminType = 'Main'
+    return adminType
+
+class PublicationUpdateDecision(generic.UpdateView):
+
+    model = Publication
+    template_name_suffix = '_decision_form'
+    form_class = PublicationDecisionForm
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        publication = get_object_or_404(Publication, pk=self.kwargs['pk'])
+
+        user = self.request.user
+        typeUser = adminType(user)
+
+        # if main admin, change directly artefact status
+        if typeUser=='Main':
+            # Change validated attribut of the artefact
+            if 'refuse' in self.request.POST :
+                self.object.artefact.validated = False
+            elif 'validate' in self.request.POST :
+                self.object.artefact.validated = True
+                # if validated, research eventual old published child of the same artefact to replace it
+                try :
+                    artefacts = Artefact.objects.filter(parent_id=self.object.artefact.parent_id)
+                    for artefact in artefacts :
+                        if artefact.published :
+                            artefact.published = False
+                            artefact.save()
+                except :
+                    pass
+                # publish artefact
+                self.object.artefact.published = True
+            # save the artefact
+            self.object.artefact.save()
+            self.object.decision_taken = True
+        # if delegated admin, change decision_delegated_user attribut value
+        elif typeUser=='Delegated' and user==publication.delegated_user :
+            if 'refuse' in self.request.POST :
+                self.object.decision_delegated_user = False
+            elif 'validate' in self.request.POST :
+                self.object.decision_delegated_user = True
+        else :
+            raise Http404
+        # save publication
+        self.object.save()
+
+        return super(PublicationUpdateDecision, self).form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        user = self.request.user
+        publication = get_object_or_404(Publication, pk=self.kwargs['pk'])
+        typeAdmin = adminType(user)
+        if typeAdmin==None :
+            raise Http404
+        if typeAdmin=='Delegated' :
+            if user!=publication.delegated_user:
+                raise Http404
+
+        self.object = publication
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+
+        context = super(PublicationUpdateDecision, self).get_context_data(**kwargs)
+        context['typeAdmin'] = typeAdmin
+        context['form'] = form
+        context['publication'] = publication
+
+        return context
+
+    def get_success_url(self):
+        return reverse('artefacts:publication-administration-menu')
+
+def confirmDecisionDelegatedAdmin(request, publication_id):
+    if request.POST :
+        user = request.user
+        publication = get_object_or_404(Publication, pk=publication_id)
+        typeAdmin = adminType(user)
+        if typeAdmin=='Main' and publication.decision_delegated_user != None and publication.decision_taken == False :
+            publication = get_object_or_404(Publication, pk=publication_id)
+            artefact = publication.artefact
+            if publication.decision_delegated_user == False :
+                artefact.validated = False
+            elif publication.decision_delegated_user == True :
+                artefact.validated = True
+                try :
+                    artefacts = Artefact.objects.filter(parent_id = artefact.parent_id)
+                    for art in artefacts:
+                        if art.published :
+                            art.published = False
+                            art.save()
+                except:
+                    pass
+                artefact.published = True
+            else :
+                raise Http404
+
+            artefact.save()
+            publication.decision_taken=True
+            publication.save()
+
+            return redirect('artefacts:publication-administration-menu')

@@ -86,7 +86,7 @@
                 <div class="pull-right">
                     <br><br>
                     <a href="#" class="btn btn-primary btn-md">Delegate</a>
-                    <a href="#" class="btn btn-primary btn-md">Take a decision</a>
+                    <a href="{% url 'artefacts:publication-administration-decision' pk=publication.id %}" class="btn btn-primary btn-md">Take a decision</a>
                     <br>
                 </div>
               </div>
@@ -146,13 +146,17 @@
                     </div>
                 {% endif %}
                 <div class="pull-right">
-                    <br><br>
-                    {% if publication.decision_delegated_user == True %}
-                        <a href="#" class="btn btn-primary btn-md">Confirm decision and publish</a>
-                    {% else %}
-                        <a href="#" class="btn btn-primary btn-md">Confirm decision</a>
-                    {% endif %}
-                    <br>
+                    <form action="{% url 'artefacts:publication-administration-confirm' publication_id=publication.id %}" method="post">{% csrf_token %}
+                        <br><br>
+                        {% if publication.decision_delegated_user == True %}
+                            <button type="submit" class="btn btn-primary btn-md" onclick="return confirm('Are you sure you want ' +
+                             'to confirm the decision? The artefact will be published.')">Confirm decision and publish</button>
+                        {% else %}
+                            <button type="submit" class="btn btn-primary btn-md" onclick="return confirm('Are you sure you want ' +
+                             'to confirm the decision?')">Confirm decision</button>
+                        {% endif %}
+                        <br>
+                    </form>
                 </div>
               </div>
 
@@ -193,7 +197,7 @@
                 {% endif %}
                 <div class="pull-right">
                     <br>
-                    <a href="#" class="btn btn-primary btn-md">Take a decision</a>
+                    <a href="{% url 'artefacts:publication-administration-decision' pk=publication.id %}" class="btn btn-primary btn-md">Take a decision</a>
                     <br>
                 </div>
               </div>

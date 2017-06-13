@@ -16,9 +16,29 @@
                         </div>
                     {% endif %}
                 </h3>
-                <br>
             </div>
         </div>
+        {% if newPublications != 0 %}
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="pull-right">
+                       {% if newComments == 1 %}
+                           <div class="notifComm">
+                               <b style="color: #E30000">{{ newPublications }}</b> publication
+                           </div>
+                       {% else %}
+                           <div class="notifComm">
+                               <b style="color: #E30000">{{ newPublications }}</b> publications
+                           </div>
+                       {% endif %}
+                    </div>
+                </div>
+            </div>
+            <br>
+        {% else %}
+            <br>
+        {% endif %}
+
 
         {% if user == request.user %}
 
