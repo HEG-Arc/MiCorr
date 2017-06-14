@@ -85,7 +85,7 @@
                 </div>
                 <div class="pull-right">
                     <br><br>
-                    <a href="#" class="btn btn-primary btn-md">Delegate</a>
+                    <a href="{% url 'artefacts:publication-administration-delegate' pk=publication.id %}" class="btn btn-primary btn-md">Delegate</a>
                     <a href="{% url 'artefacts:publication-administration-decision' pk=publication.id %}" class="btn btn-primary btn-md">Take a decision</a>
                     <br>
                 </div>
@@ -138,25 +138,33 @@
                         ({{ publicaiton.artefact.object.user.first_name }} {{ publication.artefact.object.user.last_name }})
                     {% endif %}
                 </div>
-                {% if publication.comment_to_user != None %}
+                {% if publication.comment_to_user != None and publication.comment_to_user != '' %}
                     <div class="c12">
                         <b>Comment from the delegated administrator to the author :</b>
                         <br>
                         <i>{{ publication.comment_to_user|safe }}</i>
                     </div>
                 {% endif %}
-                <div class="pull-right">
-                    <form action="{% url 'artefacts:publication-administration-confirm' publication_id=publication.id %}" method="post">{% csrf_token %}
-                        <br><br>
-                        {% if publication.decision_delegated_user == True %}
-                            <button type="submit" class="btn btn-primary btn-md" onclick="return confirm('Are you sure you want ' +
-                             'to confirm the decision? The artefact will be published.')">Confirm decision and publish</button>
-                        {% else %}
-                            <button type="submit" class="btn btn-primary btn-md" onclick="return confirm('Are you sure you want ' +
-                             'to confirm the decision?')">Confirm decision</button>
-                        {% endif %}
-                        <br>
-                    </form>
+              </div>
+              <div class="row">
+                <div class="c9">
+                    <div class="pull-right">
+                        <a href="{% url 'artefacts:publication-administration-reject' pk=publication.id %}" class="btn btn-primary btn-md">Reject decision</a>
+                    </div>
+                </div>
+                <div class="c3">
+                    <div class="pull-right">
+                        <form action="{% url 'artefacts:publication-administration-confirm' publication_id=publication.id %}" method="post">{% csrf_token %}
+                            {% if publication.decision_delegated_user == True %}
+                                <button type="submit" class="btn btn-primary btn-md" onclick="return confirm('Are you sure you want ' +
+                                 'to confirm the decision? The artefact will be published.')">Confirm decision and publish</button>
+                            {% else %}
+                                <button type="submit" class="btn btn-primary btn-md" onclick="return confirm('Are you sure you want ' +
+                                 'to confirm the decision?')">Confirm decision</button>
+                            {% endif %}
+                            <br>
+                        </form>
+                    </div>
                 </div>
               </div>
 
@@ -188,7 +196,7 @@
                         ({{ publicaiton.artefact.object.user.first_name }} {{ publication.artefact.object.user.last_name }})
                     {% endif %}
                 </div>
-                {% if publication.comment_delegation != None %}
+                {% if publication.comment_delegation != None and publication.comment_delegation != '' %}
                     <div class="c12">
                         <b>Comment from the main administator to you :</b>
                         <br>

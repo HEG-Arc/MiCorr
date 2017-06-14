@@ -1,6 +1,11 @@
 {% extends "base.html" %}
 {% load terms %}
 
+{% block custom_header_script %}
+    <script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
+    <script>tinymce.init({selector: 'textarea', plugins: "table"});</script>
+{% endblock custom_header_script %}
+
     {% block title %}
         <title>MiCorr | {{ artefact.artefact_verbose_description_short }}</title>
     {% endblock title %}
@@ -46,12 +51,40 @@
       <h1>{{ artefact.artefact_verbose_description_short }}</h1>
       <div class="row">
         <hr>
-        <h2>Informations about the publication requests</h2>
-        Send a request of publication for this artefact will allow the main administrator of Micorr to visualize it and take a decision.
-        If the request is accepted, the current version of this artefact will be published and visitors will be able to see it.
+        {% if admin %}
+            <h2>Informations about the publication requests</h2>
+            Send a request of publication for this artefact will allow the chosen delegated administrator of Micorr to
+            visualize it and take a decision. Then, you'll have to confirm this decision. If the request is accepted,
+            the current version of this artefact will be published and visitors will be able to see it.
+        {% else %}
+            <h2>Informations about the publication requests</h2>
+            Send a request of publication for this artefact will allow the main administrator of Micorr to visualize it and take a decision.
+            If the request is accepted, the current version of this artefact will be published and visitors will be able to see it.
+        {% endif %}
         <br><br>
         The publication menu of your profile allow you to see informations about your publications and requests.<br>
         <br><br>
+      </div>
+      <!--{ if admin %}
+        <div class="row">
+            <hr>
+            <h2>Additional informations</h2>
+            <br>
+            <div class="c4">
+                <b>Delegated administrator :</b>
+            </div>
+            <div class="c8">
+                { publiForm.delegated_user }}
+            </div>
+            <div class="c12">
+                <br>
+                <b>Comment for the delegated administrator (facultative)</b><br>
+                { publiForm.comment_delegation }}
+                <br>
+            </div>
+        </div>
+      { endif %}-->
+      <div class="row">
         <div class="pull-right">
             <form action="{% url 'artefacts:publication-create' pk=artefact.id %}" method="post">{% csrf_token %}
                 <button class="btn btn-primary btn-lg" type="submit"><i class="fa fa-paper-plane"></i>&nbsp;&nbsp;Send for publication</button>

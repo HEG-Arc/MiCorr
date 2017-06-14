@@ -3,6 +3,7 @@ from django.forms import TextInput, Textarea
 from django.template.loader import render_to_string
 
 from contacts.models import Contact
+from users.models import User
 
 from .models import Artefact, Document, Metal, CorrosionForm, CorrosionType, Environment, Object, Origin, ChronologyPeriod, \
     Alloy, Technology, Microstructure, RecoveringDate, Image, Type, Stratigraphy, Token, Collaboration_comment, \
@@ -302,3 +303,27 @@ class PublicationDecisionForm(forms.ModelForm):
     class Meta:
         model = Publication
         fields=['comment_to_user']
+
+class PublicationDelegateForm(forms.ModelForm):
+    admin = None
+    # Get delegated administrator group to display only delegated administrator users
+    users = User.objects.all()
+    for user in users :
+        groups = user.groups.all()
+        for group in groups :
+            if group.name=='Delegated administrator' :
+                admin = group
+
+    delegated_user = forms.ModelChoiceField(User.objects.filter(groups=admin).order_by('username'), help_text='The delegated admin charged to analyze the request.', required=True)
+    comment_delegation = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 5}), required=False)
+
+    class Meta:
+        model = Publication
+        fields=['delegated_user', 'comment_delegation']
+
+class PublicationRejectDecisionForm(forms.ModelForm):
+    comment_delegation = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 5}), required=True)
+
+    class Meta:
+        model = Publication
+        fields=['comment_delegation']
