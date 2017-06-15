@@ -1471,14 +1471,22 @@ class PublicationListView(generic.ListView):
         isAdmin = False
         publicationsUser = []
         artefactsHistory = []
+        # Get currents publications and publication history (decided)
         try :
-            publications = Publication.objects.all()
+            publications = Publication.objects.all().order_by('-modified')
+            for publication in publications :
+                if publication.artefact.object.user == user :
+                    if publication.decision_taken :
+                        artefactsHistory.append(publication)
+        except :
+            pass
+
+        try :
+            publications = Publication.objects.all().order_by('-created')
             for publication in publications :
                 if publication.artefact.object.user == user :
                     if not publication.decision_taken :
                         publicationsUser.append(publication)
-                    else :
-                        artefactsHistory.append(publication)
         except :
             pass
 

@@ -62,7 +62,7 @@
                                         </tr>
                                         {% for artPub in artefactsPublished %}
                                             <tr>
-                                                <td>{{ artPub.created }}</td>
+                                                <td>{{ artPub.modified }}</td>
                                                 <td>{{ artPub.object.name }}</td>
                                                 <td><a href="{% url 'artefacts:artefact-detail' pk=artPub.id %}" target="_blank"><i class="fa fa-eye"></i></a></td>
                                             </tr>
@@ -92,7 +92,7 @@
                                         </tr>
                                         {% for publi in publications %}
                                             <tr>
-                                                <td>{{ publi.modified }}</td>
+                                                <td>{{ publi.created }}</td>
                                                 <td>{{ publi.artefact.object.name }}</td>
                                                 <td><a href="{% url 'artefacts:publication-artefact-detail' pk=publi.id %}" target="_blank"><i class="fa fa-eye"></i></a></td>
                                             </tr>
