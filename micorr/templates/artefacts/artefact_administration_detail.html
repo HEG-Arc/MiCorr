@@ -1,0 +1,220 @@
+{% extends "base.html" %}
+
+    {% block title %}
+        <title>MiCorr | {{ artefact.artefact_verbose_description_short }}</title>
+    {% endblock title %}
+
+      {% block sidemenu %}
+      <div class="c3" id="sidemenu"> <!-- no-active-hilight : do not highlight the "active" node of the menu. It is difficult for the affix to work when elements in the page are close one to the other (i.e. folded elements), therefore, it is less confusing to NOT hilight the .active nodes of the menu -->
+          <div class="sidemenu-container">
+              <ul class="nav smooth-scroll"> <!-- smooth-scroll to the element in the page instead of jumping -->
+                  <li><a href="#title1">{{ sections.0.title }}</a></li>
+                  <li>
+                      <a href="#title2">{{ sections.1.title }}</a>
+                      <ul class="nav subnav">
+                          <li><a href="#title21">{{ sections.2.title }}</a></li>
+                          <li><a href="#title22">{{ sections.3.title }}</a></li>
+                      </ul>
+                  </li>
+                  <li><a href="#title3">{{ sections.4.title }}</a></li>
+                  <li>
+                       <a href="#title4">{{ sections.5.title }}</a>
+                       <ul class="nav subnav"> <!-- subnav indicates that we will unfold the parent before jumping to a child to make sure that the element is visible -->
+                          <li><a href="#title41">{{ sections.6.title }}</a></li>
+                          <li><a href="#title42">{{ sections.7.title }}</a></li>
+                       </ul>
+                  </li>
+                  <li><a href="#title5">{{ sections.8.title }}</a></li>
+                  <li><a href="#title6">{{ sections.9.title }}</a></li>
+                  <li><a href="#title7">{{ sections.10.title }}</a></li>
+              </ul>
+          </div>
+      </div>
+      {% endblock sidemenu %}
+
+      {% block content %}
+
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+      <h1>{{ artefact.artefact_verbose_description_short }}</h1>
+          {% if accessType == 'answermain' %}
+              <div class="row">
+                <hr>
+                <h2>Informations about the available options</h2>
+                <br>
+                As a main administrator, you have 2 options about requests sent :
+                <br><br>
+                1. You can delegate the request to a delegated administrator which will be able to take a decision for it.
+                Then, the decision taken will be sent to you and you'll have to confirm it. If the request is validated,
+                the artefact will be published on the public part of MiCorr. In both cases, the author of the artefact will
+                be able to see the decision and read the comment (facultative)<br><br>
+                2. You can take the decision yourself (validate or refuse). If you validate the request, the artefact will
+                be published on the public part of MiCorr. You're decision will be sent to the author of the artefact. A
+                comment can be added.<br><br>
+              </div>
+              <div class="row">
+                <hr>
+                <h2>Informations about the request</h2>
+                <br>
+                <div class="c4">
+                    <b>Date of the request :</b>
+                </div>
+                <div class="c8">
+                    {{ publication.created }}
+                </div>
+                <div class="c4">
+                    <b>Object analyzed :</b>
+                </div>
+                <div class="c8">
+                    {{ publication.artefact.object.name }}
+                </div>
+                <div class="c4">
+                    <b>Author of the artefact :</b>
+                </div>
+                <div class="c8">
+                    {{ publication.artefact.object.user.username }}
+                    {% if publication.artefact.object.user.first_name != '' and publication.artefact.object.user.last_name != '' %}
+                        ({{ publication.artefact.object.user.first_name }} {{ publication.artefact.object.user.last_name }})
+                    {% endif %}
+                </div>
+                <div class="pull-right">
+                    <br><br>
+                    <a href="{% url 'artefacts:publication-administration-delegate' pk=publication.id %}" class="btn btn-primary btn-md">Delegate</a>
+                    <a href="{% url 'artefacts:publication-administration-decision' pk=publication.id %}" class="btn btn-primary btn-md">Take a decision</a>
+                    <br>
+                </div>
+              </div>
+
+          {% elif accessType == 'confirm' %}
+              <div class="row">
+                <hr>
+                <h2>Informations about the available options</h2>
+                <br>
+                You've delegated this request and a decision has been taken by the delegated administrator. You have to
+                confirm it before it is sent to the author of the artefact. If the request is validated by the delegated
+                administrator, your confirmation will publish the artefact on the public part of MiCorr.
+              </div>
+              <div class="row">
+                <hr>
+                <h2>Informations about the request</h2>
+                <br>
+                <div class="c4">
+                    <b>Delegated administrator :</b>
+                </div>
+                <div class="c8">
+                    {{ publication.delegated_user.username }}
+                    {% if publication.delegated_user.first_name != '' and publication.delegated_user.last_name != '' %}
+                        ({{ publicaiton.delegated_user.first_name }} {{ publication.delegated_user.last_name }})
+                    {% endif %}
+                </div>
+                <div class="c4">
+                    <b>Decision :</b>
+                </div>
+                <div class="c8">
+                    {% if publication.decision_delegated_user == True %}
+                        Accepted
+                    {% else %}
+                        Refused
+                    {% endif %}
+                </div>
+                <div class="c4">
+                    <b>Object analyzed :</b>
+                </div>
+                <div class="c8">
+                    {{ publication.artefact.object.name }}
+                </div>
+                <div class="c4">
+                    <b>Author of the artefact :</b>
+                </div>
+                <div class="c8">
+                    {{ publication.artefact.object.user.username }}
+                    {% if publication.artefact.object.user.first_name != '' and publication.artefact.object.user.last_name != '' %}
+                        ({{ publicaiton.artefact.object.user.first_name }} {{ publication.artefact.object.user.last_name }})
+                    {% endif %}
+                </div>
+                {% if publication.comment_to_user != None and publication.comment_to_user != '' %}
+                    <div class="c12">
+                        <b>Comment from the delegated administrator to the author :</b>
+                        <br>
+                        <i>{{ publication.comment_to_user|safe }}</i>
+                    </div>
+                {% endif %}
+              </div>
+              <div class="row">
+                <div class="c9">
+                    <div class="pull-right">
+                        <a href="{% url 'artefacts:publication-administration-reject' pk=publication.id %}" class="btn btn-primary btn-md">Reject decision</a>
+                    </div>
+                </div>
+                <div class="c3">
+                    <div class="pull-right">
+                        <form action="{% url 'artefacts:publication-administration-confirm' publication_id=publication.id %}" method="post">{% csrf_token %}
+                            {% if publication.decision_delegated_user == True %}
+                                <button type="submit" class="btn btn-primary btn-md" onclick="return confirm('Are you sure you want ' +
+                                 'to confirm the decision? The artefact will be published.')">Confirm decision and publish</button>
+                            {% else %}
+                                <button type="submit" class="btn btn-primary btn-md" onclick="return confirm('Are you sure you want ' +
+                                 'to confirm the decision?')">Confirm decision</button>
+                            {% endif %}
+                            <br>
+                        </form>
+                    </div>
+                </div>
+              </div>
+
+          {% elif accessType == 'answerdeleg' %}
+              <div class="row">
+                <hr>
+                <h2>Informations about the available options</h2>
+                  <br>
+                The main administrator delegated this request to you. You'll have to analyze it and take a decision.<br><br>
+                Then, the main administrator will have to confirm your decision. If you choose to validate the request, it
+                will be published on the public part of MiCorr after the main administrator confirmation.
+              </div>
+              <div class="row">
+                <hr>
+                <h2>Informations about the request</h2>
+                <br>
+                <div class="c4">
+                    <b>Object analyzed :</b>
+                </div>
+                <div class="c8">
+                    {{ publication.artefact.object.name }}
+                </div>
+                <div class="c4">
+                    <b>Author of the artefact :</b>
+                </div>
+                <div class="c8">
+                    {{ publication.artefact.object.user.username }}
+                    {% if publication.artefact.object.user.first_name != '' and publication.artefact.object.user.last_name != '' %}
+                        ({{ publicaiton.artefact.object.user.first_name }} {{ publication.artefact.object.user.last_name }})
+                    {% endif %}
+                </div>
+                {% if publication.comment_delegation != None and publication.comment_delegation != '' %}
+                    <div class="c12">
+                        <b>Comment from the main administator to you :</b>
+                        <br>
+                        <i>{{ publication.comment_delegation|safe }}</i>
+                    </div>
+                {% endif %}
+                <div class="pull-right">
+                    <br>
+                    <a href="{% url 'artefacts:publication-administration-decision' pk=publication.id %}" class="btn btn-primary btn-md">Take a decision</a>
+                    <br>
+                </div>
+              </div>
+          {% endif %}
+          <div class="row">
+            <hr>
+            <h2>Visualization of the artefact</h2>
+            <br>
+          </div>
+          {% include "./artefact_detail_body.html" %}
+
+      {% endblock content %}

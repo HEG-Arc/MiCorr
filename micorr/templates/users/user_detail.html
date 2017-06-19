@@ -9,8 +9,8 @@
 
         <div class="row">
             <div class="col-sm-12">
-
                 <h2>{{ object.username|capfirst }}</h2>
+                <br>
             </div>
         </div>
 
@@ -26,17 +26,73 @@
                 </div>
             </div>
             <br>
+        <!--
+        { if object == request.user %}
+            <div class="row">
+                <div class="col-sm-6">
+                    <h2>{ object.username|capfirst }}</h2>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="pull-right">
+                        <br>
+                        <a class="btn btn-primary" href="{ url 'users:update' %}">My Info</a>
+                        <a class="btn btn-primary" href="{ url 'account_email' %}">E-Mail</a>
+                        <a class="btn btn-info" href="{ url 'avatar_change' %}">Avatar</a>
+
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <hr>
+                </div>
+            </div>
+
+            <div class="row">
+                <br>-->
+
             <div class="row">
                 <div class="col-sm-6 ">
                     <a class="btn btn-success" href="{% url 'artefacts:searchStratigraphy' %}"><i class="fa fa-align-justify"></i> Create new stratigraphy</a>
                     <a class="btn btn-success" href="{% url 'artefacts:object-create' %}"><i class="fa fa-pencil"></i> Create new artefact</a>
                 </div>
-                <div class="col-sm-3">
+                <div class="col-sm-3 col-sm-offset-1">
                     <div class="pull-right">
                          <a class="btn btn-success" href="{% url 'artefacts:publication-menu' %}"><i class="fa fa-file-text"></i> Publication</a>
                     </div>
+                    {% if newPubliHistory != 0 %}
+                        <br><br>
+                        <div class="pull-right">
+                            {% if newPubliHistory == 1 %}
+                                <div class="notifComm">
+                                    <b style="color: #E30000">{{ newPubliHistory }}</b> new decision
+                                </div>
+                            {% else %}
+                                <div class="notifComm">
+                                    <b style="color: #E30000">{{ newPubliHistory }}</b> new decisions
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                    {% if newRequests != 0 %}
+                        {% if newPubliHistory != 0 %}
+                            <br>
+                        {% else %}
+                            <br><br>
+                        {% endif %}
+                        <div class="pull-right">
+                            {% if newRequests == 1 %}
+                                <div class="notifComm">
+                                    <b style="color: #E30000">{{ newRequests }}</b> request
+                                </div>
+                            {% else %}
+                                <div class="notifComm">
+                                    <b style="color: #E30000">{{ newRequests }}</b> requests
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endif %}
                 </div>
-                <div class="col-sm-3">
+                <div class="col-sm-2">
                     <div class="pull-right">
                         <a class="btn btn-success" href="{% url 'artefacts:collaboration_menu' %}"><i class="fa fa-users"></i> Collaboration</a>
                     </div>
@@ -123,7 +179,6 @@
                             <div id="artefacts" class="panel-collapse collapse">
                                 {% if objects %}
                                     {% for object in objects %}
-                                    <!-- Test -->
                                         <div class="panel-heading" style="background-color: #E4E5E5">
                                             <h4 class="panel-title">
                                                 <div id="object{{ forloop.counter }}" onclick="salut({{ forloop.counter }})">
@@ -189,7 +244,6 @@
                                                             <tr style="background-color: #f5f5f5">
                                                                 <th colspan="5"><i>History of validated versions of the artefact</i></th>
                                                             </tr>
-
                                                             <tr>
                                                                 <th>Created</th>
                                                                 <th>Validation / Publication date</th>

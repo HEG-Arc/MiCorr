@@ -12,13 +12,33 @@
                 <h3>Publications
                     {% if isAdmin %}
                         <div class="pull-right" style="margin-top: 0px">
-                            <a href="#" class="btn btn-primary btn-md"><i class="fa fa-wrench"></i>&nbsp;&nbsp;Administration</a>
+                            <a href="{% url 'artefacts:publication-administration-menu' %}" class="btn btn-primary btn-md"><i class="fa fa-wrench"></i>&nbsp;&nbsp;Administration</a>
                         </div>
                     {% endif %}
                 </h3>
-                <br>
             </div>
         </div>
+        {% if newPublications != 0 %}
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="pull-right">
+                       {% if newPublications == 1 %}
+                           <div class="notifComm">
+                               <b style="color: #E30000">{{ newPublications }}</b> request
+                           </div>
+                       {% else %}
+                           <div class="notifComm">
+                               <b style="color: #E30000">{{ newPublications }}</b> requests
+                           </div>
+                       {% endif %}
+                    </div>
+                </div>
+            </div>
+            <br>
+        {% else %}
+            <br>
+        {% endif %}
+
 
         {% if user == request.user %}
 
@@ -42,9 +62,9 @@
                                         </tr>
                                         {% for artPub in artefactsPublished %}
                                             <tr>
-                                                <td>{{ artPub.created }}</td>
+                                                <td>{{ artPub.modified }}</td>
                                                 <td>{{ artPub.object.name }}</td>
-                                                <td><a href="{% url 'artefacts:publication-artefact-detail' pk=artPub.id %}" target="_blank"><i class="fa fa-eye"></i></a></td>
+                                                <td><a href="{% url 'artefacts:artefact-detail' pk=artPub.id %}" target="_blank"><i class="fa fa-eye"></i></a></td>
                                             </tr>
                                         {% endfor %}
                                     </table>
@@ -72,9 +92,9 @@
                                         </tr>
                                         {% for publi in publications %}
                                             <tr>
-                                                <td>{{ publi.modified }}</td>
+                                                <td>{{ publi.created }}</td>
                                                 <td>{{ publi.artefact.object.name }}</td>
-                                                <td><a href="{% url 'artefacts:publication-artefact-detail' pk=publi.artefact.id %}" target="_blank"><i class="fa fa-eye"></i></a></td>
+                                                <td><a href="{% url 'artefacts:publication-artefact-detail' pk=publi.id %}" target="_blank"><i class="fa fa-eye"></i></a></td>
                                             </tr>
                                         {% endfor %}
                                     </table>
@@ -90,6 +110,13 @@
                                 <h4 class="panel-title">
                                     <span class="glyphicon glyphicon-plus"></span>
                                     <a data-toggle="collapse" href="#decisionsformypublications">Decisions for publications</a>
+                                    {% if newPubliHistory != 0 %}
+                                        <div class="pull-right">
+                                            <div id="moncercle">
+                                                <center>{{ newPubliHistory }}</center>
+                                            </div>
+                                        </div>
+                                    {% endif %}
                                 </h4>
                             </div>
                             <div id="decisionsformypublications" class="panel-collapse collapse">
@@ -98,21 +125,27 @@
                                         <tr>
                                             <th>Decision date</th>
                                             <th>Artefact</th>
-                                            <th>Comment</th>
                                             <th>Decision</th>
                                             <th>Action</th>
                                         </tr>
                                         {% for pubHist in artefactsHistory %}
                                             <tr>
                                                 <td>{{ pubHist.modified }}</td>
-                                                <td>{{ pubHist.artefact.object.name }}</td>
-                                                <td>{{ pubHist.comment_to_user }}</td>
-                                                {% if publiHist.artefact.validated %}
+                                                {% if not pubHist.read %}
+                                                    <td>
+                                                        <div class="newCommentsRed">
+                                                            {{ pubHist.artefact.object.name }}
+                                                        </div>
+                                                    </td>
+                                                {% else %}
+                                                    <td>{{ pubHist.artefact.object.name }}</td>
+                                                {% endif %}
+                                                {% if pubHist.artefact.validated %}
                                                     <td><i class="fa fa-check" style="color: green"></i></td>
                                                 {% else %}
                                                     <td><i class="fa fa-times" style="color: red"></i></td>
                                                 {% endif %}
-                                                <td><a href="{% url 'artefacts:publication-artefact-detail' pk=pubHist.artefact.id %}"><i class="fa fa-eye"></i></a></td>
+                                                <td><a href="{% url 'artefacts:publication-artefact-detail' pk=pubHist.id %}" target="_blank"><i class="fa fa-eye"></i></a></td>
                                             </tr>
                                         {% endfor %}
                                     </table>

@@ -10,7 +10,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.views import generic
 from django.conf import settings
 
-from artefacts.models import Collaboration_comment, Token
+from artefacts.models import Collaboration_comment, Publication, Token
 from stratigraphies.neo4jdao import Neo4jDAO
 
 from django.contrib.contenttypes.models import ContentType
@@ -77,7 +77,40 @@ class UserDetailView(generic.DetailView):
         except:
             pass
 
+        newPubliHistory = 0
+        # Get currents publications and publication history (decided)
+        try:
+            publications = Publication.objects.filter(decision_taken = True, read=False)
+            for publication in publications:
+                if publication.artefact.object.user == self.request.user :
+                    newPubliHistory = newPubliHistory + 1
+        except:
+            pass
+
+        newRequests = 0
+        userType = adminType(self.request.user)
+        if userType == 'Main':
+            try :
+                publiReq = Publication.objects.filter(decision_taken=False, user=self.request.user, delegated_user=None)
+                newRequests = newRequests + len(publiReq)
+            except:
+                pass
+
+            try :
+                publiConf = Publication.objects.filter(decision_taken=False, user=self.request.user).exclude(decision_delegated_user=None)
+                newRequests = newRequests + len(publiConf)
+            except:
+                pass
+        elif userType == 'Delegated' :
+            try :
+                publiDeleg = Publication.objects.filter(decision_taken=False, delegated_user=self.request.user, decision_delegated_user=None)
+                newRequests = newRequests + len(publiDeleg)
+            except:
+                pass
+
         context['pubValArtForObj'] = isTherePubValArtForObj
+        context['newPubliHistory'] = newPubliHistory
+        context['newRequests'] = newRequests
         context['stratigraphies'] = stratigraphies
         context['objects'] = objects
         context['artefacts'] = artefactsList
@@ -85,6 +118,17 @@ class UserDetailView(generic.DetailView):
         context['node_base_url'] = settings.NODE_BASE_URL
         return context
 
+def adminType(user) :
+    adminType = None
+    groups = user.groups.all()
+    for group in groups:
+        if group.name == 'Delegated administrator':
+                adminType = 'Delegated'
+
+        for group in groups:
+            if group.name == 'Main administrator':
+                adminType = 'Main'
+    return adminType
 
 
 class UserRedirectView(LoginRequiredMixin, RedirectView):
