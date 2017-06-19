@@ -1471,6 +1471,7 @@ class PublicationListView(generic.ListView):
         isAdmin = False
         publicationsUser = []
         artefactsHistory = []
+        newPubliHistory = 0
         # Get currents publications and publication history (decided)
         try :
             publications = Publication.objects.all().order_by('-modified')
@@ -1478,6 +1479,8 @@ class PublicationListView(generic.ListView):
                 if publication.artefact.object.user == user :
                     if publication.decision_taken :
                         artefactsHistory.append(publication)
+                        if publication.read==False :
+                            newPubliHistory=newPubliHistory + 1
         except :
             pass
 
@@ -1534,6 +1537,7 @@ class PublicationListView(generic.ListView):
         context['artefactsPublished'] = artefactsPublished
         context['artefactsHistory'] = artefactsHistory
         context['user'] = user
+        context['newPubliHistory'] = newPubliHistory
         return context
 
 class PublicationArtefactDetailView(generic.DetailView):
@@ -1556,7 +1560,12 @@ class PublicationArtefactDetailView(generic.DetailView):
         documents = artefact.document_set.all()
         stratigraphies = artefact.stratigraphy_set.all()
 
+        if publication.decision_taken and publication.read==False :
+            publication.read = True
+            publication.save()
+
         context['artefact'] = artefact
+        context['publication'] = publication
         context['sections'] = sections
         context['documents'] = documents
         context['stratigraphies'] = stratigraphies
