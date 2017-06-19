@@ -26,7 +26,7 @@
                                     <a data-toggle="collapse" href="#artefacts_shared">Artefacts shared with contributors</a>
                                     {% if newCommentsSha != 0 %}
                                         <div class="pull-right">
-                                            <div id="moncercle">
+                                            <div id="moncercle" title="New comments">
                                                 <center>{{ newCommentsSha }}</center>
                                             </div>
                                         </div>
@@ -84,8 +84,15 @@
                                     <a data-toggle="collapse" href="#artefacts_received">Artefacts shared with me</a>
                                     {% if newCommentsRec != 0 %}
                                         <div class="pull-right">
-                                            <div id="moncercle">
+                                            <div id="moncercle" title="New comments">
                                                 <center>{{ newCommentsRec }}</center>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                    {% if newTokens != 0 %}
+                                        <div class="pull-right">
+                                            <div id="moncerclegreen" title="New collaborations">
+                                                <center>{{ newTokens }}</center>
                                             </div>
                                         </div>
                                     {% endif %}
@@ -109,10 +116,18 @@
                                                          {% if value != 0 %}
                                                              <div class="newCommentsRed">
                                                                 ({{ value }})
-                                                                {{ tokenRec.artefact.object.name }}
+                                                                 {% if not tokenRec.read %}
+                                                                    <div class="newToken">{{ tokenRec.artefact.object.name }}</div>
+                                                                 {% else %}
+                                                                     {{ tokenRec.artefact.object.name }}
+                                                                {% endif %}
                                                              </div>
                                                          {% else %}
-                                                            {{ tokenRec.artefact.object.name }}
+                                                             {% if not tokenRec.read %}
+                                                                 <div class="newToken">{{ tokenRec.artefact.object.name }}</div>
+                                                             {% else %}
+                                                                 {{ tokenRec.artefact.object.name }}
+                                                             {% endif %}
                                                          {% endif %}
                                                         {% endif %}
                                                     {% endfor %}

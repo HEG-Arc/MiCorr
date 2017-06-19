@@ -9489,6 +9489,22 @@ img {
   font-weight: bolder;
 }
 
+#moncerclegreen{
+  background:green;
+  border-radius:50%;
+  width:21px;
+  height:21px;
+  border:2px solid green;
+  color: white;
+  font-weight: bolder;
+}
+
+.newToken{
+  color: green;
+  font-weight: bolder;
+  display : inline;
+}
+
 .redicon {
   color: #E30000;
 }

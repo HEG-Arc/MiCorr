@@ -35,6 +35,9 @@ class UserDetailView(generic.DetailView):
         artefactsList = []
         isTherePubValArtForObj = {}
         newComments = 0
+        newTokens = 0
+        newPubliHistory = 0
+        newRequests = 0
 
         for obj in objects :
             isTherePubValArtForObj[obj.id] = False
@@ -74,11 +77,11 @@ class UserDetailView(generic.DetailView):
                 for comm in allCommTokenSection:
                     if comm.user != self.request.user and comm.sent == True and comm.read == False:
                         newComments = newComments + 1
+                if token.read == False :
+                    newTokens = newTokens + 1
         except:
             pass
 
-        newPubliHistory = 0
-        # Get currents publications and publication history (decided)
         try:
             publications = Publication.objects.filter(decision_taken = True, read=False)
             for publication in publications:
@@ -87,7 +90,6 @@ class UserDetailView(generic.DetailView):
         except:
             pass
 
-        newRequests = 0
         userType = adminType(self.request.user)
         if userType == 'Main':
             try :
@@ -115,6 +117,7 @@ class UserDetailView(generic.DetailView):
         context['objects'] = objects
         context['artefacts'] = artefactsList
         context['newComments'] = newComments
+        context['newTokens'] = newTokens
         context['node_base_url'] = settings.NODE_BASE_URL
         return context
 
