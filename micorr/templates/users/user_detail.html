@@ -110,6 +110,24 @@
                            {% endif %}
                         </div>
                     {% endif %}
+                    {% if newTokens != 0 %}
+                        {% if newComments != 0 %}
+                            <br>
+                        {% else %}
+                            <br><br>
+                        {% endif %}
+                        <div class="pull-right">
+                            {% if newTokens == 1 %}
+                                <div class="notifComm">
+                                    <b style="color: green">{{ newTokens }}</b> new collaboration
+                                </div>
+                            {% else %}
+                                <div class="notifComm">
+                                    <b style="color: green">{{ newTokens }}</b> new collaborations
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endif %}
                 </div>
             </div>
             <br>

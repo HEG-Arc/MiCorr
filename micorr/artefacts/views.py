@@ -745,45 +745,40 @@ class CollaborationListView(generic.ListView):
         nbTotSha = 0
         newCommentsForTokenSha = {}
         try :
-            allTokensShared = self.request.user.token_set.all().order_by('-modified')
-            for token in allTokensShared :
+            tokensShared = self.request.user.token_set.filter(right='W', hidden_by_author=False).order_by('-modified')
+            for token in tokensShared :
                 nbCommSha = 0
-                if token.right == 'W' and not token.hidden_by_author :
-                    tokensShared.append(token)
-
-                    commentsToken = Collaboration_comment.objects.filter(content_type_id=modelToken.id, object_model_id=token.id, sent=True, read=False).exclude(user=self.request.user)
-                    nbCommSha = nbCommSha + len(commentsToken)
-                    commentsSection = Collaboration_comment.objects.filter(content_type_id=modelSection.id, token_for_section=token, sent=True, read=False).exclude(user=self.request.user)
-                    nbCommSha = nbCommSha + len(commentsSection)
-                    newCommentsForTokenSha[token.id] = nbCommSha
-                    nbTotSha = nbTotSha+nbCommSha
-
-
+                commentsToken = Collaboration_comment.objects.filter(content_type_id=modelToken.id, object_model_id=token.id, sent=True, read=False).exclude(user=self.request.user)
+                nbCommSha = nbCommSha + len(commentsToken)
+                commentsSection = Collaboration_comment.objects.filter(content_type_id=modelSection.id, token_for_section=token, sent=True, read=False).exclude(user=self.request.user)
+                nbCommSha = nbCommSha + len(commentsSection)
+                newCommentsForTokenSha[token.id] = nbCommSha
+                nbTotSha = nbTotSha+nbCommSha
         except:
             pass
 
         # Research tokens shared with the user
         nbTotRec=0
+        newTokens=0
         newCommentsForTokenRec = {}
         try :
-            allTokensReceived = Token.tokenManager.filter(recipient=user.email)
-            for token in allTokensReceived :
+            tokensReceived = Token.tokenManager.filter(recipient=user.email, right='W', hidden_by_recipient=False)
+            for token in tokensReceived :
                 nbCommRec=0
-                if token.right == 'W' and not token.hidden_by_recipient :
-                    tokensReceived.append(token)
-                    commentsToken = Collaboration_comment.objects.filter(content_type_id=modelToken.id, object_model_id=token.id, sent=True, read=False).exclude(user=self.request.user)
-                    nbCommRec = nbCommRec + len(commentsToken)
-                    commentsSection = Collaboration_comment.objects.filter(content_type_id=modelSection.id, token_for_section=token, sent=True, read=False).exclude(user=self.request.user)
-                    nbCommRec = nbCommRec + len(commentsSection)
-                    newCommentsForTokenRec[token.id] = nbCommRec
-                    nbTotRec = nbTotRec+nbCommRec
-
+                commentsToken = Collaboration_comment.objects.filter(content_type_id=modelToken.id, object_model_id=token.id, sent=True, read=False).exclude(user=self.request.user)
+                nbCommRec = nbCommRec + len(commentsToken)
+                commentsSection = Collaboration_comment.objects.filter(content_type_id=modelSection.id, token_for_section=token, sent=True, read=False).exclude(user=self.request.user)
+                nbCommRec = nbCommRec + len(commentsSection)
+                newCommentsForTokenRec[token.id] = nbCommRec
+                nbTotRec = nbTotRec+nbCommRec
+                if token.read == False :
+                    newTokens = newTokens + 1
         except :
             pass
 
-
         context['newCommentsSha'] = nbTotSha
         context['newCommentsRec'] = nbTotRec
+        context['newTokens'] = newTokens
         context['commentsForEachTokenSha'] = newCommentsForTokenSha
         context['commentsForEachTokenRec'] = newCommentsForTokenRec
         context['tokens_shared_by_me'] = tokensShared
@@ -811,6 +806,10 @@ class CollaborationUpdateView(generic.UpdateView):
         sections = artefact.section_set.all()
         obj = Object.objects.get(id=artefact.object.id)
         user=self.request.user
+
+        if token.read == False :
+            token.read = True
+            token.save()
 
         self.object = artefact
         form_class = self.get_form_class()
@@ -1002,6 +1001,11 @@ class CollaborationCommentView(generic.CreateView):
         sections = artefact.section_set.all()
         documents = artefact.document_set.all()
         stratigraphies = artefact.stratigraphy_set.all()
+
+        if token.read == False :
+            token.read = True
+            token.save()
+
         sectionComments = []
         sectionDict = defaultdict(list)
         tokenComments = []
@@ -1332,6 +1336,11 @@ class CommentDeleteView(generic.DeleteView):
 
         token = get_object_or_404(Token, pk=self.kwargs['token_id'])
         errorAccessToken(self.kwargs['token_id'], self.request.user)
+
+        if token.read == False :
+            token.read = True
+            token.save()
+
         parent = 0
         child = 0
 

@@ -477,6 +477,7 @@ class Token(TimeStampedModel):
     link = models.CharField(max_length=200, null=True)
     hidden_by_author = models.BooleanField(default=False)
     hidden_by_recipient = models.BooleanField(default=False)
+    read = models.BooleanField(default=False)
 
     # Foreign Keys
     user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name="user's object", blank=True, null=True)
