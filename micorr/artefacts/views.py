@@ -1563,7 +1563,8 @@ class PublicationArtefactDetailView(generic.DetailView):
         context = super(PublicationArtefactDetailView, self).get_context_data(**kwargs)
         publication = get_object_or_404(Publication, pk=self.kwargs['pk'])
         artefact = publication.artefact
-        if artefact.object.user != self.request.user :
+        typeUser = adminType(self.request.user)
+        if artefact.object.user != self.request.user and typeUser==None :
             raise Http404
         sections = artefact.section_set.all()
         documents = artefact.document_set.all()

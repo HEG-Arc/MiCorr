@@ -41,7 +41,7 @@
             {% endfor %}
         </ul>
         {% endif %}
-
+      <a href="{% url 'artefacts:publication-administration-menu' %}" class="btn btn-primary btn-md">Return to Administration menu</a><br><br>
       <h1>{{ artefact.artefact_verbose_description_short }}</h1>
           {% if accessType == 'answermain' %}
               <div class="row">

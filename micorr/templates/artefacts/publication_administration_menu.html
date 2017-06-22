@@ -54,7 +54,7 @@
                                                     <td>{{ request.created }}</td>
                                                     <td>{{ request.artefact.object.name }}</td>
                                                     <td>{{ request.artefact.object.user.username }}</td>
-                                                    <td><a href="{% url 'artefacts:publication-administration-detail' pk=request.id accessType='answermain' %}" target="_blank"><i class="fa fa-eye"></i></a></td>
+                                                    <td><a href="{% url 'artefacts:publication-administration-detail' pk=request.id accessType='answermain' %}"><i class="fa fa-eye"></i></a></td>
                                                 </tr>
                                             {% endfor %}
                                         </table>
@@ -98,7 +98,7 @@
                                                     {% else %}
                                                         <td><i class="fa fa-times" style="color: red"></i></td>
                                                     {% endif %}
-                                                    <td><a href="{% url 'artefacts:publication-administration-detail' pk=delegPubConf.id accessType='confirm' %}" target="_blank"><i class="fa fa-eye"></i></a></td>
+                                                    <td><a href="{% url 'artefacts:publication-administration-detail' pk=delegPubConf.id accessType='confirm' %}"><i class="fa fa-eye"></i></a></td>
                                                 </tr>
                                             {% endfor %}
                                         </table>
@@ -171,7 +171,7 @@
                                                     <td>{{ delegrequest.created }}</td>
                                                     <td>{{ delegrequest.artefact.object.name }}</td>
                                                     <td>{{ delegrequest.artefact.object.user.username }}</td>
-                                                    <td><a href="{% url 'artefacts:publication-administration-detail' pk=delegrequest.id accessType='answerdeleg' %}" target="_blank"><i class="fa fa-eye"></i></a></td>
+                                                    <td><a href="{% url 'artefacts:publication-administration-detail' pk=delegrequest.id accessType='answerdeleg' %}"><i class="fa fa-eye"></i></a></td>
                                                 </tr>
                                             {% endfor %}
                                         </table>
@@ -182,6 +182,8 @@
                             </div>
                         </div>
                     {% endif %}
+                    <br>
+                    <a href="{% url 'artefacts:publication-menu' %}" class="btn btn-primary btn-md">Return to Publication menu</a>
                 </div>
             </div>
         {% endif %}

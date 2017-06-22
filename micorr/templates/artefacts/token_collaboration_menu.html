@@ -7,7 +7,6 @@
 
         <div class="row">
             <div class="col-sm-12">
-
                 <h2>{{ user.username|capfirst }}</h2>
                 <h3>Collaborations</h3>
                 <br>
@@ -147,6 +146,7 @@
                         </div>
                     </div>
                     <br>
+                    <a href="{% url 'users:detail' username=user %}" class="btn btn-primary btn-md">Return to My Profile</a>
                     <div class="pull-right">
                         <a href="{% url 'artefacts:collaboration_deleted_menu' %}" class="btn btn-primary btn-md"><i class="fa fa-recycle"></i> Retrieve deleted collaborations</a>
                     </div>

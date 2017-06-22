@@ -46,18 +46,23 @@
             {% endfor %}
         </ul>
         {% endif %}
-
+      <div class="row">
+          <a href="{% url 'artefacts:collaboration_menu' %}" class="btn btn-primary btn-md">Return to collaboration menu</a><br><br>
+      </div>
       <h1>{{ artefact.artefact_verbose_description_short }}</h1>
 
         <div class="row">
           <div class="c2"><em>Authors</em></div>
           <div class="c10"><p>{{ artefact.get_authors }}</p></div>
         </div>
-            <div class="row">
+        <div class="row">
+            <form action="{% url 'artefacts:send-comments' token_id=token.id %}" method="post">{% csrf_token %}
+                <a href="{% url 'artefacts:read-comments' pk=token.id %}" class="btn btn-primary btn-md"><i class="fa fa-eye"></i>&nbsp;&nbsp;I have read all comments</a>
                 <div class="pull-right">
-                    <a href="{% url 'artefacts:read-comments' pk=token.id %}" class="btn btn-primary btn-md"><i class="fa fa-eye"></i>&nbsp;&nbsp;I have read all comments</a>
+                    <button class="btn btn-primary btn-md" type="submit" onclick="return confirm('Are you sure you want to send comments? You will not be allowed to delete sent comments')"><i class="fa fa-paper-plane"></i>&nbsp;&nbsp;Send comments</button>
                 </div>
-            </div>
+            </form>
+        </div>
         <br>
         <div  id="accordionN1" aria-multiselectable="true">
 
@@ -923,7 +928,7 @@
                 <div class="c3"><em>Stratigraphies</em></div>
                 <div class="c8">
                     {% for stratigraphy in stratigraphies %}
-                        <p><a href="/micorr/#/stratigraphy/{{ stratigraphy.uid }}" target="_blank"><img src="{{ node_base_url }}getStratigraphySvg?name={{ stratigraphy.uid }}&width=300" class="img-responsive"></a></p>
+                        <p><img src="{{ node_base_url }}getStratigraphySvg?name={{ stratigraphy.uid }}&width=300" class="img-responsive"></p>
                     {% empty %}
                         <p>None</p>
                     {% endfor %}
@@ -1312,8 +1317,9 @@
         <br>
         <form action="{% url 'artefacts:send-comments' token_id=token.id %}" method="post">{% csrf_token %}
             <div class="row">
+                <a href="{% url 'artefacts:read-comments' pk=token.id %}" class="btn btn-primary btn-md"><i class="fa fa-eye"></i>&nbsp;&nbsp;I have read all comments</a>
                 <div class="pull-right">
-                    <button class="btn btn-primary btn-lg" type="submit" onclick="return confirm('Are you sure you want to send comments? You will not be allowed to delete sent comments')"><i class="fa fa-paper-plane"></i>&nbsp;&nbsp;Send comments</button>
+                    <button class="btn btn-primary btn-md" type="submit" onclick="return confirm('Are you sure you want to send comments? You will not be allowed to delete sent comments')"><i class="fa fa-paper-plane"></i>&nbsp;&nbsp;Send comments</button>
                 </div>
             </div>
         </form>
