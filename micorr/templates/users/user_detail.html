@@ -55,9 +55,30 @@
                     <a class="btn btn-success" href="{% url 'artefacts:searchStratigraphy' %}"><i class="fa fa-align-justify"></i> Create new stratigraphy</a>
                     <a class="btn btn-success" href="{% url 'artefacts:object-create' %}"><i class="fa fa-pencil"></i> Create new artefact</a>
                 </div>
-                <div class="col-sm-3 col-sm-offset-1">
+                <div class="col-sm-2">
+                    {% if userType != None %}
+                        <div class="pull-right">
+                            <a class="btn btn-success" href="{% url 'artefacts:publication-administration-menu' %}"><i class="fa fa-wrench"></i>&nbsp;&nbsp;Administration</a>
+                        </div>
+                        {% if newRequests != 0 %}
+                            <br><br>
+                            <div class="pull-right">
+                                {% if newRequests == 1 %}
+                                    <div class="notifComm">
+                                        <b style="color: #E30000">{{ newRequests }}</b> unanswered request
+                                    </div>
+                                {% else %}
+                                    <div class="notifComm">
+                                        <b style="color: #E30000">{{ newRequests }}</b> unanswered requests
+                                    </div>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    {% endif %}
+                </div>
+                <div class="col-sm-2">
                     <div class="pull-right">
-                         <a class="btn btn-success" href="{% url 'artefacts:publication-menu' %}"><i class="fa fa-file-text"></i> Publication</a>
+                         <a class="btn btn-success" href="{% url 'artefacts:publication-menu' %}"><i class="fa fa-file-text"></i>&nbsp;&nbsp;Publication</a>
                     </div>
                     {% if newPubliHistory != 0 %}
                         <br><br>
@@ -73,28 +94,10 @@
                             {% endif %}
                         </div>
                     {% endif %}
-                    {% if newRequests != 0 %}
-                        {% if newPubliHistory != 0 %}
-                            <br>
-                        {% else %}
-                            <br><br>
-                        {% endif %}
-                        <div class="pull-right">
-                            {% if newRequests == 1 %}
-                                <div class="notifComm">
-                                    <b style="color: #E30000">{{ newRequests }}</b> request
-                                </div>
-                            {% else %}
-                                <div class="notifComm">
-                                    <b style="color: #E30000">{{ newRequests }}</b> requests
-                                </div>
-                            {% endif %}
-                        </div>
-                    {% endif %}
                 </div>
                 <div class="col-sm-2">
                     <div class="pull-right">
-                        <a class="btn btn-success" href="{% url 'artefacts:collaboration_menu' %}"><i class="fa fa-users"></i> Collaboration</a>
+                        <a class="btn btn-success" href="{% url 'artefacts:collaboration_menu' %}"><i class="fa fa-users"></i>&nbsp;&nbsp;Collaboration</a>
                     </div>
                     {% if newComments != 0 %}
                         <br><br>
@@ -137,7 +140,7 @@
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <h4 class="panel-title">
-                                    <div id="menuStratigraphies">
+                                    <div id="menuStratigraphies" onclick="menuCollapse('Stratigraphies')">
                                         <a data-toggle="collapse" href="#stratigraphies">
                                             <span class="glyphicon glyphicon-plus"></span>
                                             Stratigraphies
@@ -186,7 +189,7 @@
 
                             <div class="panel-heading">
                                 <h4 class="panel-title">
-                                    <div id="menuArtefacts">
+                                    <div id="menuArtefacts" onclick="menuCollapse('Artefacts')">
                                         <a data-toggle="collapse" href="#artefacts">
                                             <span class="glyphicon glyphicon-plus"></span>
                                             Artefacts
@@ -199,7 +202,7 @@
                                     {% for object in objects %}
                                         <div class="panel-heading" style="background-color: #E4E5E5">
                                             <h4 class="panel-title">
-                                                <div id="object{{ forloop.counter }}" onclick="salut({{ forloop.counter }})">
+                                                <div id="object{{ forloop.counter }}" onclick="objectCollapse({{ forloop.counter }})">
                                                     <a data-toggle="collapse" href="#artefacts_card{{ object.id }}">
                                                         <span class="glyphicon glyphicon-plus"></span>
                                                         {{ object.name }}
@@ -317,22 +320,13 @@
 
 {% block custom_bottom_script %}
     <script type="text/javascript">
-        /*$('.collapse').on('shown.bs.collapse', function(){
-            $(this).parent().find(".glyphicon-plus").removeClass("glyphicon-plus").addClass("glyphicon-minus");
-            }).on('hidden.bs.collapse', function(){
-            $(this).parent().find(".glyphicon-minus").removeClass("glyphicon-minus").addClass("glyphicon-plus");
-        });*/
 
-        $('#menuStratigraphies').click(function(){
-            $(this).find('span').toggleClass('glyphicon-plus').toggleClass('glyphicon-minus');
-        });
+        function menuCollapse(name) {
+            $('#menu'+name).find('span').toggleClass('glyphicon-plus').toggleClass('glyphicon-minus');
+        }
 
-        $('#menuArtefacts').click(function(){
-            $(this).find('span').toggleClass('glyphicon-plus').toggleClass('glyphicon-minus');
-        });
-
-        function salut(index) {
-            $('#object'+index).find('span').toggleClass('glyphicon-plus').toggleClass('glyphicon-minus')
+        function objectCollapse(index) {
+            $('#object'+index).find('span').toggleClass('glyphicon-plus').toggleClass('glyphicon-minus');
         }
 
     </script>
