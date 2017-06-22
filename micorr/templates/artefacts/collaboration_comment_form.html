@@ -923,7 +923,7 @@
                 <div class="c3"><em>Stratigraphies</em></div>
                 <div class="c8">
                     {% for stratigraphy in stratigraphies %}
-                        <p><a href="/micorr/#/stratigraphy/{{ stratigraphy.uid }}" target="_blank"><img src="{{ node_base_url }}getStratigraphySvg?name={{ stratigraphy.uid }}&width=300" class="img-responsive"></a></p>
+                        <p><img src="{{ node_base_url }}getStratigraphySvg?name={{ stratigraphy.uid }}&width=300" class="img-responsive"></p>
                     {% empty %}
                         <p>None</p>
                     {% endfor %}
