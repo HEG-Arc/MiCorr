@@ -7,7 +7,6 @@
 
         <div class="row">
             <div class="col-sm-12">
-
                 <h2>{{ user.username|capfirst }}</h2>
                 <h3>Publications
                     {% if isAdmin %}
@@ -145,7 +144,7 @@
                                                 {% else %}
                                                     <td><i class="fa fa-times" style="color: red"></i></td>
                                                 {% endif %}
-                                                <td><a href="{% url 'artefacts:publication-artefact-detail' pk=pubHist.id %}" target="_blank"><i class="fa fa-eye"></i></a></td>
+                                                <td><a href="{% url 'artefacts:publication-artefact-detail' pk=pubHist.id %}"><i class="fa fa-eye"></i></a></td>
                                             </tr>
                                         {% endfor %}
                                     </table>
@@ -155,6 +154,8 @@
                             </div>
                         </div>
                     </div>
+                    <br>
+                    <a href="{% url 'users:detail' username=user %}" class="btn btn-primary btn-md">Return to My Profile</a>
                 </div>
             </div>
         {% endif %}

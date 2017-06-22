@@ -42,6 +42,7 @@
         </ul>
         {% endif %}
 
+      <a href="{% url 'artefacts:publication-menu' %}" class="btn btn-primary btn-md">Return to Publication menu</a><br><br>
       <h1>{{ artefact.artefact_verbose_description_short }}</h1>
       {% if publication.decision_taken %}
           <div class="row">
