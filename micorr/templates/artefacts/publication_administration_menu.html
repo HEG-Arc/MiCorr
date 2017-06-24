@@ -10,11 +10,9 @@
 
                 <h2>{{ user.username|capfirst }}</h2>
                 <h3>Administration
-                    {% if isAdmin %}
-                        <div class="pull-right" style="margin-top: 0px">
-                            <a href="#" class="btn btn-primary btn-md"><i class="fa fa-wrench"></i>&nbsp;&nbsp;Administration</a>
-                        </div>
-                    {% endif %}
+                    <div class="pull-right" style="margin-top: 0px;">
+                        <a href="{% url 'users:detail' username=user %}" class="btn btn-primary btn-md">Return to My Profile</a>
+                    </div>
                 </h3>
                 <br>
             </div>
@@ -183,7 +181,6 @@
                         </div>
                     {% endif %}
                     <br>
-                    <a href="{% url 'artefacts:publication-menu' %}" class="btn btn-primary btn-md">Return to Publication menu</a>
                 </div>
             </div>
         {% endif %}

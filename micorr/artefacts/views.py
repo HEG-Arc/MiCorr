@@ -1474,13 +1474,14 @@ class PublicationListView(generic.ListView):
     template_name_suffix = '_menu'
 
     def get_context_data(self, **kwargs):
-        # Call the base implementation first to get a context
+
         context = super(PublicationListView, self).get_context_data(**kwargs)
         user = self.request.user
         isAdmin = False
         publicationsUser = []
         artefactsHistory = []
         newPubliHistory = 0
+
         # Get currents publications and publication history (decided)
         try :
             publications = Publication.objects.all().order_by('-modified')
@@ -1523,24 +1524,6 @@ class PublicationListView(generic.ListView):
         except:
             pass
 
-        typeUser = adminType(user)
-        newPublicationsAdmin = 0
-        if typeUser == 'Main':
-            publications = Publication.objects.filter(user=user, decision_taken=False)
-            for publication in publications:
-                if publication.delegated_user == None:
-                    newPublicationsAdmin = newPublicationsAdmin + 1
-                else:
-                    if publication.decision_delegated_user != None:
-                        newPublicationsAdmin = newPublicationsAdmin + 1
-
-        elif typeUser == 'Delegated':
-            publications = Publication.objects.filter(delegated_user=user, decision_taken=False)
-            for publication in publications:
-                if publication.decision_delegated_user == None:
-                    newPublicationsAdmin = newPublicationsAdmin + 1
-
-        context['newPublications'] = newPublicationsAdmin
         context['isAdmin'] = isAdmin
         context['publications'] = publicationsUser
         context['artefactsPublished'] = artefactsPublished

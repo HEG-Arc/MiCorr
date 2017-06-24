@@ -114,6 +114,7 @@ class UserDetailView(generic.DetailView):
         context['newPubliHistory'] = newPubliHistory
         context['newRequests'] = newRequests
         context['stratigraphies'] = stratigraphies
+        context['userType'] = userType
         context['objects'] = objects
         context['artefacts'] = artefactsList
         context['newComments'] = newComments
