@@ -1767,11 +1767,11 @@ def adminType(user) :
     groups = user.groups.all()
     for group in groups:
         if group.name == 'Delegated administrator':
-                adminType = 'Delegated'
+            adminType = 'Delegated'
 
-        for group in groups:
-            if group.name == 'Main administrator':
-                adminType = 'Main'
+    for group in groups:
+        if group.name == 'Main administrator':
+            adminType = 'Main'
     return adminType
 
 class PublicationUpdateDecision(generic.UpdateView):

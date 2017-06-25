@@ -95,6 +95,9 @@ class UserDetailView(generic.DetailView):
             try :
                 publiReq = Publication.objects.filter(decision_taken=False, user=self.request.user, delegated_user=None)
                 newRequests = newRequests + len(publiReq)
+                for publi in publiReq :
+                    if publi.artefact.object.user == self.request.user :
+                        newRequests = newRequests - 1
             except:
                 pass
 
