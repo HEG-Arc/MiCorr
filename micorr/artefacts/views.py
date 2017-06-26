@@ -1535,8 +1535,8 @@ class PublicationListView(generic.ListView):
 
 class PublicationArtefactDetailView(generic.DetailView):
 
-    model = Artefact
-    template_name_suffix = '_publication_detail'
+    model = Publication
+    template_name_suffix = '_detail'
 
     def get_context_data(self, **kwargs):
 
@@ -1728,7 +1728,7 @@ def accessAdministration(publication_id, user, accessType) :
 
 class AdministrationArtefactDetailView(generic.DetailView):
 
-    model = Artefact
+    model = Publication
     template_name_suffix = '_administration_detail'
 
     """queryset = Artefact.objects.select_related('alloy', 'type', 'origin', 'recovering_date', 'chronology_period',
