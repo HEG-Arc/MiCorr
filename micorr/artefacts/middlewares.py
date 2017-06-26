@@ -6,6 +6,8 @@ from artefacts.views import hasWriteRight, hasReadRight
 from artefacts.views import sendFirstUseOfTokenEmail
 from django.http import Http404
 
+from artefacts.models import Artefact
+
 
 class artefactAccessControlMiddleware:
 
@@ -15,6 +17,7 @@ class artefactAccessControlMiddleware:
         token_uuid = None
         has_write_right = False
         has_read_right = False
+        adminType = None
 
         # check if exist a token in the url
         if 'token' in request.GET:
@@ -24,8 +27,11 @@ class artefactAccessControlMiddleware:
         # Check if READ RIGHT
         # If url like = '/artefacts/5/' (with or without token)
         pattern_read = re.compile('^\/artefacts\/[0-9]+\/$')
+
         if pattern_read.match(url):
+
             artefact_id = view_kwargs.get('pk', None)
+            artefact = Artefact.objects.get(pk=artefact_id)
 
             artefact_right = hasReadRight(request, artefact_id, token_uuid)
             if (artefact_right):
@@ -33,7 +39,7 @@ class artefactAccessControlMiddleware:
                 if token_uuid != None:
                     sendFirstUseOfTokenEmail(token_uuid)
 
-            if not has_read_right:
+            if not has_read_right and not artefact.published :
                 raise Http404("Page not found")
 
         # Check if WRITE RIGHT
