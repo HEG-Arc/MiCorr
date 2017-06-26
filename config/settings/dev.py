@@ -26,12 +26,13 @@ SECRET_KEY = env('DJANGO_SECRET_KEY', default='&h2bn6%fhy&b3(d^umvh9yoai111dz=ac
 # Mail settings
 # ------------------------------------------------------------------------------
 
-EMAIL_PORT = 1025
-
-EMAIL_HOST = 'localhost'
-EMAIL_BACKEND = env('DJANGO_EMAIL_BACKEND',
-                    default='django.core.mail.backends.console.EmailBackend')
-
+DEFAULT_FROM_EMAIL = env('DJANGO_DEFAULT_FROM_EMAIL',
+                         default='MiCorr <micorr@he-arc.ch>')
+EMAIL_SUBJECT_PREFIX = env('DJANGO_EMAIL_SUBJECT_PREFIX', default='[MiCorr] ')
+SERVER_EMAIL = env('DJANGO_SERVER_EMAIL', default=DEFAULT_FROM_EMAIL)
+EMAIL_USE_TLS = True
+EMAIL_HOST = env('DJANGO_EMAIL_HOST', default='smtprel.he-arc.ch')
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 # CACHING
 # ------------------------------------------------------------------------------
