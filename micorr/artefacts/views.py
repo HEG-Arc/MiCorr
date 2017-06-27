@@ -112,7 +112,8 @@ class ArtefactsListView(generic.ListView):
                     filtered_artefacts_list.append(artefact.object)
         else:
             for artefact in artefactsfilter.qs:
-                filtered_artefacts_list.append(artefact)
+                if artefact.published :
+                    filtered_artefacts_list.append(artefact)
         return render(request, "artefacts/artefact_list.html",
                       {'search': artefactssearch, 'results': filtered_artefacts_list, 'filter': artefactsfilter,
                        'self': self, 'node_base_url': settings.NODE_BASE_URL})
@@ -1534,12 +1535,8 @@ class PublicationListView(generic.ListView):
 
 class PublicationArtefactDetailView(generic.DetailView):
 
-    model = Artefact
-    template_name_suffix = '_publication_detail'
-
-    queryset = Artefact.objects.select_related('alloy', 'type', 'origin', 'recovering_date', 'chronology_period',
-                                               'environment', 'location', 'owner', 'technology', 'sample_location',
-                                               'responsible_institution', 'microstructure', 'corrosion_form', 'corrosion_type')
+    model = Publication
+    template_name_suffix = '_detail'
 
     def get_context_data(self, **kwargs):
 
@@ -1731,13 +1728,13 @@ def accessAdministration(publication_id, user, accessType) :
 
 class AdministrationArtefactDetailView(generic.DetailView):
 
-    model = Artefact
+    model = Publication
     template_name_suffix = '_administration_detail'
 
-    queryset = Artefact.objects.select_related('alloy', 'type', 'origin', 'recovering_date', 'chronology_period',
+    """queryset = Artefact.objects.select_related('alloy', 'type', 'origin', 'recovering_date', 'chronology_period',
                                                'environment', 'location', 'owner', 'technology', 'sample_location',
                                                'responsible_institution', 'microstructure', 'corrosion_form', 'corrosion_type')
-
+"""
     def get_context_data(self, **kwargs):
         typeUser = adminType(self.request.user)
         if typeUser == None :
