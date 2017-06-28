@@ -81,9 +81,9 @@ urlpatterns = [
     url(r'^publication/(?P<pk>\d+)/$', login_required(artefacts_views.PublicationArtefactDetailView.as_view()), name='publication-artefact-detail'),
     url(r'^administration/$', login_required(artefacts_views.AdministrationListView.as_view()), name='publication-administration-menu'),
     url(r'^administration/(?P<pk>\d+)/(?P<accessType>\w+)/$', login_required(artefacts_views.AdministrationArtefactDetailView.as_view()), name='publication-administration-detail'),
-    url(r'^administration/(?P<pk>\d+)/decision/$', login_required(artefacts_views.PublicationUpdateDecision.as_view()), name='publication-administration-decision'),
-    url(r'^administration/(?P<publication_id>\d+)/confirm/$', login_required(artefacts_views.confirmDecisionDelegatedAdmin), name='publication-administration-confirm'),
-    url(r'^administration/(?P<pk>\d+)/reject/$', login_required(artefacts_views.PublicationDecisionReject.as_view()), name='publication-administration-reject'),
-    url(r'^administration/(?P<pk>\d+)/delegate/$', login_required(artefacts_views.PublicationDelegateView.as_view()), name='publication-administration-delegate'),
+    url(r'^administration/decision/(?P<pk>\d+)/$', login_required(artefacts_views.PublicationUpdateDecision.as_view()), name='publication-administration-decision'),
+    url(r'^administration/confirm/(?P<publication_id>\d+)/$', login_required(artefacts_views.confirmDecisionDelegatedAdmin), name='publication-administration-confirm'),
+    url(r'^administration/reject/(?P<pk>\d+)/$', login_required(artefacts_views.PublicationDecisionReject.as_view()), name='publication-administration-reject'),
+    url(r'^administration/delegate/(?P<pk>\d+)/$', login_required(artefacts_views.PublicationDelegateView.as_view()), name='publication-administration-delegate'),
     # url(r'^test-ontology/$', displayOntology),
 ]

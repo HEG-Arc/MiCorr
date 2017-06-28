@@ -48,7 +48,10 @@
                 </div>
                 <div class="row">
                     <br>
-                    <div class="col-sm-1 col-sm-offset-9">
+                    <div class="col-sm-1">
+                        <a href="{% url 'artefacts:publication-administration-menu' %}" class="btn btn-md btn-primary">Cancel</a>
+                    </div>
+                    <div class="col-sm-1 col-sm-offset-8">
                         <div class="pull-right">
                             <button class="btn btn-danger btn-md" type="submit" name="refuse" onclick="return confirm('Are you sure you want to refuse the request?')"><i class="fa fa-times"></i> Refuse</button>
                         </div>
