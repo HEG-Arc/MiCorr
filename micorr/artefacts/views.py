@@ -441,7 +441,8 @@ def shareArtefact(request, artefact_id):
             if right == 'R':
                 link = request.get_host() + '/artefacts/' + artefact_id + '/?token='+token.uuid
             elif right == 'W':
-                link = request.get_host() + '/artefacts/' + artefact_id + '/update/?token='+token.uuid
+                #link = request.get_host() + '/artefacts/' + artefact_id + '/update/?token='+token.uuid
+                link = request.get_host() + '/artefacts/collaboration/'
 
             token.link = link
             token.save()
