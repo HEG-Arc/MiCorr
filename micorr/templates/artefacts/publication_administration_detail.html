@@ -50,12 +50,12 @@
                 <br>
                 As a main administrator, you have 2 options about requests sent :
                 <br><br>
-                1. You can delegate the request to a delegated administrator which will be able to take a decision for it.
-                Then, the decision taken will be sent to you and you'll have to confirm it. If the request is validated,
+                1. You can delegate the request to a delegated administrator who will be able to take a decision for it.
+                The decision taken will then be sent to you and you'll have to confirm it. If the request is validated,
                 the artefact will be published on the public part of MiCorr. In both cases, the author of the artefact will
                 be able to see the decision and read the comment (facultative)<br><br>
                 2. You can take the decision yourself (validate or refuse). If you validate the request, the artefact will
-                be published on the public part of MiCorr. You're decision will be sent to the author of the artefact. A
+                be published on the public part of MiCorr. Your decision will be sent to the author of the artefact. A
                 comment can be added.<br><br>
               </div>
               <div class="row">
@@ -174,7 +174,7 @@
                 <h2>Informations about the available options</h2>
                   <br>
                 The main administrator delegated this request to you. You'll have to analyze it and take a decision.<br><br>
-                Then, the main administrator will have to confirm your decision. If you choose to validate the request, it
+                The main administrator will then have to confirm your decision. If you choose to validate the request, it
                 will be published on the public part of MiCorr after the main administrator confirmation.
               </div>
               <div class="row">
@@ -193,7 +193,7 @@
                 <div class="c8">
                     {{ publication.artefact.object.user.username }}
                     {% if publication.artefact.object.user.first_name != '' and publication.artefact.object.user.last_name != '' %}
-                        ({{ publicaiton.artefact.object.user.first_name }} {{ publication.artefact.object.user.last_name }})
+                        ({{ publication.artefact.object.user.first_name }} {{ publication.artefact.object.user.last_name }})
                     {% endif %}
                 </div>
                 {% if publication.comment_delegation != None and publication.comment_delegation != '' %}

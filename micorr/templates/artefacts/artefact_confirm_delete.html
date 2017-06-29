@@ -7,12 +7,12 @@
     <div class="row">
         <h2>Delete {{ artefact }}</h2>
         <br/>
-        <p>Are you sure you want to delete this card for the artefact <b>{{ artefact }}</b>?</p>
+        <p>Are you sure you want to delete the artefact <b>{{ artefact.object.name }}</b>?</p>
     </div>
 
     <div class="row">
         <div class="col-xs-3 col-xs-offset-9">
-            <form action="{% url 'artefacts:artefact-delete' artefact.pk %}" method="POST">
+            <form action="{% url 'artefacts:artefact-object-delete' pk=artefact.pk object_id=artefact.object.id %}" method="POST">
                 {% csrf_token %}
                     <button type="submit" class="btn btn-danger">Delete</button>
                     <a href="{% url 'users:detail' user %}"><button type="button" class="btn btn-link">Cancel</button></a>
