@@ -58,32 +58,13 @@
             the current version of this artefact will be published and visitors will be able to see it.
         {% else %}
             <h2>Informations about the publication requests</h2>
-            Send a request of publication for this artefact will allow the main administrator of Micorr to visualize it and take a decision.
+            By sending a request of publication for this artefact, you will allow the main administrator of Micorr to visualize it and take a decision.
             If the request is accepted, the current version of this artefact will be published and visitors will be able to see it.
         {% endif %}
         <br><br>
         The publication menu of your profile allows you to see informations about your publications and requests.<br>
         <br><br>
       </div>
-      <!--{ if admin %}
-        <div class="row">
-            <hr>
-            <h2>Additional informations</h2>
-            <br>
-            <div class="c4">
-                <b>Delegated administrator :</b>
-            </div>
-            <div class="c8">
-                { publiForm.delegated_user }}
-            </div>
-            <div class="c12">
-                <br>
-                <b>Comment for the delegated administrator (facultative)</b><br>
-                { publiForm.comment_delegation }}
-                <br>
-            </div>
-        </div>
-      { endif %}-->
       <div class="row">
         <div class="pull-right">
             <form action="{% url 'artefacts:publication-create' pk=artefact.id %}" method="post">{% csrf_token %}
