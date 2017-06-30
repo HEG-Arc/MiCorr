@@ -247,6 +247,8 @@ class ArtefactsDeleteView(generic.DeleteView):
     template_name_suffix = '_confirm_delete'
 
     def get_success_url(self):
+        object = Object.objects.get(pk=self.kwargs['object_id'])
+        object.delete()
         return reverse('users:detail', kwargs={'username': self.request.user})
 
 class ObjectCreateView(generic.CreateView):
@@ -1364,10 +1366,6 @@ class CommentDeleteView(generic.DeleteView):
         context['child_id'] = child
         return context
 
-    def form_valid(self, form):
-
-        comment = get_object_or_404(Collaboration_comment, pk=self.kwargs['pk'])
-
     def get_success_url(self):
 
         parent = 0
@@ -1812,6 +1810,7 @@ class PublicationUpdateDecision(generic.UpdateView):
                 self.object.decision_delegated_user = False
             elif 'validate' in self.request.POST :
                 self.object.decision_delegated_user = True
+            self.object.comment_delegation = None
         else :
             raise Http404
         # save publication
@@ -1906,6 +1905,7 @@ class PublicationDecisionReject(generic.UpdateView) :
         else :
             self.object = form.save(commit=False)
             self.object.decision_delegated_user = None
+            self.object.comment_to_user = None
 
             return super(PublicationDecisionReject, self).form_valid(form)
 
