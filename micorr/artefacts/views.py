@@ -108,7 +108,7 @@ class ArtefactsListView(generic.ListView):
         filtered_artefacts_list = []
         if request.GET.get('q'):
             for artefact in searchresults:
-                if artefact.object in artefactsfilter:
+                if artefact.object in artefactsfilter.qs:
                     filtered_artefacts_list.append(artefact.object)
         else:
             for artefact in artefactsfilter.qs:
