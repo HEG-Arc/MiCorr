@@ -29,7 +29,9 @@ services:
       - django
       - certbot
     environment:
-      - MY_DOMAIN_NAME=micorr.org
+      # MY_DOMAIN_NAME is used by both nginx (for allowed hosts) and certbot for getting ssl certificate
+      # set MY_DOMAIN_NAME env var to eg.: micorr.org
+      - MY_DOMAIN_NAME=${MY_DOMAIN_NAME}
 
     ports:
       - "0.0.0.0:80:80"
@@ -40,7 +42,7 @@ services:
 
   certbot:
     image: quay.io/letsencrypt/letsencrypt
-    command: bash -c "sleep 6 && certbot certonly -n --standalone -d micorr.org --test --agree-tos --email bernard.letoumy@he-arc.ch --server https://acme-v01.api.letsencrypt.org/directory --rsa-key-size 4096 --verbose --keep-until-expiring --preferred-challenges http-01"
+    command: bash -c "sleep 6 && certbot certonly -n --standalone -d ${MY_DOMAIN_NAME} --staging --agree-tos --email micorr@he-arc.ch --server https://acme-v01.api.letsencrypt.org/directory --rsa-key-size 4096 --verbose --keep-until-expiring --preferred-challenges http-01"
     entrypoint: ""
     volumes:
       - /etc/letsencrypt:/etc/letsencrypt
