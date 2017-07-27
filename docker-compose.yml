@@ -12,6 +12,23 @@ services:
       - postgres_backup:/backups
     env_file: .env
 
+  neo4j:
+    build: ./compose/neo4j
+    volumes:
+      - ./data/neo4j:/data
+
+
+    env_file: .env.neo4j #for setting NEO4J_AUTH var in user/password format
+    environment:
+      - NEO4J_dbms_allowFormatMigration=true
+      # to load initial data in neo4j graph.db
+      # copy a neo4j-admin dump file to compose/neo4j/initial_neo4j-admin.dump
+      # remove it on subsequent builds to avoid overriding data
+      - EXTENSION_SCRIPT=/bootstrap_data.sh
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+
   django:
     build:
       context: .
@@ -22,6 +39,7 @@ services:
     depends_on:
       - postgres
       - redis
+      - neo4j
     command: /gunicorn.sh
     env_file: .env
 

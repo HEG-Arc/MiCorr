@@ -69,5 +69,4 @@ INSTALLED_APPS += ('django_extensions', )
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
 # Your local stuff: Below this line define 3rd party library settings
-NEO4J_AUTH = env('NEO4J_AUTH', default='neo4j/secret')
-NEO4J_HOST = env('NEO4J_HOST', default='neo4j')
+

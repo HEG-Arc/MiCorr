@@ -1,4 +1,4 @@
-from py2neo import Graph
+from py2neo import Graph, authenticate
 import time
 import datetime
 from py2neo import Node, Relationship
@@ -15,8 +15,10 @@ class Neo4jDAO:
     def __init__(self):
         # self.url = "http://MiCorr:hmqKUx4ehTQv0M7Z1STc@micorr.sb04.stations.graphenedb.com:24789/db/data/"
         neo4j_host = settings.NEO4J_HOST
-        neo4j_auth = settings.NEO4J_AUTH.split('/')
-        self.url = "http://%s:%s@%s:7474/db/data" % (neo4j_auth[0], neo4j_auth[1], neo4j_host)
+        neo4j_auth = settings.NEO4J_AUTH.split(':')
+        if len(neo4j_auth)!=2:
+            raise ValueError('NEO4J_AUTH environment variable expected format user:pass')
+        self.url = "http://%s:%s@%s/db/data" % (neo4j_auth[0], neo4j_auth[1], neo4j_host)
         self.graph = Graph(self.url)
         self.tx = self.graph.cypher.begin()
 

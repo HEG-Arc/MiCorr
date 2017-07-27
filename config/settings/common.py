@@ -282,3 +282,6 @@ HAYSTACK_CONNECTIONS = {
 }
 
 NODE_BASE_URL = '/micorr/node/'
+
+NEO4J_AUTH = env('NEO4J_AUTH', default='neo4j:secret') #no default provided as it must be set in environment variable for direct use by py2neo
+NEO4J_HOST = env('NEO4J_HOST', default='neo4j:7474')
