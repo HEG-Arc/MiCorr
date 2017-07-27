@@ -16,12 +16,25 @@ services:
     build:
       context: .
       dockerfile: ./compose/django/Dockerfile
+#    volumes:
+#      - .:/app
     user: django
     depends_on:
       - postgres
       - redis
     command: /gunicorn.sh
     env_file: .env
+
+  node:
+    build:
+      context: .
+      dockerfile: ./compose/node/Dockerfile
+#    volumes_from:
+#      - django
+    ports:
+      - "8080:8080"
+    depends_on:
+      - django
 
   nginx:
     build: ./compose/nginx
