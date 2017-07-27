@@ -1,4 +1,4 @@
-FROM nginx:latest
+FROM nginx:1.13.3
 ADD nginx.conf /etc/nginx/nginx.conf
 
 

@@ -1,5 +1,4 @@
 FROM node:8.2.1
-#previous node:6.7
 
 EXPOSE 8080
 
