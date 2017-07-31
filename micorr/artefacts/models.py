@@ -13,6 +13,8 @@ from tinymce import models as tinymce_models
 from cities_light.models import City
 from django.core.mail import  send_mail
 
+from artefacts import get_img_storage_path, get_img_storage_path_stratigraphy, get_doc_storage_path
+
 
 class Metal(TimeStampedModel):
     """
@@ -361,9 +363,6 @@ class Section(TimeStampedModel):
         return "%s, %s, %s" % (self.title, self.artefact, self.section_category)
 
 
-def get_img_storage_path(instance, filename):
-    return '/'.join(['artefacts', str(instance.section.artefact.id), 'images', filename])
-
 
 class Image(TimeStampedModel):
     """
@@ -382,13 +381,6 @@ class Image(TimeStampedModel):
     def __unicode__(self):
         return self.legend
 
-
-def get_doc_storage_path(instance, filename):
-    return '/'.join(['artefacts', str(instance.artefact.id), 'documents', filename])
-
-
-def get_img_storage_path_stratigraphy(instance, filename):
-    return '/'.join(['artefacts', str(instance.artefact.id), 'stratigraphies', filename])
 
 
 class Stratigraphy(TimeStampedModel):
