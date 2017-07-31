@@ -305,16 +305,16 @@ class PublicationDecisionForm(forms.ModelForm):
         fields=['comment_to_user']
 
 class PublicationDelegateForm(forms.ModelForm):
-    admin = None
-    # Get delegated administrator group to display only delegated administrator users
-    users = User.objects.all()
-    for user in users :
-        groups = user.groups.all()
-        for group in groups :
-            if group.name=='Delegated administrator' :
-                admin = group
+    # admin = None
+    # # Get delegated administrator group to display only delegated administrator users
+    # users = User.objects.all()
+    # for user in users :
+    #     groups = user.groups.all()
+    #     for group in groups :
+    #         if group.name=='Delegated administrator' :
+    #             admin = group
 
-    delegated_user = forms.ModelChoiceField(User.objects.filter(groups=admin).order_by('username'), help_text='The delegated admin charged to analyze the request.', required=True)
+    delegated_user = forms.ModelChoiceField(User.objects.filter(groups__name='Delegated administrator').order_by('username'), help_text='The delegated admin charged to analyze the request.', required=True)
     comment_delegation = forms.CharField(widget=TinyMCE(attrs={'cols': 10, 'rows': 5}), required=False)
 
     class Meta:
