@@ -13,9 +13,9 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('wagtaildocs', '0007_merge'),
-        ('wagtailcore', '0029_unicode_slugfield_dj19'),
-        ('wagtailimages', '0013_make_rendition_upload_callable'),
+        ('wagtaildocs', '0002_initial_data'),
+        ('wagtailcore', '0010_change_page_owner_to_null_on_delete'),
+        ('wagtailimages', '0004_make_focal_point_key_not_nullable'),
     ]
 
     operations = [
