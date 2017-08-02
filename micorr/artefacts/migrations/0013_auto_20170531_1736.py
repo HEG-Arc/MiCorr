@@ -8,7 +8,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('artefacts', '0012_auto_20170523_1238'),
+        ('artefacts', '0012_datamigration_populate_artefact_field'),
     ]
 
     operations = [
