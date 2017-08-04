@@ -11,6 +11,8 @@ Production Configurations
 from __future__ import absolute_import, unicode_literals
 
 import logging
+import os
+import raven
 
 
 from .common import *  # noqa
@@ -122,8 +124,8 @@ LOGGING = {
     'version': 1,
     'disable_existing_loggers': True,
     'root': {
-        'level': 'WARNING',
-        'handlers': ['sentry'],
+        'level': 'INFO',
+        'handlers': ['sentry','console'],
     },
     'formatters': {
         'verbose': {
@@ -133,7 +135,7 @@ LOGGING = {
     },
     'handlers': {
         'sentry': {
-            'level': 'ERROR',
+            'level': 'WARNING',
             'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler',
         },
         'console': {
@@ -144,8 +146,8 @@ LOGGING = {
     },
     'loggers': {
         'django': {
-            'level': 'DEBUG',
-            'handlers': ['console'],
+            'level': 'INFO',
+            'handlers': ['console','sentry'],
             'propagate': False,
         },
         'raven': {
@@ -168,7 +170,8 @@ LOGGING = {
 SENTRY_CELERY_LOGLEVEL = env.int('DJANGO_SENTRY_LOG_LEVEL', logging.INFO)
 RAVEN_CONFIG = {
     'CELERY_LOGLEVEL': env.int('DJANGO_SENTRY_LOG_LEVEL', logging.INFO),
-    'DSN': SENTRY_DSN
+    'dsn': SENTRY_DSN,
+    'release': raven.fetch_git_sha(os.path.dirname(os.pardir))
 }
 
 # Custom Admin URL, use {% url 'admin:index' %}
