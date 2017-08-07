@@ -119,6 +119,7 @@ CACHES = {
 
 # Sentry Configuration
 SENTRY_DSN = env('DJANGO_SENTRY_DSN')
+APP_GIT_REV = env('APP_GIT_REV')
 SENTRY_CLIENT = env('DJANGO_SENTRY_CLIENT', default='raven.contrib.django.raven_compat.DjangoClient')
 LOGGING = {
     'version': 1,
@@ -171,7 +172,7 @@ SENTRY_CELERY_LOGLEVEL = env.int('DJANGO_SENTRY_LOG_LEVEL', logging.INFO)
 RAVEN_CONFIG = {
     'CELERY_LOGLEVEL': env.int('DJANGO_SENTRY_LOG_LEVEL', logging.INFO),
     'dsn': SENTRY_DSN,
-    'release': raven.fetch_git_sha(os.path.dirname(os.pardir))
+    'release': APP_GIT_REV
 }
 
 # Custom Admin URL, use {% url 'admin:index' %}
