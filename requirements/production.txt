@@ -14,4 +14,4 @@ Collectfast==0.2.3
 
 # Raven is the Sentry client
 # --------------------------
-raven==5.21.0
+raven==6.1.0
