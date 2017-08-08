@@ -11,6 +11,7 @@ RUN npm install -g grunt-cli@1.2.0 forever@0.15.3
 
 WORKDIR /app
 COPY package.json /app/
+COPY package-lock.json /app/
 COPY ./micorr/stratigraphies/static/ /app/micorr/stratigraphies/static/
 
 #COPY Gruntfile.js /src/Gruntfile.js
