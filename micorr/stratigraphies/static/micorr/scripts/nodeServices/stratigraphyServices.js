@@ -9,7 +9,8 @@ var Characteristic = require('../business/characteristic').Characteristic;
 var SubCharacteristic = require('../business/subCharacteristic').SubCharacteristic;
 var GraphGenerationUtil = require('../utils/graphGenerationUtil').GraphGenerationUtil;
 
-var url = "https://micorr.org/micorr";
+var url = process.env.DJANGO_SERVICE_URL || "http://django:5000/micorr";
+console.log('stratigrapyService.js: DJANGO_SERVICE_URL='+url);
 
 module.exports = {
 
