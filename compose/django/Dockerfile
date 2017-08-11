@@ -9,6 +9,10 @@ COPY ./requirements /requirements
 RUN pip install --no-cache-dir -r /requirements/production.freeze \
     && rm -rf /requirements
 
+# patch wagtail migration for migration compatibilty
+# see https://code.micorr.org/youtrack/issue/MC-277#comment=4-151
+RUN sed -i -e 's/0026_group_collection_permission/0002_initial_data/' $(find  /usr/local/lib/ -name 0001_create_admin_access_permissions.py)
+
 COPY ./compose/django/gunicorn.sh ./compose/django/entrypoint.sh /
 RUN sed -i 's/\r//' /entrypoint.sh \
     && sed -i 's/\r//' /gunicorn.sh \
