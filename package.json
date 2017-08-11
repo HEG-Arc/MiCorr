@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "dependencies": {
     "httpdispatcher": "1.0.0",
-    "jsdom": "11.1.0",
-    "svg.js": "2.6.3"
+    "jsdom": "9.2.1",
+    "inkscape": "1.1.1"
   },
   "devDependencies": {
     "connect-livereload": "~0.3.2",
