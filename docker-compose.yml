@@ -33,8 +33,8 @@ services:
     build:
       context: .
       dockerfile: ./compose/django/Dockerfile
-#    volumes:
-#      - .:/app
+    volumes:
+      - ./micorr/media:/app/micorr/media
     user: django
     depends_on:
       - postgres
