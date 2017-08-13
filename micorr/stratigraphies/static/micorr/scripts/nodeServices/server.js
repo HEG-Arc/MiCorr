@@ -40,7 +40,7 @@ server.listen(PORT, function () {
 });
 
 //Récupération du svg d'une stratigraphie
-dispatcher.onPost("/getStratigraphySvg", function (req, res) {
+dispatcher.onPost(/\/getStratigraphySvg\/*/, function (req, res) {
 
     res.writeHead(200, {'Content-Type': 'text/plain'});
 
@@ -74,7 +74,7 @@ dispatcher.onPost("/getStratigraphySvg", function (req, res) {
 });
 
 //Quick hack to support GET requests # TODO: Refactoring
-dispatcher.onGet("/getStratigraphySvg", function (req, res) {
+dispatcher.onGet(/\/getStratigraphySvg\/*/, function (req, res) {
     res.writeHead(200, {'Content-Type': 'image/svg+xml'});
     var params = querystring.parse(url.parse(req.url).query);
     console.log('widthParam: ' + params['width']);
@@ -103,7 +103,7 @@ dispatcher.onGet("/getStratigraphySvg", function (req, res) {
 
 
 //Export de la stratigraphie en PNG ou en PDF
-dispatcher.onGet("/exportStratigraphy", function (req, res) {
+dispatcher.onGet(/\/exportStratigraphy\/*/, function (req, res) {
 
     console.log('test');
     var params = querystring.parse(url.parse(req.url).query);
