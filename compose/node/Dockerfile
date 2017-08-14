@@ -5,7 +5,7 @@ EXPOSE 8080
 # TODO check if sass is needed?
 # RUN apt-get update -qq && apt-get install -y build-essential ruby
 # RUN gem install sass
-
+RUN apt-get update && apt-get install -y inkscape
 RUN mkdir -p /app/micorr/stratigraphies/static/
 RUN npm install -g grunt-cli@1.2.0 forever@0.15.3
 
