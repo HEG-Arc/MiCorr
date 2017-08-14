@@ -127,13 +127,24 @@ dispatcher.onGet(/\/exportStratigraphy\/*/, function (req, res) {
                     inkscape.end(svgresult);
                     inkscape.pipe(res);
                 }
-                if(format == 'pdf'){
+                else if(format == 'pdf'){
                     inkscape = new Inkscape(['--export-pdf']);
                     res.writeHead(200, {'Content-Type': 'application/pdf'});
                     inkscape.end(svgresult);
                     inkscape.pipe(res);
                 }
-
+/*  test of svg2png using phantomjs - more issues than with inkscape 0.92
+                else if(format == 'pngp') {
+                    // add following dependencies to package.json:
+                    //    "phantomjs-prebuilt": "^2.1.14",
+                    //    "svg2png": "^4.1.1"
+                    const svg2png = require("svg2png");
+                    svg2png(svgresult, { width: width }).then(function(buffer) {
+                        res.writeHead(200, {'Content-Type': 'image/png'});
+                        res.write(buffer);
+                        res.end()}).catch(function(e) { console.error(e)});
+                }
+ */
             });
         }
         else {

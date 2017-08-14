@@ -95,7 +95,7 @@ module.exports = {
             width = 200;
         }
         var result = drawer.drawStratigraphy(width);
-        console.log('stratigraphy drawed')
+        console.log('stratigraphy drawn')
         return callback(result);
     }
 
