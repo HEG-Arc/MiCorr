@@ -2,9 +2,12 @@
   "name": "micorr",
   "version": "0.1.0",
   "dependencies": {
+    "datauri": "^1.0.5",
     "httpdispatcher": "1.0.0",
+    "inkscape": "1.1.1",
     "jsdom": "9.2.1",
-    "inkscape": "1.1.1"
+    "phantomjs-prebuilt": "^2.1.14",
+    "svg2png": "^4.1.1"
   },
   "devDependencies": {
     "connect-livereload": "~0.3.2",

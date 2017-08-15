@@ -481,21 +481,13 @@
                     var char = strata.getCharacteristicsByFamily('cpriMicrostructureFamily')[0].getName();
                     switch (char) {
                         case "pseudomorphOfGranularCharacteristic":
-                            if (this.window == undefined) {
-                                var image = draw.image("../static/micorr/images/c/grains/GrainsGris_" + height + "x" + width + ".png");
-                                image.size(width, height);
-                            }
+                            this.addImage(draw,"../static/micorr/images/c/grains/GrainsGris_" + height + "x" + width + ".png",width, height);
                             break;
-
                         case "pseudomorphOfDendriticCharacteristic":
                             this.addImage(draw, "../static/micorr/images/c/CP/Dendrite/CP_Dendrite_" + height + "x" + width + ".svg", width, height);
                             break;
-
                         case "hexagonalNetworkCharacteristic":
-                            if (this.window == undefined) {
-                                var image = draw.image("../static/micorr/images/c/hexagonal.png");
-                                image.size(width, height);
-                            }
+                            this.addImage(draw,"../static/micorr/images/c/hexagonal.png", width, height);
                             break;
 
                         case "alternatingBandsCharacteristic":
@@ -619,14 +611,11 @@
 
                 //On dessine les images pour les points dans le tableau PoissonDisk
                 //Pour l'instant ces images sont en png, il faudra les exporter en svg
-                if (this.window == undefined) {
                     for (var i = 0; i < pds.pointList.length; i++) {
-                        var image = draw.image("../static/micorr/images/c/" + pds.pointList[i].t + ".png");
-                        image.size(pds.pointList[i].w, pds.pointList[i].h);
+                        var image = this.addImage(draw,"../static/micorr/images/c/" + pds.pointList[i].t + ".png",pds.pointList[i].w, pds.pointList[i].h);
                         image.x(pds.pointList[i].x - pds.pointList[i].w / 2);
                         image.y(pds.pointList[i].y - pds.pointList[i].h / 2);
                     }
-                }
             }
         }, {
             key: 'getThicknesses',
@@ -859,23 +848,14 @@
         }, {
             key: 'addImage',
             value: function addImage(draw, url, width, height) {
-                var format = url.substr(url.length - 3);
-                console.log(format);
-
-                if (this.window != undefined && format == 'svg') {
-
-                    //On récupère le contenu du fichier SVG et on l'absorbe dans notre SVG
-                    var svgContent = utils.getSvgFileContent(url);
-                    var nested = draw.nested();
-                    var imp = nested.absorb(svgContent);
-                    var box = nested.viewbox(0, 0, width, height);
-
-                    return box;
-                } else {
-                    var image = draw.image(url);
-                    image.size(width, height);
-                    return image;
+                if (this.window) //node case we embed the images (svg and png) as datauri
+                {
+                    const Datauri = require('datauri');
+                    url = new Datauri(url).content;
                 }
+                var image = draw.image(url);
+                image.size(width, height);
+                return image;
             }
         }]);
 

@@ -37,6 +37,11 @@ var server = http.createServer(handleRequest);
 server.listen(PORT, function () {
 
     console.log("Server listening on: http://localhost:%s", PORT);
+    console.log('Current directory: ' + process.cwd());
+    // Change working dir to /app/micorr/stratigraphies/static to access svg and png files
+    // referred to as ../static/micorr/...
+    process.chdir(__dirname + "/../../../");
+    console.log('Change dir to: ' + process.cwd());
 });
 
 //Récupération du svg d'une stratigraphie
@@ -109,9 +114,11 @@ dispatcher.onGet(/\/exportStratigraphy\/*/, function (req, res) {
     var params = querystring.parse(url.parse(req.url).query);
     var width = params['width'];
     var format = params['format'];
+/*
     if (format != 'pdf') {
         format = 'png';
     }
+*/
     /*On récupère la stratigraphie et on la convertit dans le format donné en paramèter avec
     le module inkscape
      */
@@ -119,32 +126,27 @@ dispatcher.onGet(/\/exportStratigraphy\/*/, function (req, res) {
         console.log('ready to draw');
         if (stratig != undefined) {
             stratigraphyServices.drawStratigraphy(stratig, width, function (svgresult) {
-
-                var Inkscape = require('inkscape')
                 if(format == 'png') {
-                    inkscape = new Inkscape(['-e']);
-                    res.writeHead(200, {'Content-Type': 'image/png'});
-                    inkscape.end(svgresult);
-                    inkscape.pipe(res);
-                }
-                else if(format == 'pdf'){
-                    inkscape = new Inkscape(['--export-pdf']);
-                    res.writeHead(200, {'Content-Type': 'application/pdf'});
-                    inkscape.end(svgresult);
-                    inkscape.pipe(res);
-                }
-/*  test of svg2png using phantomjs - more issues than with inkscape 0.92
-                else if(format == 'pngp') {
-                    // add following dependencies to package.json:
-                    //    "phantomjs-prebuilt": "^2.1.14",
-                    //    "svg2png": "^4.1.1"
                     const svg2png = require("svg2png");
                     svg2png(svgresult, { width: width }).then(function(buffer) {
                         res.writeHead(200, {'Content-Type': 'image/png'});
                         res.write(buffer);
                         res.end()}).catch(function(e) { console.error(e)});
                 }
- */
+                else if(format == 'pngi') {
+                    var Inkscape = require('inkscape')
+                    inkscape = new Inkscape(['-e']);
+                    res.writeHead(200, {'Content-Type': 'image/png'});
+                    inkscape.end(svgresult);
+                    inkscape.pipe(res);
+                }
+                else if(format == 'pdf'){
+                    var Inkscape = require('inkscape')
+                    inkscape = new Inkscape(['--export-pdf']);
+                    res.writeHead(200, {'Content-Type': 'application/pdf'});
+                    inkscape.end(svgresult);
+                    inkscape.pipe(res);
+                }
             });
         }
         else {
