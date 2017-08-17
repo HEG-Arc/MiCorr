@@ -10,8 +10,9 @@ module.exports = {
      * @param win l'élément window virtuel créé par JSDOM
      */
     getDrawer(win){
-        var drawer = require('../dependencies/svg.js')(win);
-        var absorb = require('../dependencies/svg.absorb.js')(win);
+        const SVG=require('svg.js')(win);
+        //var drawer =  SVG(win.document.documentElement);
+        //var absorb = require('../dependencies/svg.absorb.js')(win);
     },
 
     /**

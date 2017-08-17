@@ -84,12 +84,9 @@ module.exports = {
      * @returns le SVG généré
      */
     drawStratigraphy: function (stratigraphy, width, callback) {
-
-        //drawer.drawStrata(stratigraphy.getStratas()[0], 'drawing');
-        var jsdom = require("jsdom").jsdom;
-        var document = jsdom("<div id='drawing'></div><div id='result'></div><div id='exp'><div/>")
-        var window = document.defaultView;
-
+        // require('svgdom') returns a window with a document and an svg root node that'll be used by svg.js
+        // see nodeUtils.js getDrawer
+        const window   = require('svgdom');
         var drawer = new GraphGenerationUtil(window, stratigraphy);
         if (width == undefined) {
             width = 200;

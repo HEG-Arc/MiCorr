@@ -83,44 +83,32 @@
         _createClass(GraphGenerationUtil, [{
             key: 'drawStratigraphy',
             value: function drawStratigraphy(width) {
-                console.log('im called');
-                var drawings = new Array();
 
                 var stratigraphyHeight = 0;
-                var div = this.window.document.getElementById('drawing');
-                console.log("Nb of stratas:" + this.stratig.getStratas().length);
-
+                var resultDraw = SVG(this.window.document.documentElement);
+                console.log("Nb of strata:" + this.stratig.getStratas().length);
                 for (var i = 0; i < this.stratig.getStratas().length; i++) {
                     var str = this.stratig.getStratas()[i];
-                    var nestedInterface = this.drawInterface(str, 'drawing');
+                    var nestedInterface = this.drawInterface(str, null, resultDraw);
+                    nestedInterface.y(stratigraphyHeight);
                     stratigraphyHeight = stratigraphyHeight + nestedInterface.height();
                     console.log('strataUid: ' + str.getUid());
-                    drawings.push(nestedInterface);
-                    var nestedStrata = this.drawStrata(str, 'drawing');
+                    var nestedStrata = this.drawStrata(str, null, resultDraw);
+                    nestedStrata.y(stratigraphyHeight);
                     stratigraphyHeight = stratigraphyHeight + nestedStrata.height();
-                    drawings.push(nestedStrata);
                 }
-                var resultDraw = SVG('result');
-                var box = resultDraw.viewbox(0, 0, 500, stratigraphyHeight);
-                var bottomY = 0;
-                for (var i = 0; i < drawings.length; i++) {
-                    var nestedObject = drawings[i];
-                    nestedObject.y(bottomY);
-                    bottomY = bottomY + nestedObject.height();
-                    box.add(drawings[i]);
-                }
-
-                //var resultDiv = this.window.document.getElementById('result');
-                //var svgContent = resultDiv.innerHTML;
-
-                box.width(width);
-                var svgContent = resultDraw.exportSvg();
-
+                var box = resultDraw.viewbox();
+                resultDraw.viewbox(0,0,500,stratigraphyHeight);
+                var svgContent = resultDraw.svg();
+                // remove all svg nodes from dom to be ready for next rendering
+                resultDraw.clear();
                 return svgContent;
             }
         }, {
             key: 'drawInterface',
-            value: function drawInterface(strata, divID) {
+            value: function drawInterface(strata, divID, draw) {
+                // Either pass divID (browser case) or svg.js draw context directly when called from nodejs
+                // the other argument must be null
                 var index = strata.getIndex();
 
                 var interfaceHeight = 22;
@@ -133,13 +121,14 @@
                         isUpperCM = true;
                     }
                 }
-
-                if (this.window == undefined) {
-                    var interfaceDiv = document.getElementById(divID);
-                    interfaceDiv.style.height = interfaceHeight + "px";
-                } else {
-                    var interfaceDiv = this.window.document.getElementById(divID);
-                    interfaceDiv.style.height = interfaceHeight + "px";
+                if (divID) {
+                    if (this.window == undefined) {
+                        var interfaceDiv = document.getElementById(divID);
+                        interfaceDiv.style.height = interfaceHeight + "px";
+                    } else {
+                        var interfaceDiv = this.window.document.getElementById(divID);
+                        interfaceDiv.style.height = interfaceHeight + "px";
+                    }
                 }
 
                 var borderWidth = 8;
@@ -153,7 +142,7 @@
 
                 var interfaceWidth = strataWidth;
 
-                var draw = SVG(divID).size(interfaceWidth, interfaceHeight);
+                draw = draw || SVG(divID).size(interfaceWidth, interfaceHeight);
 
                 var nestedInterface = draw.nested();
                 nestedInterface.height(interfaceHeight);
@@ -271,7 +260,9 @@
             }
         }, {
             key: 'drawStrata',
-            value: function drawStrata(strata, divID) {
+            value: function drawStrata(strata, divID, draw) {
+                // Either pass divID (browser case) or svg.js draw context directly when called from nodejs
+                // the other argument must be null
                 var borderColor = 'black';
 
                 var height = 100;
@@ -283,16 +274,17 @@
                 if (strata.getCharacteristicsByFamily('widthFamily').length > 0) {
                     width = this.getWidths(strata.getCharacteristicsByFamily('widthFamily')[0].getName());
                 }
+                if (divID) {
 
-                if (this.window == undefined) {
-                    document.getElementById(divID).style.height = height + "px";
-                } else {
-                    this.window.document.getElementById(divID).style.height = height + "px";
+                    if (this.window == undefined) {
+                        document.getElementById(divID).style.height = height + "px";
+                    } else {
+                        this.window.document.getElementById(divID).style.height = height + "px";
+                    }
                 }
-
                 var borderWidth = 8;
 
-                var draw = SVG(divID).size(width, height);
+                var draw = draw || SVG(divID).size(width, height);
 
                 //on crée un groupe pour englober la strate et pour pouvoir la réutiliser
                 var nestedStrata = draw.nested();
@@ -381,7 +373,8 @@
                     //if (upperStrata.getCharacteristicsByFamily('colourFamily').length > 0) {
                     //upperStrataColor = upperStrata.getCharacteristicsByFamily('colourFamily')[0].getRealName();
                     //}
-                    var path = draw.path(pathString).attr({ fill: 'none' });
+                    var defs = draw.defs();
+                    var path = defs.path(pathString).attr({ fill: 'none' });
                     group.clipWith(path);
                 } else {
                     draw.path(pathString).attr({ fill: 'white' });

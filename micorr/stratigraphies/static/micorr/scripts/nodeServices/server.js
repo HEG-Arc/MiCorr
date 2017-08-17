@@ -47,7 +47,7 @@ server.listen(PORT, function () {
 //Récupération du svg d'une stratigraphie
 dispatcher.onPost(/\/getStratigraphySvg\/*/, function (req, res) {
 
-    res.writeHead(200, {'Content-Type': 'text/plain'});
+    res.writeHead(200, {'Content-Type': 'image/svg+xml'});
 
 
     var params = querystring.parse(url.parse(req.url).query);
@@ -126,6 +126,10 @@ dispatcher.onGet(/\/exportStratigraphy\/*/, function (req, res) {
         console.log('ready to draw');
         if (stratig != undefined) {
             stratigraphyServices.drawStratigraphy(stratig, width, function (svgresult) {
+                // we replace standard href by deprecated xlink:href in the svg output by recent svg.js (2.6.3)
+                // as it is not yet supported by latest svg2png/phantomjs (2.1.1) and all embedded images
+                // are removed otherwise
+                svgresult = svgresult.replace(/href/g, 'xlink:href');
                 if(format == 'png') {
                     const svg2png = require("svg2png");
                     svg2png(svgresult, { width: width }).then(function(buffer) {
@@ -146,6 +150,11 @@ dispatcher.onGet(/\/exportStratigraphy\/*/, function (req, res) {
                     res.writeHead(200, {'Content-Type': 'application/pdf'});
                     inkscape.end(svgresult);
                     inkscape.pipe(res);
+                }
+                else if (format == 'svg') {
+                    res.writeHead(200, {'Content-Type': 'image/svg+xml'});
+                    res.write(svgresult);
+                    res.end();
                 }
             });
         }

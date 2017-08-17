@@ -7,7 +7,9 @@
     "inkscape": "1.1.1",
     "jsdom": "9.2.1",
     "phantomjs-prebuilt": "^2.1.14",
-    "svg2png": "^4.1.1"
+    "svg2png": "^4.1.1",
+    "svg.js": "^2.6.3",
+    "svgdom": "^0.0.15"
   },
   "devDependencies": {
     "connect-livereload": "~0.3.2",
