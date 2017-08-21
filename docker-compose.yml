@@ -47,8 +47,6 @@ services:
     build:
       context: .
       dockerfile: ./compose/node/Dockerfile
-#    volumes_from:
-#      - django
     ports:
       - "8080:8080"
     depends_on:
@@ -56,8 +54,10 @@ services:
 
   nginx:
     build: ./compose/nginx
+    restart: always
     depends_on:
       - django
+      - node
       - certbot
     environment:
       # MY_DOMAIN_NAME is used by both nginx (for allowed hosts) and certbot for getting ssl certificate
