@@ -1,4 +1,8 @@
 #!/bin/bash
+if [! -f compose/nginx/dhparams.pem]
+then
+    openssl dhparam -out compose/nginx/dhparams.pem 2048
+fi
 APP_GIT_REV=$(git describe --tags)
 echo "update .env file with MiCorr git revision:"
 echo "APP_GIT_REV=$APP_GIT_REV"
