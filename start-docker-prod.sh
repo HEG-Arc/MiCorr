@@ -32,4 +32,4 @@ update_var APP_GIT_REV $APP_GIT_REV
 update_var DEALER_TAG $DEALER_TAG
 update_var DEALER_REVISION $DEALER_REVISION
 echo "build and start docker-compose production containers"
-docker-compose up -d --build
+#docker-compose up -d --build
