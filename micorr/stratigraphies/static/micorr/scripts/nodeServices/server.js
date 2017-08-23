@@ -151,7 +151,7 @@ dispatcher.onGet(/\/exportStratigraphy\/*/, function (req, res) {
                     inkscape.end(svgresult);
                     inkscape.pipe(res);
                 }
-                else if (format == 'svg') {
+                else { // defaulting to svg format
                     res.writeHead(200, {'Content-Type': 'image/svg+xml'});
                     res.write(svgresult);
                     res.end();
@@ -160,7 +160,7 @@ dispatcher.onGet(/\/exportStratigraphy\/*/, function (req, res) {
         }
         else {
             //Si la stratigraphie n'existe pas on retourne une erreur
-            res.writeHead( 400, 'Stratigraphie non trouvée', {'content-type' : 'text/plain'});
+            res.writeHead( 404, 'Stratigraphy not found', {'content-type' : 'text/plain'});
             res.end();
         }
     });
