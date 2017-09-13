@@ -508,3 +508,47 @@ ON CREATE set sc+=$common_props
 MERGE (sc)-[:HAS_SPECIALIZATION]-> (ssc:SubCharacteristic {name:new_nodes.ssc, uid:new_nodes.ssc_uid})
 ON CREATE set ssc+=$common_props
 RETURN f.name, c.name, sc.name,ssc.name;
+
+
+/**************************
+//MC-224
+Famille des argent / Strate CP / Composition / Secondary element (mettre la formule des composés)
+
+Add
+  la ligne Br correspondant au composé : Bromargyrite (AgBr)
+Update
+  la ligne Cl correspondant au composé : Chlorargyrite (AgCl)
+  la ligne S correspondant aux composés : Acanthite (α-Ag2S), Argentite (β-Ag2S)
+
+MATCH (f:Family {name:"CP Composition"})<--(c:Characteristic {name: "Ag" })-->(sc)-->(ssc) RETURN sc.name, sc.uid,ssc.name,ssc.uid ORDER BY sc.name, ssc.name
+╒═════════╤════════╤═══════════════╤═════════════════╕
+│"sc.name"│"sc.uid"│"ssc.name"     │"ssc.uid"        │
+╞═════════╪════════╪═══════════════╪═════════════════╡
+│"Cl"     │"cpAgCl"│"Chlorargyrite"│"cpChlorargyrite"│
+├─────────┼────────┼───────────────┼─────────────────┤
+│"S"      │"cpAgS" │"Acanthite"    │"cpAcanthite"    │
+├─────────┼────────┼───────────────┼─────────────────┤
+│"S"      │"cpAgS" │"Argentite"    │"cpArgentite"    │
+└─────────┴────────┴───────────────┴─────────────────┘
+*/
+
+//Update ssc
+UNWIND [
+{ ssc: "Chlorargyrite (AgCl)", ssc_uid:"cpChlorargyrite"},
+{ ssc: "Acanthite (α-Ag2S)", ssc_uid:"cpAcanthite"},
+{ ssc: "Argentite (β-Ag2S)", ssc_uid:"cpArgentite"}
+] as upd_node
+MATCH (ssc:SubCharacteristic {uid:upd_node.ssc_uid})
+SET ssc.name =  upd_node.ssc
+RETURN ssc.name,ssc.uid;
+
+//Add
+UNWIND [
+{sc:"Br", sc_uid:"cpAgBr", ssc:"Bromargyrite (AgBr)", ssc_uid:"cpBromargyrite"}
+] as new_nodes
+MATCH (f:Family {name:"CP Composition"})<--(c:Characteristic {name: "Ag" })
+MERGE (c)-[:HAS_SPECIALIZATION]-> (sc:SubCharacteristic {name:new_nodes.sc, uid:new_nodes.sc_uid})
+ON CREATE set sc+=$common_props
+MERGE (sc)-[:HAS_SPECIALIZATION]-> (ssc:SubCharacteristic {name:new_nodes.ssc, uid:new_nodes.ssc_uid})
+ON CREATE set ssc+=$common_props
+RETURN f.name,c.name,sc.name,ssc.name;
