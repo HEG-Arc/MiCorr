@@ -552,3 +552,43 @@ ON CREATE set sc+=$common_props
 MERGE (sc)-[:HAS_SPECIALIZATION]-> (ssc:SubCharacteristic {name:new_nodes.ssc, uid:new_nodes.ssc_uid})
 ON CREATE set ssc+=$common_props
 RETURN f.name,c.name,sc.name,ssc.name;
+
+/**************************
+//MC-223
+Famille des aluminium / Strate CP / Composition / Secondary element (mettre la formule des composés)
+
+Modifier/ajouter :
+    la ligne O doit correspondre au composé : Alumina (-Al2O3)
+    la ligne O,H, doit correspondre aux composés : Al(OH)3 Bayerite / Gibbsite / Hydrargillite (Al(OH)3), Boehmite (AlO(OH))
+    la ligne O, H, Cl correspondant au composé : Chloraluminite (AlCl3.6H2O)
+
+MATCH (f:Family {name:"CP Composition"})<--(c:Characteristic {name: "Al" })-->(sc)-->(ssc) RETURN sc.name, sc.uid,ssc.name,ssc.uid ORDER BY sc.name, ssc.name
+
+╒═════════╤════════╤═════════════════════╤══════════════════════╕
+│"sc.name"│"sc.uid"│"ssc.name"           │"ssc.uid"             │
+╞═════════╪════════╪═════════════════════╪══════════════════════╡
+│"O"      │"cpAlO" │"Alumina"            │"cpAlumina"           │
+├─────────┼────────┼─────────────────────┼──────────────────────┤
+│"O"      │"cpAlO" │"Aluminium Hydroxide"│"cpAluminiumHydroxide"│
+└─────────┴────────┴─────────────────────┴──────────────────────┘
+*/
+
+
+/**************************
+//MC-222
+Famille des aluminium / Strate M / Composition / Additional element(s)
+
+Ajouter :
+    la ligne Sn
+    la ligne Cu, Sn, Zn, Si
+*/
+
+// Add
+UNWIND [
+{uid:"mAlSn", name: "Sn"},
+{uid:"mAlCuSnZnSi", name: "Cu, Sn, Zn, Si"}
+] as new_node
+MATCH (f:Family {name:"M Composition"})<--(c:Characteristic {name: "Al" })
+MERGE (c)-[:HAS_SPECIALIZATION]-> (sc:SubCharacteristic {name:new_node.name, uid:new_node.uid})
+ON CREATE set sc+=$common_props
+RETURN f.name,c.name,sc.name;
