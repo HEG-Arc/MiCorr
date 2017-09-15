@@ -620,8 +620,13 @@ MERGE (c)-[:HAS_SPECIALIZATION]-> (sc:SubCharacteristic {name:new_node.name, uid
 ON CREATE set sc+=$common_props
 RETURN f.name,c.name,sc.name;
 
+/**************************
 // MC-296
-//MATCH (f:Family {name:"M Composition"})<--(c:Characteristic)-->(sc:SubCharacteristic) WHERE c.name=sc.name  RETURN f,c,sc
+Strate M / Composition "Main Element" duplicated in "Secondary Element" list
+
+existing:
+MATCH (f:Family {name:"M Composition"})<--(c:Characteristic)-->(sc:SubCharacteristic) WHERE c.name=sc.name  RETURN f,c,sc
+*/
 
 // Add new mCuPb element to replace mPb that was badly using mPb
 MATCH (f:Family {name:"M Composition"})<--(c:Characteristic {name: "Cu" })
@@ -638,3 +643,58 @@ RETURN f,c,sc,sta,sty,a, mCuPb;
 //Delete the redundant sub characteristic
 MATCH (f:Family {name:"M Composition"})<--(c:Characteristic)-->(sc:SubCharacteristic) WHERE c.name=sc.name DETACH DELETE sc;
 
+/**************************
+//MC-271
+Famille des cuivreux / Strate M / Secondary elements
+ ajouter Ag
+ ajouter Ag, Au
+
+Existing
+MATCH (f:Family {name:"M Composition"})<--(c:Characteristic {name:"Cu"})-[:HAS_SPECIALIZATION]->(sc:SubCharacteristic) return sc.name, sc.uid ORDER BY sc.name
+╒════════════╤═══════════╕
+│"sc.name"   │"sc.uid"   │
+╞════════════╪═══════════╡
+│"Al"        │"mCuAl"    │
+├────────────┼───────────┤
+│"As"        │"mAs"      │
+├────────────┼───────────┤
+│"Be"        │"mCuBe"    │
+├────────────┼───────────┤
+│"Mn"        │"mCuMn"    │
+├────────────┼───────────┤
+│"Ni"        │"mCuNi"    │
+├────────────┼───────────┤
+│"Ni, Zn"    │"mCuNiZn"  │
+├────────────┼───────────┤
+│"Pb"        │"mCuPb"    │
+├────────────┼───────────┤
+│"Sb"        │"mSb"      │
+├────────────┼───────────┤
+│"Sn"        │"mCuSn"    │
+├────────────┼───────────┤
+│"Sn, As"    │"mSnAs"    │
+├────────────┼───────────┤
+│"Sn, Pb"    │"mCuSnPb"  │
+├────────────┼───────────┤
+│"Sn, Pb, Zn"│"mCuSnPbZn"│
+├────────────┼───────────┤
+│"Sn, Sb"    │"mSnSb"    │
+├────────────┼───────────┤
+│"Sn, Zn"    │"mCuSnZn"  │
+├────────────┼───────────┤
+│"Zn"        │"mCuZn"    │
+├────────────┼───────────┤
+│"Zn, Pb"    │"mCuZnPb"  │
+├────────────┼───────────┤
+│"Zn, Sn"    │"mCuZnSn"  │
+└────────────┴───────────┘
+*/
+
+UNWIND [
+{uid:"mCuAg", name: "Ag"},
+{uid:"mCuAgAu", name: "Ag, Au"}
+] as new_node
+MATCH (f:Family {name:"M Composition"})<--(c:Characteristic {name: "Cu" })
+MERGE (c)-[:HAS_SPECIALIZATION]-> (sc:SubCharacteristic {name:new_node.name, uid:new_node.uid})
+ON CREATE set sc+=$common_props
+RETURN f.name,c.name,sc.name;
