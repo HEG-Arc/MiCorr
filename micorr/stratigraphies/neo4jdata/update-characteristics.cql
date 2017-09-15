@@ -571,7 +571,34 @@ MATCH (f:Family {name:"CP Composition"})<--(c:Characteristic {name: "Al" })-->(s
 ├─────────┼────────┼─────────────────────┼──────────────────────┤
 │"O"      │"cpAlO" │"Aluminium Hydroxide"│"cpAluminiumHydroxide"│
 └─────────┴────────┴─────────────────────┴──────────────────────┘
+
+MATCH (cpah {uid:"cpAluminiumHydroxide"})-[r]-(n) return cpah,r,n
+
 */
+//Update ssc
+UNWIND [
+{ ssc: "Alumina (Al2O3)", ssc_uid:"cpAlumina"}
+] as upd_node
+MATCH (ssc:SubCharacteristic {uid:upd_node.ssc_uid})
+SET ssc.name =  upd_node.ssc
+RETURN ssc.name,ssc.uid;
+
+//Delete node and relations
+MATCH (cpah {uid:"cpAluminiumHydroxide"}) DETACH DELETE cpah
+RETURN cpah;
+
+//Add
+UNWIND [
+{sc:"O, H", sc_uid:"cpAlOH", ssc:"Bayerite / Gibbsite / Hydrargillite (Al2O3,3H2O / Al(OH)3)", ssc_uid:"cpBayeriteGibbsiteHydrargillite"},
+{sc:"O, H", sc_uid:"cpAlOH", ssc:"Boehmite (Al2O3,H2O / AlO(OH))", ssc_uid:"cpBoehmite"},
+{sc:"O, H, Cl", sc_uid:"cpAlOHCl", ssc:"Chloraluminite (AlCl3.6H2O)", ssc_uid:"cpChloraluminite"}
+] as new_nodes
+MATCH (f:Family {name:"CP Composition"})<--(c:Characteristic {name: "Al" })
+MERGE (c)-[:HAS_SPECIALIZATION]-> (sc:SubCharacteristic {name:new_nodes.sc, uid:new_nodes.sc_uid})
+ON CREATE set sc+=$common_props
+MERGE (sc)-[:HAS_SPECIALIZATION]-> (ssc:SubCharacteristic {name:new_nodes.ssc, uid:new_nodes.ssc_uid})
+ON CREATE set ssc+=$common_props
+RETURN f.name,c.name,sc.name,ssc.name;
 
 
 /**************************
