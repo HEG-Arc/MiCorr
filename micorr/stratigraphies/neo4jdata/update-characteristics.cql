@@ -633,8 +633,8 @@ MATCH (f:Family {name:"M Composition"})<--(c:Characteristic)-->(sc:SubCharacteri
   WHERE c.uid="mCuCharacteristic" AND sc.uid="mPb"
 DELETE r_stasc
 MERGE (sta)-[:IS_CONSTITUTED_BY]->(mCuPb)
-RETURN f,c,sc,sta,sty,a, mCuPb
+RETURN f,c,sc,sta,sty,a, mCuPb;
 
 //Delete the redundant sub characteristic
-MATCH (f:Family {name:"M Composition"})<--(c:Characteristic)-->(sc:SubCharacteristic) WHERE c.name=sc.name DETACH DELETE sc
+MATCH (f:Family {name:"M Composition"})<--(c:Characteristic)-->(sc:SubCharacteristic) WHERE c.name=sc.name DETACH DELETE sc;
 
