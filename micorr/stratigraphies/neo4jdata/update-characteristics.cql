@@ -619,3 +619,22 @@ MATCH (f:Family {name:"M Composition"})<--(c:Characteristic {name: "Al" })
 MERGE (c)-[:HAS_SPECIALIZATION]-> (sc:SubCharacteristic {name:new_node.name, uid:new_node.uid})
 ON CREATE set sc+=$common_props
 RETURN f.name,c.name,sc.name;
+
+// MC-296
+//MATCH (f:Family {name:"M Composition"})<--(c:Characteristic)-->(sc:SubCharacteristic) WHERE c.name=sc.name  RETURN f,c,sc
+
+// Add new mCuPb element to replace mPb that was badly using mPb
+MATCH (f:Family {name:"M Composition"})<--(c:Characteristic {name: "Cu" })
+MERGE (c)-[:HAS_SPECIALIZATION]-> (mCuPb:SubCharacteristic {name:"Pb", uid:"mCuPb"})
+ON CREATE set mCuPb+=$common_props
+WITH mCuPb
+// Now we replace all relations to previous bad mPb by relation to new mCuPb
+MATCH (f:Family {name:"M Composition"})<--(c:Characteristic)-->(sc:SubCharacteristic)<-[r_stasc]-(sta:Strata)--(sty:Stratigraphy)--(a:Artefact)
+  WHERE c.uid="mCuCharacteristic" AND sc.uid="mPb"
+DELETE r_stasc
+MERGE (sta)-[:IS_CONSTITUTED_BY]->(mCuPb)
+RETURN f,c,sc,sta,sty,a, mCuPb
+
+//Delete the redundant sub characteristic
+MATCH (f:Family {name:"M Composition"})<--(c:Characteristic)-->(sc:SubCharacteristic) WHERE c.name=sc.name DETACH DELETE sc
+
