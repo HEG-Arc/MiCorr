@@ -5,7 +5,7 @@
  * @name micorrApp.controller:ShowStratCtrl
  * @description
  * # ShowStratCtrl
- * Controlleur qui est appelé lors de l'affichage d'une stratographie
+ * Controlleur qui est appelé lors de l'affichage d'une stratigraphie
  */
 angular.module('micorrApp')
     .controller('ShowStratCtrl', function ($scope, $routeParams, $timeout, MiCorrService, StratigraphyData, ngProgress) {
@@ -26,7 +26,7 @@ angular.module('micorrApp')
 
         //quand on supprime une strate, on se positionne sur la strate 0 et on met à jour le dessin
         $scope.removeStrata = function (index) {
-            StratigraphyData.delStrata(index);
+            StratigraphyData.getStratigraphy().delStratum(index);
             $scope.$emit('doUpdate', 0);
             $scope.$emit('updateDraw');
         };
@@ -38,7 +38,7 @@ angular.module('micorrApp')
         $scope.movestrataup = function (i) {
             var current = parseInt(i);
             if (current > 0) {
-                StratigraphyData.swapTwoStratas(current, current - 1);
+                StratigraphyData.getStratigraphy().swapTwoStrata(current, current - 1);
                 $scope.$broadcast('doUpdate', current - 1);
                 $scope.$broadcast('updateDraw');
             }
@@ -52,7 +52,7 @@ angular.module('micorrApp')
 
             var current = parseInt(i);
             if (current + 1 < StratigraphyData.getStratigraphy().getStratas().length) {
-                StratigraphyData.swapTwoStratas(current, current + 1);
+                StratigraphyData.getStratigraphy().swapTwoStrata(current, current + 1);
                 $scope.$broadcast('doUpdate', current + 1);
                 $scope.$broadcast('updateDraw', current + 1);
             }
@@ -316,7 +316,7 @@ angular.module('micorrApp')
                         str.addChildStrata(childMStrata);
                     }
 
-                    st.addStrata(str);
+                    st.addStratum(str);
                 }
 
 
@@ -413,7 +413,7 @@ angular.module('micorrApp')
             $scope.hideShowForms(strat);
 
             if (strat != undefined) {
-                $scope.strataName = strat.getName();
+                $scope.strataName = strat.getLabel();
                 $scope.natureFamilyname = strat.getNature();
 
 

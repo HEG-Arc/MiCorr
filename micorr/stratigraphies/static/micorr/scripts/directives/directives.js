@@ -74,27 +74,7 @@ angular.module('micorrApp').directive('strata', function ($compile, Stratigraphy
 
                 // on récupère les strates et la strate
                 var stratas = StratigraphyData.getStratigraphy().getStratas();
-                var strata = stratas[index];
-
-                var sameNature = 1;
-                var label;
-
-                var similar = false;
-
-                // pour la strate actuelle on parcourt toutes les strates jusqu'à celle ci
-                for (var i = 0; i < index; i++) {
-                    var s2 = stratas[i];
-
-                    if (strata.getCharacteristicsByFamily("natureFamily")[0].getName() == s2.getCharacteristicsByFamily("natureFamily")[0].getName()) {
-                        sameNature++;
-                    }
-
-                }
-
-                label = strata.getCharacteristicsByFamily("natureFamily")[0].getName();
-                label = label.split("Char")
-                label = label[0].toUpperCase();
-                label = label + sameNature;
+                var label=stratas[index].getLabel();
                 element.children()[0].id = 'info'+index;
 
                 element.children()[0].innerHTML = '<button class="btn btn-link btn-xs" ng-click="removeStrata(' + index + ')" title="delete this strata"><span class="glyphicon glyphicon-remove"></span></button>';

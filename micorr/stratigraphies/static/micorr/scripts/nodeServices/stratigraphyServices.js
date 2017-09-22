@@ -69,7 +69,7 @@ module.exports = {
                     subCharacteristic.setUid(currentSubCharacteristic.name);
                     strata.addSubCharacteristic(subCharacteristic);
                 }
-                stratigraphy.addStrata(strata);
+                stratigraphy.addStratum(strata);
 
             }
             return callback(stratigraphy);
