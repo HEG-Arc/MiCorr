@@ -81,17 +81,21 @@ class Neo4jDAO:
     # retourne tous les details d'une stratigraphie, caracteristiques, sous-caracteristiques et interfaces
     # @params le nom de la stratigraphie
     # @returns tous les details de la stratigraphie voulue
-    def getStratigraphyDetails(self, stratigraphy):
-        # on retourne c
-        c = []
-
+    def getStratigraphyDetails(self, stratigraphy_uid):
         # on cherche d'abord toutes les strates
-        strataList = self.graph.cypher.execute(
-            "MATCH (n:Stratigraphy)-[r:POSSESSES]->(d:Strata) where n.uid='" + stratigraphy + "'  RETURN d.uid as uid order by d.uid")
-        print (stratigraphy)
+        strata_records = self.graph.cypher.execute(
+            "MATCH (sg:Stratigraphy)-[r:POSSESSES]->(st:Strata) where sg.uid={uid}\
+               RETURN sg.description as description, st.uid as uid order by st.uid",
+            uid=stratigraphy_uid )
+
+        stratigraphy = {'uid':stratigraphy_uid,
+                        'description': strata_records[0].description,
+                        'strata':[]
+                        }
+        print (stratigraphy_uid)
 
         # pour chaque strates on va faire une requete
-        for strata in strataList:
+        for strata in strata_records:
             st = {'name': strata.uid, 'characteristics': '', 'subcharacteristics': '', 'interfaces': '', 'children': ''}
             print ("***" + strata.uid)
 
@@ -173,9 +177,8 @@ class Neo4jDAO:
                 children.append(cst)
                 #childStList['subcharacteristics'] = childSList
             st['children'] = children;
-            c.append(st)
-
-        return c
+            stratigraphy['strata'].append(st)
+        return stratigraphy
 
     # retourne la liste de toutes les caracteristiques, sous-caracteristiques et sous-sous-caracteristiques
     # @params

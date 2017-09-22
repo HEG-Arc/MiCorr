@@ -76,7 +76,7 @@ angular.module('micorrApp')
 
             $scope.artefactName = $routeParams.artefact;        // nom de l'artefact
             $scope.stratigraphyName = $routeParams.strat;           // nom de la stratigraphie
-            $scope.stratigrapgydescription = $routeParams.stratigrapgydescription; // description de la stratigraphie
+            $scope.stratigraphyDescription = $routeParams.stratigraphyDescription; // description de la stratigraphie
             $scope.strataName = "No strata selected";         // par défaut aucune strata n'est choisie
             $scope.natureFamilyname = "";                           // par défaut aucune nature n'est choisie
 
@@ -125,14 +125,13 @@ angular.module('micorrApp')
                 var st = StratigraphyData.getStratigraphy();
                 st.setUid($scope.stratigraphyName);
                 st.setArtefact($scope.artefactName);
-                if ($scope.stratigrapgydescription != undefined) {
-                    st.setDescription($scope.stratigrapgydescription)
+                $scope.stratigraphyDescription =  $scope.stratigraphyDescription || data.description;
+                if ($scope.stratigraphyDescription != undefined) {
+                    st.setDescription($scope.stratigraphyDescription)
                 }
-
                 //Boucle sur les strates
-                for (var i = 0; i < data.length; i++) {
-
-                    var currentStrata = data[i];
+                for (var i = 0; i < data.strata.length; i++) {
+                    var currentStrata = data.strata[i];
                     var nature = StratigraphyData.getStrataNature(currentStrata);
                     var str = new strata.Strata(nature, false);
                     str.setUid(currentStrata.name);
