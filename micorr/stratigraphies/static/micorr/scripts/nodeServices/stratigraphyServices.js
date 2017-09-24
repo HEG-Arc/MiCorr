@@ -91,6 +91,8 @@ module.exports = {
         if (width == undefined) {
             width = 200;
         }
+        else
+            width = parseInt(width);
         var result = drawer.drawStratigraphy(width);
         console.log('stratigraphy drawn')
         return callback(result);
