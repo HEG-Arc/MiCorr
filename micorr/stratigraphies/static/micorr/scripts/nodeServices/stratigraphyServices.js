@@ -28,9 +28,9 @@ module.exports = {
             var jsonData = JSON.parse(body);
             console.log(jsonData);
             //Boucle sur les strates
-            for (var i = 0; i < jsonData.length; i++) {
+            for (var i = 0; i < jsonData.strata.length; i++) {
                 var strata = new Strata();
-                var currentStrata = jsonData[i];
+                var currentStrata = jsonData.strata[i];
                 strata.setUid(currentStrata.name);
                 strata.setIndex(i);
                 //Boucle sur les characteristiques
