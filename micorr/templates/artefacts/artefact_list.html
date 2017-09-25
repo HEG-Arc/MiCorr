@@ -3,7 +3,7 @@
 {% load static documents_tags %}
 
 {% block title %}
-    <title>MiCorr | Search tool</title>
+    <title>MiCorr | Search tools</title>
 {% endblock %}
 
 {% block content %}
@@ -49,20 +49,24 @@
           <table class="table table-bordered table-striped table-hover">
               <tr>
                   <th>Metal Family</th>
-                  <th>Metal Alloy</th>
-                  <th>Object</th>
+                  <th>Alloy</th>
+                  <th>Object type</th>
+                  <th>Object name</th>
+                  <th>Origin</th>
                   <th>Chronology</th>
                   <th>Technology</th>
-                  <th>Microstructure</th>
+                  <th>Artefact location</th>
               </tr>
               {% for artefact in results %}
                   <tr onmouseover="this.style.cursor='pointer'" onclick="document.location = '{% url 'artefacts:artefact-detail' artefact.pk %}'">
                       <td>{{ artefact.metal1 }}</td>
                       <td>{{ artefact.alloy }}</td>
+                      <td>{{ artefact.type }}</td>
                       <td>{{ artefact.object.name }}</td>
+                      <td>({{artefact.origin}})</td>
                       <td>{{ artefact.chronology_period.chronology_category.name }}</td>
                       <td>{{ artefact.technology }}</td>
-                      <td>{{ artefact.microstructure }}</td>
+                      <td>{{ artefact.location }}</td>
                   </tr>
               {% empty %}
                   <tr><td colspan="5">No results found</td></tr>
