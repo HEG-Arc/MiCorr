@@ -43,7 +43,13 @@ CACHES = {
 
 if 'TRAVIS' in os.environ:
     DATABASES = {
-        'default': 'postgres://postgres@localhost:5432/micorr'
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'micorr',
+            'USER': 'postgres',
+            'HOST': 'localhost',
+            'PORT': '5432',
+        }
     }
 # TESTING
 # ------------------------------------------------------------------------------
