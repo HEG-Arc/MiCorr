@@ -4,8 +4,11 @@ python:
 install:
   - pip install coveralls
   - pip install -r requirements/test.txt
+env:
+  - DJANGO_SETTINGS_MODULE=config.settings.test
+
 script:
-  - coverage run --source micorr setup.py test
+  - coverage run --branch ./manage.py test
 after_success:
   - coveralls
 notifications:
@@ -18,5 +21,6 @@ notifications:
   email:
     recipients:
       - cedric@gaspoz-fleiner.com
+      - micorr@he-arc.ch
     on_success: always
     on_failure: always

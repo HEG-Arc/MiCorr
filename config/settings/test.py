@@ -12,7 +12,9 @@ from .common import *  # noqa
 # ------------------------------------------------------------------------------
 # Turn debug off so tests run faster
 DEBUG = False
-TEMPLATES[0]['OPTIONS']['debug'] = False
+TEMPLATE_DEBUGGING = True
+# with django-coverage-plugin 1.5 Template debugging must be enabled in settings (otherwise DjangoTemplatePluginException)
+TEMPLATES[0]['OPTIONS']['debug'] = True
 
 # SECRET CONFIGURATION
 # ------------------------------------------------------------------------------

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django import forms
 
-from .models import User
+from users.models import User
 
 
 class UserForm(forms.ModelForm):

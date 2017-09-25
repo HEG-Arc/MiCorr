@@ -14,8 +14,7 @@ from artefacts.models import Collaboration_comment, Publication, Token
 from stratigraphies.neo4jdao import Neo4jDAO
 
 from django.contrib.contenttypes.models import ContentType
-from .models import User
-
+from users.models import User
 
 class UserDetailView(generic.DetailView):
     model = User
