@@ -6,7 +6,7 @@ Test settings
 '''
 
 from .common import *  # noqa
-
+import os
 
 # DEBUG
 # ------------------------------------------------------------------------------
@@ -41,6 +41,10 @@ CACHES = {
     }
 }
 
+if 'TRAVIS' in os.environ:
+    DATABASES = {
+        'default': 'postgres://postgres@localhost:5432/micorr'
+    }
 # TESTING
 # ------------------------------------------------------------------------------
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
