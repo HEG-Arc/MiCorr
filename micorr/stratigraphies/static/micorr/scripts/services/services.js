@@ -197,7 +197,7 @@ angular.module('micorrApp').factory('StratigraphyData', function StratigraphyDat
             },
 
             pushOneStrata: function (strata) {
-                stratig.add(strata);
+                stratig.addStratum(strata);
             },
             stratigraphyToJson: function () {
 

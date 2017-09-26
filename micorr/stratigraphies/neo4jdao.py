@@ -89,7 +89,7 @@ class Neo4jDAO:
             uid=stratigraphy_uid )
 
         stratigraphy = {'uid':stratigraphy_uid,
-                        'description': strata_records[0].description,
+                        'description': strata_records[0].description if len(strata_records) else None,
                         'strata':[]
                         }
         print (stratigraphy_uid)
