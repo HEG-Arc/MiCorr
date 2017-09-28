@@ -70,6 +70,7 @@ services:
     volumes:
       - /etc/letsencrypt:/etc/letsencrypt
       - /var/lib/letsencrypt:/var/lib/letsencrypt
+      - ./micorr/media:/media
 
   certbot:
     image: quay.io/letsencrypt/letsencrypt
