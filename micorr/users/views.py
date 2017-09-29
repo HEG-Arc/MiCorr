@@ -26,9 +26,11 @@ class UserDetailView(generic.DetailView):
         # Call the base implementation first to get a context
         context = super(UserDetailView, self).get_context_data(**kwargs)
         # Add the stratigraphies of the user
-        stratigraphies = Neo4jDAO().getStratigraphiesByUser(self.request.user.id)
+        stratigraphy_order_by=self.request.GET.get('stratigraphy_order_by', 'description')
+        artefact_order_by=self.request.GET.get('artefact_order_by', 'name')
+        stratigraphies = Neo4jDAO().getStratigraphiesByUser(self.request.user.id,stratigraphy_order_by)
         # Add all the objects of the user in a variable
-        objects = self.request.user.object_set.all().order_by('name')
+        objects = self.request.user.object_set.all().order_by(artefact_order_by)
         tokenType = ContentType.objects.get(model='token')
         sectionType = ContentType.objects.get(model='section')
         artefactsList = []

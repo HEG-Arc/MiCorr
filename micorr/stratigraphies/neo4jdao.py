@@ -35,8 +35,8 @@ class Neo4jDAO:
     def rollback(self):
         self.tx.rollback()
 
-    def getStratigraphiesByUser(self, user_id):
-        stratigraphies = self.graph.cypher.execute("MATCH (n:Stratigraphy) WHERE n.user_uid=%s RETURN n" % user_id)
+    def getStratigraphiesByUser(self, user_id, order_by='description'):
+        stratigraphies = self.graph.cypher.execute("MATCH (n:Stratigraphy) WHERE n.user_uid=%s RETURN n ORDER BY n.%s" % (user_id, order_by))
         stratigraphies_list = []
         for stratigraphy in stratigraphies:
             # TODO: We should be able to use stratigraphy.date to access the properties of the record :-(
