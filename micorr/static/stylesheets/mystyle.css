@@ -2124,6 +2124,11 @@ pre code {
     width: 1170px;
   }
 }
+@media (min-width: 1800px) {
+  .container {
+    width: 1750px;
+  }
+}
 
 .container-fluid {
   margin-right: auto;
