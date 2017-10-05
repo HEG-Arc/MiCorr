@@ -192,7 +192,9 @@
                                             <tr>
                                                 <th>Date</th>
                                                 <th>Name</th>
-                                                <th>Origin</th>
+                                                <th>Site</th>
+                                                <th>City</th>
+                                                <th>Country</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -302,10 +304,10 @@
                                             </table>
                                         </div>
                                         </td>
-                                         <td>
-                                            {{ object.origin }}
-                                        </td>
-                                    {% endfor %}
+                                      <td>{{ object.origin.site }}</td>
+                                      <td>{{ object.origin.city.name }}</td>
+                                      <td>{{ object.origin.city.country }}</td>
+                                {% endfor %}
                                         </tbody>
                                     </table>
 
