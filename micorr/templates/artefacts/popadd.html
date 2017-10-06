@@ -28,5 +28,5 @@
 {% endblock footer %}
 
 {% block custom_bottom_script %}
-    <script type="text/javascript" src="/static/admin/js/admin/RelatedObjectLookups.js"></script>
+    {% include "artefacts/dj_admin_related_object_lookups.html" %}
 {% endblock custom_bottom_script %}

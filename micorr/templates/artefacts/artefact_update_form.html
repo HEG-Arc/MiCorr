@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+{% load static %}
 {% block custom_header_script %}
     <script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
     <script>tinymce.init({selector: 'textarea', plugins: "table"});</script>
@@ -634,8 +634,8 @@
 {% endblock content %}
 
 {% block custom_bottom_script %}
-    <script type="text/javascript" src="/static/admin/js/admin/RelatedObjectLookups.js"></script>
-    <script type="text/javascript">
+    {% include "artefacts/dj_admin_related_object_lookups.html" %}
+   <script type="text/javascript">
         function refreshDiv(sectionid) {
             $.ajax({
                 url: "/artefacts/" + sectionid + "/refresh/div/",
