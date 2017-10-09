@@ -66,8 +66,9 @@ class Origin(TimeStampedModel):
     """
     Where the artefact was located
     """
-    site = models.CharField(max_length=100, blank=True, help_text='The place where the artefact was located')
-    city = models.ForeignKey(City, blank=True, null=True, help_text='The city where the artefact was located')
+    site = models.CharField(max_length=100, blank=True, verbose_name="site/object",
+                            help_text='The place where the artefact was located or the object to which the section considered belongs to')
+    city = models.ForeignKey(City, blank=True, null=True, help_text='The city where the artefact was located (optional for objects)')
 
     def origin_verbose_description(self):
         origin = []

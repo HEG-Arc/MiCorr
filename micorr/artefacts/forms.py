@@ -107,7 +107,8 @@ class OriginCreateForm(forms.ModelForm):
     """
     Create a new origin
     """
-    city = forms.ModelChoiceField(
+    city = forms.ModelChoiceField(required=False,
+                                  help_text=unicode(Origin._meta.get_field('city').help_text),
         queryset=City.objects.all(),
         widget=autocomplete.ModelSelect2(url='artefacts:city-autocomplete')
     )
