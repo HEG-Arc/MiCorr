@@ -12,42 +12,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>MiCorr</title>
 
-    <script type="text/javascript">
-        (function () {
-            var path = '//easy.myfonts.net/v2/js?sid=211388(font-family=DIN+Next+Pro+Bold)&sid=217470(font-family=DIN+Next+Pro+Medium)&sid=217469(font-family=DIN+Next+Pro+Regular)&sid=217467(font-family=DIN+Next+Pro+Light)&key=tNHbXuRhxc',
-                    protocol = ('https:' == document.location.protocol ? 'https:' : 'http:'),
-                    trial = document.createElement('script');
-            trial.type = 'text/javascript';
-            trial.async = true;
-            trial.src = protocol + path;
-            var head = document.getElementsByTagName("head")[0];
-            head.appendChild(trial);
-        })();
-
-        (function () {
-            var path = '//easy.myfonts.net/v2/js?sid=209492(font-family=Miso+Bold)&sid=209490(font-family=Miso)&sid=209494(font-family=Miso+Light)&key=gwmkEJHaRD',
-                    protocol = ('https:' == document.location.protocol ? 'https:' : 'http:'),
-                    trial = document.createElement('script');
-            trial.type = 'text/javascript';
-            trial.async = true;
-            trial.src = protocol + path;
-            var head = document.getElementsByTagName("head")[0];
-            head.appendChild(trial);
-        })();
-
-
-        (function () {
-            var path = '//easy.myfonts.net/v2/js?sid=259686(font-family=Compasse+Bold)&sid=259693(font-family=Compasse+Light)&sid=259695(font-family=Compasse+Regular)&sid=259690(font-family=Compasse+Extra+Light)&key=sPc7yFZ8fS',
-                    protocol = ('https:' == document.location.protocol ? 'https:' : 'http:'),
-                    trial = document.createElement('script');
-            trial.type = 'text/javascript';
-            trial.async = true;
-            trial.src = protocol + path;
-            var head = document.getElementsByTagName("head")[0];
-            head.appendChild(trial);
-        })();
-
-    </script>
+  <style type="text/css">
+      @font-face {
+          font-family: "Miso";
+          src: url("{% static 'fonts/Miso.woff' %}") format('woff');
+      }
+      @font-face {
+          font-family: "DIN Next Pro Light";
+          src: url("{% static 'fonts/DINNextLight.woff' %}") format('woff');
+      }
+      @font-face {
+          font-family: "DIN Next Pro Regular";
+          src: url("{% static 'fonts/DINNextRegular.woff' %}") format('woff');
+      }
+      @font-face {
+          font-family: "DIN Next Pro Medium";
+          src: url("{% static 'fonts/DINNextMedium.woff' %}") format('woff');
+      }
+  </style>
 
     <style type="text/css">#mfPreviewBar {
         display: none !important;
