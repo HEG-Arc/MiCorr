@@ -76,6 +76,8 @@ INSTALLED_APPS += ('gunicorn', )
 #STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 STATICFILES_STORAGE = 'micorr.whitenoise.storage.ErrorSquashingStorage'
 
+WHITENOISE_SKIP_COMPRESS_EXTENSIONS = ( # adds mp4 to default list of uncompressed files
+'mp4', 'jpg', 'jpeg', 'png', 'gif', 'webp', 'zip', 'gz', 'tgz', 'bz2', 'tbz', 'swf', 'flv', 'woff')
 
 # EMAIL
 # ------------------------------------------------------------------------------
