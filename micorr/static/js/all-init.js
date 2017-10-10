@@ -90,7 +90,8 @@ $(document).ready(function(){
   $('.image-popup').magnificPopup({
    type:'image'
   });
-  $('.editable').jinplace();
+    if ($.fn.jinplace)
+        $('.editable').jinplace();
 });
 
 
