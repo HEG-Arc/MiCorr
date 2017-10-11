@@ -86,5 +86,6 @@ urlpatterns = [
     url(r'^administration/confirm/(?P<publication_id>\d+)/$', login_required(artefacts_views.confirmDecisionDelegatedAdmin), name='publication-administration-confirm'),
     url(r'^administration/reject/(?P<pk>\d+)/$', login_required(artefacts_views.PublicationDecisionReject.as_view()), name='publication-administration-reject'),
     url(r'^administration/delegate/(?P<pk>\d+)/$', login_required(artefacts_views.PublicationDelegateView.as_view()), name='publication-administration-delegate'),
+    url(r'^city-autocomplete/$', artefacts_views.CityAutocomplete.as_view(), name='city-autocomplete'),
     # url(r'^test-ontology/$', displayOntology),
 ]

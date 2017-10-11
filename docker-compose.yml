@@ -11,6 +11,8 @@ services:
       - postgres_data:/var/lib/postgresql/data
       - postgres_backup:/backups
     env_file: .env
+    ports:
+      - "5432:5432"
 
   neo4j:
     build: ./compose/neo4j
@@ -25,6 +27,7 @@ services:
       # copy a neo4j-admin dump file to compose/neo4j/initial_neo4j-admin.dump
       # remove it on subsequent builds to avoid overriding data
       - EXTENSION_SCRIPT=/bootstrap_data.sh
+      #- EXTENSION_SCRIPT=/backup.sh
     ports:
       - "7474:7474"
       - "7687:7687"

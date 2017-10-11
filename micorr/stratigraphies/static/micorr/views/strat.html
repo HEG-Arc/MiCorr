@@ -15,8 +15,7 @@
         <div class="col-md-6">
             <ol class="breadcrumb">
                 <li><a href="/">Home</a></li>
-                <li><a href="/artefacts">{{ artefactName }}</a></li>
-                <!--<li><a href="#/artefact/{{artefactName}}/{{stratigraphyName}}">{{stratigrapydescription}}</a></li>-->
+                <li><a href="/micorr/#/stratigraphy/{{stratigraphyName}}">{{stratigraphyDescription}}</a></li>
             </ol>
         </div>
         <div class="col-md-6">
@@ -29,7 +28,7 @@
                         <div class="modal-body">
                             <form>
                                 <div class="form-group">
-                                    <label for="natureFamily">Nature Family</label>
+                                    <label for="natureFamily">Stratum Type</label>
                                     <select ng-model="nature" id="natureFamily" class="form-control">
                                         <option ng-repeat="nature in natures.natures"
                                                 value="{{ nature.code }}">{{ nature.description }}</option>
@@ -210,7 +209,7 @@
 <div class="row-fluid" ng-show="showTabForms">
     <div class="col-md-7">
         <h1 class="ng-binding minititle">
-            Strata : {{ strataName }}
+            Stratum : {{ strataName }}
         </h1>
 
         <div class="col-md-3 text-center" ng-controller="ModalAddChildStrataCtrl">
@@ -221,7 +220,7 @@
                 <div class="modal-body">
                     <form>
                         <div class="form-group">
-                            <label for="natureFamily">Nature Family</label>
+                            <label for="natureFamily">Stratum Type</label>
                             <select ng-model="nature" id="childNatureFamily" class="form-control">
                                 <option ng-repeat="nature in natures.natures"
                                         value="{{ nature.code }}">{{ nature.description }}</option>
@@ -245,7 +244,7 @@
     </div>
     <div class="col-md-5">
         <h1 class="ng-binding minititle">
-            Nature family : {{ natureFamilyname }}
+            Type : {{ natureFamilyname }}
         </h1>
     </div>
 </div>
@@ -347,7 +346,7 @@
         <div class="row-fluid">
             <div ng-show="showPorosity" class="col-md-6 form-group">
                 <label for="texturePorosity"><span class="glyphicon glyphicon-eye-open"
-                                                   title="visual impact on the stratum"></span> Texture</label>
+                                                   title="visual impact on the stratum"></span> Compactness</label>
                 <select id="texturePorosity" class="form-control" ng-model="selectedPorosityFamily"
                         ng-options="x.real_name for x in porosityFamily" ng-change="upTexture()">
                     <option value=""></option>
@@ -613,7 +612,7 @@
 
     </form>
 </tab>
-<tab heading="Interfaces" ng-controller="StratInterfaceCtrl" active="activeTabInterface">
+<tab heading="Interface" ng-controller="StratInterfaceCtrl" active="activeTabInterface">
     <div class="row-fluid">
         <div ng-show="showinterfaceprofileFamily" class="col-md-6 form-group">
             <label for="interfaceProfileFamily"><span class="glyphicon glyphicon-eye-open"

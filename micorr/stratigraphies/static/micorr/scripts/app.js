@@ -31,7 +31,7 @@ angular
             })
             // affichage de la stratigraphie
             // n'est plus utilisée mais je l'ai laissée quand même si jamais un lien n'a pas encore été modifié
-            .when('/artefact/:artefact/:strat/:stratigrapgydescription', {
+            .when('/artefact/:artefact/:strat/:stratigraphyDescription', {
                 templateUrl: '../static/micorr/views/strat.html'
             })
             // affichage de la liste des artefacts

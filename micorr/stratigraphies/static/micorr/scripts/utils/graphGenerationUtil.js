@@ -97,8 +97,9 @@
                     nestedStrata.y(stratigraphyHeight);
                     stratigraphyHeight = stratigraphyHeight + nestedStrata.height();
                 }
-                var box = resultDraw.viewbox();
-                resultDraw.viewbox(0,0,500,stratigraphyHeight);
+                //var box = resultDraw.viewbox();
+                var box = resultDraw.viewbox(0,0,500,stratigraphyHeight);
+                box.width(width);
                 var svgContent = resultDraw.svg();
                 // remove all svg nodes from dom to be ready for next rendering
                 resultDraw.clear();

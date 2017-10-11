@@ -41,7 +41,7 @@
 		};
 	}();
 
-	let PoissonDiskSampler = function () {
+	var PoissonDiskSampler = function () {
 		function PoissonDiskSampler(width, height) {
 			_classCallCheck(this, PoissonDiskSampler);
 
@@ -265,3 +265,4 @@
 
 	exports.PoissonDiskSampler = PoissonDiskSampler;
 });
+//# sourceMappingURL=poissonDisk.js.map

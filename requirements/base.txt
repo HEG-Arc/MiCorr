@@ -59,7 +59,8 @@ django-newsletter
 django-tinymce
 sorl-thumbnail
 django-envelope
-django-cities-light
+django-cities-light==3.3.0
+django-autocomplete-light==3.2.10
 django-filter
 django-haystack
 lxml

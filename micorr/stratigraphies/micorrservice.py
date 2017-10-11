@@ -1,4 +1,4 @@
-from stratigraphies.neo4jdao import Neo4jDAO
+from .neo4jdao import Neo4jDAO
 
 
 class MiCorrService:

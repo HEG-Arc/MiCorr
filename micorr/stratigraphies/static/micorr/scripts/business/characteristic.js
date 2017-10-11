@@ -42,7 +42,7 @@
         };
     }();
 
-    let Characteristic = function () {
+    var Characteristic = function () {
         function Characteristic() {
             _classCallCheck(this, Characteristic);
         }
@@ -108,6 +108,16 @@
                 this.realName = realName;
             }
         }, {
+            key: 'getDescription',
+            value: function getDescription() {
+                return this.description;
+            }
+        }, {
+            key: 'setDescription',
+            value: function setDescription(description) {
+                this.description = description;
+            }
+        }, {
             key: 'getFamily',
             value: function getFamily() {
                 return this.family;
@@ -134,3 +144,4 @@
 
     exports.Characteristic = Characteristic;
 });
+//# sourceMappingURL=characteristic.js.map

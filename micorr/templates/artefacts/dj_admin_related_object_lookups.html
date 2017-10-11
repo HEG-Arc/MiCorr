@@ -1,0 +1,12 @@
+
+{% comment %}
+Make our base.html selected jquery available into django namespace for use by RelatedObjectLookups
+(from django admin module) outside of django admin
+{% endcomment %}
+{% load static %}
+<script type="text/javascript">
+    var django = {
+        'jQuery': $
+    };
+</script>
+<script type="text/javascript" src="{% static 'admin/js/admin/RelatedObjectLookups.js' %}"></script>

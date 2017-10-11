@@ -2124,6 +2124,11 @@ pre code {
     width: 1170px;
   }
 }
+@media (min-width: 1800px) {
+  .container {
+    width: 1750px;
+  }
+}
 
 .container-fluid {
   margin-right: auto;
@@ -9802,7 +9807,7 @@ body.sticky-footer #footer {
   padding-bottom: .5em;
   width: 100%;
   color: #fff;
-  font-size: 1.7em;
+  font-size: 1.6em;
 }
 #topsubmenu a {
   display: inline-block;
@@ -9939,7 +9944,7 @@ body.slideshow {
 }
 
 #slideshow-replacement {
-  background-image: url(../slideshow/3.jpg);
+  background-image: url(../landing/img/background/3.jpg);
   background-position: center center;
   background-size: cover;
   padding-top: 8em;

@@ -16,7 +16,7 @@ angular.module('micorrApp')
 
         //quand on supprime une strate, on se positionne sur la strate 0 et on met à jour le dessin
         $scope.doUpdate = function () {
-            StrataData.delStrata();
+            StrataData.delStratum();
             $scope.$emit('doUpdate', 0);
             $scope.$emit('updateDraw');
         };

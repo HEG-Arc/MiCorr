@@ -8,7 +8,8 @@ from users.models import User
 from .models import Artefact, Document, Metal, CorrosionForm, CorrosionType, Environment, Object, Origin, ChronologyPeriod, \
     Alloy, Technology, Microstructure, RecoveringDate, Image, Type, Stratigraphy, Token, Collaboration_comment, \
     Publication
-from cities_light.models import Country
+from cities_light.models import Country, City
+from dal import autocomplete
 from tinymce.widgets import TinyMCE
 import django_filters
 
@@ -106,6 +107,11 @@ class OriginCreateForm(forms.ModelForm):
     """
     Create a new origin
     """
+    city = forms.ModelChoiceField(required=False,
+                                  help_text=unicode(Origin._meta.get_field('city').help_text),
+        queryset=City.objects.all(),
+        widget=autocomplete.ModelSelect2(url='artefacts:city-autocomplete')
+    )
 
     class Meta:
         model = Origin

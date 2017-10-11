@@ -31,7 +31,8 @@ DJANGO_APPS = (
 
     # Useful template tags:
     # 'django.contrib.humanize',
-
+    'dal',
+    'dal_select2',
     # Admin
     'django.contrib.admin',
 )
@@ -64,6 +65,7 @@ THIRD_PARTY_APPS = (
     'wagtail.wagtailforms',
     'wagtail.wagtailredirects',
     'wagtail.contrib.wagtailsitemaps',
+    'wagtail.contrib.settings',
     # end wagtail apps
     'robots',
     'simplejson',
@@ -154,6 +156,8 @@ LANGUAGE_CODE = 'en-us'
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#site-id
 SITE_ID = 1
+
+WAGTAIL_SITE_NAME = 'MiCorr'
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#use-i18n
 USE_I18N = True

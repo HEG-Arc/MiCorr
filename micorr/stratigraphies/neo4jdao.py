@@ -1,3 +1,5 @@
+from collections import OrderedDict
+
 from py2neo import Graph, authenticate
 import time
 import datetime
@@ -33,8 +35,8 @@ class Neo4jDAO:
     def rollback(self):
         self.tx.rollback()
 
-    def getStratigraphiesByUser(self, user_id):
-        stratigraphies = self.graph.cypher.execute("MATCH (n:Stratigraphy) WHERE n.user_uid=%s RETURN n" % user_id)
+    def getStratigraphiesByUser(self, user_id, order_by='description'):
+        stratigraphies = self.graph.cypher.execute("MATCH (n:Stratigraphy) WHERE n.user_uid=%s RETURN n ORDER BY n.%s" % (user_id, order_by))
         stratigraphies_list = []
         for stratigraphy in stratigraphies:
             # TODO: We should be able to use stratigraphy.date to access the properties of the record :-(
@@ -79,17 +81,21 @@ class Neo4jDAO:
     # retourne tous les details d'une stratigraphie, caracteristiques, sous-caracteristiques et interfaces
     # @params le nom de la stratigraphie
     # @returns tous les details de la stratigraphie voulue
-    def getStratigraphyDetails(self, stratigraphy):
-        # on retourne c
-        c = []
-
+    def getStratigraphyDetails(self, stratigraphy_uid):
         # on cherche d'abord toutes les strates
-        strataList = self.graph.cypher.execute(
-            "MATCH (n:Stratigraphy)-[r:POSSESSES]->(d:Strata) where n.uid='" + stratigraphy + "'  RETURN d.uid as uid order by d.uid")
-        print (stratigraphy)
+        strata_records = self.graph.cypher.execute(
+            "MATCH (sg:Stratigraphy)-[r:POSSESSES]->(st:Strata) where sg.uid={uid}\
+               RETURN sg.description as description, st.uid as uid order by st.uid",
+            uid=stratigraphy_uid )
+
+        stratigraphy = {'uid':stratigraphy_uid,
+                        'description': strata_records[0].description if len(strata_records) else None,
+                        'strata':[]
+                        }
+        print (stratigraphy_uid)
 
         # pour chaque strates on va faire une requete
-        for strata in strataList:
+        for strata in strata_records:
             st = {'name': strata.uid, 'characteristics': '', 'subcharacteristics': '', 'interfaces': '', 'children': ''}
             print ("***" + strata.uid)
 
@@ -171,50 +177,53 @@ class Neo4jDAO:
                 children.append(cst)
                 #childStList['subcharacteristics'] = childSList
             st['children'] = children;
-            c.append(st)
-
-        return c
+            stratigraphy['strata'].append(st)
+        return stratigraphy
 
     # retourne la liste de toutes les caracteristiques, sous-caracteristiques et sous-sous-caracteristiques
     # @params
     # @returns toutes les caracteristiques et sous-caracteristiques de la base
     def getAllCharacteristic(self):
-        chars = []
-        # tout d'abord on cherche les famille
-        familyList = self.graph.cypher.execute("MATCH (n:Family) RETURN n.uid as name, n.name as fam_real_name")
-        for family in familyList:
-            #pour chaque famille on ajoute les caracteristiques
-            caracList = self.graph.cypher.execute(
-                "MATCH (a)-[r:BELONGS_TO]->(b) where b.uid = '" + family.name + "' return a.uid as uid, a.description as description, a.name as carac_real_name, a.visible as visible order by a.order asc")
-            fam = {'family': family.name, 'characteristics': [], 'fam_real_name': family.fam_real_name}
-            for carac in caracList:
-                # pour chaque caracteristiques on ajoute les sous caracteristiques
-                subcaracList = self.graph.cypher.execute(
-                    "MATCH (a)-[r:HAS_SPECIALIZATION]->(b) where a.uid='" + carac.uid + "' RETURN b.uid as uid, b.description as description, b.name as sub_real_name order by b.name asc")
-
-                sc = []
-                for subcarac in subcaracList:
-                    # pour chaque sous-caracteristique on ajoute les sous-sous caracteristiques
-                    subsubcaractList = self.graph.cypher.execute(
-                        "MATCH (sub:SubCharacteristic)-[:`HAS_SPECIALIZATION`]->(subsub:SubCharacteristic) where sub.uid='" + subcarac.uid + "' RETURN subsub.uid as uid, subsub.name as subsub_real_name order by subsub_real_name")
-
-                    subsubcaractItems = []
-                    for subsubcarac in subsubcaractList:
-                        subsubcaractItems.append(
-                            {'name': subsubcarac.uid, 'subsub_real_name': subsubcarac.subsub_real_name})
-
-                    ssc = {'name': subcarac.uid, 'description': subcarac.description, 'subcharacteristics': '',
-                           'sub_real_name': subcarac.sub_real_name}
-                    ssc['subcharacteristics'] = subsubcaractItems
-                    sc.append(ssc)
-
-                fam['characteristics'].append(
-                    {'name': carac.uid, 'description': carac.description, 'real_name': carac.carac_real_name,
-                     'visible': carac.visible, 'subcharacteristics': sc})
-
-            chars.append(fam)
-
-        return chars
+        all_characteristics = self.graph.cypher.execute("""
+         MATCH (f:Family) OPTIONAL MATCH (f)<-[:BELONGS_TO]-(c:Characteristic)
+         OPTIONAL MATCH (c)-[:HAS_SPECIALIZATION]->(sc:SubCharacteristic)
+         OPTIONAL MATCH (sc)-[:HAS_SPECIALIZATION]->(ssc:SubCharacteristic)
+         RETURN f,c,sc,ssc
+         ORDER BY f.name, c.order, sc.name, ssc.name  
+        """)
+        # here we get a flat list of records including all family, Characteristic, SubCharacteristic, SubCharacteristic
+        # convert it into hierarchical lists of f -> c -> sc -> ssc, setting field names as expected by api client
+        # we use OrderedDicts to build the "lists" and easily create or update list items from redundant elements in records
+        family_dic = OrderedDict()
+        for record in all_characteristics:
+            f_uid = record.f['uid']
+            if not family_dic.has_key(f_uid):
+                family_dic[f_uid] = {'family': f_uid, 'fam_real_name': record.f['name'],
+                                     'characteristics': OrderedDict()}
+            c_uid = record.c['uid']
+            if not family_dic[f_uid]['characteristics'].has_key(c_uid):
+                family_dic[f_uid]['characteristics'][c_uid] = {'name': c_uid, 'real_name': record.c['name'],
+                                                               'description': record.c['description'],
+                                                               'visible': record.c['visible'],
+                                                               'subcharacteristics': OrderedDict()}
+            if record.sc:
+                sc_uid = record.sc['uid']
+                if not family_dic[f_uid]['characteristics'][c_uid]['subcharacteristics'].has_key(sc_uid):
+                    family_dic[f_uid]['characteristics'][c_uid]['subcharacteristics'][sc_uid] = \
+                                                            {'name': sc_uid, 'sub_real_name': record.sc['name'],
+                                                             'description': record.sc['description'],
+                                                             'subcharacteristics': [],
+                                                             }
+                if record.ssc:
+                    ssc_uid = record.ssc['uid']
+                    family_dic[f_uid]['characteristics'][c_uid]['subcharacteristics'][sc_uid][
+                        'subcharacteristics'].append({'name': ssc_uid, 'subsub_real_name': record.ssc['name']})
+        # now convert the dictionaries into lists as expected by api client
+        for f_uid, f in family_dic.iteritems():
+            for c_uid, c in f['characteristics'].iteritems():
+                c['subcharacteristics'] = c['subcharacteristics'].values()
+            f['characteristics'] = f['characteristics'].values()
+        return family_dic.values()
 
     # Retourne la liste des caracteristiques pour une nature family (S, NMM, Metal, etc.)
     # @params uid de la nature family

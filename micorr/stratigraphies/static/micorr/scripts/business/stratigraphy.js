@@ -42,7 +42,7 @@
         };
     }();
 
-    let Stratigraphy = function () {
+    var Stratigraphy = function () {
         function Stratigraphy() {
             _classCallCheck(this, Stratigraphy);
 
@@ -62,9 +62,45 @@
                 return jsonStratigraphy;
             }
         }, {
-            key: 'addStrata',
-            value: function addStrata(strata) {
-                this.stratas.push(strata);
+            key: 'setStratumLabel',
+            value: function setStratumLabel(stratum) {
+                var natureFamilyAbbrev = stratum.getNatureFamilyAbbrev();
+                var natureFamilyindex = 1;
+                for (var i = 0; i < this.stratas.length && i < stratum.index; i++) {
+                    if (natureFamilyAbbrev == this.stratas[i].getNatureFamilyAbbrev()) {
+                        natureFamilyindex++;
+                    }
+                }
+                stratum.setLabel(natureFamilyAbbrev + natureFamilyindex);
+            }
+        }, {
+            key: 'addStratum',
+            value: function addStratum(stratum) {
+                this.stratas.push(stratum);
+                this.setStratumLabel(stratum);
+            }
+        }, {
+            key: 'swapTwoStrata',
+            value: function swapTwoStrata(index1, index2) {
+                var temp;
+                temp = this.stratas[index1];
+                this.stratas[index1] = this.stratas[index2];
+                this.stratas[index2] = temp;
+
+                this.stratas[index1].setIndex(index1);
+                this.stratas[index2].setIndex(index2);
+                this.setStratumLabel(this.stratas[index1]);
+                this.setStratumLabel(this.stratas[index2]);
+            }
+        }, {
+            key: 'delStratum',
+            value: function delStratum(index) {
+                var idel = parseInt(index);
+                this.stratas.splice(idel, 1);
+                if (this.stratas[idel] != undefined) {
+                    this.stratas[idel].setIndex(idel);
+                    this.setStratumLabel(this.stratas[idel]);
+                }
             }
         }, {
             key: 'getId',
@@ -118,3 +154,4 @@
 
     exports.Stratigraphy = Stratigraphy;
 });
+//# sourceMappingURL=stratigraphy.js.map

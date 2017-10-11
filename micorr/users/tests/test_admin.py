@@ -1,5 +1,11 @@
 from test_plus.test import TestCase
 
+from django.contrib import admin
+
+from users.models import User
+
+admin.site.unregister(User)
+
 from ..admin import MyUserCreationForm
 
 

@@ -87,7 +87,7 @@ dispatcher.onGet(/\/getStratigraphySvg\/*/, function (req, res) {
         var width = 250;
         if ('width' in params) {
             if (params['width'] != undefined) {
-                width = params['width'];
+                width = parseInt(params['width']);
             }
         }
         stratigraphyServices.getStratigraphyByName(params['name'], function (stratig) {

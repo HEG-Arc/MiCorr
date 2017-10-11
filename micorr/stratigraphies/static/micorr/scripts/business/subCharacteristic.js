@@ -41,7 +41,7 @@
         };
     }();
 
-    let SubCharacteristic = function () {
+    var SubCharacteristic = function () {
         function SubCharacteristic() {
             _classCallCheck(this, SubCharacteristic);
         }
@@ -93,3 +93,4 @@
 
     exports.SubCharacteristic = SubCharacteristic;
 });
+//# sourceMappingURL=subCharacteristic.js.map

@@ -10,12 +10,11 @@ from django.contrib.contenttypes.models import ContentType
 from django.views import generic
 from django.conf import settings
 
-from artefacts.models import Collaboration_comment, Publication, Token
+from artefacts.models import Collaboration_comment, Publication, Token, Stratigraphy
 from stratigraphies.neo4jdao import Neo4jDAO
 
 from django.contrib.contenttypes.models import ContentType
-from .models import User
-
+from users.models import User
 
 class UserDetailView(generic.DetailView):
     model = User
@@ -27,28 +26,42 @@ class UserDetailView(generic.DetailView):
         # Call the base implementation first to get a context
         context = super(UserDetailView, self).get_context_data(**kwargs)
         # Add the stratigraphies of the user
-        stratigraphies = Neo4jDAO().getStratigraphiesByUser(self.request.user.id)
+        stratigraphy_order_by=self.request.GET.get('stratigraphy_order_by', 'description')
+        artefact_order_by=self.request.GET.get('artefact_order_by', 'name')
+        stratigraphies = Neo4jDAO().getStratigraphiesByUser(self.request.user.id,stratigraphy_order_by)
+        # Add stratigraphy information from django model
+        pg_stratigraphies = Stratigraphy.objects.filter(uid__in=[s['uid'] for s in stratigraphies])
+        for i, s in enumerate(stratigraphies):
+            pg_s = pg_stratigraphies.filter(uid=s['uid']).first()
+            if pg_s:
+                s['origin'] = pg_s.artefact.origin
+
         # Add all the objects of the user in a variable
-        objects = self.request.user.object_set.all().order_by('name')
+        objects = self.request.user.object_set.all().order_by(artefact_order_by)
         tokenType = ContentType.objects.get(model='token')
         sectionType = ContentType.objects.get(model='section')
         artefactsList = []
+        objectsList = []
         isTherePubValArtForObj = {}
         newComments = 0
         newTokens = 0
         newPubliHistory = 0
         newRequests = 0
-
         for obj in objects :
             isTherePubValArtForObj[obj.id] = False
 
         # Add all artefacts card in a list
         for obj in objects :
             artefacts = obj.artefact_set.all().order_by('-modified')
+            obj_dic = {'name': obj.name, 'modified': obj.modified, 'id':obj.id }
             for artefact in artefacts :
                 artefactsList.append(artefact)
+                # we take the first origin found in the list of object's artefact as object origin
+                if artefact.origin and 'origin' not in obj_dic:
+                    obj_dic['origin'] = artefact.origin
                 if artefact.parent and artefact.validated :
                     isTherePubValArtForObj[obj.id] = True
+            objectsList.append(obj_dic)
 
         try:
             allSharedToken = Token.tokenManager.filter(user=self.request.user, hidden_by_author=False, right='W')
@@ -118,7 +131,7 @@ class UserDetailView(generic.DetailView):
         context['newRequests'] = newRequests
         context['stratigraphies'] = stratigraphies
         context['userType'] = userType
-        context['objects'] = objects
+        context['objects'] = objectsList
         context['artefacts'] = artefactsList
         context['newComments'] = newComments
         context['newTokens'] = newTokens

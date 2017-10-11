@@ -42,15 +42,17 @@
         };
     }();
 
-    let Strata = function () {
+    var Strata = function () {
         function Strata(nature, child) {
             _classCallCheck(this, Strata);
 
             this.nature = nature;
+            this.natureFamilyAbbrev = null;
+            this.label = null;
             this.dependencies = new Array();
             this.characteristics = new Array();
             this.subCharacteristics = new Array();
-            this.childStratas = new Array();
+            this.childStrata = new Array();
             this.child = child;
 
             this.init();
@@ -67,9 +69,9 @@
             key: 'getChildStrataByNature',
             value: function getChildStrataByNature(nature) {
 
-                for (var i = 0; i < this.childStratas.length; i++) {
-                    if (this.childStratas[i].getNature() == nature) {
-                        return this.childStratas[i];
+                for (var i = 0; i < this.childStrata.length; i++) {
+                    if (this.childStrata[i].getNature() == nature) {
+                        return this.childStrata[i];
                     }
                 }
                 return null;
@@ -168,8 +170,8 @@
             }
         }, {
             key: 'addChildStrata',
-            value: function addChildStrata(childStrata) {
-                this.childStratas.push(childStrata);
+            value: function addChildStrata(childStratum) {
+                this.childStrata.push(childStratum);
             }
         }, {
             key: 'replaceCharacteristic',
@@ -223,6 +225,24 @@
             key: 'setNature',
             value: function setNature(nature) {
                 this.nature = nature;
+            }
+        }, {
+            key: 'getNatureFamilyAbbrev',
+            value: function getNatureFamilyAbbrev() {
+                if (this.characteristics) this.natureFamilyAbbrev = this.natureFamilyAbbrev || this.characteristics.find(function (elem) {
+                    return elem.family == "natureFamily";
+                }).name.slice(0, 2).toUpperCase();
+                if (this.natureFamilyAbbrev) return this.natureFamilyAbbrev;else return "";
+            }
+        }, {
+            key: 'setLabel',
+            value: function setLabel(label) {
+                this.label = label;
+            }
+        }, {
+            key: 'getLabel',
+            value: function getLabel() {
+                return this.label;
             }
         }, {
             key: 'getUid',
@@ -408,7 +428,7 @@
         }, {
             key: 'toJson',
             value: function toJson() {
-                var childStratas = [];
+                var childStrata = [];
 
                 var jsonStrata = { 'name': this.getUid(), 'characteristics': [], 'interfaces': [], 'children': [] };
 
@@ -432,8 +452,8 @@
 
                 //On récupère les strates enfants si ce n'est pas une strate enfant
                 if (!this.child) {
-                    for (var i = 0; i < this.childStratas.length; i++) {
-                        jsonStrata.children.push(this.childStratas[i].toJson());
+                    for (var i = 0; i < this.childStrata.length; i++) {
+                        jsonStrata.children.push(this.childStrata[i].toJson());
                     }
                 }
 
@@ -446,3 +466,4 @@
 
     exports.Strata = Strata;
 });
+//# sourceMappingURL=strata.js.map

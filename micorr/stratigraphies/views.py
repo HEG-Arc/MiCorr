@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from django.views.decorators.cache import cache_page
 from django.views.decorators.csrf import csrf_exempt
 
 from stratigraphies import micorrservice
@@ -32,6 +33,7 @@ def getStratigraphyDetails(request, stratigraphy):
 
 # retourne toutes les sous caracteristiques et sous caracteristiques
 # @ params
+@cache_page(60 * 15)
 def getallcharacteristic(request):
     ms = micorrservice.MiCorrService()
     return HttpResponse(json.dumps(ms.getAllCharacteristic()), content_type='application/json')

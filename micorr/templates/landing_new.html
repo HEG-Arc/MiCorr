@@ -12,42 +12,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>MiCorr</title>
 
-    <script type="text/javascript">
-        (function () {
-            var path = '//easy.myfonts.net/v2/js?sid=211388(font-family=DIN+Next+Pro+Bold)&sid=217470(font-family=DIN+Next+Pro+Medium)&sid=217469(font-family=DIN+Next+Pro+Regular)&sid=217467(font-family=DIN+Next+Pro+Light)&key=tNHbXuRhxc',
-                    protocol = ('https:' == document.location.protocol ? 'https:' : 'http:'),
-                    trial = document.createElement('script');
-            trial.type = 'text/javascript';
-            trial.async = true;
-            trial.src = protocol + path;
-            var head = document.getElementsByTagName("head")[0];
-            head.appendChild(trial);
-        })();
-
-        (function () {
-            var path = '//easy.myfonts.net/v2/js?sid=209492(font-family=Miso+Bold)&sid=209490(font-family=Miso)&sid=209494(font-family=Miso+Light)&key=gwmkEJHaRD',
-                    protocol = ('https:' == document.location.protocol ? 'https:' : 'http:'),
-                    trial = document.createElement('script');
-            trial.type = 'text/javascript';
-            trial.async = true;
-            trial.src = protocol + path;
-            var head = document.getElementsByTagName("head")[0];
-            head.appendChild(trial);
-        })();
-
-
-        (function () {
-            var path = '//easy.myfonts.net/v2/js?sid=259686(font-family=Compasse+Bold)&sid=259693(font-family=Compasse+Light)&sid=259695(font-family=Compasse+Regular)&sid=259690(font-family=Compasse+Extra+Light)&key=sPc7yFZ8fS',
-                    protocol = ('https:' == document.location.protocol ? 'https:' : 'http:'),
-                    trial = document.createElement('script');
-            trial.type = 'text/javascript';
-            trial.async = true;
-            trial.src = protocol + path;
-            var head = document.getElementsByTagName("head")[0];
-            head.appendChild(trial);
-        })();
-
-    </script>
+  <style type="text/css">
+      @font-face {
+          font-family: "Miso";
+          src: url("{% static 'fonts/Miso.woff' %}") format('woff');
+      }
+      @font-face {
+          font-family: "DIN Next Pro Light";
+          src: url("{% static 'fonts/DINNextLight.woff' %}") format('woff');
+      }
+      @font-face {
+          font-family: "DIN Next Pro Regular";
+          src: url("{% static 'fonts/DINNextRegular.woff' %}") format('woff');
+      }
+      @font-face {
+          font-family: "DIN Next Pro Medium";
+          src: url("{% static 'fonts/DINNextMedium.woff' %}") format('woff');
+      }
+  </style>
 
     <style type="text/css">#mfPreviewBar {
         display: none !important;
@@ -96,11 +78,10 @@
         <div class="container">
             <div class="row">
                 <div class="w9 pre3">
-                    <a href="#search"><i class="fa fa-search"></i>Search tool</a>
+                    <a href="#search"><i class="fa fa-search"></i>Search tools</a>
+                    <a href="#submit"><i class="fa fa-arrow-circle-up"></i>Submit new artefact</a>
                     <a href="#learn"><i class="fa fa-book"></i>Learn</a>
                     <a href="#news"><i class="fa fa-calendar-o"></i>News</a>
-                    <a href="#submit"><i class="fa fa-arrow-circle-up"></i>Submit new item</a>
-
                 </div>
             </div>
         </div>
@@ -314,64 +295,15 @@
     </div>
     <div class="c6">
         <h3 class="underline">by keywords</h3>
-        <p>
-        <form action="{% url 'artefacts:artefact-list' %}" method="get">
-            Keywords: <input style="width:auto;" type="text" name="q" placeholder="Start searching here">
-            <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search faded"></span>
-            </button>
-        </form>
-        </p>
-        <p>
-        <div style="display:inline-block;margin-top:5px;margin-bottom:5px">Country:</div>
-        <a href="{% url 'artefacts:artefact-list' %}">
-            <button type="button" class="btn btn-default">All</button>
-        </a>
-        {% for country in countries %}
-            <div style="display:inline-block;margin-top:5px;margin-bottom:5px"><a
-                    href="{% url 'artefacts:artefact-list' %}?q=&origin__city__country={{ country.id }}"
-                    class="btn btn-default" role="button">{{ country }}</a></div>
-        {% endfor %}
-        </p>
-        <p>
-        <div style="display:inline-block;margin-top:5px;margin-bottom:5px">Metal Family:</div>
-        <a href="{% url 'artefacts:artefact-list' %}">
-            <button type="button" class="btn btn-default">All</button>
-        </a>
-        {% for metal in metalfamilies %}
-            <div style="display:inline-block;margin-top:5px;margin-bottom:5px"><a
-                    href="{% url 'artefacts:artefact-list' %}?q=&metal1={{ metal.id }}" class="btn btn-default"
-                    role="button">{{ metal }}</a></div>
-        {% endfor %}
-        </p>
-        <p>
-        <div style="display:inline-block;margin-top:5px;margin-bottom:5px">Corrosion Forms:</div>
-        <a href="{% url 'artefacts:artefact-list' %}">
-            <button type="button" class="btn btn-default">All</button>
-        </a>
-        {% for corrosion in corrosionforms %}
-            <div style="display:inline-block;margin-top:5px;margin-bottom:5px"><a
-                    href="{% url 'artefacts:artefact-list' %}?q=&corrosion_form={{ corrosion.id }}"
-                    class="btn btn-default" role="button">{{ corrosion }}</a></div>
-        {% endfor %}
-        </p>
-        <p>
-        <div style="display:inline-block;margin-top:5px;margin-bottom:5px">Environment:</div>
-        <a href="{% url 'artefacts:artefact-list' %}">
-            <button type="button" class="btn btn-default">All</button>
-        </a>
-        {% for environment in environments %}
-            <div style="display:inline-block;margin-top:5px;margin-bottom:5px"><a
-                    href="{% url 'artefacts:artefact-list' %}?q=&environment={{ environment.id }}"
-                    class="btn btn-default" role="button">{{ environment }}</a></div>
-        {% endfor %}
-        </p>
+        <a href="{% url 'artefacts:artefact-list' %}"><img src="{% static 'pics/keywords.png' %}"
+                                                           class="img-responsive"></a>
     </div>
 </div>
 
 <div id="submit" class="lightframe">
     <div class="container">
         <div class="row center">
-            <h1>Submit new item</h1>
+            <h1>Submit new artefact</h1>
             <div class="submit">
                 <p>This page allows you to create a file that describes a corrosion form that you have observed on an
                     artefact that you are examining.</p>
@@ -400,7 +332,7 @@
             <p class="right">
                 <a href="/artefacts/create">
                     <button type="button" class="btn btn-default btn-lg" data-toggle="modal">
-                        <i class="fa fa-arrow-circle-up"></i> Create new item
+                        <i class="fa fa-arrow-circle-up"></i> Create new artefact
                     </button>
                 </a>
             </p>
@@ -517,7 +449,7 @@
     <div class="container">
         <div class="row">
             <div class="c8 pre2 center">
-                <a href="/conditions-use">Conditions of use</a> | <a href="/privacy">Privacy</a> | <a href="/impressum">Impressum</a>
+                <a href="/conditions-use">Conditions of use</a> | <a href="/contact/">Contact</a> | <a href="/privacy">Privacy</a> | <a href="/impressum">Impressum</a>
 
             </div>
             <div class="c2">
