@@ -224,7 +224,9 @@ class Strata {
      */
     getNatureFamilyAbbrev() {
         if (this.characteristics)
-            this.natureFamilyAbbrev = this.natureFamilyAbbrev || this.characteristics.find(function (elem){return elem.family=="natureFamily"}).name.slice(0,2).toUpperCase()
+            this.natureFamilyAbbrev = this.natureFamilyAbbrev || this.characteristics.find(function (elem) {
+                return elem.family == "natureFamily"
+            }).name.split("Char")[0].toUpperCase()
         if (this.natureFamilyAbbrev)
             return this.natureFamilyAbbrev;
         else
