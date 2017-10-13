@@ -525,13 +525,21 @@ class Neo4jDAO:
             # Add artefact characteristics
             if i['artefact_id']:
                 artefact = Artefact.objects.get(pk=i['artefact_id'])
+                # Quick fix
+                published_artefact = artefact.object.artefact_set.filter(published=True).first()
+                if published_artefact:
+                    artefact = published_artefact
+                    # else todo check artefact.user against logged in user to list only published or own artefacts
+                    # but there (in api context) we are missing the request.user
+                    line['artefact_id'] = artefact.pk
                 line['artefact_metal1'] = artefact.metal1.element
                 line['artefact_alloy'] = artefact.alloy.name
                 line['artefact_type'] = artefact.type.name
                 line['artefact_chronology_category'] = artefact.chronology_period.chronology_category.name
                 line['artefact_technology'] = artefact.technology.name
                 line['artefact_microstructure'] = artefact.microstructure.name
-            old_list.append(line)
+                if published_artefact:
+                    old_list.append(line)
         result = []
         for j in old_list:
             if j['artefact_id'] and j['matching100'] < 100:
