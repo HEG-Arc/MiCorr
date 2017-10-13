@@ -525,6 +525,10 @@ class Neo4jDAO:
             # Add artefact characteristics
             if i['artefact_id']:
                 artefact = Artefact.objects.get(pk=i['artefact_id'])
+                # Quick fix
+                child = Artefact.object.filter(parent=artefact,published=True).first()
+                if child:
+                    artefact = child
                 line['artefact_metal1'] = artefact.metal1.element
                 line['artefact_alloy'] = artefact.alloy.name
                 line['artefact_type'] = artefact.type.name
