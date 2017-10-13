@@ -526,9 +526,11 @@ class Neo4jDAO:
             if i['artefact_id']:
                 artefact = Artefact.objects.get(pk=i['artefact_id'])
                 # Quick fix
-                child = Artefact.object.filter(parent=artefact,published=True).first()
-                if child:
-                    artefact = child
+                published_artefact = artefact.object.artefact_set.filter(published=True).first()
+                if published_artefact:
+                    artefact = published_artefact
+                    # else todo check artefact.user against logged in user to list only published or own artefacts
+                    # but there (in api context) we are missing the request.user
                 line['artefact_metal1'] = artefact.metal1.element
                 line['artefact_alloy'] = artefact.alloy.name
                 line['artefact_type'] = artefact.type.name

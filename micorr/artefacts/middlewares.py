@@ -4,8 +4,7 @@ import re
 
 from artefacts.views import hasWriteRight, hasReadRight
 from artefacts.views import sendFirstUseOfTokenEmail
-from django.http import Http404
-
+from django.core.exceptions import PermissionDenied
 from artefacts.models import Artefact
 
 
@@ -40,7 +39,7 @@ class artefactAccessControlMiddleware:
                     sendFirstUseOfTokenEmail(token_uuid)
 
             if not has_read_right and not artefact.published :
-                raise Http404("Page not found")
+                raise PermissionDenied
 
         # Check if WRITE RIGHT
         # If url like = '/artefacts/5/update/' (with or without token)
@@ -61,7 +60,7 @@ class artefactAccessControlMiddleware:
                     sendFirstUseOfTokenEmail(token_uuid)
 
             if not has_write_right:
-                raise Http404("Page not found")
+                raise PermissionDenied
 
 
 
