@@ -514,7 +514,6 @@ class Neo4jDAO:
                     'totalmatching': '', 'totalrelation': '', 'matching100': ''}
             line['node_base_url'] = node_base_url
             line['artefact'] = i['auid']
-            line['artefact_id'] = i['artefact_id']
             line['stratigraphy_uid'] = i['stratigraphy_uid']
             line['stratum'] = i['stratum']
             line['diffnbstratum'] = i['DiffNombreStratum']
@@ -531,12 +530,14 @@ class Neo4jDAO:
                     artefact = published_artefact
                     # else todo check artefact.user against logged in user to list only published or own artefacts
                     # but there (in api context) we are missing the request.user
+                    i['artefact_id'] = published_artefact.pk
                 line['artefact_metal1'] = artefact.metal1.element
                 line['artefact_alloy'] = artefact.alloy.name
                 line['artefact_type'] = artefact.type.name
                 line['artefact_chronology_category'] = artefact.chronology_period.chronology_category.name
                 line['artefact_technology'] = artefact.technology.name
                 line['artefact_microstructure'] = artefact.microstructure.name
+            line['artefact_id'] = i['artefact_id']
             old_list.append(line)
         result = []
         for j in old_list:
