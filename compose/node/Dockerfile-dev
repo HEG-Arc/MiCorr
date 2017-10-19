@@ -1,0 +1,14 @@
+FROM node:8.3.0
+
+EXPOSE 8080
+
+# we must use at least inkscape 0.91 for svg export so activate jessie-backports
+RUN echo "deb http://ftp.debian.org/debian jessie-backports main" >>/etc/apt/sources.list
+RUN apt-get update && apt-get -t jessie-backports install -y inkscape
+
+RUN npm install -g grunt-cli@1.2.0 forever@0.15.3
+
+WORKDIR /app
+
+# start serveur
+CMD npm install  && forever micorr/stratigraphies/static/micorr/scripts/nodeServices/server.js
