@@ -77,17 +77,6 @@ urlpatterns = [
     url(r'^stratigraphy-construction/$', TemplateView.as_view(template_name='stratigraphy-construction.html')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-# Wagtail URLS
-urlpatterns += [
-    url(r'^w/admin/', include(wagtailadmin_urls)),
-    url(r'^w/search/', include(wagtailsearch_frontend_urls)),
-    url(r'^w/documents/', include(wagtaildocs_urls)),
-
-    # For anything not caught by a more specific rule above, hand over to
-    # Wagtail's serving mechanism
-    url(r'', include(wagtail_urls)),
-]
-
 if settings.DEBUG:
     # This allows the error pages to be debugged during development, just visit
     # these url in browser to see how these error pages look like.
@@ -99,3 +88,15 @@ if settings.DEBUG:
         url(r'^500/$', default_views.server_error),
         url(r'^__debug__/', include(debug_toolbar.urls)),
     ]
+
+# Wagtail URLS
+urlpatterns += [
+    url(r'^w/admin/', include(wagtailadmin_urls)),
+    url(r'^w/search/', include(wagtailsearch_frontend_urls)),
+    url(r'^w/documents/', include(wagtaildocs_urls)),
+
+    # For anything not caught by a more specific rule above, hand over to
+    # Wagtail's serving mechanism
+    url(r'', include(wagtail_urls)),
+]
+
