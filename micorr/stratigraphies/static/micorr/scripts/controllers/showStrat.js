@@ -327,18 +327,17 @@ angular.module('micorrApp')
                 ngProgress.complete();
             });
         };
-
-        MiCorrService.getAllCharacteristic().success(function (data) {
-
+        MiCorrService.getFamilyDescriptions().success(function(descriptions){
+            MiCorrService.getAllCharacteristic().success(function (data) {
             if (typeof data !== "undefined") {
-
-                StratigraphyData.Fill(data);
-
+                StratigraphyData.Fill(data,descriptions);
             }
         }).success(function () {
             initShowStrata();
             ngProgress.complete();
         });
+        });
+
         /*
          * exécute une mise à jour de l'interface après un événement en provenance d'un enfant
          * @params index : index de la strate sélectionnée

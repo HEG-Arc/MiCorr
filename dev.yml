@@ -35,9 +35,9 @@ services:
       context: .
       dockerfile: ./compose/django/Dockerfile-dev
     command: /start-dev.sh
-    depends_on:
-      - postgres
-      - neo4j
+#    depends_on:
+#      - postgres
+#      - neo4j
     environment:
       - POSTGRES_USER=micorr
       - USE_DOCKER=yes

@@ -75,8 +75,13 @@ angular.module('micorrApp').factory('MiCorrService', function ($http, $q) {
                 alert('Erreur de chargement des caractéristiques');
             });
         },
-
-
+        getFamilyDescriptions: function () {
+             return $http.get('node_descriptions').error(function ()
+            {
+                console.log('Error loading  glossary');
+                alert('Error loading  glossary');
+            })
+        },
         saveStratigraphy: function (item) {
             $http.post('json/save', item, {headers: {'Content-Type': 'application/json'} }).error(function (data, status, headers, config) {
                 console.log('Could not save stratigraphy');
@@ -203,11 +208,10 @@ angular.module('micorrApp').factory('StratigraphyData', function StratigraphyDat
 
             },
 
-            Fill: function (data) {
-                var characteristics = data;
+            Fill: function (characteristics,descriptions) {
 
                 /*
-                 * parcours les caractéristiques de data et retourne les caractéristiques de la famille voulue
+                 * parcours les caractéristiques et retourne les caractéristiques de la famille voulue
                  * @params name : nom de la famille
                  * @returns liste des caractéristiques d'une famille au format json
                  */
@@ -255,6 +259,7 @@ angular.module('micorrApp').factory('StratigraphyData', function StratigraphyDat
                 };
 
                 this.setRawCharacteristics(characteristics);
+                this.descriptions = descriptions;
 
                 this.shapeFamily = parseCharasteristic('shapeFamily');
                 this.widthFamily = parseCharasteristic('widthFamily');

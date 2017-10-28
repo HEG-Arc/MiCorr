@@ -6,8 +6,11 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.cache import cache_page
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_http_methods
 
 from stratigraphies import micorrservice
+
+from .models import NodeDescription
 from .forms import StratigraphyDescriptionUpdateForm
 
 
@@ -193,3 +196,7 @@ def deleteArtefact(request, artefact):
 def getnaturefamily(request, nature):
     ms = micorrservice.MiCorrService()
     return HttpResponse(json.dumps(ms.getnaturefamily(nature)), content_type='application/json')
+
+@require_http_methods(["GET"])
+def node_descriptions(request):
+    return HttpResponse(json.dumps(dict(NodeDescription.objects.values_list('uid','text'))), content_type='application/json')

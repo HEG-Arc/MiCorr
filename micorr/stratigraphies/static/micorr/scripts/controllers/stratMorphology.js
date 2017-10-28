@@ -10,17 +10,6 @@
 angular.module('micorrApp')
     .controller('StratMorphologyCtrl', function ($scope, $route, $window, StratigraphyData) {
 
-        //valeurs sélectionnées dans les champs de notre formulaire
-        $scope.selectedShapeFamily;
-        $scope.selectedWidthFamily;
-        $scope.selectedThicknessFamily;
-        $scope.selectedContinuityFamily;
-        $scope.selectedDirectionFamily;
-        $scope.selectedColourFamily;
-        $scope.selectedBrightnessFamily;
-        $scope.selectedOpacityFamily;
-        $scope.selectedMagnetismFamily;
-
         var initStratMorphology = function () {
 
 
@@ -35,6 +24,20 @@ angular.module('micorrApp')
             $scope.brightnessFamily = StratigraphyData.getBrightnessFamily()['characteristics'];
             $scope.opacityFamily = StratigraphyData.getOpacityFamily()['characteristics'];
             $scope.magnetismFamily = StratigraphyData.getMagnetismFamily()['characteristics'];
+            $scope.descriptions = StratigraphyData.descriptions;
+            $scope.familyGroup = [{"uid": "shapeFamily", "name": "Shape"}, {
+                "uid": "magnetismFamily",
+                "name": "Magnetism"
+            }, {"uid": "thicknessFamily", "name": "Thickness"}, {
+                "uid": "widthFamily",
+                "name": "Width"
+            }, {"uid": "directionFamily", "name": "Direction"}, {
+                "uid": "continuityFamily",
+                "name": "Continuity"
+            }, {"uid": "brightnessFamily", "name": "Brightness"}, {
+                "uid": "colourFamily",
+                "name": "Colour"
+            }, {"uid": "opacityFamily", "name": "Opacity"}]
         };
 
         $scope.$on('initShowStrat', function (event) {

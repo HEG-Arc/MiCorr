@@ -18,7 +18,6 @@ from wagtail.wagtailsearch.signal_handlers import register_signal_handlers as wa
 
 from config.sitemaps import ArtefactsSitemap, HomePageSitemap
 from views import HomePageView
-
 admin.autodiscover()
 wagtailsearch_register_signal_handlers()
 

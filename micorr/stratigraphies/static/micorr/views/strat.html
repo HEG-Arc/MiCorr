@@ -250,12 +250,27 @@
 </div>
 
 <tabset ng-show="showTabForms" justified="true" class="clearfix">
-<tab heading="Morphology" ng-controller="StratMorphologyCtrl" active="activeMorphologyTab">
+<tab heading="Morphology" ng-controller="StratMorphologyCtrl" active="activeMorphologyTab" title="{{descriptions.fgMorphology}}">
     <form>
-        <div class="row-fluid">
+
+<!--
+  todo Dynamic family templates we miss dynamic ng-model assignent
+  (ng-model="$eval('selected'+family.uid) not working =>
+  Error: ngModel:nonassign  Non-Assignable Expression
+
+       <div class="row-fluid">
+              <div class="col-md-6 form-group" ng-repeat="family in familyGroup">
+                <label for="{{ 'morphology' + family.name }}"><span class="glyphicon glyphicon-eye-close"
+                                                    title="no visual impact on the stratum"></span><span title="{{ descriptions[family.uid] }}"> {{ family.name }}</span></label>
+                <select id="{{ 'morphology' + family.name }}" class="form-control" ng-model="$eval('selected'+family.uid)"
+                        ng-options="x.real_name for x in this[family.uid]" ng-change="upMorpho()">
+                    <option value=""></option>
+                </select>
+            </div>
+-->
             <div class="col-md-6 form-group">
                 <label for="morphologyShape"><span class="glyphicon glyphicon-eye-close"
-                                                   title="no visual impact on the stratum"></span> Shape</label>
+                                                   title="no visual impact on the stratum"></span><span title="{{descriptions.shapeFamily}}"> Shape</span></label>
                 <select id="morphologyShape" class="form-control" ng-model="selectedShapeFamily"
                         ng-options="x.real_name for x in shapeFamily" ng-change="upMorpho()">
                     <option value=""></option>
@@ -263,17 +278,16 @@
             </div>
             <div ng-show="showWidth" class="col-md-6 form-group">
                 <label for="morphologyWidth"><span class="glyphicon glyphicon-eye-open"
-                                                   title="visual impact on the stratum"></span> Width</label>
+                                                   title="visual impact on the stratum"></span> <span title="{{descriptions.widthFamily}}">Width</span></label>
                 <select id="morphologyWidth" class="form-control" ng-model="selectedWidthFamily"
                         ng-options="x.real_name for x in widthFamily" ng-change="upMorpho()">
                     <option value=""></option>
                 </select>
             </div>
-        </div>
         <div class="row-fluid">
             <div ng-show="showThickness" class="col-md-6 form-group">
                 <label for="morphologyThickness"><span class="glyphicon glyphicon-eye-open"
-                                                       title="visual impact on the stratum"></span> Thickness</label>
+                                                       title="visual impact on the stratum"></span> <span title="{{descriptions.thicknessFamily}}">Thickness</span></label>
                 <select id="morphologyThickness" class="form-control" ng-model="selectedThicknessFamily"
                         ng-options="x.real_name for x in thicknessFamily" ng-change="upMorpho()">
                     <option value=""></option>
@@ -282,7 +296,7 @@
             <div ng-show="showContinuity" class="col-md-6 form-group">
                 <label for="morphologyContinuity"><span class="glyphicon glyphicon-eye-close"
                                                         title="no visual impact on the stratum"></span>
-                    Continuity</label>
+                    <span title="{{descriptions.continuityFamily}}">Continuity</span></label>
                 <select id="morphologyContinuity" class="form-control" ng-model="selectedContinuityFamily"
                         ng-options="x.real_name for x in continuityFamily" ng-change="upMorpho()">
                     <option value=""></option>
@@ -292,7 +306,7 @@
         <div class="row-fluid">
             <div ng-show="showDirection" class="col-md-6 form-group">
                 <label for="morphologyDirection"><span class="glyphicon glyphicon-eye-close"
-                                                       title="no visual impact on the stratum"></span> Direction</label>
+                                                       title="no visual impact on the stratum"></span> <span title="{{descriptions.directionFamily}}">Direction</span></label>
                 <select id="morphologyDirection" class="form-control" ng-model="selectedDirectionFamily"
                         ng-options="x.real_name for x in directionFamily" ng-change="upMorpho()">
                     <option value=""></option>
@@ -300,7 +314,7 @@
             </div>
             <div ng-show="showColor" class="col-md-6 form-group">
                 <label for="physicalPropertyColor"><span class="glyphicon glyphicon-eye-open"
-                                                         title="visual impact on the stratum"></span> Colour</label>
+                                                         title="visual impact on the stratum"></span> <span title="{{descriptions.colourFamily}}">Colour</span></label>
                 <select id="physicalPropertyColor" class="form-control" ng-model="selectedColourFamily"
                         ng-options="x.real_name for x in colourFamily" ng-change="upMorpho()">
                     <option value=""></option>
@@ -310,7 +324,7 @@
         <div class="row-fluid">
             <div ng-show="showBrightness" class="col-md-6 form-group">
                 <label for="physicalPropertyBrightness"><span class="glyphicon glyphicon-eye-close"
-                                                              title="no visual impact on the stratum"></span> Brightness</label>
+                                                              title="no visual impact on the stratum"></span> <span title="{{descriptions.brightnessFamily}}">Brightness</span></label>
                 <select id="physicalPropertyBrightness" class="form-control" ng-model="selectedBrightnessFamily"
                         ng-options="x.real_name for x in brightnessFamily" ng-change="upMorpho()">
                     <option value=""></option>
@@ -328,9 +342,9 @@
         </div>
         <div class="row-fluid">
             <div ng-show="showMagnetism" class="col-md-6 form-group">
-                <label for="physicalPropertyMagnetism"><span class="glyphicon glyphicon-eye-close"
-                                                             title="no visual impact on the stratum"></span>
-                    Magnetism</label>
+                <span for="physicalPropertyMagnetism"><span class="glyphicon glyphicon-eye-close"
+                                                            title="no visual impact on the stratum"></span>
+                    <span title="{{descriptions.magnetismFamily}}"> Magnetism</span></label>
                 <select id="physicalPropertyMagnetism" class="form-control" ng-model="selectedMagnetismFamily"
                         ng-options="x.real_name for x in magnetismFamily" ng-change="upMorpho()">
                     <option value=""></option>
