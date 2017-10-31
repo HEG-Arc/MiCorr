@@ -1,4 +1,4 @@
-from whitenoise.storage import CompressedManifestStaticFilesStorage
+from whitenoise.storage import CompressedManifestStaticFilesStorage,MissingFileError
 
 # multiple static file errors workaround
 # overwrite default CompressedManifestStaticFilesStorage ignoring bad references in static file
@@ -8,5 +8,5 @@ class ErrorSquashingStorage(CompressedManifestStaticFilesStorage):
     def url(self, name, **kwargs):
         try:
             return super(ErrorSquashingStorage, self).url(name, **kwargs)
-        except ValueError:
+        except MissingFileError:
             return name
