@@ -355,12 +355,12 @@
         </div>
     </form>
 </tab>
-<tab heading="Texture" ng-controller="StratTextureCtrl">
+<tab heading="Texture" ng-controller="StratTextureCtrl" title="{{descriptions.fgTexture}}">
     <form>
         <div class="row-fluid">
             <div ng-show="showPorosity" class="col-md-6 form-group">
                 <label for="texturePorosity"><span class="glyphicon glyphicon-eye-open"
-                                                   title="visual impact on the stratum"></span> Compactness</label>
+                                                   title="visual impact on the stratum"></span><span title="{{descriptions.porosityFamily}}"> Compactness</span></label>
                 <select id="texturePorosity" class="form-control" ng-model="selectedPorosityFamily"
                         ng-options="x.real_name for x in porosityFamily" ng-change="upTexture()">
                     <option value=""></option>
@@ -368,7 +368,7 @@
             </div>
             <div ng-show="showCohesion" class="col-md-6 form-group">
                 <label for="textureCohesion"><span class="glyphicon glyphicon-eye-open"
-                                                   title="visual impact on the stratum"></span> Cohesion</label>
+                                                   title="visual impact on the stratum"></span> <span title="{{descriptions.cohesionFamily}}">Cohesion</span></label>
                 <select id="textureCohesion" class="form-control" ng-model="selectedCohesionFamily"
                         ng-options="x.real_name for x in cohesionFamily" ng-change="upTexture()">
                     <option value=""></option>
@@ -378,7 +378,7 @@
         <div class="row-fluid">
             <div ng-show="showHardness" class="col-md-6 form-group">
                 <label for="textureHardness"><span class="glyphicon glyphicon-eye-close"
-                                                   title="no visual impact on the stratum"></span> Hardness</label>
+                                                   title="no visual impact on the stratum"></span> <span title="{{descriptions.hardnessFamily}}">Hardness</span></label>
                 <select id="textureHardness" class="form-control" ng-model="selectedHardnessFamily"
                         ng-options="x.real_name for x in hardnessFamily" ng-change="upTexture()">
                     <option value=""></option>
@@ -386,7 +386,7 @@
             </div>
             <div ng-show="showCracking" class="col-md-6 form-group">
                 <label for="textureCracking"><span class="glyphicon glyphicon-eye-open"
-                                                   title="visual impact on the stratum"></span> Cracking</label>
+                                                   title="visual impact on the stratum"></span> <span title="{{descriptions.crackingFamily}}">Cracking</span></label>
                 <select id="textureCracking" class="form-control" ng-model="selectedCrackingFamily"
                         ng-options="x.real_name for x in crackingFamily" ng-change="upTexture()">
                     <option value=""></option>
@@ -395,14 +395,14 @@
         </div>
     </form>
 </tab>
-<tab heading="Microstructure" ng-controller="StratMicrostructureCtrl">
+<tab heading="Microstructure" ng-controller="StratMicrostructureCtrl" title="{{descriptions.fgMicrostructure}}">
     <form>
         <!-- Microstructure pour la couche CM -->
 
         <div class="col-md-12 form-group" ng-show="corrodedMetalStrataSelected">
             <label class="control-label"><span class="glyphicon glyphicon-eye-close"
-                                               title="no visual impact on the stratum"></span> Additional microstructure
-                in CP
+                                               title="no visual impact on the stratum"></span> <span title="{{descriptions.cmCpMicrostructureFamily}}">Additional microstructure
+                in CP</span></span>
             </label>
             <picklist size="10" data-picklist="" data-pick-model="selectedCmcpmicrostructureFamily"
                       data-pick-options="v.real_name for v in cmcpmicrostructureFamily"/>
@@ -421,7 +421,7 @@
             <div ng-show="showcprimicrostructureFamily" class="col-md-6 form-group">
                 <label for="cpriMicrostructureFamily"><span class="glyphicon glyphicon-eye-open"
                                                             title="visual impact on the stratum"></span>
-                    Microstructure</label>
+                    <span title="{{descriptions.cpriMicrostructureFamily}}">Microstructure</span></label>
                 <select id="cpriMicrostructureFamily" class="form-control" ng-model="selectedCprimicrostructureFamily"
                         ng-options="x.real_name for x in cprimicrostructureFamily" ng-change="upMicrostructure()">
                     <option value=""></option>
@@ -444,7 +444,7 @@
             <div ng-show="showmmicrostructureFamily" class="col-md-6 form-group">
                 <label for="mMicrostructureFamily"><span class="glyphicon glyphicon-eye-open"
                                                          title="visual impact on the stratum"></span>
-                    Microstructure</label>
+                    <span title="{{descriptions.mMicrostructureFamily}}">Microstructure</span></label>
                 <select id="mMicrostructureFamily" class="form-control" ng-model="selectedMmicrostructureFamily"
                         ng-options="x.real_name for x in mmicrostructureFamily" ng-change="upMicrostructure()">
                     <option value=""></option>
@@ -474,7 +474,7 @@
 
     </form>
 </tab>
-<tab heading="Composition" ng-controller="StratCompositionCtrl">
+<tab heading="Composition" ng-controller="StratCompositionCtrl" title="{{descriptions.fgComposition}}">
 
 
     <form>
@@ -626,11 +626,11 @@
 
     </form>
 </tab>
-<tab heading="Interface" ng-controller="StratInterfaceCtrl" active="activeTabInterface">
+<tab heading="Interface" ng-controller="StratInterfaceCtrl" active="activeTabInterface" title="{{descriptions.fgInterface}}">
     <div class="row-fluid">
         <div ng-show="showinterfaceprofileFamily" class="col-md-6 form-group">
             <label for="interfaceProfileFamily"><span class="glyphicon glyphicon-eye-open"
-                                                      title="visual impact on the stratum"></span> Profile</label>
+                                                      title="visual impact on the stratum"></span> <span title="{{descriptions.profileFamily}}">Profile</span></label>
             <select id="interfaceProfileFamily" class="form-control" ng-model="selectedInterfaceprofileFamily"
                     ng-options="x.real_name for x in interfaceprofileFamily" ng-change="upInterface()">
                 <option value=""></option>
@@ -638,7 +638,7 @@
         </div>
         <div ng-show="showinterfacetransition" class="col-md-6 form-group">
             <label for="interfaceTransitionFamily"><span class="glyphicon glyphicon-eye-open"
-                                                         title="visual impact on the stratum"></span> Transition</label>
+                                                         title="visual impact on the stratum"></span> <span title="{{descriptions.transitionFamily}}">Transition</span></label>
             <select id="interfaceTransitionFamily" class="form-control" ng-model="selectedInterfacetransitionFamily"
                     ng-options="x.real_name for x in interfacetransitionFamily" ng-change="upInterface()">
                 <option value=""></option>
@@ -648,7 +648,7 @@
     <div class="row-fluid">
         <div ng-show="showinterfaceroughness" class="col-md-6 form-group">
             <label for="interfaceRoughnessFamily"><span class="glyphicon glyphicon-eye-open"
-                                                        title="visual impact on the stratum"></span> Roughness</label>
+                                                        title="visual impact on the stratum"></span> <span title="{{descriptions.roughnessFamily}}">Roughness</span></label>
             <select id="interfaceRoughnessFamily" class="form-control" ng-model="selectedInterfaceroughnessFamily"
                     ng-options="x.real_name for x in interfaceroughnessFamily" ng-change="upInterface()">
                 <option value=""></option>
@@ -656,7 +656,7 @@
         </div>
         <div ng-show="showinterfaceadherence" class="col-md-6 form-group">
             <label for="interfaceAdherenceFamily"><span class="glyphicon glyphicon-eye-close"
-                                                        title="no visual impact on the stratum"></span> Adherence</label>
+                                                        title="no visual impact on the stratum"></span> <span title="{{descriptions.interfaceAdherenceFamily}}">Adherence</span></label>
             <select id="interfaceAdherenceFamily" class="form-control" ng-model="selectedInterfaceadherenceFamily"
                     ng-options="x.real_name for x in interfaceadherenceFamily" ng-change="upInterface()">
                 <option value=""></option>

@@ -40,6 +40,7 @@ angular.module('micorrApp')
             $scope.mcompositionFamily = StratigraphyData.getMcompositionFamily()['characteristics'];
             $scope.cpcompositionextensionFamily = StratigraphyData.getCpcompositionextensionFamily()['characteristics'];
             $scope.cmcpaggregateCompositionFamily = StratigraphyData.getCmcpaggregateCompositionFamily()['characteristics'];
+            $scope.descriptions = StratigraphyData.descriptions;
         };
 
         $scope.$on('initShowStrat', function (event) {

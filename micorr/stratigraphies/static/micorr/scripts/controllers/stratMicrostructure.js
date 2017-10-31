@@ -44,8 +44,9 @@ angular.module('micorrApp')
             $scope.subsubcprimicrostructureaggregatecompositionFamily = StratigraphyData.getSubsubcprimicrostructureaggregatecompositionFamily();
             $scope.subcmlevelofcorrosionFamily = StratigraphyData.getSubcmLevelOfCorrosionFamily();
             $scope.submmicrostructureFamily = StratigraphyData.getSubmmicrostructureFamily();
-
             $scope.cmcpmicrostructureFamily = StratigraphyData.getCmcpmicrostructureFamily()['characteristics'];
+
+            $scope.descriptions = StratigraphyData.descriptions;
         };
 
         $scope.$on('initShowStrat', function (event) {
