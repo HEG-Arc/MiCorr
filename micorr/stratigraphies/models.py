@@ -7,9 +7,9 @@ from wagtail.wagtailadmin.edit_handlers import FieldPanel
 
 @python_2_unicode_compatible  # provide equivalent __unicode__ and __str__ methods on Python 2
 class NodeDescription(models.Model):
-    label = models.CharField(max_length=80, null=True, blank=True)
-    uid = models.CharField(max_length=80, null=True, blank=True)
-    name = models.CharField(max_length=255, null=True, blank=True)
+    label = models.CharField(max_length=80)
+    uid = models.CharField(max_length=80,unique=True)
+    name = models.CharField(max_length=255)
     text = models.TextField()
     panels = [
         FieldPanel('uid'),
