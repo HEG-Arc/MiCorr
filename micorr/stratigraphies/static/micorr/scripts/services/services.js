@@ -124,51 +124,6 @@ angular.module('micorrApp').factory('StratigraphyData', function StratigraphyDat
     var getStratigraphyData = function () {
 
         var stratig = null;
-        var selectedStrata = 0;
-
-        var shapeFamily = [];
-        var widthFamily = [];
-        var thicknessFamily = [];
-        var continuityFamily = [];
-        var directionFamily = [];
-        var colourFamily = [];
-        var brightnessFamily = [];
-        var opacityFamily = [];
-        var magnetismFamily = [];
-        var porosityFamily = [];
-        var cohesionFamily = [];
-        var hardnessFamily = [];
-        var crackingFamily = [];
-        var scompositionFamily = [];
-        var nmmcompositionFamily = [];
-        var dcompositionFamily = [];
-        var pomcompositionFamily = [];
-        var cpcompositionFamily = [];
-        var cmcompositionFamily = [];
-        var mcompositionFamily = [];
-        var cmlevelofcorrosionFamily = [];
-        var cprimicrostructureFamily = [];
-        var mmicrostructureFamily = [];
-        var interfaceprofileFamily = [];
-        var interfacetransitionFamily = [];
-        var interfaceroughnessFamily = [];
-        var interfaceadherenceFamily = [];
-        var subcpcompositionFamily = [];
-        var subsubcpcompositionFamily = [];
-        var cpcompositionextensionFamily = [];
-        var cprimicrostructureaggregatecompositionFamily = [];
-        var cprimicrostructureaggregatecompositionextensionFamily = [];
-        var submmicrostructureFamily = [];
-        var subcprimicrostructureFamily = [];
-        var subcprimicrostructureaggregatecompositionFamily = [];
-        var subsubcprimicrostructureaggregatecompositionFamily = [];
-        var subcmcompositionFamily = [];
-        var subcmLevelOfCorrosionFamily = [];
-        var submmicrostructureFamily = [];
-        var submcompositionFamily = [];
-
-        var cmcpmicrostructureFamily = [];
-
 
         return {
 
@@ -261,6 +216,10 @@ angular.module('micorrApp').factory('StratigraphyData', function StratigraphyDat
                 this.setRawCharacteristics(characteristics);
                 this.descriptions = descriptions;
 
+                for (var i = 0; i < characteristics.length; i++) {
+                        this[characteristics[i].family] = characteristics[i];
+                    }
+/*
                 this.shapeFamily = parseCharasteristic('shapeFamily');
                 this.widthFamily = parseCharasteristic('widthFamily');
                 this.thicknessFamily = parseCharasteristic('thicknessFamily');
@@ -274,6 +233,7 @@ angular.module('micorrApp').factory('StratigraphyData', function StratigraphyDat
                 this.cohesionFamily = parseCharasteristic('cohesionFamily');
                 this.hardnessFamily = parseCharasteristic('hardnessFamily');
                 this.crackingFamily = parseCharasteristic('crackingFamily');
+                */
                 this.scompositionFamily = parseCharasteristic('sCompositionFamily');
                 this.nmmcompositionFamily = parseCharasteristic('nmmCompositionFamily');
                 this.dcompositionFamily = parseCharasteristic('dCompositionFamily');

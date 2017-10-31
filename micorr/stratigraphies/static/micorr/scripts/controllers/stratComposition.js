@@ -10,20 +10,29 @@
 angular.module('micorrApp')
     .controller('StratCompositionCtrl', function ($scope, $route, $window, StratigraphyData) {
 
-        //valeurs sélectionnées dans les champs de notre formulaire
-        $scope.selectedScompositionFamily = null;
-        $scope.selectedNmmcompositionFamily = null;
-        $scope.selectedDcompositionFamily = null;
-        $scope.selectedPomcompositionFamily = null;
-        $scope.selectedCpcompositionFamily = null;
-        $scope.selectedCmcompositionFamily = null;
-        $scope.selectedMcompositionFamily = null;
-        $scope.selectedSubcpcompositionFamily = null;
-        $scope.selectedSubsubcpcompositionFamily = null;
-        $scope.selectedSubcmcompositionFamily = null;
-        $scope.selectedCpcompositionextensionFamily = [];
-        $scope.selectedSubmcompositionFamily = null;
+         /**
+         * Cette fonction vide les champs et est appelée à chaque chargement du formulaire
+         * pour éviter de garder des anciennes valeurs
+         */
+        function emptyFields() {
+            $scope.selectedScompositionFamily = null;
+            $scope.selectedNmmcompositionFamily = null;
+            $scope.selectedDcompositionFamily = null;
+            $scope.selectedPomcompositionFamily = null;
+            $scope.selectedCpcompositionFamily = null;
+            $scope.selectedCmcompositionFamily = null;
+            $scope.selectedMcompositionFamily = null;
+            $scope.selectedSubcpcompositionFamily = null;
+            $scope.selectedSubsubcpcompositionFamily = null;
+            $scope.selectedSubcmcompositionFamily = null;
+            $scope.selectedSubmcompositionFamily = null;
 
+            $scope.subcpcompositionFamily = null;
+            $scope.subsubcpcompositionFamily = null;
+            $scope.subcmcompositionFamily = null;
+            $scope.submcompositionFamily = null;
+        }
+        emptyFields();
         //Les tableaux pour les picklist des strates enfant.
         $scope.selectedCmcpcomposition = [];
         $scope.selectedCmmcomposition = [];
@@ -154,31 +163,6 @@ angular.module('micorrApp')
             }
 
         });
-        /**
-         * Cette fonction vide les champs et est appelée à chaque chargement du formulaire
-         * pour éviter de garder des anciennes valeurs
-         */
-        function emptyFields() {
-            $scope.selectedScompositionFamily = null;
-            $scope.selectedNmmcompositionFamily = null;
-            $scope.selectedDcompositionFamily = null;
-            $scope.selectedPomcompositionFamily = null;
-            $scope.selectedCpcompositionFamily = null;
-            $scope.selectedCmcompositionFamily = null;
-            $scope.selectedMcompositionFamily = null;
-            $scope.selectedSubcpcompositionFamily = null;
-            $scope.selectedSubsubcpcompositionFamily = null;
-            $scope.selectedSubcmcompositionFamily = null;
-            $scope.selectedSubmcompositionFamily = null;
-
-            $scope.subcpcompositionFamily = null;
-            $scope.subsubcpcompositionFamily = null;
-            $scope.subcmcompositionFamily = null;
-            $scope.submcompositionFamily = null;
-
-
-        }
-
 
         /* Met à jour les données de la strate en fonction des valeurs dans le formulaire
          * @params
@@ -323,19 +307,6 @@ angular.module('micorrApp')
                 }
             }
 
-
-            //Plus utilisé
-            /*if (temp[index].findDependency('cpcompositionFamily'))
-             temp[index].setCpcompositionFamily($scope.selectedCpcompositionFamily.name);*/
-            /*if (temp[index].findDependency('cmcompositionFamily'))
-             temp[index].setCmcompositionFamily($scope.selectedCmcompositionFamily.name);*/
-            /*if (temp[index].findDependency('mcompositionFamily'))
-             temp[index].setMcompositionFamily($scope.selectedMcompositionFamily.name);*/
-
-            /*if (temp[index].findDependency('subcpcompositionFamily'))
-             temp[index].setSubcpcompositionFamily($scope.selectedSubcpcompositionFamily.name);*/
-
-            //$scope.$emit('updateDraw');
             $scope.$emit('updateSelectedStrata');
 
             $scope.$emit('updateFormOnly');

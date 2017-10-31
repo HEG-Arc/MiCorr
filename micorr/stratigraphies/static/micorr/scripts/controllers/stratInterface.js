@@ -30,7 +30,6 @@ angular.module('micorrApp')
             $scope.selectedInterfaceadherenceFamily = null;
         }
 
-
         /*
          * Met à jour les valeurs dans les champs quand on change de strate. Est appelé par un événement parent
          * On met à jour les valeurs sélectionnées en fonction des valeurs qui se trouvent dans la strate actuelle
@@ -105,42 +104,6 @@ angular.module('micorrApp')
                 }
             }
 
-
             $scope.$emit('updateSelectedInterface');
         };
-
-        /* Ne semble plus utilisé
-         $scope.addCorrodedMetalStrata = function () {
-         if (StrataData.getCurrentSelectedStrata() != 0) {
-         if (StrataData.getStratas()[StrataData.getCurrentSelectedStrata() - 1].getNatureFamilyUid() == "cpCharacteristic") {
-         var cmStrata = natureFactory("CM");
-         cmStrata.relatedCP = StrataData.getStratas()[StrataData.getCurrentSelectedStrata() - 1];
-         cmStrata.relatedM = StrataData.getStratas()[StrataData.getCurrentSelectedStrata()]
-         StrataData.getStratas().splice(StrataData.getCurrentSelectedStrata(), 0, cmStrata);
-         $scope.$emit('doUpdate', StrataData.getCurrentSelectedStrata());
-         $scope.$emit('updateDraw');
-         } else {
-         cmStrata.relatedM = StrataData.getStratas()[StrataData.getCurrentSelectedStrata()];
-         var cmStrata = natureFactory("CM");
-         StrataData.getStratas().splice(StrataData.getCurrentSelectedStrata(), 0, cmStrata);
-         var cpStrata = natureFactory("CP");
-         StrataData.getStratas().splice(StrataData.getCurrentSelectedStrata(), 0, cpStrata);
-         cmStrata.relatedCP = cpStrata;
-         $scope.$emit('doUpdate', StrataData.getCurrentSelectedStrata());
-         $scope.$emit('updateDraw');
-
-         }
-         } else {
-         cmStrata.relatedM = StrataData.getStratas()[StrataData.getCurrentSelectedStrata()];
-         var cmStrata = natureFactory("CM");
-         StrataData.getStratas().splice(StrataData.getCurrentSelectedStrata(), 0, cmStrata);
-         var cpStrata = natureFactory("CP");
-         StrataData.getStratas().splice(StrataData.getCurrentSelectedStrata(), 0, cpStrata);
-         cmStrata.relatedCP = cpStrata;
-         $scope.$emit('doUpdate', StrataData.getCurrentSelectedStrata());
-         $scope.$emit('updateDraw');
-         }
-
-
-         };*/
-    });
+  });
