@@ -455,8 +455,9 @@
         <div class="row-fluid">
             <div class="col-md-12 form-group" ng-show="showsubcprimicrostructureFamily">
                 <label class="control-label"><span class="glyphicon glyphicon-eye-open"
-                                                   title="visual impact on the stratum"></span> Sub
-                    Microstructure</label>
+                                                   title="visual impact on the stratum"></span>
+                    <span title="{{ descriptions.subcprimicrostructureFamily }}">Sub Microstructure</span>
+                </label>
                 <picklist size="10" data-picklist="" data-pick-model="selectedSubcprimicrostructureFamily"
                           data-pick-options="v.name for v in subcprimicrostructureFamily"/>
             </div>
@@ -464,8 +465,9 @@
         <div class="row-fluid">
             <div class="col-md-12 form-group" ng-show="showsubmmicrostructureFamily">
                 <label class="control-label"><span class="glyphicon glyphicon-eye-open"
-                                                   title="visual impact on the stratum"></span> Sub
-                    Microstructure</label>
+                                                   title="visual impact on the stratum"></span>
+                 <span title="{{ descriptions.submmicrostructureFamily }}">Sub Microstructure</span>
+                </label>
                 <picklist size="10" data-picklist="" data-pick-model="selectedSubmmicrostructureFamily"
                           data-pick-options="v.name for v in submmicrostructureFamily"/>
             </div>
@@ -484,8 +486,9 @@
         <div class="row-fluid">
             <div class="col-md-12 form-group" ng-show="corrodedMetalStrataSelected">
                 <label class="control-label"><span class="glyphicon glyphicon-eye-close"
-                                                   title="no visual impact on the stratum"></span> Additional elements in
-                    M</label>
+                                                   title="no visual impact on the stratum"></span>
+                <span title="{{ descriptions.cmmcompositionFamily }}">Additional elements in M</span>
+                </label>
                 <picklist size="10" data-picklist="" data-pick-model="selectedCmmcomposition"
                           data-pick-options="v.real_name for v in cpcompositionextensionFamily"/>
             </div>
@@ -493,8 +496,9 @@
         <div class="row-fluid">
             <div class="col-md-12 form-group" ng-show="corrodedMetalStrataSelected">
                 <label class="control-label"><span class="glyphicon glyphicon-eye-close"
-                                                   title="no visual impact on the stratum"></span> Additional elements in
-                    CP</label>
+                                                   title="no visual impact on the stratum"></span>
+                     <span title="{{ descriptions.cmcpcompositionFamily }}">Additional elements in CP</span>
+                </label>
                 <picklist size="10" data-picklist="" data-pick-model="selectedCmcpcomposition"
                           data-pick-options="v.real_name for v in cpcompositionextensionFamily"/>
             </div>
@@ -503,8 +507,8 @@
         <div class="row-fluid">
             <div class="col-md-12 form-group" ng-show="corrodedMetalStrataSelected">
                 <label class="control-label"><span class="glyphicon glyphicon-eye-close"
-                                                   title="no visual impact on the stratum"></span> Additional element(s)
-                    in CP aggregates
+                                                   title="no visual impact on the stratum"></span>
+                 <span title="{{ descriptions.cmcpaggregateCompositionFamily }}">Additional element(s) in CP aggregates</span>
                 </label>
                 <picklist size="10" data-picklist="" data-pick-model="selectedCmcpaggregateCompositionFamily"
                           data-pick-options="v.real_name for v in cmcpaggregateCompositionFamily"/>
@@ -564,8 +568,9 @@
         <div class="row-fluid">
             <div ng-show="showMcomposition" class="col-md-6 form-group">
                 <label for="mCompositionFamily"><span class="glyphicon glyphicon-eye-close"
-                                                      title="no visual impact on the stratum"></span> Main
-                    element</label>
+                                                      title="no visual impact on the stratum"></span>
+                 <span title="{{ descriptions.mcompositionFamily }}">Main element</span>
+                </label>
                 <select id="mCompositionFamily" class="form-control" ng-model="selectedMcompositionFamily"
                         ng-options="x.real_name for x in mcompositionFamily" ng-change="upComposition2()">
                     <option value=""></option>
@@ -573,8 +578,9 @@
             </div>
             <div ng-show="showCpcomposition" class="col-md-6 form-group">
                 <label for="cpCompositionFamily"><span class="glyphicon glyphicon-eye-close"
-                                                       title="no visual impact on the stratum"></span> Main
-                    element</label>
+                                                       title="no visual impact on the stratum"></span>
+                     <span title="{{ descriptions.cpcompositionFamily }}">Main element</span>
+                </label>
                 <select id="cpCompositionFamily" class="form-control" ng-model="selectedCpcompositionFamily"
                         ng-options="x.real_name for x in cpcompositionFamily" ng-change="upComposition2()">
                     <option value=""></option>
@@ -584,8 +590,9 @@
         <div class="row-fluid">
             <div ng-show="showsubcpcompositionFamily" class="col-md-6 form-group">
                 <label for="subcpcompositionFamily"><span class="glyphicon glyphicon-eye-close"
-                                                          title="no visual impact on the stratum"></span> Secondary
-                    element(s)</label>
+                                                          title="no visual impact on the stratum"></span>
+                     <span title="{{ descriptions.subcpcompositionFamily }}">Secondary element(s)</span>
+                </label>
                 <select id="subcpcompositionFamily" class="form-control" ng-model="selectedSubcpcompositionFamily"
                         ng-options="x.name for x in subcpcompositionFamily" ng-change="upComposition3()">
                     <option value=""></option>
@@ -594,7 +601,8 @@
             <div ng-show="showsubsubcpcompositionFamily" class="col-md-6 form-group">
                 <label for="subsubcpcompositionFamily"><span class="glyphicon glyphicon-eye-close"
                                                              title="no visual impact on the stratum"></span>
-                    Compound</label>
+                    <span title="{{ descriptions.subsubcpcompositionFamily }}">Compound</span>
+                </label>
                 <select id="subsubcpcompositionFamily" class="form-control" ng-model="selectedSubsubcpcompositionFamily"
                         ng-options="x.name for x in subsubcpcompositionFamily" ng-change="upComposition()">
                     <option value=""></option>
@@ -604,8 +612,9 @@
         <div class="row-fluid">
             <div ng-show="showsubmcompositionFamily" class="col-md-6 form-group">
                 <label for="submcompositionFamily"><span class="glyphicon glyphicon-eye-close"
-                                                         title="no visual impact on the stratum"></span> Additional
-                    element(s)</label>
+                                                         title="no visual impact on the stratum"></span>
+                    <span title="{{ descriptions.submcompositionFamily }}">Additional element(s)</span>
+                </label>
                 <select id="submcompositionFamily" class="form-control" ng-model="selectedSubmcompositionFamily"
                         ng-options="x.name for x in submcompositionFamily" ng-change="upComposition()">
                     <option value=""></option>
@@ -616,8 +625,9 @@
         <div class="row-fluid">
             <div class="col-md-12 form-group" ng-show="showcpcompositionextensionfamily">
                 <label class="control-label"><span class="glyphicon glyphicon-eye-close"
-                                                   title="no visual impact on the stratum"></span> Additional
-                    elements</label>
+                                                   title="no visual impact on the stratum"></span>
+                     <span title="{{ descriptions.cpcompositionextensionFamily }}">Additional element(s)</span>
+                </label>
                 <picklist size="10" data-picklist="" data-pick-model="selectedCpcompositionextensionFamily"
                           data-pick-options="v.real_name for v in cpcompositionextensionFamily"/>
             </div>
