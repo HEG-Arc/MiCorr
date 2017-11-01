@@ -332,8 +332,7 @@
             </div>
             <div ng-show="showBrightness" class="col-md-6 form-group">
                 <label for="physicalPropertyOpacity"><span class="glyphicon glyphicon-eye-close"
-                                                           title="no visual impact on the stratum"></span>
-                    Opacity</label>
+                                                           title="no visual impact on the stratum"></span> <span title="{{descriptions.opacityFamily}}">Opacity</span></label>
                 <select id="physicalPropertyOpacity" class="form-control" ng-model="selectedOpacityFamily"
                         ng-options="x.real_name for x in opacityFamily" ng-change="upMorpho()">
                     <option value=""></option>
@@ -342,7 +341,7 @@
         </div>
         <div class="row-fluid">
             <div ng-show="showMagnetism" class="col-md-6 form-group">
-                <span for="physicalPropertyMagnetism"><span class="glyphicon glyphicon-eye-close"
+                <label for="physicalPropertyMagnetism"><span class="glyphicon glyphicon-eye-close"
                                                             title="no visual impact on the stratum"></span>
                     <span title="{{descriptions.magnetismFamily}}"> Magnetism</span></label>
                 <select id="physicalPropertyMagnetism" class="form-control" ng-model="selectedMagnetismFamily"
