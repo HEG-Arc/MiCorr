@@ -150,7 +150,11 @@ NODE_DESCRIPTIONS = [{u'label': u'Family',
            {u'label': u'Family',
             u'name': u'Additional element(s) in CP aggregates  available sub-characteristics',
             u'text': u'Select the corresponding elements. Once selected these sub-characteristics have to be transferred with the arrow in the box \u201cchosen sub-characteristics.',
-            u'uid': u'cmcpaggregateCompositionFamily'}
+            u'uid': u'cmcpaggregateCompositionFamily'},
+           {u'label': u'Family',
+            u'name': u'CM M/CP Ratio',
+            u'text': u'Select the proper ratio M/CP. Three options exist: if the cursor is on the left, the ratio M/CP is low, if the cursor is in the centre, the ratio M/CP has an average value, if the cursor is on the right, the ratio M/CP is high.',
+            u'uid': u'mcpRatio'}
            ]
 
 

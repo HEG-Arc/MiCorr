@@ -480,8 +480,21 @@
 
     <form>
         <!-- Composition pour la couche CM -->
-        <div ng-show="corrodedMetalStrataSelected">
-            <input type="range" min="1" max="3" ng-model="ratio.ratio" ng-change="ratioChange()"></input>
+        <div class="row-fluid">
+            <div class="col-md-12 form-group" ng-show="corrodedMetalStrataSelected">
+                <label for="mcpRatio">
+                    <span class="glyphicon glyphicon-eye-open" title="visual impact on the stratum"></span>
+                    <span title="{{ descriptions.mcpRatio }}">M/CP Ratio (low / average / high) </span>
+                </label>
+                <input id="mcpRatio" type="range" min="1" max="3" list="tickmarks" ng-model="ratio.ratio"
+                       ng-change="ratioChange()">
+                <datalist id="tickmarks">
+                    <option value="1" label="Low">
+                    <option value="2" label="Average">
+                    <option value="3" label="High">
+                </datalist>
+                </input>
+            </div>
         </div>
         <div class="row-fluid">
             <div class="col-md-12 form-group" ng-show="corrodedMetalStrataSelected">
