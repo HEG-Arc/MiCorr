@@ -26,7 +26,7 @@ $(document).ready(function(){
     event.preventDefault();
   });
 
-  $('.smooth-scroll a[href*=#]').click(function() {
+  $('.smooth-scroll a[href*=\\#]').click(function() {
 
      // skip SmoothScroll on links inside accordion titles or scroll boxes also using anchors or if there is a javascript call
      //if($(this).parent().hasClass('accordion-title1')  || $(this).parent().hasClass('accordion-title2') || $(this).attr('href').indexOf('javascript')>-1) return;
