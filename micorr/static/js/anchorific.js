@@ -43,7 +43,7 @@ if ( typeof Object.create !== 'function' ) {
 
 			self.opt = $.extend( {},  this.opt, options );
 
-			self.headers = self.$elem.find( 'h1, h2, h3, h4, h5, h6' );
+			self.headers = self.$elem.find( self.opt.headers );
 			self.previous = 0;
 
 			// Fix bug #1
@@ -56,6 +56,7 @@ if ( typeof Object.create !== 'function' ) {
 
 		opt: {
 			navigation: '.anchorific', // position of navigation
+			headers: 'h1, h2, h3, h4, h5, h6', // custom headers selector
 			speed: 200, // speed of sliding back to top
 			anchorClass: 'anchor', // class of anchor links
 			anchorText: '#', // prepended or appended to anchor headings
