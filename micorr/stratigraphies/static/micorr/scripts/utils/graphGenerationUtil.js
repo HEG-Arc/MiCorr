@@ -1,16 +1,16 @@
 (function (global, factory) {
     if (typeof define === "function" && define.amd) {
-        define(['exports', '../business/stratigraphy', '../business/characteristic', '../business/subCharacteristic', '../algorithms/poissonDisk', '../nodeServices/nodeUtils.js'], factory);
+        define(['exports', '../business/stratigraphy', '../business/characteristic', '../business/subCharacteristic', '../algorithms/poissonDisk', '../nodeServices/nodeUtils.js', 'datauri'], factory);
     } else if (typeof exports !== "undefined") {
-        factory(exports, require('../business/stratigraphy'), require('../business/characteristic'), require('../business/subCharacteristic'), require('../algorithms/poissonDisk'), require('../nodeServices/nodeUtils.js'));
+        factory(exports, require('../business/stratigraphy'), require('../business/characteristic'), require('../business/subCharacteristic'), require('../algorithms/poissonDisk'), require('../nodeServices/nodeUtils.js'), require('datauri'));
     } else {
         var mod = {
             exports: {}
         };
-        factory(mod.exports, global.stratigraphy, global.characteristic, global.subCharacteristic, global.poissonDisk, global.nodeUtils);
+        factory(mod.exports, global.stratigraphy, global.characteristic, global.subCharacteristic, global.poissonDisk, global.nodeUtils, global.datauri);
         global.graphGenerationUtil = mod.exports;
     }
-})(this, function (exports, _stratigraphy, _characteristic, _subCharacteristic, _poissonDisk, _nodeUtils) {
+})(this, function (exports, _stratigraphy, _characteristic, _subCharacteristic, _poissonDisk, _nodeUtils, Datauri) {
     'use strict';
 
     Object.defineProperty(exports, "__esModule", {
@@ -61,7 +61,7 @@
         };
     }();
 
-    let GraphGenerationUtil = function () {
+    var GraphGenerationUtil = function () {
         function GraphGenerationUtil(win, stratig) {
             _classCallCheck(this, GraphGenerationUtil);
 
@@ -98,7 +98,7 @@
                     stratigraphyHeight = stratigraphyHeight + nestedStrata.height();
                 }
                 //var box = resultDraw.viewbox();
-                var box = resultDraw.viewbox(0,0,500,stratigraphyHeight);
+                var box = resultDraw.viewbox(0, 0, 500, stratigraphyHeight);
                 box.width(width);
                 var svgContent = resultDraw.svg();
                 // remove all svg nodes from dom to be ready for next rendering
@@ -108,8 +108,6 @@
         }, {
             key: 'drawInterface',
             value: function drawInterface(strata, divID, draw) {
-                // Either pass divID (browser case) or svg.js draw context directly when called from nodejs
-                // the other argument must be null
                 var index = strata.getIndex();
 
                 var interfaceHeight = 22;
@@ -149,15 +147,15 @@
                 nestedInterface.height(interfaceHeight);
                 nestedInterface.width(interfaceWidth);
 
-                var upperInterfaceColor = "white";  // couleur de fond de la partie haute
-                var lowerInterfaceColor = "white";  // couleur de fond de la partie basse
+                var upperInterfaceColor = "white"; // couleur de fond de la partie haute
+                var lowerInterfaceColor = "white"; // couleur de fond de la partie basse
 
                 // si on est pas à la première interface alors on change la couleur de fond du haut
                 if (index > 0) {
                     if (this.stratig.getStratas()[index - 1].getCharacteristicsByFamily('colourFamily').length > 0) {
                         var color = this.stratig.getStratas()[index - 1].getCharacteristicsByFamily('colourFamily')[0].getRealName();
                         // !!! A MODIFIER QUAND ON FERA LE REFACTORING DU DAO...
-                        if (color != "" && color != "undefined" && color != "black" && color != "dark red" && color != "light yellow" && color != "ochre" && color != "dark green" && color != "medium green"  && color != "light green" && color != "dark blue" && color != "medium blue"  && color != "light blue") {
+                        if (color != "" && color != "undefined" && color != "black" && color != "dark red" && color != "light yellow" && color != "ochre" && color != "dark green" && color != "medium green" && color != "light green" && color != "dark blue" && color != "medium blue" && color != "light blue") {
                             upperInterfaceColor = color;
                         } else if (color == "black") {
                             upperInterfaceColor = '#474747';
@@ -186,7 +184,7 @@
                 if (strata.getCharacteristicsByFamily('colourFamily').length > 0) {
                     var color = strata.getCharacteristicsByFamily('colourFamily')[0].getRealName();
                     // !!! A MODIFIER QUAND ON FERA LE REFACTORING DU DAO...
-                    if (color != "" && color != "undefined" && color != "black" && color != "dark red" && color != "light yellow" && color != "ochre" && color != "dark green" && color != "medium green"  && color != "light green" && color != "dark blue" && color != "medium blue"  && color != "light blue") {
+                    if (color != "" && color != "undefined" && color != "black" && color != "dark red" && color != "light yellow" && color != "ochre" && color != "dark green" && color != "medium green" && color != "light green" && color != "dark blue" && color != "medium blue" && color != "light blue") {
                         lowerInterfaceColor = color;
                     } else if (color == "black") {
                         lowerInterfaceColor = "#474747";
@@ -262,8 +260,6 @@
         }, {
             key: 'drawStrata',
             value: function drawStrata(strata, divID, draw) {
-                // Either pass divID (browser case) or svg.js draw context directly when called from nodejs
-                // the other argument must be null
                 var borderColor = 'black';
 
                 var height = 100;
@@ -285,7 +281,7 @@
                 }
                 var borderWidth = 8;
 
-                var draw = draw || SVG(divID).size(width, height);
+                draw = draw || SVG(divID).size(width, height);
 
                 //on crée un groupe pour englober la strate et pour pouvoir la réutiliser
                 var nestedStrata = draw.nested();
@@ -475,13 +471,15 @@
                     var char = strata.getCharacteristicsByFamily('cpriMicrostructureFamily')[0].getName();
                     switch (char) {
                         case "pseudomorphOfGranularCharacteristic":
-                            this.addImage(draw,"../static/micorr/images/c/grains/GrainsGris_" + height + "x" + width + ".png",width, height);
+                            this.addImage(draw, "../static/micorr/images/c/grains/GrainsGris_" + height + "x" + width + ".png", width, height);
                             break;
+
                         case "pseudomorphOfDendriticCharacteristic":
                             this.addImage(draw, "../static/micorr/images/c/CP/Dendrite/CP_Dendrite_" + height + "x" + width + ".svg", width, height);
                             break;
+
                         case "hexagonalNetworkCharacteristic":
-                            this.addImage(draw,"../static/micorr/images/c/hexagonal.png", width, height);
+                            this.addImage(draw, "../static/micorr/images/c/hexagonal.png", width, height);
                             break;
 
                         case "alternatingBandsCharacteristic":
@@ -605,11 +603,11 @@
 
                 //On dessine les images pour les points dans le tableau PoissonDisk
                 //Pour l'instant ces images sont en png, il faudra les exporter en svg
-                    for (var i = 0; i < pds.pointList.length; i++) {
-                        var image = this.addImage(draw,"../static/micorr/images/c/" + pds.pointList[i].t + ".png",pds.pointList[i].w, pds.pointList[i].h);
-                        image.x(pds.pointList[i].x - pds.pointList[i].w / 2);
-                        image.y(pds.pointList[i].y - pds.pointList[i].h / 2);
-                    }
+                for (var i = 0; i < pds.pointList.length; i++) {
+                    var image = this.addImage(draw, "../static/micorr/images/c/" + pds.pointList[i].t + ".png", pds.pointList[i].w, pds.pointList[i].h);
+                    image.x(pds.pointList[i].x - pds.pointList[i].w / 2);
+                    image.y(pds.pointList[i].y - pds.pointList[i].h / 2);
+                }
             }
         }, {
             key: 'getThicknesses',
@@ -647,8 +645,9 @@
                     else {
                             var pds = new _poissonDisk.PoissonDiskSampler(width, height);
                         }
-                    for (var i = 0; i < 50; i++) pds.createPointsPerso(10, 10, 'none', 0, 0);
-                    for (var i = 0; i < pds.pointList.length; i++) {
+                    for (var i = 0; i < 50; i++) {
+                        pds.createPointsPerso(10, 10, 'none', 0, 0);
+                    }for (var i = 0; i < pds.pointList.length; i++) {
                         // BEFORE: paper.circle(pds.pointList[i].x, pds.pointList[i].y + bubbleTransitionSize, bubbleTransitionSize).attr("fill", bottomBackgroundColor);
                         var point = draw.circle(bubbleTransitionSize);
                         point.x(pds.pointList[i].x);
@@ -767,8 +766,9 @@
                     else {
                             var pds = new _poissonDisk.PoissonDiskSampler(width, height);
                         }
-                    for (var i = 0; i < 50; i++) pds.createPointsPerso(10, 10, 'none', 0, 0);
-                    for (var i = 0; i < pds.pointList.length; i++) {
+                    for (var i = 0; i < 50; i++) {
+                        pds.createPointsPerso(10, 10, 'none', 0, 0);
+                    }for (var i = 0; i < pds.pointList.length; i++) {
                         var point = draw.circle(bubbleTransitionSize);
                         point.x(pds.pointList[i].x);
                         point.y(pds.pointList[i].y);
@@ -843,10 +843,9 @@
             key: 'addImage',
             value: function addImage(draw, url, width, height) {
                 if (this.window) //node case we embed the images (svg and png) as datauri
-                {
-                    const Datauri = require('datauri');
-                    url = new Datauri(url).content;
-                }
+                    {
+                        url = new Datauri(url).content;
+                    }
                 var image = draw.image(url);
                 image.size(width, height);
                 return image;
@@ -858,3 +857,4 @@
 
     exports.GraphGenerationUtil = GraphGenerationUtil;
 });
+//# sourceMappingURL=graphGenerationUtil.js.map
