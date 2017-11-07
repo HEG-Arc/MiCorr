@@ -90,157 +90,157 @@ class PoissonDiskSampler {
      *          w : largeur de l'image
      *          h : hauteur de l'image
      */
-	generateRandomAroundPerso(p_point, radiusMin, radiusMax, type, imgw, imgh) {
-		var ran,
-			radius,
-			a,
-			newX,
-			newY;
+    generateRandomAroundPerso(p_point, radiusMin, radiusMax, type, imgw, imgh) {
+        var ran,
+            radius,
+            a,
+            newX,
+            newY;
 
-		ran = Math.random();
-		radius = parseInt(p_point.r + radiusMax * (ran), 10);
-		a = this.pi2 * (ran);
-		newX = parseInt(p_point.x + (radius * Math.sin(a)), 10);
-		newY = parseInt(p_point.y + (radius * Math.cos(a)), 10);
+        ran = Math.random();
+        radius = parseInt(p_point.r + radiusMax * (ran), 10);
+        a = this.pi2 * (ran);
+        newX = parseInt(p_point.x + (radius * Math.sin(a)), 10);
+        newY = parseInt(p_point.y + (radius * Math.cos(a)), 10);
 
-		if (newX <= 0 || newX >= this.w) {
-			newX = parseInt(ran * this.w, 10);
-		}
+        if (newX <= 0 || newX >= this.w) {
+            newX = parseInt(ran * this.w, 10);
+        }
 
-		if (newY <= 0 || newY >= this.h) {
-			newY = parseInt(ran * this.h, 10);
-		}
+        if (newY <= 0 || newY >= this.h) {
+            newY = parseInt(ran * this.h, 10);
+        }
 
-		if (this.distanceMap === null) {
-			radius = radiusMin + (Math.random() * (radiusMax - radiusMin));
-		} else {
-			// red color
-			var p = this.getHitMapPixel(newX, newY);
-			radius = radiusMin + ((radiusMax - radiusMin) * (p[0] / 255));
-		}
+        if (this.distanceMap === null) {
+            radius = radiusMin + (Math.random() * (radiusMax - radiusMin));
+        } else {
+            // red color
+            var p = this.getHitMapPixel(newX, newY);
+            radius = radiusMin + ((radiusMax - radiusMin) * (p[0] / 255));
+        }
 
-		return {
-			x : newX,
-			y : newY,
-			r : radius,
-			t : type,
-            w : imgw,
-            h : imgh
-		};
-	}
+        return {
+            x: newX,
+            y: newY,
+            r: radius,
+            t: type,
+            w: imgw,
+            h: imgh
+        };
+    }
 
     // créé un point au hasard sur la carte
-	createPoints() {
-		var nr = 0,
-			pp,
-			numFailed = 0;
+    createPoints() {
+        var nr = 0,
+            pp,
+            numFailed = 0;
 
-		while (nr < this.maxPoints && numFailed < this.maxFails) {
-			if (nr === 0) {
-				pp = this.createfirstPoint();
-			} else {
-				pp = this.generateRandomAround(pp);
-			}
+        while (nr < this.maxPoints && numFailed < this.maxFails) {
+            if (nr === 0) {
+                pp = this.createfirstPoint();
+            } else {
+                pp = this.generateRandomAround(pp);
+            }
 
-			if (this.hitTest(pp)) {
-				this.pointList[nr] = pp;
-				nr++;
-				numFailed = 0;
-			} else {
-				numFailed++;
-			}
-		}
-	}
+            if (this.hitTest(pp)) {
+                this.pointList[nr] = pp;
+                nr++;
+                numFailed = 0;
+            } else {
+                numFailed++;
+            }
+        }
+    }
 
     // regarde si le point créé touche un autre point
-	hitTest(p_point) {
-		if( this.excludeMap !== null ) {
-			var p = this.getExcludeMapPixel(p_point.x, p_point.y);
-			if(p[0] <= this.excludeThreshold) {
-				return false;
-			}
-		}
+    hitTest(p_point) {
+        if (this.excludeMap !== null) {
+            var p = this.getExcludeMapPixel(p_point.x, p_point.y);
+            if (p[0] <= this.excludeThreshold) {
+                return false;
+            }
+        }
 
-		var l = this.pointList.length,
-			d = 0,
-			dx = 0,
-			dy = 0,
-			i = l,
-			pTemp;
+        var l = this.pointList.length,
+            d = 0,
+            dx = 0,
+            dy = 0,
+            i = l,
+            pTemp;
 
-		if (l > 0) {
-			while (i--) {
-				pTemp = this.pointList[i];
-				dx = pTemp.x - p_point.x;
-				dy = pTemp.y - p_point.y;
-				d = Math.sqrt(dx * dx + dy * dy);
+        if (l > 0) {
+            while (i--) {
+                pTemp = this.pointList[i];
+                dx = pTemp.x - p_point.x;
+                dy = pTemp.y - p_point.y;
+                d = Math.sqrt(dx * dx + dy * dy);
 
-				if (d <= (pTemp.r + p_point.r)) {
-					return false;
-				}
-			}
-		}
+                if (d <= (pTemp.r + p_point.r)) {
+                    return false;
+                }
+            }
+        }
 
-		return true;
-	}
+        return true;
+    }
 
     createfirstPoint() {
-		var ranX = parseInt(Math.random() * this.w, 10),
-			ranY = parseInt(Math.random() * this.h, 10),
-			radius;
+        var ranX = parseInt(Math.random() * this.w, 10),
+            ranY = parseInt(Math.random() * this.h, 10),
+            radius;
 
-		if (this.distanceMap === null) {
-			radius = parseInt(this.radiusMin + (Math.random() * (this.radiusMax - this.radiusMin)),10);
-		} else {
-			var p = this.getHitMapPixel(ranX, ranY);
-			radius = this.radiusMin + ((this.radiusMax - this.radiusMin) * (p[0] / 255));
-		}
-		return {x:ranX, y:ranY, r:radius};
-	}
+        if (this.distanceMap === null) {
+            radius = parseInt(this.radiusMin + (Math.random() * (this.radiusMax - this.radiusMin)), 10);
+        } else {
+            var p = this.getHitMapPixel(ranX, ranY);
+            radius = this.radiusMin + ((this.radiusMax - this.radiusMin) * (p[0] / 255));
+        }
+        return {x: ranX, y: ranY, r: radius};
+    }
 
-	getExcludeMapPixel(p_x, p_y) {
-		return this.excludeMap.getImageData(p_x, p_y, 1, 1).data;
-	}
+    getExcludeMapPixel(p_x, p_y) {
+        return this.excludeMap.getImageData(p_x, p_y, 1, 1).data;
+    }
 
-	getHitMapPixel(p_x, p_y) {
-		return this.distanceMap.getImageData(p_x, p_y, 1, 1).data;
-	}
+    getHitMapPixel(p_x, p_y) {
+        return this.distanceMap.getImageData(p_x, p_y, 1, 1).data;
+    }
 
-	generateRandomAround(p_point) {
-		var ran,
-			radius,
-			a,
-			newX,
-			newY;
+    generateRandomAround(p_point) {
+        var ran,
+            radius,
+            a,
+            newX,
+            newY;
 
-		ran = Math.random();
-		radius = parseInt(p_point.r + this.radiusMax * (ran), 10);
-		a = this.pi2 * (ran);
-		newX = parseInt(p_point.x + (radius * Math.sin(a)), 10);
-		newY = parseInt(p_point.y + (radius * Math.cos(a)), 10);
+        ran = Math.random();
+        radius = parseInt(p_point.r + this.radiusMax * (ran), 10);
+        a = this.pi2 * (ran);
+        newX = parseInt(p_point.x + (radius * Math.sin(a)), 10);
+        newY = parseInt(p_point.y + (radius * Math.cos(a)), 10);
 
-		if (newX <= 0 || newX >= this.w) {
-			newX = parseInt(ran * this.w, 10);
-		}
+        if (newX <= 0 || newX >= this.w) {
+            newX = parseInt(ran * this.w, 10);
+        }
 
-		if (newY <= 0 || newY >= this.h) {
-			newY = parseInt(ran * this.h, 10);
-		}
+        if (newY <= 0 || newY >= this.h) {
+            newY = parseInt(ran * this.h, 10);
+        }
 
-		if (this.distanceMap === null) {
-			radius = this.radiusMin + (Math.random() * (this.radiusMax - this.radiusMin));
-		} else {
-			// red color
-			var p = this.getHitMapPixel(newX, newY);
-			radius = this.radiusMin + ((this.radiusMax - this.radiusMin) * (p[0] / 255));
-		}
+        if (this.distanceMap === null) {
+            radius = this.radiusMin + (Math.random() * (this.radiusMax - this.radiusMin));
+        } else {
+            // red color
+            var p = this.getHitMapPixel(newX, newY);
+            radius = this.radiusMin + ((this.radiusMax - this.radiusMin) * (p[0] / 255));
+        }
 
-		return {
-			x : newX,
-			y : newY,
-			r : radius
-		};
-	}
+        return {
+            x: newX,
+            y: newY,
+            r: radius
+        };
+    }
 }
 
-export{PoissonDiskSampler};
+export {PoissonDiskSampler};

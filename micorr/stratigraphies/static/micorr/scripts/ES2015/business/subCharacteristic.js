@@ -5,44 +5,44 @@
  * C'est la classe business de la sous-caractéristique
  */
 
-class SubCharacteristic{
+class SubCharacteristic {
 
-    constructor(){
+    constructor() {
 
     }
 
 
-    getId(){
+    getId() {
         return this.id;
     }
 
-    setId(id){
+    setId(id) {
         this.id = id;
     }
 
-    getUid(){
+    getUid() {
         return this.uid;
     }
 
-    setUid(uid){
+    setUid(uid) {
         this.uid = uid;
     }
 
-    getName(){
+    getName() {
         return this.name;
     }
 
-    setName(name){
+    setName(name) {
         this.name = name;
     }
 
-    getFamily(){
+    getFamily() {
         return this.family;
     }
 
-    setFamily(family){
+    setFamily(family) {
         this.family = family;
     }
 }
 
-export{SubCharacteristic};
+export {SubCharacteristic};

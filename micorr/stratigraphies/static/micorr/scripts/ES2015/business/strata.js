@@ -30,7 +30,7 @@ class Strata {
      * @param nature la nature recherchée
      * @returns la strate enfant
      */
-        getChildStrataByNature(nature) {
+    getChildStrataByNature(nature) {
 
         for (var i = 0; i < this.childStrata.length; i++) {
             if (this.childStrata[i].getNature() == nature) {
@@ -46,7 +46,7 @@ class Strata {
      * @param family la famille recherchée
      * @returns les characteristiques correspondante
      */
-        getCharacteristicsByFamily(family) {
+    getCharacteristicsByFamily(family) {
         var charact = [];
         for (var i = 0; i < this.characteristics.length; i++) {
             if (this.characteristics[i].getFamily() == family) {
@@ -62,7 +62,7 @@ class Strata {
      * @param family
      * @returns {Array} liste de sous caractéristiques
      */
-        getSubCharacteristicsByFamily(family) {
+    getSubCharacteristicsByFamily(family) {
         var charact = [];
         for (var i = 0; i < this.subCharacteristics.length; i++) {
             if (this.subCharacteristics[i].getFamily() == family) {
@@ -76,7 +76,7 @@ class Strata {
      * Supprime toutes les characteristiques d'une famille
      * @param family
      */
-        clearCharacteristicsFromFamily(family) {
+    clearCharacteristicsFromFamily(family) {
 
         for (var i = 0; i < this.characteristics.length; i++) {
             if (this.characteristics[i].getFamily() == family) {
@@ -90,7 +90,7 @@ class Strata {
      * Supprime toutes les sous characteristiques d'une famille
      * @param family
      */
-        clearSubCharacteristicsFromFamily(family) {
+    clearSubCharacteristicsFromFamily(family) {
         for (var i = 0; i < this.subCharacteristics.length; i++) {
             if (this.subCharacteristics[i].getFamily() == family) {
                 this.subCharacteristics.splice(i, 1);
@@ -112,7 +112,7 @@ class Strata {
      * @param le nom de la sous caracteristique à vérifier
      * @returns boolean indiquant si la sous-caracteristique existe
      */
-        isSubCharacteristic(name) {
+    isSubCharacteristic(name) {
         var exists = false;
         var i = 0;
         while (exists == false && i < this.subCharacteristics.length) {
@@ -128,7 +128,7 @@ class Strata {
      * Ajoute une sous caractéristique sans vérifier si il en existe déjà une pour cette famille
      * @param subCharacteristic
      */
-        addSubCharacteristic(subCharacteristic) {
+    addSubCharacteristic(subCharacteristic) {
         this.subCharacteristics.push(subCharacteristic);
     }
 
@@ -136,7 +136,7 @@ class Strata {
      * Remplace une sous caractéristique de la famille de celle donnée en paramètre
      * @param subCharacteristic
      */
-        replaceSubCharacteristic(subCharacteristic) {
+    replaceSubCharacteristic(subCharacteristic) {
         var found = false;
         var i = 0;
 
@@ -181,7 +181,7 @@ class Strata {
      * Permet de savoir si la strate est une strate enfant.
      * @returns Un booleen qui indique si c'est une strate enfant
      */
-        isChild() {
+    isChild() {
         return this.child;
     }
 
@@ -189,7 +189,7 @@ class Strata {
      * Permet d'indiquer que la strate est une strate enfant
      * @param child
      */
-        setChild(child) {
+    setChild(child) {
         this.child = child;
     }
 
@@ -244,6 +244,7 @@ class Strata {
     getLabel() {
         return (this.label);
     }
+
     getUid() {
         return this.uid;
     }
@@ -285,7 +286,7 @@ class Strata {
     /**
      * Permet d'enregistrer le dessin SVG.JS d'une image pour éviter de la redessiner à chaque fois
      */
-        setStrataImage(strataImage) {
+    setStrataImage(strataImage) {
         this.strataImage = strataImage;
     }
 
@@ -306,7 +307,7 @@ class Strata {
      * Cette méthode initialise la strate en ajoutant à un tableau les propriétés modifiables
      * et en lui attribuant des valeurs par défaut
      */
-        init() {
+    init() {
 
         this.dependencies.push('thicknessFamily');
         this.dependencies.push('widthFamily');
@@ -464,4 +465,4 @@ class Strata {
 
 }
 
-export{Strata};
+export {Strata};

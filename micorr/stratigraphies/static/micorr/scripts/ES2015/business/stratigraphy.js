@@ -15,15 +15,16 @@ class Stratigraphy {
         this.stratas = [];
     }
 
-    toJson(){
+    toJson() {
         var jsonStratigraphy = {'artefact': this.getArtefact(), 'stratigraphy': this.getUid(), 'stratas': []};
 
-        for(var i = 0; i < this.stratas.length; i++){
+        for (var i = 0; i < this.stratas.length; i++) {
             jsonStratigraphy.stratas.push(this.stratas[i].toJson());
         }
 
         return jsonStratigraphy;
     }
+
     setStratumLabel(stratum) {
         var natureFamilyAbbrev = stratum.getNatureFamilyAbbrev();
         var natureFamilyindex = 1;
@@ -32,8 +33,9 @@ class Stratigraphy {
                 natureFamilyindex++;
             }
         }
-        stratum.setLabel(natureFamilyAbbrev+natureFamilyindex);
+        stratum.setLabel(natureFamilyAbbrev + natureFamilyindex);
     }
+
     /**
      * Ajoute une strate à la stratigraphie
      * @param stratum La strate à ajouter
@@ -63,6 +65,7 @@ class Stratigraphy {
             this.setStratumLabel(this.stratas[idel]);
         }
     }
+
     getId() {
         return this.id;
     }
@@ -87,17 +90,19 @@ class Stratigraphy {
         this.description = description;
     }
 
-    getStratas(){
+    getStratas() {
         return this.stratas;
     }
-    setArtefact(artefact){
+
+    setArtefact(artefact) {
         this.artefact = artefact;
     }
-    getArtefact(){
+
+    getArtefact() {
         return this.artefact;
     }
 
 
 }
 
-export{Stratigraphy};
+export {Stratigraphy};

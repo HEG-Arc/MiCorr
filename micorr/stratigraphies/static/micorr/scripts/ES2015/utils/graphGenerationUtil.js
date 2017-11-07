@@ -4,11 +4,11 @@
  * d'une stratigraphie ou d'une strate.
  */
 
-import{Stratigraphy} from '../business/stratigraphy';
-import{Strata} from '../business/stratigraphy';
-import{Characteristic} from '../business/characteristic';
-import{SubCharacteristic} from '../business/subCharacteristic';
-import{PoissonDiskSampler} from '../algorithms/poissonDisk';
+import {Stratigraphy} from '../business/stratigraphy';
+import {Strata} from '../business/stratigraphy';
+import {Characteristic} from '../business/characteristic';
+import {SubCharacteristic} from '../business/subCharacteristic';
+import {PoissonDiskSampler} from '../algorithms/poissonDisk';
 
 import * as utils from '../nodeServices/nodeUtils.js';
 
@@ -27,29 +27,29 @@ class GraphGenerationUtil {
     /**
      * Cette méthode est utilisée par Node.js pour dessiner la stratigraphie entière
      */
-        drawStratigraphy(width) {
+    drawStratigraphy(width) {
 
 
         var stratigraphyHeight = 0;
-                var resultDraw = SVG(this.window.document.documentElement);
-                console.log("Nb of strata:" + this.stratig.getStratas().length);
-                for (var i = 0; i < this.stratig.getStratas().length; i++) {
-                    var str = this.stratig.getStratas()[i];
-                    var nestedInterface = this.drawInterface(str, null, resultDraw);
-                    nestedInterface.y(stratigraphyHeight);
-                    stratigraphyHeight = stratigraphyHeight + nestedInterface.height();
-                    console.log('strataUid: ' + str.getUid());
-                    var nestedStrata = this.drawStrata(str, null, resultDraw);
-                    nestedStrata.y(stratigraphyHeight);
-                    stratigraphyHeight = stratigraphyHeight + nestedStrata.height();
-                }
-                //var box = resultDraw.viewbox();
-                var box = resultDraw.viewbox(0,0,500,stratigraphyHeight);
+        var resultDraw = SVG(this.window.document.documentElement);
+        console.log("Nb of strata:" + this.stratig.getStratas().length);
+        for (var i = 0; i < this.stratig.getStratas().length; i++) {
+            var str = this.stratig.getStratas()[i];
+            var nestedInterface = this.drawInterface(str, null, resultDraw);
+            nestedInterface.y(stratigraphyHeight);
+            stratigraphyHeight = stratigraphyHeight + nestedInterface.height();
+            console.log('strataUid: ' + str.getUid());
+            var nestedStrata = this.drawStrata(str, null, resultDraw);
+            nestedStrata.y(stratigraphyHeight);
+            stratigraphyHeight = stratigraphyHeight + nestedStrata.height();
+        }
+        //var box = resultDraw.viewbox();
+        var box = resultDraw.viewbox(0, 0, 500, stratigraphyHeight);
         box.width(width);
-                var svgContent = resultDraw.svg();
-                // remove all svg nodes from dom to be ready for next rendering
-                resultDraw.clear();
-                return svgContent;
+        var svgContent = resultDraw.svg();
+        // remove all svg nodes from dom to be ready for next rendering
+        resultDraw.clear();
+        return svgContent;
     }
 
     /**
@@ -57,9 +57,9 @@ class GraphGenerationUtil {
      * @param strata la strate
      * @param divID la div dans laquelle on veut dessiner l'interface
      */
-     // Either pass divID (browser case) or svg.js draw context directly when called from nodejs
-     // the other argument must be null
-        drawInterface(strata, divID, draw) {
+    // Either pass divID (browser case) or svg.js draw context directly when called from nodejs
+    // the other argument must be null
+    drawInterface(strata, divID, draw) {
         var index = strata.getIndex();
 
 
@@ -74,21 +74,21 @@ class GraphGenerationUtil {
                 isUpperCM = true;
             }
         }
-                if (divID) {
-        if (this.window == undefined) {
-            var interfaceDiv = document.getElementById(divID);
-            interfaceDiv.style.height = interfaceHeight + "px";
+        if (divID) {
+            if (this.window == undefined) {
+                var interfaceDiv = document.getElementById(divID);
+                interfaceDiv.style.height = interfaceHeight + "px";
+            }
+            else {
+                var interfaceDiv = this.window.document.getElementById(divID);
+                interfaceDiv.style.height = interfaceHeight + "px";
+            }
         }
-        else{
-            var interfaceDiv = this.window.document.getElementById(divID);
-            interfaceDiv.style.height = interfaceHeight + "px";
-        }
-	}
 
         var borderWidth = 8;
         var divisionLineWidth = 5;
 
-                var strataWidth = 500;
+        var strataWidth = 500;
 
         if (strata.getCharacteristicsByFamily('widthFamily').length > 0) {
             strataWidth = this.getWidths(strata.getCharacteristicsByFamily('widthFamily')[0].getName());
@@ -96,7 +96,7 @@ class GraphGenerationUtil {
 
         var interfaceWidth = strataWidth;
 
-                draw = draw || SVG(divID).size(interfaceWidth, interfaceHeight);
+        draw = draw || SVG(divID).size(interfaceWidth, interfaceHeight);
 
         var nestedInterface = draw.nested();
         nestedInterface.height(interfaceHeight);
@@ -109,10 +109,10 @@ class GraphGenerationUtil {
         if (index > 0) {
             if (this.stratig.getStratas()[index - 1].getCharacteristicsByFamily('colourFamily').length > 0) {
                 var color = this.stratig.getStratas()[index - 1].getCharacteristicsByFamily('colourFamily')[0].getRealName();
-                        // !!! A MODIFIER QUAND ON FERA LE REFACTORING DU DAO...
-                        if (color != "" && color != "undefined" && color != "black" && color != "dark red" && color != "light yellow" && color != "ochre" && color != "dark green" && color != "medium green"  && color != "light green" && color != "dark blue" && color != "medium blue"  && color != "light blue") {
+                // !!! A MODIFIER QUAND ON FERA LE REFACTORING DU DAO...
+                if (color != "" && color != "undefined" && color != "black" && color != "dark red" && color != "light yellow" && color != "ochre" && color != "dark green" && color != "medium green" && color != "light green" && color != "dark blue" && color != "medium blue" && color != "light blue") {
                     upperInterfaceColor = color;
-                        } else if (color == "black") {
+                } else if (color == "black") {
                     upperInterfaceColor = '#474747';
                 } else if (color == 'dark red') {
                     upperInterfaceColor = '#bc2c14';
@@ -138,10 +138,10 @@ class GraphGenerationUtil {
 
         if (strata.getCharacteristicsByFamily('colourFamily').length > 0) {
             var color = strata.getCharacteristicsByFamily('colourFamily')[0].getRealName();
-                    // !!! A MODIFIER QUAND ON FERA LE REFACTORING DU DAO...
-                    if (color != "" && color != "undefined" && color != "black" && color != "dark red" && color != "light yellow" && color != "ochre" && color != "dark green" && color != "medium green"  && color != "light green" && color != "dark blue" && color != "medium blue"  && color != "light blue") {
-                        lowerInterfaceColor = color;
-                    } else if (color == "black") {
+            // !!! A MODIFIER QUAND ON FERA LE REFACTORING DU DAO...
+            if (color != "" && color != "undefined" && color != "black" && color != "dark red" && color != "light yellow" && color != "ochre" && color != "dark green" && color != "medium green" && color != "light green" && color != "dark blue" && color != "medium blue" && color != "light blue") {
+                lowerInterfaceColor = color;
+            } else if (color == "black") {
                 lowerInterfaceColor = "#474747";
             } else if (color == 'dark red') {
                 lowerInterfaceColor = '#bc2c14';
@@ -185,25 +185,25 @@ class GraphGenerationUtil {
         if (isUpperCM) {
             var rect = nestedInterface.rect(interfaceWidth, interfaceHeight).attr({fill: lowerInterfaceColor});
             var borderPath = nestedInterface.path("M0 0L0 " + interfaceHeight + " M" + strataWidth + " " + " 0L" + interfaceWidth + " " + interfaceHeight).fill('none');
-            borderPath.stroke({ color: borderColor, width: borderWidth });
+            borderPath.stroke({color: borderColor, width: borderWidth});
         }
         else if (strata.getCharacteristicsByFamily('natureFamily')[0].getName() == 'cmCharacteristic') {
             var rect = nestedInterface.rect(interfaceWidth, interfaceHeight).attr({fill: upperInterfaceColor});
             var borderPath = nestedInterface.path("M0 0L0 " + interfaceHeight + " M" + strataWidth + " " + " 0L" + interfaceWidth + " " + interfaceHeight).fill('none');
-            borderPath.stroke({ color: borderColor, width: borderWidth });
+            borderPath.stroke({color: borderColor, width: borderWidth});
         }
         else {
             //Si elle est droite on dessine simplement deux rectangles
             if (profile == 'straightCharacteristic' || profile == '') {
-                var upperRect = nestedInterface.rect(interfaceWidth, interfaceHeight).attr({ fill: upperInterfaceColor });
-                var lowerRect = nestedInterface.rect(interfaceWidth, interfaceHeight).x(0).y(interfaceHeight / 2).attr({fill: lowerInterfaceColor });
+                var upperRect = nestedInterface.rect(interfaceWidth, interfaceHeight).attr({fill: upperInterfaceColor});
+                var lowerRect = nestedInterface.rect(interfaceWidth, interfaceHeight).x(0).y(interfaceHeight / 2).attr({fill: lowerInterfaceColor});
 
                 //On dessine la bordure extérieure et la droite qui sépare les strates
                 var borderPath = nestedInterface.path("M0 0L0 " + interfaceHeight + " M" + strataWidth + " " + " 0L" + interfaceWidth + " " + interfaceHeight).fill('none');
-                borderPath.stroke({ color: borderColor, width: borderWidth });
+                borderPath.stroke({color: borderColor, width: borderWidth});
 
                 var divisionPath = nestedInterface.path("M0 " + (interfaceHeight / 2) + "L" + interfaceWidth + " " + (interfaceHeight / 2)).fill('none');
-                divisionPath.stroke({ color: borderColor, width: divisionLineWidth });
+                divisionPath.stroke({color: borderColor, width: divisionLineWidth});
             }
             else if (profile == 'wavyCharacteristic') {
                 this.drawCustomInterface(nestedInterface, index, interfaceWidth, interfaceHeight, 'wavy', 8, lowerInterfaceColor, upperInterfaceColor, borderWidth, divisionLineWidth, diffuse, transition);
@@ -225,13 +225,13 @@ class GraphGenerationUtil {
      * @param strata
      * @param divID La div dans laquelle on veut dessiner la strate
      */
-     // Either pass divID (browser case) or svg.js draw context directly when called from nodejs
-     // the other argument must be null
-        drawStrata(strata, divID, draw) {
+    // Either pass divID (browser case) or svg.js draw context directly when called from nodejs
+    // the other argument must be null
+    drawStrata(strata, divID, draw) {
         var borderColor = 'black';
 
         var height = 100;
-	var width = 500;
+        var width = 500;
         if (strata.getCharacteristicsByFamily('thicknessFamily').length > 0) {
             height = this.getThicknesses(strata.getCharacteristicsByFamily('thicknessFamily')[0].getName());
         }
@@ -239,17 +239,17 @@ class GraphGenerationUtil {
         if (strata.getCharacteristicsByFamily('widthFamily').length > 0) {
             width = this.getWidths(strata.getCharacteristicsByFamily('widthFamily')[0].getName());
         }
-                if (divID) {
+        if (divID) {
 
-        if (this.window == undefined) {
-            document.getElementById(divID).style.height = height + "px";
-                    } else {
-            this.window.document.getElementById(divID).style.height = height + "px";
+            if (this.window == undefined) {
+                document.getElementById(divID).style.height = height + "px";
+            } else {
+                this.window.document.getElementById(divID).style.height = height + "px";
+            }
         }
-                }
         var borderWidth = 8;
 
-	    draw = draw || SVG(divID).size(width, height);
+        draw = draw || SVG(divID).size(width, height);
 
 
         //on crée un groupe pour englober la strate et pour pouvoir la réutiliser
@@ -271,13 +271,13 @@ class GraphGenerationUtil {
         //Dessin des bords
         var leftBorder = nestedStrata.path("M0 0L0 " + height).fill('none');
         var rightBorder = nestedStrata.path("M" + width + " 0L" + width + " " + height).fill('none');
-        leftBorder.stroke({ color: borderColor, width: borderWidth });
-        rightBorder.stroke({ color: borderColor, width: borderWidth });
+        leftBorder.stroke({color: borderColor, width: borderWidth});
+        rightBorder.stroke({color: borderColor, width: borderWidth});
 
         //Dessin du bord inférieur si c'est la dernière strate
         if (strata.getIndex() == this.stratig.getStratas().length - 1) {
             var bottomBorder = nestedStrata.path("M0 " + height + "L" + width + " " + height).fill('none');
-            bottomBorder.stroke({ color: borderColor, width: borderWidth });
+            bottomBorder.stroke({color: borderColor, width: borderWidth});
         }
 
         //On retourne le dessin de la strate
@@ -288,7 +288,7 @@ class GraphGenerationUtil {
     /**
      * Cette méthode s'occupe de dessiner la strate CM
      */
-        drawCM(strata, width, height, draw) {
+    drawCM(strata, width, height, draw) {
         var upperStrata;
         if (strata.getIndex() > 0) {
             upperStrata = this.stratig.getStratas()[strata.getIndex() - 1];
@@ -314,13 +314,13 @@ class GraphGenerationUtil {
         var begin = 0;
         switch (ratio) {
             case 1:
-                        begin = 0 - 2 * height / 9 * 1;
+                begin = 0 - 2 * height / 9 * 1;
                 break;
             case 2:
                 begin = 0 - height;
                 break;
             case 3:
-                        begin = 0 - 2 * height / 9 * 8;
+                begin = 0 - 2 * height / 9 * 8;
                 break;
 
         }
@@ -334,7 +334,7 @@ class GraphGenerationUtil {
         for (var i = 0; i < 7; i++) {
             var divisor = 8;
             var topY = width - (i + 1) * (width / divisor) - i * (width / divisor);
-                    var downY = topY - width / divisor;
+            var downY = topY - width / divisor;
             pathString = pathString + ' L ' + topY + ' ' + topX + ' L ' + downY + ' ' + rectHeight;
         }
 
@@ -345,12 +345,12 @@ class GraphGenerationUtil {
             //if (upperStrata.getCharacteristicsByFamily('colourFamily').length > 0) {
             //upperStrataColor = upperStrata.getCharacteristicsByFamily('colourFamily')[0].getRealName();
             //}
-                    var defs = draw.defs();
-                    var path = defs.path(pathString).attr({ fill: 'none' });
+            var defs = draw.defs();
+            var path = defs.path(pathString).attr({fill: 'none'});
             group.clipWith(path);
         }
         else {
-            draw.path(pathString).attr({ fill: 'white' });
+            draw.path(pathString).attr({fill: 'white'});
         }
 
     }
@@ -360,7 +360,7 @@ class GraphGenerationUtil {
      * @param canvas
      * @param strata
      */
-        fillStrata(draw, strata, w, h) {
+    fillStrata(draw, strata, w, h) {
 
 
         //Création d'un groupe pour le contenu du fond de la strate pour pouvoir le réutiliser
@@ -432,7 +432,7 @@ class GraphGenerationUtil {
             color = '#a0cedb';
         }
 
-        var rect = draw.rect(width, height).attr({ fill: color });
+        var rect = draw.rect(width, height).attr({fill: color});
 
         if (strata.getCharacteristicsByFamily('porosityFamily').length > 0) {
             var char = strata.getCharacteristicsByFamily('porosityFamily')[0].getName();
@@ -457,7 +457,7 @@ class GraphGenerationUtil {
             var char = strata.getCharacteristicsByFamily('cpriMicrostructureFamily')[0].getName();
             switch (char) {
                 case "pseudomorphOfGranularCharacteristic":
-                            this.addImage(draw,"../static/micorr/images/c/grains/GrainsGris_" + height + "x" + width + ".png",width, height);
+                    this.addImage(draw, "../static/micorr/images/c/grains/GrainsGris_" + height + "x" + width + ".png", width, height);
                     break;
 
                 case "pseudomorphOfDendriticCharacteristic":
@@ -465,7 +465,7 @@ class GraphGenerationUtil {
                     break;
 
                 case "hexagonalNetworkCharacteristic":
-                            this.addImage(draw,"../static/micorr/images/c/hexagonal.png", width, height);
+                    this.addImage(draw, "../static/micorr/images/c/hexagonal.png", width, height);
                     break;
 
                 case "alternatingBandsCharacteristic":
@@ -542,7 +542,7 @@ class GraphGenerationUtil {
             strata.isSubCharacteristic('eutecticPhaseGrainLarge') || strata.isSubCharacteristic('eutecticPhaseGrainSmall')) {
             this.addImage(draw, "../static/micorr/images/c/M/EutheticPhase/M_EutheticPhase_" + height + "x" + width + ".svg", width, height);
         }
-        else if(strata.isSubCharacteristic('eutecticPhaseDeformedDendritic')){
+        else if (strata.isSubCharacteristic('eutecticPhaseDeformedDendritic')) {
             this.addImage(draw, "../static/micorr/images/c/M/EutheticPhase/M_EutheticPhaseDeformedDendrite_" + height + "x" + width + ".svg", width, height);
         }
 
@@ -574,7 +574,6 @@ class GraphGenerationUtil {
         else if (strata.isSubCharacteristic('inclusionsGrainLarge')) {
             this.addImage(draw, "../static/micorr/images/c/M/Inclusion/M_InclusionGrainLarge_" + height + "x" + width + ".svg", width, height);
         }
-
 
 
         //Fissures
@@ -614,13 +613,13 @@ class GraphGenerationUtil {
 
         //On dessine les images pour les points dans le tableau PoissonDisk
         //Pour l'instant ces images sont en png, il faudra les exporter en svg
-            for (var i = 0; i < pds.pointList.length; i++) {
-                        var image = this.addImage(draw,"../static/micorr/images/c/" + pds.pointList[i].t + ".png",pds.pointList[i].w, pds.pointList[i].h);
-                image.x(pds.pointList[i].x - pds.pointList[i].w / 2);
-                image.y(pds.pointList[i].y - pds.pointList[i].h / 2);
+        for (var i = 0; i < pds.pointList.length; i++) {
+            var image = this.addImage(draw, "../static/micorr/images/c/" + pds.pointList[i].t + ".png", pds.pointList[i].w, pds.pointList[i].h);
+            image.x(pds.pointList[i].x - pds.pointList[i].w / 2);
+            image.y(pds.pointList[i].y - pds.pointList[i].h / 2);
 
-            }
         }
+    }
 
     getThicknesses(thickness) {
         if (thickness == "thickCharacteristic")
@@ -772,8 +771,8 @@ class GraphGenerationUtil {
         }
         var path1 = draw.path(lineString).fill('none');
         var path2 = draw.path(tString).fill(bottomBackgroundColor);
-                path1.stroke({ color: strokeColor, width: 5 });
-                path2.stroke({ color: bottomBackgroundColor, width: 1 });
+        path1.stroke({color: strokeColor, width: 5});
+        path2.stroke({color: bottomBackgroundColor, width: 1});
         // Si c'est la première interface alros la bordure extérieure commence au milieu
         var startHeight = 0;
         if (index == 0) {
@@ -781,10 +780,10 @@ class GraphGenerationUtil {
         }
 
         var leftBorder = draw.path("M0 " + startHeight + "L0 " + height).fill('none');
-        leftBorder.stroke({ color: 'black', width: borderWidth });
+        leftBorder.stroke({color: 'black', width: borderWidth});
 
         var rightBorder = draw.path("M" + width + " " + startHeight + "L" + width + " " + height).fill('none');
-        rightBorder.stroke({ color: 'black', width: borderWidth });
+        rightBorder.stroke({color: 'black', width: borderWidth});
 
         if (transition == "semiGradualSuperiorCharacteristic" || transition == "gradualCharacteristic") {
             var heightBottom = height / 2 - bubbleTransitionSize;
@@ -849,7 +848,7 @@ class GraphGenerationUtil {
             }
 
             var path = draw.path(pathString).fill('none');
-            path.stroke({ color: 'grey', width: 1 })
+            path.stroke({color: 'grey', width: 1})
         }
     }
 
@@ -878,19 +877,19 @@ class GraphGenerationUtil {
      * @param height
      * @returns {*}
      */
-        addImage(draw, url, width, height) {
-                if (this.window) //node case we embed the images (svg and png) as datauri
-                {
-                    const Datauri = require('datauri');
-                    url = new Datauri(url).content;
-                }
-            var image = draw.image(url);
-            image.size(width, height);
-            return image;
+    addImage(draw, url, width, height) {
+        if (this.window) //node case we embed the images (svg and png) as datauri
+        {
+            const Datauri = require('datauri');
+            url = new Datauri(url).content;
         }
+        var image = draw.image(url);
+        image.size(width, height);
+        return image;
+    }
 }
 
 
 export {
     GraphGenerationUtil
-    }
+}
