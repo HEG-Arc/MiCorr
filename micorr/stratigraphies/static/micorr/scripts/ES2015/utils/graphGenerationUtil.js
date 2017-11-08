@@ -32,6 +32,7 @@ class GraphGenerationUtil {
 
         var stratigraphyHeight = 0;
         var resultDraw = SVG(this.window.document.documentElement);
+        resultDraw.attr("shape-rendering","crispEdges");
         console.log("Nb of strata:" + this.stratig.getStratas().length);
         for (var i = 0; i < this.stratig.getStratas().length; i++) {
             var str = this.stratig.getStratas()[i];
