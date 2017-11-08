@@ -86,13 +86,16 @@
 
                 var stratigraphyHeight = 0;
                 var resultDraw = SVG(this.window.document.documentElement);
+                resultDraw.attr("shape-rendering", "crispEdges");
                 console.log("Nb of strata:" + this.stratig.getStratas().length);
                 for (var i = 0; i < this.stratig.getStratas().length; i++) {
                     var str = this.stratig.getStratas()[i];
-                    var nestedInterface = this.drawInterface(str, null, resultDraw);
-                    nestedInterface.y(stratigraphyHeight);
-                    stratigraphyHeight = stratigraphyHeight + nestedInterface.height();
                     console.log('strataUid: ' + str.getUid());
+                    var nestedInterface = this.drawInterface(str, null, resultDraw);
+                    if (nestedInterface) {
+                        nestedInterface.y(stratigraphyHeight);
+                        stratigraphyHeight = stratigraphyHeight + nestedInterface.height();
+                    }
                     var nestedStrata = this.drawStrata(str, null, resultDraw);
                     nestedStrata.y(stratigraphyHeight);
                     stratigraphyHeight = stratigraphyHeight + nestedStrata.height();
@@ -111,13 +114,18 @@
                 var index = strata.getIndex();
 
                 var interfaceHeight = 22;
-                var isUpperCM = false;
                 var borderColor = 'black';
 
+                // CM stratum is itself an interface between M and CP strata so we don't draw any interface with a CM
+                // No interface above CM
+                if (strata.getCharacteristicsByFamily('natureFamily')[0].getName() == 'cmCharacteristic')
+                    // we don't draw anything
+                    return null;
+                // Nor below
                 if (strata.index > 0) {
                     var upperStrata = this.stratig.getStratas()[index - 1];
                     if (upperStrata.getCharacteristicsByFamily('natureFamily')[0].getName() == 'cmCharacteristic' && strata.getCharacteristicsByFamily('natureFamily')[0].getName() == 'mCharacteristic') {
-                        isUpperCM = true;
+                        return null;
                     }
                 }
                 if (divID) {
@@ -155,9 +163,7 @@
                     if (this.stratig.getStratas()[index - 1].getCharacteristicsByFamily('colourFamily').length > 0) {
                         var color = this.stratig.getStratas()[index - 1].getCharacteristicsByFamily('colourFamily')[0].getRealName();
                         // !!! A MODIFIER QUAND ON FERA LE REFACTORING DU DAO...
-                        if (color != "" && color != "undefined" && color != "black" && color != "dark red" && color != "light yellow" && color != "ochre" && color != "dark green" && color != "medium green" && color != "light green" && color != "dark blue" && color != "medium blue" && color != "light blue") {
-                            upperInterfaceColor = color;
-                        } else if (color == "black") {
+                        if (color == "black") {
                             upperInterfaceColor = '#474747';
                         } else if (color == 'dark red') {
                             upperInterfaceColor = '#bc2c14';
@@ -177,6 +183,8 @@
                             upperInterfaceColor = '#4cb3d4';
                         } else if (color == 'light blue') {
                             upperInterfaceColor = '#a0cedb';
+                        } else if (color != "" && color != "undefined") {
+                            upperInterfaceColor = color;
                         }
                     }
                 }
@@ -184,9 +192,7 @@
                 if (strata.getCharacteristicsByFamily('colourFamily').length > 0) {
                     var color = strata.getCharacteristicsByFamily('colourFamily')[0].getRealName();
                     // !!! A MODIFIER QUAND ON FERA LE REFACTORING DU DAO...
-                    if (color != "" && color != "undefined" && color != "black" && color != "dark red" && color != "light yellow" && color != "ochre" && color != "dark green" && color != "medium green" && color != "light green" && color != "dark blue" && color != "medium blue" && color != "light blue") {
-                        lowerInterfaceColor = color;
-                    } else if (color == "black") {
+                    if (color == "black") {
                         lowerInterfaceColor = "#474747";
                     } else if (color == 'dark red') {
                         lowerInterfaceColor = '#bc2c14';
@@ -206,6 +212,8 @@
                         lowerInterfaceColor = '#4cb3d4';
                     } else if (color == 'light blue') {
                         lowerInterfaceColor = '#a0cedb';
+                    } else if (color != "" && color != "undefined") {
+                        lowerInterfaceColor = color;
                     }
                 }
 
@@ -225,34 +233,23 @@
 
                 //On va maintenant dessiner l'interface
 
-                //Si c'est une strate CM ou que la strate par dessus est une strate CM on n'affiche pas de trait
-                if (isUpperCM) {
-                    var rect = nestedInterface.rect(interfaceWidth, interfaceHeight).attr({ fill: lowerInterfaceColor });
+                //Si elle est droite on dessine simplement deux rectangles
+                if (profile == 'straightCharacteristic' || profile == '') {
+                    var upperRect = nestedInterface.rect(interfaceWidth, interfaceHeight).attr({ fill: upperInterfaceColor });
+                    var lowerRect = nestedInterface.rect(interfaceWidth, interfaceHeight).x(0).y(interfaceHeight / 2).attr({ fill: lowerInterfaceColor });
+
+                    //On dessine la bordure extérieure et la droite qui sépare les strates
                     var borderPath = nestedInterface.path("M0 0L0 " + interfaceHeight + " M" + strataWidth + " " + " 0L" + interfaceWidth + " " + interfaceHeight).fill('none');
                     borderPath.stroke({ color: borderColor, width: borderWidth });
-                } else if (strata.getCharacteristicsByFamily('natureFamily')[0].getName() == 'cmCharacteristic') {
-                    var rect = nestedInterface.rect(interfaceWidth, interfaceHeight).attr({ fill: upperInterfaceColor });
-                    var borderPath = nestedInterface.path("M0 0L0 " + interfaceHeight + " M" + strataWidth + " " + " 0L" + interfaceWidth + " " + interfaceHeight).fill('none');
-                    borderPath.stroke({ color: borderColor, width: borderWidth });
-                } else {
-                    //Si elle est droite on dessine simplement deux rectangles
-                    if (profile == 'straightCharacteristic' || profile == '') {
-                        var upperRect = nestedInterface.rect(interfaceWidth, interfaceHeight).attr({ fill: upperInterfaceColor });
-                        var lowerRect = nestedInterface.rect(interfaceWidth, interfaceHeight).x(0).y(interfaceHeight / 2).attr({ fill: lowerInterfaceColor });
 
-                        //On dessine la bordure extérieure et la droite qui sépare les strates
-                        var borderPath = nestedInterface.path("M0 0L0 " + interfaceHeight + " M" + strataWidth + " " + " 0L" + interfaceWidth + " " + interfaceHeight).fill('none');
-                        borderPath.stroke({ color: borderColor, width: borderWidth });
-
-                        var divisionPath = nestedInterface.path("M0 " + interfaceHeight / 2 + "L" + interfaceWidth + " " + interfaceHeight / 2).fill('none');
-                        divisionPath.stroke({ color: borderColor, width: divisionLineWidth });
-                    } else if (profile == 'wavyCharacteristic') {
-                        this.drawCustomInterface(nestedInterface, index, interfaceWidth, interfaceHeight, 'wavy', 8, lowerInterfaceColor, upperInterfaceColor, borderWidth, divisionLineWidth, diffuse, transition);
-                    } else if (profile == 'bumpyCharacteristic') {
-                        this.drawCustomInterface(nestedInterface, index, interfaceWidth, interfaceHeight, 'bumpy', 20, lowerInterfaceColor, upperInterfaceColor, borderWidth, divisionLineWidth, diffuse, transition);
-                    } else if (profile == 'irregularCharacteristic') {
-                        this.drawCustomInterface(nestedInterface, index, interfaceWidth, interfaceHeight, 'irregular', 30, lowerInterfaceColor, upperInterfaceColor, borderWidth, divisionLineWidth, diffuse, transition);
-                    }
+                    var divisionPath = nestedInterface.path("M0 " + interfaceHeight / 2 + "L" + interfaceWidth + " " + interfaceHeight / 2).fill('none');
+                    divisionPath.stroke({ color: borderColor, width: divisionLineWidth });
+                } else if (profile == 'wavyCharacteristic') {
+                    this.drawCustomInterface(nestedInterface, index, interfaceWidth, interfaceHeight, 'wavy', 8, lowerInterfaceColor, upperInterfaceColor, borderWidth, divisionLineWidth, diffuse, transition);
+                } else if (profile == 'bumpyCharacteristic') {
+                    this.drawCustomInterface(nestedInterface, index, interfaceWidth, interfaceHeight, 'bumpy', 20, lowerInterfaceColor, upperInterfaceColor, borderWidth, divisionLineWidth, diffuse, transition);
+                } else if (profile == 'irregularCharacteristic') {
+                    this.drawCustomInterface(nestedInterface, index, interfaceWidth, interfaceHeight, 'irregular', 30, lowerInterfaceColor, upperInterfaceColor, borderWidth, divisionLineWidth, diffuse, transition);
                 }
 
                 return nestedInterface;
