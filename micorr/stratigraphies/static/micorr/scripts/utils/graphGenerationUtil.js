@@ -364,11 +364,10 @@
 
                     var group = draw.group();
                     this.fillStrata(group, upperStrata, width, height);
-                    //if (upperStrata.getCharacteristicsByFamily('colourFamily').length > 0) {
-                    //upperStrataColor = upperStrata.getCharacteristicsByFamily('colourFamily')[0].getRealName();
-                    //}
+
                     var defs = draw.defs();
                     var path = defs.path(pathString).attr({ fill: 'none' });
+                    if (upperStrata.getFirstCharacteristicByFamily('colourFamily', 'realName') == lowerStrata.getFirstCharacteristicByFamily('colourFamily', 'realName')) group.path(pathString).attr({ fill: 'none', 'stroke-width': '1', stroke: 'black' });
                     group.clipWith(path);
                 } else {
                     draw.path(pathString).attr({ fill: 'white' });
@@ -407,10 +406,7 @@
                         var pds = new _poissonDisk.PoissonDiskSampler(width, height);
                     }
 
-                var color = 'white';
-                if (strata.getCharacteristicsByFamily('colourFamily').length > 0) {
-                    color = strata.getCharacteristicsByFamily('colourFamily')[0].getRealName();
-                }
+                var color = strata.getFirstCharacteristicByFamily('colourFamily', 'realName') || 'white';
 
                 // !!! A MODIFIER QUAND ON FERA LE REFACTORING DU DAO...
                 if (color == 'black') {

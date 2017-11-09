@@ -56,6 +56,24 @@ class Strata {
         return charact;
     }
 
+    /**
+     * Returns either first characteristic with requested family
+     *  or its requested property
+     * @param family: characteristics's family searched
+     * @param property: (optional) property of the charasteric object requested
+     * @returns characteristic object / characteristic[property] value
+     */
+    getFirstCharacteristicByFamily(family, property) {
+        let c = this.characteristics.find(e => e.getFamily() == family);
+        if (!property)
+            return c;
+        else {
+            if (c)
+                return c[property];
+            else
+                return c;
+        }
+    }
 
     /**
      * Retourne les sous caractéristiques de la famille en paramètre

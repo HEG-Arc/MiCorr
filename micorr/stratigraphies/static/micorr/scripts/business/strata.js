@@ -88,6 +88,16 @@
                 return charact;
             }
         }, {
+            key: 'getFirstCharacteristicByFamily',
+            value: function getFirstCharacteristicByFamily(family, property) {
+                var c = this.characteristics.find(function (e) {
+                    return e.getFamily() == family;
+                });
+                if (!property) return c;else {
+                    if (c) return c[property];else return c;
+                }
+            }
+        }, {
             key: 'getSubCharacteristicsByFamily',
             value: function getSubCharacteristicsByFamily(family) {
                 var charact = [];
