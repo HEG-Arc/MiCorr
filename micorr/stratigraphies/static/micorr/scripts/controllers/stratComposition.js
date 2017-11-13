@@ -31,12 +31,13 @@ angular.module('micorrApp')
             $scope.subsubcpcompositionFamily = null;
             $scope.subcmcompositionFamily = null;
             $scope.submcompositionFamily = null;
+            $scope.selectedCpcompositionextensionFamily = [];
+            //Les tableaux pour les picklist des strates enfant.
+            $scope.selectedCmcpcomposition = [];
+            $scope.selectedCmmcomposition = [];
+            $scope.selectedCmcpaggregateCompositionFamily = [];
         }
         emptyFields();
-        //Les tableaux pour les picklist des strates enfant.
-        $scope.selectedCmcpcomposition = [];
-        $scope.selectedCmmcomposition = [];
-        $scope.selectedCmcpaggregateCompositionFamily = [];
 
         var initStratComposition = function () {
             // On récupère les valeurs qui vont aller dans les champs de notre formulaire

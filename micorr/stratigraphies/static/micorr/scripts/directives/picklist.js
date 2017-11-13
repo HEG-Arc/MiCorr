@@ -321,7 +321,7 @@ var fxPickListTpl=
 "				</div>"+
 "			</div>"+
 "			<div style=\"display: table-cell; width: 45%;vertical-align: middle;\">"+
-                "<label>Choosen characteristics</label>" +
+                "<label>Chosen characteristics</label>" +
 "				<select multiple size=\"5\" class=\"form-control\" data-ng-options=\"fake\" name=\"fake\" data-ng-model=\"picklist_dest\" data-picklist-dest>"+
 "				</select>"+
 "			</div>"+
