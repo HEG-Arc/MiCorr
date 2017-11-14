@@ -22,6 +22,7 @@ function fxPickList($compile, $templateCache){
 
 			//name
 			$scope.formname=$attrs.name;
+			$scope.elementName=$attrs.elementName;
 
 
 			$scope.ngOptions=$attrs.pickOptions;
@@ -304,7 +305,7 @@ var fxPickListTpl=
 "			  <div style=\"display: table;width:100%\" data-ng-form=\"fake\" data-picklist-form>"+
 "		<div style=\"display: table-row;\">"+
 "			<div style=\"display: table-cell; width: 45%;vertical-align: middle;\">"+
-                "<label>Available characteristics</label>" +
+                "<label>Available {{ elementName}}</label>" +
 "				<select multiple size=\"5\" class=\"form-control\" data-ng-options=\"fake\" name=\"fake\" data-ng-model=\"picklist_src\" data-picklist-src>"+
 "				</select>"+
 "			</div>"+
@@ -321,7 +322,7 @@ var fxPickListTpl=
 "				</div>"+
 "			</div>"+
 "			<div style=\"display: table-cell; width: 45%;vertical-align: middle;\">"+
-                "<label>Chosen characteristics</label>" +
+                "<label>Chosen {{ elementName}}</label>" +
 "				<select multiple size=\"5\" class=\"form-control\" data-ng-options=\"fake\" name=\"fake\" data-ng-model=\"picklist_dest\" data-picklist-dest>"+
 "				</select>"+
 "			</div>"+
