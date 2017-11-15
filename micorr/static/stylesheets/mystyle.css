@@ -9869,14 +9869,15 @@ body.sticky-footer #footer {
   padding: .1em 0 .1em 2.5em;
 }
 nav.anchorific>ul>li>a {
-  padding-left: .5em;
+   /* padding-left: .5em; */
 }
-nav.anchorific>ul>li>ul>li>a {
+nav.anchorific>ul>li>ul>li {
   padding-left: 1.5em;
 }
 nav.anchorific>ul>li {
   padding-top:.4em;
   padding-bottom:.4em;
+  padding-left: .4em;
   font-weight:700;
 }
 nav.anchorific>ul>li>ul>li{
@@ -9884,18 +9885,27 @@ nav.anchorific>ul>li>ul>li{
   padding-bottom:.1em;
   font-weight:500;
 }
-nav.anchorific>ul>li.active>a {
+
+nav.anchorific>ul>li.active {
+    margin-left: -2px;
+    padding-left: 0.4em;
+    border-left-color: #e78115;
+    border-left-style: solid;
+    border-left-width: 2px;
+}
+
+/* nav.anchorific>ul>li.active>a {
   border-left-color:#e78115;
   border-left-style: solid;
   border-left-width: 2px;
   margin-left:-2px;
-}
-nav.anchorific>ul>li>ul>li.active>a {
+} */
+/* nav.anchorific>ul>li>ul>li.active>a {
   border-left-color:#e78115;
   border-left-style: solid;
   border-left-width: 2px;
   margin-left:-2px;
-}
+} */
 
 .no-active-highlight .active > a {
   color: #4d4d4d !important;
