@@ -8,9 +8,22 @@
 import {SubCharacteristic} from './subCharacteristic';
 
 class Characteristic{
-    constructor(){
+    constructor(family, sourceC){
+       if (family)
+            this.family = family;
+        if (sourceC) {
+            if ('uid' in sourceC)
+            {
+                this.uid = sourceC.uid ;
+                this.name = sourceC.name;
+            }
+            else
+            {
+                this.name = sourceC.name ;
+                this.real_name = sourceC.real_name;
+            }
+        }
     }
-
 
 
     getId(){

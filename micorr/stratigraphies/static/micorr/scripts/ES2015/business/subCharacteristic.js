@@ -7,10 +7,14 @@
 
 class SubCharacteristic {
 
-    constructor() {
-
+    constructor(family, sourceSC){
+        if (family)
+            this.family = family;
+        if (sourceSC) {
+            this.uid = sourceSC.uid;
+            this.name = sourceSC.name;
+        }
     }
-
 
     getId() {
         return this.id;

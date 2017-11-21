@@ -261,7 +261,6 @@ angular.module('micorrApp').factory('StratigraphyData', function StratigraphyDat
                 this.subsubcprimicrostructureaggregatecompositionFamily = getSubCharacteristicsFromFamily('cpriMicrostructureAggregateCompositionFamily', 'subsub');
                 this.subcmcompositionFamily = getSubCharacteristicsFromFamily('cmCompositionFamily', 'sub');
                 this.subcmLevelOfCorrosionFamily = getSubCharacteristicsFromFamily('cmLevelOfCorrosionFamily', 'sub');
-                this.submmicrostructureFamily = getSubCharacteristicsFromFamily('mMicrostructureFamily', 'sub');
                 this.submcompositionFamily = getSubCharacteristicsFromFamily('mCompositionFamily', 'sub');
             },
             getRawCharacteristics: function () {

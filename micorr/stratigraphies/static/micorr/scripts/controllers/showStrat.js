@@ -197,36 +197,6 @@ angular.module('micorrApp')
                             }
                         }
                     }
-
-                    /* PLUS UTILISE
-                     if (str.findDependency('subcprimicrostructureaggregatecompositionFamily')) {
-                     var sChar = $scope.getSubCharacteristicByFamily(subCharacteristicsList, StratigraphyData.getSubcprimicrostructureaggregatecompositionFamily());
-                     if (sChar != undefined) {
-                     var subChar = new subCharacteristic.SubCharacteristic();
-                     subChar.setFamily('subcprimicrostructureaggregatecompositionFamily');
-                     subChar.setName(sChar.real_name);
-                     subChar.setUid(sChar.name);
-                     if (subChar.getUid() != "" && subChar.getUid() != undefined) {
-                     str.addSubCharacteristic(subChar);
-                     }
-                     }
-                     }
-
-
-
-                     if (str.findDependency('subcmcompositionFamily')) {
-                     var sChar = $scope.getSubCharacteristicByFamily(subCharacteristicsList, StratigraphyData.getSubcmcompositionFamily());
-                     if (sChar != undefined) {
-                     var subChar = new subCharacteristic.SubCharacteristic();
-                     subChar.setFamily('subcmcompositionFamily');
-                     subChar.setName(sChar.real_name);
-                     subChar.setUid(sChar.name);
-                     if (subChar.getUid() != "" && subChar.getUid() != undefined) {
-                     str.addSubCharacteristic(subChar);
-                     }
-                     }
-                     }
-                     */
                     if (str.findDependency('subcmlevelofcorrosionFamily')) {
                         var sChar = $scope.getSubCharacteristicByFamily(subCharacteristicsList, StratigraphyData.getSubcmLevelOfCorrosionFamily());
                         if (sChar != undefined) {
@@ -527,39 +497,6 @@ angular.module('micorrApp')
                 } else {
                     $scope.corrodedMetalStrataSelected = false;
                 }
-
-                /*
-                 if (strata.findDependency('cprimicrostructureFamily') && strata.getCpriMicrostructureFamily() != "noMicrostructureCharacteristic") {
-                 $scope.showsubcprimicrostructureFamily = strata.findDependency('subcprimicrostructureFamily');
-                 $scope.showsubcprimicrostructureaggregatecompositionFamily = strata.findDependency('subcprimicrostructureaggregatecompositionFamily');
-                 $scope.showsubsubcprimicrostructureaggregatecompositionFamily = strata.findDependency('subsubcprimicrostructureaggregatecompositionFamily');
-                 $scope.showcprimicrostructureaggregatecompositionFamily = strata.findDependency('cprimicrostructureaggregatecompositionFamily');
-                 $scope.showcprimicrostructureaggregatecompositionextensionFamily = strata.findDependency('cprimicrostructureaggregatecompositionextensionFamily');
-                 }
-                 else {
-                 $scope.showsubcprimicrostructureFamily = false;
-                 $scope.showsubcprimicrostructureaggregatecompositionFamily = false;
-                 $scope.showsubsubcprimicrostructureaggregatecompositionFamily = false;
-                 $scope.showcprimicrostructureaggregatecompositionFamily = false;
-                 $scope.showcprimicrostructureaggregatecompositionextensionFamily = false;
-                 }
-                 */
-
-                /*
-                 if (strata.getNatureFamilyUid() == 'mCharacteristic') {
-                 $scope.showAddCorrodedMetalStrata = true;
-                 } else {
-                 $scope.showAddCorrodedMetalStrata = false;
-                 }
-
-                 if (strata.getNatureFamilyUid() == 'cmCharacteristic') {
-                 $scope.corrodedMetalStrataSelected = true;
-                 if (typeof $scope.ratio == "undefined")
-                 $scope.ratio = strata.ratio;
-                 } else {
-                 $scope.corrodedMetalStrataSelected = false;
-                 }
-                 */
             }
         };
 

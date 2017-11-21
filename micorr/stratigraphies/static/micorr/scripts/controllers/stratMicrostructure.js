@@ -21,7 +21,9 @@ angular.module('micorrApp')
             $scope.selectedCprimicrostructureFamily = null;
             $scope.selectedMmicrostructureFamily = null;
             $scope.selectedCmlevelofcorrosionFamily = null;
+            /* cprimicrostructureaggregatecompositionFamily moved to stratComposition controller
             $scope.selectedCprimicrostructureaggregatecompositionFamily = null;
+            */
             $scope.selectedSubcprimicrostructureaggregatecompositionFamily = null;
             $scope.selectedSubsubcprimicrostructureaggregatecompositionFamily = null;
             $scope.selectedSubcmlevelofcorrosionFamily = null;
@@ -77,10 +79,11 @@ angular.module('micorrApp')
             if (strata.getCharacteristicsByFamily("cmLevelOfCorrosionFamily").length > 0) {
                 $scope.selectedCmlevelofcorrosionFamily = getCharacteristicByItsName($scope.cmlevelofcorrosionFamily, strata.getCharacteristicsByFamily("cmLevelOfCorrosionFamily")[0].getName());
             }
+            /* cprimicrostructureaggregatecompositionFamily moved to stratComposition controller
             if (strata.getCharacteristicsByFamily('cpriMicrostructureAggregateCompositionFamily').length > 0) {
                 $scope.selectedCprimicrostructureaggregatecompositionFamily = getCharacteristicByItsName($scope.cprimicrostructureaggregatecompositionFamily, strata.getCharacteristicsByFamily("cpriMicrostructureAggregateCompositionFamily")[0].getName());
             }
-
+            */
             //Reprise des characteristiques de microstructure pour la strate CM
             if (strata.getNature() == 'Corroded metal') {
                 var CPChild = strata.getChildStrataByNature('Corrosion products');
@@ -174,7 +177,7 @@ angular.module('micorrApp')
                 }
             }
 
-
+            /* cprimicrostructureaggregatecompositionFamily moved to stratComposition controller
             if ($scope.selectedCprimicrostructureaggregatecompositionFamily != null) {
                 if (strata.findDependency('cprimicrostructureaggregatecompositionFamily')) {
                     var char = new characteristic.Characteristic();
@@ -186,7 +189,7 @@ angular.module('micorrApp')
                     strata.replaceCharacteristic(char);
                 }
             }
-
+            */
 
             if ($scope.selectedSubcmlevelofcorrosionFamily != null) {
                 if (strata.findDependency('subcmlevelofcorrosionFamily')) {

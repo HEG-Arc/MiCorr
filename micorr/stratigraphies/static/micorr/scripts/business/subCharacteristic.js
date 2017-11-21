@@ -42,8 +42,14 @@
     }();
 
     var SubCharacteristic = function () {
-        function SubCharacteristic() {
+        function SubCharacteristic(family, sourceSC) {
             _classCallCheck(this, SubCharacteristic);
+
+            if (family) this.family = family;
+            if (sourceSC) {
+                this.uid = sourceSC.uid;
+                this.name = sourceSC.name;
+            }
         }
 
         _createClass(SubCharacteristic, [{

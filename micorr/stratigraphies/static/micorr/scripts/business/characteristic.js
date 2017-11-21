@@ -43,8 +43,19 @@
     }();
 
     var Characteristic = function () {
-        function Characteristic() {
+        function Characteristic(family, sourceC) {
             _classCallCheck(this, Characteristic);
+
+            if (family) this.family = family;
+            if (sourceC) {
+                if ('uid' in sourceC) {
+                    this.uid = sourceC.uid;
+                    this.name = sourceC.name;
+                } else {
+                    this.name = sourceC.name;
+                    this.real_name = sourceC.real_name;
+                }
+            }
         }
 
         _createClass(Characteristic, [{
