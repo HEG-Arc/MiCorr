@@ -609,7 +609,7 @@
             <div ng-show="showcprimicrostructureaggregatecompositionFamily" class="col-md-6 form-group">
                 <label for="cprimicrostructureaggregatecompositionFamily"><span class="glyphicon glyphicon-eye-close"
                                                        title="no visual impact on the stratum"></span>
-                    <span title="cprimicrostructureaggregatecompositionFamily No description available">Aggregate main element</span>
+                    <span title="cprimicrostructureaggregatecompositionFamily No description available">{{ cpriMicrostructureOptionTitle }} main element</span>
                 </label>
                 <select id="cprimicrostructureaggregatecompositionFamily" class="form-control" ng-model="selectedCprimicrostructureaggregatecompositionFamily"
                         ng-options="x.real_name for x in cprimicrostructureaggregatecompositionFamily" ng-change="upComposition2()">
@@ -620,7 +620,7 @@
             <div ng-show="showsubcprimicrostructureaggregatecompositionFamily" class="col-md-6 form-group">
                 <label for="subcprimicrostructureaggregatecompositionFamily"><span class="glyphicon glyphicon-eye-close"
                                                           title="no visual impact on the stratum"></span>
-                    <span title="{{ descriptions.subcprimicrostructureaggregatecompositionFamily }}">Aggregate secondary element(s)</span>
+                    <span title="{{ descriptions.subcprimicrostructureaggregatecompositionFamily }}">{{ cpriMicrostructureOptionTitle }}  secondary element(s)</span>
                 </label>
                 <select id="subcprimicrostructureaggregatecompositionFamily" class="form-control" ng-model="selectedSubcprimicrostructureaggregatecompositionFamily"
                         ng-options="x.name for x in subcprimicrostructureaggregatecompositionFamily" ng-change="upComposition3()">
@@ -629,7 +629,7 @@
             <div ng-show="showsubsubcprimicrostructureaggregatecompositionFamily" class="col-md-6 form-group">
                 <label for="subsubcprimicrostructureaggregatecompositionFamily"><span class="glyphicon glyphicon-eye-close"
                                                              title="no visual impact on the stratum"></span>
-                    <span title="{{ descriptions.subsubcprimicrostructureaggregatecompositionFamily }}">Aggregate compound</span>
+                    <span title="{{ descriptions.subsubcprimicrostructureaggregatecompositionFamily }}">{{ cpriMicrostructureOptionTitle }}  compound</span>
                 </label>
                 <select id="subsubcprimicrostructureaggregatecompositionFamily" class="form-control" ng-model="selectedSubsubcprimicrostructureaggregatecompositionFamily"
                         ng-options="x.name for x in subsubcprimicrostructureaggregatecompositionFamily" ng-change="upComposition()">
@@ -640,7 +640,7 @@
             <div class="col-md-12 form-group" ng-show="showcprimicrostructureaggregatecompositionextensionFamily">
                 <label class="control-label"><span class="glyphicon glyphicon-eye-close"
                                                    title="no visual impact on the stratum"></span>
-                    <span title="{{ descriptions.cprimicrostructureaggregatecompositionextensionFamily }}">Aggregate additional element(s)</span>
+                    <span title="{{ descriptions.cprimicrostructureaggregatecompositionextensionFamily }}">{{ cpriMicrostructureOptionTitle }}  additional element(s)</span>
                 </label>
                 <picklist element-name="sub-characteristics" size="10" data-picklist=""
                           data-pick-model="selectedCprimicrostructureaggregatecompositionextensionFamily"

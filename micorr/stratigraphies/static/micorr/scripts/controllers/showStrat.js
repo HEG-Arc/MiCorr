@@ -452,18 +452,17 @@ angular.module('micorrApp')
                 $scope.showcprimicrostructureFamily = str.findDependency('cprimicrostructureFamily');
                 $scope.showsubmcompositionFamily = str.findDependency('submcompositionFamily');
 
-                // on affiche seulement si cprimicrostructure n'est pas égal à noMiccrostructure
-                var noMicrostructure = false;
-                if (str.getCharacteristicsByFamily("cpriMicrostructureFamily").length > 0) {
-                    if (str.getCharacteristicsByFamily("cpriMicrostructureFamily")[0].getName() == "noMicrostructureCharacteristic") {
-                        noMicrostructure = true;
-                    }
-                }
-                else {
-                    noMicrostructure = true;
-                }
-
-                if (str.findDependency('cprimicrostructureFamily') && !noMicrostructure) {
+                var selectedcpriMicrostructureFamily=str.getFirstCharacteristicByFamily("cpriMicrostructureFamily","name");
+                // only display Microstructure composition options in these cases
+                if (selectedcpriMicrostructureFamily &&
+                    ["scatteredAggregateMicrostructureCharacteristic",
+                        "isolatedAggregateMicrostructureCharacteristic",
+                        "alternatingBandsCharacteristic"].indexOf(selectedcpriMicrostructureFamily) !== -1 &&
+                    str.findDependency('cprimicrostructureFamily')) {
+                    if (selectedcpriMicrostructureFamily=="alternatingBandsCharacteristic")
+                        $scope.cpriMicrostructureOptionTitle = "Second band";
+                    else
+                        $scope.cpriMicrostructureOptionTitle = "Aggregate";
                     $scope.showsubcprimicrostructureFamily = str.findDependency('subcprimicrostructureFamily');
                     $scope.showsubcprimicrostructureaggregatecompositionFamily = str.findDependency('subcprimicrostructureaggregatecompositionFamily');
                     $scope.showsubsubcprimicrostructureaggregatecompositionFamily = str.findDependency('subsubcprimicrostructureaggregatecompositionFamily');
