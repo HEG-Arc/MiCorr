@@ -71,17 +71,17 @@ services:
       - "0.0.0.0:80:80"
       - "0.0.0.0:443:443"
     volumes:
-      - /etc/letsencrypt:/etc/letsencrypt
-      - /var/lib/letsencrypt:/var/lib/letsencrypt
+      - ./data/etc-letsencrypt:/etc/letsencrypt
+      - ./data/lib-letsencrypt:/var/lib/letsencrypt
       - ./micorr/media:/media
 
   certbot:
-    image: quay.io/letsencrypt/letsencrypt
-    command: bash -c "sleep 6 && certbot certonly -n --standalone -d ${MY_DOMAIN_NAME} --staging --agree-tos --email micorr@he-arc.ch --server https://acme-v01.api.letsencrypt.org/directory --rsa-key-size 4096 --verbose --keep-until-expiring --preferred-challenges http-01"
+    image: certbot/certbot
+    command: /bin/sh -c "sleep 6 && certbot certonly -n --standalone -d ${MY_DOMAIN_NAME} --agree-tos --email micorr@he-arc.ch --server https://acme-v01.api.letsencrypt.org/directory --rsa-key-size 4096 --verbose --keep-until-expiring --preferred-challenges http-01"
     entrypoint: ""
     volumes:
-      - /etc/letsencrypt:/etc/letsencrypt
-      - /var/lib/letsencrypt:/var/lib/letsencrypt
+      - ./data/etc-letsencrypt:/etc/letsencrypt
+      - ./data/lib-letsencrypt:/var/lib/letsencrypt
     ports:
       - "80"
       - "443"
