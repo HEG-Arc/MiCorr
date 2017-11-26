@@ -11,10 +11,11 @@ class Strata {
         this.nature = nature;
         this.natureFamilyAbbrev = null;
         this.label = null;
-        this.dependencies = new Array();
-        this.characteristics = new Array();
-        this.subCharacteristics = new Array();
-        this.childStrata = new Array();
+        this.dependencies = [];
+        this.characteristics = [];
+        this.subCharacteristics = [];
+        this.childStrata = [];
+        this.secondaryComponents = [{characteristics: [], subCharacteristics: []}];
         this.child = child;
 
         this.init();
@@ -45,24 +46,25 @@ class Strata {
      * @returns les characteristiques correspondante
      */
     getCharacteristicsByFamily(family) {
-        var charact = [];
-        for (var i = 0; i < this.characteristics.length; i++) {
-            if (this.characteristics[i].getFamily() == family) {
-                charact.push(this.characteristics[i]);
-            }
-        }
-        return charact;
+        return this.characteristics.filter(e => e.family == family);
+    }
+
+    getSecondaryComponentCharacteristicsByFamily(family, secondaryComponentIndex=0) {
+        return this.secondaryComponents[secondaryComponentIndex].characteristics.filter(e => e.family == family);
     }
 
     /**
      * Returns either first characteristic with requested family
-     *  or its requested property
+     * or its requested property
      * @param family: characteristics's family searched
      * @param property: (optional) property of the charasteric object requested
+     * @param inArrayProperty: (optional default to "characteristics") Array or name of the Array property in Strata where to search for characteristic
      * @returns characteristic object / characteristic[property] value
      */
-    getFirstCharacteristicByFamily(family, property) {
-        let c = this.characteristics.find(e => e.getFamily() == family);
+    getFirstCharacteristicByFamily(family, property, inArrayProperty="characteristics") {
+        if (typeof(inArrayProperty)=="string")
+            inArrayProperty=this[inArrayProperty];
+        let c = inArrayProperty.find(e => e.getFamily() == family);
         if (!property)
             return c;
         else {
@@ -72,6 +74,22 @@ class Strata {
                 return c;
         }
     }
+    getFirstSecondaryComponentCharacteristicByFamily(family, property, secondaryComponentIndex=0) {
+        return this.getFirstCharacteristicByFamily(family, property, this.secondaryComponents[secondaryComponentIndex].characteristics)
+    }
+    /**
+     * Returns either first subCharacteristics with requested family
+     * or its requested property
+     * @param family: subCharacteristics's family searched
+     * @param property: (optional) property of the SubCharacteristic object requested
+     * @returns characteristic object / characteristic[property] value
+     */
+    getFirstSubCharacteristicByFamily(family, property) {
+        return this.getFirstCharacteristicByFamily(family, property, this.subCharacteristics);
+    }
+    getFirstSecondaryComponentSubCharacteristicByFamily(family, property,secondaryComponentIndex=0) {
+        return this.getFirstCharacteristicByFamily(family, property, this.secondaryComponents[secondaryComponentIndex].subCharacteristics);
+    }
 
     /**
      * Retourne les sous caractéristiques de la famille en paramètre
@@ -79,13 +97,11 @@ class Strata {
      * @returns {Array} liste de sous caractéristiques
      */
     getSubCharacteristicsByFamily(family) {
-        var charact = [];
-        for (var i = 0; i < this.subCharacteristics.length; i++) {
-            if (this.subCharacteristics[i].getFamily() == family) {
-                charact.push(this.subCharacteristics[i]);
-            }
-        }
-        return charact;
+        return this.subCharacteristics.filter(e => e.family == family);
+    }
+
+    getSecondaryComponentSubCharacteristicsByFamily(family, secondaryComponentIndex=0) {
+        return this.secondaryComponents[secondaryComponentIndex].subCharacteristics.filter(e => e.family == family);
     }
 
     /**
@@ -116,15 +132,11 @@ class Strata {
     }
 
     isFamily(family) {
-        var exists = false;
-        if (getCharacteristicsByFamily(family).length > 0) {
-            exists = true;
-        }
-        return exists;
+        return (this.getCharacteristicsByFamily(family).length > 0);
     }
 
     /**
-     * Cette méthoe indique si une sous-caracterisitique existe dans une strate.
+     * Cette méthode indique si une sous-caracterisitique existe dans une strate.
      * @param le nom de la sous caracteristique à vérifier
      * @returns boolean indiquant si la sous-caracteristique existe
      */
@@ -147,25 +159,28 @@ class Strata {
     addSubCharacteristic(subCharacteristic) {
         this.subCharacteristics.push(subCharacteristic);
     }
+     /**
+     * Remplace une sous caractéristique de la famille de celle donnée en paramètre
+     * @param characteristic / subcharacteristic
+      * inArrayProperty ("characteristics", "subCharacteristics", etc..)
+     */
+    replaceCharacteristic(characteristic, inArrayProperty="characteristics") {
+        //todo refactoring switch characteristics and subCharacteristics to Map instead of Array
+        if (typeof(inArrayProperty)==="string")
+            inArrayProperty=this[inArrayProperty];
+        var i = inArrayProperty.findIndex(e => e.family == characteristic.family );
+        if (i==-1)
+            inArrayProperty.push(characteristic);
+        else
+            inArrayProperty[i] = characteristic;
+    }
 
     /**
      * Remplace une sous caractéristique de la famille de celle donnée en paramètre
      * @param subCharacteristic
      */
-    replaceSubCharacteristic(subCharacteristic) {
-        var found = false;
-        var i = 0;
-
-        while (!found && i < this.subCharacteristics.length) {
-            if (subCharacteristic.family == this.subCharacteristics[i].family) {
-                found = true;
-                this.subCharacteristics[i] = subCharacteristic;
-            }
-            i++;
-        }
-        if (!found) {
-            this.subCharacteristics.push(subCharacteristic);
-        }
+    replaceSubCharacteristic(subCharacteristic,inArrayProperty="subCharacteristics") {
+        this.replaceCharacteristic(subCharacteristic, inArrayProperty);
     }
 
     addCharacteristic(characteristic) {
@@ -174,23 +189,6 @@ class Strata {
 
     addChildStrata(childStratum) {
         this.childStrata.push(childStratum);
-    }
-
-    replaceCharacteristic(characteristic) {
-        var found = false;
-        var i = 0;
-
-        while (!found && i < this.characteristics.length) {
-            if (characteristic.family == this.characteristics[i].family) {
-                found = true;
-                this.characteristics[i] = characteristic;
-            }
-            i++;
-        }
-        if (!found) {
-            this.characteristics.push(characteristic);
-        }
-
     }
 
     /**
@@ -240,13 +238,8 @@ class Strata {
      */
     getNatureFamilyAbbrev() {
         if (this.characteristics)
-            this.natureFamilyAbbrev = this.natureFamilyAbbrev || this.characteristics.find(function (elem) {
-                return elem.family == "natureFamily"
-            }).name.split("Char")[0].toUpperCase()
-        if (this.natureFamilyAbbrev)
-            return this.natureFamilyAbbrev;
-        else
-            return "";
+            this.natureFamilyAbbrev = this.natureFamilyAbbrev || this.characteristics.find(elem => elem.family == "natureFamily").name.split("Char")[0].toUpperCase();
+        return this.natureFamilyAbbrev || "";
     }
 
     /**
@@ -313,14 +306,19 @@ class Strata {
      * Helper methods to update stratum Characteristic from controller scope variables
      * @returns true if characteristic has been updated based on stratum dependency and characteristicSource
      */
-    updateCharacteristic(familyName, characteristicSource)
+    updateCharacteristic(familyName, characteristicSource, dependencyName=null, inArrayProperty="characteristics")
     {
-        if (characteristicSource && this.findDependency(familyName)) {
+        dependencyName = dependencyName || familyName; //dependencyName defaults to familyName but could be different
+        if (characteristicSource && this.findDependency(dependencyName)) {
             let c = new characteristic.Characteristic(familyName, characteristicSource);
-            this.replaceCharacteristic(c) ;
+            this.replaceCharacteristic(c, inArrayProperty);
             return true;
         }
         return false;
+    }
+    updateSecondaryComponentCharacteristic(familyName, characteristicSource, dependencyName, secondaryComponentIndex=0)
+    {
+        return this.updateCharacteristic(familyName, subCharacteristicSource, dependencyName, this.secondaryComponents[secondaryComponentIndex].characteristics);
     }
 
     updateCharacteristicList(familyName, characteristicList) {
@@ -332,13 +330,19 @@ class Strata {
         }
         return false;
     }
-    updateSubCharacteristic(familyName, subCharacteristicSource) {
-        if (subCharacteristicSource && this.findDependency(familyName)) {
+
+    updateSubCharacteristic(familyName, subCharacteristicSource, dependencyName=null, inArrayProperty="subCharacteristics") {
+        dependencyName = dependencyName || familyName; //dependencyName defaults to familyName but could be different
+        if (subCharacteristicSource && this.findDependency(dependencyName)) {
             let sc = new subCharacteristic.SubCharacteristic(familyName, subCharacteristicSource);
-            this.replaceSubCharacteristic(sc);
+            this.replaceSubCharacteristic(sc, inArrayProperty);
             return true;
         }
         return false;
+    }
+    updateSecondaryComponentSubCharacteristic(familyName, subCharacteristicSource, dependencyName, secondaryComponentIndex=0)
+    {
+        return this.updateSubCharacteristic(familyName, subCharacteristicSource, dependencyName, this.secondaryComponents[secondaryComponentIndex].subCharacteristics);
     }
 
     /**

@@ -212,35 +212,6 @@
             Stratum : {{ strataName }}
         </h1>
 
-        <div class="col-md-3 text-center" ng-controller="ModalAddChildStrataCtrl">
-            <script type="text/ng-template" id="modalAddChildStrata.html">
-                <div class="modal-header">
-                    <h3 class="modal-title">Add a child stratum</h3>
-                </div>
-                <div class="modal-body">
-                    <form>
-                        <div class="form-group">
-                            <label for="natureFamily">Stratum Type</label>
-                            <select ng-model="nature" id="childNatureFamily" class="form-control">
-                                <option ng-repeat="nature in natures.natures"
-                                        value="{{ nature.code }}">{{ nature.description }}</option>
-                            </select>
-                        </div>
-                    </form>
-                </div>
-
-                <div class="modal-footer">
-                    <button class="btn btn-primary" ng-click="ok()">OK</button>
-                    <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
-                </div>
-            </script>
-            <!--
-            <button type="button" class="btn btn-primary" ng-click="open()">
-                    <span class="glyphicon glyphicon glyphicon-plus" aria-hidden="true"></span>
-                    Add a child stratum
-            </button>
-            -->
-        </div>
     </div>
     <div class="col-md-5">
         <h1 class="ng-binding minititle">
@@ -440,7 +411,7 @@
                                                    title="visual impact on the stratum"></span>
                     <span title="{{ descriptions.subcprimicrostructureFamily }}">Sub Microstructure</span>
                 </label>
-                <picklist element-name="sub-characteristics" size="10" data-picklist="" data-pick-model="selectedSubcprimicrostructureFamily"
+                <picklist element-name="sub-characteristics" size="10" data-picklist="" data-pick-model="secondaryComponent.selectedSubcprimicrostructureFamily"
                           data-pick-options="v.name for v in subcprimicrostructureFamily"/>
             </div>
         </div>
@@ -605,14 +576,15 @@
             </div>
         </div>
         <!-- CP Microstructure composition -->
+        <div ng-repeat='secondaryComponent in secondaryComponents'>
         <div class="row-fluid">
             <div ng-show="showcprimicrostructureaggregatecompositionFamily" class="col-md-6 form-group">
                 <label for="cprimicrostructureaggregatecompositionFamily"><span class="glyphicon glyphicon-eye-close"
                                                        title="no visual impact on the stratum"></span>
                     <span title="cprimicrostructureaggregatecompositionFamily No description available">{{ cpriMicrostructureOptionTitle }} main element</span>
                 </label>
-                <select id="cprimicrostructureaggregatecompositionFamily" class="form-control" ng-model="selectedCprimicrostructureaggregatecompositionFamily"
-                        ng-options="x.real_name for x in cprimicrostructureaggregatecompositionFamily" ng-change="upComposition2()">
+                <select id="cprimicrostructureaggregatecompositionFamily" class="form-control" ng-model="secondaryComponent.selectedCpcompositionFamily"
+                        ng-options="x.real_name for x in cpcompositionFamily" ng-change="upComposition2()">
                 </select>
             </div>
         </div>
@@ -622,8 +594,8 @@
                                                           title="no visual impact on the stratum"></span>
                     <span title="{{ descriptions.subcprimicrostructureaggregatecompositionFamily }}">{{ cpriMicrostructureOptionTitle }}  secondary element(s)</span>
                 </label>
-                <select id="subcprimicrostructureaggregatecompositionFamily" class="form-control" ng-model="selectedSubcprimicrostructureaggregatecompositionFamily"
-                        ng-options="x.name for x in subcprimicrostructureaggregatecompositionFamily" ng-change="upComposition3()">
+                <select id="subcprimicrostructureaggregatecompositionFamily" class="form-control" ng-model="secondaryComponent.selectedSubcpcompositionFamily"
+                        ng-options="x.name for x in subcpcompositionFamily" ng-change="upComposition3()">
                 </select>
             </div>
             <div ng-show="showsubsubcprimicrostructureaggregatecompositionFamily" class="col-md-6 form-group">
@@ -631,8 +603,8 @@
                                                              title="no visual impact on the stratum"></span>
                     <span title="{{ descriptions.subsubcprimicrostructureaggregatecompositionFamily }}">{{ cpriMicrostructureOptionTitle }}  compound</span>
                 </label>
-                <select id="subsubcprimicrostructureaggregatecompositionFamily" class="form-control" ng-model="selectedSubsubcprimicrostructureaggregatecompositionFamily"
-                        ng-options="x.name for x in subsubcprimicrostructureaggregatecompositionFamily" ng-change="upComposition()">
+                <select id="subsubcprimicrostructureaggregatecompositionFamily" class="form-control" ng-model="secondaryComponent.selectedSubsubcpcompositionFamily"
+                        ng-options="x.name for x in subsubcpcompositionFamily" ng-change="upComposition()">
                 </select>
             </div>
         </div>
@@ -643,9 +615,10 @@
                     <span title="{{ descriptions.cprimicrostructureaggregatecompositionextensionFamily }}">{{ cpriMicrostructureOptionTitle }}  additional element(s)</span>
                 </label>
                 <picklist element-name="sub-characteristics" size="10" data-picklist=""
-                          data-pick-model="selectedCprimicrostructureaggregatecompositionextensionFamily"
-                          data-pick-options="v.real_name for v in cprimicrostructureaggregatecompositionextensionFamily"/>
+                          data-pick-model="secondaryComponent.selectedCpcompositionextensionFamily"
+                          data-pick-options="v.real_name for v in cpcompositionextensionFamily"/>
             </div>
+        </div>
         </div>
         <!-- End CP Microstructure composition -->
 

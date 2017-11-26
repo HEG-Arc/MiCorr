@@ -11,9 +11,6 @@ angular.module('micorrApp')
     .controller('ModalAddStrataCtrl', function ($scope, $rootScope, $route, $modal, MiCorrService, StratigraphyData) {
         $rootScope.route = $route;
         $rootScope.natures = natures;
-        $scope.nature;
-        $scope.strataName;
-        $scope.strataUid;
 
         $scope.artefactName = $scope.$parent.artefactName;
 

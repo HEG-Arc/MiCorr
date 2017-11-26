@@ -87,6 +87,12 @@ class Neo4jDAO:
             "MATCH (sg:Stratigraphy)-[r:POSSESSES]->(st:Strata) where sg.uid={uid}\
                RETURN sg.description as description, st.uid as uid order by st.uid",
             uid=stratigraphy_uid )
+        # todo optimization something like the following query would be enough
+        # stratigraphy_records = self.graph.cypher.execute(
+        # MATCH (sg:Stratigraphy)-[:POSSESSES]->(st:Strata),(st)-[:IS_CONSTITUTED_BY]->(csc)-[b:BELONGS_TO]->(f:Family) where sg.uid={uid}
+        # OPTIONAL MATCH (st)-[:HAS_UPPER_INTERFACE]->(ui:Interface)-[:IS_CONSTITUTED_BY]->(uicsc)-[:BELONGS_TO]->(uif:Family)
+        # return sg,st,csc,f,ui,uicsc,uif
+        # , uid=stratigraphy_uid)
 
         stratigraphy = {'uid':stratigraphy_uid,
                         'description': strata_records[0].description if len(strata_records) else None,
@@ -359,6 +365,15 @@ class Neo4jDAO:
         print(self.query)
         self.graph.cypher.execute(self.query)
 
+    # attache une caracteristique ou sous-caracteristique a un node (Strata, Interface, ...)
+    # @params nom de la strate etnom de la caracteristique, sous-caracteristique
+    # @returns
+    def attachCharacteristic(self, node_uid, characteristic_uid):
+        self.graph.cypher.execute("""MATCH (n),(c)
+                                WHERE n.uid = {node_uid} AND c.uid={characteristic_uid}
+                                CREATE (a)-[r:IS_CONSTITUTED_BY]->(b)""",
+                                  node_uid=node_uid,characteristic=characteristic_uid)
+
     # cree une strate
     # @params nom de la strate et nom de la stratigraphie
     # @returns
@@ -397,39 +412,39 @@ class Neo4jDAO:
     # @params details d'une stratigraphie au format json
     # @returns 1 si ok
     def save(self, data):
-        stratigraphyName = data['stratigraphy']
-        print stratigraphyName
+        stratigraphy_name = data['stratigraphy']
+        print('save:',stratigraphy_name)
         # on supprime entierement toutes les strates de l'ancienne stratigraphie pour en creer une nouvelle
         # on fait ca pour partir sur une base vierge et on reconstruit de graphe a chaque sauvegarde
-        self.deleteAllStrataFromAStratigraphy(stratigraphyName)
+        self.deleteAllStrataFromAStratigraphy(stratigraphy_name)
 
         # on parcourt toutes les strates
-        for t in data['stratas']:
-            strataName = stratigraphyName + "_Strata" + str(self.getNbStratasByStratigraphy(stratigraphyName) + 1)
-            self.createStrata(strataName, stratigraphyName)
+        for i,stratum in enumerate(data['stratas']):
+            strata_name = "{}_Strata{}".format(stratigraphy_name,i+1)
+            self.createStrata(strata_name, stratigraphy_name)
 
             # pour chaque strate on attache une caracteristique ou sous caracteristique
-            for c in t['characteristics']:
-                if len(c) > 0:
-                    self.attachCharacteristicToStrata(strataName, c['name'])
+            for characteristic in stratum['characteristics']:
+                if len(characteristic) > 0:
+                    self.attachCharacteristicToStrata(strata_name, characteristic['name'])
 
             # pour chaque strate on cree une interface et on y attache des caracteristiques
-            interfaceName = strataName + "_interface" + str(self.getNbInterfaceByStratigraphy(stratigraphyName) + 1)
-            self.createInterface(strataName, interfaceName)
-            for i in t['interfaces']:
-                if len(i) > 0:
-                    self.attachCharacteristicToInterface(interfaceName, i['name'])
+            interface_name = strata_name + "_interface" + str(self.getNbInterfaceByStratigraphy(stratigraphy_name) + 1)
+            self.createInterface(strata_name, interface_name)
+            for interface in stratum['interfaces']:
+                if len(interface) > 0:
+                    self.attachCharacteristicToInterface(interface_name, interface['name'])
 
 
             #Pour chaque strate on attache les strates enfants
-            for s in t['children']:
+            for s in stratum['children']:
                 if len(s) > 0:
-                    childName = s['name']
-                    self.createChildStrata(childName, strataName)
+                    child_name = s['name']
+                    self.createChildStrata(child_name, strata_name)
 
                     for sc in s['characteristics']:
                         if len(sc) > 0:
-                            self.attachCharacteristicToStrata(childName, sc['name'])
+                            self.attachCharacteristicToStrata(child_name, sc['name'])
 
         return {'res': 1}
 
@@ -544,7 +559,7 @@ class Neo4jDAO:
         for j in old_list:
             if j['artefact_id'] and j['matching100'] < 100:
                 result.append(j)
-        print result
+        print(result)
         return result
 
     # Ajout d'un artefact

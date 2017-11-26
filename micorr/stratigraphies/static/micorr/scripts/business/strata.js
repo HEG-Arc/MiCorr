@@ -48,10 +48,11 @@
             this.nature = nature;
             this.natureFamilyAbbrev = null;
             this.label = null;
-            this.dependencies = new Array();
-            this.characteristics = new Array();
-            this.subCharacteristics = new Array();
-            this.childStrata = new Array();
+            this.dependencies = [];
+            this.characteristics = [];
+            this.subCharacteristics = [];
+            this.childStrata = [];
+            this.secondaryComponents = [{ characteristics: [], subCharacteristics: [] }];
             this.child = child;
 
             this.init();
@@ -78,18 +79,26 @@
         }, {
             key: "getCharacteristicsByFamily",
             value: function getCharacteristicsByFamily(family) {
-                var charact = [];
-                for (var i = 0; i < this.characteristics.length; i++) {
-                    if (this.characteristics[i].getFamily() == family) {
-                        charact.push(this.characteristics[i]);
-                    }
-                }
-                return charact;
+                return this.characteristics.filter(function (e) {
+                    return e.family == family;
+                });
+            }
+        }, {
+            key: "getSecondaryComponentCharacteristicsByFamily",
+            value: function getSecondaryComponentCharacteristicsByFamily(family) {
+                var secondaryComponentIndex = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+
+                return this.secondaryComponents[secondaryComponentIndex].characteristics.filter(function (e) {
+                    return e.family == family;
+                });
             }
         }, {
             key: "getFirstCharacteristicByFamily",
             value: function getFirstCharacteristicByFamily(family, property) {
-                var c = this.characteristics.find(function (e) {
+                var inArrayProperty = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "characteristics";
+
+                if (typeof inArrayProperty == "string") inArrayProperty = this[inArrayProperty];
+                var c = inArrayProperty.find(function (e) {
                     return e.getFamily() == family;
                 });
                 if (!property) return c;else {
@@ -97,15 +106,39 @@
                 }
             }
         }, {
+            key: "getFirstSecondaryComponentCharacteristicByFamily",
+            value: function getFirstSecondaryComponentCharacteristicByFamily(family, property) {
+                var secondaryComponentIndex = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+
+                return this.getFirstCharacteristicByFamily(family, property, this.secondaryComponents[secondaryComponentIndex].characteristics);
+            }
+        }, {
+            key: "getFirstSubCharacteristicByFamily",
+            value: function getFirstSubCharacteristicByFamily(family, property) {
+                return this.getFirstCharacteristicByFamily(family, property, this.subCharacteristics);
+            }
+        }, {
+            key: "getFirstSecondaryComponentSubCharacteristicByFamily",
+            value: function getFirstSecondaryComponentSubCharacteristicByFamily(family, property) {
+                var secondaryComponentIndex = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+
+                return this.getFirstCharacteristicByFamily(family, property, this.secondaryComponents[secondaryComponentIndex].subCharacteristics);
+            }
+        }, {
             key: "getSubCharacteristicsByFamily",
             value: function getSubCharacteristicsByFamily(family) {
-                var charact = [];
-                for (var i = 0; i < this.subCharacteristics.length; i++) {
-                    if (this.subCharacteristics[i].getFamily() == family) {
-                        charact.push(this.subCharacteristics[i]);
-                    }
-                }
-                return charact;
+                return this.subCharacteristics.filter(function (e) {
+                    return e.family == family;
+                });
+            }
+        }, {
+            key: "getSecondaryComponentSubCharacteristicsByFamily",
+            value: function getSecondaryComponentSubCharacteristicsByFamily(family) {
+                var secondaryComponentIndex = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+
+                return this.secondaryComponents[secondaryComponentIndex].subCharacteristics.filter(function (e) {
+                    return e.family == family;
+                });
             }
         }, {
             key: "clearCharacteristicsFromFamily",
@@ -131,11 +164,7 @@
         }, {
             key: "isFamily",
             value: function isFamily(family) {
-                var exists = false;
-                if (getCharacteristicsByFamily(family).length > 0) {
-                    exists = true;
-                }
-                return exists;
+                return this.getCharacteristicsByFamily(family).length > 0;
             }
         }, {
             key: "isSubCharacteristic",
@@ -156,21 +185,23 @@
                 this.subCharacteristics.push(subCharacteristic);
             }
         }, {
+            key: "replaceCharacteristic",
+            value: function replaceCharacteristic(characteristic) {
+                var inArrayProperty = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "characteristics";
+
+                //todo refactoring switch characteristics and subCharacteristics to Map instead of Array
+                if (typeof inArrayProperty === "string") inArrayProperty = this[inArrayProperty];
+                var i = inArrayProperty.findIndex(function (e) {
+                    return e.family == characteristic.family;
+                });
+                if (i == -1) inArrayProperty.push(characteristic);else inArrayProperty[i] = characteristic;
+            }
+        }, {
             key: "replaceSubCharacteristic",
             value: function replaceSubCharacteristic(subCharacteristic) {
-                var found = false;
-                var i = 0;
+                var inArrayProperty = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "subCharacteristics";
 
-                while (!found && i < this.subCharacteristics.length) {
-                    if (subCharacteristic.family == this.subCharacteristics[i].family) {
-                        found = true;
-                        this.subCharacteristics[i] = subCharacteristic;
-                    }
-                    i++;
-                }
-                if (!found) {
-                    this.subCharacteristics.push(subCharacteristic);
-                }
+                this.replaceCharacteristic(subCharacteristic, inArrayProperty);
             }
         }, {
             key: "addCharacteristic",
@@ -181,23 +212,6 @@
             key: "addChildStrata",
             value: function addChildStrata(childStratum) {
                 this.childStrata.push(childStratum);
-            }
-        }, {
-            key: "replaceCharacteristic",
-            value: function replaceCharacteristic(characteristic) {
-                var found = false;
-                var i = 0;
-
-                while (!found && i < this.characteristics.length) {
-                    if (characteristic.family == this.characteristics[i].family) {
-                        found = true;
-                        this.characteristics[i] = characteristic;
-                    }
-                    i++;
-                }
-                if (!found) {
-                    this.characteristics.push(characteristic);
-                }
             }
         }, {
             key: "isChild",
@@ -241,7 +255,7 @@
                 if (this.characteristics) this.natureFamilyAbbrev = this.natureFamilyAbbrev || this.characteristics.find(function (elem) {
                     return elem.family == "natureFamily";
                 }).name.split("Char")[0].toUpperCase();
-                if (this.natureFamilyAbbrev) return this.natureFamilyAbbrev;else return "";
+                return this.natureFamilyAbbrev || "";
             }
         }, {
             key: "setLabel",
@@ -333,12 +347,23 @@
         }, {
             key: "updateCharacteristic",
             value: function updateCharacteristic(familyName, characteristicSource) {
-                if (characteristicSource && this.findDependency(familyName)) {
+                var dependencyName = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+                var inArrayProperty = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "characteristics";
+
+                dependencyName = dependencyName || familyName; //dependencyName defaults to familyName but could be different
+                if (characteristicSource && this.findDependency(dependencyName)) {
                     var c = new characteristic.Characteristic(familyName, characteristicSource);
-                    this.replaceCharacteristic(c);
+                    this.replaceCharacteristic(c, inArrayProperty);
                     return true;
                 }
                 return false;
+            }
+        }, {
+            key: "updateSecondaryComponentCharacteristic",
+            value: function updateSecondaryComponentCharacteristic(familyName, characteristicSource, dependencyName) {
+                var secondaryComponentIndex = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 0;
+
+                return this.updateCharacteristic(familyName, subCharacteristicSource, dependencyName, this.secondaryComponents[secondaryComponentIndex].characteristics);
             }
         }, {
             key: "updateCharacteristicList",
@@ -377,12 +402,23 @@
         }, {
             key: "updateSubCharacteristic",
             value: function updateSubCharacteristic(familyName, subCharacteristicSource) {
-                if (subCharacteristicSource && this.findDependency(familyName)) {
+                var dependencyName = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+                var inArrayProperty = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "subCharacteristics";
+
+                dependencyName = dependencyName || familyName; //dependencyName defaults to familyName but could be different
+                if (subCharacteristicSource && this.findDependency(dependencyName)) {
                     var sc = new subCharacteristic.SubCharacteristic(familyName, subCharacteristicSource);
-                    this.replaceSubCharacteristic(sc);
+                    this.replaceSubCharacteristic(sc, inArrayProperty);
                     return true;
                 }
                 return false;
+            }
+        }, {
+            key: "updateSecondaryComponentSubCharacteristic",
+            value: function updateSecondaryComponentSubCharacteristic(familyName, subCharacteristicSource, dependencyName) {
+                var secondaryComponentIndex = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 0;
+
+                return this.updateSubCharacteristic(familyName, subCharacteristicSource, dependencyName, this.secondaryComponents[secondaryComponentIndex].subCharacteristics);
             }
         }, {
             key: "setStrataImage",
