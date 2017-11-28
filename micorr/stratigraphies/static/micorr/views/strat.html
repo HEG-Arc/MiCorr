@@ -595,7 +595,7 @@
                     <span title="{{ descriptions.subcprimicrostructureaggregatecompositionFamily }}">{{ cpriMicrostructureOptionTitle }}  secondary element(s)</span>
                 </label>
                 <select id="subcprimicrostructureaggregatecompositionFamily" class="form-control" ng-model="secondaryComponent.selectedSubcpcompositionFamily"
-                        ng-options="x.name for x in subcpcompositionFamily" ng-change="upComposition3()">
+                        ng-options="x.name for x in secondaryComponent.subcpcompositionFamily" ng-change="upComposition3()">
                 </select>
             </div>
             <div ng-show="showsubsubcprimicrostructureaggregatecompositionFamily" class="col-md-6 form-group">
@@ -604,7 +604,7 @@
                     <span title="{{ descriptions.subsubcprimicrostructureaggregatecompositionFamily }}">{{ cpriMicrostructureOptionTitle }}  compound</span>
                 </label>
                 <select id="subsubcprimicrostructureaggregatecompositionFamily" class="form-control" ng-model="secondaryComponent.selectedSubsubcpcompositionFamily"
-                        ng-options="x.name for x in subsubcpcompositionFamily" ng-change="upComposition()">
+                        ng-options="x.name for x in secondaryComponent.subsubcpcompositionFamily" ng-change="upComposition()">
                 </select>
             </div>
         </div>

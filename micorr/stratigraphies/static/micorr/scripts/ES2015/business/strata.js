@@ -108,11 +108,12 @@ class Strata {
      * Supprime toutes les characteristiques d'une famille
      * @param family
      */
-    clearCharacteristicsFromFamily(family) {
-
-        for (var i = 0; i < this.characteristics.length; i++) {
-            if (this.characteristics[i].getFamily() == family) {
-                this.characteristics.splice(i, 1);
+    clearCharacteristicsFromFamily(family, inArrayProperty ='characteristics') {
+        if (typeof(inArrayProperty)==="string")
+            inArrayProperty=this[inArrayProperty];
+        for (var i = 0; i < inArrayProperty.length; i++) {
+            if (inArrayProperty[i].getFamily() == family) {
+                inArrayProperty.splice(i, 1);
                 i--;
             }
         }
@@ -123,12 +124,7 @@ class Strata {
      * @param family
      */
     clearSubCharacteristicsFromFamily(family) {
-        for (var i = 0; i < this.subCharacteristics.length; i++) {
-            if (this.subCharacteristics[i].getFamily() == family) {
-                this.subCharacteristics.splice(i, 1);
-                i--;
-            }
-        }
+       this.clearCharacteristicsFromFamily(family,'subCharacteristics')
     }
 
     isFamily(family) {
@@ -183,8 +179,10 @@ class Strata {
         this.replaceCharacteristic(subCharacteristic, inArrayProperty);
     }
 
-    addCharacteristic(characteristic) {
-        this.characteristics.push(characteristic);
+    addCharacteristic(characteristic,inArrayProperty="characteristics") {
+        if (typeof(inArrayProperty)==="string")
+            inArrayProperty=this[inArrayProperty];
+        inArrayProperty.push(characteristic);
     }
 
     addChildStrata(childStratum) {
@@ -318,18 +316,31 @@ class Strata {
     }
     updateSecondaryComponentCharacteristic(familyName, characteristicSource, dependencyName, secondaryComponentIndex=0)
     {
-        return this.updateCharacteristic(familyName, subCharacteristicSource, dependencyName, this.secondaryComponents[secondaryComponentIndex].characteristics);
+        return this.updateCharacteristic(familyName, characteristicSource, dependencyName, this.secondaryComponents[secondaryComponentIndex].characteristics);
     }
 
-    updateCharacteristicList(familyName, characteristicList) {
+    updateCharacteristicList(familyName, characteristicList, dependencyName=null,  inArrayProperty="characteristics") {
+        dependencyName = dependencyName || familyName; //dependencyName defaults to familyName but could be different
+        if (typeof(inArrayProperty)==="string")
+            inArrayProperty=this[inArrayProperty];
         if (this.findDependency(familyName)) {
-            this.clearCharacteristicsFromFamily(familyName);
+            this.clearCharacteristicsFromFamily(familyName, inArrayProperty);
             for (let cSource of characteristicList)
                 this.addCharacteristic(new characteristic.Characteristic(familyName, cSource));
             return true;
         }
         return false;
     }
+    updateSecondaryComponentCharacteristicList(familyName, characteristicList, dependencyName, secondaryComponentIndex=0){
+        if (this.findDependency(dependencyName)) {
+            this.clearCharacteristicsFromFamily(familyName, this.secondaryComponents[0].characteristics);
+            for (let cSource of characteristicList)
+                this.addCharacteristic(new characteristic.Characteristic(familyName, cSource), this.secondaryComponents[0].characteristics);
+            return true;
+        }
+        return false;
+    }
+
 
     updateSubCharacteristic(familyName, subCharacteristicSource, dependencyName=null, inArrayProperty="subCharacteristics") {
         dependencyName = dependencyName || familyName; //dependencyName defaults to familyName but could be different

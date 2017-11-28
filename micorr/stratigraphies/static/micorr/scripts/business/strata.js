@@ -143,10 +143,12 @@
         }, {
             key: "clearCharacteristicsFromFamily",
             value: function clearCharacteristicsFromFamily(family) {
+                var inArrayProperty = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'characteristics';
 
-                for (var i = 0; i < this.characteristics.length; i++) {
-                    if (this.characteristics[i].getFamily() == family) {
-                        this.characteristics.splice(i, 1);
+                if (typeof inArrayProperty === "string") inArrayProperty = this[inArrayProperty];
+                for (var i = 0; i < inArrayProperty.length; i++) {
+                    if (inArrayProperty[i].getFamily() == family) {
+                        inArrayProperty.splice(i, 1);
                         i--;
                     }
                 }
@@ -154,12 +156,7 @@
         }, {
             key: "clearSubCharacteristicsFromFamily",
             value: function clearSubCharacteristicsFromFamily(family) {
-                for (var i = 0; i < this.subCharacteristics.length; i++) {
-                    if (this.subCharacteristics[i].getFamily() == family) {
-                        this.subCharacteristics.splice(i, 1);
-                        i--;
-                    }
-                }
+                this.clearCharacteristicsFromFamily(family, 'subCharacteristics');
             }
         }, {
             key: "isFamily",
@@ -206,7 +203,10 @@
         }, {
             key: "addCharacteristic",
             value: function addCharacteristic(characteristic) {
-                this.characteristics.push(characteristic);
+                var inArrayProperty = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "characteristics";
+
+                if (typeof inArrayProperty === "string") inArrayProperty = this[inArrayProperty];
+                inArrayProperty.push(characteristic);
             }
         }, {
             key: "addChildStrata",
@@ -363,13 +363,18 @@
             value: function updateSecondaryComponentCharacteristic(familyName, characteristicSource, dependencyName) {
                 var secondaryComponentIndex = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 0;
 
-                return this.updateCharacteristic(familyName, subCharacteristicSource, dependencyName, this.secondaryComponents[secondaryComponentIndex].characteristics);
+                return this.updateCharacteristic(familyName, characteristicSource, dependencyName, this.secondaryComponents[secondaryComponentIndex].characteristics);
             }
         }, {
             key: "updateCharacteristicList",
             value: function updateCharacteristicList(familyName, characteristicList) {
+                var dependencyName = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+                var inArrayProperty = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "characteristics";
+
+                dependencyName = dependencyName || familyName; //dependencyName defaults to familyName but could be different
+                if (typeof inArrayProperty === "string") inArrayProperty = this[inArrayProperty];
                 if (this.findDependency(familyName)) {
-                    this.clearCharacteristicsFromFamily(familyName);
+                    this.clearCharacteristicsFromFamily(familyName, inArrayProperty);
                     var _iteratorNormalCompletion2 = true;
                     var _didIteratorError2 = false;
                     var _iteratorError2 = undefined;
@@ -391,6 +396,42 @@
                         } finally {
                             if (_didIteratorError2) {
                                 throw _iteratorError2;
+                            }
+                        }
+                    }
+
+                    return true;
+                }
+                return false;
+            }
+        }, {
+            key: "updateSecondaryComponentCharacteristicList",
+            value: function updateSecondaryComponentCharacteristicList(familyName, characteristicList, dependencyName) {
+                var secondaryComponentIndex = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 0;
+
+                if (this.findDependency(dependencyName)) {
+                    this.clearCharacteristicsFromFamily(familyName, this.secondaryComponents[0].characteristics);
+                    var _iteratorNormalCompletion3 = true;
+                    var _didIteratorError3 = false;
+                    var _iteratorError3 = undefined;
+
+                    try {
+                        for (var _iterator3 = characteristicList[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+                            var cSource = _step3.value;
+
+                            this.addCharacteristic(new characteristic.Characteristic(familyName, cSource), this.secondaryComponents[0].characteristics);
+                        }
+                    } catch (err) {
+                        _didIteratorError3 = true;
+                        _iteratorError3 = err;
+                    } finally {
+                        try {
+                            if (!_iteratorNormalCompletion3 && _iterator3.return) {
+                                _iterator3.return();
+                            }
+                        } finally {
+                            if (_didIteratorError3) {
+                                throw _iteratorError3;
                             }
                         }
                     }
