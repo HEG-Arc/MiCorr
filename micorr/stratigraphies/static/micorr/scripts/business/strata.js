@@ -603,32 +603,63 @@
         }, {
             key: "toJson",
             value: function toJson() {
-                var childStrata = [];
+                var childStrata = [],
+                    i;
 
-                var jsonStrata = { 'name': this.getUid(), 'characteristics': [], 'interfaces': [], 'children': [] };
+                var jsonStrata = { name: this.getUid(), characteristics: [], interfaces: [], children: [], secondaryComponents: [] };
 
                 //On récupère les caractéristiques
-                for (var i = 0; i < this.characteristics.length; i++) {
+                for (i = 0; i < this.characteristics.length; i++) {
                     if (!this.characteristics[i].isInterface()) {
-                        jsonStrata.characteristics.push({ 'name': this.characteristics[i].getName() });
+                        jsonStrata.characteristics.push({ name: this.characteristics[i].getName() });
                     }
                 }
                 //On récupère les sous caractéristiques
-                for (var i = 0; i < this.subCharacteristics.length; i++) {
-                    jsonStrata.characteristics.push({ 'name': this.subCharacteristics[i].getUid() });
+                for (i = 0; i < this.subCharacteristics.length; i++) {
+                    jsonStrata.characteristics.push({ name: this.subCharacteristics[i].getUid() });
                 }
 
                 //On récupère les caractéristiques d'interface
-                for (var i = 0; i < this.characteristics.length; i++) {
+                for (i = 0; i < this.characteristics.length; i++) {
                     if (this.characteristics[i].isInterface()) {
-                        jsonStrata.interfaces.push({ 'name': this.characteristics[i].getName() });
+                        jsonStrata.interfaces.push({ name: this.characteristics[i].getName() });
                     }
                 }
 
                 //On récupère les strates enfants si ce n'est pas une strate enfant
                 if (!this.child) {
-                    for (var i = 0; i < this.childStrata.length; i++) {
+                    for (i = 0; i < this.childStrata.length; i++) {
                         jsonStrata.children.push(this.childStrata[i].toJson());
+                    }
+                }
+                // secondaryComponents
+                var _iteratorNormalCompletion4 = true;
+                var _didIteratorError4 = false;
+                var _iteratorError4 = undefined;
+
+                try {
+                    for (var _iterator4 = this.secondaryComponents[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+                        var sc = _step4.value;
+
+                        var all_component_characteristics = sc.characteristics.map(function (c) {
+                            return { name: c.getName() };
+                        }).concat(sc.subCharacteristics.map(function (sc) {
+                            return { name: sc.getUid() };
+                        }));
+                        if (all_component_characteristics.length) jsonStrata.secondaryComponents.push(all_component_characteristics);
+                    }
+                } catch (err) {
+                    _didIteratorError4 = true;
+                    _iteratorError4 = err;
+                } finally {
+                    try {
+                        if (!_iteratorNormalCompletion4 && _iterator4.return) {
+                            _iterator4.return();
+                        }
+                    } finally {
+                        if (_didIteratorError4) {
+                            throw _iteratorError4;
+                        }
                     }
                 }
 

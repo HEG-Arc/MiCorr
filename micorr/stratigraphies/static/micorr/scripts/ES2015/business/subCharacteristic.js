@@ -6,13 +6,20 @@
  */
 
 class SubCharacteristic {
-
     constructor(family, sourceSC){
         if (family)
             this.family = family;
         if (sourceSC) {
-            this.uid = sourceSC.uid;
-            this.name = sourceSC.name;
+            if ('uid' in sourceSC)
+            {
+                this.uid = sourceSC.uid ;
+                this.name = sourceSC.name;
+            }
+            else
+            {
+                this.uid = sourceSC.name ;
+                this.name = sourceSC.real_name;
+            }
         }
     }
 

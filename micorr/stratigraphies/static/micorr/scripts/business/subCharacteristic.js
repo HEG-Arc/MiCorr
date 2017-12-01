@@ -1,6 +1,6 @@
 (function (global, factory) {
     if (typeof define === "function" && define.amd) {
-        define(["exports"], factory);
+        define(['exports'], factory);
     } else if (typeof exports !== "undefined") {
         factory(exports);
     } else {
@@ -11,7 +11,7 @@
         global.subCharacteristic = mod.exports;
     }
 })(this, function (exports) {
-    "use strict";
+    'use strict';
 
     Object.defineProperty(exports, "__esModule", {
         value: true
@@ -47,48 +47,53 @@
 
             if (family) this.family = family;
             if (sourceSC) {
-                this.uid = sourceSC.uid;
-                this.name = sourceSC.name;
+                if ('uid' in sourceSC) {
+                    this.uid = sourceSC.uid;
+                    this.name = sourceSC.name;
+                } else {
+                    this.uid = sourceSC.name;
+                    this.name = sourceSC.real_name;
+                }
             }
         }
 
         _createClass(SubCharacteristic, [{
-            key: "getId",
+            key: 'getId',
             value: function getId() {
                 return this.id;
             }
         }, {
-            key: "setId",
+            key: 'setId',
             value: function setId(id) {
                 this.id = id;
             }
         }, {
-            key: "getUid",
+            key: 'getUid',
             value: function getUid() {
                 return this.uid;
             }
         }, {
-            key: "setUid",
+            key: 'setUid',
             value: function setUid(uid) {
                 this.uid = uid;
             }
         }, {
-            key: "getName",
+            key: 'getName',
             value: function getName() {
                 return this.name;
             }
         }, {
-            key: "setName",
+            key: 'setName',
             value: function setName(name) {
                 this.name = name;
             }
         }, {
-            key: "getFamily",
+            key: 'getFamily',
             value: function getFamily() {
                 return this.family;
             }
         }, {
-            key: "setFamily",
+            key: 'setFamily',
             value: function setFamily(family) {
                 this.family = family;
             }

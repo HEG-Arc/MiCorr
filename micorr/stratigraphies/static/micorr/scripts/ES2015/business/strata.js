@@ -502,35 +502,41 @@ class Strata {
     }
 
     toJson() {
-        var childStrata = [];
+        var childStrata = [],i;
 
-        var jsonStrata = {'name': this.getUid(), 'characteristics': [], 'interfaces': [], 'children': []};
+        var jsonStrata = {name: this.getUid(), characteristics: [], interfaces: [], children: [], secondaryComponents:[]};
 
         //On récupère les caractéristiques
-        for (var i = 0; i < this.characteristics.length; i++) {
+        for (i = 0; i < this.characteristics.length; i++) {
             if (!this.characteristics[i].isInterface()) {
-                jsonStrata.characteristics.push({'name': this.characteristics[i].getName()});
+                jsonStrata.characteristics.push({name: this.characteristics[i].getName()});
             }
         }
         //On récupère les sous caractéristiques
-        for (var i = 0; i < this.subCharacteristics.length; i++) {
-            jsonStrata.characteristics.push({'name': this.subCharacteristics[i].getUid()});
+        for (i = 0; i < this.subCharacteristics.length; i++) {
+            jsonStrata.characteristics.push({name: this.subCharacteristics[i].getUid()});
         }
 
         //On récupère les caractéristiques d'interface
-        for (var i = 0; i < this.characteristics.length; i++) {
+        for (i = 0; i < this.characteristics.length; i++) {
             if (this.characteristics[i].isInterface()) {
-                jsonStrata.interfaces.push({'name': this.characteristics[i].getName()});
+                jsonStrata.interfaces.push({name: this.characteristics[i].getName()});
             }
         }
 
         //On récupère les strates enfants si ce n'est pas une strate enfant
         if (!this.child) {
-            for (var i = 0; i < this.childStrata.length; i++) {
+            for (i = 0; i < this.childStrata.length; i++) {
                 jsonStrata.children.push(this.childStrata[i].toJson());
             }
         }
-
+        // secondaryComponents
+        for (let sc of this.secondaryComponents) {
+            let all_component_characteristics = sc.characteristics.map(c => ({name: c.getName()})
+            ).concat(sc.subCharacteristics.map(sc => ({name: sc.getUid()})));
+            if (all_component_characteristics.length)
+                jsonStrata.secondaryComponents.push(all_component_characteristics);
+        }
         return jsonStrata;
 
     }

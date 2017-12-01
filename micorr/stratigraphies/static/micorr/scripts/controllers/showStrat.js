@@ -122,6 +122,58 @@ angular.module('micorrApp')
             //Chargement de la stratigraphie
             MiCorrService.getDetailedStratigraphy($scope.stratigraphyName).success(function (data) {
 
+                 /*
+                 * cherche dans une liste (liste de sous-charactéristiques) une valeur et si elle correspond
+                 * à la valeur donnée en paramètre alors on retourne la sous caractéristique
+                 * @params sub : sous-charactéristique de cette strate
+                 *         list : liste des sous caractéristiques pour cette famille
+                 * @returns valeur de la charactéristique
+                 */
+                 // for subCharacteristics there is no "real"/graph model Family so for now we still filter
+                // through the list of all subcharacteristics sorted by Characteristic Family and relationship level
+                // for ex. 'subcpcompositionFamily' is not a family Node uid in the graph db but just means 1st level
+                // Subcharacteristics of 'cpCompositionFamily'
+                // todo refactoring: just synthesize and add this pseudo family to data on load from the graph
+                // todo and remove all these repeated filtering loops
+                 function getSubCharacteristicByFamily(sub, list) {
+                    for (var i = 0; i < sub.length; i++) {
+                        for (var j = 0; j < list.length; j++) {
+                            if (sub[i].name == list[j].uid || sub[i].name == list[j].name)
+                                return sub[i];
+                        }
+                    }
+                    return undefined;
+                }
+
+                function getSubCharacteristicByFamilyMulti(sub, list) {
+                    var t = [];
+                    for (var i = 0; i < sub.length; i++) {
+                        for (var j = 0; j < list.length; j++) {
+                            if (sub[i].name == list[j].name || sub[i].name == list[j].uid)
+                                t.push(sub[i]);
+                            //return sub[i].name;
+                        }
+                    }
+                    return t;
+                }
+
+                /*
+                 * cherche dans une liste (liste de sous-charactéristiques) des valeurs et si elles correspondent
+                 * à la valeur donnée en paramètre alors on retourne les sous caractéristiques
+                 * @params sub : sous-charactéristique de cette strate
+                 *         list : liste des sous caractéristiques pour cette famille
+                 * @returns valeurs de la caractéristique
+                 */
+                function getCharacteristicByFamilyMulti(data, family) {
+                    var t = [];
+                    for (var i = 0; i < data.length; i++) {
+                        if (data[i].family == family) {
+                            t.push({'name': data[i].name});
+                        }
+                    }
+                    return t;
+                }
+
                 var st = StratigraphyData.getStratigraphy();
                 st.setUid($scope.stratigraphyName);
                 st.setArtefact($scope.artefactName);
@@ -139,7 +191,7 @@ angular.module('micorrApp')
                     if (st.getDescription() != undefined) {
                         str.setName(st.getDescription() + '_strata_' + str.getIndex());
                     }
-                    //Boucle sur les caracteristiques
+                 //Boucle sur les caracteristiques
                     for (var j = 0; j < currentStrata.characteristics.length; j++) {
                         var currentCharacteristic = currentStrata.characteristics[j];
                         var char = new characteristic.Characteristic();
@@ -169,64 +221,41 @@ angular.module('micorrApp')
 
                     //Récupération des sous caractéristiques:
                     var subCharacteristicsList = currentStrata['subcharacteristics'];
+                    var sChar;
+                    if (str.findDependency('subcpcompositionFamily') &&
+                        (sChar = getSubCharacteristicByFamily(subCharacteristicsList, StratigraphyData.getSubcpcompositionFamily())))
+                        str.addSubCharacteristic(new subCharacteristic.SubCharacteristic('subcpcompositionFamily', sChar));
 
-                    if (str.findDependency('subcpcompositionFamily')) {
-                        var sChar = $scope.getSubCharacteristicByFamily(subCharacteristicsList, StratigraphyData.getSubcpcompositionFamily());
+                    if (str.findDependency('subsubcpcompositionFamily') &&
+                        (sChar = getSubCharacteristicByFamily(subCharacteristicsList, StratigraphyData.getSubsubcpcompositionFamily())))
+                        str.addSubCharacteristic(new subCharacteristic.SubCharacteristic('subsubcpcompositionFamily', sChar));
 
-                        if (sChar != undefined) {
-                            var subChar = new subCharacteristic.SubCharacteristic();
-                            subChar.setFamily('subcpcompositionFamily');
-                            subChar.setUid(sChar.name);
-                            subChar.setName(sChar.real_name);
-                            if (subChar.getUid() != "" && subChar.getUid() != undefined) {
+                    if (str.findDependency('subcmlevelofcorrosionFamily') &&
+                        (sChar = getSubCharacteristicByFamily(subCharacteristicsList, StratigraphyData.getSubcmLevelOfCorrosionFamily())))
+                        str.addSubCharacteristic(new subCharacteristic.SubCharacteristic('subcmlevelofcorrosionFamily', sChar));
 
-                                str.addSubCharacteristic(subChar);
+                    if (str.findDependency('submcompositionFamily') &&
+                        (sChar = getSubCharacteristicByFamily(subCharacteristicsList, StratigraphyData.getSubmcompositionFamily())))
+                        str.addSubCharacteristic(new subCharacteristic.SubCharacteristic('submcompositionFamily', sChar));
+
+                     // secondary Components
+                    if (currentStrata.secondaryComponents)
+                        for (let component of currentStrata.secondaryComponents) {
+                            for (let c of component.characteristics)
+                                str.addCharacteristic(new characteristic.Characteristic(c.family, c), str.secondaryComponents[0].characteristics)
+                            for (let sc of component.subCharacteristics) {
+                                 if (sChar = getSubCharacteristicByFamily([sc], StratigraphyData.getSubcpcompositionFamily()))
+                                     str.addCharacteristic(new subCharacteristic.SubCharacteristic('subcpcompositionFamily', sc), str.secondaryComponents[0].subCharacteristics);
+                                 else if (sChar = getSubCharacteristicByFamily([sc], StratigraphyData.getSubsubcpcompositionFamily()))
+                                     str.addCharacteristic(new subCharacteristic.SubCharacteristic('subsubcpcompositionFamily', sc), str.secondaryComponents[0].subCharacteristics);
+                                 else
+                                     console.log(`ignoring unexpected subCharacteristic:${sc.name} in secondaryComponent`);
                             }
                         }
-                    }
-
-                    if (str.findDependency('subsubcpcompositionFamily')) {
-                        var sChar = $scope.getSubCharacteristicByFamily(subCharacteristicsList, StratigraphyData.getSubsubcpcompositionFamily());
-                        if (sChar != undefined) {
-                            var subChar = new subCharacteristic.SubCharacteristic();
-                            subChar.setFamily('subsubcpcompositionFamily');
-                            subChar.setName(sChar.real_name);
-                            subChar.setUid(sChar.name);
-                            if (subChar.getUid() != "" && subChar.getUid() != undefined) {
-                                str.addSubCharacteristic(subChar);
-                            }
-                        }
-                    }
-                    if (str.findDependency('subcmlevelofcorrosionFamily')) {
-                        var sChar = $scope.getSubCharacteristicByFamily(subCharacteristicsList, StratigraphyData.getSubcmLevelOfCorrosionFamily());
-                        if (sChar != undefined) {
-                            var subChar = new subCharacteristic.SubCharacteristic();
-                            subChar.setFamily('subcmlevelofcorrosionFamily');
-                            subChar.setName(sChar.real_name);
-                            subChar.setUid(sChar.name);
-                            if (subChar.getUid() != "" && subChar.getUid() != undefined) {
-                                str.addSubCharacteristic(subChar);
-                            }
-                        }
-                    }
-
-                    if (str.findDependency('submcompositionFamily')) {
-                        var sChar = $scope.getSubCharacteristicByFamily(subCharacteristicsList, StratigraphyData.getSubmcompositionFamily());
-                        if (sChar != undefined) {
-                            var subChar = new subCharacteristic.SubCharacteristic();
-                            subChar.setFamily('submcompositionFamily');
-                            subChar.setName(sChar.real_name);
-                            subChar.setUid(sChar.name);
-                            if (subChar.getUid() != "" && subChar.getUid() != undefined) {
-                                str.addSubCharacteristic(subChar);
-                            }
-                        }
-                    }
-
 
                     //Chargement des données pour la picklist
                     if (str.findDependency('subcprimicrostructureFamily')) {
-                        var sChars = $scope.getSubCharacteristicByFamilyMulti(subCharacteristicsList, StratigraphyData.getSubcprimicrostructureFamily());
+                        var sChars = getSubCharacteristicByFamilyMulti(subCharacteristicsList, StratigraphyData.getSubcprimicrostructureFamily());
                         for (var j = 0; j < sChars.length; j++) {
                             var subChar = new subCharacteristic.SubCharacteristic();
                             subChar.setFamily('subcprimicrostructureFamily');
@@ -236,7 +265,7 @@ angular.module('micorrApp')
                         }
                     }
                     if (str.findDependency('submmicrostructureFamily')) {
-                        var sChars = $scope.getSubCharacteristicByFamilyMulti(subCharacteristicsList, StratigraphyData.getSubmmicrostructureFamily());
+                        var sChars = getSubCharacteristicByFamilyMulti(subCharacteristicsList, StratigraphyData.getSubmmicrostructureFamily());
 
                         for (var j = 0; j < sChars.length; j++) {
                             var subChar = new subCharacteristic.SubCharacteristic();
@@ -318,53 +347,6 @@ angular.module('micorrApp')
                 $scope.update(index); // on donne toujours l'index de la strate sélectionnée pour la mise à jour
             });
         });
-
-        /*
-         * cherche dans une liste (liste de sous-charactéristiques) une valeur et si elle correspond
-         * à la valeur donnée en paramètre alors on retourne la sous caractéristique
-         * @params sub : sous-charactéristique de cette strate
-         *         list : liste des sous caractéristiques pour cette famille
-         * @returns valeur de la charactéristique
-         */
-        $scope.getSubCharacteristicByFamily = function (sub, list) {
-            for (var i = 0; i < sub.length; i++) {
-                for (var j = 0; j < list.length; j++) {
-                    if (sub[i].name == list[j].uid || sub[i].name == list[j].name)
-                        return sub[i];
-                }
-            }
-            return undefined;
-        }
-
-
-        $scope.getSubCharacteristicByFamilyMulti = function (sub, list) {
-            var t = [];
-            for (var i = 0; i < sub.length; i++) {
-                for (var j = 0; j < list.length; j++) {
-                    if (sub[i].name == list[j].name || sub[i].name == list[j].uid)
-                        t.push(sub[i]);
-                    //return sub[i].name;
-                }
-            }
-            return t;
-        }
-
-        /*
-         * cherche dans une liste (liste de sous-charactéristiques) des valeurs et si elles correspondent
-         * à la valeur donnée en paramètre alors on retourne les sous caractéristiques
-         * @params sub : sous-charactéristique de cette strate
-         *         list : liste des sous caractéristiques pour cette famille
-         * @returns valeurs de la caractéristique
-         */
-        $scope.getCharacteristicByFamilyMulti = function (data, family) {
-            var t = [];
-            for (var i = 0; i < data.length; i++) {
-                if (data[i].family == family) {
-                    t.push({'name': data[i].name});
-                }
-            }
-            return t;
-        }
 
         /*
          * exécute une mise à jour de l'interface. On met à jour le formulaire pour être plus précis
