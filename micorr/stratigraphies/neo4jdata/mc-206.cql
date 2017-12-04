@@ -2,7 +2,7 @@
 
 // Add new "no microstructure" Characteristic to Metal Microstructure family
 MATCH (f:Family {uid:"mMicrostructureFamily"})
-MERGE (c:Characteristic {name: "no microstructure",uid:"noMicrostructureCharacteristic",type:"Strata",visible:true, order:0})
+MERGE (c:Characteristic {name: "no microstructure",uid:"mnoMicrostructureCharacteristic",type:"Strata",visible:true, order:0})
 ON CREATE set c+=$common_props
 MERGE (f)<-[r:BELONGS_TO]-(c)
 RETURN f,r,c;
