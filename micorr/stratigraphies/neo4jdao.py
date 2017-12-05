@@ -22,7 +22,6 @@ class Neo4jDAO:
             raise ValueError('NEO4J_AUTH environment variable expected format user:pass')
         self.url = "http://%s:%s@%s/db/data" % (neo4j_auth[0], neo4j_auth[1], neo4j_host)
         self.graph = Graph(self.url)
-        self.tx = self.graph.cypher.begin()
 
     def begin(self):
         self.tx = self.graph.cypher.begin()
@@ -355,7 +354,7 @@ class Neo4jDAO:
     # @params nom de la stratigraphie
     # @returns
     def deleteStratigraphy(self, stratigraphy):
-        #self.deleteAllStrataFromAStratigraphy(stratigraphy)
+        self.deleteAllStrataFromAStratigraphy(stratigraphy)
         self.query = "match (a:Artefact)-[i:IS_REPRESENTED_BY]->(s:Stratigraphy) where s.uid = '" + stratigraphy + "' optional match (s)-[r]->()  delete i, r, s";
         self.graph.cypher.execute(self.query)
         return {'res': 1}
