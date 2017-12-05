@@ -23,17 +23,6 @@ class Neo4jDAO:
         self.url = "http://%s:%s@%s/db/data" % (neo4j_auth[0], neo4j_auth[1], neo4j_host)
         self.graph = Graph(self.url)
 
-    def begin(self):
-        self.tx = self.graph.cypher.begin()
-
-    # commit des transaction. Si rien n'est precise, autocommit
-    def commit(self):
-        self.tx.process()
-        self.tx.commit()
-
-    def rollback(self):
-        self.tx.rollback()
-
     def getStratigraphiesByUser(self, user_id, order_by='description'):
         stratigraphies = self.graph.cypher.execute("MATCH (n:Stratigraphy) WHERE n.user_uid=%s RETURN n ORDER BY n.%s" % (user_id, order_by))
         stratigraphies_list = []
@@ -302,19 +291,19 @@ class Neo4jDAO:
     # @params nom de l'artefact et description de la stratigraphie de la stratigraphie
     # @returns true si ajout, false si refus d'ajout
     def addStratigraphy(self, artefact, stratigraphy):
-        self.insertOk = False
+        insertOk = False
 
         name = str(uuid.uuid1())
 
         if self.stratigraphyExists(stratigraphy) > 0:
-            self.insertOk = False
+            insertOk = False
         else:
-            self.insertOk = name
+            insertOk = name
             self.graph.cypher.execute_one("CREATE(stratigraphy:Stratigraphy{uid:'%s', timestamp: %f, date:'%s', artefact_uid: '%s', label:'stratigraphy', description:'%s'})" % (name, time.time(), time.strftime("%Y-%m-%d"), artefact, stratigraphy))
             self.graph.cypher.execute_one(
                 "MATCH (a:Artefact),(b:Stratigraphy) WHERE a.uid = '" + artefact + "' AND b.uid= '" + name + "' CREATE (a)-[:IS_REPRESENTED_BY]->(b)")
 
-        return self.insertOk
+        return insertOk
 
     # retourne la liste de tous les artefacts
     # @params
@@ -333,9 +322,9 @@ class Neo4jDAO:
     # @params nom de la stratigraphie
     # @returns chiffre > 0 si existe, 0 sinon
     def stratigraphyExists(self, stratigraphy):
-        self.strat = self.graph.cypher.execute(
+        strat = self.graph.cypher.execute(
             "match (n:`Stratigraphy`) where n.uid='" + stratigraphy + "' return n.uid as name")
-        return len(self.strat) > 0
+        return len(strat) > 0
 
     # supprime toutes les strates et sous strates d'une stratigraphie
     # @params nom de la stratigraphie
@@ -355,35 +344,35 @@ class Neo4jDAO:
     # @returns
     def deleteStratigraphy(self, stratigraphy):
         self.deleteAllStrataFromAStratigraphy(stratigraphy)
-        self.query = "match (a:Artefact)-[i:IS_REPRESENTED_BY]->(s:Stratigraphy) where s.uid = '" + stratigraphy + "' optional match (s)-[r]->()  delete i, r, s";
-        self.graph.cypher.execute(self.query)
+        query = "match (a:Artefact)-[i:IS_REPRESENTED_BY]->(s:Stratigraphy) where s.uid = '" + stratigraphy + "' optional match (s)-[r]->()  delete i, r, s";
+        self.graph.cypher.execute(query)
         return {'res': 1}
 
     # cree une interface
     # @params nom de la strate et nom de l'interface
     # @returns
     def createInterface(self, strata, interface):
-        self.query = "CREATE (interface:Interface {uid:'" + interface + "', date:'" + time.strftime(
+        query = "CREATE (interface:Interface {uid:'" + interface + "', date:'" + time.strftime(
             "%Y-%m-%d") + "', strata_uid:'" + strata + "', label:'interface'})"
-        self.queryMatch = (
+        queryMatch = (
         "MATCH (a:Strata),(b:Interface) WHERE a.uid = '" + strata + "' AND b.uid= '" + interface + "' CREATE (a)-[:HAS_UPPER_INTERFACE]->(b)")
-        self.graph.cypher.execute(self.query)
-        self.graph.cypher.execute(self.queryMatch)
+        self.graph.cypher.execute(query)
+        self.graph.cypher.execute(queryMatch)
 
     # attache une caracteristique a une interface
     # @params nom de l'interface et nom de la caracteristique
     # @returns
     def attachCharacteristicToInterface(self, interface, characteristic):
-        self.query = "MATCH (a:Interface),(b) WHERE a.uid = '" + interface + "' AND b.uid= '" + characteristic + "' CREATE (a)-[r:IS_CONSTITUTED_BY]->(b)"
-        self.graph.cypher.execute(self.query)
+        query = "MATCH (a:Interface),(b) WHERE a.uid = '" + interface + "' AND b.uid= '" + characteristic + "' CREATE (a)-[r:IS_CONSTITUTED_BY]->(b)"
+        self.graph.cypher.execute(query)
 
     # attache une caracteristique,sous-caracteristique a une strate
     # @params nom de la strate etnom de la caracteristique, sous-caracteristique
     # @returns
     def attachCharacteristicToStrata(self, strata, characteristic):
-        self.query = "MATCH (a:Strata),(b) WHERE a.uid = '" + strata + "' AND b.uid= '" + characteristic + "' CREATE (a)-[r:IS_CONSTITUTED_BY]->(b)"
-        print(self.query)
-        self.graph.cypher.execute(self.query)
+        query = "MATCH (a:Strata),(b) WHERE a.uid = '" + strata + "' AND b.uid= '" + characteristic + "' CREATE (a)-[r:IS_CONSTITUTED_BY]->(b)"
+        print(query)
+        self.graph.cypher.execute(query)
 
     # attache une caracteristique ou sous-caracteristique a un node (Strata, Interface, ...)
     # @params nom de la strate etnom de la caracteristique, sous-caracteristique
@@ -398,21 +387,21 @@ class Neo4jDAO:
     # @params nom de la strate et nom de la stratigraphie
     # @returns
     def createStrata(self, strata, stratigraphy):
-        self.query = "CREATE(strata:Strata{uid:'" + strata + "',date:'" + time.strftime(
+        query = "CREATE(strata:Strata{uid:'" + strata + "',date:'" + time.strftime(
             "%Y-%m-%d") + "',stratigraphy_uid: '" + stratigraphy + "',label:'strata'})"
-        self.graph.cypher.execute(self.query)
-        self.query = "MATCH (a:Stratigraphy),(b:Strata) WHERE a.uid = '" + stratigraphy + "' AND b.uid= '" + strata + "' CREATE (a)-[:POSSESSES]->(b)"
-        self.graph.cypher.execute(self.query)
+        self.graph.cypher.execute(query)
+        query = "MATCH (a:Stratigraphy),(b:Strata) WHERE a.uid = '" + stratigraphy + "' AND b.uid= '" + strata + "' CREATE (a)-[:POSSESSES]->(b)"
+        self.graph.cypher.execute(query)
 
     # cree une strate enfant
     # @params nom de la strate et nom de la strate parent
     # @returns
     def createChildStrata(self, strata, parentstrata):
-        self.query = "CREATE(strata:Strata{uid:'" + strata + "',date:'" + time.strftime(
+        query = "CREATE(strata:Strata{uid:'" + strata + "',date:'" + time.strftime(
             "%Y-%m-%d") + "',label:'strata'})"
-        self.graph.cypher.execute(self.query)
-        self.query = "MATCH (a:Strata),(b:Strata) WHERE a.uid = '" + strata + "' AND b.uid= '" + parentstrata + "' CREATE (b)-[:IS_PARENT_OF]->(a)"
-        self.graph.cypher.execute(self.query)
+        self.graph.cypher.execute(query)
+        query = "MATCH (a:Strata),(b:Strata) WHERE a.uid = '" + strata + "' AND b.uid= '" + parentstrata + "' CREATE (b)-[:IS_PARENT_OF]->(a)"
+        self.graph.cypher.execute(query)
 
     def create_secondary_components(self, strata, components):
         """
@@ -444,15 +433,15 @@ class Neo4jDAO:
     # @params nom de la stratigraphie
     # @returns nombre d'interface pour toutes les strates d'une stratigrpahie
     def getNbInterfaceByStratigraphy(self, stratigraphy):
-        self.query = "MATCH (n:Stratigraphy)-[p:POSSESSES]->(s:Strata)-[u:HAS_UPPER_INTERFACE]->(i:Interface) where n.uid='" + stratigraphy + "' RETURN  count(i) as nb"
-        return self.graph.cypher.execute(self.query)[0].nb
+        query = "MATCH (n:Stratigraphy)-[p:POSSESSES]->(s:Strata)-[u:HAS_UPPER_INTERFACE]->(i:Interface) where n.uid='" + stratigraphy + "' RETURN  count(i) as nb"
+        return self.graph.cypher.execute(query)[0].nb
 
     # retourne le nombre de strates pour une stratigraphie
     # @params nom de la stratigraphie
     # @returns nombre de strates pour cette stratigraphie
     def getNbStratasByStratigraphy(self, stratigraphy):
-        self.query = "MATCH (n:Stratigraphy)-[p:POSSESSES]->(s:Strata) where n.uid='" + stratigraphy + "' RETURN  count(s) as nb"
-        return self.graph.cypher.execute(self.query)[0].nb
+        query = "MATCH (n:Stratigraphy)-[p:POSSESSES]->(s:Strata) where n.uid='" + stratigraphy + "' RETURN  count(s) as nb"
+        return self.graph.cypher.execute(query)[0].nb
 
     # sauvegarde toutes les strates d'une stratigraphie
     # @params details d'une stratigraphie au format json
@@ -614,27 +603,27 @@ class Neo4jDAO:
     # @params nom de l'artefact
     # @returns 0 si pas ok, 1 si ok
     def addArtefact(self, artefact):
-        self.query = "MATCH (n:Artefact) where n.uid='" + artefact + "' RETURN count(n.uid) as nb"
-        self.nb = self.graph.cypher.execute(self.query)[0].nb
+        query = "MATCH (n:Artefact) where n.uid='" + artefact + "' RETURN count(n.uid) as nb"
+        nb = self.graph.cypher.execute(query)[0].nb
 
-        if self.nb >= 1:
+        if nb >= 1:
             return {'res': 0}
         else:
-            self.query = "CREATE(artefact:Artefact{uid:'" + artefact + "',date:'" + time.strftime(
+            query = "CREATE(artefact:Artefact{uid:'" + artefact + "',date:'" + time.strftime(
                 "%Y-%m-%d") + "',label:'artefact'})"
-            self.graph.cypher.execute(self.query)
+            self.graph.cypher.execute(query)
             return {'res': 1}
 
     # suppression d'un artefact
     # @params nom de l'artefact
     # @returns
     def delArtefact(self, artefact):
-        self.query = "MATCH (a:Artefact)-[r:IS_REPRESENTED_BY]->(s:Stratigraphy) where a.uid='" + artefact + "' RETURN  s.uid as uid"
-        listStrat = self.graph.cypher.execute(self.query)
+        query = "MATCH (a:Artefact)-[r:IS_REPRESENTED_BY]->(s:Stratigraphy) where a.uid='" + artefact + "' RETURN  s.uid as uid"
+        listStrat = self.graph.cypher.execute(query)
         for strat in listStrat:
             self.deleteStratigraphy(strat.uid)
 
-        self.query = "match (a:Artefact) where a.uid='" + artefact + "' optional match (a)-[x]-() delete x, a"
-        self.graph.cypher.execute(self.query)
+        query = "match (a:Artefact) where a.uid='" + artefact + "' optional match (a)-[x]-() delete x, a"
+        self.graph.cypher.execute(query)
 
         return {'res': 1}
