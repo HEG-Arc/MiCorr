@@ -226,31 +226,19 @@
                     }
                 }
 
-                var profile = '';
+                var profile = 'straightCharacteristic';
                 if (strata.getCharacteristicsByFamily('interfaceProfileFamily').length > 0) {
                     profile = strata.getCharacteristicsByFamily('interfaceProfileFamily')[0].getName();
                 }
 
                 //On va maintenant dessiner l'interface
-
-                //Si elle est droite on dessine simplement deux rectangles
-                if (profile == 'straightCharacteristic' || profile == '') {
-                    var upperRect = nestedInterface.rect(interfaceWidth, interfaceHeight).attr({ fill: upperInterfaceColor });
-                    var lowerRect = nestedInterface.rect(interfaceWidth, interfaceHeight).x(0).y(interfaceHeight / 2).attr({ fill: lowerInterfaceColor });
-
-                    //On dessine la bordure extérieure et la droite qui sépare les strates
-                    var borderPath = nestedInterface.path("M0 0L0 " + interfaceHeight + " M" + strataWidth + " " + " 0L" + interfaceWidth + " " + interfaceHeight).fill('none');
-                    borderPath.stroke({ color: borderColor, width: borderWidth });
-
-                    var divisionPath = nestedInterface.path("M0 " + interfaceHeight / 2 + "L" + interfaceWidth + " " + interfaceHeight / 2).fill('none');
-                    divisionPath.stroke({ color: borderColor, width: divisionLineWidth });
-                } else if (profile == 'wavyCharacteristic') {
-                    this.drawCustomInterface(nestedInterface, index, interfaceWidth, interfaceHeight, 'wavy', 8, lowerInterfaceColor, upperInterfaceColor, borderWidth, divisionLineWidth, diffuse, transition);
-                } else if (profile == 'bumpyCharacteristic') {
-                    this.drawCustomInterface(nestedInterface, index, interfaceWidth, interfaceHeight, 'bumpy', 20, lowerInterfaceColor, upperInterfaceColor, borderWidth, divisionLineWidth, diffuse, transition);
-                } else if (profile == 'irregularCharacteristic') {
-                    this.drawCustomInterface(nestedInterface, index, interfaceWidth, interfaceHeight, 'irregular', 30, lowerInterfaceColor, upperInterfaceColor, borderWidth, divisionLineWidth, diffuse, transition);
-                }
+                var nb_hop = {
+                    straightCharacteristic: 1,
+                    wavyCharacteristic: 8,
+                    bumpyCharacteristic: 20,
+                    irregularCharacteristic: 30
+                };
+                this.drawCustomInterface(nestedInterface, index, interfaceWidth, interfaceHeight, profile, nb_hop[profile], lowerInterfaceColor, upperInterfaceColor, borderWidth, divisionLineWidth, diffuse, transition);
 
                 return nestedInterface;
             }
@@ -614,7 +602,7 @@
             }
         }, {
             key: 'drawCustomInterface',
-            value: function drawCustomInterface(draw, index, width, height, type, nb_hop, bottomBackgroundColor, topBackgroundColor, borderWidth, interfaceLineThickness, diffuse, transition) {
+            value: function drawCustomInterface(draw, index, width, height, profile, nb_hop, bottomBackgroundColor, topBackgroundColor, borderWidth, interfaceLineThickness, diffuse, transition) {
                 /* Le dessin des interfaces se fait en 3 étapes
                  *  1) Tout d'abord on colorie la zone de dessin avec la couleur topBackground et sans cadre
                  *  2) on dessine la ligne d'interface avec le tableau line = []
@@ -622,121 +610,91 @@
                  */
 
                 // Si la couleur des deux strates est noire alors la ligne d'interface est blanche
+
+                var bubbleTransitionSize = 4;
+                var y = height / 2;
+                var line = [],
+                    t = [];
+                var nb = nb_hop;
+                var x = 0;
+                var h_hop = width / nb;
+                var rndx = void 0,
+                    rndy = void 0;
                 var strokeColor = "black";
                 if (bottomBackgroundColor == "black" && topBackgroundColor == "black") strokeColor = "white";
 
-                var bubbleTransitionSize = 4;
-
-                // BEFORE : var rect = paper.rect(0, 0, width, height).attr("stroke-width", 0); // zone de dessin sans cadre
                 var rect = draw.rect(width, height).fill('none');
                 if ((transition == "semiGradualInferiorCharacteristic" || transition == "gradualCharacteristic") && index != 0) {
+                    var pds = void 0;
                     //Instance Browser
-                    if (this.window == undefined) {
-                        var pds = new poissonDisk.PoissonDiskSampler(width, height);
-                    }
+                    if (this.window == undefined) pds = new poissonDisk.PoissonDiskSampler(width, height);
                     //Instance Node.js
-                    else {
-                            var pds = new _poissonDisk.PoissonDiskSampler(width, height);
-                        }
+                    else pds = new _poissonDisk.PoissonDiskSampler(width, height);
+
                     for (var i = 0; i < 50; i++) {
                         pds.createPointsPerso(10, 10, 'none', 0, 0);
-                    }for (var i = 0; i < pds.pointList.length; i++) {
-                        // BEFORE: paper.circle(pds.pointList[i].x, pds.pointList[i].y + bubbleTransitionSize, bubbleTransitionSize).attr("fill", bottomBackgroundColor);
+                    }for (var _i = 0; _i < pds.pointList.length; _i++) {
                         var point = draw.circle(bubbleTransitionSize);
-                        point.x(pds.pointList[i].x);
-                        point.y(pds.pointList[i].y);
+                        point.x(pds.pointList[_i].x);
+                        point.y(pds.pointList[_i].y);
                         point.fill(bottomBackgroundColor);
                     }
                 }
 
                 rect.attr("fill", topBackgroundColor);
-                var y = height / 2;
-                var t = [];
-                var line = [];
-                var nb = nb_hop;
-                var x = 0;
-                var h_hop = width / nb;
-                var y = height / 2;
-                for (var i = 0; i < nb; i++) {
-                    t.push('M');
-                    line.push('M');
-                    t.push(x);
-                    line.push(x);
-                    t.push(y);
-                    line.push(y);
-                    t.push('Q');
-                    line.push('Q');
-                    // on utilise les courbes de béziers pour faire des vagues
-                    if (type == "wavy") {
-                        t.push(x + width / nb / 2);
-                        line.push(x + width / nb / 2);
-                        if (i % 2 == 0) {
-                            line.push(y + y / 2);
-                            t.push(y + y / 2);
-                        } else {
-                            line.push(y - y / 2);
-                            t.push(y - y / 2);
+
+                for (var _i2 = 0; _i2 < nb; _i2++) {
+                    line.push('M', x, y);
+                    t.push('M', x, y);
+                    if (profile === "straightCharacteristic") {
+                        line.push("L", x + h_hop, y);
+                        t.push("L", x + h_hop, y);
+                    } else {
+                        line.push('Q');
+                        t.push('Q');
+                        // on utilise les courbes de béziers pour faire des vagues
+                        if (profile == "wavyCharacteristic") {
+                            var pointx = x + width / nb / 2,
+                                pointy = y * (_i2 % 2 ? .5 : 1.5);
+                            line.push(pointx, pointy);
+                            t.push(pointx, pointy);
+                        } else if (profile == "bumpyCharacteristic") {
+                            // on fait des bosses avec les courbes de béziers en introduisant des hauteurs aléatoires
+                            rndy = this.getRandomInt(0, y);
+                            var _pointx = x + width / nb / 2,
+                                _pointy = y + rndy * (_i2 % 2 ? -1 : 1);
+                            line.push(_pointx, _pointy);
+                            t.push(_pointx, _pointy);
+                        } else if (profile == "irregularCharacteristic") {
+                            // on faire des formes irrégulières avec les courbes de béziers avec des valeurs aléatoires
+                            rndx = this.getRandomInt(0, width / nb);
+                            rndy = this.getRandomInt(-height * 0.8, height * 0.8);
+                            line.push(x + rndx, y + rndy);
+                            t.push(x + rndx, y + rndy);
                         }
-                    } else if (type == "bumpy") {
-                        // on fait des bosses avec les courbes de béziers en introduisant des hauteurs aléatoires
-                        t.push(x + width / nb / 2);
-                        line.push(x + width / nb / 2);
-                        var rnd = this.getRandomInt(0, y);
-                        if (i % 2 == 0) {
-                            line.push(y + rnd);
-                            t.push(y + rnd);
-                        } else {
-                            line.push(y - rnd);
-                            t.push(y - rnd);
-                        }
-                    } else if (type == "irregular") {
-                        // on faire des formes irrégulières avec les courbes de béziers avec des valeurs aléatoires
-                        var rndx = this.getRandomInt(0, width / nb);
-                        t.push(x + rndx);
-                        line.push(x + rndx);
-                        var rnd = this.getRandomInt(-height * 0.8, height * 0.8);
-                        line.push(y + rnd);
-                        t.push(y + rnd);
+                        line.push(x + h_hop, y);
+                        t.push(x + h_hop, y);
                     }
-                    line.push(x + h_hop);
-                    t.push(x + h_hop);
-                    line.push(y);
-                    t.push(y);
-
-                    t.push('L');
-                    t.push(x + h_hop);
-                    t.push(height);
-                    t.push('L');
-                    t.push(x);
-                    t.push(height);
-
+                    //Only extra points inserted in t array for closing path below
+                    t.push('L', x + h_hop, height);
+                    t.push('L', x, height);
                     x += h_hop;
                 }
-
-                var lineAttrs = new Array();
-                lineAttrs.push({ "stroke-width": interfaceLineThickness });
-
+                // commenting out diffuse / lineAttrs handling as it was not used in previous code
+                // and as no effect once adapted as below
+                // todo verify requirements here and svg.js api
+                /*
+                let lineAttrs = {"stroke-width": interfaceLineThickness};
                 if (diffuse) {
-                    lineAttrs.push({ "stroke-dasharray": ["."] });
-                    lineAttrs.push({ "stroke": "grey" });
-                }
-                /*BEFORE
-                 paper.path(line).attr("stroke", strokeColor).attr(lineAttrs);
-                 paper.path(t).attr("fill", bottomBackgroundColor).attr("stroke", bottomBackgroundColor);;
-                 */
-                var lineString = '';
-                for (var i = 0; i < line.length; i++) {
-                    lineString = lineString + line[i] + ' ';
-                }
+                    lineAttrs["stroke-dasharray"] = ["."];
+                    lineAttrs["stroke"] = "grey";
+                }*/
 
-                var tString = '';
-                for (var i = 0; i < t.length; i++) {
-                    tString = tString + t[i] + ' ';
-                }
-                var path1 = draw.path(lineString).fill('none');
-                var path2 = draw.path(tString).fill(bottomBackgroundColor);
+                var path1 = draw.path(line.join(' ')).fill('none'); //.attr(lineAttrs);
+                var path2 = draw.path(t.join(' ')).fill(bottomBackgroundColor);
                 path1.stroke({ color: strokeColor, width: 5 });
                 path2.stroke({ color: bottomBackgroundColor, width: 1 });
+
                 // Si c'est la première interface alros la bordure extérieure commence au milieu
                 var startHeight = 0;
                 if (index == 0) {
@@ -750,22 +708,17 @@
                 rightBorder.stroke({ color: 'black', width: borderWidth });
 
                 if (transition == "semiGradualSuperiorCharacteristic" || transition == "gradualCharacteristic") {
-                    var heightBottom = height / 2 - bubbleTransitionSize;
-                    //Instance Browser
-                    if (this.window == undefined) {
-                        var pds = new poissonDisk.PoissonDiskSampler(width, height);
-                    }
-                    //Instance Node.js
-                    else {
-                            var pds = new _poissonDisk.PoissonDiskSampler(width, height);
-                        }
-                    for (var i = 0; i < 50; i++) {
-                        pds.createPointsPerso(10, 10, 'none', 0, 0);
-                    }for (var i = 0; i < pds.pointList.length; i++) {
-                        var point = draw.circle(bubbleTransitionSize);
-                        point.x(pds.pointList[i].x);
-                        point.y(pds.pointList[i].y);
-                        point.fill(topBackgroundColor);
+                    var _pds = void 0;
+                    if (this.window == undefined) //Instance Browser
+                        _pds = new poissonDisk.PoissonDiskSampler(width, height);else //Instance Node.js
+                        _pds = new _poissonDisk.PoissonDiskSampler(width, height);
+                    for (var _i3 = 0; _i3 < 50; _i3++) {
+                        _pds.createPointsPerso(10, 10, 'none', 0, 0);
+                    }for (var _i4 = 0; _i4 < _pds.pointList.length; _i4++) {
+                        var _point = draw.circle(bubbleTransitionSize);
+                        _point.x(_pds.pointList[_i4].x);
+                        _point.y(_pds.pointList[_i4].y);
+                        _point.fill(topBackgroundColor);
                     }
                 }
             }
