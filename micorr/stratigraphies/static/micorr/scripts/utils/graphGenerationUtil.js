@@ -86,7 +86,7 @@
 
                 var stratigraphyHeight = 0;
                 var resultDraw = SVG(this.window.document.documentElement);
-                resultDraw.attr("shape-rendering", "crispEdges");
+                resultDraw.attr("shape-rendering", "auto"); //set shape rendering to default (auto) vs crispEdges
                 console.log("Nb of strata:" + this.stratig.getStratas().length);
                 for (var i = 0; i < this.stratig.getStratas().length; i++) {
                     var str = this.stratig.getStratas()[i];
@@ -428,7 +428,7 @@
                     color = '#a0cedb';
                 }
 
-                var rect = draw.rect(width, height).attr({ fill: color });
+                var rect = draw.rect(width, height).attr({ fill: color, "shape-rendering": "crispEdges" });
 
                 if (strata.getCharacteristicsByFamily('porosityFamily').length > 0) {
                     var char = strata.getCharacteristicsByFamily('porosityFamily')[0].getName();
@@ -623,7 +623,7 @@
                 var strokeColor = "black";
                 if (bottomBackgroundColor == "black" && topBackgroundColor == "black") strokeColor = "white";
 
-                var rect = draw.rect(width, height).fill('none');
+                var rect = draw.rect(width, height).attr("shape-rendering", "crispEdges").fill(topBackgroundColor);
                 if ((transition == "semiGradualInferiorCharacteristic" || transition == "gradualCharacteristic") && index != 0) {
                     var pds = void 0;
                     //Instance Browser
@@ -640,8 +640,6 @@
                         point.fill(bottomBackgroundColor);
                     }
                 }
-
-                rect.attr("fill", topBackgroundColor);
 
                 for (var _i2 = 0; _i2 < nb; _i2++) {
                     line.push('M', x, y);
@@ -690,8 +688,9 @@
                     lineAttrs["stroke"] = "grey";
                 }*/
 
-                var path1 = draw.path(line.join(' ')).fill('none'); //.attr(lineAttrs);
-                var path2 = draw.path(t.join(' ')).fill(bottomBackgroundColor);
+                var path1 = draw.path(line.join(' ')).attr("shape-rendering", profile === "straightCharacteristic" ? "crispEdges" : "auto").fill('none'); //.attr(lineAttrs);
+                var path2 = draw.path(t.join(' ')).attr("shape-rendering", "crispEdges").fill(bottomBackgroundColor);
+
                 path1.stroke({ color: strokeColor, width: 5 });
                 path2.stroke({ color: bottomBackgroundColor, width: 1 });
 
@@ -761,7 +760,7 @@
                         pathString = pathString + t[i] + ' ';
                     }
 
-                    var path = draw.path(pathString).fill('none');
+                    var path = draw.path(pathString).attr('shape-rendering', 'auto').fill('none');
                     path.stroke({ color: 'grey', width: 1 });
                 }
             }
