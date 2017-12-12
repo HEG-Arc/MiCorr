@@ -74,7 +74,6 @@ angular.module('micorrApp').directive('strata', function ($compile, Stratigraphy
 
                 // on récupère les strates et la strate
                 var stratas = StratigraphyData.getStratigraphy().getStratas();
-                var label=stratas[index].getLabel();
                 element.children()[0].id = 'info'+index;
 
                 element.children()[0].innerHTML = '<button class="btn btn-link btn-xs" ng-click="removeStrata(' + index + ')" title="delete this strata"><span class="glyphicon glyphicon-remove"></span></button>';
@@ -87,8 +86,9 @@ angular.module('micorrApp').directive('strata', function ($compile, Stratigraphy
                     btns += '<button ng-click="movestratadown(' + index + ')" type="button" class="btn btn-link btn-xs" title="move down this strata"><span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span></button>';
 
                 $(element.children()[1]).append(btns);
-
-                $(element.children()[1]).append('<div class="labelinfo" >' + label + '</div>');
+                // strata labels are now displayed inside stratigraphy svg
+                //var label=stratas[index].getLabel();
+                //$(element.children()[1]).append('<div class="labelinfo" >' + label + '</div>');
 
                 $(element.children()[1]).bind('click', function () {
                     scope.update(index);
