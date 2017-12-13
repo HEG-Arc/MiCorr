@@ -296,14 +296,23 @@
                     bottomBorder.stroke({ color: borderColor, width: borderWidth });
                 }
                 var strataColor = strata.getFirstCharacteristicByFamily("colourFamily", "realName");
-                var label = nestedStrata.plain(strata.getLabel()).attr({ x: 20, y: height / 2, "text-anchor": "auto", "font-size": 15 }).fill(strataColor !== "black" ? "black" : "white");
+                var label = nestedStrata.plain(strata.getLabel()).attr({ x: 20, y: height / 2, "text-anchor": "auto", "font-size": 18, fill: "black" });
                 var labelBbox = label.bbox();
                 console.log('stratum ' + strata.getLabel() + ' label bbox:' + labelBbox.width + ', ' + labelBbox.height);
                 // add a translucent rectangle in text background we needed to draw the text first to get its dimension
                 // then we draw the rectangle and move it before the text to have it in its background (z-order arrangement)
                 var wRectRatio = 1.3,
                     hRectRatio = 1.1;
-                label.before(nestedStrata.rect(labelBbox.width * wRectRatio, labelBbox.height * hRectRatio).attr({ x: labelBbox.x - labelBbox.width * ((wRectRatio - 1) / 2), y: labelBbox.y - labelBbox.height * ((hRectRatio - 1) / 2), rx: 5, ry: 5 }).fill({ color: "#b0b0b0", opacity: "0.6" }));
+                label.before(nestedStrata.rect(labelBbox.width * wRectRatio, labelBbox.height * hRectRatio).attr({
+                    x: labelBbox.x - labelBbox.width * ((wRectRatio - 1) / 2),
+                    y: labelBbox.y - labelBbox.height * ((hRectRatio - 1) / 2),
+                    rx: 5,
+                    ry: 5,
+                    'stroke-width': '1',
+                    stroke: 'black',
+                    fill: "white",
+                    "fill-opacity": "0.8"
+                }));
                 //On retourne le dessin de la strate
                 return nestedStrata;
             }
