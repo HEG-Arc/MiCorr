@@ -73,7 +73,6 @@
           <div class="row accordion-content1 collapse in" id="content1" aria-labelledby="title1">
             <div class="line palebox">
               <div class="row">
-                <div class="c6">
                   {% if sections.0.image_set.all %}
                         {% for image in sections.0.image_set.all %}
                           <div class="row">
@@ -88,9 +87,8 @@
                           </div>
                         {% endfor %}
                   {% endif %}
-                </div>
-              </div>
             </div>
+          </div>
           </div>
 
         <!--DESCRIPTION-->
@@ -206,7 +204,7 @@
               <a class="line"  data-toggle="collapse" data-parent="#accordionN1" href="#content3" aria-expanded="true" aria-controls="content3">{{ sections.4.title }}</a>
           </div>
           <div class="row accordion-content3 collapse in" id="content3"  aria-labelledby="title3">
-            <div class="line palebox">
+            <div class="line lightbox">
                 {% if sections.4.image_set.all %}
                     {% for image in sections.4.image_set.all %}
                       <div class="row">
@@ -222,7 +220,7 @@
                     {% endfor %}
                 {% endif %}
             </div>
-            <div class="line lightbox">
+            <div class="line palebox">
               <div class="row">
                 <div class="c3"><em>Description of sample</em></div>
                 <div class="c9"><p>{{ artefact.sample_description|safe }}</p></div>
@@ -251,17 +249,29 @@
                 <div class="c3"><em>Date and aim of sampling</em></div>
                 <div class="c9"><p>{{ artefact.date_aim_sampling }}</p></div>
               </div>
-              <div class="row">
-                <div class="c3"><em>Stratigraphies</em></div>
-                <div class="c9">
-                    {% for stratigraphy in stratigraphies %}
-                        <p><a href="/micorr/#/stratigraphy/{{ stratigraphy.uid }}" target="_blank"><img src="{{ node_base_url }}getStratigraphySvg?name={{ stratigraphy.uid }}&width=300" class="img-responsive"></a></p>
-                    {% empty %}
-                        <p>None</p>
-                    {% endfor %}
-                </div>
+              <div class="row accordion-title2" id="title31">
+                  <a class="line" data-toggle="collapse" data-parent="#accordionN2" href="#content31"
+                     aria-expanded="true" aria-controls="content31">Stratigraphies</a>
               </div>
-            </div>
+              <div class="row accordion-content2 collapse in" id="content31" aria-labelledby="title31">
+                  <div class="line lightbox">
+                      <div class="row">
+                          {% for stratigraphy in stratigraphies %}
+                              <div class="c6">
+                                  <p><a href="/micorr/#/stratigraphy/{{ stratigraphy.uid }}" target="_blank"><img
+                                          src="{{ node_base_url }}getStratigraphySvg?name={{ stratigraphy.uid }}&width=400"
+                                          class="img-responsive"></a></p>
+                              </div>
+                              <div class="c6">
+                                  <p><a name="fig1"></a>{{ stratigraphy.legend }}</p>
+                              </div>
+                          {% empty %}
+                              <p>None</p>
+                          {% endfor %}
+                      </div>
+                  </div>
+              </div>
+          </div>
             {% if sections.4.complementary_information != '' %}
               <div class="line palebox">
                 <h4 class="underline">Complementary information</h4>

@@ -390,10 +390,10 @@ class Stratigraphy(TimeStampedModel):
     """
     artefact = models.ForeignKey(Artefact, blank=True, null=True, help_text='The artefact the stratigraphy represents')
     order = models.IntegerField(blank=True, null=True, help_text='The order of a stratigraphy for a given artefact')
-    uid = models.CharField(max_length=500, blank=True, null=True, help_text='The identification of the stratigraphy')
+    uid = models.CharField(max_length=500, blank=True, null=True, help_text='The unique identifier of the stratigraphy')
     url = models.CharField(max_length=500, blank=True, null=True, help_text='The url that leads to the corresponding stratigraphy in the tool')
     image = models.ImageField(upload_to=get_img_storage_path_stratigraphy, blank=True, null=True, help_text='The image file for a stratigraphy')
-
+    legend = models.CharField(max_length=500, blank=True, help_text='The stratigraphy description')
     class Meta:
         ordering = ['artefact', 'order']
         verbose_name = 'Stratigraphy'

@@ -44,6 +44,8 @@ urlpatterns = [
 
     url(r'^(?P<artefact_id>\d+)/list/stratigraphy/$', artefacts_views.StratigraphyListView, name='stratigraphy-list'),
     url(r'^(?P<artefact_id>\d+)/add/stratigraphy/(?P<stratigraphy_uid>[\w\-]+)/$', artefacts_views.StratigraphyAddView, name='add-stratigraphy'),
+    url(r'^(?P<artefact_id>\d+)/update/stratigraphy/(?P<pk>[\w\-]+)/$', login_required(artefacts_views.StratigraphyUpdateView.as_view()),
+        name='stratigraphy-update'),
     url(r'^(?P<artefact_id>\d+)/refresh/stratigraphy/$', TemplateView.as_view(template_name='artefacts/strat-refresh.html'), name='strat-refresh'),
     url(r'^(?P<artefact_id>\d+)/refresh/strat-div/$', artefacts_views.RefreshStratDivView, name='strat-div-refresh'),
     url(r'^stratigraphy/(?P<pk>\d+)/delete/$', login_required(artefacts_views.StratigraphyDeleteView.as_view()), name='stratigraphy-delete'),

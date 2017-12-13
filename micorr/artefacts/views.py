@@ -21,12 +21,12 @@ from contacts.forms import ContactCreateForm
 from stratigraphies.neo4jdao import Neo4jDAO
 from users.models import User
 
-from .forms import ArtefactsUpdateForm, ArtefactsCreateForm, DocumentUpdateForm, DocumentCreateForm, ArtefactFilter,\
+from .forms import ArtefactsUpdateForm, ArtefactsCreateForm, DocumentUpdateForm, DocumentCreateForm, ArtefactFilter, \
     OriginCreateForm, ChronologyCreateForm, AlloyCreateForm, TechnologyCreateForm, EnvironmentCreateForm, \
     MicrostructureCreateForm, MetalCreateForm, CorrosionFormCreateForm, CorrosionTypeCreateForm, \
     RecoveringDateCreateForm, ImageCreateForm, TypeCreateForm, ContactAuthorForm, ShareArtefactForm, \
     ShareWithFriendForm, ObjectCreateForm, ObjectUpdateForm, CollaborationCommentForm, TokenHideForm, \
-    PublicationDecisionForm, PublicationDelegateForm, PublicationRejectDecisionForm
+    PublicationDecisionForm, PublicationDelegateForm, PublicationRejectDecisionForm, StratigraphyCreateForm
 
 from .models import Artefact, Document, Collaboration_comment, Field, Object, Section, SectionCategory, Image, Stratigraphy, Token, \
     Publication
@@ -651,6 +651,19 @@ def StratigraphyAddView(request, artefact_id, stratigraphy_uid):
     stratigraphy.save()
     return render(request, 'artefacts/strat-refresh.html', {'artefact_id': artefact_id})
 
+class StratigraphyUpdateView(generic.UpdateView):
+    model = Stratigraphy
+    template_name_suffix="_update_form"
+    form_class = StratigraphyCreateForm
+
+    def get(self, request, **kwargs):
+        self.object = get_object_or_404(self.model, pk=self.kwargs['pk'])
+        return self.render_to_response(self.get_context_data(form=self.get_form(),artefact_id=kwargs['artefact_id'], pk=self.object.pk))
+
+    def get_success_url(self):
+        return reverse('artefacts:strat-refresh', kwargs={'artefact_id': self.object.artefact_id})
+
+
 
 class StratigraphyDeleteView(generic.DeleteView):
     model = Stratigraphy
@@ -663,7 +676,7 @@ class StratigraphyDeleteView(generic.DeleteView):
 
 def RefreshStratDivView(request, artefact_id):
     artefact = get_object_or_404(Artefact, pk=artefact_id)
-    return render(request, 'artefacts/stratigraphy.html', {'artefact': artefact, 'node_base_url': settings.NODE_BASE_URL})
+    return render(request, 'artefacts/stratigraphy.html', {'object':artefact, 'artefact': artefact, 'node_base_url': settings.NODE_BASE_URL})
 
 
 class DocumentUpdateView(generic.UpdateView):

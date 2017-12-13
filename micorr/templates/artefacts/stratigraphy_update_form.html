@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block menu %}
+    <h1>Update stratigraphy</h1>
+{% endblock %}
+
+{% block content %}
+    <div class="line lightbox">
+        <div class="c9">
+            <div class="row">
+                <form action="{% url 'artefacts:stratigraphy-update' artefact_id=artefact_id pk=pk %}" enctype="multipart/form-data" method="post">
+                    {% csrf_token %}
+                        {% for field in form %}
+                            <p>{{ field.label_tag }}</p>
+                            <p>{{ field }}</p>
+                            <p><i>{{ field.help_text }}</i></p>
+                            <br/>
+                        {% endfor %}
+                    <input type="submit" value="Submit">
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+{% block custom_bottom_script %}
+    {% include "artefacts/dj_admin_related_object_lookups.html" %}
+   <script type="text/javascript">
+        function refreshDiv(sectionid) {
+            $.ajax({
+                url: "/artefacts/" + sectionid + "/refresh/div/",
+                success: function (data) {
+                    $('#image_section_' + sectionid).html(data);
+                }
+            });
+        }
+        function refreshStratigraphy(artefactid) {
+            $.ajax({
+                url: "/artefacts/" + artefactid + "/refresh/strat-div/",
+                success: function (data) {
+                    $('#stratigraphy').html(data);
+                }
+            });
+        }
+    </script>
+
+{% endblock custom_bottom_script %}
+
+{% block footer %}
+{% endblock footer %}

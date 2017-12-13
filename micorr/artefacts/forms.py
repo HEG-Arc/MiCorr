@@ -92,6 +92,11 @@ class ImageCreateForm(forms.ModelForm):
         model = Image
         exclude = ['section']
 
+class StratigraphyCreateForm(forms.ModelForm):
+
+    class Meta:
+        model = Stratigraphy
+        fields = ['order', 'legend']
 
 class TypeCreateForm(forms.ModelForm):
     """
