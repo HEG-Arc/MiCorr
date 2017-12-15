@@ -346,7 +346,7 @@ class GraphGenerationUtil {
             if (upperStrata.getFirstCharacteristicByFamily('colourFamily', 'realName') ==
                 lowerStrata.getFirstCharacteristicByFamily('colourFamily', 'realName'))
                 group.path(pathString).attr({fill: 'none', 'stroke-width': '1', stroke: 'black'});
-            group.clipWith(path);
+                group.clipWith(path);
         }
         else {
             draw.path(pathString).attr({fill: 'white'});
@@ -661,6 +661,11 @@ class GraphGenerationUtil {
             strokeColor = "white";
 
         let rect = draw.rect(width, height).attr("shape-rendering", "crispEdges").fill(topBackgroundColor);
+
+        if (index === 0) {
+            rect.attr({ 'fill-opacity': '0' });
+        }
+
         if ((transition == "semiGradualInferiorCharacteristic" || transition == "gradualCharacteristic") && index != 0) {
             let  pds;
             //Instance Browser

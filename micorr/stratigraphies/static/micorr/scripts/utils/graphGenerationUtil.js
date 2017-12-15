@@ -641,6 +641,11 @@
                 if (bottomBackgroundColor == "black" && topBackgroundColor == "black") strokeColor = "white";
 
                 var rect = draw.rect(width, height).attr("shape-rendering", "crispEdges").fill(topBackgroundColor);
+
+                if (index === 0) {
+                    rect.attr({ 'fill-opacity': '0' });
+                }
+
                 if ((transition == "semiGradualInferiorCharacteristic" || transition == "gradualCharacteristic") && index != 0) {
                     var pds = void 0;
                     //Instance Browser
