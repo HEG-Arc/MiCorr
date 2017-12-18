@@ -78,7 +78,7 @@ class Origin(TimeStampedModel):
             origin.append(self.city.name)
             origin.append(self.city.region.name)
             origin.append(self.city.country.name)
-        return ", ".join(origin)
+        return u", ".join(origin)
 
     class Meta:
         ordering = ['site']
@@ -277,7 +277,7 @@ class Artefact(TimeStampedModel):
             authors_list.append(u"{0}. {1} ({2}, {3})".format(author.name, author.surname,
                                                                   author.organization_name,
                                                                   author.city))
-        return " & ".join(authors_list)
+        return u" & ".join(authors_list)
 
     def get_authors_email(self):
         email_list = []
@@ -297,7 +297,7 @@ class Artefact(TimeStampedModel):
         if self.origin:
             if self.origin.city:
                 artefact.append(self.origin.city.country.name)
-        return " - ".join(artefact)
+        return u" - ".join(artefact)
 
     def artefact_verbose_description_short(self):
         artefact = []
@@ -310,7 +310,7 @@ class Artefact(TimeStampedModel):
             if self.origin.city:
                 if self.origin.city.country:
                     artefact.append(self.origin.city.country.name)
-        return " - ".join(artefact)
+        return u" - ".join(artefact)
 
     def __unicode__(self):
         return self.artefact_verbose_description()
@@ -484,7 +484,7 @@ class Token(TimeStampedModel):
         verbose_name_plural = 'Tokens'
 
     def __str__(self):
-        return "Token {} with {} rights, for artefact {} by user {}".format(
+        return u"Token {} with {} rights, for artefact {} by user {}".format(
             self.uuid, self.right, self.artefact.object.name, self.user.name)
 
 
