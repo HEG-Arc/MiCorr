@@ -363,12 +363,12 @@ def newMicrostructure(request):
 
 @login_required
 def newMetal1(request):
-    return handlePopAdd(request, MetalCreateForm, 'metal1')
+    return handlePopAdd(request, MetalCreateForm, 'metal1', 'metal')
 
 
 @login_required
 def newMetalX(request):
-    return handlePopAdd(request, MetalCreateForm, 'metalx')
+    return handlePopAdd(request, MetalCreateForm, 'metalx', 'metal')
 
 
 @login_required
@@ -381,7 +381,7 @@ def newCorrosionType(request):
     return handlePopAdd(request, CorrosionTypeCreateForm, 'corrosion_type')
 
 
-def handlePopAdd(request, addForm, field):
+def handlePopAdd(request, addForm, field, field_name=None):
     if request.method == "POST":
         form = addForm(request.POST)
         if form.is_valid():
@@ -393,7 +393,9 @@ def handlePopAdd(request, addForm, field):
                 return HttpResponse('<script type="text/javascript">opener.dismissAddAnotherPopup(window, "%s", "%s");</script>' % (escape(newObject._get_pk_val()), escape(newObject)))
     else:
         form = addForm()
-    pageContext = {'form': form, 'field': field}
+        if not field_name:
+            field_name = field
+    pageContext = {'form': form, 'field': field, 'field_name':field_name}
     return render(request, "artefacts/popadd.html", pageContext)
 
 
