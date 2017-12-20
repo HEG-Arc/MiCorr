@@ -260,7 +260,7 @@ class Artefact(TimeStampedModel):
                                    help_text='The manufacturing techniques used to produce the artefact')
     sample_location = models.ForeignKey(Contact, blank=True, null=True, related_name='sample_location', help_text='The actual location of the artefact sample')
     responsible_institution = models.ForeignKey(Contact, blank=True, null=True, related_name='responsible_institution', help_text='The responsible institution for the artefact sample')
-    microstructure = models.ForeignKey(Microstructure, blank=True, null=True, help_text='A description of the metal: its composition, texture (porosity), hardness, microstructure revealed by etching and specific features (figures and tables are referred as Fig. 1, Table 1)')
+    microstructure = models.ForeignKey(Microstructure, blank=True, null=True, help_text='Microstructure of the metal')
     corrosion_form = models.ForeignKey(CorrosionForm, blank=True, null=True)
     corrosion_type = models.ForeignKey(CorrosionType, blank=True, null=True, help_text='')
     parent = models.ForeignKey('self', blank=True, null=True, help_text='The card from which this card is the child')
