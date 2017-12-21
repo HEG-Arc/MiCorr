@@ -8,7 +8,7 @@
     <div class="line lightbox">
         <div class="c9">
             <div class="row">
-                <form action="{% url 'artefacts:stratigraphy-update' artefact_id=artefact_id pk=pk %}" enctype="multipart/form-data" method="post">
+                <form action="{% url 'artefacts:stratigraphy-update' section_id=section_id pk=pk %}" enctype="multipart/form-data" method="post">
                     {% csrf_token %}
                         {% for field in form %}
                             <p>{{ field.label_tag }}</p>
@@ -24,25 +24,7 @@
 {% endblock content %}
 {% block custom_bottom_script %}
     {% include "artefacts/dj_admin_related_object_lookups.html" %}
-   <script type="text/javascript">
-        function refreshDiv(sectionid) {
-            $.ajax({
-                url: "/artefacts/" + sectionid + "/refresh/div/",
-                success: function (data) {
-                    $('#image_section_' + sectionid).html(data);
-                }
-            });
-        }
-        function refreshStratigraphy(artefactid) {
-            $.ajax({
-                url: "/artefacts/" + artefactid + "/refresh/strat-div/",
-                success: function (data) {
-                    $('#stratigraphy').html(data);
-                }
-            });
-        }
-    </script>
-
+    {% include "artefacts/refresh-divs-script.html" %}
 {% endblock custom_bottom_script %}
 
 {% block footer %}

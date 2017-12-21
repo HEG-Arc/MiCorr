@@ -277,6 +277,26 @@
                                     using the encoded strata system developed within Bertholon schematic description of
                                     metal corrosion.</i></p>
                             </div>
+                            <div class="row">
+                                <div class="c3">
+                                    <em>Stratigraphic representation of the object in cross-section by macroscopic observation. The schematic drawing should indicate the whole stratigraphy of layers using the encoded strata system developed within Bertholon schematic description of metal corrosion.</em></div>
+                                <div class="c9">
+                                    <div id="stratigraphy_section_{{ macroscopic_section.id }}">
+                                        {% with section=macroscopic_section %}
+                                            {% include "artefacts/stratigraphy.html" %}
+                                        {% endwith %}
+                                    </div>
+                                    <div class="c9">
+                                        <p>
+                                            <a class="add-another" id="stratigraphy_add"
+                                               onclick="window.open('{% url 'artefacts:stratigraphy-list' macroscopic_section.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');">
+                                                <span class="glyphicon glyphicon-plus"></span>
+                                            </a>
+                                        </p>
+                                    </div>
+
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -328,15 +348,17 @@
                         built using the MiCorr application.</i></p>
                     <br>
                     <div class="row">
-                        <div class="c3"><em>Stratigraphies</em></div>
+                        <div class="c3"><em>Stratigraph{{artefact.stratigraphy_set.count|pluralize:"y,ies" }}</em></div>
                         <div class="c9">
-                            <div id="stratigraphy">
-                            {%  include "artefacts/stratigraphy.html" %}
+                            <div id="stratigraphy_section_{{ sample_section.id }}">
+                                {% with section=sample_section %}
+                                {% include "artefacts/stratigraphy.html" %}
+                                {% endwith %}
                             </div>
                             <div class="c9">
-                                <p> <!-- Upload Photos -->
+                                <p>
                                     <a class="add-another" id="stratigraphy_add"
-                                       onclick="window.open('{% url 'artefacts:stratigraphy-list' artefact.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');">
+                                       onclick="window.open('{% url 'artefacts:stratigraphy-list' sample_section.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');">
                                         <span class="glyphicon glyphicon-plus"></span>
                                     </a>
                                 </p>
@@ -625,23 +647,5 @@
 
 {% block custom_bottom_script %}
     {% include "artefacts/dj_admin_related_object_lookups.html" %}
-   <script type="text/javascript">
-        function refreshDiv(sectionid) {
-            $.ajax({
-                url: "/artefacts/" + sectionid + "/refresh/div/",
-                success: function (data) {
-                    $('#image_section_' + sectionid).html(data);
-                }
-            });
-        }
-        function refreshStratigraphy(artefactid) {
-            $.ajax({
-                url: "/artefacts/" + artefactid + "/refresh/strat-div/",
-                success: function (data) {
-                    $('#stratigraphy').html(data);
-                }
-            });
-        }
-    </script>
-
+    {% include "artefacts/refresh-divs-script.html" %}
 {% endblock custom_bottom_script %}

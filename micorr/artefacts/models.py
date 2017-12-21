@@ -389,6 +389,7 @@ class Stratigraphy(TimeStampedModel):
     An artefact can be represented by one or more stratigraphies
     """
     artefact = models.ForeignKey(Artefact, blank=True, null=True, help_text='The artefact the stratigraphy represents')
+    section = models.ForeignKey(Section, blank=True, null=True, help_text='The section in which the stratigraphy is displayed')
     order = models.IntegerField(blank=True, null=True, help_text='The order of a stratigraphy for a given artefact')
     uid = models.CharField(max_length=500, blank=True, null=True, help_text='The unique identifier of the stratigraphy')
     url = models.CharField(max_length=500, blank=True, null=True, help_text='The url that leads to the corresponding stratigraphy in the tool')

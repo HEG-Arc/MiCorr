@@ -1,0 +1,23 @@
+{% load static %}
+<script type="text/javascript">
+        function refreshDiv(section_id) {
+{% comment %}
+            in order to use django url tag with a runtime variable in js code we need to use an placeholder
+            for section_id (a numerical one in that case) to render the templace then replace it on function call
+{% endcomment %}
+            $.ajax({
+                url: "{% url 'artefacts:div-refresh' '12345' %}".replace('12345', section_id),
+                success: function (data) {
+                    $('#image_section_' + section_id).html(data);
+                }
+            });
+        }
+        function refreshStratigraphy(section_id) {
+            $.ajax({
+                url: "{% url 'artefacts:strat-div-refresh' '12345' %}".replace('12345', section_id),
+                success: function (data) {
+                    $('#stratigraphy_section_'+ section_id).html(data);
+                }
+            });
+        }
+</script>

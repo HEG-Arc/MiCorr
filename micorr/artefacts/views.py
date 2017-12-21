@@ -135,11 +135,9 @@ class ArtefactsDetailView(generic.DetailView):
         artefact = get_object_or_404(Artefact, pk=self.kwargs['pk'])
         sections = artefact.section_set.all()
         documents = artefact.document_set.all()
-        stratigraphies = artefact.stratigraphy_set.all()
         context['artefact'] = artefact
         context['sections'] = sections
         context['documents'] = documents
-        context['stratigraphies'] = stratigraphies
         context['node_base_url'] = settings.NODE_BASE_URL
         return context
 
@@ -187,8 +185,9 @@ class ArtefactsUpdateView(generic.UpdateView):
                                                              sample_section=sample_section, analyses_performed=analyses_performed,
                                                              metal_section=metal_section, corrosion_section=corrosion_section,
                                                              synthesis_section=synthesis_section, conclusion_text=conclusion_text,
-                                                             references_text=references_text, stratigraphies=stratigraphies,
-                                                             node_base_url=settings.NODE_BASE_URL))
+                                                             references_text=references_text,
+                                                             node_base_url=settings.NODE_BASE_URL,
+                                                             view='ArtefactsUpdateView'))
 
     def post(self, request, *args, **kwargs):
         artefact = get_object_or_404(Artefact, pk=self.kwargs['pk'])
@@ -642,16 +641,16 @@ def RefreshDivView(request, section_id):
     return render(request, 'artefacts/image_section.html', {'object_section': object_section})
 
 
-def StratigraphyListView(request, artefact_id):
+def StratigraphyListView(request, section_id):
     stratigraphies = Neo4jDAO().getStratigraphiesByUser(request.user.id)
-    return render(request, 'artefacts/stratigraphies_list.html', {'stratigraphies': stratigraphies, 'artefact_id': artefact_id})
+    return render(request, 'artefacts/stratigraphies_list.html', {'node_base_url': settings.NODE_BASE_URL, 'stratigraphies': stratigraphies, 'section_id': section_id})
 
 
-def StratigraphyAddView(request, artefact_id, stratigraphy_uid):
-    stratigraphy = Stratigraphy.objects.get_or_create(uid=stratigraphy_uid, artefact=get_object_or_404(Artefact, id=artefact_id))[0]
+def StratigraphyAddView(request, section_id, stratigraphy_uid):
+    stratigraphy = Stratigraphy.objects.get_or_create(uid=stratigraphy_uid, section=get_object_or_404(Section, id=section_id))[0]
     stratigraphy.image = settings.NODE_BASE_URL + 'exportStratigraphy?name='+ stratigraphy_uid +'&width=300&format=png'
     stratigraphy.save()
-    return render(request, 'artefacts/strat-refresh.html', {'artefact_id': artefact_id})
+    return render(request, 'artefacts/strat-refresh.html', {'section_id': section_id})
 
 class StratigraphyUpdateView(generic.UpdateView):
     model = Stratigraphy
@@ -660,10 +659,10 @@ class StratigraphyUpdateView(generic.UpdateView):
 
     def get(self, request, **kwargs):
         self.object = get_object_or_404(self.model, pk=self.kwargs['pk'])
-        return self.render_to_response(self.get_context_data(form=self.get_form(),artefact_id=kwargs['artefact_id'], pk=self.object.pk))
+        return self.render_to_response(self.get_context_data(form=self.get_form(),section_id=kwargs['section_id'], pk=self.object.pk))
 
     def get_success_url(self):
-        return reverse('artefacts:strat-refresh', kwargs={'artefact_id': self.object.artefact_id})
+        return reverse('artefacts:strat-refresh', kwargs={'section_id': self.object.section_id})
 
 
 
@@ -672,13 +671,13 @@ class StratigraphyDeleteView(generic.DeleteView):
     template_name_suffix = '_confirm_delete'
 
     def get_success_url(self):
-        artefact_id = get_object_or_404(Stratigraphy, pk=self.kwargs['pk']).artefact.id
-        return reverse('artefacts:strat-refresh', kwargs={'artefact_id': artefact_id})
+        section_id = get_object_or_404(Stratigraphy, pk=self.kwargs['pk']).section.id
+        return reverse('artefacts:strat-refresh', kwargs={'section_id': section_id})
 
 
-def RefreshStratDivView(request, artefact_id):
-    artefact = get_object_or_404(Artefact, pk=artefact_id)
-    return render(request, 'artefacts/stratigraphy.html', {'object':artefact, 'artefact': artefact, 'node_base_url': settings.NODE_BASE_URL})
+def RefreshStratDivView(request, section_id):
+    section = get_object_or_404(Section, pk=section_id)
+    return render(request, 'artefacts/stratigraphy.html', { 'section': section, 'node_base_url': settings.NODE_BASE_URL})
 
 
 class DocumentUpdateView(generic.UpdateView):
