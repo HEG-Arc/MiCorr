@@ -169,7 +169,7 @@ class AlloyCreateForm(forms.ModelForm):
 
     class Meta:
         model = Alloy
-        exclude = []
+        fields = ['name']
 
 
 class TechnologyCreateForm(forms.ModelForm):
