@@ -677,7 +677,7 @@ class StratigraphyDeleteView(generic.DeleteView):
 
 def RefreshStratDivView(request, section_id):
     section = get_object_or_404(Section, pk=section_id)
-    return render(request, 'artefacts/stratigraphy.html', { 'section': section, 'node_base_url': settings.NODE_BASE_URL})
+    return render(request, 'artefacts/stratigraphy.html', { 'view':'ArtefactsUpdateView', 'section': section, 'node_base_url': settings.NODE_BASE_URL})
 
 
 class DocumentUpdateView(generic.UpdateView):

@@ -108,7 +108,7 @@
                         </div>
                     </div>
                     <p><i>General picture of the object should contain a scale and a chart colour. The caption gives the
-                        name of the artefact, the type of alloy and any relevant information.</i></p>
+                        name of the artefact, the type of alloy and any relevant information</i></p>
                 </div>
             </div>
 
@@ -176,7 +176,7 @@
                 <div class="line palebox">
                     <h4 class="underline">Complementary information</h4>
                     <textarea name="complementary_information">{{ description_section.complementary_information }}</textarea>
-                    <p><i>Any important information that does not fit to the previous fields.</i></p>
+                    <p><i>Any important information that does not fit to the previous fields</i></p>
                 </div>
 
                 <div class="line">
@@ -224,7 +224,7 @@
                                 </div>
                                 <p><i>Picture of the object / element with arrows indicating the location of the
                                     sampling area. Pictures with details can be provided. Caption should be more or less
-                                    the same as: Location of sampling area and sample selected.</i></p>
+                                    the same as: Location of sampling area and sample selected</i></p>
                             </div>
                         </div>
 
@@ -236,7 +236,7 @@
                         <div class="row accordion-content2 collapse in" id="content22" aria-labelledby="title22">
                             <div class="line palebox">
                                 <textarea name="macroscopic_text">{{ macroscopic_section.content }}</textarea>
-                                <p><i>Except if specific, copy / paste the following text : The schematic representation below gives an overview of the corrosion layers encountered on the object from a first visual macroscopic observation.</i></p>
+                                <p><i>Except if specific, copy / paste the following text : The schematic representation below gives an overview of the corrosion layers encountered on the object from a first visual macroscopic observation</i></p>
                             </div>
                             <div class="line lightbox">
                                 <div class="row">
@@ -272,15 +272,14 @@
                                         <p>Figures and tables are referred as Fig. 1, Table 1.</p>
                                     </div>
                                 </div>
-                                <p><i>Stratigraphic representation of the object in cross-section by macroscopic
+                                <p><i>
+                                    Stratigraphic representation of the object in cross-section by macroscopic
                                     observation. The schematic drawing should indicate the whole stratigraphy of layers
                                     using the encoded strata system developed within Bertholon schematic description of
-                                    metal corrosion.</i></p>
+                                    metal corrosion</i></p>
                             </div>
                             <div class="row">
-                                <div class="c3">
-                                    <em>Stratigraphic representation of the object in cross-section by macroscopic observation. The schematic drawing should indicate the whole stratigraphy of layers using the encoded strata system developed within Bertholon schematic description of metal corrosion.</em></div>
-                                <div class="c9">
+                                <div class="c12">
                                     <div id="stratigraphy_section_{{ macroscopic_section.id }}">
                                         {% with section=macroscopic_section %}
                                             {% include "artefacts/stratigraphy.html" %}
@@ -297,6 +296,7 @@
 
                                 </div>
                             </div>
+                        <p><i>Stratigraphic representation(s) of the object in cross-section using the MiCorr application</i></p>
                         </div>
                     </div>
                 </div>
@@ -345,7 +345,7 @@
                         scale and indication of other figures found below in the file. The caption should be more or
                         less the same as: Micrograph of the cross-section showing the location of Fig.... Unetched, dark
                         field, x (indication of the magnification). The next figure should be the MiCorr stratigraphy
-                        built using the MiCorr application.</i></p>
+                        built using the MiCorr application</i></p>
                     <br>
                     <div class="row">
                         <div class="c3"><em>Stratigraph{{artefact.stratigraphy_set.count|pluralize:"y,ies" }}</em></div>
@@ -409,7 +409,7 @@
                 <div class="line palebox">
                     <h4 class="underline">Complementary information</h4>
                     <textarea name="sample_complementary_information">{{ sample_section.complementary_information }}</textarea>
-                    <p><i>Any important information that does not fit to the previous fields.</i></p>
+                    <p><i>Any important information that does not fit to the previous fields</i></p>
                 </div>
             </div>
 
@@ -422,7 +422,7 @@
                 <div class="line palebox">
                     <p><em>Analyses performed</em></p>
                     <textarea name="analyses_performed">{{ analyses_performed }}</textarea>
-                    <p><i>Add the list of the techniques used : Metallography (etched with ? reagent), SEM-EDS, FTIR, Raman spectroscopy. If the conditions of the analyses are specific (check with the information provided under the “Scientific bases” tab), please add them in your text.</i></p>
+                    <p><i>Add the list of the techniques used : Metallography (etched with ? reagent), SEM-EDS, FTIR, Raman spectroscopy. If the conditions of the analyses are specific (check with the information provided under the “Scientific bases” tab), please add them in your text</i></p>
                 </div>
                 <div class="line">
                     <div id="accordionAR" aria-multiselectable="true">
@@ -436,7 +436,7 @@
                             <div class="line palebox">
                                 <textarea name="metal_text">{{ metal_section.content }}</textarea>
                                 <p><i>A description of the metal: its composition, texture (porosity), hardness,
-                                    microstructure revealed by etching and specific features.</i></p>
+                                    microstructure revealed by etching and specific features</i></p>
                                 <div class="row">
                                     <div class="c3"><em>Microstructure</em></div>
                                     <div class="c9">
@@ -493,7 +493,7 @@
                             <div class="line palebox">
                                 <h4 class="underline">Complementary information</h4>
                                 <textarea name="metal_complementary_information">{{ metal_section.complementary_information }}</textarea>
-                                <p><i>Any important information that does not fit to the previous fields.</i></p>
+                                <p><i>Any important information that does not fit to the previous fields</i></p>
                             </div>
                         </div>
 
@@ -507,7 +507,7 @@
                                 <textarea name="corrosion_text">{{ corrosion_section.content }}</textarea>
                                 <p><i>A description of the corrosion layers: their composition, texture
                                     (porosity), microstructure if any and specific features. The corrosion form(s) and corrosion type
-                                    should be deduced.</i></p>
+                                    should be deduced</i></p>
                                 <div class="row">
                                     <div class="c3"><em>Corrosion form</em></div>
                                     <div class="c9">
@@ -518,7 +518,7 @@
                                     <div class="c3"><em>Corrosion type</em></div>
                                     <div class="c9">
                                         <p>{{ form.corrosion_type }}</p>
-                                        <p><i></i></p></div>
+                                        <p><i>{{ form.corrosion_type.help_text }}</i></p></div>
                                 </div>
                             </div>
                             <div class="line lightbox">
@@ -559,7 +559,7 @@
                             <div class="line palebox">
                                 <h4 class="underline">Complementary information</h4>
                                 <textarea name="corrosion_complementary_information">{{ corrosion_section.complementary_information }}</textarea>
-                                <p><i>Any important information that does not fit to the previous fields.</i></p>
+                                <p><i>Any important information that does not fit to the previous fields</i></p>
                             </div>
                         </div>
                     </div> <!--accordionAR -->
@@ -575,7 +575,7 @@
             <div class="row accordion-content3 collapse in" id="content5" aria-labelledby="title5">
                 <div class="line palebox">
                     <textarea name="synthesis_text">{{ synthesis_section.content }}</textarea>
-                    <p><i>The schematic representation of corrosion layers integrating additional information based on the analyses carried out.</i></p>
+                    <p><i>The schematic representation of corrosion layers integrating additional information based on the analyses carried out</i></p>
                 </div>
                 <div class="line lightbox">
                     <div class="row">
@@ -625,7 +625,7 @@
                     <textarea name="conclusion_text">{{ conclusion_text }}</textarea>
                     <p><i>A brief summary of all data collected: metal with composition and microstructure.
                         Corrosion forms and type as well as description of the corrosion layers. Location of the
-                        limit of the original surface if any.</i></p>
+                        limit of the original surface if any</i></p>
                 </div>
             </div>
 
