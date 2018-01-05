@@ -61,8 +61,8 @@ class ArtefactsUpdateForm(forms.ModelForm):
             'recorded_conservation_data',
             'sample_description',
             'sample_number',
-            'date_aim_sampling',
-            'object']
+            'date_aim_sampling'
+        ]
         fields = fk_fields + m2m_fields + other_fields
 
     # Non Artefact/form only fields (coming from related model Section )
