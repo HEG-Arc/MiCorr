@@ -344,7 +344,8 @@ class Neo4jDAO:
     def deleteAllStrataFromAStratigraphy(self, stratigraphy):
         # supression des strates enfants, interfaces et components
         self.graph.cypher.execute('''
-            MATCH (sg:Stratigraphy {uid:{stratigraphy}})-[:POSSESSES]->(parent_st:Strata)-[:IS_PARENT_OF]->(child_st:Strata)
+            MATCH (sg:Stratigraphy {uid:{stratigraphy}})
+            OPTIONAL MATCH (sg)-[:POSSESSES]->(parent_st:Strata)-[:IS_PARENT_OF]->(child_st:Strata)
             DETACH DELETE child_st
             WITH sg MATCH (sg)-[:POSSESSES]->(st:Strata)-[:HAS_UPPER_INTERFACE]->(i:Interface)
             OPTIONAL MATCH (st)-[:INCLUDES]->(c:Component)
