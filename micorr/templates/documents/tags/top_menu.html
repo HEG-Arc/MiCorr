@@ -2,8 +2,11 @@
 {% get_site_root as site_root %}
 
       <div class="row">
-        {% if not hidetoplogo %}
-        <div class="w3"><a href="{% pageurl site_root %}"><img src="{% static 'stylesheets/logo.png' %}" class="img-responsive"></a></div>
+        {% if not hidetoplogo%}
+            <div class="w3"><a href="
+                                 {% if site_root %} {% pageurl site_root %} {% endif %}">
+                <img src="{% static 'stylesheets/logo.png' %}" class="img-responsive"></a>
+            </div>
         {% endif %}
         <div class="w9 {% if not cssclass %}menu{% else %}{{ cssclass }}{% endif %}">
             {% for menuitem in menuitems %}

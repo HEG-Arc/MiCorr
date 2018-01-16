@@ -46,7 +46,10 @@ def get_googe_maps_key():
 def get_site_root(context):
     # NB this returns a core.Page, not the implementation-specific model used
     # so object-comparison to self will return false as objects would differ
-    return context['request'].site.root_page
+    try:
+        return context['request'].site.root_page
+    except (KeyError, AttributeError):
+        return None
 
 
 def has_menu_children(page):
@@ -64,7 +67,7 @@ def top_menu(context, parent, calling_page=None, cssclass=None, hidetoplogo=None
     menuitems = parent.get_children().filter(
         live=True,
         show_in_menus=True
-    )
+    ) if parent else []
     for menuitem in menuitems:
         menuitem.show_dropdown = has_menu_children(menuitem)
     return {
