@@ -69,11 +69,6 @@ urlpatterns = [
 
     # Stratigraphies
     url(r'^micorr/', include('stratigraphies.urls', namespace="stratigraphies")),
-
-    # Learn
-    url(r'^manual/$', TemplateView.as_view(template_name='manual.html')),
-    url(r'^learn/$', TemplateView.as_view(template_name='learn.html')),
-    url(r'^stratigraphy-construction/$', TemplateView.as_view(template_name='stratigraphy-construction.html')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:

@@ -127,7 +127,7 @@ def secondary_menu(context, calling_page=None):
     takes_context=True
 )
 def generic_index_listing(context, calling_page):
-    pages = calling_page.get_children().filter(live=True)
+    pages = calling_page.get_children().filter(live=True).specific()
     return {
         'pages': pages,
         # required by the pageurl tag that we want to use within this template
