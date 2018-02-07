@@ -505,10 +505,29 @@
                 </select>
             </div>
             <div ng-show="showPomcomposition" class="col-md-6 form-group">
-                <label for="pomCompositionFamily">Composition</label>
+                <label for="pomCompositionFamily"> <span class="glyphicon glyphicon-eye-close"
+                                                         title="no visual impact on the stratum"></span>
+                    Organic material
+                </label>
                 <select id="pomCompositionFamily" class="form-control" ng-model="selectedPomcompositionFamily"
                         ng-options="x.real_name for x in pomcompositionFamily" ng-change="upComposition()">
                 </select>
+            </div>
+            <div ng-show="showPomcomposition" class="col-md-6 form-group">
+                <label for="pomCompositionMetallicPollutants"> <span class="glyphicon glyphicon-eye-close"
+                                                            title="no visual impact on the stratum"></span>
+                    Metallic pollutant(s)</label>
+                <ui-select id="pomCompositionMetallicPollutants" class="form-control" multiple limit="50" theme="bootstrap"
+                           ng-model="pomCompositionMetallicPollutants.selected" on-remove="upComposition()" on-select="upComposition()">
+                    <ui-select-match placeholder="Select up to 5 elements by order of importance">
+                        {{$item.symbol}}
+                    </ui-select-match>
+                    <ui-select-choices group-by="'category'"
+                                       repeat="item in (pomCompositionMetallicPollutants.characteristics | filter: $select.search) track by item.symbol">
+                        <span ng-bind-html="item.symbol | highlight: $select.search"></span> <span
+                            ng-bind-html="item.real_name | highlight: $select.search"></span>
+                    </ui-select-choices>
+                </ui-select>
             </div>
         </div>
         <div class="row-fluid">

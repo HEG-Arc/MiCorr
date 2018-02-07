@@ -56,6 +56,7 @@ angular.module('micorrApp')
             $scope.nmmcompositionFamily = StratigraphyData.getNmmcompositionFamily()['characteristics'];
             $scope.dcompositionFamily = StratigraphyData.getDcompositionFamily()['characteristics'];
             $scope.pomcompositionFamily = StratigraphyData.getPomcompositionFamily()['characteristics'];
+            $scope.pomCompositionMetallicPollutants = {characteristics:StratigraphyData.elementFamily.characteristics, selected:[]};
             $scope.cpcompositionFamily = StratigraphyData.getCpcompositionFamily()['characteristics'];
             $scope.cmcompositionFamily = StratigraphyData.getCmcompositionFamily()['characteristics'];
             $scope.mcompositionFamily = StratigraphyData.getMcompositionFamily()['characteristics'];
@@ -83,7 +84,22 @@ angular.module('micorrApp')
             emptyFields();
             var strata = StratigraphyData.getStratigraphy().getStratas()[StratigraphyData.getSelectedStrata()];
 
-
+            function getSelectedFamilyCharacteristic(familyUid,allCharacteristics)
+            {
+                let characteristics = strata.getCharacteristicsByFamily(familyUid);
+                if (characteristics.length>0)
+                    return getCharacteristicByItsName(allCharacteristics, characteristics[0].getName());
+                else
+                    return null;
+            }
+            function getSelectedFamilyCharacteristicList(familyUid,allCharacteristics)
+            {
+                let stratumCharacteristics = strata.getCharacteristicsByFamily(familyUid);
+                if (stratumCharacteristics.length>0)
+                    return getCharacteristicByItsNameMulti(allCharacteristics, stratumCharacteristics );
+                else
+                    return [];
+            }
             if (strata.getCharacteristicsByFamily("sCompositionFamily").length > 0) {
                 $scope.selectedScompositionFamily = getCharacteristicByItsName($scope.scompositionFamily, strata.getCharacteristicsByFamily("sCompositionFamily")[0].getName());
             }
@@ -98,6 +114,9 @@ angular.module('micorrApp')
             if (strata.getCharacteristicsByFamily("pomCompositionFamily").length > 0) {
                 $scope.selectedPomcompositionFamily = getCharacteristicByItsName($scope.pomcompositionFamily, strata.getCharacteristicsByFamily("pomCompositionFamily")[0].getName());
             }
+
+            $scope.pomCompositionMetallicPollutants.selected = strata.getContainerElements("pomCompositionMetallicPollutants");
+
             if (strata.getCharacteristicsByFamily("cpCompositionFamily").length > 0) {
                 $scope.selectedCpcompositionFamily = getCharacteristicByItsName($scope.cpcompositionFamily, strata.getCharacteristicsByFamily("cpCompositionFamily")[0].getName());
             }
@@ -224,6 +243,7 @@ angular.module('micorrApp')
             strata.updateCharacteristic('nmmCompositionFamily',$scope.selectedNmmcompositionFamily);
             strata.updateCharacteristic('dCompositionFamily',$scope.selectedDcompositionFamily);
             strata.updateCharacteristic('pomCompositionFamily',$scope.selectedPomcompositionFamily);
+            strata.setContainerElements('pomCompositionMetallicPollutants',$scope.pomCompositionMetallicPollutants.selected);
             strata.updateCharacteristicList('cpCompositionExtensionFamily',$scope.selectedCpcompositionextensionFamily);
 
             //Ajout  des composition aux deux strates enfant de la strate CM
