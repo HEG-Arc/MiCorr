@@ -16,7 +16,9 @@ angular
         'ngResource',
         'ui.bootstrap',
         'fxpicklist',
-        'ngProgress'
+        'ngProgress',
+        'ui.select',
+        'ngSanitize'
     ])
     .config(function ($routeProvider, $httpProvider) {
         $routeProvider
