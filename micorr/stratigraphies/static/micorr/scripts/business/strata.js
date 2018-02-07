@@ -17,6 +17,44 @@
         value: true
     });
 
+    var _slicedToArray = function () {
+        function sliceIterator(arr, i) {
+            var _arr = [];
+            var _n = true;
+            var _d = false;
+            var _e = undefined;
+
+            try {
+                for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+                    _arr.push(_s.value);
+
+                    if (i && _arr.length === i) break;
+                }
+            } catch (err) {
+                _d = true;
+                _e = err;
+            } finally {
+                try {
+                    if (!_n && _i["return"]) _i["return"]();
+                } finally {
+                    if (_d) throw _e;
+                }
+            }
+
+            return _arr;
+        }
+
+        return function (arr, i) {
+            if (Array.isArray(arr)) {
+                return arr;
+            } else if (Symbol.iterator in Object(arr)) {
+                return sliceIterator(arr, i);
+            } else {
+                throw new TypeError("Invalid attempt to destructure non-iterable instance");
+            }
+        };
+    }();
+
     function _classCallCheck(instance, Constructor) {
         if (!(instance instanceof Constructor)) {
             throw new TypeError("Cannot call a class as a function");
@@ -53,6 +91,7 @@
             this.subCharacteristics = [];
             this.childStrata = [];
             this.secondaryComponents = [{ characteristics: [], subCharacteristics: [] }];
+            this.containers = {}; //map of Element list
             this.child = child;
 
             this.init();
@@ -441,6 +480,20 @@
                 return false;
             }
         }, {
+            key: "setContainerElements",
+            value: function setContainerElements(familyName, elements) {
+                if (this.findDependency(familyName)) {
+                    this.containers[familyName] = elements.slice();
+                    return true;
+                }
+                return false;
+            }
+        }, {
+            key: "getContainerElements",
+            value: function getContainerElements(familyName) {
+                if (familyName in this.containers) return this.containers[familyName];else return [];
+            }
+        }, {
             key: "updateSubCharacteristic",
             value: function updateSubCharacteristic(familyName, subCharacteristicSource) {
                 var dependencyName = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
@@ -552,6 +605,7 @@
                     this.addDependency('hardnessFamily');
                     this.addDependency('crackingFamily');
                     this.addDependency('pomcompositionFamily');
+                    this.addDependency('pomCompositionMetallicPollutants');
                     this.addDependency('interfacetransitionFamily');
                     this.addDependency('interfaceroughnessFamily');
                     this.addDependency('interfaceadherenceFamily');
@@ -606,7 +660,10 @@
                 var childStrata = [],
                     i;
 
-                var jsonStrata = { name: this.getUid(), characteristics: [], interfaces: [], children: [], secondaryComponents: [] };
+                var jsonStrata = {
+                    name: this.getUid(), characteristics: [], interfaces: [], children: [], secondaryComponents: [],
+                    containers: {}
+                };
 
                 //On récupère les caractéristiques
                 for (i = 0; i < this.characteristics.length; i++) {
@@ -648,6 +705,7 @@
                         }));
                         if (all_component_characteristics.length) jsonStrata.secondaryComponents.push(all_component_characteristics);
                     }
+                    // containers
                 } catch (err) {
                     _didIteratorError4 = true;
                     _iteratorError4 = err;
@@ -659,6 +717,38 @@
                     } finally {
                         if (_didIteratorError4) {
                             throw _iteratorError4;
+                        }
+                    }
+                }
+
+                var _iteratorNormalCompletion5 = true;
+                var _didIteratorError5 = false;
+                var _iteratorError5 = undefined;
+
+                try {
+                    for (var _iterator5 = Object.entries(this.containers)[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+                        var _ref = _step5.value;
+
+                        var _ref2 = _slicedToArray(_ref, 2);
+
+                        var family = _ref2[0];
+                        var elements = _ref2[1];
+
+                        jsonStrata.containers[family] = elements.map(function (e) {
+                            return { name: e.symbol };
+                        });
+                    }
+                } catch (err) {
+                    _didIteratorError5 = true;
+                    _iteratorError5 = err;
+                } finally {
+                    try {
+                        if (!_iteratorNormalCompletion5 && _iterator5.return) {
+                            _iterator5.return();
+                        }
+                    } finally {
+                        if (_didIteratorError5) {
+                            throw _iteratorError5;
                         }
                     }
                 }

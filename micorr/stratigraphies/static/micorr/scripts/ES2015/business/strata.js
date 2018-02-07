@@ -16,6 +16,7 @@ class Strata {
         this.subCharacteristics = [];
         this.childStrata = [];
         this.secondaryComponents = [{characteristics: [], subCharacteristics: []}];
+        this.containers = {}; //map of Element list
         this.child = child;
 
         this.init();
@@ -341,6 +342,19 @@ class Strata {
         return false;
     }
 
+    setContainerElements(familyName, elements ) {
+        if (this.findDependency(familyName)) {
+            this.containers[familyName]=elements.slice();
+            return true;
+        }
+        return false;
+    }
+    getContainerElements(familyName) {
+        if (familyName in this.containers)
+            return this.containers[familyName];
+        else
+            return [];
+    }
 
     updateSubCharacteristic(familyName, subCharacteristicSource, dependencyName=null, inArrayProperty="subCharacteristics") {
         dependencyName = dependencyName || familyName; //dependencyName defaults to familyName but could be different
@@ -450,6 +464,7 @@ class Strata {
             this.addDependency('hardnessFamily');
             this.addDependency('crackingFamily');
             this.addDependency('pomcompositionFamily');
+            this.addDependency('pomCompositionMetallicPollutants');
             this.addDependency('interfacetransitionFamily');
             this.addDependency('interfaceroughnessFamily');
             this.addDependency('interfaceadherenceFamily');
@@ -504,7 +519,10 @@ class Strata {
     toJson() {
         var childStrata = [],i;
 
-        var jsonStrata = {name: this.getUid(), characteristics: [], interfaces: [], children: [], secondaryComponents:[]};
+        var jsonStrata = {
+            name: this.getUid(), characteristics: [], interfaces: [], children: [], secondaryComponents: [],
+            containers: {}
+        };
 
         //On récupère les caractéristiques
         for (i = 0; i < this.characteristics.length; i++) {
@@ -536,6 +554,10 @@ class Strata {
             ).concat(sc.subCharacteristics.map(sc => ({name: sc.getUid()})));
             if (all_component_characteristics.length)
                 jsonStrata.secondaryComponents.push(all_component_characteristics);
+        }
+        // containers
+        for (let [family,elements] of Object.entries(this.containers)) {
+            jsonStrata.containers[family]=elements.map(e => ({name: e.symbol}));
         }
         return jsonStrata;
 

@@ -252,7 +252,10 @@ angular.module('micorrApp')
                                      console.log(`ignoring unexpected subCharacteristic:${sc.name} in secondaryComponent`);
                             }
                         }
-
+                    // Element containers
+                    if (currentStrata.containers) {
+                        str.containers = currentStrata.containers
+                    }
                     //Chargement des données pour la picklist
                     if (str.findDependency('subcprimicrostructureFamily')) {
                         var sChars = getSubCharacteristicByFamilyMulti(subCharacteristicsList, StratigraphyData.getSubcprimicrostructureFamily());

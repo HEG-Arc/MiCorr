@@ -102,18 +102,28 @@ class Neo4jDAO:
 
         # pour chaque strates on va faire une requete
         for strata in strata_records:
-            st = {'name': strata.uid, 'characteristics': '', 'subcharacteristics': '', 'interfaces': '', 'children': ''}
+            st = {'name': strata.uid, 'characteristics': '', 'subcharacteristics': '', 'interfaces': '',
+                  'children': '', 'containers': {}}
             print ("***" + strata.uid)
 
             # Chaque strates a des caracteristiques
             charactList = self.graph.cypher.execute(
-                "MATCH (n:Strata)-[r:IS_CONSTITUTED_BY]->(c:Characteristic)-[b:BELONGS_TO]->(f:Family) where n.uid='" + strata.uid + "' RETURN c.uid as uid, f.uid as family, c.name as real_name, c.visible as visible, c.order as order")
+                """MATCH (n:Strata)-[r:IS_CONSTITUTED_BY]->(c:Characteristic)-[b:BELONGS_TO]->(f:Family) where n.uid={strata_uid}
+                   RETURN c,f
+                """, strata_uid=strata.uid)
             print ("======Characteristic")
+            # c.uid as uid, f.uid as family, c.name as real_name, c.visible as visible, c.order as order
             clist = []
             for charact in charactList:
-                clist.append({'name': charact.uid, 'family': charact.family, 'real_name': charact.real_name,
-                              'order': charact.order, 'visible': charact.visible})
-                print ("         " + charact.uid)
+                cp=charact.c.properties
+                fp=charact.f.properties
+                if fp['uid']=='elementFamily':
+                        clist.append({'name': cp['uid'], 'family': fp['uid'], 'real_name': cp['name'],
+                                  'symbol': cp['symbol'], 'category':cp['category'], 'order':0, 'visible': True})
+                else:
+                    clist.append({'name': cp['uid'], 'family': fp['uid'], 'real_name': cp['name'],
+                              'order': cp['order'], 'visible': cp['visible']})
+                print ("         " + cp['uid'])
 
             # Chaque strate a des sous-caracteristiques
             print ("======subCharacteristic")
@@ -143,6 +153,16 @@ class Neo4jDAO:
             if len(secondary_components[0]['characteristics']) or len(secondary_components[0]['subCharacteristics']):
                 st['secondaryComponents'] = secondary_components
 
+            print ("======Containers")
+            container_records = self.graph.cypher.execute(
+                """MATCH (s:Strata { uid:{strata_uid} })-[r:INCLUDES]->(c:Container)-[ce_r:IS_CONSTITUTED_BY]->(e:Element)
+                   MATCH (c)-[BELONGS_TO]->(f:Family) RETURN s,c,ce_r,e,f ORDER BY f.uid, ce_r.order""",
+                strata_uid=strata.uid)
+            for r in container_records:
+                if not r.f['uid'] in st['containers']:
+                    st['containers'][r.f['uid']]=[r.e.properties]
+                else:
+                    st['containers'][r.f['uid']].append(r.e.properties)
             # Chaque strates a des interfaces
             print("======interface")
             interfaceName = self.graph.cypher.execute(
@@ -225,12 +245,17 @@ class Neo4jDAO:
             if not family_dic.has_key(f_uid):
                 family_dic[f_uid] = {'family': f_uid, 'fam_real_name': record.f['name'],
                                      'characteristics': OrderedDict()}
-            c_uid = record.c['uid']
-            if not family_dic[f_uid]['characteristics'].has_key(c_uid):
-                family_dic[f_uid]['characteristics'][c_uid] = {'name': c_uid, 'real_name': record.c['name'],
-                                                               'description': record.c['description'],
-                                                               'visible': record.c['visible'],
-                                                               'subcharacteristics': OrderedDict()}
+            if record.c:
+                c_uid = record.c['uid']
+                if not family_dic[f_uid]['characteristics'].has_key(c_uid):
+                    c_dic = {'name': c_uid, 'real_name': record.c['name'], 'subcharacteristics': OrderedDict()}
+                    if f_uid == 'elementFamily':
+                        c_dic.update({'symbol': record.c['symbol'], 'category': record.c['category'], 'order': 0, 'visible': True})
+                    else:
+                        c_dic.update({'description': record.c['description'], 'order': record.c['order'], 'visible': record.c['visible']})
+                    family_dic[f_uid]['characteristics'][c_uid] = c_dic
+            else:
+                print 'no characteristic in : ',record
             if record.sc:
                 sc_uid = record.sc['uid']
                 if not family_dic[f_uid]['characteristics'][c_uid]['subcharacteristics'].has_key(sc_uid):
@@ -342,15 +367,16 @@ class Neo4jDAO:
     # @params nom de la stratigraphie
     # @returns
     def deleteAllStrataFromAStratigraphy(self, stratigraphy):
-        # supression des strates enfants, interfaces et components
+        # supression des strates enfants, interfaces, components et containers
         self.graph.cypher.execute('''
             MATCH (sg:Stratigraphy {uid:{stratigraphy}})
             OPTIONAL MATCH (sg)-[:POSSESSES]->(parent_st:Strata)-[:IS_PARENT_OF]->(child_st:Strata)
             DETACH DELETE child_st
             WITH sg MATCH (sg)-[:POSSESSES]->(st:Strata)-[:HAS_UPPER_INTERFACE]->(i:Interface)
-            OPTIONAL MATCH (st)-[:INCLUDES]->(c:Component)
+            OPTIONAL MATCH (st)-[:INCLUDES]->(c) WHERE c:Component OR c:Container
             DETACH DELETE c,i,st
         ''', stratigraphy=stratigraphy)
+        # optional "WHERE c:Component OR c:Container" is there to be explicit on types of Node INCLUDED
 
     # # supprime une stratigraphie
     # @params nom de la stratigraphie
@@ -399,12 +425,15 @@ class Neo4jDAO:
     # cree une strate
     # @params nom de la strate et nom de la stratigraphie
     # @returns
-    def createStrata(self, strata, stratigraphy):
-        self.query = "CREATE(strata:Strata{uid:'" + strata + "',date:'" + time.strftime(
-            "%Y-%m-%d") + "',stratigraphy_uid: '" + stratigraphy + "',label:'strata'})"
-        self.graph.cypher.execute(self.query)
-        self.query = "MATCH (a:Stratigraphy),(b:Strata) WHERE a.uid = '" + stratigraphy + "' AND b.uid= '" + strata + "' CREATE (a)-[:POSSESSES]->(b)"
-        self.graph.cypher.execute(self.query)
+    def createStrata(self, strata_uid, stratigraphy_uid):
+        today = time.strftime("%Y-%m-%d")
+        res = self.graph.cypher.execute("""
+               CREATE(strata:Strata{uid:{strata_uid}, date:{today}, stratigraphy_uid: {stratigraphy_uid}})
+               WITH strata 
+               MATCH (stgy:Stratigraphy {uid:{stratigraphy_uid}})
+               CREATE (stgy)-[:POSSESSES]->(strata) RETURN strata""",
+                                  strata_uid=strata_uid, today=today, stratigraphy_uid=stratigraphy_uid)
+        return res[0]
 
     # cree une strate enfant
     # @params nom de la strate et nom de la strate parent
@@ -416,15 +445,15 @@ class Neo4jDAO:
         self.query = "MATCH (a:Strata),(b:Strata) WHERE a.uid = '" + strata + "' AND b.uid= '" + parentstrata + "' CREATE (b)-[:IS_PARENT_OF]->(a)"
         self.graph.cypher.execute(self.query)
 
-    def create_secondary_components(self, strata, components):
+    def create_secondary_components(self, strata_uid, components):
         """
-        :param strata:
+        :param strata_uid:
         :param components:
         :return:
         """
         if not len(components):
             return
-        st = self.graph.find_one("Strata", "uid", strata)
+        st = self.graph.find_one("Strata", "uid", strata_uid)
         for i, component in enumerate(components):
             c = Node("Component", order=i)
             stc = Relationship(st, "INCLUDES", c)
@@ -441,6 +470,28 @@ class Neo4jDAO:
                     else:
                         print 'Characteristic:{} not found'.format(characteristic['name'])
                 # one liner fail not working for merge self.graph.create(*[Relationship(c, "IS_CONSTITUTED_BY", )) for characteristic in component])
+    def create_containers(self, strata_uid, containers):
+        """
+        :param strata_uid:
+        :param containers:
+        :return:
+        """
+        if not len(containers):
+            return
+        st = self.graph.find_one("Strata", "uid", strata_uid)
+        for family, elements in containers.iteritems():
+            c = Node("Container")
+            stc_rel = Relationship(st, "INCLUDES", c)
+
+            cf = self.graph.find_one("Family", "uid", family)
+            fc_rel = Relationship(c, "BELONGS_TO", cf)
+
+            self.graph.create(c, st, stc_rel, cf, fc_rel)
+
+            if len(elements):
+                for i,e in enumerate(elements):
+                    element = self.graph.find_one("Element", "uid", e['name'])
+                    self.graph.create(Relationship(c, "IS_CONSTITUTED_BY", element, order=i))
 
     # retourne le nombre d'interface pour toutes les strates d'une stratigraphie
     # @params nom de la stratigraphie
@@ -495,6 +546,7 @@ class Neo4jDAO:
                             self.attachCharacteristicToStrata(child_name, sc['name'])
 
             self.create_secondary_components(strata_name,stratum['secondaryComponents'])
+            self.create_containers(strata_name, stratum['containers'])
 
         return {'res': 1}
 
