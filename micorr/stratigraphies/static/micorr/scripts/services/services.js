@@ -238,6 +238,7 @@ angular.module('micorrApp').factory('StratigraphyData', function StratigraphyDat
                 this.nmmcompositionFamily = parseCharasteristic('nmmCompositionFamily');
                 this.dcompositionFamily = parseCharasteristic('dCompositionFamily');
                 this.pomcompositionFamily = parseCharasteristic('pomCompositionFamily');
+                this.elementFamily = parseCharasteristic('elementFamily');
                 this.cpcompositionFamily = parseCharasteristic('cpCompositionFamily');
                 this.cmcompositionFamily = parseCharasteristic('cmCompositionFamily');
                 this.mcompositionFamily = parseCharasteristic('mCompositionFamily');
@@ -250,9 +251,9 @@ angular.module('micorrApp').factory('StratigraphyData', function StratigraphyDat
                 this.interfacetransitionFamily = parseCharasteristic('interfaceTransitionFamily');
                 this.interfaceroughnessFamily = parseCharasteristic('interfaceRoughnessFamily');
                 this.interfaceadherenceFamily = parseCharasteristic('interfaceAdherenceFamily');
-                this.subcpcompositionFamily = getSubCharacteristicsFromFamily('cpCompositionFamily', 'sub')
-                this.subsubcpcompositionFamily = getSubCharacteristicsFromFamily('cpCompositionFamily', 'subsub')
-                this.cpcompositionextensionFamily = parseCharasteristic('cpCompositionExtensionFamily', 'sub');
+                this.subcpcompositionFamily = getSubCharacteristicsFromFamily('cpCompositionFamily', 'sub');
+                this.subsubcpcompositionFamily = getSubCharacteristicsFromFamily('cpCompositionFamily', 'subsub');
+                this.cpcompositionextensionFamily = parseCharasteristic('cpCompositionExtensionFamily');
                 this.cprimicrostructureaggregatecompositionFamily = parseCharasteristic('cpriMicrostructureAggregateCompositionFamily');
                 this.cprimicrostructureaggregatecompositionextensionFamily = parseCharasteristic('cpriMicrostructureAggregateCompositionExtensionFamily');
                 this.submmicrostructureFamily = getSubCharacteristicsFromFamily('mMicrostructureFamily', 'sub');

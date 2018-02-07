@@ -51,6 +51,8 @@
                 if ('uid' in sourceC) {
                     this.uid = sourceC.uid;
                     this.name = sourceC.name;
+                } else if ('symbol' in sourceC) {
+                    this.name = sourceC.symbol; //name is currently used as uid on save...
                 } else {
                     this.name = sourceC.name;
                     this.real_name = sourceC.real_name;
