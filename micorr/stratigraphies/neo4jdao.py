@@ -485,7 +485,7 @@ class Neo4jDAO:
 
             cf = self.graph.find_one("Family", "uid", family)
             fc_rel = Relationship(c, "BELONGS_TO", cf)
-
+            print(c, st, stc_rel, cf, fc_rel)
             self.graph.create(c, st, stc_rel, cf, fc_rel)
 
             if len(elements):
