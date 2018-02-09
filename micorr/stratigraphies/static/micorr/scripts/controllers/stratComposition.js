@@ -56,7 +56,11 @@ angular.module('micorrApp')
             $scope.nmmcompositionFamily = StratigraphyData.getNmmcompositionFamily()['characteristics'];
             $scope.dcompositionFamily = StratigraphyData.getDcompositionFamily()['characteristics'];
             $scope.pomcompositionFamily = StratigraphyData.getPomcompositionFamily()['characteristics'];
+
             $scope.pomCompositionMetallicPollutants = {characteristics:StratigraphyData.elementFamily.characteristics, selected:[]};
+            $scope.mCompositionMainElements = {characteristics:StratigraphyData.elementFamily.characteristics, selected:[]};
+            $scope.mCompositionSecondaryElements = {characteristics:StratigraphyData.elementFamily.characteristics, selected:[]};
+
             $scope.cpcompositionFamily = StratigraphyData.getCpcompositionFamily()['characteristics'];
             $scope.cmcompositionFamily = StratigraphyData.getCmcompositionFamily()['characteristics'];
             $scope.mcompositionFamily = StratigraphyData.getMcompositionFamily()['characteristics'];
@@ -116,6 +120,8 @@ angular.module('micorrApp')
             }
 
             $scope.pomCompositionMetallicPollutants.selected = strata.getContainerElements("pomCompositionMetallicPollutants");
+            $scope.mCompositionMainElements.selected = strata.getContainerElements("mCompositionMainElements");
+            $scope.mCompositionSecondaryElements.selected = strata.getContainerElements("mCompositionSecondaryElements");
 
             if (strata.getCharacteristicsByFamily("cpCompositionFamily").length > 0) {
                 $scope.selectedCpcompositionFamily = getCharacteristicByItsName($scope.cpcompositionFamily, strata.getCharacteristicsByFamily("cpCompositionFamily")[0].getName());
@@ -244,6 +250,9 @@ angular.module('micorrApp')
             strata.updateCharacteristic('dCompositionFamily',$scope.selectedDcompositionFamily);
             strata.updateCharacteristic('pomCompositionFamily',$scope.selectedPomcompositionFamily);
             strata.setContainerElements('pomCompositionMetallicPollutants',$scope.pomCompositionMetallicPollutants.selected);
+            strata.setContainerElements('mCompositionMainElements', $scope.mCompositionMainElements.selected);
+            strata.setContainerElements('mCompositionSecondaryElements', $scope.mCompositionSecondaryElements.selected);
+
             strata.updateCharacteristicList('cpCompositionExtensionFamily',$scope.selectedCpcompositionextensionFamily);
 
             //Ajout  des composition aux deux strates enfant de la strate CM
