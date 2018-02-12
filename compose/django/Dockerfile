@@ -2,7 +2,7 @@ FROM python:2.7
 ENV PYTHONUNBUFFERED 1
 
 RUN groupadd -r django \
-    && useradd -r -g django django
+    && useradd -r -g django django -m -d /home/django -s /bin/bash
 
 # Requirements have to be pulled and installed here, otherwise caching won't work
 COPY ./requirements /requirements

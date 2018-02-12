@@ -69,6 +69,7 @@ THIRD_PARTY_APPS = (
     # end wagtail apps
     'robots',
     'simplejson',
+    'django_extensions'
 )
 
 # Apps specific for this project go here.
