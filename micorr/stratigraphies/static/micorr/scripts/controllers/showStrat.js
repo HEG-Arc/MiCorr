@@ -234,10 +234,6 @@ angular.module('micorrApp')
                         (sChar = getSubCharacteristicByFamily(subCharacteristicsList, StratigraphyData.getSubcmLevelOfCorrosionFamily())))
                         str.addSubCharacteristic(new subCharacteristic.SubCharacteristic('subcmlevelofcorrosionFamily', sChar));
 
-                    if (str.findDependency('submcompositionFamily') &&
-                        (sChar = getSubCharacteristicByFamily(subCharacteristicsList, StratigraphyData.getSubmcompositionFamily())))
-                        str.addSubCharacteristic(new subCharacteristic.SubCharacteristic('submcompositionFamily', sChar));
-
                      // secondary Components
                     if (currentStrata.secondaryComponents)
                         for (let component of currentStrata.secondaryComponents) {
@@ -421,7 +417,7 @@ angular.module('micorrApp')
                 $scope.showPomcomposition = str.findDependency('pomcompositionFamily');
                 $scope.showCpcomposition = str.findDependency('cpcompositionFamily');
                 $scope.showCmcomposition = str.findDependency('cmcompositionFamily');
-                $scope.showMcomposition = str.findDependency('mcompositionFamily');
+                $scope.showmCompositionMainElements = str.findDependency('mCompositionMainElements');
                 $scope.showinterfaceprofileFamily = str.findDependency('interfaceprofileFamily');
                 $scope.showinterfacetransition = str.findDependency('interfacetransitionFamily');
                 $scope.showinterfaceroughness = str.findDependency('interfaceroughnessFamily');
@@ -435,7 +431,7 @@ angular.module('micorrApp')
                 $scope.showsubmmicrostructureFamily = str.findDependency('submmicrostructureFamily');
 
                 $scope.showcprimicrostructureFamily = str.findDependency('cprimicrostructureFamily');
-                $scope.showsubmcompositionFamily = str.findDependency('submcompositionFamily');
+                $scope.showmCompositionSecondaryElements = str.findDependency('mCompositionSecondaryElements');
 
                 var selectedcpriMicrostructureFamily=str.getFirstCharacteristicByFamily("cpriMicrostructureFamily","name");
                 // only display Microstructure composition options in these cases

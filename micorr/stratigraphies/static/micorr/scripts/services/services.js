@@ -241,7 +241,6 @@ angular.module('micorrApp').factory('StratigraphyData', function StratigraphyDat
                 this.elementFamily = parseCharasteristic('elementFamily');
                 this.cpcompositionFamily = parseCharasteristic('cpCompositionFamily');
                 this.cmcompositionFamily = parseCharasteristic('cmCompositionFamily');
-                this.mcompositionFamily = parseCharasteristic('mCompositionFamily');
                 this.cmcpaggregateCompositionFamily = parseCharasteristic('cmCpAggregatesCompositionFamily');
                 this.cmlevelofcorrosionFamily = parseCharasteristic('cmLevelOfCorrosionFamily');
                 this.cprimicrostructureFamily = parseCharasteristic('cpriMicrostructureFamily');
@@ -262,7 +261,6 @@ angular.module('micorrApp').factory('StratigraphyData', function StratigraphyDat
                 this.subsubcprimicrostructureaggregatecompositionFamily = getSubCharacteristicsFromFamily('cpriMicrostructureAggregateCompositionFamily', 'subsub');
                 this.subcmcompositionFamily = getSubCharacteristicsFromFamily('cmCompositionFamily', 'sub');
                 this.subcmLevelOfCorrosionFamily = getSubCharacteristicsFromFamily('cmLevelOfCorrosionFamily', 'sub');
-                this.submcompositionFamily = getSubCharacteristicsFromFamily('mCompositionFamily', 'sub');
             },
             getRawCharacteristics: function () {
                 return this.rawCharacteristics;
@@ -275,12 +273,6 @@ angular.module('micorrApp').factory('StratigraphyData', function StratigraphyDat
             },
             setSelectedStrata: function (index) {
                 this.selectedStrata = index;
-            },
-            getSubmcompositionFamily: function () {
-                return this.submcompositionFamily;
-            },
-            setSubmcompositionFamily: function (submcompositionFamily) {
-                this.submcompositionFamily = submcompositionFamily;
             },
             setSubmmicrostructureFamily: function (submmicrostructureFamily) {
                 this.submmicrostructureFamily = submmicrostructureFamily;
@@ -389,12 +381,6 @@ angular.module('micorrApp').factory('StratigraphyData', function StratigraphyDat
             },
             getInterfaceprofileFamily: function () {
                 return this.interfaceprofileFamily;
-            },
-            setMcompositionFamily: function (mcompositionFamily) {
-                this.mcompositionFamily = mcompositionFamily;
-            },
-            getMcompositionFamily: function () {
-                return this.mcompositionFamily;
             },
             setCmcompositionFamily: function (cmcompositionFamily) {
                 this.cmcompositionFamily = cmcompositionFamily;

@@ -21,11 +21,9 @@ angular.module('micorrApp')
             $scope.selectedPomcompositionFamily = null;
             $scope.selectedCpcompositionFamily = null;
             $scope.selectedCmcompositionFamily = null;
-            $scope.selectedMcompositionFamily = null;
             $scope.selectedSubcpcompositionFamily = null;
             $scope.selectedSubsubcpcompositionFamily = null;
             $scope.selectedSubcmcompositionFamily = null;
-            $scope.selectedSubmcompositionFamily = null;
 
             $scope.subcpcompositionFamily = null;
             $scope.subsubcpcompositionFamily = null;
@@ -63,7 +61,6 @@ angular.module('micorrApp')
 
             $scope.cpcompositionFamily = StratigraphyData.getCpcompositionFamily()['characteristics'];
             $scope.cmcompositionFamily = StratigraphyData.getCmcompositionFamily()['characteristics'];
-            $scope.mcompositionFamily = StratigraphyData.getMcompositionFamily()['characteristics'];
             $scope.cpcompositionextensionFamily = StratigraphyData.getCpcompositionextensionFamily()['characteristics'];
             $scope.cmcpaggregateCompositionFamily = StratigraphyData.getCmcpaggregateCompositionFamily()['characteristics'];
             $scope.descriptions = StratigraphyData.descriptions;
@@ -129,9 +126,6 @@ angular.module('micorrApp')
             if (strata.getCharacteristicsByFamily("cmCompositionFamily").length > 0) {
                 $scope.selectedCmcompositionFamily = getCharacteristicByItsName($scope.cmcompositionFamily, strata.getCharacteristicsByFamily("cmCompositionFamily")[0].getName());
             }
-            if (strata.getCharacteristicsByFamily("mCompositionFamily").length > 0) {
-                $scope.selectedMcompositionFamily = getCharacteristicByItsName($scope.mcompositionFamily, strata.getCharacteristicsByFamily("mCompositionFamily")[0].getName());
-            }
             if (strata.getCharacteristicsByFamily("cpCompositionExtensionFamily").length > 0) {
                 $scope.selectedCpcompositionextensionFamily = getCharacteristicByItsNameMulti($scope.cpcompositionextensionFamily, strata.getCharacteristicsByFamily("cpCompositionExtensionFamily"));
             }
@@ -175,14 +169,6 @@ angular.module('micorrApp')
 
 
             //Sous caracteristiques
-
-            // met à jour les données des formulaires en fonction de mcompositionFamily
-            if (strata.getSubCharacteristicsByFamily("submcompositionFamily").length > 0) {
-                if (strata.findDependency('submcompositionFamily')) {
-                    $scope.submcompositionFamily = returnSubCharacteristicsFromParent(StratigraphyData.getRawCharacteristics(), 'mCompositionFamily', strata.getCharacteristicsByFamily('mCompositionFamily')[0].getName(), '');
-                    $scope.selectedSubmcompositionFamily = getCharacteristicByItsName($scope.submcompositionFamily, strata.getSubCharacteristicsByFamily('submcompositionFamily')[0].getName());
-                }
-            }
 
             // met à jour les données des formulaires en fonction de cmcompositionFamily
             if (strata.getSubCharacteristicsByFamily("subcmcompositionFamily").length > 0) {
@@ -270,7 +256,6 @@ angular.module('micorrApp')
             //Sous caractéristiques
             strata.updateSubCharacteristic('subsubcpcompositionFamily', $scope.selectedSubsubcpcompositionFamily);
             strata.updateSubCharacteristic('subcmcompositionFamily', $scope.selectedSubcmcompositionFamily);
-            strata.updateSubCharacteristic('submcompositionFamily', $scope.selectedSubmcompositionFamily);
 
             strata.updateSecondaryComponentCharacteristic('cpCompositionFamily',
                 $scope.secondaryComponents[0].selectedCpcompositionFamily, 'cpriMicrostructureAggregateCompositionFamily');
@@ -292,26 +277,6 @@ angular.module('micorrApp')
         $scope.upComposition2 = function () {
 
             var strata = StratigraphyData.getStratigraphy().getStratas()[StratigraphyData.getSelectedStrata()];
-
-            if ($scope.selectedMcompositionFamily != null) {
-                if (strata.findDependency('mcompositionFamily')) {
-                    var char = new characteristic.Characteristic();
-                    char.setFamily('mCompositionFamily');
-
-                    char.setName($scope.selectedMcompositionFamily.name);
-                    char.setRealName($scope.selectedMcompositionFamily.real_name);
-
-                    strata.replaceCharacteristic(char);
-
-                    if (strata.getCharacteristicsByFamily('mCompositionFamily').length > 0) {
-                        $scope.submcompositionFamily = returnSubCharacteristicsFromParent(StratigraphyData.getRawCharacteristics(), 'mCompositionFamily', strata.getCharacteristicsByFamily('mCompositionFamily')[0].getName(), '');
-
-                        if (strata.getSubCharacteristicsByFamily('submcompositionFamily').length > 0) {
-                            $scope.selectedSubmcompositionFamily = getCharacteristicByItsName($scope.submcompositionFamily, strata.getSubCharacteristicsByFamily('submcompositionFamily')[0].getName());
-                        }
-                    }
-                }
-            }
 
             if ($scope.selectedCpcompositionFamily != null) {
                 if (strata.findDependency('cpcompositionFamily')) {

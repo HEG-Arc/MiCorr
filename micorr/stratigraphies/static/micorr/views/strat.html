@@ -545,10 +545,10 @@
             </div>
         </div>
         <div class="row-fluid">
-            <div ng-show="showMcomposition" class="col-md-6 form-group">
+            <div ng-show="showmCompositionMainElements" class="col-md-6 form-group">
                 <label for="mCompositionMainElements"><span class="glyphicon glyphicon-eye-close"
                                                       title="no visual impact on the stratum"></span>
-                 <span title="{{ descriptions.mcompositionFamily }}">Main element(s)</span>
+                 <span title="{{ descriptions.mCompositionMainElements }}">Main element(s)</span>
                 </label>
                 <ui-select id="mCompositionMainElements" class="form-control" multiple
                            theme="bootstrap"
@@ -563,9 +563,6 @@
                             ng-bind-html="item.real_name | highlight: $select.search"></span>
                     </ui-select-choices>
                 </ui-select>
-                <select id="mCompositionFamily" class="form-control" ng-model="selectedMcompositionFamily"
-                        ng-options="x.real_name for x in mcompositionFamily" ng-change="upComposition2()">
-                </select>
             </div>
             <div ng-show="showCpcomposition" class="col-md-6 form-group">
                 <label for="cpCompositionFamily"><span class="glyphicon glyphicon-eye-close"
@@ -655,10 +652,10 @@
         <!-- End CP Microstructure composition -->
 
         <div class="row-fluid">
-            <div ng-show="showsubmcompositionFamily" class="col-md-6 form-group">
-                <label for="submcompositionFamily"><span class="glyphicon glyphicon-eye-close"
+            <div ng-show="showmCompositionSecondaryElements" class="col-md-6 form-group">
+                <label for="mCompositionSecondaryElements"><span class="glyphicon glyphicon-eye-close"
                                                          title="no visual impact on the stratum"></span>
-                    <span title="{{ descriptions.submcompositionFamily }}">Secondary element(s)</span>
+                    <span title="{{ descriptions.mCompositionSecondaryElements }}">Secondary element(s)</span>
                 </label>
                 <ui-select id="mCompositionSecondaryElements" class="form-control" multiple
                            theme="bootstrap"
@@ -673,10 +670,6 @@
                             ng-bind-html="item.real_name | highlight: $select.search"></span>
                     </ui-select-choices>
                 </ui-select>
-
-                <select id="submcompositionFamily" class="form-control" ng-model="selectedSubmcompositionFamily"
-                        ng-options="x.name for x in submcompositionFamily" ng-change="upComposition()">
-                </select>
             </div>
         </div>
 

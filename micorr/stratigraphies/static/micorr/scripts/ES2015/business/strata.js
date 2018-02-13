@@ -505,14 +505,12 @@ class Strata {
             this.addDependency('cohesionFamily');
             this.addDependency('hardnessFamily');
             this.addDependency('crackingFamily');
-            this.addDependency('mcompositionFamily');
             this.addDependency('mCompositionMainElements');
             this.addDependency('mCompositionSecondaryElements');
             this.addDependency('interfacetransitionFamily');
             this.addDependency('interfaceroughnessFamily');
             this.addDependency('interfaceadherenceFamily');
             this.addDependency('submmicrostructureFamily');
-            this.addDependency('submcompositionFamily');
         }
 
 
