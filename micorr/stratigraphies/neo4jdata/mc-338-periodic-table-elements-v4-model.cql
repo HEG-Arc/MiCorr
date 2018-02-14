@@ -54,6 +54,17 @@ UNWIND ["pomOtherCharacteristic",
 MATCH (c:Characteristic {uid:c_uid})
 DETACH DELETE c;
 
+// Set remaining characteristics in alphabetical order but for other
+// and change uids for consistency with  other characteristics Families
+UNWIND [
+  {uid: "leatherCharacteristic", new_uid: "pomLeatherCharacteristic", order: 0},
+  {uid: "textileCharacteristic", new_uid: "pomTextileCharacteristic", order: 1},
+  {uid: "woodCharacteristic", new_uid: "pomWoodCharacteristic", order: 2},
+  {uid: "woodOtherCharacteristic", new_uid: "pomOtherCharacteristic", order: 3}] AS updt
+MATCH (c:Characteristic {uid: updt.uid})
+SET c.order = updt.order, c.uid = updt.new_uid
+RETURN c;
+
 
 /**************************
 // MC-270 Strate M - tableau periodique des éléments
