@@ -492,6 +492,9 @@ class Strata {
             this.addDependency('subcprimicrostructureFamily');
             this.addDependency('subcprimicrostructureaggregatecompositionFamily');
             this.addDependency('subsubcprimicrostructureaggregatecompositionFamily');
+            this.addDependency('cpCompositionMainElements');
+            this.addDependency('cpCompositionSecondaryElements');
+            this.addDependency('cpCompositionCompounds');
         }
 
         if (this.nature == "Metal") {
@@ -557,7 +560,7 @@ class Strata {
         }
         // containers
         for (let [family,elements] of Object.entries(this.containers)) {
-            jsonStrata.containers[family]=elements.map(e => ({name: e.symbol}));
+            jsonStrata.containers[family]=elements.map(e => {if (e.symbol) return {name: e.symbol}; else return {name: e.name}; } );
         }
         return jsonStrata;
 

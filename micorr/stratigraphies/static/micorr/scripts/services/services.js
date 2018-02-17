@@ -216,10 +216,13 @@ angular.module('micorrApp').factory('StratigraphyData', function StratigraphyDat
                 this.setRawCharacteristics(characteristics);
                 this.descriptions = descriptions;
 
+                // single loop characteristic retrieval to replace parseCharacteristic
+                // (works only when characteristic and property names are the same :(
                 for (var i = 0; i < characteristics.length; i++) {
                         this[characteristics[i].family] = characteristics[i];
                     }
 /*
+                // following characteristics have been retrieved correctly by loop above
                 this.shapeFamily = parseCharasteristic('shapeFamily');
                 this.widthFamily = parseCharasteristic('widthFamily');
                 this.thicknessFamily = parseCharasteristic('thicknessFamily');
@@ -233,12 +236,14 @@ angular.module('micorrApp').factory('StratigraphyData', function StratigraphyDat
                 this.cohesionFamily = parseCharasteristic('cohesionFamily');
                 this.hardnessFamily = parseCharasteristic('hardnessFamily');
                 this.crackingFamily = parseCharasteristic('crackingFamily');
-                */
+                this.elementFamily = parseCharasteristic('elementFamily');
+                this.compoundFamily = parseCharasteristic('compoundFamily');
+*/
                 this.scompositionFamily = parseCharasteristic('sCompositionFamily');
                 this.nmmcompositionFamily = parseCharasteristic('nmmCompositionFamily');
                 this.dcompositionFamily = parseCharasteristic('dCompositionFamily');
                 this.pomcompositionFamily = parseCharasteristic('pomCompositionFamily');
-                this.elementFamily = parseCharasteristic('elementFamily');
+
                 this.cpcompositionFamily = parseCharasteristic('cpCompositionFamily');
                 this.cmcompositionFamily = parseCharasteristic('cmCompositionFamily');
                 this.cmcpaggregateCompositionFamily = parseCharasteristic('cmCpAggregatesCompositionFamily');

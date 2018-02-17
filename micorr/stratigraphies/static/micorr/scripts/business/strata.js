@@ -633,6 +633,9 @@
                     this.addDependency('subcprimicrostructureFamily');
                     this.addDependency('subcprimicrostructureaggregatecompositionFamily');
                     this.addDependency('subsubcprimicrostructureaggregatecompositionFamily');
+                    this.addDependency('cpCompositionMainElements');
+                    this.addDependency('cpCompositionSecondaryElements');
+                    this.addDependency('cpCompositionCompounds');
                 }
 
                 if (this.nature == "Metal") {
@@ -735,7 +738,7 @@
                         var elements = _ref2[1];
 
                         jsonStrata.containers[family] = elements.map(function (e) {
-                            return { name: e.symbol };
+                            if (e.symbol) return { name: e.symbol };else return { name: e.name };
                         });
                     }
                 } catch (err) {

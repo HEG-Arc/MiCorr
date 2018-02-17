@@ -155,14 +155,20 @@ class Neo4jDAO:
 
             print ("======Containers")
             container_records = self.graph.cypher.execute(
-                """MATCH (s:Strata { uid:{strata_uid} })-[r:INCLUDES]->(c:Container)-[ce_r:IS_CONSTITUTED_BY]->(e:Element)
+                """MATCH (s:Strata { uid:{strata_uid} })-[r:INCLUDES]->(c:Container)-[ce_r:IS_CONSTITUTED_BY]->(e:Characteristic)
                    MATCH (c)-[BELONGS_TO]->(f:Family) RETURN s,c,ce_r,e,f ORDER BY f.uid, ce_r.order""",
                 strata_uid=strata.uid)
             for r in container_records:
+                # to be consistent with getAllCharacteristic name/uid renaming scheme
+                # and remaining client code we still need to "convert" the original Element and Compound Characteristics
+                # before returning to client
+                hacked_characteristic = r.e.properties.copy()
+                hacked_characteristic['real_name'] = hacked_characteristic['name']
+                hacked_characteristic['name'] = hacked_characteristic['uid']
+                del hacked_characteristic['uid']
                 if not r.f['uid'] in st['containers']:
-                    st['containers'][r.f['uid']]=[r.e.properties]
-                else:
-                    st['containers'][r.f['uid']].append(r.e.properties)
+                    st['containers'][r.f['uid']]=[]
+                st['containers'][r.f['uid']].append(hacked_characteristic)
             # Chaque strates a des interfaces
             print("======interface")
             interfaceName = self.graph.cypher.execute(
@@ -490,7 +496,7 @@ class Neo4jDAO:
 
             if len(elements):
                 for i,e in enumerate(elements):
-                    element = self.graph.find_one("Element", "uid", e['name'])
+                    element = self.graph.find_one("Characteristic", "uid", e['name'])
                     self.graph.create(Relationship(c, "IS_CONSTITUTED_BY", element, order=i))
 
     # retourne le nombre d'interface pour toutes les strates d'une stratigraphie

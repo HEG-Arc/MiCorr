@@ -58,6 +58,9 @@ angular.module('micorrApp')
             $scope.pomCompositionMetallicPollutants = {characteristics:StratigraphyData.elementFamily.characteristics, selected:[]};
             $scope.mCompositionMainElements = {characteristics:StratigraphyData.elementFamily.characteristics, selected:[]};
             $scope.mCompositionSecondaryElements = {characteristics:StratigraphyData.elementFamily.characteristics, selected:[]};
+            $scope.cpCompositionMainElements = {characteristics:StratigraphyData.elementFamily.characteristics, selected:[]};
+            $scope.cpCompositionSecondaryElements = {characteristics:StratigraphyData.elementFamily.characteristics, selected:[]};
+            $scope.cpCompositionCompounds =  {characteristics:StratigraphyData.compoundFamily.characteristics, selected:[]};
 
             $scope.cpcompositionFamily = StratigraphyData.getCpcompositionFamily()['characteristics'];
             $scope.cmcompositionFamily = StratigraphyData.getCmcompositionFamily()['characteristics'];
@@ -119,6 +122,9 @@ angular.module('micorrApp')
             $scope.pomCompositionMetallicPollutants.selected = strata.getContainerElements("pomCompositionMetallicPollutants");
             $scope.mCompositionMainElements.selected = strata.getContainerElements("mCompositionMainElements");
             $scope.mCompositionSecondaryElements.selected = strata.getContainerElements("mCompositionSecondaryElements");
+            $scope.cpCompositionMainElements.selected = strata.getContainerElements("cpCompositionMainElements");
+            $scope.cpCompositionSecondaryElements.selected = strata.getContainerElements("cpCompositionSecondaryElements");
+            $scope.cpCompositionCompounds.selected = strata.getContainerElements("cpCompositionCompounds");
 
             if (strata.getCharacteristicsByFamily("cpCompositionFamily").length > 0) {
                 $scope.selectedCpcompositionFamily = getCharacteristicByItsName($scope.cpcompositionFamily, strata.getCharacteristicsByFamily("cpCompositionFamily")[0].getName());
@@ -238,6 +244,9 @@ angular.module('micorrApp')
             strata.setContainerElements('pomCompositionMetallicPollutants',$scope.pomCompositionMetallicPollutants.selected);
             strata.setContainerElements('mCompositionMainElements', $scope.mCompositionMainElements.selected);
             strata.setContainerElements('mCompositionSecondaryElements', $scope.mCompositionSecondaryElements.selected);
+            strata.setContainerElements('cpCompositionMainElements', $scope.cpCompositionMainElements.selected);
+            strata.setContainerElements('cpCompositionSecondaryElements', $scope.cpCompositionSecondaryElements.selected);
+            strata.setContainerElements('cpCompositionCompounds', $scope.cpCompositionCompounds.selected);
 
             strata.updateCharacteristicList('cpCompositionExtensionFamily',$scope.selectedCpcompositionextensionFamily);
 
@@ -269,7 +278,19 @@ angular.module('micorrApp')
             $scope.$emit('updateSelectedStrata');
             $scope.$emit('updateFormOnly');
         };
+        $scope.filterCompounds = function(compound, index, array) {
+           // A predicate function can be used to write arbitrary filters. The function is called for each element of the array, with the element, its index, and the entire array itself as arguments.
+           // The final result is an array of those elements that the predicate returned true for.
+            function inCompound(element) {
+                // tests if the Element symbol is found inside the compound formula parenthesises
+                // e.g. in "Antlerite (Cu3(OH)4SO4)"
+                var search_re = new RegExp("\\(.*" + element.symbol + ".*\\)");
+                return (compound.real_name.search(search_re) != -1);
+                //return (compound.real_name.indexOf(element.symbol) != -1);
+            }
 
+            return ($scope.cpCompositionMainElements.selected.every(inCompound) && $scope.cpCompositionSecondaryElements.selected.every(inCompound));
+        };
         /* Met à jour les données quand les valeurs de mcomposition, cpcomposition ou cmcomposition changent
          * @params
          * @returns
