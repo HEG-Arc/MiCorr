@@ -497,7 +497,11 @@ class Neo4jDAO:
             if len(elements):
                 for i,e in enumerate(elements):
                     element = self.graph.find_one("Characteristic", "uid", e['name'])
-                    self.graph.create(Relationship(c, "IS_CONSTITUTED_BY", element, order=i))
+                    if element:
+                        self.graph.create(Relationship(c, "IS_CONSTITUTED_BY", element, order=i))
+                    else:
+                        print ("create_containers(): Characteristic :{} not found - not added to container {}".format(e['name'], c))
+                        logger.warning("Characteristic :{} not found - not added to container {}".format(e['name'], c))
 
     # retourne le nombre d'interface pour toutes les strates d'une stratigraphie
     # @params nom de la stratigraphie
