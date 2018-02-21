@@ -569,9 +569,6 @@
                                                        title="no visual impact on the stratum"></span>
                      <span title="{{ descriptions.cpcompositionFamily }}">Main element(s)</span>
                 </label>
-                <select id="cpCompositionFamily" class="form-control" ng-model="selectedCpcompositionFamily"
-                        ng-options="x.real_name for x in cpcompositionFamily" ng-change="upComposition2()">
-                </select>
                 <ui-select id="cpCompositionMainElements" class="form-control" multiple
                            theme="bootstrap"
                            ng-model="cpCompositionMainElements.selected" on-remove="upComposition()"
@@ -593,9 +590,6 @@
                                                           title="no visual impact on the stratum"></span>
                      <span title="{{ descriptions.subcpcompositionFamily }}">Secondary element(s)</span>
                 </label>
-                <select id="subcpcompositionFamily" class="form-control" ng-model="selectedSubcpcompositionFamily"
-                        ng-options="x.name for x in subcpcompositionFamily" ng-change="upComposition3()">
-                </select>
                 <ui-select id="cpCompositionSecondaryElements" class="form-control" multiple
                            theme="bootstrap"
                            ng-model="cpCompositionSecondaryElements.selected" on-remove="upComposition()"
@@ -615,9 +609,7 @@
                                                              title="no visual impact on the stratum"></span>
                     <span title="{{ descriptions.subsubcpcompositionFamily }}">Compound</span>
                 </label>
-                <select id="subsubcpcompositionFamily" class="form-control" ng-model="selectedSubsubcpcompositionFamily"
-                        ng-options="x.name for x in subsubcpcompositionFamily" ng-change="upComposition()">
-                </select>
+                <label>Only compounds with exact composition<input type="checkbox" ng-model="compoundExactComposition"></label>
                 <ui-select id="cpCompositionCompounds" class="form-control" multiple limit="1"
                            theme="bootstrap"
                            ng-model="cpCompositionCompounds.selected" on-remove="upComposition()"
