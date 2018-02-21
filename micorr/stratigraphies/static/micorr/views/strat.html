@@ -564,10 +564,10 @@
                     </ui-select-choices>
                 </ui-select>
             </div>
-            <div ng-show="showCpcomposition" class="col-md-6 form-group">
-                <label for="cpCompositionFamily"><span class="glyphicon glyphicon-eye-close"
+            <div ng-show="showcpCompositionMainElements" class="col-md-6 form-group">
+                <label for="cpCompositionMainElements"><span class="glyphicon glyphicon-eye-close"
                                                        title="no visual impact on the stratum"></span>
-                     <span title="{{ descriptions.cpcompositionFamily }}">Main element(s)</span>
+                     <span title="{{ descriptions.cpCompositionMainElements }}">Main element(s)</span>
                 </label>
                 <ui-select id="cpCompositionMainElements" class="form-control" multiple
                            theme="bootstrap"
@@ -585,10 +585,10 @@
             </div>
         </div>
         <div class="row-fluid">
-            <div ng-show="showsubcpcompositionFamily" class="col-md-6 form-group">
-                <label for="subcpcompositionFamily"><span class="glyphicon glyphicon-eye-close"
+            <div ng-show="showcpCompositionSecondaryElements" class="col-md-6 form-group">
+                <label for="cpCompositionSecondaryElements"><span class="glyphicon glyphicon-eye-close"
                                                           title="no visual impact on the stratum"></span>
-                     <span title="{{ descriptions.subcpcompositionFamily }}">Secondary element(s)</span>
+                     <span title="{{ descriptions.cpCompositionSecondaryElements }}">Secondary element(s)</span>
                 </label>
                 <ui-select id="cpCompositionSecondaryElements" class="form-control" multiple
                            theme="bootstrap"
@@ -604,10 +604,10 @@
                     </ui-select-choices>
                 </ui-select>
             </div>
-            <div ng-show="showsubsubcpcompositionFamily" class="col-md-6 form-group">
-                <label for="subsubcpcompositionFamily"><span class="glyphicon glyphicon-eye-close"
+            <div ng-show="showcpCompositionCompounds" class="col-md-6 form-group">
+                <label for="cpCompositionCompounds"><span class="glyphicon glyphicon-eye-close"
                                                              title="no visual impact on the stratum"></span>
-                    <span title="{{ descriptions.subsubcpcompositionFamily }}">Compound</span>
+                    <span title="{{ descriptions.cpCompositionCompounds }}">Compound</span>
                 </label>
                 <label>Only compounds with exact composition<input type="checkbox" ng-model="compoundExactComposition"></label>
                 <ui-select id="cpCompositionCompounds" class="form-control" multiple limit="1"

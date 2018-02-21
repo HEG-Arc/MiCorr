@@ -222,13 +222,6 @@ angular.module('micorrApp')
                     //Récupération des sous caractéristiques:
                     var subCharacteristicsList = currentStrata['subcharacteristics'];
                     var sChar;
-                    if (str.findDependency('subcpcompositionFamily') &&
-                        (sChar = getSubCharacteristicByFamily(subCharacteristicsList, StratigraphyData.getSubcpcompositionFamily())))
-                        str.addSubCharacteristic(new subCharacteristic.SubCharacteristic('subcpcompositionFamily', sChar));
-
-                    if (str.findDependency('subsubcpcompositionFamily') &&
-                        (sChar = getSubCharacteristicByFamily(subCharacteristicsList, StratigraphyData.getSubsubcpcompositionFamily())))
-                        str.addSubCharacteristic(new subCharacteristic.SubCharacteristic('subsubcpcompositionFamily', sChar));
 
                     if (str.findDependency('subcmlevelofcorrosionFamily') &&
                         (sChar = getSubCharacteristicByFamily(subCharacteristicsList, StratigraphyData.getSubcmLevelOfCorrosionFamily())))
@@ -415,7 +408,11 @@ angular.module('micorrApp')
                 $scope.showNmmcomposition = str.findDependency('nmmcompositionFamily');
                 $scope.showDcomposition = str.findDependency('dcompositionFamily');
                 $scope.showPomcomposition = str.findDependency('pomcompositionFamily');
-                $scope.showCpcomposition = str.findDependency('cpcompositionFamily');
+
+                $scope.showcpCompositionMainElements = str.findDependency('cpCompositionMainElements');
+                $scope.showcpCompositionSecondaryElements = str.findDependency('cpCompositionSecondaryElements');
+                $scope.showcpCompositionCompounds = str.findDependency('cpCompositionCompounds');
+
                 $scope.showCmcomposition = str.findDependency('cmcompositionFamily');
                 $scope.showmCompositionMainElements = str.findDependency('mCompositionMainElements');
                 $scope.showinterfaceprofileFamily = str.findDependency('interfaceprofileFamily');
@@ -424,8 +421,6 @@ angular.module('micorrApp')
                 $scope.showinterfaceadherence = str.findDependency('interfaceadherenceFamily');
                 $scope.showCmlevelofcorrosionFamily = str.findDependency('cmlevelofcorrosionFamily');
                 $scope.showcpcompositionextensionfamily = str.findDependency('cpcompositionextensionFamily');
-                $scope.showsubcpcompositionFamily = str.findDependency('subcpcompositionFamily');
-                $scope.showsubsubcpcompositionFamily = str.findDependency('subsubcpcompositionFamily');
                 $scope.showsubcmcompositionFamily = str.findDependency('subcmcompositionFamily');
                 $scope.showsubcmlevelofcorrosionFamily = str.findDependency('subcmlevelofcorrosionFamily');
                 $scope.showsubmmicrostructureFamily = str.findDependency('submmicrostructureFamily');

@@ -486,15 +486,12 @@ class Strata {
             this.addDependency('cpcompositionextensionFamily');
             this.addDependency('cprimicrostructureaggregatecompositionFamily');
             this.addDependency('cprimicrostructureaggregatecompositionextensionFamily');
-            this.addDependency('cpcompositionFamily');
-            this.addDependency('subcpcompositionFamily');
-            this.addDependency('subsubcpcompositionFamily');
-            this.addDependency('subcprimicrostructureFamily');
-            this.addDependency('subcprimicrostructureaggregatecompositionFamily');
-            this.addDependency('subsubcprimicrostructureaggregatecompositionFamily');
             this.addDependency('cpCompositionMainElements');
             this.addDependency('cpCompositionSecondaryElements');
             this.addDependency('cpCompositionCompounds');
+            this.addDependency('subcprimicrostructureFamily');
+            this.addDependency('subcprimicrostructureaggregatecompositionFamily');
+            this.addDependency('subsubcprimicrostructureaggregatecompositionFamily');
         }
 
         if (this.nature == "Metal") {
