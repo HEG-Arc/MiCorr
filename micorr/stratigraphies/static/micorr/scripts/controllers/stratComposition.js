@@ -46,6 +46,31 @@ angular.module('micorrApp')
         emptyFields();
         $scope.compoundExactComposition = true;
 
+        function CharacteristicsSelector(family)
+        /**
+         * construct an objet like : {characteristics:StratigraphyData[family];characteristics, selected:[]};
+         * @param family
+         * @constructor
+         */ {
+            this.characteristics = StratigraphyData[family].characteristics;
+            this.selected = [];
+        }
+
+        function ElementSelector()
+        /**
+         * specialized CharacteristicsSelector for elementFamily
+         * @constructor
+         */ {
+            CharacteristicsSelector.apply(this, ["elementFamily"]);
+        }
+
+        function CompoundSelector()
+        /**
+         * specialized CharacteristicsSelector for compoundFamily
+         * @constructor
+         */ {
+            CharacteristicsSelector.apply(this, ["compoundFamily"]);
+        }
         var initStratComposition = function () {
             // On récupère les valeurs qui vont aller dans les champs de notre formulaire
             $scope.scompositionFamily = StratigraphyData.getScompositionFamily()['characteristics'];
@@ -53,12 +78,12 @@ angular.module('micorrApp')
             $scope.dcompositionFamily = StratigraphyData.getDcompositionFamily()['characteristics'];
             $scope.pomcompositionFamily = StratigraphyData.getPomcompositionFamily()['characteristics'];
 
-            $scope.pomCompositionMetallicPollutants = {characteristics:StratigraphyData.elementFamily.characteristics, selected:[]};
-            $scope.mCompositionMainElements = {characteristics:StratigraphyData.elementFamily.characteristics, selected:[]};
-            $scope.mCompositionSecondaryElements = {characteristics:StratigraphyData.elementFamily.characteristics, selected:[]};
-            $scope.cpCompositionMainElements = {characteristics:StratigraphyData.elementFamily.characteristics, selected:[]};
-            $scope.cpCompositionSecondaryElements = {characteristics:StratigraphyData.elementFamily.characteristics, selected:[]};
-            $scope.cpCompositionCompounds =  {characteristics:StratigraphyData.compoundFamily.characteristics, selected:[]};
+            $scope.pomCompositionMetallicPollutants = new ElementSelector();
+            $scope.mCompositionMainElements = new ElementSelector();
+            $scope.mCompositionSecondaryElements = new ElementSelector();
+            $scope.cpCompositionMainElements = new ElementSelector();
+            $scope.cpCompositionSecondaryElements = new ElementSelector();
+            $scope.cpCompositionCompounds =  new CompoundSelector();
 
             $scope.cpcompositionFamily = StratigraphyData.getCpcompositionFamily()['characteristics'];
             $scope.cmcompositionFamily = StratigraphyData.getCmcompositionFamily()['characteristics'];
