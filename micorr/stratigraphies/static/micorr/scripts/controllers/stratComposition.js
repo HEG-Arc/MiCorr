@@ -87,7 +87,11 @@ angular.module('micorrApp')
 
             $scope.cpcompositionFamily = StratigraphyData.getCpcompositionFamily()['characteristics'];
             $scope.cmcompositionFamily = StratigraphyData.getCmcompositionFamily()['characteristics'];
+
             $scope.cpcompositionextensionFamily = StratigraphyData.getCpcompositionextensionFamily()['characteristics'];
+            // => to be replaced by
+            $scope.cpCompositionAdditionalElements = new ElementSelector();
+
             $scope.cmcpaggregateCompositionFamily = StratigraphyData.getCmcpaggregateCompositionFamily()['characteristics'];
             $scope.descriptions = StratigraphyData.descriptions;
         };
@@ -155,9 +159,12 @@ angular.module('micorrApp')
             if (strata.getCharacteristicsByFamily("cmCompositionFamily").length > 0) {
                 $scope.selectedCmcompositionFamily = getCharacteristicByItsName($scope.cmcompositionFamily, strata.getCharacteristicsByFamily("cmCompositionFamily")[0].getName());
             }
+
             if (strata.getCharacteristicsByFamily("cpCompositionExtensionFamily").length > 0) {
                 $scope.selectedCpcompositionextensionFamily = getCharacteristicByItsNameMulti($scope.cpcompositionextensionFamily, strata.getCharacteristicsByFamily("cpCompositionExtensionFamily"));
             }
+            $scope.cpCompositionAdditionalElements.selected = strata.getContainerElements("cpCompositionAdditionalElements");
+
             var selectedCharacteristicName;
             if (selectedCharacteristicName = strata.getFirstSecondaryComponentCharacteristicByFamily("cpCompositionFamily","name")) {
                 $scope.secondaryComponents[0].selectedCpcompositionFamily = getCharacteristicByItsName($scope.cpcompositionFamily, selectedCharacteristicName);
@@ -248,6 +255,7 @@ angular.module('micorrApp')
             strata.setContainerElements('cpCompositionCompounds', $scope.cpCompositionCompounds.selected);
 
             strata.updateCharacteristicList('cpCompositionExtensionFamily',$scope.selectedCpcompositionextensionFamily);
+            strata.setContainerElements('cpCompositionAdditionalElements', $scope.cpCompositionAdditionalElements.selected);
 
             //Ajout  des composition aux deux strates enfant de la strate CM
             if (strata.getNature() == 'Corroded metal') {

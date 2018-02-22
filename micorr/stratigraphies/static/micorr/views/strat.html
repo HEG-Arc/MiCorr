@@ -624,11 +624,25 @@
             </div>
         </div>
         <div class="row-fluid">
+
             <div class="col-md-12 form-group" ng-show="showcpcompositionextensionfamily">
                 <label class="control-label"><span class="glyphicon glyphicon-eye-close"
                                                    title="no visual impact on the stratum"></span>
                      <span title="{{ descriptions.cpcompositionextensionFamily }}">Additional element(s)</span>
                 </label>
+                 <ui-select id="cpCompositionAdditionalElements" class="form-control" multiple
+                           theme="bootstrap"
+                           ng-model="cpCompositionAdditionalElements.selected" on-remove="upComposition()"
+                           on-select="upComposition()">
+                    <ui-select-match placeholder="Select element(s) by order of importance">
+                        {{$item.symbol}}
+                    </ui-select-match>
+                    <ui-select-choices group-by="'category'"
+                                       repeat="item in (cpCompositionAdditionalElements.characteristics | filter: $select.search) track by item.symbol">
+                        <span ng-bind-html="item.symbol | highlight: $select.search"></span> <span
+                            ng-bind-html="item.real_name | highlight: $select.search"></span>
+                    </ui-select-choices>
+                </ui-select>
                 <picklist element-name="sub-characteristics" size="10" data-picklist="" data-pick-model="selectedCpcompositionextensionFamily"
                           data-pick-options="v.real_name for v in cpcompositionextensionFamily"/>
             </div>

@@ -112,7 +112,8 @@ MERGE (f:Family {uid:"compoundFamily", name:"Compound"}) WITH f
 UNWIND [
   {uid: 'cpCompositionMainElements', name: 'CP Composition Main elements', upto: 0, list_elem_family:"elementFamily"},
   {uid: 'cpCompositionSecondaryElements', name: 'CP Composition Secondary elements', upto: 0, list_elem_family:"elementFamily"},
-  {uid: 'cpCompositionCompounds', name: 'CP Composition Compounds', upto: 1, list_elem_family:"compoundFamily"}
+  {uid: 'cpCompositionCompounds', name: 'CP Composition Compounds', upto: 1, list_elem_family:"compoundFamily"},
+  {uid: 'cpCompositionAdditionalElements', name: 'CP Composition Additional elements', upto: 0, list_elem_family:"elementFamily"}
 ] AS new_f
 MERGE (f:Family {uid: new_f.uid, name: new_f.name})
   ON CREATE SET f+=$common_props
