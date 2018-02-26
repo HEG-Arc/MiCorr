@@ -617,7 +617,7 @@
                     <ui-select-match placeholder="Select compound">
                         {{$item.real_name}}
                     </ui-select-match>
-                    <ui-select-choices repeat="item in (cpCompositionCompounds.characteristics | filter: filterCompounds | filter: $select.search) track by item.name">
+                    <ui-select-choices repeat="item in (cpCompositionCompounds.characteristics | filterCompounds:cpCompositionMainElements:cpCompositionSecondaryElements:compoundExactComposition | filter: $select.search) track by item.name">
                         <span ng-bind-html="item.real_name | highlight: $select.search"></span>
                     </ui-select-choices>
                 </ui-select>
@@ -655,6 +655,19 @@
                                                        title="no visual impact on the stratum"></span>
                     <span title="cprimicrostructureaggregatecompositionFamily No description available">{{ cpriMicrostructureOptionTitle }} main element</span>
                 </label>
+                  <ui-select id="{{'cpSdyCpt' + $index + 'mainElements'}}" class="form-control" multiple
+                           theme="bootstrap"
+                           ng-model="secondaryComponent.mainElements.selected" on-remove="upComposition()"
+                           on-select="upComposition()">
+                    <ui-select-match placeholder="Select element(s) by order of importance">
+                        {{$item.symbol}}
+                    </ui-select-match>
+                    <ui-select-choices group-by="'category'"
+                                       repeat="item in (secondaryComponent.mainElements.characteristics | filter: $select.search) track by item.symbol">
+                        <span ng-bind-html="item.symbol | highlight: $select.search"></span> <span
+                            ng-bind-html="item.real_name | highlight: $select.search"></span>
+                    </ui-select-choices>
+                </ui-select>
                 <select id="cprimicrostructureaggregatecompositionFamily" class="form-control" ng-model="secondaryComponent.selectedCpcompositionFamily"
                         ng-options="x.real_name for x in cpcompositionFamily" ng-change="upComposition2()">
                 </select>
@@ -666,6 +679,19 @@
                                                           title="no visual impact on the stratum"></span>
                     <span title="{{ descriptions.subcprimicrostructureaggregatecompositionFamily }}">{{ cpriMicrostructureOptionTitle }}  secondary element(s)</span>
                 </label>
+                 <ui-select id="{{'cpSdyCpt' + $index + 'secondaryElements'}}" class="form-control" multiple
+                           theme="bootstrap"
+                           ng-model="secondaryComponent.secondaryElements.selected" on-remove="upComposition()"
+                           on-select="upComposition()">
+                    <ui-select-match placeholder="Select element(s) by order of importance">
+                        {{$item.symbol}}
+                    </ui-select-match>
+                    <ui-select-choices group-by="'category'"
+                                       repeat="item in (secondaryComponent.secondaryElements.characteristics | filter: $select.search) track by item.symbol">
+                        <span ng-bind-html="item.symbol | highlight: $select.search"></span> <span
+                            ng-bind-html="item.real_name | highlight: $select.search"></span>
+                    </ui-select-choices>
+                </ui-select>
                 <select id="subcprimicrostructureaggregatecompositionFamily" class="form-control" ng-model="secondaryComponent.selectedSubcpcompositionFamily"
                         ng-options="x.name for x in secondaryComponent.subcpcompositionFamily" ng-change="upComposition3()">
                 </select>
@@ -675,6 +701,17 @@
                                                              title="no visual impact on the stratum"></span>
                     <span title="{{ descriptions.subsubcprimicrostructureaggregatecompositionFamily }}">{{ cpriMicrostructureOptionTitle }}  compound</span>
                 </label>
+                 <ui-select id="{{'cpSdyCpt' + $index + 'compounds'}}" class="form-control" multiple limit="1"
+                           theme="bootstrap"
+                           ng-model="secondaryComponent.compounds.selected" on-remove="upComposition()"
+                           on-select="upComposition()">
+                    <ui-select-match placeholder="Select compound">
+                        {{$item.real_name}}
+                    </ui-select-match>
+                    <ui-select-choices repeat="item in (secondaryComponent.compounds.characteristics | filterCompounds:secondaryComponent.mainElements:secondaryComponent.secondaryElements:compoundExactComposition | filter: $select.search) track by item.name">
+                        <span ng-bind-html="item.real_name | highlight: $select.search"></span>
+                    </ui-select-choices>
+                </ui-select>
                 <select id="subsubcprimicrostructureaggregatecompositionFamily" class="form-control" ng-model="secondaryComponent.selectedSubsubcpcompositionFamily"
                         ng-options="x.name for x in secondaryComponent.subsubcpcompositionFamily" ng-change="upComposition()">
                 </select>
@@ -686,6 +723,19 @@
                                                    title="no visual impact on the stratum"></span>
                     <span title="{{ descriptions.cprimicrostructureaggregatecompositionextensionFamily }}">{{ cpriMicrostructureOptionTitle }}  additional element(s)</span>
                 </label>
+                <ui-select id="{{ 'cpSdyCpt' + $index + 'additionalElements'}}" class="form-control" multiple
+                           theme="bootstrap"
+                           ng-model="secondaryComponent.additionalElements.selected" on-remove="upComposition()"
+                           on-select="upComposition()">
+                    <ui-select-match placeholder="Select element(s) by order of importance">
+                        {{$item.symbol}}
+                    </ui-select-match>
+                    <ui-select-choices group-by="'category'"
+                                       repeat="item in (secondaryComponent.additionalElements.characteristics | filter: $select.search) track by item.symbol">
+                        <span ng-bind-html="item.symbol | highlight: $select.search"></span> <span
+                            ng-bind-html="item.real_name | highlight: $select.search"></span>
+                    </ui-select-choices>
+                </ui-select>
                 <picklist element-name="sub-characteristics" size="10" data-picklist=""
                           data-pick-model="secondaryComponent.selectedCpcompositionextensionFamily"
                           data-pick-options="v.real_name for v in cpcompositionextensionFamily"/>
