@@ -90,7 +90,7 @@
             this.characteristics = [];
             this.subCharacteristics = [];
             this.childStrata = [];
-            this.secondaryComponents = [{ characteristics: [], subCharacteristics: [] }];
+            this.secondaryComponents = [{ characteristics: [], subCharacteristics: [], containers: {} }];
             this.containers = {}; //map of Element list
             this.child = child;
 
@@ -482,8 +482,12 @@
         }, {
             key: "setContainerElements",
             value: function setContainerElements(familyName, elements) {
+                var containers = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+
+                // default target containers is this.containers
+                containers = containers || this.containers;
                 if (this.findDependency(familyName)) {
-                    this.containers[familyName] = elements.slice();
+                    containers[familyName] = elements.slice();
                     return true;
                 }
                 return false;
@@ -491,7 +495,25 @@
         }, {
             key: "getContainerElements",
             value: function getContainerElements(familyName) {
-                if (familyName in this.containers) return this.containers[familyName];else return [];
+                var containers = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+
+                // default source containers is this.containers
+                containers = containers || this.containers;
+                if (familyName in containers) return containers[familyName];else return [];
+            }
+        }, {
+            key: "setSecondaryComponentContainerElements",
+            value: function setSecondaryComponentContainerElements(familyName, elements) {
+                var secondaryComponentIndex = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+
+                return this.setContainerElements(familyName, elements, this.secondaryComponents[secondaryComponentIndex]);
+            }
+        }, {
+            key: "getSecondaryComponentContainerElements",
+            value: function getSecondaryComponentContainerElements(familyName) {
+                var secondaryComponentIndex = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+
+                return this.getContainerElements(familyName, this.secondaryComponents[secondaryComponentIndex]);
             }
         }, {
             key: "updateSubCharacteristic",
@@ -617,7 +639,6 @@
                     this.addDependency('opacityFamily');
                     this.addDependency('magnetismFamily');
                     this.addDependency('porosityFamily');
-                    this.addDependency('cprimicrostructureFamily');
                     this.addDependency('cohesionFamily');
                     this.addDependency('hardnessFamily');
                     this.addDependency('crackingFamily');
@@ -625,14 +646,23 @@
                     this.addDependency('interfaceroughnessFamily');
                     this.addDependency('interfaceadherenceFamily');
                     this.addDependency('cpcompositionextensionFamily');
-                    this.addDependency('cprimicrostructureaggregatecompositionFamily');
-                    this.addDependency('cprimicrostructureaggregatecompositionextensionFamily');
                     this.addDependency('cpCompositionMainElements');
                     this.addDependency('cpCompositionSecondaryElements');
                     this.addDependency('cpCompositionCompounds');
+                    this.addDependency('cpCompositionAdditionalElements');
+
+                    this.addDependency('cprimicrostructureFamily');
+                    this.addDependency('cprimicrostructureaggregatecompositionFamily');
+                    this.addDependency('cprimicrostructureaggregatecompositionextensionFamily');
                     this.addDependency('subcprimicrostructureFamily');
                     this.addDependency('subcprimicrostructureaggregatecompositionFamily');
                     this.addDependency('subsubcprimicrostructureaggregatecompositionFamily');
+                    // => to be replaced by:
+                    //cp Secondary Components dependencies
+                    this.addDependency('cpSdyCptMainElements');
+                    this.addDependency('cpSdyCptSecondaryElements');
+                    this.addDependency('cpSdyCptCompounds');
+                    this.addDependency('cpSdyCptAdditionalElements');
                 }
 
                 if (this.nature == "Metal") {

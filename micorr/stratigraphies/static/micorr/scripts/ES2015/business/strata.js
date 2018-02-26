@@ -15,7 +15,7 @@ class Strata {
         this.characteristics = [];
         this.subCharacteristics = [];
         this.childStrata = [];
-        this.secondaryComponents = [{characteristics: [], subCharacteristics: []}];
+        this.secondaryComponents = [{characteristics: [], subCharacteristics: [], containers: {}}];
         this.containers = {}; //map of Element list
         this.child = child;
 
@@ -342,18 +342,30 @@ class Strata {
         return false;
     }
 
-    setContainerElements(familyName, elements ) {
+    setContainerElements(familyName, elements, containers=null) {
+        // default target containers is this.containers
+        containers = containers || this.containers;
         if (this.findDependency(familyName)) {
-            this.containers[familyName]=elements.slice();
+            containers[familyName]=elements.slice();
             return true;
         }
         return false;
     }
-    getContainerElements(familyName) {
-        if (familyName in this.containers)
-            return this.containers[familyName];
+    getContainerElements(familyName, containers=null) {
+        // default source containers is this.containers
+        containers = containers || this.containers;
+        if (familyName in containers)
+            return containers[familyName];
         else
             return [];
+    }
+
+    setSecondaryComponentContainerElements(familyName, elements, secondaryComponentIndex = 0) {
+        return this.setContainerElements(familyName, elements, this.secondaryComponents[secondaryComponentIndex]);
+    }
+
+    getSecondaryComponentContainerElements(familyName, secondaryComponentIndex = 0) {
+        return this.getContainerElements(familyName, this.secondaryComponents[secondaryComponentIndex]);
     }
 
     updateSubCharacteristic(familyName, subCharacteristicSource, dependencyName=null, inArrayProperty="subCharacteristics") {
@@ -476,7 +488,6 @@ class Strata {
             this.addDependency('opacityFamily');
             this.addDependency('magnetismFamily');
             this.addDependency('porosityFamily');
-            this.addDependency('cprimicrostructureFamily');
             this.addDependency('cohesionFamily');
             this.addDependency('hardnessFamily');
             this.addDependency('crackingFamily');
@@ -484,14 +495,24 @@ class Strata {
             this.addDependency('interfaceroughnessFamily');
             this.addDependency('interfaceadherenceFamily');
             this.addDependency('cpcompositionextensionFamily');
-            this.addDependency('cprimicrostructureaggregatecompositionFamily');
-            this.addDependency('cprimicrostructureaggregatecompositionextensionFamily');
             this.addDependency('cpCompositionMainElements');
             this.addDependency('cpCompositionSecondaryElements');
             this.addDependency('cpCompositionCompounds');
+            this.addDependency('cpCompositionAdditionalElements');
+
+            this.addDependency('cprimicrostructureFamily');
+            this.addDependency('cprimicrostructureaggregatecompositionFamily');
+            this.addDependency('cprimicrostructureaggregatecompositionextensionFamily');
             this.addDependency('subcprimicrostructureFamily');
             this.addDependency('subcprimicrostructureaggregatecompositionFamily');
             this.addDependency('subsubcprimicrostructureaggregatecompositionFamily');
+            // => to be replaced by:
+            //cp Secondary Components dependencies
+            this.addDependency('cpSdyCptMainElements');
+            this.addDependency('cpSdyCptSecondaryElements');
+            this.addDependency('cpSdyCptCompounds');
+            this.addDependency('cpSdyCptAdditionalElements');
+
         }
 
         if (this.nature == "Metal") {

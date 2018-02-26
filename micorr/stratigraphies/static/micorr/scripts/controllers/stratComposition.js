@@ -33,15 +33,6 @@ angular.module('micorrApp')
             $scope.selectedCmmcomposition = [];
             $scope.selectedCmcpaggregateCompositionFamily = [];
 
-            // list of secondary components for Microstructure composition for ex.
-             $scope.secondaryComponents = [{
-                 selectedCpcompositionFamily: null,
-                 selectedSubcpcompositionFamily: null,
-                 selectedSubsubcpcompositionFamily: null,
-                 selectedcpcompositionextensionFamily : [],
-                 subcpcompositionFamily: null,
-                 subsubcpcompositionFamily: null
-             }]
         }
         emptyFields();
         $scope.compoundExactComposition = true;
@@ -84,6 +75,19 @@ angular.module('micorrApp')
             $scope.cpCompositionMainElements = new ElementSelector();
             $scope.cpCompositionSecondaryElements = new ElementSelector();
             $scope.cpCompositionCompounds =  new CompoundSelector();
+            // list of secondary components for Microstructure composition for ex.
+             $scope.secondaryComponents = [{
+                 selectedCpcompositionFamily: null,
+                 selectedSubcpcompositionFamily: null,
+                 selectedSubsubcpcompositionFamily: null,
+                 selectedcpcompositionextensionFamily : [],
+                 subcpcompositionFamily: null,
+                 subsubcpcompositionFamily: null
+             }]
+            $scope.secondaryComponents[0].mainElements = new ElementSelector();
+            $scope.secondaryComponents[0].secondaryElements = new ElementSelector();
+            $scope.secondaryComponents[0].compounds = new CompoundSelector();
+            $scope.secondaryComponents[0].additionalElements = new ElementSelector();
 
             $scope.cpcompositionFamily = StratigraphyData.getCpcompositionFamily()['characteristics'];
             $scope.cmcompositionFamily = StratigraphyData.getCmcompositionFamily()['characteristics'];
@@ -173,6 +177,12 @@ angular.module('micorrApp')
             if (characteristics.length > 0) {
                 $scope.secondaryComponents[0].selectedCpcompositionextensionFamily = getCharacteristicByItsNameMulti($scope.cpcompositionextensionFamily, characteristics);
             }
+            // => to be replaced by:
+            $scope.secondaryComponents[0].mainElements.selected = strata.getSecondaryComponentContainerElements("cpCompositionMainElements");
+            $scope.secondaryComponents[0].secondaryElements.selected = strata.getSecondaryComponentContainerElements("cpCompositionSecondaryElements");
+            $scope.secondaryComponents[0].compounds.selected = strata.getSecondaryComponentContainerElements("cpCompositionCompounds");
+            $scope.secondaryComponents[0].additionalElements.selected = strata.getSecondaryComponentContainerElements("cpCompositionAdditionalElements");
+
             if (strata.getCharacteristicsByFamily('cmCorrosionRatioFamily').length > 0) {
                 var ratio = strata.getCharacteristicsByFamily('cmCorrosionRatioFamily')[0].getRealName();
                 ratio = parseInt(ratio.substr(1));
@@ -280,6 +290,11 @@ angular.module('micorrApp')
                 $scope.secondaryComponents[0].selectedSubsubcpcompositionFamily, 'subsubcprimicrostructureaggregatecompositionFamily');
             strata.updateSecondaryComponentCharacteristicList('cpCompositionExtensionFamily',
                 $scope.secondaryComponents[0].selectedCpcompositionextensionFamily, 'cpriMicrostructureAggregateCompositionExtensionFamily');
+            // to be replaced by =>
+            strata.setSecondaryComponentContainerElements("cpCompositionMainElements", $scope.secondaryComponents[0].mainElements.selected);
+            strata.setSecondaryComponentContainerElements("cpCompositionSecondaryElements", $scope.secondaryComponents[0].secondaryElements.selected);
+            strata.setSecondaryComponentContainerElements("cpCompositionCompounds", $scope.secondaryComponents[0].compounds.selected);
+            strata.setSecondaryComponentContainerElements("cpCompositionAdditionalElements", $scope.secondaryComponents[0].additionalElements.selected);
 
             $scope.$emit('updateSelectedStrata');
             $scope.$emit('updateFormOnly');

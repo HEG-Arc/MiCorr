@@ -71,8 +71,7 @@ angular.module('micorrApp')
                 $scope.activeTabInterface = val;
                 $scope.activeMorphologyTab = !val;
                 $scope.$apply();
-            }
-
+            };
 
             $scope.artefactName = $routeParams.artefact;        // nom de l'artefact
             $scope.stratigraphyName = $routeParams.strat;           // nom de la stratigraphie
@@ -233,12 +232,14 @@ angular.module('micorrApp')
                             for (let c of component.characteristics)
                                 str.addCharacteristic(new characteristic.Characteristic(c.family, c), str.secondaryComponents[0].characteristics)
                             for (let sc of component.subCharacteristics) {
-                                 if (sChar = getSubCharacteristicByFamily([sc], StratigraphyData.getSubcpcompositionFamily()))
-                                     str.addCharacteristic(new subCharacteristic.SubCharacteristic('subcpcompositionFamily', sc), str.secondaryComponents[0].subCharacteristics);
-                                 else if (sChar = getSubCharacteristicByFamily([sc], StratigraphyData.getSubsubcpcompositionFamily()))
-                                     str.addCharacteristic(new subCharacteristic.SubCharacteristic('subsubcpcompositionFamily', sc), str.secondaryComponents[0].subCharacteristics);
-                                 else
-                                     console.log(`ignoring unexpected subCharacteristic:${sc.name} in secondaryComponent`);
+                                if (sChar = getSubCharacteristicByFamily([sc], StratigraphyData.getSubcpcompositionFamily()))
+                                    str.addCharacteristic(new subCharacteristic.SubCharacteristic('subcpcompositionFamily', sc), str.secondaryComponents[0].subCharacteristics);
+                                else if (sChar = getSubCharacteristicByFamily([sc], StratigraphyData.getSubsubcpcompositionFamily()))
+                                    str.addCharacteristic(new subCharacteristic.SubCharacteristic('subsubcpcompositionFamily', sc), str.secondaryComponents[0].subCharacteristics);
+                                else
+                                    console.log(`ignoring unexpected subCharacteristic:${sc.name} in secondaryComponent`);
+                                if (component.containers)
+                                    str.secondaryComponents[0].containers = component.containers;
                             }
                         }
                     // Element containers
@@ -412,6 +413,7 @@ angular.module('micorrApp')
                 $scope.showcpCompositionMainElements = str.findDependency('cpCompositionMainElements');
                 $scope.showcpCompositionSecondaryElements = str.findDependency('cpCompositionSecondaryElements');
                 $scope.showcpCompositionCompounds = str.findDependency('cpCompositionCompounds');
+                $scope.showcpCompositionAdditionalElements = str.findDependency('cpCompositionAdditionalElements');
 
                 $scope.showCmcomposition = str.findDependency('cmcompositionFamily');
                 $scope.showmCompositionMainElements = str.findDependency('mCompositionMainElements');
@@ -424,6 +426,11 @@ angular.module('micorrApp')
                 $scope.showsubcmcompositionFamily = str.findDependency('subcmcompositionFamily');
                 $scope.showsubcmlevelofcorrosionFamily = str.findDependency('subcmlevelofcorrosionFamily');
                 $scope.showsubmmicrostructureFamily = str.findDependency('submmicrostructureFamily');
+
+                $scope.showcpSdyCptMainElements = str.findDependency('cpSdyCptMainElements');
+                $scope.showcpSdyCptSecondaryElements = str.findDependency('cpSdyCptSecondaryElements');
+                $scope.showcpSdyCptCompounds = str.findDependency('cpSdyCptCompounds');
+                $scope.showcpSdyCptAdditionalElements = str.findDependency('cpSdyCptAdditionalElements');
 
                 $scope.showcprimicrostructureFamily = str.findDependency('cprimicrostructureFamily');
                 $scope.showmCompositionSecondaryElements = str.findDependency('mCompositionSecondaryElements');
