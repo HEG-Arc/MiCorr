@@ -300,62 +300,7 @@ angular.module('micorrApp')
             $scope.$emit('updateFormOnly');
         };
 
-        function extractElements(compound) {
-            /** Parses the compound formula and returns elements
-             * @param {!compound} String name of the compound including formula in brackets
-             *     for example "Chalconatronite (CuNa2(CO3)2.3H2O)"
-             *
-             * @return {[String]} list of elements found in formula (symbol strings).
-             *     ["Cu", "Na", "C", "O", "H"]
-             */
-                // first split formula using Upper case Lower case element as separator (and include them in the result as group)
-            let preClosingParenthesisIndex = compound.search(/(\).*?\()/g);
-            if (preClosingParenthesisIndex != -1)
-                compound = compound.substring(preClosingParenthesisIndex);
-            let formulaIndex = compound.indexOf('(');
-            if (formulaIndex == -1)
-                return [];
-            else
-                compound = compound.substring(formulaIndex);
-            let seachUlElements = compound.split(/([A-Z][a-z])/g);
-            let elements = [];
-            for (let ulCandidate of seachUlElements) {
-                if (ulCandidate !== '') {
-                    if (ulCandidate.match(/[A-Z][a-z]/)) {
-                        elements.push(ulCandidate);
-                    }
-                    else {
-                        //Extract the single letters elements
-                        let singleLetterElements = ulCandidate.match(/[A-Z]/g);
-                        if (singleLetterElements) {
-                            // Add them to the elements list
-                            Array.prototype.push.apply(elements, singleLetterElements);
-                        }
-                    }
-                }
-            }
-            return elements;
-        }
-        $scope.filterCompounds = function(compound, index, array) {
-           // A predicate function can be used to write arbitrary filters. The function is called for each element of the array, with the element, its index, and the entire array itself as arguments.
-           // The final result is an array of those elements that the predicate returned true for.
-            function inCompound(element) {
-                // tests if the Element symbol is found inside the compound formula parenthesises
-                // e.g. in "Antlerite (Cu3(OH)4SO4)"
-                var search_re = new RegExp("\\(.*" + element.symbol + ".*\\)");
-                return (compound.real_name.search(search_re) != -1);
-                //return (compound.real_name.indexOf(element.symbol) != -1);
-            }
-            if ($scope.compoundExactComposition)
-            {
-                var compoundElements = extractElements(compound.real_name);
-                var allcpElements = $scope.cpCompositionMainElements.selected.map(e=>e.symbol).concat($scope.cpCompositionSecondaryElements.selected.map(e=>e.symbol));
-                return allcpElements.every(symbol => compoundElements.includes(symbol)) && compoundElements.every(symbol => allcpElements.includes(symbol));
-            }
-            else
-                return ($scope.cpCompositionMainElements.selected.every(inCompound) && $scope.cpCompositionSecondaryElements.selected.every(inCompound));
-        };
-        /* Met à jour les données quand les valeurs de mcomposition, cpcomposition ou cmcomposition changent
+         /* Met à jour les données quand les valeurs de mcomposition, cpcomposition ou cmcomposition changent
          * @params
          * @returns
          */
@@ -425,4 +370,77 @@ angular.module('micorrApp')
             //mise à jour du dessin
             $scope.$emit('updateSelectedStrata');
         };
-    });
+    })
+    .filter("filterCompounds", function() { // register new angular filter
+            // helper function
+            function extractElements(compound) {
+            /** Parses the compound formula and returns elements
+             * @param {!compound} String name of the compound including formula in brackets
+             *     for example "Chalconatronite (CuNa2(CO3)2.3H2O)"
+             *
+             * @return {[String]} list of elements found in formula (symbol strings).
+             *     ["Cu", "Na", "C", "O", "H"]
+             */
+                // first split formula using Upper case Lower case element as separator (and include them in the result as group)
+            let preClosingParenthesisIndex = compound.search(/(\).*?\()/g);
+            if (preClosingParenthesisIndex != -1)
+                compound = compound.substring(preClosingParenthesisIndex);
+            let formulaIndex = compound.indexOf('(');
+            if (formulaIndex == -1)
+                return [];
+            else
+                compound = compound.substring(formulaIndex);
+            let seachUlElements = compound.split(/([A-Z][a-z])/g);
+            let elements = [];
+            for (let ulCandidate of seachUlElements) {
+                if (ulCandidate !== '') {
+                    if (ulCandidate.match(/[A-Z][a-z]/)) {
+                        elements.push(ulCandidate);
+                    }
+                    else {
+                        //Extract the single letters elements
+                        let singleLetterElements = ulCandidate.match(/[A-Z]/g);
+                        if (singleLetterElements) {
+                            // Add them to the elements list
+                            Array.prototype.push.apply(elements, singleLetterElements);
+                        }
+                    }
+                }
+            }
+            return elements;
+        }
+        // core stateless "filterCompounds"  function
+        return function(compounds, mainElements, secondaryElements, compoundExactComposition)
+            /**
+             * Filter the compounds list to return only those containing the list of all elements in
+             * mainElements and secondaryElements arrays
+             *
+             * @param compounds:  input array of compounds to filter
+             * @param mainElements:  Array of main elements (filter criteria)
+             * @param secondaryElements: Array of secondary elements (filter criteria)
+             * @param compoundExactComposition: boolean
+             *          - if true then only compounds containing only mainElements and secondaryElements are returned
+             *          - if false then compounds containing at least mainElements and secondaryElements are returned
+             *            (compounds with other additional elements might be returned)
+             */
+        {
+
+            function inCompound(element) {
+                // tests if the Element symbol is found inside the compound formula parenthesises
+                // e.g. in "Antlerite (Cu3(OH)4SO4)"
+                var search_re = new RegExp("\\(.*" + element.symbol + ".*\\)");
+                return (compound.real_name.search(search_re) != -1);
+                //return (compound.real_name.indexOf(element.symbol) != -1);
+            }
+
+            return compounds.filter(function (compound, index, array) {
+                if (compoundExactComposition) {
+                    var compoundElements = extractElements(compound.real_name);
+                    var allcpElements = mainElements.selected.map(e => e.symbol).concat(secondaryElements.selected.map(e => e.symbol));
+                    return allcpElements.every(symbol => compoundElements.includes(symbol)) && compoundElements.every(symbol => allcpElements.includes(symbol));
+                }
+                else
+                    return (mainElements.selected.every(inCompound) && secondaryElements.selected.every(inCompound));
+            });
+        }
+});
