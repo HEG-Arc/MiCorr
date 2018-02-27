@@ -83,11 +83,12 @@ angular.module('micorrApp')
                  selectedcpcompositionextensionFamily : [],
                  subcpcompositionFamily: null,
                  subsubcpcompositionFamily: null
-             }]
+             }];
             $scope.secondaryComponents[0].mainElements = new ElementSelector();
             $scope.secondaryComponents[0].secondaryElements = new ElementSelector();
             $scope.secondaryComponents[0].compounds = new CompoundSelector();
             $scope.secondaryComponents[0].additionalElements = new ElementSelector();
+            $scope.secondaryComponents[0].compoundExactComposition = true;
 
             $scope.cpcompositionFamily = StratigraphyData.getCpcompositionFamily()['characteristics'];
             $scope.cmcompositionFamily = StratigraphyData.getCmcompositionFamily()['characteristics'];
@@ -424,16 +425,16 @@ angular.module('micorrApp')
              *            (compounds with other additional elements might be returned)
              */
         {
-
-            function inCompound(element) {
-                // tests if the Element symbol is found inside the compound formula parenthesises
-                // e.g. in "Antlerite (Cu3(OH)4SO4)"
-                var search_re = new RegExp("\\(.*" + element.symbol + ".*\\)");
-                return (compound.real_name.search(search_re) != -1);
-                //return (compound.real_name.indexOf(element.symbol) != -1);
-            }
-
+            compounds = compounds || []; // make sure compounds is valid as AngularJS calls filter function with undefined input as part of digest / $parseFilter cycle (causing exceptions)
+                                         // (not explicitely required in ng doc but see example at https://docs.angularjs.org/guide/filter#creating-custom-filters
             return compounds.filter(function (compound, index, array) {
+                function inCompound(element) {
+                    // tests if the Element symbol is found inside the compound formula parenthesises
+                    // e.g. in "Antlerite (Cu3(OH)4SO4)"
+                    var search_re = new RegExp("\\(.*" + element.symbol + ".*\\)");
+                    return (compound.real_name.search(search_re) != -1);
+                    //return (compound.real_name.indexOf(element.symbol) != -1);
+                }
                 if (compoundExactComposition) {
                     var compoundElements = extractElements(compound.real_name);
                     var allcpElements = mainElements.selected.map(e => e.symbol).concat(secondaryElements.selected.map(e => e.symbol));

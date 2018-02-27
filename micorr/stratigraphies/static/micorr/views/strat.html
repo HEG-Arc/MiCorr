@@ -610,7 +610,7 @@
                     <span title="{{ descriptions.cpCompositionCompounds }}">Compound</span>
                 </label>
                 <label>Only compounds with exact composition<input type="checkbox" ng-model="compoundExactComposition"></label>
-                <ui-select id="cpCompositionCompounds" class="form-control" multiple limit="1"
+                <ui-select id="cpCompositionCompounds" class="form-control" multiple
                            theme="bootstrap"
                            ng-model="cpCompositionCompounds.selected" on-remove="upComposition()"
                            on-select="upComposition()">
@@ -701,14 +701,15 @@
                                                              title="no visual impact on the stratum"></span>
                     <span title="{{ descriptions.subsubcprimicrostructureaggregatecompositionFamily }}">{{ cpriMicrostructureOptionTitle }}  compound</span>
                 </label>
-                 <ui-select id="{{'cpSdyCpt' + $index + 'compounds'}}" class="form-control" multiple limit="1"
+                <label>Only compounds with exact composition<input type="checkbox" ng-model="secondaryComponent.compoundExactComposition"></label>
+                 <ui-select id="{{'cpSdyCpt' + $index + 'compounds'}}" class="form-control" multiple
                            theme="bootstrap"
                            ng-model="secondaryComponent.compounds.selected" on-remove="upComposition()"
                            on-select="upComposition()">
                     <ui-select-match placeholder="Select compound">
                         {{$item.real_name}}
                     </ui-select-match>
-                    <ui-select-choices repeat="item in (secondaryComponent.compounds.characteristics | filterCompounds:secondaryComponent.mainElements:secondaryComponent.secondaryElements:compoundExactComposition | filter: $select.search) track by item.name">
+                    <ui-select-choices repeat="item in (secondaryComponent.compounds.characteristics | filterCompounds:secondaryComponent.mainElements:secondaryComponent.secondaryElements:secondaryComponent.compoundExactComposition | filter: $select.search) track by item.name">
                         <span ng-bind-html="item.real_name | highlight: $select.search"></span>
                     </ui-select-choices>
                 </ui-select>
