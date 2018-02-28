@@ -238,9 +238,9 @@ angular.module('micorrApp')
                                     str.addCharacteristic(new subCharacteristic.SubCharacteristic('subsubcpcompositionFamily', sc), str.secondaryComponents[0].subCharacteristics);
                                 else
                                     console.log(`ignoring unexpected subCharacteristic:${sc.name} in secondaryComponent`);
-                                if (component.containers)
-                                    str.secondaryComponents[0].containers = component.containers;
                             }
+                            if (component.containers)
+                                str.secondaryComponents[0].containers = component.containers;
                         }
                     // Element containers
                     if (currentStrata.containers) {

@@ -1,4 +1,4 @@
-from collections import OrderedDict
+from collections import OrderedDict, defaultdict
 
 from py2neo import Graph, authenticate
 import time
@@ -103,7 +103,7 @@ class Neo4jDAO:
         # pour chaque strates on va faire une requete
         for strata in strata_records:
             st = {'name': strata.uid, 'characteristics': '', 'subcharacteristics': '', 'interfaces': '',
-                  'children': '', 'containers': {}}
+                  'children': '', 'containers': defaultdict(list)}
             print ("***" + strata.uid)
 
             # Chaque strates a des caracteristiques
@@ -135,40 +135,53 @@ class Neo4jDAO:
                 print("         " + subCharact.uid)
 
             print ("======Components")
+
+            def convert_elem_or_cpnd(elem_or_cpnd):
+                # to be consistent with getAllCharacteristic name/uid renaming scheme
+                # and remaining client code we still need to "convert" the original Element and Compound Characteristics
+                # before returning to client
+                hacked_characteristic = elem_or_cpnd.copy()
+                hacked_characteristic['real_name'] = hacked_characteristic['name']
+                hacked_characteristic['name'] = hacked_characteristic['uid']
+                del hacked_characteristic['uid']
+                return hacked_characteristic
+
             component_records = self.graph.cypher.execute(
-                "MATCH (sg:Stratigraphy {uid:{stratigraphy_uid}})-[POSSESSES]->(s:Strata { uid:{strata_uid} })-[r:INCLUDES]->(c:Component)-[IS_CONSTITUTED_BY]->(characteristic)\
-                 OPTIONAL MATCH (characteristic)-[BELONGS_TO]->(family:Family) RETURN s,c,characteristic,family ORDER BY c.name",
-                strata_uid=strata.uid,stratigraphy_uid=stratigraphy_uid)
-            secondary_components = [{'characteristics': [], 'subCharacteristics': []}]
+                """MATCH (sg:Stratigraphy {uid:{stratigraphy_uid}})-[POSSESSES]->(s:Strata {uid:{strata_uid}})-[r:INCLUDES]->(cpnt:Component)
+                    OPTIONAL MATCH (cpnt)-[r_const_or_incl]->(char_or_ctn)-[:BELONGS_TO]->(family:Family)
+                    OPTIONAL MATCH (char_or_ctn)-[ce_r:IS_CONSTITUTED_BY]->(elem_or_cpnd:Characteristic)
+                   RETURN s.uid,id(cpnt),char_or_ctn, family.uid, ce_r.order, elem_or_cpnd
+                   ORDER BY s.uid, id(cpnt), family.uid, ce_r.order
+                """, strata_uid=strata.uid,stratigraphy_uid=stratigraphy_uid)
+            secondary_components = [{'characteristics': [], 'subCharacteristics': [], 'containers': defaultdict(list)}]
             for record in component_records:
-                if 'SubCharacteristic' in record.characteristic.labels:
-                    secondary_components[0]['subCharacteristics'].append(
-                        {'name': record.characteristic['uid'], 'real_name': record.characteristic['name']})
-                elif 'Characteristic' in record.characteristic.labels:
-                    secondary_components[0]['characteristics'].append(
-                        {'name': record.characteristic['uid'], 'family': record.family['uid'],
-                         'real_name': record.characteristic['name'],
-                         'order': record.characteristic['order'], 'visible': record.characteristic['visible']})
-                print("         " + str(record.characteristic))
-            if len(secondary_components[0]['characteristics']) or len(secondary_components[0]['subCharacteristics']):
+                if record.char_or_ctn:
+                    if 'SubCharacteristic' in record.char_or_ctn.labels:
+                        secondary_components[0]['subCharacteristics'].append(
+                            {'name': record.char_or_ctn['uid'], 'real_name': record.char_or_ctn['name']})
+                    elif 'Characteristic' in record.char_or_ctn.labels:
+                        secondary_components[0]['characteristics'].append(
+                            {'name': record.char_or_ctn['uid'], 'family': record['family.uid'],
+                             'real_name': record.char_or_ctn['name'],
+                             'order': record.char_or_ctn['order'], 'visible': record.char_or_ctn['visible']})
+                    elif 'Container' in record.char_or_ctn.labels:
+                        secondary_components[0]['containers'][record['family.uid']].append(
+                            convert_elem_or_cpnd(record.elem_or_cpnd.properties))
+
+                print("         " + str(record.char_or_ctn))
+
+            if len(secondary_components[0]['characteristics']) or len(
+                secondary_components[0]['subCharacteristics']) or len(secondary_components[0]['containers']):
                 st['secondaryComponents'] = secondary_components
 
             print ("======Containers")
             container_records = self.graph.cypher.execute(
-                """MATCH (s:Strata { uid:{strata_uid} })-[r:INCLUDES]->(c:Container)-[ce_r:IS_CONSTITUTED_BY]->(e:Characteristic)
-                   MATCH (c)-[BELONGS_TO]->(f:Family) RETURN s,c,ce_r,e,f ORDER BY f.uid, ce_r.order""",
+                """MATCH (s:Strata { uid:{strata_uid} })-[r:INCLUDES]->(c:Container)-[ce_r:IS_CONSTITUTED_BY]->(elem_or_cpnd:Characteristic)
+                   MATCH (c)-[BELONGS_TO]->(f:Family) RETURN s,c,ce_r,elem_or_cpnd,f ORDER BY f.uid, ce_r.order""",
                 strata_uid=strata.uid)
             for r in container_records:
-                # to be consistent with getAllCharacteristic name/uid renaming scheme
-                # and remaining client code we still need to "convert" the original Element and Compound Characteristics
-                # before returning to client
-                hacked_characteristic = r.e.properties.copy()
-                hacked_characteristic['real_name'] = hacked_characteristic['name']
-                hacked_characteristic['name'] = hacked_characteristic['uid']
-                del hacked_characteristic['uid']
-                if not r.f['uid'] in st['containers']:
-                    st['containers'][r.f['uid']]=[]
-                st['containers'][r.f['uid']].append(hacked_characteristic)
+                st['containers'][r.f['uid']].append(convert_elem_or_cpnd(r.elem_or_cpnd.properties))
+
             # Chaque strates a des interfaces
             print("======interface")
             interfaceName = self.graph.cypher.execute(
