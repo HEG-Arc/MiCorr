@@ -643,8 +643,6 @@
                             ng-bind-html="item.real_name | highlight: $select.search"></span>
                     </ui-select-choices>
                 </ui-select>
-                <picklist element-name="sub-characteristics" size="10" data-picklist="" data-pick-model="selectedCpcompositionextensionFamily"
-                          data-pick-options="v.real_name for v in cpcompositionextensionFamily"/>
             </div>
         </div>
         <!-- CP Microstructure composition -->
@@ -668,9 +666,6 @@
                             ng-bind-html="item.real_name | highlight: $select.search"></span>
                     </ui-select-choices>
                 </ui-select>
-                <select id="cprimicrostructureaggregatecompositionFamily" class="form-control" ng-model="secondaryComponent.selectedCpcompositionFamily"
-                        ng-options="x.real_name for x in cpcompositionFamily" ng-change="upComposition2()">
-                </select>
             </div>
         </div>
         <div class="row-fluid">
@@ -692,9 +687,6 @@
                             ng-bind-html="item.real_name | highlight: $select.search"></span>
                     </ui-select-choices>
                 </ui-select>
-                <select id="subcprimicrostructureaggregatecompositionFamily" class="form-control" ng-model="secondaryComponent.selectedSubcpcompositionFamily"
-                        ng-options="x.name for x in secondaryComponent.subcpcompositionFamily" ng-change="upComposition3()">
-                </select>
             </div>
             <div ng-show="showsubsubcprimicrostructureaggregatecompositionFamily" class="col-md-6 form-group">
                 <label for="subsubcprimicrostructureaggregatecompositionFamily"><span class="glyphicon glyphicon-eye-close"
@@ -713,9 +705,6 @@
                         <span ng-bind-html="item.real_name | highlight: $select.search"></span>
                     </ui-select-choices>
                 </ui-select>
-                <select id="subsubcprimicrostructureaggregatecompositionFamily" class="form-control" ng-model="secondaryComponent.selectedSubsubcpcompositionFamily"
-                        ng-options="x.name for x in secondaryComponent.subsubcpcompositionFamily" ng-change="upComposition()">
-                </select>
             </div>
         </div>
         <div class="row-fluid">
@@ -737,9 +726,6 @@
                             ng-bind-html="item.real_name | highlight: $select.search"></span>
                     </ui-select-choices>
                 </ui-select>
-                <picklist element-name="sub-characteristics" size="10" data-picklist=""
-                          data-pick-model="secondaryComponent.selectedCpcompositionextensionFamily"
-                          data-pick-options="v.real_name for v in cpcompositionextensionFamily"/>
             </div>
         </div>
         </div>
