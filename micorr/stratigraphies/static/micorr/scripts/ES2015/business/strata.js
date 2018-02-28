@@ -361,11 +361,11 @@ class Strata {
     }
 
     setSecondaryComponentContainerElements(familyName, elements, secondaryComponentIndex = 0) {
-        return this.setContainerElements(familyName, elements, this.secondaryComponents[secondaryComponentIndex]);
+        return this.setContainerElements(familyName, elements, this.secondaryComponents[secondaryComponentIndex].containers);
     }
 
     getSecondaryComponentContainerElements(familyName, secondaryComponentIndex = 0) {
-        return this.getContainerElements(familyName, this.secondaryComponents[secondaryComponentIndex]);
+        return this.getContainerElements(familyName, this.secondaryComponents[secondaryComponentIndex].containers);
     }
 
     updateSubCharacteristic(familyName, subCharacteristicSource, dependencyName=null, inArrayProperty="subCharacteristics") {
@@ -570,12 +570,9 @@ class Strata {
             }
         }
         // secondaryComponents
-        for (let sc of this.secondaryComponents) {
-            let all_component_characteristics = sc.characteristics.map(c => ({name: c.getName()})
-            ).concat(sc.subCharacteristics.map(sc => ({name: sc.getUid()})));
-            if (all_component_characteristics.length)
-                jsonStrata.secondaryComponents.push(all_component_characteristics);
-        }
+
+        jsonStrata.secondaryComponents = this.secondaryComponents.slice();
+
         // containers
         for (let [family,elements] of Object.entries(this.containers)) {
             jsonStrata.containers[family]=elements.map(e => {if (e.symbol) return {name: e.symbol}; else return {name: e.name}; } );

@@ -430,7 +430,7 @@ class Neo4jDAO:
 
     # cree une strate
     # @params nom de la strate et nom de la stratigraphie
-    # @returns
+    # @returns Strata node py2neo object
     def createStrata(self, strata_uid, stratigraphy_uid):
         today = time.strftime("%Y-%m-%d")
         res = self.graph.cypher.execute("""
@@ -439,7 +439,7 @@ class Neo4jDAO:
                MATCH (stgy:Stratigraphy {uid:{stratigraphy_uid}})
                CREATE (stgy)-[:POSSESSES]->(strata) RETURN strata""",
                                   strata_uid=strata_uid, today=today, stratigraphy_uid=stratigraphy_uid)
-        return res[0]
+        return res[0]['strata']
 
     # cree une strate enfant
     # @params nom de la strate et nom de la strate parent
@@ -451,48 +451,51 @@ class Neo4jDAO:
         self.query = "MATCH (a:Strata),(b:Strata) WHERE a.uid = '" + strata + "' AND b.uid= '" + parentstrata + "' CREATE (b)-[:IS_PARENT_OF]->(a)"
         self.graph.cypher.execute(self.query)
 
-    def create_secondary_components(self, strata_uid, components):
+    def create_secondary_components(self, stratum_node, components):
         """
-        :param strata_uid:
+        :param stratum_node:
         :param components:
         :return:
         """
         if not len(components):
             return
-        st = self.graph.find_one("Strata", "uid", strata_uid)
         for i, component in enumerate(components):
             c = Node("Component", order=i)
-            stc = Relationship(st, "INCLUDES", c)
-            self.graph.create(c,st,stc)
-            if len(component):
-                for characteristic in component:
-                    # characteristic_node = self.graph.match(Node("Characteristic",uid=characteristic['name']))
-                    characteristic_node = self.graph.find_one("Characteristic","uid",characteristic['name'])
-                    # bad temp re find_one as we can't find without Label... use match instead or upgrade py2neo 3 with transaction support
-                    if not characteristic_node:
-                        characteristic_node = self.graph.find_one("SubCharacteristic", "uid", characteristic['name'])
-                    if characteristic_node:
-                        self.graph.create(Relationship(c, "IS_CONSTITUTED_BY", characteristic_node))
-                    else:
-                        print 'Characteristic:{} not found'.format(characteristic['name'])
-                # one liner fail not working for merge self.graph.create(*[Relationship(c, "IS_CONSTITUTED_BY", )) for characteristic in component])
-    def create_containers(self, strata_uid, containers):
+            stc = Relationship(stratum_node, "INCLUDES", c)
+            self.graph.create(c, stratum_node, stc)
+
+            def find_and_attach_node_to_component(label,key,value,component):
+                node = self.graph.find_one(label, key, value)
+                if node:
+                    self.graph.create(Relationship(component, "IS_CONSTITUTED_BY", node))
+                else:
+                    print(u"{}: with {}={} not found".format(label, key, value))
+
+            for characteristic in component["characteristics"]:
+                find_and_attach_node_to_component("Characteristic","uid", characteristic["name"], c)
+
+            for sub_characteristic in component["subCharacteristics"]:
+                find_and_attach_node_to_component("SubCharacteristic", "uid", sub_characteristic["name"], c)
+
+            if len(component["containers"]):
+                self.create_containers(c, component["containers"])
+
+    def create_containers(self, parent_node, containers):
         """
-        :param strata_uid:
-        :param containers:
+        :param parent_node: (stratum or component node)
+        :param containers: dictionary of Elements/Compound list
         :return:
         """
         if not len(containers):
             return
-        st = self.graph.find_one("Strata", "uid", strata_uid)
         for family, elements in containers.iteritems():
             c = Node("Container")
-            stc_rel = Relationship(st, "INCLUDES", c)
+            stc_rel = Relationship(parent_node, "INCLUDES", c)
 
             cf = self.graph.find_one("Family", "uid", family)
             fc_rel = Relationship(c, "BELONGS_TO", cf)
-            print(c, st, stc_rel, cf, fc_rel)
-            self.graph.create(c, st, stc_rel, cf, fc_rel)
+            print(c, parent_node, stc_rel, cf, fc_rel)
+            self.graph.create(c, parent_node, stc_rel, cf, fc_rel)
 
             if len(elements):
                 for i,e in enumerate(elements):
@@ -529,17 +532,17 @@ class Neo4jDAO:
 
         # on parcourt toutes les strates
         for i,stratum in enumerate(data['stratas']):
-            strata_name = "{}_Strata{}".format(stratigraphy_name,i+1)
-            self.createStrata(strata_name, stratigraphy_name)
+            stratum_name = "{}_Strata{}".format(stratigraphy_name,i+1)
+            stratum_node = self.createStrata(stratum_name, stratigraphy_name)
 
             # pour chaque strate on attache une caracteristique ou sous caracteristique
             for characteristic in stratum['characteristics']:
                 if len(characteristic) > 0:
-                    self.attachCharacteristicToStrata(strata_name, characteristic['name'])
+                    self.attachCharacteristicToStrata(stratum_name, characteristic['name'])
 
             # pour chaque strate on cree une interface et on y attache des caracteristiques
-            interface_name = strata_name + "_interface" + str(self.getNbInterfaceByStratigraphy(stratigraphy_name) + 1)
-            self.createInterface(strata_name, interface_name)
+            interface_name = stratum_name + "_interface" + str(self.getNbInterfaceByStratigraphy(stratigraphy_name) + 1)
+            self.createInterface(stratum_name, interface_name)
             for interface in stratum['interfaces']:
                 if len(interface) > 0:
                     self.attachCharacteristicToInterface(interface_name, interface['name'])
@@ -549,14 +552,14 @@ class Neo4jDAO:
             for s in stratum['children']:
                 if len(s) > 0:
                     child_name = s['name']
-                    self.createChildStrata(child_name, strata_name)
+                    self.createChildStrata(child_name, stratum_name)
 
                     for sc in s['characteristics']:
                         if len(sc) > 0:
                             self.attachCharacteristicToStrata(child_name, sc['name'])
 
-            self.create_secondary_components(strata_name,stratum['secondaryComponents'])
-            self.create_containers(strata_name, stratum['containers'])
+            self.create_secondary_components(stratum_node, stratum['secondaryComponents'])
+            self.create_containers(stratum_node, stratum['containers'])
 
         return {'res': 1}
 

@@ -506,14 +506,14 @@
             value: function setSecondaryComponentContainerElements(familyName, elements) {
                 var secondaryComponentIndex = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
 
-                return this.setContainerElements(familyName, elements, this.secondaryComponents[secondaryComponentIndex]);
+                return this.setContainerElements(familyName, elements, this.secondaryComponents[secondaryComponentIndex].containers);
             }
         }, {
             key: "getSecondaryComponentContainerElements",
             value: function getSecondaryComponentContainerElements(familyName) {
                 var secondaryComponentIndex = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
 
-                return this.getContainerElements(familyName, this.secondaryComponents[secondaryComponentIndex]);
+                return this.getContainerElements(familyName, this.secondaryComponents[secondaryComponentIndex].containers);
             }
         }, {
             key: "updateSubCharacteristic",
@@ -720,44 +720,17 @@
                     }
                 }
                 // secondaryComponents
+
+                jsonStrata.secondaryComponents = this.secondaryComponents.slice();
+
+                // containers
                 var _iteratorNormalCompletion4 = true;
                 var _didIteratorError4 = false;
                 var _iteratorError4 = undefined;
 
                 try {
-                    for (var _iterator4 = this.secondaryComponents[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-                        var sc = _step4.value;
-
-                        var all_component_characteristics = sc.characteristics.map(function (c) {
-                            return { name: c.getName() };
-                        }).concat(sc.subCharacteristics.map(function (sc) {
-                            return { name: sc.getUid() };
-                        }));
-                        if (all_component_characteristics.length) jsonStrata.secondaryComponents.push(all_component_characteristics);
-                    }
-                    // containers
-                } catch (err) {
-                    _didIteratorError4 = true;
-                    _iteratorError4 = err;
-                } finally {
-                    try {
-                        if (!_iteratorNormalCompletion4 && _iterator4.return) {
-                            _iterator4.return();
-                        }
-                    } finally {
-                        if (_didIteratorError4) {
-                            throw _iteratorError4;
-                        }
-                    }
-                }
-
-                var _iteratorNormalCompletion5 = true;
-                var _didIteratorError5 = false;
-                var _iteratorError5 = undefined;
-
-                try {
-                    for (var _iterator5 = Object.entries(this.containers)[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-                        var _ref = _step5.value;
+                    for (var _iterator4 = Object.entries(this.containers)[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+                        var _ref = _step4.value;
 
                         var _ref2 = _slicedToArray(_ref, 2);
 
@@ -769,16 +742,16 @@
                         });
                     }
                 } catch (err) {
-                    _didIteratorError5 = true;
-                    _iteratorError5 = err;
+                    _didIteratorError4 = true;
+                    _iteratorError4 = err;
                 } finally {
                     try {
-                        if (!_iteratorNormalCompletion5 && _iterator5.return) {
-                            _iterator5.return();
+                        if (!_iteratorNormalCompletion4 && _iterator4.return) {
+                            _iterator4.return();
                         }
                     } finally {
-                        if (_didIteratorError5) {
-                            throw _iteratorError5;
+                        if (_didIteratorError4) {
+                            throw _iteratorError4;
                         }
                     }
                 }
