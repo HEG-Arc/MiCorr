@@ -35,7 +35,15 @@ angular.module('micorrApp')
 
         }
         emptyFields();
-        $scope.compoundExactComposition = true;
+        $scope.filterCompoundsMethodOptions = [{value: "exact", text: "having exact composition"},
+                {value: "atleast", text: "with at least composition elements"},
+                {value: "any", text: "having any of the composition elements"}];
+        $scope.filterCompoundsMethod = {
+            options: $scope.filterCompoundsMethodOptions,
+            selected :  $scope.filterCompoundsMethodOptions[0]
+        };
+        // $scope.filterCompoundsMethod.selected = $scope.filterCompoundsMethod.options[0];
+
 
         function CharacteristicsSelector(family)
         /**
@@ -88,7 +96,10 @@ angular.module('micorrApp')
             $scope.secondaryComponents[0].secondaryElements = new ElementSelector();
             $scope.secondaryComponents[0].compounds = new CompoundSelector();
             $scope.secondaryComponents[0].additionalElements = new ElementSelector();
-            $scope.secondaryComponents[0].compoundExactComposition = true;
+            $scope.secondaryComponents[0].filterCompoundsMethod = {
+                options: $scope.filterCompoundsMethodOptions,
+                selected: $scope.filterCompoundsMethodOptions[0]
+            };
 
             $scope.cpcompositionFamily = StratigraphyData.getCpcompositionFamily()['characteristics'];
             $scope.cmcompositionFamily = StratigraphyData.getCmcompositionFamily()['characteristics'];
@@ -411,7 +422,7 @@ angular.module('micorrApp')
             return elements;
         }
         // core stateless "filterCompounds"  function
-        return function(compounds, mainElements, secondaryElements, compoundExactComposition)
+        return function(compounds, mainElements, secondaryElements, filterMethod)
             /**
              * Filter the compounds list to return only those containing the list of all elements in
              * mainElements and secondaryElements arrays
@@ -419,10 +430,11 @@ angular.module('micorrApp')
              * @param compounds:  input array of compounds to filter
              * @param mainElements:  Array of main elements (filter criteria)
              * @param secondaryElements: Array of secondary elements (filter criteria)
-             * @param compoundExactComposition: boolean
-             *          - if true then only compounds containing only mainElements and secondaryElements are returned
-             *          - if false then compounds containing at least mainElements and secondaryElements are returned
+             * @param filterMethod: string
+             *          - "exact": only compounds containing only mainElements and secondaryElements are returned
+             *          - "atleast":  compounds containing at least mainElements and secondaryElements are returned
              *            (compounds with other additional elements might be returned)
+             *          - "any": compounds having any of the composition elements are returned
              */
         {
             compounds = compounds || []; // make sure compounds is valid as AngularJS calls filter function with undefined input as part of digest / $parseFilter cycle (causing exceptions)
@@ -435,13 +447,21 @@ angular.module('micorrApp')
                     return (compound.real_name.search(search_re) != -1);
                     //return (compound.real_name.indexOf(element.symbol) != -1);
                 }
-                if (compoundExactComposition) {
-                    var compoundElements = extractElements(compound.real_name);
-                    var allcpElements = mainElements.selected.map(e => e.symbol).concat(secondaryElements.selected.map(e => e.symbol));
-                    return allcpElements.every(symbol => compoundElements.includes(symbol)) && compoundElements.every(symbol => allcpElements.includes(symbol));
+                switch(filterMethod)
+                {
+                    case "exact":
+                        var compoundElements = extractElements(compound.real_name);
+                        var allcpElements = mainElements.selected.map(e => e.symbol).concat(secondaryElements.selected.map(e => e.symbol));
+                        return allcpElements.every(symbol => compoundElements.includes(symbol)) && compoundElements.every(symbol => allcpElements.includes(symbol));
+                        break;
+                    case "atleast":
+                        return (mainElements.selected.every(inCompound) && secondaryElements.selected.every(inCompound));
+                        break;
+                    case "any":
+                        return (mainElements.selected.some(inCompound) || secondaryElements.selected.some(inCompound));
+                        break;
                 }
-                else
-                    return (mainElements.selected.every(inCompound) && secondaryElements.selected.every(inCompound));
+
             });
         }
 });
