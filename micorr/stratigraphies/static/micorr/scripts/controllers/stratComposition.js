@@ -109,6 +109,11 @@ angular.module('micorrApp')
             $scope.cpCompositionAdditionalElements = new ElementSelector();
 
             $scope.cmcpaggregateCompositionFamily = StratigraphyData.getCmcpaggregateCompositionFamily()['characteristics'];
+            // => to be replaced by
+            $scope.cmmCompositionAdditionalElements = new ElementSelector();
+            $scope.cmcpCompositionAdditionalElements = new ElementSelector();
+            $scope.cmcpagCompositionAdditionalElements = new ElementSelector();
+
             $scope.descriptions = StratigraphyData.descriptions;
         };
 
@@ -205,6 +210,7 @@ angular.module('micorrApp')
             if (strata.getNature() == 'Corroded metal') {
                 var cpChild = strata.getChildStrataByNature('Corrosion products');
                 var mChild = strata.getChildStrataByNature('Metal');
+                // todo  replace ->
                 if (cpChild.getCharacteristicsByFamily("cpCompositionExtensionFamily").length > 0) {
                     $scope.selectedCmcpcomposition = getCharacteristicByItsNameMulti($scope.cpcompositionextensionFamily, cpChild.getCharacteristicsByFamily("cpCompositionExtensionFamily"));
                 }
@@ -223,6 +229,10 @@ angular.module('micorrApp')
                 else{
                     $scope.selectedCmmcomposition = [];
                 }
+                // by ->
+                $scope.cmmCompositionAdditionalElements.selected = mChild.getContainerElements("cmmCompositionAdditionalElements");
+                $scope.cmcpCompositionAdditionalElements.selected = cpChild.getContainerElements("cmcpCompositionAdditionalElements");
+                $scope.cmcpagCompositionAdditionalElements.selected = cpChild.getContainerElements("cmcpagCompositionAdditionalElements");
             }
 
 
@@ -283,12 +293,19 @@ angular.module('micorrApp')
             if (strata.getNature() == 'Corroded metal') {
                 //Strate enfant CP
                 var childCP = strata.getChildStrataByNature('Corrosion products');
+                // todo replace
                 childCP.updateCharacteristicList('cpCompositionExtensionFamily',$scope.selectedCmcpcomposition);
                 childCP.updateCharacteristicList('cmCpAggregatesCompositionFamily',$scope.selectedCmcpaggregateCompositionFamily);
+                // by ->
+                childCP.setContainerElements("cmcpCompositionAdditionalElements", $scope.cmcpCompositionAdditionalElements.selected);
+                childCP.getContainerElements("cmcpagCompositionAdditionalElements", $scope.cmcpagCompositionAdditionalElements.selected);
 
                 //Strate enfant M
                 var childM = strata.getChildStrataByNature('Metal');
+                // todo replace
                 childM.updateCharacteristicList('cpCompositionExtensionFamily',$scope.selectedCmcpcomposition);
+                // by ->
+                childM.setContainerElements("cmmCompositionAdditionalElements", $scope.cmmCompositionAdditionalElements.selected);
             }
 
             //Sous caractéristiques

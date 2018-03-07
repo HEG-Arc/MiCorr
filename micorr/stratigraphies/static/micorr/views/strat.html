@@ -455,6 +455,19 @@
                                                    title="no visual impact on the stratum"></span>
                 <span title="{{ descriptions.cmmcompositionFamily }}">Additional elements in M</span>
                 </label>
+                <ui-select id="cmmCompositionAdditionalElements" class="form-control" multiple
+                           theme="bootstrap"
+                           ng-model="cmmCompositionAdditionalElements.selected" on-remove="upComposition()"
+                           on-select="upComposition()">
+                    <ui-select-match placeholder="Select element(s) by order of importance">
+                        {{$item.symbol}}
+                    </ui-select-match>
+                    <ui-select-choices group-by="'category'"
+                                       repeat="item in (cmmCompositionAdditionalElements.characteristics | filter: $select.search) track by item.symbol">
+                        <span ng-bind-html="item.symbol | highlight: $select.search"></span> <span
+                            ng-bind-html="item.real_name | highlight: $select.search"></span>
+                    </ui-select-choices>
+                </ui-select>
                 <picklist element-name="sub-characteristics" size="10" data-picklist="" data-pick-model="selectedCmmcomposition"
                           data-pick-options="v.real_name for v in cpcompositionextensionFamily"/>
             </div>
@@ -465,6 +478,19 @@
                                                    title="no visual impact on the stratum"></span>
                      <span title="{{ descriptions.cmcpcompositionFamily }}">Additional elements in CP</span>
                 </label>
+                  <ui-select id="cmcpCompositionAdditionalElements" class="form-control" multiple
+                           theme="bootstrap"
+                           ng-model="cmcpCompositionAdditionalElements.selected" on-remove="upComposition()"
+                           on-select="upComposition()">
+                    <ui-select-match placeholder="Select element(s) by order of importance">
+                        {{$item.symbol}}
+                    </ui-select-match>
+                    <ui-select-choices group-by="'category'"
+                                       repeat="item in (cmcpCompositionAdditionalElements.characteristics | filter: $select.search) track by item.symbol">
+                        <span ng-bind-html="item.symbol | highlight: $select.search"></span> <span
+                            ng-bind-html="item.real_name | highlight: $select.search"></span>
+                    </ui-select-choices>
+                </ui-select>
                 <picklist element-name="sub-characteristics" size="10" data-picklist="" data-pick-model="selectedCmcpcomposition"
                           data-pick-options="v.real_name for v in cpcompositionextensionFamily"/>
             </div>
@@ -476,6 +502,19 @@
                                                    title="no visual impact on the stratum"></span>
                  <span title="{{ descriptions.cmcpaggregateCompositionFamily }}">Additional element(s) in CP aggregates</span>
                 </label>
+                <ui-select id="cmcpagCompositionAdditionalElements" class="form-control" multiple
+                           theme="bootstrap"
+                           ng-model="cmcpagCompositionAdditionalElements.selected" on-remove="upComposition()"
+                           on-select="upComposition()">
+                    <ui-select-match placeholder="Select element(s) by order of importance">
+                        {{$item.symbol}}
+                    </ui-select-match>
+                    <ui-select-choices group-by="'category'"
+                                       repeat="item in (cmcpagCompositionAdditionalElements.characteristics | filter: $select.search) track by item.symbol">
+                        <span ng-bind-html="item.symbol | highlight: $select.search"></span> <span
+                            ng-bind-html="item.real_name | highlight: $select.search"></span>
+                    </ui-select-choices>
+                </ui-select>
                 <picklist element-name="sub-characteristics" size="10" data-picklist="" data-pick-model="selectedCmcpaggregateCompositionFamily"
                           data-pick-options="v.real_name for v in cmcpaggregateCompositionFamily"/>
             </div>

@@ -513,6 +513,10 @@ class Strata {
             this.addDependency('cpSdyCptCompounds');
             this.addDependency('cpSdyCptAdditionalElements');
 
+            // dependencies for cp children of CM strata
+            this.addDependency('cmcpCompositionAdditionalElements');
+            this.addDependency('cmcpagCompositionAdditionalElements');
+
         }
 
         if (this.nature == "Metal") {
@@ -532,6 +536,9 @@ class Strata {
             this.addDependency('interfaceroughnessFamily');
             this.addDependency('interfaceadherenceFamily');
             this.addDependency('submmicrostructureFamily');
+
+            // dependencies for m children of CM strata
+            this.addDependency('cmmCompositionAdditionalElements');
         }
 
 
