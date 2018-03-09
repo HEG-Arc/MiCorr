@@ -475,9 +475,16 @@ angular.module('micorrApp')
                         ratio = parseInt(ratio.substr(1));
                         $scope.ratio = new Ratio(ratio);
                     }
+                    var CPChild = str.getChildStrataByNature('Corrosion products');
+                    var selectedcmCpMicrostructureFamily = CPChild.getFirstCharacteristicByFamily("cmCpMicrostructureFamily", "name")
+                    if (selectedcmCpMicrostructureFamily)
+                        $scope.showcmcpagCompositionAdditionalElements = true;
+                    else
+                        $scope.showcmcpagCompositionAdditionalElements = false;
 
                 } else {
                     $scope.corrodedMetalStrataSelected = false;
+                    $scope.showcmcpagCompositionAdditionalElements = false;
                 }
             }
         };
