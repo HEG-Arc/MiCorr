@@ -84,8 +84,8 @@ angular.module('micorrApp').factory('MiCorrService', function ($http, $q) {
         },
         saveStratigraphy: function (item) {
             $http.post('json/save', item, {headers: {'Content-Type': 'application/json'} }).error(function (data, status, headers, config) {
-                console.log('Could not save stratigraphy');
-                window.alert('Erreur lors de la sauvegarde de la stratigraphie');
+                console.log('Could not save stratigraphy: ' +status);
+                window.alert('Error saving stratigraphy:'+ status);
             }).success(function (data, status, headers, config) {
                 console.log('Saved');
             });

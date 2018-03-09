@@ -2,7 +2,7 @@ import simplejson as json
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseForbidden
 from django.shortcuts import render, redirect
 from django.views.decorators.cache import cache_page
 from django.views.decorators.csrf import csrf_exempt
@@ -146,7 +146,7 @@ def save(request):
             response = ms.save(data)
         else:
             # Not allowed to save the stratigraphy!
-            response = {'res': 0}
+            return HttpResponseForbidden()
     else:
         # This stratigraphy belongs to nobody, we try to add the current user_id
         if request.user.is_authenticated():
