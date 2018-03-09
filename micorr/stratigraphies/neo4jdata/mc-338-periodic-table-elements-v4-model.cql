@@ -108,17 +108,26 @@ MERGE (f:Family {uid:"compoundFamily", name:"Compound"}) WITH f
         MERGE (c)-[:BELONGS_TO]->(f)
         RETURN c,f;
 
+/**************************
+// MC-339 Strate CP - tableau periodique des éléments
 // Create new Families for cp MainElements SecondaryElements and Compounds
+//
+// MC-340 Strate CM - tableau periodique des éléments
+// Create new Families for cmm / cmcp / cmcpag Additional Elements
+*/
 UNWIND [
-  {uid: 'cpCompositionMainElements', name: 'CP Composition Main elements', upto: 0, list_elem_family:"elementFamily"},
-  {uid: 'cpCompositionSecondaryElements', name: 'CP Composition Secondary elements', upto: 0, list_elem_family:"elementFamily"},
-  {uid: 'cpCompositionCompounds', name: 'CP Composition Compounds', upto: 1, list_elem_family:"compoundFamily"},
-  {uid: 'cpCompositionAdditionalElements', name: 'CP Composition Additional elements', upto: 0, list_elem_family:"elementFamily"}
+  {nature:'cp', uid: 'cpCompositionMainElements', name: 'CP Composition Main elements', upto: 0, list_elem_family:"elementFamily"},
+  {nature:'cp', uid: 'cpCompositionSecondaryElements', name: 'CP Composition Secondary elements', upto: 0, list_elem_family:"elementFamily"},
+  {nature:'cp', uid: 'cpCompositionCompounds', name: 'CP Composition Compounds', upto: 1, list_elem_family:"compoundFamily"},
+  {nature:'cp', uid: 'cpCompositionAdditionalElements', name: 'CP Composition Additional elements', upto: 0, list_elem_family:"elementFamily"},
+  {nature:'cm', uid: 'cmmCompositionAdditionalElements', name: 'CM M Composition Additional elements', upto: 0, list_elem_family:"elementFamily"},
+  {nature:'cm', uid: 'cmcpCompositionAdditionalElements', name: 'CM CP Composition Additional elements', upto: 0, list_elem_family:"elementFamily"},
+  {nature:'cm', uid: 'cmcpagCompositionAdditionalElements', name: 'CM CP Aggregates Composition Additional elements', upto: 0, list_elem_family:"elementFamily"}
 ] AS new_f
 MERGE (f:Family {uid: new_f.uid, name: new_f.name})
   ON CREATE SET f+=$common_props
 WITH f, new_f
-MATCH (n:Nature {uid: 'cp'})
+MATCH (n:Nature {uid: new_f.nature})
 WITH f, n, new_f
 MERGE (n)-[:HAS_FAMILY]->(f)
 WITH n, f, new_f
