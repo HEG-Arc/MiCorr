@@ -230,9 +230,15 @@ angular.module('micorrApp')
                     $scope.selectedCmmcomposition = [];
                 }
                 // by ->
+/*
                 $scope.cmmCompositionAdditionalElements.selected = mChild.getContainerElements("cmmCompositionAdditionalElements");
                 $scope.cmcpCompositionAdditionalElements.selected = cpChild.getContainerElements("cmcpCompositionAdditionalElements");
                 $scope.cmcpagCompositionAdditionalElements.selected = cpChild.getContainerElements("cmcpagCompositionAdditionalElements");
+*/
+
+                $scope.cmmCompositionAdditionalElements.selected = strata.getContainerElements("cmmCompositionAdditionalElements");
+                $scope.cmcpCompositionAdditionalElements.selected = strata.getContainerElements("cmcpCompositionAdditionalElements");
+                $scope.cmcpagCompositionAdditionalElements.selected = strata.getContainerElements("cmcpagCompositionAdditionalElements");
             }
 
 
@@ -297,15 +303,15 @@ angular.module('micorrApp')
                 childCP.updateCharacteristicList('cpCompositionExtensionFamily',$scope.selectedCmcpcomposition);
                 childCP.updateCharacteristicList('cmCpAggregatesCompositionFamily',$scope.selectedCmcpaggregateCompositionFamily);
                 // by ->
-                childCP.setContainerElements("cmcpCompositionAdditionalElements", $scope.cmcpCompositionAdditionalElements.selected);
-                childCP.getContainerElements("cmcpagCompositionAdditionalElements", $scope.cmcpagCompositionAdditionalElements.selected);
+                strata.setContainerElements("cmcpCompositionAdditionalElements", $scope.cmcpCompositionAdditionalElements.selected);
+                strata.setContainerElements("cmcpagCompositionAdditionalElements", $scope.cmcpagCompositionAdditionalElements.selected);
 
                 //Strate enfant M
                 var childM = strata.getChildStrataByNature('Metal');
                 // todo replace
                 childM.updateCharacteristicList('cpCompositionExtensionFamily',$scope.selectedCmcpcomposition);
                 // by ->
-                childM.setContainerElements("cmmCompositionAdditionalElements", $scope.cmmCompositionAdditionalElements.selected);
+                strata.setContainerElements("cmmCompositionAdditionalElements", $scope.cmmCompositionAdditionalElements.selected);
             }
 
             //Sous caractéristiques
