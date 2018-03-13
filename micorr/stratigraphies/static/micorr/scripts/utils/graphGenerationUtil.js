@@ -10,7 +10,7 @@ import {Characteristic} from '../business/characteristic';
 import {SubCharacteristic} from '../business/subCharacteristic';
 import {PoissonDiskSampler} from '../algorithms/poissonDisk';
 
-import * as utils from '../nodeServices/nodeUtils.js';
+//import * as utils from '../nodeServices/nodeUtils.js';
 
 class GraphGenerationUtil {
     constructor(win, stratig) {
@@ -839,8 +839,8 @@ class GraphGenerationUtil {
     addImage(draw, url, width, height) {
         if (this.window) //node case we embed the images (svg and png) as datauri
         {
-            const Datauri = require('datauri');
-            url = new Datauri(url).content;
+//            const Datauri = require('datauri');
+//            url = new Datauri(url).content;
         }
         var image = draw.image(url);
         image.size(width, height);
