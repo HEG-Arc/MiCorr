@@ -38,7 +38,7 @@
 {% endblock sidemenu %}
 
 {% block content %}
-  <div class="c9"
+  <div class="c9">
     <h1>New artefact</h1>
     <form action="{% url 'artefacts:artefact-update' form.instance.pk %}" method="post">{% csrf_token %}
         {% if form.errors %}
