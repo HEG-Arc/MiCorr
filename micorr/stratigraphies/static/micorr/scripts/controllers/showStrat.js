@@ -1,5 +1,11 @@
 'use strict';
 
+import {Strata} from "../business/strata";
+import {Characteristic} from "../business/characteristic";
+import {SubCharacteristic} from "../business/subCharacteristic";
+
+import {GraphGenerationUtil} from "../utils/graphGenerationUtil";
+import {Ratio, returnNatureCharacteristic} from "../init";
 /**
  * @ngdoc function
  * @name micorrApp.controller:ShowStratCtrl
@@ -184,7 +190,7 @@ angular.module('micorrApp')
                 for (var i = 0; i < data.strata.length; i++) {
                     var currentStrata = data.strata[i];
                     var nature = StratigraphyData.getStrataNature(currentStrata);
-                    var str = new strata.Strata(nature, false);
+                    var str = new Strata(nature, false);
                     str.setUid(currentStrata.name);
                     str.setIndex(i);
                     if (st.getDescription() != undefined) {
@@ -193,7 +199,7 @@ angular.module('micorrApp')
                  //Boucle sur les caracteristiques
                     for (var j = 0; j < currentStrata.characteristics.length; j++) {
                         var currentCharacteristic = currentStrata.characteristics[j];
-                        var char = new characteristic.Characteristic();
+                        var char = new Characteristic();
                         char.setName(currentCharacteristic.name);
                         char.setRealName(currentCharacteristic.real_name);
                         char.setFamily(currentCharacteristic.family);
@@ -203,7 +209,7 @@ angular.module('micorrApp')
                     //Boucle sur les caracteristiques d'interface
                     for (var j = 0; j < currentStrata.interfaces.characteristics.length; j++) {
                         var currentCharacteristic = currentStrata.interfaces.characteristics[j];
-                        var char = new characteristic.Characteristic();
+                        var char = new Characteristic();
                         char.setName(currentCharacteristic.name);
                         char.setFamily(currentCharacteristic.family);
                         char.setInterface(true);
@@ -224,18 +230,18 @@ angular.module('micorrApp')
 
                     if (str.findDependency('subcmlevelofcorrosionFamily') &&
                         (sChar = getSubCharacteristicByFamily(subCharacteristicsList, StratigraphyData.getSubcmLevelOfCorrosionFamily())))
-                        str.addSubCharacteristic(new subCharacteristic.SubCharacteristic('subcmlevelofcorrosionFamily', sChar));
+                        str.addSubCharacteristic(new SubCharacteristic('subcmlevelofcorrosionFamily', sChar));
 
                      // secondary Components
                     if (currentStrata.secondaryComponents)
                         for (let component of currentStrata.secondaryComponents) {
                             for (let c of component.characteristics)
-                                str.addCharacteristic(new characteristic.Characteristic(c.family, c), str.secondaryComponents[0].characteristics)
+                                str.addCharacteristic(new Characteristic(c.family, c), str.secondaryComponents[0].characteristics)
                             for (let sc of component.subCharacteristics) {
                                 if (sChar = getSubCharacteristicByFamily([sc], StratigraphyData.getSubcpcompositionFamily()))
-                                    str.addCharacteristic(new subCharacteristic.SubCharacteristic('subcpcompositionFamily', sc), str.secondaryComponents[0].subCharacteristics);
+                                    str.addCharacteristic(new SubCharacteristic('subcpcompositionFamily', sc), str.secondaryComponents[0].subCharacteristics);
                                 else if (sChar = getSubCharacteristicByFamily([sc], StratigraphyData.getSubsubcpcompositionFamily()))
-                                    str.addCharacteristic(new subCharacteristic.SubCharacteristic('subsubcpcompositionFamily', sc), str.secondaryComponents[0].subCharacteristics);
+                                    str.addCharacteristic(new SubCharacteristic('subsubcpcompositionFamily', sc), str.secondaryComponents[0].subCharacteristics);
                                 else
                                     console.log(`ignoring unexpected subCharacteristic:${sc.name} in secondaryComponent`);
                             }
@@ -250,7 +256,7 @@ angular.module('micorrApp')
                     if (str.findDependency('subcprimicrostructureFamily')) {
                         var sChars = getSubCharacteristicByFamilyMulti(subCharacteristicsList, StratigraphyData.getSubcprimicrostructureFamily());
                         for (var j = 0; j < sChars.length; j++) {
-                            var subChar = new subCharacteristic.SubCharacteristic();
+                            var subChar = new SubCharacteristic();
                             subChar.setFamily('subcprimicrostructureFamily');
                             subChar.setName(sChars[j].real_name);
                             subChar.setUid(sChars[j].name);
@@ -261,7 +267,7 @@ angular.module('micorrApp')
                         var sChars = getSubCharacteristicByFamilyMulti(subCharacteristicsList, StratigraphyData.getSubmmicrostructureFamily());
 
                         for (var j = 0; j < sChars.length; j++) {
-                            var subChar = new subCharacteristic.SubCharacteristic();
+                            var subChar = new SubCharacteristic();
                             subChar.setFamily('submmicrostructureFamily');
                             subChar.setName(sChars[j].real_name);
                             subChar.setUid(sChars[j].name);
@@ -274,12 +280,12 @@ angular.module('micorrApp')
                     for (var j = 0; j < currentStrata.children.length; j++) {
                         var curChild = currentStrata.children[j];
                         var nat = StratigraphyData.getStrataNature(curChild);
-                        var childStrata = new strata.Strata(nat, true);
+                        var childStrata = new Strata(nat, true);
                         childStrata.setUid(curChild.name);
                         //Boucle sur les caracteristiques
                         for (var k = 0; k < curChild.characteristics.length; k++) {
                             var curChar = curChild.characteristics[k];
-                            var char = new characteristic.Characteristic();
+                            var char = new Characteristic();
                             char.setName(curChar.name);
                             char.setRealName(curChar.real_name);
                             char.setFamily(curChar.family);
@@ -294,14 +300,14 @@ angular.module('micorrApp')
                     if (str.getNature() == 'Corroded metal' && currentStrata.children.length == 0) {
                         //Ajout de la sous strate CP
                         var cpNature = returnNatureCharacteristic('CP');
-                        var childCPStrata = new strata.Strata(cpNature.getRealName(), true);
+                        var childCPStrata = new Strata(cpNature.getRealName(), true);
                         childCPStrata.replaceCharacteristic(cpNature);
                         childCPStrata.setUid(str.getUid() + '_childCP');
                         str.addChildStrata(childCPStrata);
 
                         //Ajout de la sous strate M
                         var mNature = returnNatureCharacteristic('M');
-                        var childMStrata = new strata.Strata(mNature.getRealName(), true);
+                        var childMStrata = new Strata(mNature.getRealName(), true);
                         childMStrata.replaceCharacteristic(mNature);
                         childMStrata.setUid(str.getUid() + '_childM');
                         str.addChildStrata(childMStrata);
@@ -493,7 +499,7 @@ angular.module('micorrApp')
          * Cette méthode ne regénère que l'interface modifié
          */
         $scope.$on('updateSelectedInterface', function () {
-            var graphGenUtil = new graphGenerationUtil.GraphGenerationUtil(null, StratigraphyData.getStratigraphy());
+            var graphGenUtil = new GraphGenerationUtil(null, StratigraphyData.getStratigraphy());
 
             var index = parseInt(StratigraphyData.getSelectedStrata());
             var strata = StratigraphyData.getStratigraphy().getStratas()[index];
@@ -514,7 +520,7 @@ angular.module('micorrApp')
             var intDivName = 'strataInterface' + index;
             var strDivName = 'strata' + index;
 
-            var graphGenUtil = new graphGenerationUtil.GraphGenerationUtil(null, StratigraphyData.getStratigraphy());
+            var graphGenUtil = new GraphGenerationUtil(null, StratigraphyData.getStratigraphy());
             var interfaceDiv = document.getElementById(intDivName);
             var strataDiv = document.getElementById(strDivName);
 
@@ -570,7 +576,7 @@ angular.module('micorrApp')
             $timeout(function () {
 
                 $scope.stratigraphy = StratigraphyData.getStratigraphy();
-                $scope.stratas = new Array();
+                $scope.stratas = [];
                 $scope.$apply();
                 $scope.stratas = StratigraphyData.getStratigraphy().getStratas();
                 $scope.$apply();

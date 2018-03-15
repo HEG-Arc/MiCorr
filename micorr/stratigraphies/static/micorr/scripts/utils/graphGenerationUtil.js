@@ -10,7 +10,10 @@ import {Characteristic} from '../business/characteristic';
 import {SubCharacteristic} from '../business/subCharacteristic';
 import {PoissonDiskSampler} from '../algorithms/poissonDisk';
 
-//import * as utils from '../nodeServices/nodeUtils.js';
+/* Here we use CommonJS style import with webpack import-loader to turn around this/window test issue in svg.js
+ module export code ( see https://github.com/svgdotjs/svg.js/issues/767 ) */
+const SVG = require("imports-loader?define=>false!../dependencies/svg.js");
+
 
 class GraphGenerationUtil {
     constructor(win, stratig) {
@@ -387,7 +390,7 @@ class GraphGenerationUtil {
         var poisson = [];
         //Instance browser
         if (this.window == undefined) {
-            var pds = new poissonDisk.PoissonDiskSampler(width, height);
+            var pds = new PoissonDiskSampler(width, height);
         }
         //Instance Node.js
         else {
@@ -670,7 +673,7 @@ class GraphGenerationUtil {
             let  pds;
             //Instance Browser
             if (this.window == undefined)
-                pds = new poissonDisk.PoissonDiskSampler(width, height);
+                pds = new PoissonDiskSampler(width, height);
             //Instance Node.js
             else
                 pds = new PoissonDiskSampler(width, height);
@@ -752,7 +755,7 @@ class GraphGenerationUtil {
         if (transition == "semiGradualSuperiorCharacteristic" || transition == "gradualCharacteristic") {
             let pds;
             if (this.window == undefined) //Instance Browser
-                pds = new poissonDisk.PoissonDiskSampler(width, height);
+                pds = new PoissonDiskSampler(width, height);
             else //Instance Node.js
                 pds = new PoissonDiskSampler(width, height);
             for (let i = 0; i < 50; i++)

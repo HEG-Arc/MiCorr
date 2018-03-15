@@ -1,5 +1,11 @@
 'use strict';
 
+import {Characteristic} from "../business/characteristic";
+import {
+    getCharacteristicByItsName, getCharacteristicByItsNameMulti, Ratio,
+    returnSubCharacteristicsFromParent
+} from "../init";
+
 /**
  * @ngdoc function
  * @name micorrApp.controller:StratCompositionCtrl
@@ -346,7 +352,7 @@ angular.module('micorrApp')
 
             if ($scope.selectedCmcompositionFamily != null) {
                 if (strata.findDependency('cmcompositionFamily')) {
-                    var char = new characteristic.Characteristic();
+                    var char = new Characteristic();
                     char.setFamily('cmCompositionFamily');
 
                     char.setName($scope.selectedCmcompositionFamily.name);
@@ -394,7 +400,7 @@ angular.module('micorrApp')
         //Appelée lorsqu'on change déplace le slider dans la composition d'une strate CM
         $scope.ratioChange = function () {
 
-            var ratioChar = new characteristic.Characteristic();
+            var ratioChar = new Characteristic();
 
             var rName = 'r' + $scope.ratio.ratio;
             ratioChar.setName(rName + 'Characteristic');

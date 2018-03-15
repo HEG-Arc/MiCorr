@@ -1,5 +1,5 @@
 'use strict';
-
+import angular from 'angular';
 /**
  * @ngdoc function
  * @name micorrApp.controller:MainCtrl
@@ -13,7 +13,7 @@
  * Attention si on accède aux détails d'une stratigraphie sans que les caractéristiques soient chargées au préalable alors il va y avoir un problème
  * On doit avant tout accéder d'abord à la liste des artefacts ou stratigraphies avant d'aller dans les détails sinon les charactéristiques ne sont pas chargées
  */
-angular.module('micorrApp')
+export default angular.module('micorrApp')
     .controller('MainCtrl', function ($scope, $route, $routeParams, MiCorrService, StratigraphyData, ngProgress, httpRequestTracker) {
 
         ngProgress.height('4px');
@@ -26,4 +26,4 @@ angular.module('micorrApp')
             //return httpRequestTracker.hasPendingRequests();
             return false;
         };
-    });
+    }).name;

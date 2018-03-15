@@ -5,6 +5,9 @@
  * C'est la classe business de la Strate
  */
 
+import {Characteristic} from "./characteristic";
+import {SubCharacteristic} from "./subCharacteristic";
+
 class Strata {
 
     constructor(nature, child) {
@@ -309,7 +312,7 @@ class Strata {
     {
         dependencyName = dependencyName || familyName; //dependencyName defaults to familyName but could be different
         if (characteristicSource && this.findDependency(dependencyName)) {
-            let c = new characteristic.Characteristic(familyName, characteristicSource);
+            let c = new Characteristic(familyName, characteristicSource);
             this.replaceCharacteristic(c, inArrayProperty);
             return true;
         }
@@ -327,7 +330,7 @@ class Strata {
         if (this.findDependency(familyName)) {
             this.clearCharacteristicsFromFamily(familyName, inArrayProperty);
             for (let cSource of characteristicList)
-                this.addCharacteristic(new characteristic.Characteristic(familyName, cSource));
+                this.addCharacteristic(new Characteristic(familyName, cSource));
             return true;
         }
         return false;
@@ -336,7 +339,7 @@ class Strata {
         if (this.findDependency(dependencyName)) {
             this.clearCharacteristicsFromFamily(familyName, this.secondaryComponents[0].characteristics);
             for (let cSource of characteristicList)
-                this.addCharacteristic(new characteristic.Characteristic(familyName, cSource), this.secondaryComponents[0].characteristics);
+                this.addCharacteristic(new Characteristic(familyName, cSource), this.secondaryComponents[0].characteristics);
             return true;
         }
         return false;
@@ -371,7 +374,7 @@ class Strata {
     updateSubCharacteristic(familyName, subCharacteristicSource, dependencyName=null, inArrayProperty="subCharacteristics") {
         dependencyName = dependencyName || familyName; //dependencyName defaults to familyName but could be different
         if (subCharacteristicSource && this.findDependency(dependencyName)) {
-            let sc = new subCharacteristic.SubCharacteristic(familyName, subCharacteristicSource);
+            let sc = new SubCharacteristic(familyName, subCharacteristicSource);
             this.replaceSubCharacteristic(sc, inArrayProperty);
             return true;
         }

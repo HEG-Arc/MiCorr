@@ -1,5 +1,5 @@
 'use strict';
-
+import angular from 'angular';
 /**
  * @ngdoc function
  * @name micorrApp.controller:AddStratigraphyCtrl
@@ -7,7 +7,7 @@
  * # AddStratigraphyCtrl
  * Contrôlleur des messages d'erreurs qui surviennent lors de l'ajout d'une stratigraphie
  */
-angular.module('micorrApp')
+export default angular.module('micorrApp')
     .controller('AddStratigraphyCtrl', function ($scope) {
         $scope.alerts = [];
 
@@ -22,4 +22,4 @@ angular.module('micorrApp')
         $scope.closeAlert = function(index) {
             $scope.alerts.splice(index, 1);
         };
-    });
+    }).name;

@@ -6,11 +6,14 @@
  * Divers méthodes et propriétés qui sont utilisés tout au long de l'application
  */
 
+import {Characteristic} from "./business/characteristic";
+import {PoissonDiskSampler} from "./algorithms/poissonDisk";
+
 /* Factory qui retourne l'instance qui convient selon la nature
  * @params nature : nom de la nature dont on veut l'instance
  * €returns instance de la nature qui convient
  */
-function natureFactory(nature) {
+export function natureFactory(nature) {
     if (nature == "cmCharacteristic" || nature == "CM")
         return new CM();
     else if (nature == "cpCharacteristic" || nature == "CP")
@@ -29,8 +32,8 @@ function natureFactory(nature) {
         return new SV();
 }
 
-function returnNatureCharacteristic(nature){
-    var natureChar = new characteristic.Characteristic();
+export function returnNatureCharacteristic(nature){
+    var natureChar = new Characteristic();
     natureChar.setFamily('natureFamily');
     if (nature == "cmCharacteristic" || nature == "CM"){
          natureChar.setName('cmCharacteristic');
@@ -79,7 +82,7 @@ function returnNatureCharacteristic(nature){
  * @params charactéristique de largeur
  * €returns largeur qui convient, par défaut 500px
  */
-function getWidths(width) {
+export function getWidths(width) {
     if (width == "largeCharacteristic")
         return 650;
     else if (width == "normalWidthCharacteristic")
@@ -94,7 +97,7 @@ function getWidths(width) {
  * @params charactéristique de hauteur
  * €returns hauteur qui convient, par défaut 100px
  */
-function getThicknesses(thickness) {
+export function getThicknesses(thickness) {
     if (thickness == "thickCharacteristic")
         return 150;
     else if (thickness == "normalThicknessCharacteristic")
@@ -107,7 +110,7 @@ function getThicknesses(thickness) {
 }
 
 // matreials or voids constituing the corroded artefact
-var natures = {"natures": [
+export const natures = {"natures": [
     {"guidc": "cmCharacteristic", "description": "Corroded metal", "code": "CM"},
     {"guidc": "cpCharacteristic", "description": "Corroded product", "code": "CP"},
     {"guidc": "dCharacteristic", "description": "Deposit", "code": "D"},
@@ -123,7 +126,7 @@ var natures = {"natures": [
  *         name : nom de la caractéristique à trouver
  * €returns nom de la caractéristique trouvée dans la liste
  */
-getCharacteristicByItsName = function (data, name) {
+export function getCharacteristicByItsName(data, name) {
     for (var i = 0; i < data.length; i++) {
         if (data[i].name == name) {
             return data[i];
@@ -137,7 +140,7 @@ getCharacteristicByItsName = function (data, name) {
  *         name : nom de la caractéristique à trouver
  * €returns nom de la caractéristique trouvée dans la liste
  */
-getCharacteristicByItsNameMulti = function (data, name) {
+export function getCharacteristicByItsNameMulti(data, name) {
     var t = [];
 
     for (var i = 0; i < name.length; i++) {
@@ -155,7 +158,7 @@ getCharacteristicByItsNameMulti = function (data, name) {
  * @params deux strates
  * €returns true = identique, false = différente
  */
-function compareTwoStratas(s1, s2) {
+export function compareTwoStratas(s1, s2) {
     if (s1.getNatureFamily() == s2.getNatureFamily()) {
         var s1car = s1.getJsonCharacteristics();
         var s2car = s2.getJsonCharacteristics();
@@ -190,7 +193,7 @@ function compareTwoStratas(s1, s2) {
  * @params min, max
  * €returns nombre aléatoire
  */
-function getRandomInt(min, max) {
+export function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min)) + min;
 }
 
@@ -202,7 +205,7 @@ function getRandomInt(min, max) {
  *         nbCol : nombre de craquelures verticales
  * €returns
  */
-function drawCracking(draw, width, height, nbLines, nbCol) {
+export function drawCracking(draw, width, height, nbLines, nbCol) {
     var nb_hoph = 8; // nombre de courbes de béziers horizontales
     var nb_hopv = 5; // nombre de courbes de béziers verticales
     var y = height / (nbLines + 1);
@@ -248,7 +251,7 @@ function drawCracking(draw, width, height, nbLines, nbCol) {
  *         topBackgroundColor : couleur supérieure de l'interface
  * €returns
  */
-function drawInterface(draw, index, width, height, type, nb_hop, bottomBackgroundColor, topBackgroundColor, borderWidth, interfaceLineThickness, diffuse, transition) {
+export function drawInterface(draw, index, width, height, type, nb_hop, bottomBackgroundColor, topBackgroundColor, borderWidth, interfaceLineThickness, diffuse, transition) {
     /* Le dessin des interfaces se fait en 3 étapes
      *  1) Tout d'abord on colorie la zone de dessin avec la couleur topBackground et sans cadre
      *  2) on dessine la ligne d'interface avec le tableau line = []
@@ -405,7 +408,7 @@ function drawInterface(draw, index, width, height, type, nb_hop, bottomBackgroun
  *         height : hauteur
  * €returns
  */
-function drawalternatingBands(draw, nb_hop, nb_lines, width, height) {
+export function drawalternatingBands(draw, nb_hop, nb_lines, width, height) {
     var rect = draw.rect(0, 0, width, height).attr("stroke-width", 0);
 
     var y = height / nb_lines;
@@ -449,7 +452,7 @@ function drawalternatingBands(draw, nb_hop, nb_lines, width, height) {
  * @params text : nom des interfaces ou stratigraphies
  * €returns true si ok, false si pas ok
  */
-function testUserInput(text) {
+export function testUserInput(text) {
     var exp = "^[a-zA-Z0-9\_]{2,100}$";
     var regexp = new RegExp(exp, "i");
     return regexp.test(text);
@@ -459,14 +462,14 @@ function testUserInput(text) {
  * @params couleur au format caractéristique
  * €returns couleur formattée
  */
-function returnFormattedColor(color) {
+export function returnFormattedColor(color) {
     color = color.replace('Characteristic', '');
     if (color == "black")
         color = "#474747";
     return color;
 }
 
-function Ratio(ratio) {
+export function Ratio(ratio) {
     var ratio = ratio;
 
     this.__defineGetter__("ratio", function () {
@@ -483,7 +486,7 @@ function Ratio(ratio) {
  * @params couleur au format caractéristique
  * €returns couleur formattée
  */
-function returnSubCharacteristicsFromParent(data, family, lvl1, lvl2) {
+export function returnSubCharacteristicsFromParent(data, family, lvl1, lvl2) {
     //console.log(data);
     var subList = [];
     var subsubList = [];

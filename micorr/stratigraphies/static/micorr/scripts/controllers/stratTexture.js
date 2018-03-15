@@ -1,5 +1,8 @@
 'use strict';
 
+import {Characteristic} from "../business/characteristic";
+import {getCharacteristicByItsName} from "../init";
+
 /**
  * @ngdoc function
  * @name micorrApp.controller:StratTextureCtrl
@@ -67,7 +70,7 @@ angular.module('micorrApp')
 
             if($scope.selectedPorosityFamily != null) {
                 if (strata.findDependency('porosityFamily')) {
-                    var char = new characteristic.Characteristic();
+                    var char = new Characteristic();
                     char.setFamily("porosityFamily");
                     char.setName($scope.selectedPorosityFamily.name);
                     char.setRealName($scope.selectedPorosityFamily.real_name);
@@ -76,7 +79,7 @@ angular.module('micorrApp')
             }
             if($scope.selectedCohesionFamily != null) {
                 if (strata.findDependency('cohesionFamily')) {
-                    var char = new characteristic.Characteristic();
+                    var char = new Characteristic();
                     char.setFamily("cohesionFamily");
                     char.setName($scope.selectedCohesionFamily.name);
                     char.setRealName($scope.selectedCohesionFamily.real_name);
@@ -85,7 +88,7 @@ angular.module('micorrApp')
             }
             if($scope.selectedHardnessFamily != null) {
                 if (strata.findDependency('hardnessFamily')) {
-                    var char = new characteristic.Characteristic();
+                    var char = new Characteristic();
                     char.setFamily("hardnessFamily");
                     char.setName($scope.selectedHardnessFamily.name);
                     char.setRealName($scope.selectedHardnessFamily.real_name);
@@ -94,7 +97,7 @@ angular.module('micorrApp')
             }
             if($scope.selectedCrackingFamily != null) {
                 if (strata.findDependency('crackingFamily')) {
-                    var char = new characteristic.Characteristic();
+                    var char = new Characteristic();
                     char.setFamily("crackingFamily");
                     char.setName($scope.selectedCrackingFamily.name);
                     char.setRealName($scope.selectedCrackingFamily.real_name);

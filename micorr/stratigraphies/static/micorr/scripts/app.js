@@ -1,42 +1,6 @@
 "use strict";
-import "./dependencies/angbootstrap.min.js";
-import "./directives/picklist.js";
-import "./dependencies/svg.js";
-import "./utils/graphGenerationUtil.js";
-import "./algorithms/poissonDisk.js";
-import "./business/stratigraphy.js";
-import "./business/strata.js";
-import "./business/characteristic.js";
-import "./business/subCharacteristic.js";
-import "./init.js";
-import "./controllers/addStratigraphy.js";
-import "./controllers/listArtefacts.js";
-import "./controllers/main.js";
-import "./controllers/modalAddArtefact.js";
-import "./controllers/modalAddStrata.js";
-import "./controllers/modalAddStratigraphy.js";
-import "./controllers/modalAddStratigraphyInstance.js";
-import "./controllers/modalDelArtefact.js";
-import "./controllers/modalDelStrata.js";
-import "./controllers/modalDelStratigraphy.js";
-import "./controllers/modalExportStrata.js";
-import "./controllers/modalSaveStrata.js";
-import "./controllers/modalShowSimilarStrata.js";
-import "./controllers/pickList.js";
-import "./controllers/showArtefact.js";
-import "./controllers/showStrat.js";
-import "./controllers/stratComposition.js";
-import "./controllers/stratInterface.js";
-import "./controllers/stratMicrostructure.js";
-import "./controllers/stratMorphology.js";
-import "./controllers/stratTexture.js";
-import "./controllers/tabsStrata.js";
-import "./services/services.js";
-import "./directives/directives.js";
-import "./algorithms/PoissonDiskSampler.js";
-import "./dependencies/rhill-voronoi-core.min.js";
-import "./algorithms/Voronoi.js";
-import "./dependencies/ngprogress.min.js";
+import angular from "angular";
+
 
 /**
  * @ngdoc overview
@@ -48,7 +12,7 @@ import "./dependencies/ngprogress.min.js";
  */
 
 //routage de l'application
-angular
+export default angular
     .module('micorrApp', [
         'ngRoute',
         'ngResource',
@@ -94,4 +58,8 @@ angular
         // extra
         $httpProvider.defaults.headers.get['Cache-Control'] = 'no-cache';
         $httpProvider.defaults.headers.get['Pragma'] = 'no-cache';
-    });
+    }).name;
+
+import {strata, stratainfo} from "./directives/directives";
+
+angular.module('micorrApp').directive('strata', strata).directive('stratainfo',stratainfo);

@@ -8,7 +8,14 @@
 
 /* Cette directive représente le dessin de chaque strate
  */
-angular.module('micorrApp').directive('strata', function ($compile, StratigraphyData) {
+import angular from "angular";
+import $ from "jquery";
+import {GraphGenerationUtil} from "../utils/graphGenerationUtil";
+
+let stratainfo;
+let strata;
+
+strata = function ($compile, StratigraphyData) {
     return {
         restrict: 'EA',
         replace: true,
@@ -21,12 +28,12 @@ angular.module('micorrApp').directive('strata', function ($compile, Stratigraphy
 
             var str = st.getStratas()[index];
 
-            var interfaceDiv = element.context.childNodes[0];
-            var strataDiv = element.context.childNodes[1];
+            var interfaceDiv = element[0].childNodes[0];
+            var strataDiv = element[0].childNodes[1];
             strataDiv.id = "strata" + index;
             interfaceDiv.id = "strataInterface" + index;
 
-            var graphGenUtil = new graphGenerationUtil.GraphGenerationUtil(null, st);
+            var graphGenUtil = new GraphGenerationUtil(null, st);
             graphGenUtil.setStratig(st);
 
 
@@ -57,46 +64,50 @@ angular.module('micorrApp').directive('strata', function ($compile, Stratigraphy
      * mettre le contenu de ce svg dans un canvas et ensuite créer un png téléchargeable
      * Ce png contient aussi les images qui se trouvaient sur le svg
      */
-})
+};
+
     /* Cette directive définit la classification (nommage) de la strate (CP1, CP2, M1, M2, M3, M1)
      * en fonction des autres strates de la stratigraphie
      * L'affichage vient à gauche des dessins des strates
      */
-    .directive('stratainfo', function ($compile, StratigraphyData) {
-        return {
-            restrict: 'EA',
-            replace: true,
-            transclude: true,
-            template: '<div class="col-md-2 row text-right" style="padding-top:20px"><div style="float:left"></div><div style="float:rigth"></div></div>',
-            link: function (scope, element, attrs) {
 
-                var index = attrs.index;    // index de la strate
+stratainfo = function ($compile, StratigraphyData) {
+    return {
+        restrict: 'EA',
+        replace: true,
+        transclude: true,
+        template: '<div class="col-md-2 row text-right" style="padding-top:20px"><div style="float:left"></div><div style="float:rigth"></div></div>',
+        link: function (scope, element, attrs) {
 
-                // on récupère les strates et la strate
-                var stratas = StratigraphyData.getStratigraphy().getStratas();
-                element.children()[0].id = 'info'+index;
+            var index = attrs.index;    // index de la strate
 
-                element.children()[0].innerHTML = '<button class="btn btn-link btn-xs" ng-click="removeStrata(' + index + ')" title="delete this strata"><span class="glyphicon glyphicon-remove"></span></button>';
+            // on récupère les strates et la strate
+            var stratas = StratigraphyData.getStratigraphy().getStratas();
+            element.children()[0].id = 'info' + index;
 
-                // on affiche les boutons pour bouger la strate
-                var btns = "";
-                if (index > 0)
-                    btns += '<button ng-click="movestrataup(' + index + ')" type="button" class="btn btn-link btn-xs" title="move up this strata"><span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span></button>';
-                if (index < stratas.length - 1)
-                    btns += '<button ng-click="movestratadown(' + index + ')" type="button" class="btn btn-link btn-xs" title="move down this strata"><span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span></button>';
+            element.children()[0].innerHTML = '<button class="btn btn-link btn-xs" ng-click="removeStrata(' + index + ')" title="delete this strata"><span class="glyphicon glyphicon-remove"></span></button>';
 
-                $(element.children()[1]).append(btns);
-                // strata labels are now displayed inside stratigraphy svg
-                //var label=stratas[index].getLabel();
-                //$(element.children()[1]).append('<div class="labelinfo" >' + label + '</div>');
+            // on affiche les boutons pour bouger la strate
+            var btns = "";
+            if (index > 0)
+                btns += '<button ng-click="movestrataup(' + index + ')" type="button" class="btn btn-link btn-xs" title="move up this strata"><span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span></button>';
+            if (index < stratas.length - 1)
+                btns += '<button ng-click="movestratadown(' + index + ')" type="button" class="btn btn-link btn-xs" title="move down this strata"><span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span></button>';
 
-                $(element.children()[1]).bind('click', function () {
-                    scope.update(index);
-                    scope.setInterfaceTab(false);
-                });
+            $(element.children()[1]).append(btns);
+            // strata labels are now displayed inside stratigraphy svg
+            //var label=stratas[index].getLabel();
+            //$(element.children()[1]).append('<div class="labelinfo" >' + label + '</div>');
 
-                $compile(element.contents())(scope);
+            $(element.children()[1]).bind('click', function () {
+                scope.update(index);
+                scope.setInterfaceTab(false);
+            });
 
-            }
-        };
-    });
+            $compile(element.contents())(scope);
+
+        }
+    };
+};
+
+export {strata, stratainfo};

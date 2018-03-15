@@ -5,9 +5,10 @@
  *
  * Contient les services nécessaires à l'application
  */
+import {Stratigraphy} from "../business/stratigraphy";
 
 // Contient toutes les requêtes vers le serveur
-angular.module('micorrApp').factory('MiCorrService', function ($http, $q) {
+let MiCorrService = angular.module('micorrApp').factory('MiCorrService', function ($http, $q) {
     return{
         sayHello: function () {
             return 'Hello!';
@@ -117,10 +118,10 @@ angular.module('micorrApp').factory('MiCorrService', function ($http, $q) {
             });
         }
     }
-});
+}).name;
 
 // Contient les données sur les strates qui seront échangées entre les différents contrôlleurs
-angular.module('micorrApp').factory('StratigraphyData', function StratigraphyDataFactory() {
+let StratigraphyData =  angular.module('micorrApp').factory('StratigraphyData', function StratigraphyDataFactory() {
     var getStratigraphyData = function () {
 
         var stratig = null;
@@ -144,7 +145,7 @@ angular.module('micorrApp').factory('StratigraphyData', function StratigraphyDat
 
             getStratigraphy: function () {
                 if (stratig == null) {
-                    stratig = new stratigraphy.Stratigraphy;
+                    stratig = new Stratigraphy;
                 }
                 return stratig;
             },
@@ -528,18 +529,19 @@ angular.module('micorrApp').factory('StratigraphyData', function StratigraphyDat
         }
     };
     return getStratigraphyData();
-});
+}).name;
 
 
 
-angular.module('micorrApp').factory('httpRequestTracker', function httpRequestTrackerFactory($http) {
+let httpRequestTracker = angular.module('micorrApp').factory('httpRequestTracker', function httpRequestTrackerFactory($http) {
     var httpRequestTracker = {};
     httpRequestTracker.hasPendingRequests = function () {
         return $http.pendingRequests.length > 0;
     };
     return httpRequestTracker;
-});
+}).name;
 
+export {MiCorrService, StratigraphyData, httpRequestTracker};
 
 
 

@@ -1,5 +1,8 @@
 'use strict';
 
+import {Characteristic} from "../business/characteristic";
+import {getCharacteristicByItsName} from "../init";
+
 /**
  * @ngdoc function
  * @name micorrApp.controller:StratInterfaceCtrl
@@ -64,7 +67,7 @@ angular.module('micorrApp')
 
             if ($scope.selectedInterfaceprofileFamily != null) {
                 if (strata.findDependency('interfaceprofileFamily')) {
-                    var char = new characteristic.Characteristic();
+                    var char = new Characteristic();
                     char.setFamily("interfaceProfileFamily");
                     char.setName($scope.selectedInterfaceprofileFamily.name);
                     char.setRealName($scope.selectedInterfaceprofileFamily.real_name);
@@ -74,7 +77,7 @@ angular.module('micorrApp')
             }
             if ($scope.selectedInterfacetransitionFamily != null) {
                 if (strata.findDependency('interfacetransitionFamily')) {
-                    var char = new characteristic.Characteristic();
+                    var char = new Characteristic();
                     char.setFamily("interfaceTransitionFamily");
                     char.setName($scope.selectedInterfacetransitionFamily.name);
                     char.setRealName($scope.selectedInterfacetransitionFamily.real_name);
@@ -84,7 +87,7 @@ angular.module('micorrApp')
             }
             if ($scope.selectedInterfaceroughnessFamily != null) {
                 if (strata.findDependency('interfaceroughnessFamily')) {
-                    var char = new characteristic.Characteristic();
+                    var char = new Characteristic();
                     char.setFamily("interfaceRoughnessFamily");
                     char.setName($scope.selectedInterfaceroughnessFamily.name);
                     char.setRealName($scope.selectedInterfaceroughnessFamily.real_name);
@@ -95,7 +98,7 @@ angular.module('micorrApp')
 
             if ($scope.selectedInterfaceadherenceFamily != null) {
                 if (strata.findDependency('interfaceadherenceFamily')) {
-                    var char = new characteristic.Characteristic();
+                    var char = new Characteristic();
                     char.setFamily("interfaceAdherenceFamily");
                     char.setName($scope.selectedInterfaceadherenceFamily.name);
                     char.setRealName($scope.selectedInterfaceadherenceFamily.real_name);

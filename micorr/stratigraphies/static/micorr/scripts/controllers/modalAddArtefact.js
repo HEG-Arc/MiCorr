@@ -1,5 +1,7 @@
 'use strict';
 
+import {testUserInput} from "../init";
+
 /**
  * @ngdoc function
  * @name micorrApp.controller:ModalAddArtefactCtrl

@@ -1,5 +1,8 @@
 'use strict';
 
+import {Characteristic} from "../business/characteristic";
+import {getCharacteristicByItsName} from "../init";
+
 /**
  * @ngdoc function
  * @name micorrApp.controller:StratMorphologyCtrl
@@ -113,7 +116,7 @@ angular.module('micorrApp')
 
             if ($scope.selectedShapeFamily != null) {
 
-                var char = new characteristic.Characteristic();
+                var char = new Characteristic();
                 char.setFamily("shapeFamily");
                 char.setName($scope.selectedShapeFamily.name);
                 char.setRealName($scope.selectedShapeFamily.real_name);
@@ -121,21 +124,21 @@ angular.module('micorrApp')
             }
 
             if ($scope.selectedWidthFamily != null) {
-                var char = new characteristic.Characteristic();
+                var char = new Characteristic();
                 char.setFamily("widthFamily");
                 char.setName($scope.selectedWidthFamily.name);
                 char.setRealName($scope.selectedWidthFamily.real_name);
                 strata.replaceCharacteristic(char);
             }
             if ($scope.selectedThicknessFamily != null) {
-                var char = new characteristic.Characteristic();
+                var char = new Characteristic();
                 char.setFamily("thicknessFamily");
                 char.setName($scope.selectedThicknessFamily.name);
                 char.setRealName($scope.selectedThicknessFamily.real_name);
                 strata.replaceCharacteristic(char);
             }
             if ($scope.selectedContinuityFamily != null) {
-                var char = new characteristic.Characteristic();
+                var char = new Characteristic();
                 char.setFamily("continuityFamily");
                 char.setName($scope.selectedContinuityFamily.name);
                 char.setRealName($scope.selectedContinuityFamily.real_name);
@@ -143,7 +146,7 @@ angular.module('micorrApp')
             }
 
             if ($scope.selectedDirectionFamily != null) {
-                var char = new characteristic.Characteristic();
+                var char = new Characteristic();
                 char.setFamily("directionFamily");
                 char.setName($scope.selectedDirectionFamily.name);
                 char.setRealName($scope.selectedDirectionFamily.real_name);
@@ -151,7 +154,7 @@ angular.module('micorrApp')
             }
             if ($scope.selectedColourFamily != null) {
                 if (strata.findDependency('colourFamily')) {
-                    var char = new characteristic.Characteristic();
+                    var char = new Characteristic();
                     char.setFamily("colourFamily");
                     char.setName($scope.selectedColourFamily.name);
                     char.setRealName($scope.selectedColourFamily.real_name);
@@ -161,7 +164,7 @@ angular.module('micorrApp')
 
             if ($scope.selectedBrightnessFamily != null) {
                 if (strata.findDependency('brightnessFamily')) {
-                    var char = new characteristic.Characteristic();
+                    var char = new Characteristic();
                     char.setFamily("brightnessFamily");
                     char.setName($scope.selectedBrightnessFamily.name);
                     char.setRealName($scope.selectedBrightnessFamily.real_name);
@@ -170,7 +173,7 @@ angular.module('micorrApp')
             }
             if ($scope.selectedOpacityFamily != null) {
                 if (strata.findDependency('opacityFamily')) {
-                    var char = new characteristic.Characteristic();
+                    var char = new Characteristic();
                     char.setFamily("opacityFamily");
                     char.setName($scope.selectedOpacityFamily.name);
                     char.setRealName($scope.selectedOpacityFamily.real_name);
@@ -179,7 +182,7 @@ angular.module('micorrApp')
             }
             if ($scope.selectedMagnetismFamily != null) {
                 if (strata.findDependency('magnetismFamily')) {
-                    var char = new characteristic.Characteristic();
+                    var char = new Characteristic();
                     char.setFamily("magnetismFamily");
                     char.setName($scope.selectedMagnetismFamily.name);
                     char.setRealName($scope.selectedMagnetismFamily.real_name);

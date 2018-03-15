@@ -1,5 +1,7 @@
 'use strict';
 
+import {testUserInput} from "../init";
+
 /**
  * @ngdoc function
  * @name micorrApp.controller:ModalAddStratigraphyInstanceCtrl
@@ -23,7 +25,7 @@ angular.module('micorrApp')
             $scope.s = data['strats'];  // on récupère toutes les stratigraphies pour cet artefact
             // après on affiche dans la modal la stratigraphie sous forme :
             // artefact_stratigrahpyN
-            $scope.strat = $scope.artefactName + "_stratigraphy" + (parseInt($scope.s.length) + 1);
+            $scope.strat = $scope.artefactName + "_stratigraphy" + ($scope.s.length + 1);
         });
 
         // Si l'utilisateur valide le formulaire

@@ -1,4 +1,7 @@
 'use strict';
+import {Characteristic} from "../business/characteristic";
+import {SubCharacteristic} from "../business/subCharacteristic";
+import {getCharacteristicByItsName, getCharacteristicByItsNameMulti, returnSubCharacteristicsFromParent} from "../init";
 
 /**
  * @ngdoc function
@@ -141,7 +144,7 @@ angular.module('micorrApp')
 
             if ($scope.selectedCprimicrostructureFamily != null) {
                 if (strata.findDependency('cprimicrostructureFamily')) {
-                    var char = new characteristic.Characteristic();
+                    var char = new Characteristic();
                     char.setFamily("cpriMicrostructureFamily");
                     char.setName($scope.selectedCprimicrostructureFamily.name);
                     char.setRealName($scope.selectedCprimicrostructureFamily.real_name);
@@ -152,7 +155,7 @@ angular.module('micorrApp')
 
             if ($scope.selectedMmicrostructureFamily != null) {
                 if (strata.findDependency('mmicrostructureFamily')) {
-                    var char = new characteristic.Characteristic();
+                    var char = new Characteristic();
                     char.setFamily("mMicrostructureFamily");
 
 
@@ -167,7 +170,7 @@ angular.module('micorrApp')
             if ($scope.selectedCmlevelofcorrosionFamily != null) {
 
                 if (strata.findDependency('cmlevelofcorrosionFamily')) {
-                    var char = new characteristic.Characteristic();
+                    var char = new Characteristic();
                     char.setFamily("cmLevelOfCorrosionFamily");
 
                     char.setName($scope.selectedCmlevelofcorrosionFamily.name);
@@ -180,7 +183,7 @@ angular.module('micorrApp')
             /* cprimicrostructureaggregatecompositionFamily moved to stratComposition controller
             if ($scope.selectedCprimicrostructureaggregatecompositionFamily != null) {
                 if (strata.findDependency('cprimicrostructureaggregatecompositionFamily')) {
-                    var char = new characteristic.Characteristic();
+                    var char = new Characteristic();
                     char.setFamily("cpriMicrostructureAggregateCompositionFamily");
 
                     char.setName($scope.selectedCprimicrostructureaggregatecompositionFamily.name);
@@ -193,7 +196,7 @@ angular.module('micorrApp')
 
             if ($scope.selectedSubcmlevelofcorrosionFamily != null) {
                 if (strata.findDependency('subcmlevelofcorrosionFamily')) {
-                    var subChar = new subCharacteristic.SubCharacteristic();
+                    var subChar = new SubCharacteristic();
                     subChar.setFamily('subcmlevelofcorrosionFamily');
 
                     subChar.setName($scope.selectedSubcmlevelofcorrosionFamily.name);
@@ -206,7 +209,7 @@ angular.module('micorrApp')
             if (strata.findDependency('submmicrostructureFamily')) {
                 strata.clearSubCharacteristicsFromFamily('submmicrostructureFamily');
                 for (var i = 0; i < $scope.selectedSubmmicrostructureFamily.length; i++) {
-                    var subChar = new subCharacteristic.SubCharacteristic();
+                    var subChar = new SubCharacteristic();
                     subChar.setName($scope.selectedSubmmicrostructureFamily[i].name);
                     subChar.setUid($scope.selectedSubmmicrostructureFamily[i].uid);
                     subChar.setFamily('submmicrostructureFamily');
@@ -218,7 +221,7 @@ angular.module('micorrApp')
 
                 strata.clearSubCharacteristicsFromFamily('subcprimicrostructureFamily');
                 for (var i = 0; i < $scope.selectedSubcprimicrostructureFamily.length; i++) {
-                    var subChar = new subCharacteristic.SubCharacteristic();
+                    var subChar = new SubCharacteristic();
                     var test = $scope.selectedSubcprimicrostructureFamily[i];
                     subChar.setName($scope.selectedSubcprimicrostructureFamily[i].name);
                     subChar.setUid($scope.selectedSubcprimicrostructureFamily[i].uid);
@@ -232,7 +235,7 @@ angular.module('micorrApp')
                 var childCP = strata.getChildStrataByNature('Corrosion products');
                 childCP.clearCharacteristicsFromFamily('cmCpMicrostructureFamily');
                 for (var i = 0; i < $scope.selectedCmcpmicrostructureFamily.length; i++) {
-                    var char = new characteristic.Characteristic();
+                    var char = new Characteristic();
                     char.setFamily("cmCpMicrostructureFamily");
                     char.setName($scope.selectedCmcpmicrostructureFamily[i].name);
                     char.setRealName($scope.selectedCmcpmicrostructureFamily[i].real_name);
