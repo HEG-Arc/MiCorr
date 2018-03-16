@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "webpack --config webpack.config.js"
+    "build": "webpack --config webpack.config.js"
   },
   "author": "",
   "license": "ISC",
@@ -27,6 +27,7 @@
     "imports-loader": "^0.8.0",
     "jquery": "^2.1.4",
     "jquery-ui": "^1.12.1",
+    "svg.js": "^2.6.4",
     "ui-select": "^0.20.0"
   }
 }

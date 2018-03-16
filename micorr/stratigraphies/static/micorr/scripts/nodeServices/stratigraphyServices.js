@@ -9,6 +9,8 @@ var Characteristic = require('../business/characteristic').Characteristic;
 var SubCharacteristic = require('../business/subCharacteristic').SubCharacteristic;
 var GraphGenerationUtil = require('../utils/graphGenerationUtil').GraphGenerationUtil;
 
+//import {GraphGenerationUtil} from "../utils/graphGenerationUtil";
+
 var url = process.env.DJANGO_SERVICE_URL || "http://django:5000/micorr";
 console.log('stratigrapyService.js: DJANGO_SERVICE_URL='+url);
 
@@ -44,22 +46,22 @@ module.exports = {
                 }
 
                 //Boucle sur les characteristiques d'interface
-                for (var j = 0; j < currentStrata.interfaces.characteristics.length; j++) {
-                    var currentCharacteristic = currentStrata.interfaces.characteristics[j];
-                    var char = new Characteristic();
-                    char.setName(currentCharacteristic.name);
-                    char.setFamily(currentCharacteristic.family);
-                    char.setInterface(true);
-
-                    //Si c'est une caracteristique d'une de ces familles on peut en ajouter plusieurs
-                    if (char.getFamily() == "cpcompositionextensionFamily" || char.getFamily() == "cprimicrostructureaggregatecompositionextensionFamily") {
-                        strata.addCharacteristic(char)
+                if (currentStrata.interfaces && currentStrata.interfaces.characteristics)
+                    for (var j = 0; j < currentStrata.interfaces.characteristics.length; j++) {
+                        var currentCharacteristic = currentStrata.interfaces.characteristics[j];
+                        var char = new Characteristic();
+                        char.setName(currentCharacteristic.name);
+                        char.setFamily(currentCharacteristic.family);
+                        char.setInterface(true);
+                        //Si c'est une caracteristique d'une de ces familles on peut en ajouter plusieurs
+                        if (char.getFamily() == "cpcompositionextensionFamily" || char.getFamily() == "cprimicrostructureaggregatecompositionextensionFamily") {
+                            strata.addCharacteristic(char)
+                        }
+                        else {
+                            //Sinon, il n'y en a que une donc on la remplace
+                            strata.replaceCharacteristic(char);
+                        }
                     }
-                    else {
-                        //Sinon, il n'y en a que une donc on la remplace
-                        strata.replaceCharacteristic(char);
-                    }
-                }
 
                 //Boucle sur les sous characteristiques
                 for (var j = 0; j < currentStrata.subcharacteristics.length; j++) {

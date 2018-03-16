@@ -10,10 +10,9 @@ import {Characteristic} from '../business/characteristic';
 import {SubCharacteristic} from '../business/subCharacteristic';
 import {PoissonDiskSampler} from '../algorithms/poissonDisk';
 
-/* Here we use CommonJS style import with webpack import-loader to turn around this/window test issue in svg.js
- module export code ( see https://github.com/svgdotjs/svg.js/issues/767 ) */
-const SVG = require("imports-loader?define=>false!../dependencies/svg.js");
+import * as utils from '../nodeServices/nodeUtils.js';
 
+var SVG;
 
 class GraphGenerationUtil {
     constructor(win, stratig) {
@@ -22,8 +21,11 @@ class GraphGenerationUtil {
             /*On appelle la librairie SVG.js depuis un module Node.js car celle ci
              n'est pas compatible avec ES2015 si l'on veut lui donner le paramètre window
              */
-            utils.getDrawer(win);
+            //SVG= utils.getDrawer(win);
+            SVG=require('svg.js')(win);
         }
+        else
+            SVG = require("svg.js");
         this.stratig = stratig;
     }
 
@@ -842,8 +844,8 @@ class GraphGenerationUtil {
     addImage(draw, url, width, height) {
         if (this.window) //node case we embed the images (svg and png) as datauri
         {
-//            const Datauri = require('datauri');
-//            url = new Datauri(url).content;
+            const Datauri = require('datauri');
+            url = new Datauri(url).content;
         }
         var image = draw.image(url);
         image.size(width, height);

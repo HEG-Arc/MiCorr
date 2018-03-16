@@ -11,6 +11,7 @@ module.exports = {
      */
     getDrawer(win){
         const SVG=require('svg.js')(win);
+        return(SVG);
         //var drawer =  SVG(win.document.documentElement);
         //var absorb = require('../dependencies/svg.absorb.js')(win);
     },

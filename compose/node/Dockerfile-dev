@@ -1,14 +1,20 @@
-FROM node:8.3.0
+FROM node:8.10.0-stretch
 
 EXPOSE 8080
 
 # we must use at least inkscape 0.91 for svg export so activate jessie-backports
-RUN echo "deb http://ftp.debian.org/debian jessie-backports main" >>/etc/apt/sources.list
-RUN apt-get update && apt-get -t jessie-backports install -y inkscape
+# RUN echo "deb http://ftp.debian.org/debian jessie-backports main" >>/etc/apt/sources.list
+# RUN apt-get update && apt-get -t jessie-backports install -y inkscape
+RUN apt update && apt install -y inkscape
 
-RUN npm install -g grunt-cli@1.2.0 forever@0.15.3
+RUN npm install -g forever@0.15.3
 
 WORKDIR /app
 
+
+# in docker dev as micorr root folder is mounted in /app
+# we can't install npm in the image so we do it on container execution instead
+# tranpile es6 sources from micorr/stratigraphies/static/micorr/scripts/ (see pacage.json script)
+
 # start serveur
-CMD npm install  && forever micorr/stratigraphies/static/micorr/scripts/nodeServices/server.js
+CMD npm install && npm run build && forever /app/dist/nodeServices/server.js

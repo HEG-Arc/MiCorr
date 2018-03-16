@@ -38,9 +38,9 @@ server.listen(PORT, function () {
 
     console.log("Server listening on: http://localhost:%s", PORT);
     console.log('Current directory: ' + process.cwd());
-    // Change working dir to /app/micorr/stratigraphies/static to access svg and png files
-    // referred to as ../static/micorr/...
-    process.chdir(__dirname + "/../../../");
+    // Change working dir to /app/dist/nodeServices to access svg and png files
+    // referred to as ../static/micorr/... in /app/dist/static
+    process.chdir(__dirname);
     console.log('Change dir to: ' + process.cwd());
 });
 
