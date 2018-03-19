@@ -103,25 +103,16 @@ angular.module('micorrApp')
             $scope.showNmmcomposition = false;
             $scope.showDcomposition = false;
             $scope.showPomcomposition = false;
-            $scope.showCpcomposition = false;
-            $scope.showCmcomposition = false;
-            $scope.showMcomposition = false;
+
             $scope.showinterfacetransition = false;
             $scope.showinterfaceroughness = false;
             $scope.showinterfaceadherence = false;
             $scope.showCmlevelofcorrosionFamily = false;
-            $scope.showcpcompositionextensionfamily = false;
-            $scope.showcprimicrostructureaggregatecompositionFamily = false;
-            $scope.showcprimicrostructureaggregatecompositionextensionFamily = false;
-            $scope.showsubcpcompositionFamily = false;
-            $scope.showsubsubcpcompositionFamily = false;
+
             $scope.showsubcprimicrostructureFamily = false;
-            $scope.showsubcprimicrostructureaggregatecompositionFamily = false;
-            $scope.showsubsubcprimicrostructureaggregatecompositionFamily = false;
-            $scope.showsubcmcompositionFamily = false;
+
             $scope.showsubcmlevelofcorrosionFamily = false;
             $scope.showsubmmicrostructureFamily = false;
-            $scope.showsubmcompositionFamily = false;
 
 
             //Chargement de la stratigraphie
@@ -421,22 +412,16 @@ angular.module('micorrApp')
                 $scope.showcpCompositionCompounds = str.findDependency('cpCompositionCompounds');
                 $scope.showcpCompositionAdditionalElements = str.findDependency('cpCompositionAdditionalElements');
 
-                $scope.showCmcomposition = str.findDependency('cmcompositionFamily');
                 $scope.showmCompositionMainElements = str.findDependency('mCompositionMainElements');
                 $scope.showinterfaceprofileFamily = str.findDependency('interfaceprofileFamily');
                 $scope.showinterfacetransition = str.findDependency('interfacetransitionFamily');
                 $scope.showinterfaceroughness = str.findDependency('interfaceroughnessFamily');
                 $scope.showinterfaceadherence = str.findDependency('interfaceadherenceFamily');
                 $scope.showCmlevelofcorrosionFamily = str.findDependency('cmlevelofcorrosionFamily');
-                $scope.showcpcompositionextensionfamily = str.findDependency('cpcompositionextensionFamily');
-                $scope.showsubcmcompositionFamily = str.findDependency('subcmcompositionFamily');
+
                 $scope.showsubcmlevelofcorrosionFamily = str.findDependency('subcmlevelofcorrosionFamily');
                 $scope.showsubmmicrostructureFamily = str.findDependency('submmicrostructureFamily');
 
-                $scope.showcpSdyCptMainElements = str.findDependency('cpSdyCptMainElements');
-                $scope.showcpSdyCptSecondaryElements = str.findDependency('cpSdyCptSecondaryElements');
-                $scope.showcpSdyCptCompounds = str.findDependency('cpSdyCptCompounds');
-                $scope.showcpSdyCptAdditionalElements = str.findDependency('cpSdyCptAdditionalElements');
 
                 $scope.showcprimicrostructureFamily = str.findDependency('cprimicrostructureFamily');
                 $scope.showmCompositionSecondaryElements = str.findDependency('mCompositionSecondaryElements');
@@ -453,19 +438,19 @@ angular.module('micorrApp')
                     else
                         $scope.cpriMicrostructureOptionTitle = "Aggregate";
                     $scope.showsubcprimicrostructureFamily = str.findDependency('subcprimicrostructureFamily');
-                    $scope.showsubcprimicrostructureaggregatecompositionFamily = str.findDependency('subcprimicrostructureaggregatecompositionFamily');
-                    $scope.showsubsubcprimicrostructureaggregatecompositionFamily = str.findDependency('subsubcprimicrostructureaggregatecompositionFamily');
-                    $scope.showcprimicrostructureaggregatecompositionFamily = str.findDependency('cprimicrostructureaggregatecompositionFamily');
-                    $scope.showcprimicrostructureaggregatecompositionextensionFamily = str.findDependency('cprimicrostructureaggregatecompositionextensionFamily');
+
+                    $scope.showcpSdyCptMainElements = str.findDependency('cpSdyCptMainElements');
+                    $scope.showcpSdyCptSecondaryElements = str.findDependency('cpSdyCptSecondaryElements');
+                    $scope.showcpSdyCptCompounds = str.findDependency('cpSdyCptCompounds');
+                    $scope.showcpSdyCptAdditionalElements = str.findDependency('cpSdyCptAdditionalElements');
                 }
                 else {
                     $scope.showsubcprimicrostructureFamily = false;
-                    $scope.showsubcprimicrostructureaggregatecompositionFamily = false;
-                    $scope.showsubsubcprimicrostructureaggregatecompositionFamily = false;
-                    $scope.showcprimicrostructureaggregatecompositionFamily = false;
-                    $scope.showcprimicrostructureaggregatecompositionextensionFamily = false;
+                    $scope.showcpSdyCptMainElements = false;
+                    $scope.showcpSdyCptSecondaryElements = false;
+                    $scope.showcpSdyCptCompounds = false;
+                    $scope.showcpSdyCptAdditionalElements = false;
                 }
-
                 if (str.getNature() == 'Metal') {
                     $scope.showAddCorrodedMetalStrata = true;
                 } else {

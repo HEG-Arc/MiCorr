@@ -245,9 +245,7 @@ let StratigraphyData =  angular.module('micorrApp').factory('StratigraphyData', 
                 this.dcompositionFamily = parseCharasteristic('dCompositionFamily');
                 this.pomcompositionFamily = parseCharasteristic('pomCompositionFamily');
 
-                this.cpcompositionFamily = parseCharasteristic('cpCompositionFamily');
-                this.cmcompositionFamily = parseCharasteristic('cmCompositionFamily');
-                this.cmcpaggregateCompositionFamily = parseCharasteristic('cmCpAggregatesCompositionFamily');
+
                 this.cmlevelofcorrosionFamily = parseCharasteristic('cmLevelOfCorrosionFamily');
                 this.cprimicrostructureFamily = parseCharasteristic('cpriMicrostructureFamily');
                 this.cmcpmicrostructureFamily = parseCharasteristic('cmCpMicrostructureFamily');
@@ -256,16 +254,9 @@ let StratigraphyData =  angular.module('micorrApp').factory('StratigraphyData', 
                 this.interfacetransitionFamily = parseCharasteristic('interfaceTransitionFamily');
                 this.interfaceroughnessFamily = parseCharasteristic('interfaceRoughnessFamily');
                 this.interfaceadherenceFamily = parseCharasteristic('interfaceAdherenceFamily');
-                this.subcpcompositionFamily = getSubCharacteristicsFromFamily('cpCompositionFamily', 'sub');
-                this.subsubcpcompositionFamily = getSubCharacteristicsFromFamily('cpCompositionFamily', 'subsub');
-                this.cpcompositionextensionFamily = parseCharasteristic('cpCompositionExtensionFamily');
-                this.cprimicrostructureaggregatecompositionFamily = parseCharasteristic('cpriMicrostructureAggregateCompositionFamily');
-                this.cprimicrostructureaggregatecompositionextensionFamily = parseCharasteristic('cpriMicrostructureAggregateCompositionExtensionFamily');
                 this.submmicrostructureFamily = getSubCharacteristicsFromFamily('mMicrostructureFamily', 'sub');
                 this.subcprimicrostructureFamily = getSubCharacteristicsFromFamily('cpriMicrostructureFamily', 'sub');
-                this.subcprimicrostructureaggregatecompositionFamily = getSubCharacteristicsFromFamily('cpriMicrostructureAggregateCompositionFamily', 'sub');
-                this.subsubcprimicrostructureaggregatecompositionFamily = getSubCharacteristicsFromFamily('cpriMicrostructureAggregateCompositionFamily', 'subsub');
-                this.subcmcompositionFamily = getSubCharacteristicsFromFamily('cmCompositionFamily', 'sub');
+
                 this.subcmLevelOfCorrosionFamily = getSubCharacteristicsFromFamily('cmLevelOfCorrosionFamily', 'sub');
             },
             getRawCharacteristics: function () {
@@ -292,60 +283,13 @@ let StratigraphyData =  angular.module('micorrApp').factory('StratigraphyData', 
             getSubcmLevelOfCorrosionFamily: function () {
                 return this.subcmLevelOfCorrosionFamily;
             },
-            setSubcmcompositionFamily: function (subcmcompositionFamily) {
-                this.subcmcompositionFamily = subcmcompositionFamily;
-            },
-            getSubcmcompositionFamily: function () {
-                return this.subcmcompositionFamily;
-            },
-            setSubsubcprimicrostructureaggregatecompositionFamily: function (subsubcprimicrostructureaggregatecompositionFamily) {
-                this.subsubcprimicrostructureaggregatecompositionFamily = subsubcprimicrostructureaggregatecompositionFamily;
-            },
-            getSubsubcprimicrostructureaggregatecompositionFamily: function () {
-                return this.subsubcprimicrostructureaggregatecompositionFamily;
-            },
-            setSubcprimicrostructureaggregatecompositionFamily: function (subcprimicrostructureaggregatecompositionFamily) {
-                this.subcprimicrostructureaggregatecompositionFamily = subcprimicrostructureaggregatecompositionFamily;
-            },
-            getSubcprimicrostructureaggregatecompositionFamily: function () {
-                return this.subcprimicrostructureaggregatecompositionFamily;
-            },
             setSubcprimicrostructureFamily: function (subcprimicrostructureFamily) {
                 this.subcprimicrostructureFamily = subcprimicrostructureFamily;
             },
             getSubcprimicrostructureFamily: function () {
                 return this.subcprimicrostructureFamily;
             },
-            setSubsubcpcompositionFamily: function (subsubcpcompositionFamily) {
-                this.subsubcpcompositionFamily = subsubcpcompositionFamily;
-            },
-            getSubsubcpcompositionFamily: function () {
-                return this.subsubcpcompositionFamily;
-            },
-            getSubcpcompositionFamily: function () {
-                return this.subcpcompositionFamily;
-            },
-            setSubcpcompositionFamily: function (subcpcompositionFamily) {
-                this.subcpcompositionFamily = subcpcompositionFamily;
-            },
-            setCprimicrostructureaggregatecompositionextensionFamily: function (cprimicrostructureaggregatecompositionextensionFamily) {
-                this.cprimicrostructureaggregatecompositionextensionFamily = cprimicrostructureaggregatecompositionextensionFamily;
-            },
-            getCprimicrostructureaggregatecompositionextensionFamily: function () {
-                return this.cprimicrostructureaggregatecompositionextensionFamily;
-            },
-            getCprimicrostructureaggregatecompositionFamily: function () {
-                return this.cprimicrostructureaggregatecompositionFamily;
-            },
-            setCprimicrostructureaggregatecompositionFamily: function (cprimicrostructureaggregatecompositionFamily) {
-                this.cprimicrostructureaggregatecompositionFamily = cprimicrostructureaggregatecompositionFamily;
-            },
-            setCpcompositionextensionFamily: function (cpcompositionextensionFamily) {
-                this.cpcompositionextensionFamily = cpcompositionextensionFamily;
-            },
-            getCpcompositionextensionFamily: function () {
-                return this.cpcompositionextensionFamily;
-            },
+
             setCmlevelofcorrosionFamily: function (cmlevelofcorrosionFamily) {
                 this.cmlevelofcorrosionFamily = cmlevelofcorrosionFamily;
             },
@@ -387,18 +331,6 @@ let StratigraphyData =  angular.module('micorrApp').factory('StratigraphyData', 
             },
             getInterfaceprofileFamily: function () {
                 return this.interfaceprofileFamily;
-            },
-            setCmcompositionFamily: function (cmcompositionFamily) {
-                this.cmcompositionFamily = cmcompositionFamily;
-            },
-            getCmcompositionFamily: function () {
-                return this.cmcompositionFamily;
-            },
-            getCpcompositionFamily: function () {
-                return this.cpcompositionFamily;
-            },
-            setCpcompositionFamily: function (cpcompositionFamily) {
-                this.cpcompositionFamily = cpcompositionFamily;
             },
             setPomcompositionFamily: function (pomcompositionFamily) {
                 this.pomcompositionFamily = pomcompositionFamily;
@@ -514,17 +446,8 @@ let StratigraphyData =  angular.module('micorrApp').factory('StratigraphyData', 
             getDirectionFamily: function () {
                 return this.directionFamily;
             },
-            setCmcpmicrostructureFamily: function (cpcompositionextensionFamily) {
-                this.cmcpmicrostructureFamily = cpcompositionextensionFamily;
-            },
             getCmcpmicrostructureFamily: function () {
                 return this.cmcpmicrostructureFamily;
-            },
-            setCmcpaggregateCompositionFamily: function (cmcpaggregateCompositionFamily) {
-                return this.cmcpaggregateCompositionFamily;
-            },
-            getCmcpaggregateCompositionFamily: function () {
-                return this.cmcpaggregateCompositionFamily;
             }
         }
     };

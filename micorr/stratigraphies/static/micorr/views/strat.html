@@ -564,20 +564,6 @@
             </div>
         </div>
         <div class="row-fluid">
-            <div ng-show="showCmcomposition" class="col-md-6 form-group">
-                <label for="cmCompositionFamily">Composition</label>
-                <select id="cmCompositionFamily" class="form-control" ng-model="selectedCmcompositionFamily"
-                        ng-options="x.real_name for x in cmcompositionFamily" ng-change="upComposition2()">
-                </select>
-            </div>
-            <div ng-show="showsubcmcompositionFamily" class="col-md-6 form-group">
-                <label for="subcmcompositionFamily">Sub CM composition</label>
-                <select id="subcmcompositionFamily" class="form-control" ng-model="selectedSubcmcompositionFamily"
-                        ng-options="x.sub_real_name for x in subcmcompositionFamily" ng-change="upComposition()">
-                </select>
-            </div>
-        </div>
-        <div class="row-fluid">
             <div ng-show="showmCompositionMainElements" class="col-md-6 form-group">
                 <label for="mCompositionMainElements"><span class="glyphicon glyphicon-eye-close"
                                                       title="no visual impact on the stratum"></span>
@@ -668,10 +654,10 @@
         </div>
         <div class="row-fluid">
 
-            <div class="col-md-12 form-group" ng-show="showcpcompositionextensionfamily">
+            <div class="col-md-12 form-group" ng-show="showcpCompositionAdditionalElements">
                 <label class="control-label"><span class="glyphicon glyphicon-eye-close"
                                                    title="no visual impact on the stratum"></span>
-                     <span title="{{ descriptions.cpcompositionextensionFamily }}">Additional element(s)</span>
+                     <span title="{{ descriptions.cpCompositionAdditionalElements }}">Additional element(s)</span>
                 </label>
                  <ui-select id="cpCompositionAdditionalElements" class="form-control" multiple
                            theme="bootstrap"
@@ -691,10 +677,10 @@
         <!-- CP Microstructure composition -->
         <div ng-repeat='secondaryComponent in secondaryComponents'>
         <div class="row-fluid">
-            <div ng-show="showcprimicrostructureaggregatecompositionFamily" class="col-md-6 form-group">
-                <label for="cprimicrostructureaggregatecompositionFamily"><span class="glyphicon glyphicon-eye-close"
+            <div ng-show="showcpSdyCptMainElements" class="col-md-6 form-group">
+                <label for="{{'cpSdyCpt' + $index + 'mainElements'}}"><span class="glyphicon glyphicon-eye-close"
                                                        title="no visual impact on the stratum"></span>
-                    <span title="cprimicrostructureaggregatecompositionFamily No description available">{{ cpriMicrostructureOptionTitle }} main element</span>
+                    <span title="{{ descriptions.cpSdyCptMainElements }}">{{ cpriMicrostructureOptionTitle }} main element(s)</span>
                 </label>
                   <ui-select id="{{'cpSdyCpt' + $index + 'mainElements'}}" class="form-control" multiple
                            theme="bootstrap"
@@ -712,10 +698,10 @@
             </div>
         </div>
         <div class="row-fluid">
-            <div ng-show="showsubcprimicrostructureaggregatecompositionFamily" class="col-md-6 form-group">
-                <label for="subcprimicrostructureaggregatecompositionFamily"><span class="glyphicon glyphicon-eye-close"
+            <div ng-show="showcpSdyCptSecondaryElements" class="col-md-6 form-group">
+                <label for="{{'cpSdyCpt' + $index + 'secondaryElements'}}"><span class="glyphicon glyphicon-eye-close"
                                                           title="no visual impact on the stratum"></span>
-                    <span title="{{ descriptions.subcprimicrostructureaggregatecompositionFamily }}">{{ cpriMicrostructureOptionTitle }}  secondary element(s)</span>
+                    <span title="{{ descriptions.cpSdyCptSecondaryElements }}">{{ cpriMicrostructureOptionTitle }}  secondary element(s)</span>
                 </label>
                  <ui-select id="{{'cpSdyCpt' + $index + 'secondaryElements'}}" class="form-control" multiple
                            theme="bootstrap"
@@ -731,12 +717,12 @@
                     </ui-select-choices>
                 </ui-select>
             </div>
-            <div ng-show="showsubsubcprimicrostructureaggregatecompositionFamily" class="col-md-6 form-group">
-                <label for="subsubcprimicrostructureaggregatecompositionFamily"><span class="glyphicon glyphicon-eye-close"
+            <div ng-show="showcpSdyCptCompounds" class="col-md-6 form-group">
+                <label for="{{'cpSdyCpt' + $index + 'Compounds' }}"><span class="glyphicon glyphicon-eye-close"
                                                              title="no visual impact on the stratum"></span>
-                    <span title="{{ descriptions.subsubcprimicrostructureaggregatecompositionFamily }}">{{ cpriMicrostructureOptionTitle }}  compound</span>
+                    <span title="{{ descriptions.cpSdyCptCompounds }}">{{ cpriMicrostructureOptionTitle }}  compound</span>
                 </label>
-                <ui-select id="{{'cpSdyCpt' + $index + 'filterCompoundsMethod'" ng-model="secondaryComponent.filterCompoundsMethod.selected"  theme="bootstrap">
+                <ui-select id="{{'cpSdyCpt' + $index + 'filterCompoundsMethod'}}" ng-model="secondaryComponent.filterCompoundsMethod.selected"  theme="bootstrap">
                      <ui-select-match placeholder="Search compounds...">
                         {{$select.selected.text}}
                     </ui-select-match>

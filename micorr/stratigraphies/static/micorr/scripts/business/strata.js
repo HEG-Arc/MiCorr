@@ -495,20 +495,14 @@ class Strata {
                 this.addDependency('interfacetransitionFamily');
                 this.addDependency('interfaceroughnessFamily');
                 this.addDependency('interfaceadherenceFamily');
-                this.addDependency('cpcompositionextensionFamily');
+
                 this.addDependency('cpCompositionMainElements');
                 this.addDependency('cpCompositionSecondaryElements');
                 this.addDependency('cpCompositionCompounds');
                 this.addDependency('cpCompositionAdditionalElements');
 
                 this.addDependency('cprimicrostructureFamily');
-                this.addDependency('cprimicrostructureaggregatecompositionFamily');
-                this.addDependency('cprimicrostructureaggregatecompositionextensionFamily');
                 this.addDependency('subcprimicrostructureFamily');
-                this.addDependency('subcprimicrostructureaggregatecompositionFamily');
-                this.addDependency('subsubcprimicrostructureaggregatecompositionFamily');
-                // => to be replaced by:
-                //cp Secondary Components dependencies
                 this.addDependency('cpSdyCptMainElements');
                 this.addDependency('cpSdyCptSecondaryElements');
                 this.addDependency('cpSdyCptCompounds');

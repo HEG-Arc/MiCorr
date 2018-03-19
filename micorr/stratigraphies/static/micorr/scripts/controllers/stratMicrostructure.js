@@ -16,7 +16,6 @@ angular.module('micorrApp')
         //valeurs sélectionnées dans les champs de notre formulaire
         //todo DRY check - update then replace following statements by call to emptyFields
         $scope.selectedSubcprimicrostructureFamily = [];
-        $scope.selectedCprimicrostructureaggregatecompositionExtensionFamily = [];
         $scope.selectedSubmmicrostructureFamily = [];
         $scope.selectedCmcpmicrostructureFamily = [];
         function emptyFields() {
@@ -24,11 +23,6 @@ angular.module('micorrApp')
             $scope.selectedCprimicrostructureFamily = null;
             $scope.selectedMmicrostructureFamily = null;
             $scope.selectedCmlevelofcorrosionFamily = null;
-            /* cprimicrostructureaggregatecompositionFamily moved to stratComposition controller
-            $scope.selectedCprimicrostructureaggregatecompositionFamily = null;
-            */
-            $scope.selectedSubcprimicrostructureaggregatecompositionFamily = null;
-            $scope.selectedSubsubcprimicrostructureaggregatecompositionFamily = null;
             $scope.selectedSubcmlevelofcorrosionFamily = null;
             $scope.selectedCmcpmicrostructureFamily = [];
 
@@ -41,10 +35,7 @@ angular.module('micorrApp')
 
             $scope.mmicrostructureFamily = StratigraphyData.getMmicrostructureFamily()['characteristics'];
             $scope.cmlevelofcorrosionFamily = StratigraphyData.getCmlevelofcorrosionFamily()['characteristics'];
-            $scope.cprimicrostructureaggregatecompositionExtensionFamily = StratigraphyData.getCprimicrostructureaggregatecompositionextensionFamily()['characteristics'];
             $scope.subcprimicrostructureFamily = StratigraphyData.getSubcprimicrostructureFamily();
-            $scope.subcprimicrostructureaggregatecompositionFamily = StratigraphyData.getSubcprimicrostructureaggregatecompositionFamily();
-            $scope.subsubcprimicrostructureaggregatecompositionFamily = StratigraphyData.getSubsubcprimicrostructureaggregatecompositionFamily();
             $scope.subcmlevelofcorrosionFamily = StratigraphyData.getSubcmLevelOfCorrosionFamily();
             $scope.submmicrostructureFamily = StratigraphyData.getSubmmicrostructureFamily();
             $scope.cmcpmicrostructureFamily = StratigraphyData.getCmcpmicrostructureFamily()['characteristics'];
@@ -82,11 +73,7 @@ angular.module('micorrApp')
             if (strata.getCharacteristicsByFamily("cmLevelOfCorrosionFamily").length > 0) {
                 $scope.selectedCmlevelofcorrosionFamily = getCharacteristicByItsName($scope.cmlevelofcorrosionFamily, strata.getCharacteristicsByFamily("cmLevelOfCorrosionFamily")[0].getName());
             }
-            /* cprimicrostructureaggregatecompositionFamily moved to stratComposition controller
-            if (strata.getCharacteristicsByFamily('cpriMicrostructureAggregateCompositionFamily').length > 0) {
-                $scope.selectedCprimicrostructureaggregatecompositionFamily = getCharacteristicByItsName($scope.cprimicrostructureaggregatecompositionFamily, strata.getCharacteristicsByFamily("cpriMicrostructureAggregateCompositionFamily")[0].getName());
-            }
-            */
+
             //Reprise des characteristiques de microstructure pour la strate CM
             if (strata.getNature() == 'Corroded metal') {
                 var CPChild = strata.getChildStrataByNature('Corrosion products');
@@ -120,16 +107,6 @@ angular.module('micorrApp')
             else{
                 $scope.selectedSubmmicrostructureFamily = [];
             }
-
-            if (strata.getSubCharacteristicsByFamily('cprimicrostructureaggregatecompositionextensionFamily').length > 0) {
-                if (strata.findDependency('cprimicrostructureaggregatecompositionextensionFamily')) {
-                    $scope.selectedCprimicrostructureaggregatecompositionExtensionFamily = getCharacteristicByItsNameMulti($scope.cprimicrostructureaggregatecompositionExtensionFamily, strata.getCharacteristicsByFamily('cprimicrostructureaggregatecompositionextensionFamily'));
-                }
-            }
-            else{
-                $scope.selectedCprimicrostructureaggregatecompositionExtensionFamily = [];
-            }
-
 
         });
 
@@ -180,19 +157,6 @@ angular.module('micorrApp')
                 }
             }
 
-            /* cprimicrostructureaggregatecompositionFamily moved to stratComposition controller
-            if ($scope.selectedCprimicrostructureaggregatecompositionFamily != null) {
-                if (strata.findDependency('cprimicrostructureaggregatecompositionFamily')) {
-                    var char = new Characteristic();
-                    char.setFamily("cpriMicrostructureAggregateCompositionFamily");
-
-                    char.setName($scope.selectedCprimicrostructureaggregatecompositionFamily.name);
-                    char.setRealName($scope.selectedCprimicrostructureaggregatecompositionFamily.real_name);
-
-                    strata.replaceCharacteristic(char);
-                }
-            }
-            */
 
             if ($scope.selectedSubcmlevelofcorrosionFamily != null) {
                 if (strata.findDependency('subcmlevelofcorrosionFamily')) {
@@ -247,28 +211,5 @@ angular.module('micorrApp')
             //Update formulaire pour afficher/masquer les sub/cpri microstructure
             $scope.$emit('updateFormOnly');
         };
-
-
-        /* est appelé quand la valeur du champ cprimicrostructurecompositionextension change
-         * sert à mettre  jour les données des formulaire
-         */
-        $scope.upMicrostructure2 = function () {
-            var strata = StratigraphyData.getStratigraphy().getStratas()[StratigraphyData.getSelectedStrata()];
-            $scope.subcprimicrostructureaggregatecompositionFamily = returnSubCharacteristicsFromParent(StratigraphyData.getRawCharacteristics(), 'cpriMicrostructureAggregateCompositionFamily', strata.getCharacteristicByFamily('cpriMicrostructureAggregateCompositionFamily')[0].getName(), '');
-            $scope.selectedSubcprimicrostructureaggregatecompositionFamily = getCharacteristicByItsName($scope.subcprimicrostructureaggregatecompositionFamily, strata.getSubCharacteristicsByFamily('subcprimicrostructureaggregatecompositionFamily'));
-
-            $scope.$emit('updateFormOnly');
-        };
-
-        /* est appelé quand la valeur du champ subcprimicrostructurecompositionextension change
-         * sert à mettre  jour les données des formulaire
-         * Cette méthode n'est plus utilisée
-         */
-        $scope.upMicrostructure3 = function () {
-            /* CETTE METHODE NE DEVRAIT PLUS ETRE UTILISEE
-            */
-            $scope.$emit('updateFormOnly');
-        };
-
 
     });
