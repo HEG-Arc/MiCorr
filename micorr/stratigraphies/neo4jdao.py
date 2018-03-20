@@ -164,7 +164,7 @@ class Neo4jDAO:
                             {'name': record.char_or_ctn['uid'], 'family': record['family.uid'],
                              'real_name': record.char_or_ctn['name'],
                              'order': record.char_or_ctn['order'], 'visible': record.char_or_ctn['visible']})
-                    elif 'Container' in record.char_or_ctn.labels:
+                    elif 'Container' in record.char_or_ctn.labels and record.elem_or_cpnd:
                         secondary_components[0]['containers'][record['family.uid']].append(
                             convert_elem_or_cpnd(record.elem_or_cpnd.properties))
 
