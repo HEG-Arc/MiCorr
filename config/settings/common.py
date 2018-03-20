@@ -66,6 +66,7 @@ THIRD_PARTY_APPS = (
     'wagtail.wagtailredirects',
     'wagtail.contrib.wagtailsitemaps',
     'wagtail.contrib.settings',
+    'wagtail.contrib.modeladmin',
     # end wagtail apps
     'robots',
     'simplejson',
