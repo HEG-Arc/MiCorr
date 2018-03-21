@@ -16,7 +16,7 @@ from stratigraphies.neo4jdao import Neo4jDAO
 from django.contrib.contenttypes.models import ContentType
 from users.models import User
 
-class UserDetailView(generic.DetailView):
+class UserDetailView(LoginRequiredMixin, generic.DetailView):
     model = User
     # These next two lines tell the view to index lookups by username
     slug_field = 'username'
