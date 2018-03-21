@@ -76,7 +76,7 @@ def top_menu(context, parent, calling_page=None, cssclass=None, hidetoplogo=None
         'cssclass': cssclass,
         'hidetoplogo': hidetoplogo,
         # required by the pageurl tag that we want to use within this template
-        'request': context['request'],
+        'request': context.get('request'),
     }
 
 
