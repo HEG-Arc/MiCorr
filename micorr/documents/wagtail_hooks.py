@@ -1,5 +1,11 @@
+# Allows Glossary administration from Wagtail
+#
+# in this module (name must be wagtail_hooks.py for auto-discovery by wagtail app)
+# We register TermModelAdmin in wagtail for Term django-term app's Model
+# see http://docs.wagtail.io/en/v2.0/reference/contrib/modeladmin/index.html
+
 from wagtail.contrib.modeladmin.options import ModelAdmin, modeladmin_register
-from .models import Term
+from terms.models import Term
 
 
 
