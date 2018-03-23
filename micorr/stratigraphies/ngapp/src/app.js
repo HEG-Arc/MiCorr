@@ -26,22 +26,22 @@ export default angular
         $routeProvider
             // affichage de la liste des stratigraphies
             .when('/artefact/:name', {
-                templateUrl: '../static/micorr/views/artefact.html',
+                template: require('../views/artefact.html'),
                 controller: 'ShowArtefactCtrl'
             })
             // affichage de la stratigraphie
             .when('/stratigraphy/:strat', {
-                templateUrl: '../static/micorr/views/strat.html'
+                template: require('../views/strat.html')
             })
             // affichage de la stratigraphie
             // n'est plus utilisée mais je l'ai laissée quand même si jamais un lien n'a pas encore été modifié
             .when('/artefact/:artefact/:strat/:stratigraphyDescription', {
-                templateUrl: '../static/micorr/views/strat.html'
+                template: require('../views/strat.html')
             })
             // affichage de la liste des artefacts
             .otherwise({
                 redirectTo: '/',
-                templateUrl: '../static/micorr/views/listartefacts.html',
+                template: require('../views/listartefacts.html'),
                 controller: 'ListArtefactsCtrl'
             });
 

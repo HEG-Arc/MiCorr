@@ -3,10 +3,10 @@ const webpack = require('webpack');
 
 
 module.exports = {
-    entry: './scripts/index.js',
+    entry: './src/index.js',
     output: {
         filename: 'bundle.js',
-        path: path.resolve(__dirname, 'dist')
+        path: path.resolve(__dirname, '../../static/micorr/dist')
     },
     mode: 'development',
     target: 'web',
@@ -31,7 +31,7 @@ module.exports = {
                         }
                     }
                 },
-                {test: /\.html$/, loader: "html"},
+                {test: /\.html$/, loader: "html-loader"},
                 {test: /\.css$/, loader: "style!css"}
             ]
         },
