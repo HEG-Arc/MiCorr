@@ -1,6 +1,5 @@
-# Bleeding edge Django
-Django==1.11.6
-
+#Latest LTS Django
+Django==1.11.11
 # Configuration
 django-configurations==2.0
 django-secure==1.0.1
