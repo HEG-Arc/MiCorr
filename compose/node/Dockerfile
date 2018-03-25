@@ -14,7 +14,9 @@ RUN npm install --production
 
 # temp copy of es6 source during image buils
 COPY ./micorr/stratigraphies/static/ /app/micorr/stratigraphies/static/
-# tranpile es6 sources from micorr/stratigraphies/static/micorr/scripts/
+COPY ./micorr/stratigraphies/ngapp/src /app/micorr/stratigraphies/ngapp/src
+
+# tranpile es6 sources from micorr/stratigraphies/ngapp/src/
 RUN npm run build
 # we can now remove the sources from the image
 RUN rm -rf /app/micorr/stratigraphies/static/

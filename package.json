@@ -2,8 +2,8 @@
   "name": "micorr",
   "version": "0.1.0",
   "scripts": {
-    "start": "babel-node micorr/stratigraphies/static/micorr/scripts/nodeServices/server.js --presets env,stage-2",
-    "build": "babel micorr/stratigraphies/static/micorr/scripts/ -d  dist/ --presets env,stage-2 --source-maps && babel micorr/stratigraphies/static/micorr/images/ -d dist/static/micorr/images/ --copy-files"
+    "start": "babel-node micorr/stratigraphies/ngapp/src/nodeServices/server.js --presets env,stage-2",
+    "build": "babel micorr/stratigraphies/ngapp/src/ -d  dist/ --presets env,stage-2 --source-maps && babel micorr/stratigraphies/static/micorr/images/ -d dist/static/micorr/images/ --copy-files"
   },
   "dependencies": {
     "babel-cli": "^6.26.0",
