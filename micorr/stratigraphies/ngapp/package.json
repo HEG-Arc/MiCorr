@@ -1,0 +1,35 @@
+{
+  "name": "stratigraphy",
+  "version": "1.0.0",
+  "description": "Micorr Stratigraphy Editor",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --config webpack.config.js",
+    "watch": "webpack --watch"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.4",
+    "babel-preset-env": "^1.6.1",
+    "webpack": "^4.1.1",
+    "webpack-cli": "^2.0.11"
+  },
+  "dependencies": {
+    "angular": "^1.4.0",
+    "angular-resource": "^1.4.0",
+    "angular-route": "^1.4.0",
+    "angular-sanitize": "^1.4.0",
+    "angular-ui-bootstrap": "^0.12.1",
+    "datauri": "^1.1.0",
+    "exports-loader": "^0.7.0",
+    "html-loader": "^0.5.5",
+    "imports-loader": "^0.8.0",
+    "jquery": "^2.1.4",
+    "jquery-ui": "^1.12.1",
+    "svg.js": "^2.6.4",
+    "ui-select": "^0.20.0"
+  }
+}

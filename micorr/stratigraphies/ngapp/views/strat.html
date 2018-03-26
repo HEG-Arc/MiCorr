@@ -1,0 +1,845 @@
+<section ng-controller="ShowStratCtrl">
+<div class="container" ng-show="hasPendingRequests()">
+    <div class="loader">
+        <div class="loader--dot"></div>
+        <div class="loader--dot"></div>
+        <div class="loader--dot"></div>
+        <div class="loader--dot"></div>
+        <div class="loader--dot"></div>
+        <div class="loader--dot"></div>
+        <div class="loader--text"></div>
+    </div>
+</div>
+<div class="container-fluid" ng-hide="hasPendingRequests()">
+    <div class="row">
+        <div class="col-md-6">
+            <ol class="breadcrumb">
+                <li><a href="/">Home</a></li>
+                <li><a href="/micorr/#/stratigraphy/{{stratigraphyName}}">{{stratigraphyDescription}}</a></li>
+            </ol>
+        </div>
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-3 text-center" ng-controller="ModalAddStrataCtrl">
+                    <script type="text/ng-template" id="modalAddStrata.html">
+                        <div class="modal-header">
+                            <h3 class="modal-title">Add a stratum</h3>
+                        </div>
+                        <div class="modal-body">
+                            <form>
+                                <div class="form-group">
+                                    <label for="natureFamily">Stratum Type</label>
+                                    <select ng-model="nature" id="natureFamily" class="form-control">
+                                        <option ng-repeat="nature in natures.natures"
+                                                value="{{ nature.code }}">{{ nature.description }}</option>
+                                    </select>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button class="btn btn-primary" ng-click="ok()">OK</button>
+                            <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+                        </div>
+                    </script>
+                    <button type="button" class="btn btn-primary" ng-click="open()">
+                        <span class="glyphicon glyphicon glyphicon-plus" aria-hidden="true"></span>
+                        Add a stratum
+                    </button>
+                </div>
+                <div class="col-md-2 text-center">
+                    <div ng-controller="ModalSaveStrataCtrl">
+                        <script type="text/ng-template" id="saveStrataContent.html">
+                            <div>
+                                <div class="modal-header">
+                                    <h3 class="modal-title">Save this stratum</h3>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Do you really want to save this stratum ?</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button class="btn btn-primary" ng-click="ok()">OK</button>
+                                    <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+                                </div>
+                            </div>
+                        </script>
+
+                        <script type="text/ng-template" id="sendStrataContent.html">
+                            <div>
+                                <div class="modal-header">
+                                    <h3 class="modal-title">Save this stratum</h3>
+                                </div>
+                                <div class="modal-body">
+                                    <p>You're not logged in! provide an email address to receive the link.</p>
+                                    <input ng-model="email_to" type="text" placeholder="john.doe@example.com"></input>
+                                </div>
+                                <div class="modal-footer">
+                                    <button class="btn btn-primary" ng-click="send()">Send</button>
+                                    <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+                                </div>
+                            </div>
+                        </script>
+
+                        <button ng-show="is_authenticated" ng-click="open('sm')" type="button" class="btn btn-primary">
+                            <span class="glyphicon glyphicon-floppy-saved" aria-hidden="true"></span>
+                            Save
+                        </button>
+
+                        <button ng-show="!is_authenticated" ng-click="open_send('sm')" type="button" class="btn btn-primary">
+                            <span class="glyphicon glyphicon-floppy-saved" aria-hidden="true"></span>
+                            Save
+                        </button>
+
+                    </div>
+                </div>
+                <div class="col-md-2 text-center">
+
+                    <div ng-controller="ModalShowSimilarStrataCtrl">
+                        <script type="text/ng-template" id="showSimilarStrataContent.html">
+                            <div class="modal-header">
+                                <h3 class="modal-title">List of similar artefacts</h3>
+                            </div>
+                            <div class="modal-body">
+                                <table class="table table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Picture</th>
+                                        <th>Matching 100%</th>
+                                        <th>Metal Family</th>
+                                        <th>Metal Alloy</th>
+                                        <th>Object</th>
+                                        <th>Chronology</th>
+                                        <th>Technology</th>
+                                        <th>Microstructure</th>
+
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat='result in results'>
+                                        <td><strong>{{$index + 1}}</strong></td>
+                                        <td><a href='/micorr/#/stratigraphy/{{ result.stratigraphy_uid }}' target="_blank">
+                                                <img src="{{ result.node_base_url }}getStratigraphySvg?name={{ result.stratigraphy_uid }}&amp;width=100">
+                                            </a></td>
+                                        <td><a href='/artefacts/{{ result.artefact_id }}' target="_blank">{{ result.matching100 }}</a></td>
+                                        <td><a href='/artefacts/{{ result.artefact_id }}' target="_blank">{{ result.artefact_metal1 }}</a></td>
+                                        <td><a href='/artefacts/{{ result.artefact_id }}' target="_blank">{{ result.artefact_alloy }}</a></td>
+                                        <td><a href='/artefacts/{{ result.artefact_id }}' target="_blank">{{ result.artefact_type }}</a></td>
+                                        <td><a href='/artefacts/{{ result.artefact_id }}' target="_blank">{{ result.artefact_chronology_category }}</a></td>
+                                        <td><a href='/artefacts/{{ result.artefact_id }}' target="_blank">{{ result.artefact_technology }}</a></td>
+                                        <td>{{ result.artefact_microstructure }}</td>
+
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-primary" ng-click="ok()">OK</button>
+                            </div>
+                        </script>
+
+                        <button ng-click="open('lg')" type="button" class="btn btn-primary">
+                            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                            Find similar
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-2 text-center">
+                    <div ng-controller="ModalExportStrataCtrl">
+                        <script type="text/ng-template" id="exportStrataContent.html">
+                            <div class="modal-header">
+                                <h3 class="modal-title">Export to PNG</h3>
+                            </div>
+                            <div class="modal-body">
+                                <p>Right click to download a stratum.</p>
+                                <img ng-src="/{{ imgUrl }}"/>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-primary" ng-click="ok()">OK</button>
+                            </div>
+                        </script>
+
+                        <button ng-click="open('lg')" type="button" class="btn btn-primary">
+                            <span class="glyphicon glyphicon-share-alt" aria-hidden="true"></span>
+                            Export to PNG
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-3 text-center">
+                    <!-- DELETE STRATA BUTTON
+                    <div ng-controller="ModalDelStrataCtrl">
+                        <script type="text/ng-template" id="delStrataContent.html">
+                            <div class="modal-header">
+                                <h3 class="modal-title">Delete this stratum</h3>
+                            </div>
+                            <div class="modal-body">
+                                <p>Do you really want to delete this stratum ?</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-primary" ng-click="ok()">OK</button>
+                                <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+                            </div>
+                        </script>
+
+                        <button class="btn btn-primary" ng-click="open('sm')">
+                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                            Delete this stratum
+                        </button>
+                    </div>
+                    -->
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid" ng-hide="hasPendingRequests()">
+<div class="row">
+<div class="col-md-6">
+<div ng-controller="TabsStrataCtrl">
+<div ng-hide="showTabForms">
+    <div class="jumbotron">
+        <h1>Stratigraphy visualizer</h1>
+
+        <p>Please select or add a stratum to show its properties.</p>
+    </div>
+</div>
+
+<div class="row-fluid" ng-show="showTabForms">
+    <div class="col-md-7">
+        <h1 class="ng-binding minititle">
+            Stratum : {{ strataName }}
+        </h1>
+
+    </div>
+    <div class="col-md-5">
+        <h1 class="ng-binding minititle">
+            Type : {{ natureFamilyname }}
+        </h1>
+    </div>
+</div>
+
+<tabset ng-show="showTabForms" justified="true" class="clearfix">
+<tab heading="Morphology" ng-controller="StratMorphologyCtrl" active="activeMorphologyTab" title="{{descriptions.fgMorphology}}">
+    <form>
+
+<!--
+  todo Dynamic family templates we miss dynamic ng-model assignent
+  (ng-model="$eval('selected'+family.uid) not working =>
+  Error: ngModel:nonassign  Non-Assignable Expression
+
+       <div class="row-fluid">
+              <div class="col-md-6 form-group" ng-repeat="family in familyGroup">
+                <label for="{{ 'morphology' + family.name }}"><span class="glyphicon glyphicon-eye-close"
+                                                    title="no visual impact on the stratum"></span><span title="{{ descriptions[family.uid] }}"> {{ family.name }}</span></label>
+                <select id="{{ 'morphology' + family.name }}" class="form-control" ng-model="$eval('selected'+family.uid)"
+                        ng-options="x.real_name for x in this[family.uid]" ng-change="upMorpho()">
+
+                </select>
+            </div>
+-->
+            <div class="col-md-6 form-group">
+                <label for="morphologyShape"><span class="glyphicon glyphicon-eye-close"
+                                                   title="no visual impact on the stratum"></span><span title="{{descriptions.shapeFamily}}"> Shape</span></label>
+                <select id="morphologyShape" class="form-control" ng-model="selectedShapeFamily"
+                        ng-options="x.real_name for x in shapeFamily" ng-change="upMorpho()">
+                </select>
+            </div>
+            <div ng-show="showWidth" class="col-md-6 form-group">
+                <label for="morphologyWidth"><span class="glyphicon glyphicon-eye-open"
+                                                   title="visual impact on the stratum"></span> <span title="{{descriptions.widthFamily}}">Width</span></label>
+                <select id="morphologyWidth" class="form-control" ng-model="selectedWidthFamily"
+                        ng-options="x.real_name for x in widthFamily" ng-change="upMorpho()">
+                </select>
+            </div>
+        <div class="row-fluid">
+            <div ng-show="showThickness" class="col-md-6 form-group">
+                <label for="morphologyThickness"><span class="glyphicon glyphicon-eye-open"
+                                                       title="visual impact on the stratum"></span> <span title="{{descriptions.thicknessFamily}}">Thickness</span></label>
+                <select id="morphologyThickness" class="form-control" ng-model="selectedThicknessFamily"
+                        ng-options="x.real_name for x in thicknessFamily" ng-change="upMorpho()">
+                </select>
+            </div>
+            <div ng-show="showContinuity" class="col-md-6 form-group">
+                <label for="morphologyContinuity"><span class="glyphicon glyphicon-eye-close"
+                                                        title="no visual impact on the stratum"></span>
+                    <span title="{{descriptions.continuityFamily}}">Continuity</span></label>
+                <select id="morphologyContinuity" class="form-control" ng-model="selectedContinuityFamily"
+                        ng-options="x.real_name for x in continuityFamily" ng-change="upMorpho()">
+                </select>
+            </div>
+        </div>
+        <div class="row-fluid">
+            <div ng-show="showDirection" class="col-md-6 form-group">
+                <label for="morphologyDirection"><span class="glyphicon glyphicon-eye-close"
+                                                       title="no visual impact on the stratum"></span> <span title="{{descriptions.directionFamily}}">Direction</span></label>
+                <select id="morphologyDirection" class="form-control" ng-model="selectedDirectionFamily"
+                        ng-options="x.real_name for x in directionFamily" ng-change="upMorpho()">
+                </select>
+            </div>
+            <div ng-show="showColor" class="col-md-6 form-group">
+                <label for="physicalPropertyColor"><span class="glyphicon glyphicon-eye-open"
+                                                         title="visual impact on the stratum"></span> <span title="{{descriptions.colourFamily}}">Colour</span></label>
+                <select id="physicalPropertyColor" class="form-control" ng-model="selectedColourFamily"
+                        ng-options="x.real_name for x in colourFamily" ng-change="upMorpho()">
+                </select>
+            </div>
+        </div>
+        <div class="row-fluid">
+            <div ng-show="showBrightness" class="col-md-6 form-group">
+                <label for="physicalPropertyBrightness"><span class="glyphicon glyphicon-eye-close"
+                                                              title="no visual impact on the stratum"></span> <span title="{{descriptions.brightnessFamily}}">Brightness</span></label>
+                <select id="physicalPropertyBrightness" class="form-control" ng-model="selectedBrightnessFamily"
+                        ng-options="x.real_name for x in brightnessFamily" ng-change="upMorpho()">
+                </select>
+            </div>
+            <div ng-show="showBrightness" class="col-md-6 form-group">
+                <label for="physicalPropertyOpacity"><span class="glyphicon glyphicon-eye-close"
+                                                           title="no visual impact on the stratum"></span> <span title="{{descriptions.opacityFamily}}">Opacity</span></label>
+                <select id="physicalPropertyOpacity" class="form-control" ng-model="selectedOpacityFamily"
+                        ng-options="x.real_name for x in opacityFamily" ng-change="upMorpho()">
+                </select>
+            </div>
+        </div>
+        <div class="row-fluid">
+            <div ng-show="showMagnetism" class="col-md-6 form-group">
+                <label for="physicalPropertyMagnetism"><span class="glyphicon glyphicon-eye-close"
+                                                            title="no visual impact on the stratum"></span>
+                    <span title="{{descriptions.magnetismFamily}}"> Magnetism</span></label>
+                <select id="physicalPropertyMagnetism" class="form-control" ng-model="selectedMagnetismFamily"
+                        ng-options="x.real_name for x in magnetismFamily" ng-change="upMorpho()">
+                </select>
+            </div>
+            <div class="col-md-6 form-group">
+            </div>
+        </div>
+    </form>
+</tab>
+<tab heading="Texture" ng-controller="StratTextureCtrl" title="{{descriptions.fgTexture}}">
+    <form>
+        <div class="row-fluid">
+            <div ng-show="showPorosity" class="col-md-6 form-group">
+                <label for="texturePorosity"><span class="glyphicon glyphicon-eye-open"
+                                                   title="visual impact on the stratum"></span><span title="{{descriptions.porosityFamily}}"> Compactness</span></label>
+                <select id="texturePorosity" class="form-control" ng-model="selectedPorosityFamily"
+                        ng-options="x.real_name for x in porosityFamily" ng-change="upTexture()">
+                </select>
+            </div>
+            <div ng-show="showCohesion" class="col-md-6 form-group">
+                <label for="textureCohesion"><span class="glyphicon glyphicon-eye-open"
+                                                   title="visual impact on the stratum"></span> <span title="{{descriptions.cohesionFamily}}">Cohesion</span></label>
+                <select id="textureCohesion" class="form-control" ng-model="selectedCohesionFamily"
+                        ng-options="x.real_name for x in cohesionFamily" ng-change="upTexture()">
+                </select>
+            </div>
+        </div>
+        <div class="row-fluid">
+            <div ng-show="showHardness" class="col-md-6 form-group">
+                <label for="textureHardness"><span class="glyphicon glyphicon-eye-close"
+                                                   title="no visual impact on the stratum"></span> <span title="{{descriptions.hardnessFamily}}">Hardness</span></label>
+                <select id="textureHardness" class="form-control" ng-model="selectedHardnessFamily"
+                        ng-options="x.real_name for x in hardnessFamily" ng-change="upTexture()">
+                </select>
+            </div>
+            <div ng-show="showCracking" class="col-md-6 form-group">
+                <label for="textureCracking"><span class="glyphicon glyphicon-eye-open"
+                                                   title="visual impact on the stratum"></span> <span title="{{descriptions.crackingFamily}}">Cracking</span></label>
+                <select id="textureCracking" class="form-control" ng-model="selectedCrackingFamily"
+                        ng-options="x.real_name for x in crackingFamily" ng-change="upTexture()">
+                </select>
+            </div>
+        </div>
+    </form>
+</tab>
+<tab heading="Microstructure" ng-controller="StratMicrostructureCtrl" title="{{descriptions.fgMicrostructure}}">
+    <form>
+        <!-- Microstructure pour la couche CM -->
+
+        <div class="col-md-12 form-group" ng-show="corrodedMetalStrataSelected">
+            <label class="control-label"><span class="glyphicon glyphicon-eye-close"
+                                               title="no visual impact on the stratum"></span> <span title="{{descriptions.cmCpMicrostructureFamily}}">Additional microstructure
+                in CP</span></span>
+            </label>
+            <picklist element-name="sub-characteristics" size="10" data-picklist="" data-pick-model="selectedCmcpmicrostructureFamily"
+                      data-pick-options="v.real_name for v in cmcpmicrostructureFamily"/>
+        </div>
+
+
+        <!-- Microstructure pour les autres strates-->
+        <div class="row-fluid">
+            <div ng-show="showCmlevelofcorrosionFamily" class="col-md-6 form-group">
+                <label for="cmlevelofcorrosionFamily">Level of corrosion</label>
+                <select id="cmlevelofcorrosionFamily" class="form-control" ng-model="selectedCmlevelofcorrosionFamily"
+                        ng-options="x.real_name for x in cmlevelofcorrosionFamily" ng-change="upMicrostructure()">
+                </select>
+            </div>
+            <div ng-show="showcprimicrostructureFamily" class="col-md-6 form-group">
+                <label for="cpriMicrostructureFamily"><span class="glyphicon glyphicon-eye-open"
+                                                            title="visual impact on the stratum"></span>
+                    <span title="{{descriptions.cpriMicrostructureFamily}}">Microstructure</span></label>
+                <select id="cpriMicrostructureFamily" class="form-control" ng-model="selectedCprimicrostructureFamily"
+                        ng-options="x.real_name for x in cprimicrostructureFamily" ng-change="upMicrostructure()">
+                </select>
+            </div>
+        </div>
+        <div class="row-fluid">
+            <!-- sub CM Level of Corrosion n'est pas affiché pour l'instant. Demander à Christian Degrigny pourquoi
+            <div ng-show="showsubcmlevelofcorrosionFamily" class="col-md-6 form-group">
+                <label for="subcmlevelofcorrosionFamily">Sub CM Level of corrosion</label>
+                <select id="subcmlevelofcorrosionFamily" class="form-control" ng-model="selectedSubcmlevelofcorrosionFamily" ng-options="x.name for x in subcmlevelofcorrosionFamily" ng-change="upMicrostructure()">
+                </select>
+            </div>-->
+        </div>
+        <div class="row-fluid">
+
+
+            <div ng-show="showmmicrostructureFamily" class="col-md-6 form-group">
+                <label for="mMicrostructureFamily"><span class="glyphicon glyphicon-eye-open"
+                                                         title="visual impact on the stratum"></span>
+                    <span title="{{descriptions.mMicrostructureFamily}}">Microstructure</span></label>
+                <select id="mMicrostructureFamily" class="form-control" ng-model="selectedMmicrostructureFamily"
+                        ng-options="x.real_name for x in mmicrostructureFamily" ng-change="upMicrostructure()">
+                </select>
+            </div>
+
+        </div>
+
+        <div class="row-fluid">
+            <div class="col-md-12 form-group" ng-show="showsubcprimicrostructureFamily">
+                <label class="control-label"><span class="glyphicon glyphicon-eye-open"
+                                                   title="visual impact on the stratum"></span>
+                    <span title="{{ descriptions.subcprimicrostructureFamily }}">Sub Microstructure</span>
+                </label>
+                <picklist element-name="sub-characteristics" size="10" data-picklist="" data-pick-model="secondaryComponent.selectedSubcprimicrostructureFamily"
+                          data-pick-options="v.name for v in subcprimicrostructureFamily"/>
+            </div>
+        </div>
+        <div class="row-fluid">
+            <div class="col-md-12 form-group" ng-show="showsubmmicrostructureFamily">
+                <label class="control-label"><span class="glyphicon glyphicon-eye-open"
+                                                   title="visual impact on the stratum"></span>
+                 <span title="{{ descriptions.submmicrostructureFamily }}">Sub Microstructure</span>
+                </label>
+                <picklist element-name="sub-characteristics" size="10" data-picklist="" data-pick-model="selectedSubmmicrostructureFamily"
+                          data-pick-options="v.name for v in submmicrostructureFamily"/>
+            </div>
+        </div>
+
+    </form>
+</tab>
+<tab heading="Composition" ng-controller="StratCompositionCtrl" title="{{descriptions.fgComposition}}">
+
+
+    <form>
+        <!-- Composition pour la couche CM -->
+        <div class="row-fluid">
+            <div class="col-md-12 form-group" ng-show="corrodedMetalStrataSelected">
+                <label for="mcpRatio">
+                    <span class="glyphicon glyphicon-eye-open" title="visual impact on the stratum"></span>
+                    <span title="{{ descriptions.mcpRatio }}">M/CP Ratio (low / average / high) </span>
+                </label>
+                <input id="mcpRatio" type="range" min="1" max="3" list="tickmarks" ng-model="ratio.ratio"
+                       ng-change="ratioChange()">
+                <datalist id="tickmarks">
+                    <option value="1" label="Low">
+                    <option value="2" label="Average">
+                    <option value="3" label="High">
+                </datalist>
+                </input>
+            </div>
+        </div>
+        <div class="row-fluid">
+            <div class="col-md-12 form-group" ng-show="corrodedMetalStrataSelected">
+                <label class="control-label"><span class="glyphicon glyphicon-eye-close"
+                                                   title="no visual impact on the stratum"></span>
+                <span title="{{ descriptions.cmmcompositionFamily }}">Additional elements in M</span>
+                </label>
+                <ui-select id="cmmCompositionAdditionalElements" class="form-control" multiple
+                           theme="bootstrap"
+                           ng-model="cmmCompositionAdditionalElements.selected" on-remove="upComposition()"
+                           on-select="upComposition()">
+                    <ui-select-match placeholder="Select element(s) by order of importance">
+                        {{$item.symbol}}
+                    </ui-select-match>
+                    <ui-select-choices group-by="'category'"
+                                       repeat="item in (cmmCompositionAdditionalElements.characteristics | filter: $select.search) track by item.symbol">
+                        <span ng-bind-html="item.symbol | highlight: $select.search"></span> <span
+                            ng-bind-html="item.real_name | highlight: $select.search"></span>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+        </div>
+        <div class="row-fluid">
+            <div class="col-md-12 form-group" ng-show="corrodedMetalStrataSelected">
+                <label class="control-label"><span class="glyphicon glyphicon-eye-close"
+                                                   title="no visual impact on the stratum"></span>
+                     <span title="{{ descriptions.cmcpcompositionFamily }}">Additional elements in CP</span>
+                </label>
+                  <ui-select id="cmcpCompositionAdditionalElements" class="form-control" multiple
+                           theme="bootstrap"
+                           ng-model="cmcpCompositionAdditionalElements.selected" on-remove="upComposition()"
+                           on-select="upComposition()">
+                    <ui-select-match placeholder="Select element(s) by order of importance">
+                        {{$item.symbol}}
+                    </ui-select-match>
+                    <ui-select-choices group-by="'category'"
+                                       repeat="item in (cmcpCompositionAdditionalElements.characteristics | filter: $select.search) track by item.symbol">
+                        <span ng-bind-html="item.symbol | highlight: $select.search"></span> <span
+                            ng-bind-html="item.real_name | highlight: $select.search"></span>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+        </div>
+
+        <div class="row-fluid">
+            <div class="col-md-12 form-group" ng-show="showcmcpagCompositionAdditionalElements">
+                <label class="control-label"><span class="glyphicon glyphicon-eye-close"
+                                                   title="no visual impact on the stratum"></span>
+                 <span title="{{ descriptions.cmcpaggregateCompositionFamily }}">Additional element(s) in CP aggregates</span>
+                </label>
+                <ui-select id="cmcpagCompositionAdditionalElements" class="form-control" multiple
+                           theme="bootstrap"
+                           ng-model="cmcpagCompositionAdditionalElements.selected" on-remove="upComposition()"
+                           on-select="upComposition()">
+                    <ui-select-match placeholder="Select element(s) by order of importance">
+                        {{$item.symbol}}
+                    </ui-select-match>
+                    <ui-select-choices group-by="'category'"
+                                       repeat="item in (cmcpagCompositionAdditionalElements.characteristics | filter: $select.search) track by item.symbol">
+                        <span ng-bind-html="item.symbol | highlight: $select.search"></span> <span
+                            ng-bind-html="item.real_name | highlight: $select.search"></span>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+        </div>
+
+        <!-- Fin couche CM-->
+
+        <div class="row-fluid">
+            <div ng-show="showScomposition" class="col-md-6 form-group">
+                <label for="sCompositionFamily">Composition</label>
+                <select id="sCompositionFamily" class="form-control" ng-model="selectedscompositionFamily"
+                        ng-options="x.real_name for x in scompositionFamily" ng-change="upComposition()">
+                </select>
+            </div>
+            <div ng-show="showNmmcomposition" class="col-md-6 form-group">
+                <label for="nmmCompositionFamily">Composition</label>
+                <select id="nmmCompositionFamily" class="form-control" ng-model="selectedNmmcompositionFamily"
+                        ng-options="x.real_name for x in nmmcompositionFamily" ng-change="upComposition()">
+                </select>
+            </div>
+        </div>
+        <div class="row-fluid">
+            <div ng-show="showDcomposition" class="col-md-6 form-group">
+                <label for="dCompositionFamily">Composition</label>
+                <select id="dCompositionFamily" class="form-control" ng-model="selectedDcompositionFamily"
+                        ng-options="x.real_name for x in dcompositionFamily" ng-change="upComposition()">
+                </select>
+            </div>
+            <div ng-show="showPomcomposition" class="col-md-6 form-group">
+                <label for="pomCompositionFamily"> <span class="glyphicon glyphicon-eye-close"
+                                                         title="no visual impact on the stratum"></span>
+                    Organic material
+                </label>
+                <select id="pomCompositionFamily" class="form-control" ng-model="selectedPomcompositionFamily"
+                        ng-options="x.real_name for x in pomcompositionFamily" ng-change="upComposition()">
+                </select>
+            </div>
+            <div ng-show="showPomcomposition" class="col-md-6 form-group">
+                <label for="pomCompositionMetallicPollutants"> <span class="glyphicon glyphicon-eye-close"
+                                                            title="no visual impact on the stratum"></span>
+                    Metallic pollutant(s)</label>
+                <ui-select id="pomCompositionMetallicPollutants" class="form-control" multiple theme="bootstrap"
+                           ng-model="pomCompositionMetallicPollutants.selected" on-remove="upComposition()" on-select="upComposition()">
+                    <ui-select-match placeholder="Select element(s) by order of importance">
+                        {{$item.symbol}}
+                    </ui-select-match>
+                    <ui-select-choices group-by="'category'"
+                                       repeat="item in (pomCompositionMetallicPollutants.characteristics | filter: $select.search) track by item.symbol">
+                        <span ng-bind-html="item.symbol | highlight: $select.search"></span> <span
+                            ng-bind-html="item.real_name | highlight: $select.search"></span>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+        </div>
+        <div class="row-fluid">
+            <div ng-show="showmCompositionMainElements" class="col-md-6 form-group">
+                <label for="mCompositionMainElements"><span class="glyphicon glyphicon-eye-close"
+                                                      title="no visual impact on the stratum"></span>
+                 <span title="{{ descriptions.mCompositionMainElements }}">Main element(s)</span>
+                </label>
+                <ui-select id="mCompositionMainElements" class="form-control" multiple
+                           theme="bootstrap"
+                           ng-model="mCompositionMainElements.selected" on-remove="upComposition()"
+                           on-select="upComposition()">
+                    <ui-select-match placeholder="Select element(s) by order of importance">
+                        {{$item.symbol}}
+                    </ui-select-match>
+                    <ui-select-choices group-by="'category'"
+                                       repeat="item in (mCompositionMainElements.characteristics | filter: $select.search) track by item.symbol">
+                        <span ng-bind-html="item.symbol | highlight: $select.search"></span> <span
+                            ng-bind-html="item.real_name | highlight: $select.search"></span>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div ng-show="showcpCompositionMainElements" class="col-md-6 form-group">
+                <label for="cpCompositionMainElements"><span class="glyphicon glyphicon-eye-close"
+                                                       title="no visual impact on the stratum"></span>
+                     <span title="{{ descriptions.cpCompositionMainElements }}">Main element(s)</span>
+                </label>
+                <ui-select id="cpCompositionMainElements" class="form-control" multiple
+                           theme="bootstrap"
+                           ng-model="cpCompositionMainElements.selected" on-remove="upComposition()"
+                           on-select="upComposition()">
+                    <ui-select-match placeholder="Select element(s) by order of importance">
+                        {{$item.symbol}}
+                    </ui-select-match>
+                    <ui-select-choices group-by="'category'"
+                                       repeat="item in (cpCompositionMainElements.characteristics | filter: $select.search) track by item.symbol">
+                        <span ng-bind-html="item.symbol | highlight: $select.search"></span> <span
+                            ng-bind-html="item.real_name | highlight: $select.search"></span>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+        </div>
+        <div class="row-fluid">
+            <div ng-show="showcpCompositionSecondaryElements" class="col-md-6 form-group">
+                <label for="cpCompositionSecondaryElements"><span class="glyphicon glyphicon-eye-close"
+                                                          title="no visual impact on the stratum"></span>
+                     <span title="{{ descriptions.cpCompositionSecondaryElements }}">Secondary element(s)</span>
+                </label>
+                <ui-select id="cpCompositionSecondaryElements" class="form-control" multiple
+                           theme="bootstrap"
+                           ng-model="cpCompositionSecondaryElements.selected" on-remove="upComposition()"
+                           on-select="upComposition()">
+                    <ui-select-match placeholder="Select element(s) by order of importance">
+                        {{$item.symbol}}
+                    </ui-select-match>
+                    <ui-select-choices group-by="'category'"
+                                       repeat="item in (cpCompositionSecondaryElements.characteristics | filter: $select.search) track by item.symbol">
+                        <span ng-bind-html="item.symbol | highlight: $select.search"></span> <span
+                            ng-bind-html="item.real_name | highlight: $select.search"></span>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div ng-show="showcpCompositionCompounds" class="col-md-6 form-group">
+                <label for="cpCompositionCompounds"><span class="glyphicon glyphicon-eye-close"
+                                                             title="no visual impact on the stratum"></span>
+                    <span title="{{ descriptions.cpCompositionCompounds }}">Compound</span>
+                </label>
+                <br>
+               <ui-select id="filterCompoundsMethod" ng-model="filterCompoundsMethod.selected"  theme="bootstrap">
+                     <ui-select-match placeholder="Search compounds...">
+                        {{$select.selected.text}}
+                    </ui-select-match>
+                    <ui-select-choices repeat="item in (filterCompoundsMethod.options | filter: $select.search) track by item.value">
+                        <span ng-bind-html="item.text | highlight: $select.search"></span>
+                    </ui-select-choices>
+                </ui-select>
+                <br>
+
+                <ui-select id="cpCompositionCompounds" class="form-control" multiple
+                           theme="bootstrap"
+                           ng-model="cpCompositionCompounds.selected" on-remove="upComposition()"
+                           on-select="upComposition()">
+                    <ui-select-match placeholder="Select compound">
+                        {{$item.real_name}}
+                    </ui-select-match>
+                    <ui-select-choices repeat="item in (cpCompositionCompounds.characteristics | filterCompounds:cpCompositionMainElements:cpCompositionSecondaryElements:filterCompoundsMethod.selected.value | filter: $select.search) track by item.name">
+                        <span ng-bind-html="item.real_name | highlight: $select.search"></span>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+        </div>
+        <div class="row-fluid">
+
+            <div class="col-md-12 form-group" ng-show="showcpCompositionAdditionalElements">
+                <label class="control-label"><span class="glyphicon glyphicon-eye-close"
+                                                   title="no visual impact on the stratum"></span>
+                     <span title="{{ descriptions.cpCompositionAdditionalElements }}">Additional element(s)</span>
+                </label>
+                 <ui-select id="cpCompositionAdditionalElements" class="form-control" multiple
+                           theme="bootstrap"
+                           ng-model="cpCompositionAdditionalElements.selected" on-remove="upComposition()"
+                           on-select="upComposition()">
+                    <ui-select-match placeholder="Select element(s) by order of importance">
+                        {{$item.symbol}}
+                    </ui-select-match>
+                    <ui-select-choices group-by="'category'"
+                                       repeat="item in (cpCompositionAdditionalElements.characteristics | filter: $select.search) track by item.symbol">
+                        <span ng-bind-html="item.symbol | highlight: $select.search"></span> <span
+                            ng-bind-html="item.real_name | highlight: $select.search"></span>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+        </div>
+        <!-- CP Microstructure composition -->
+        <div ng-repeat='secondaryComponent in secondaryComponents'>
+        <div class="row-fluid">
+            <div ng-show="showcpSdyCptMainElements" class="col-md-6 form-group">
+                <label for="{{'cpSdyCpt' + $index + 'mainElements'}}"><span class="glyphicon glyphicon-eye-close"
+                                                       title="no visual impact on the stratum"></span>
+                    <span title="{{ descriptions.cpSdyCptMainElements }}">{{ cpriMicrostructureOptionTitle }} main element(s)</span>
+                </label>
+                  <ui-select id="{{'cpSdyCpt' + $index + 'mainElements'}}" class="form-control" multiple
+                           theme="bootstrap"
+                           ng-model="secondaryComponent.mainElements.selected" on-remove="upComposition()"
+                           on-select="upComposition()">
+                    <ui-select-match placeholder="Select element(s) by order of importance">
+                        {{$item.symbol}}
+                    </ui-select-match>
+                    <ui-select-choices group-by="'category'"
+                                       repeat="item in (secondaryComponent.mainElements.characteristics | filter: $select.search) track by item.symbol">
+                        <span ng-bind-html="item.symbol | highlight: $select.search"></span> <span
+                            ng-bind-html="item.real_name | highlight: $select.search"></span>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+        </div>
+        <div class="row-fluid">
+            <div ng-show="showcpSdyCptSecondaryElements" class="col-md-6 form-group">
+                <label for="{{'cpSdyCpt' + $index + 'secondaryElements'}}"><span class="glyphicon glyphicon-eye-close"
+                                                          title="no visual impact on the stratum"></span>
+                    <span title="{{ descriptions.cpSdyCptSecondaryElements }}">{{ cpriMicrostructureOptionTitle }}  secondary element(s)</span>
+                </label>
+                 <ui-select id="{{'cpSdyCpt' + $index + 'secondaryElements'}}" class="form-control" multiple
+                           theme="bootstrap"
+                           ng-model="secondaryComponent.secondaryElements.selected" on-remove="upComposition()"
+                           on-select="upComposition()">
+                    <ui-select-match placeholder="Select element(s) by order of importance">
+                        {{$item.symbol}}
+                    </ui-select-match>
+                    <ui-select-choices group-by="'category'"
+                                       repeat="item in (secondaryComponent.secondaryElements.characteristics | filter: $select.search) track by item.symbol">
+                        <span ng-bind-html="item.symbol | highlight: $select.search"></span> <span
+                            ng-bind-html="item.real_name | highlight: $select.search"></span>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div ng-show="showcpSdyCptCompounds" class="col-md-6 form-group">
+                <label for="{{'cpSdyCpt' + $index + 'Compounds' }}"><span class="glyphicon glyphicon-eye-close"
+                                                             title="no visual impact on the stratum"></span>
+                    <span title="{{ descriptions.cpSdyCptCompounds }}">{{ cpriMicrostructureOptionTitle }}  compound</span>
+                </label>
+                <ui-select id="{{'cpSdyCpt' + $index + 'filterCompoundsMethod'}}" ng-model="secondaryComponent.filterCompoundsMethod.selected"  theme="bootstrap">
+                     <ui-select-match placeholder="Search compounds...">
+                        {{$select.selected.text}}
+                    </ui-select-match>
+                    <ui-select-choices repeat="item in (secondaryComponent.filterCompoundsMethod.options | filter: $select.search) track by item.value">
+                        <span ng-bind-html="item.text | highlight: $select.search"></span>
+                    </ui-select-choices>
+                </ui-select>
+                <br>
+                 <ui-select id="{{'cpSdyCpt' + $index + 'compounds'}}" class="form-control" multiple
+                           theme="bootstrap"
+                           ng-model="secondaryComponent.compounds.selected" on-remove="upComposition()"
+                           on-select="upComposition()">
+                    <ui-select-match placeholder="Select compound">
+                        {{$item.real_name}}
+                    </ui-select-match>
+                    <ui-select-choices repeat="item in (secondaryComponent.compounds.characteristics | filterCompounds:secondaryComponent.mainElements:secondaryComponent.secondaryElements:secondaryComponent.filterCompoundsMethod.selected.value | filter: $select.search) track by item.name">
+                        <span ng-bind-html="item.real_name | highlight: $select.search"></span>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+        </div>
+        <div class="row-fluid">
+            <div class="col-md-12 form-group" ng-show="showcprimicrostructureaggregatecompositionextensionFamily">
+                <label class="control-label"><span class="glyphicon glyphicon-eye-close"
+                                                   title="no visual impact on the stratum"></span>
+                    <span title="{{ descriptions.cprimicrostructureaggregatecompositionextensionFamily }}">{{ cpriMicrostructureOptionTitle }}  additional element(s)</span>
+                </label>
+                <ui-select id="{{ 'cpSdyCpt' + $index + 'additionalElements'}}" class="form-control" multiple
+                           theme="bootstrap"
+                           ng-model="secondaryComponent.additionalElements.selected" on-remove="upComposition()"
+                           on-select="upComposition()">
+                    <ui-select-match placeholder="Select element(s) by order of importance">
+                        {{$item.symbol}}
+                    </ui-select-match>
+                    <ui-select-choices group-by="'category'"
+                                       repeat="item in (secondaryComponent.additionalElements.characteristics | filter: $select.search) track by item.symbol">
+                        <span ng-bind-html="item.symbol | highlight: $select.search"></span> <span
+                            ng-bind-html="item.real_name | highlight: $select.search"></span>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+        </div>
+        </div>
+        <!-- End CP Microstructure composition -->
+
+        <div class="row-fluid">
+            <div ng-show="showmCompositionSecondaryElements" class="col-md-6 form-group">
+                <label for="mCompositionSecondaryElements"><span class="glyphicon glyphicon-eye-close"
+                                                         title="no visual impact on the stratum"></span>
+                    <span title="{{ descriptions.mCompositionSecondaryElements }}">Secondary element(s)</span>
+                </label>
+                <ui-select id="mCompositionSecondaryElements" class="form-control" multiple
+                           theme="bootstrap"
+                           ng-model="mCompositionSecondaryElements.selected" on-remove="upComposition()"
+                           on-select="upComposition()">
+                    <ui-select-match placeholder="Select elements by order of importance">
+                        {{$item.symbol}}
+                    </ui-select-match>
+                    <ui-select-choices group-by="'category'"
+                                       repeat="item in (mCompositionSecondaryElements.characteristics | filter: $select.search) track by item.symbol">
+                        <span ng-bind-html="item.symbol | highlight: $select.search"></span> <span
+                            ng-bind-html="item.real_name | highlight: $select.search"></span>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+        </div>
+
+    </form>
+</tab>
+<tab heading="Interface" ng-controller="StratInterfaceCtrl" active="activeTabInterface" title="{{descriptions.fgInterface}}">
+    <div class="row-fluid">
+        <div ng-show="showinterfaceprofileFamily" class="col-md-6 form-group">
+            <label for="interfaceProfileFamily"><span class="glyphicon glyphicon-eye-open"
+                                                      title="visual impact on the stratum"></span> <span title="{{descriptions.profileFamily}}">Profile</span></label>
+            <select id="interfaceProfileFamily" class="form-control" ng-model="selectedInterfaceprofileFamily"
+                    ng-options="x.real_name for x in interfaceprofileFamily" ng-change="upInterface()">
+            </select>
+        </div>
+        <div ng-show="showinterfacetransition" class="col-md-6 form-group">
+            <label for="interfaceTransitionFamily"><span class="glyphicon glyphicon-eye-open"
+                                                         title="visual impact on the stratum"></span> <span title="{{descriptions.transitionFamily}}">Transition</span></label>
+            <select id="interfaceTransitionFamily" class="form-control" ng-model="selectedInterfacetransitionFamily"
+                    ng-options="x.real_name for x in interfacetransitionFamily" ng-change="upInterface()">
+            </select>
+        </div>
+    </div>
+    <div class="row-fluid">
+        <div ng-show="showinterfaceroughness" class="col-md-6 form-group">
+            <label for="interfaceRoughnessFamily"><span class="glyphicon glyphicon-eye-open"
+                                                        title="visual impact on the stratum"></span> <span title="{{descriptions.roughnessFamily}}">Roughness</span></label>
+            <select id="interfaceRoughnessFamily" class="form-control" ng-model="selectedInterfaceroughnessFamily"
+                    ng-options="x.real_name for x in interfaceroughnessFamily" ng-change="upInterface()">
+            </select>
+        </div>
+        <div ng-show="showinterfaceadherence" class="col-md-6 form-group">
+            <label for="interfaceAdherenceFamily"><span class="glyphicon glyphicon-eye-close"
+                                                        title="no visual impact on the stratum"></span> <span title="{{descriptions.interfaceAdherenceFamily}}">Adherence</span></label>
+            <select id="interfaceAdherenceFamily" class="form-control" ng-model="selectedInterfaceadherenceFamily"
+                    ng-options="x.real_name for x in interfaceadherenceFamily" ng-change="upInterface()">
+            </select>
+        </div>
+    </div>
+</tab>
+</tabset>
+</div>
+
+</div>
+<div id="hello" class="col-md-6">
+    <div id="stratasvg" class="row-fluid">
+        <div id="stratasvg_{{$index}}" class="col-md-11" ng-repeat="strata in stratas">
+            <stratainfo index="{{$index}}"></stratainfo>
+            <strata index="{{$index}}"></strata>
+        </div>
+    </div>
+</div>
+
+</div>
+</div>
+
+</section>

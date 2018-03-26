@@ -1,26 +1,25 @@
-FROM node:8.3.0
+FROM node:8.10.0-stretch
 
 EXPOSE 8080
 
-# TODO check if sass is needed?
-# RUN apt-get update -qq && apt-get install -y build-essential ruby
-# RUN gem install sass
-# we must use at least inkscape 0.91 for svg export so activate jessie-backports
-RUN echo "deb http://ftp.debian.org/debian jessie-backports main" >>/etc/apt/sources.list
-RUN apt-get update && apt-get -t jessie-backports install -y inkscape
-RUN mkdir -p /app/micorr/stratigraphies/static/
-RUN npm install -g grunt-cli@1.2.0 forever@0.15.3
+# we must use at least inkscape 0.91 for svg export (default stretch version is now ok)
+RUN apt-get update && apt-get install -y inkscape
+RUN mkdir -p /app/dist
+RUN npm install -g forever@0.15.3
 
 WORKDIR /app
 COPY package.json /app/
 COPY package-lock.json /app/
+RUN npm install --production
+
+# temp copy of es6 source during image buils
 COPY ./micorr/stratigraphies/static/ /app/micorr/stratigraphies/static/
+COPY ./micorr/stratigraphies/ngapp/src /app/micorr/stratigraphies/ngapp/src
 
-#COPY Gruntfile.js /src/Gruntfile.js
-#missing js files
+# tranpile es6 sources from micorr/stratigraphies/ngapp/src/
+RUN npm run build
+# we can now remove the sources from the image
+RUN rm -rf /app/micorr/stratigraphies/static/
 
-# install dependencies
-# TODO compile ES2015 -> ES5 grunt babel, does not work!!!
-# TODO in dev start a sepearate container with a wath task?
-# start serveur
-CMD npm install --production && forever micorr/stratigraphies/static/micorr/scripts/nodeServices/server.js
+# start server from container
+CMD forever /app/dist/nodeServices/server.js
