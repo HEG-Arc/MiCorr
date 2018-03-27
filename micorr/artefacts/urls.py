@@ -4,6 +4,7 @@ from django.views.generic import TemplateView
 
 from artefacts import views as artefacts_views
 
+app_name="artefacts"
 
 urlpatterns = [
     url(r'^$', artefacts_views.ArtefactsListView.as_view(), name='artefact-list'),

@@ -50,10 +50,10 @@ urlpatterns = [
     #url(r'^dev/', include('deployment.urls')),
 
     # Artefacts management
-    url(r'^artefacts/', include('artefacts.urls', namespace="artefacts")),
+    url(r'^artefacts/', include('artefacts.urls')),
 
     # Contacts management
-    url(r'^contacts/', include('contacts.urls', namespace="contacts")),
+    url(r'^contacts/', include('contacts.urls')),
 
     # Django-terms app
     url(r'^terms/', include('terms.urls')),

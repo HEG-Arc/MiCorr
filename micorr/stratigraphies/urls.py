@@ -1,6 +1,8 @@
 from django.conf.urls import url
 from stratigraphies import views as stratigraphies_views
 
+app_name = "stratigraphies"
+
 urlpatterns = [
     url(r'^$', stratigraphies_views.home, name='list'),
     url(r'^test$', stratigraphies_views.test),

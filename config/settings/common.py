@@ -101,6 +101,7 @@ MIDDLEWARE_CLASSES = (
     'wagtail.wagtailcore.middleware.SiteMiddleware',
     'wagtail.wagtailredirects.middleware.RedirectMiddleware',
     'micorr.artefacts.middlewares.artefactAccessControlMiddleware',
+    'terms.middleware.TermsMiddleware'
 )
 
 # MIGRATIONS CONFIGURATION
@@ -293,3 +294,14 @@ NEO4J_AUTH = env('NEO4J_AUTH', default='neo4j:secret') #no default provided as i
 NEO4J_HOST = env('NEO4J_HOST', default='neo4j:7474')
 
 NOTEBOOK_ARGUMENTS = [ '--notebook-dir', 'notebooks']
+
+# Terms middleware settings
+TERMS_ENABLED = True
+TERMS_REPLACE_FIRST_ONLY = False
+
+# "try" ignoring all apps but artefacts and documents
+# see http://django-terms.readthedocs.io/en/latest/settings.html#terms-additional-ignored-apps
+# Caution this filter relies on app_name being defined in app urls modules
+# or passed in include() which is not the case for most of third party apps
+# see https://docs.djangoproject.com/en/dev/releases/1.9/#passing-a-3-tuple-or-an-app-name-to-include
+TERMS_ADDITIONAL_IGNORED_APPS = list(set(INSTALLED_APPS) - set(('wagtail.wagtaildocs', 'artefacts', 'documents')))
