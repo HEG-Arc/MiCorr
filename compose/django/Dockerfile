@@ -41,7 +41,7 @@ RUN sed -i 's/\r//' /entrypoint.sh \
 COPY . /app
 
 # added bundled angular app
-COPY --from=webpackbuilder /app/micorr/stratigraphies/static/micorr/dist /app/micorr/stratigraphies/static/micorr/
+COPY --from=webpackbuilder /app/micorr/stratigraphies/static/micorr/dist /app/micorr/stratigraphies/static/micorr/dist
 
 RUN chown -R django /app
 

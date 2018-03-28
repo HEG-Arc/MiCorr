@@ -3,4 +3,5 @@
 !.env
 !.pylintrc
 data/
+micorr/media/
 node_modules/

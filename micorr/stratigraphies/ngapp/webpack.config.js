@@ -6,7 +6,7 @@ module.exports = {
     entry: './src/index.js',
     output: {
         filename: 'bundle.js',
-        path: path.resolve(__dirname, '../../static/micorr/dist')
+        path: path.resolve(__dirname, '../static/micorr/dist')
     },
     mode: 'development',
     target: 'web',
@@ -51,3 +51,4 @@ module.exports = {
         fs: "empty"
     }
 };
+
