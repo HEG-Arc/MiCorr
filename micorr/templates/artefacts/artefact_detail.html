@@ -34,6 +34,7 @@
       {% endblock sidemenu %}
 
       {% block content %}
+{% filter replace_terms %}
 <div class="c9">
 
         {% if messages %}
@@ -417,4 +418,5 @@
 
 
 </div>
+{% endfilter %}
       {% endblock content %}

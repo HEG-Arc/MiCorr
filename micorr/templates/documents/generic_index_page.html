@@ -30,11 +30,14 @@
 
 {% block content %}
   <div id="content_column" class="c9">
+    {% filter replace_terms %}
         {% include "documents/includes/intro.html" with intro=self.intro only %}
 
+        {# Listing created with a tag - allows filtering by whether the page is live #}
         {# See also the blog index or events index where the listing is created from a method defined in models.py #}
         {% generic_index_listing calling_page=self %}
 
         {% include "documents/includes/related_links.html" with related_links=self.related_links.all only %}
+    {% endfilter %}
   </div>
 {% endblock %}
