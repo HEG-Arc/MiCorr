@@ -33,8 +33,13 @@ INSTALLED_APPS += ('raven.contrib.django.raven_compat', )
 
 # Use Whitenoise to serve static files
 # See: https://whitenoise.readthedocs.io/
-WHITENOISE_MIDDLEWARE = ('whitenoise.middleware.WhiteNoiseMiddleware', )
-MIDDLEWARE_CLASSES = WHITENOISE_MIDDLEWARE + MIDDLEWARE_CLASSES
+
+# insert whitenoise middleware after terms SecurityMiddleware and Terms middleware
+middleware_classes = list(MIDDLEWARE_CLASSES)
+middleware_classes.insert(1+MIDDLEWARE_CLASSES.index('terms.middleware.TermsMiddleware'),
+                          'whitenoise.middleware.WhiteNoiseMiddleware')
+MIDDLEWARE_CLASSES = tuple(middleware_classes)
+
 RAVEN_MIDDLEWARE = ('raven.contrib.django.raven_compat.middleware.SentryResponseErrorIdMiddleware', )
 MIDDLEWARE_CLASSES = RAVEN_MIDDLEWARE + MIDDLEWARE_CLASSES
 
