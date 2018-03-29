@@ -1,4 +1,4 @@
-:param common_props {version:4, date:"2018-02-09"}
+:param common_props {version:4, date:"2018-03-29"}
 
 // graphdb cleanup
 // removing old test nodes:Person and relationships :OWNS and :IS_CHILD_OF
@@ -122,7 +122,11 @@ UNWIND [
   {nature:'cp', uid: 'cpCompositionAdditionalElements', name: 'CP Composition Additional elements', upto: 0, list_elem_family:"elementFamily"},
   {nature:'cm', uid: 'cmmCompositionAdditionalElements', name: 'CM M Composition Additional elements', upto: 0, list_elem_family:"elementFamily"},
   {nature:'cm', uid: 'cmcpCompositionAdditionalElements', name: 'CM CP Composition Additional elements', upto: 0, list_elem_family:"elementFamily"},
-  {nature:'cm', uid: 'cmcpagCompositionAdditionalElements', name: 'CM CP Aggregates Composition Additional elements', upto: 0, list_elem_family:"elementFamily"}
+  {nature:'cm', uid: 'cmcpagCompositionAdditionalElements', name: 'CM CP Aggregates Composition Additional elements', upto: 0, list_elem_family:"elementFamily"},
+  {nature:'soil', uid: 'sCompositionMainElements', name: 'S Composition Main elements', upto: 0, list_elem_family:"elementFamily"},
+  {nature:'soil', uid: 'sCompositionSecondaryElements', name: 'S Composition Secondary elements', upto: 0, list_elem_family:"elementFamily"},
+  {nature:'deposit', uid: 'dCompositionMainElements', name: 'D Composition Main elements', upto: 0, list_elem_family:"elementFamily"},
+  {nature:'deposit', uid: 'dCompositionSecondaryElements', name: 'D Composition Secondary elements', upto: 0, list_elem_family:"elementFamily"}
 ] AS new_f
 MERGE (f:Family {uid: new_f.uid, name: new_f.name})
   ON CREATE SET f+=$common_props

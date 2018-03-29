@@ -402,9 +402,19 @@ angular.module('micorrApp')
                 $scope.showCohesion = str.findDependency('cohesionFamily');
                 $scope.showHardness = str.findDependency('hardnessFamily');
                 $scope.showCracking = str.findDependency('crackingFamily');
+
                 $scope.showScomposition = str.findDependency('scompositionFamily');
+                // to replace by
+                $scope.showsCompositionMainElements = str.findDependency('sCompositionMainElements');
+                $scope.showsCompositionSecondaryElements = str.findDependency('sCompositionSecondaryElements');
+
                 $scope.showNmmcomposition = str.findDependency('nmmcompositionFamily');
+
                 $scope.showDcomposition = str.findDependency('dcompositionFamily');
+                // to replace by
+                $scope.showdCompositionMainElements = str.findDependency('dCompositionMainElements');
+                $scope.showdCompositionSecondaryElements = str.findDependency('dCompositionSecondaryElements');
+
                 $scope.showPomcomposition = str.findDependency('pomcompositionFamily');
 
                 $scope.showcpCompositionMainElements = str.findDependency('cpCompositionMainElements');

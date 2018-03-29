@@ -72,6 +72,11 @@ angular.module('micorrApp')
             $scope.pomCompositionMetallicPollutants = new ElementSelector();
             $scope.mCompositionMainElements = new ElementSelector();
             $scope.mCompositionSecondaryElements = new ElementSelector();
+            $scope.sCompositionMainElements = new ElementSelector();
+            $scope.sCompositionSecondaryElements = new ElementSelector();
+            $scope.dCompositionMainElements = new ElementSelector();
+            $scope.dCompositionSecondaryElements = new ElementSelector();
+
             $scope.cpCompositionMainElements = new ElementSelector();
             $scope.cpCompositionSecondaryElements = new ElementSelector();
             $scope.cpCompositionCompounds =  new CompoundSelector();
@@ -151,6 +156,10 @@ angular.module('micorrApp')
             $scope.pomCompositionMetallicPollutants.selected = strata.getContainerElements("pomCompositionMetallicPollutants");
             $scope.mCompositionMainElements.selected = strata.getContainerElements("mCompositionMainElements");
             $scope.mCompositionSecondaryElements.selected = strata.getContainerElements("mCompositionSecondaryElements");
+            $scope.sCompositionMainElements.selected = strata.getContainerElements("sCompositionMainElements");
+            $scope.sCompositionSecondaryElements.selected = strata.getContainerElements("sCompositionSecondaryElements");
+            $scope.dCompositionMainElements.selected = strata.getContainerElements("dCompositionMainElements");
+            $scope.dCompositionSecondaryElements.selected = strata.getContainerElements("dCompositionSecondaryElements");
             $scope.cpCompositionMainElements.selected = strata.getContainerElements("cpCompositionMainElements");
             $scope.cpCompositionSecondaryElements.selected = strata.getContainerElements("cpCompositionSecondaryElements");
             $scope.cpCompositionCompounds.selected = strata.getContainerElements("cpCompositionCompounds");
@@ -192,6 +201,10 @@ angular.module('micorrApp')
             strata.setContainerElements('pomCompositionMetallicPollutants',$scope.pomCompositionMetallicPollutants.selected);
             strata.setContainerElements('mCompositionMainElements', $scope.mCompositionMainElements.selected);
             strata.setContainerElements('mCompositionSecondaryElements', $scope.mCompositionSecondaryElements.selected);
+            strata.setContainerElements('sCompositionMainElements', $scope.sCompositionMainElements.selected);
+            strata.setContainerElements('sCompositionSecondaryElements', $scope.sCompositionSecondaryElements.selected);
+            strata.setContainerElements('dCompositionMainElements', $scope.dCompositionMainElements.selected);
+            strata.setContainerElements('dCompositionSecondaryElements', $scope.dCompositionSecondaryElements.selected);
             strata.setContainerElements('cpCompositionMainElements', $scope.cpCompositionMainElements.selected);
             strata.setContainerElements('cpCompositionSecondaryElements', $scope.cpCompositionSecondaryElements.selected);
             strata.setContainerElements('cpCompositionCompounds', $scope.cpCompositionCompounds.selected);
@@ -308,5 +321,5 @@ angular.module('micorrApp')
                 }
 
             });
-        }
+        };
 });

@@ -506,6 +506,9 @@ class Neo4jDAO:
             stc_rel = Relationship(parent_node, "INCLUDES", c)
 
             cf = self.graph.find_one("Family", "uid", family)
+            if not cf:
+                logger.error('missing family "{}" in graph db. elements not saved'.format(family))
+                continue
             fc_rel = Relationship(c, "BELONGS_TO", cf)
             print(c, parent_node, stc_rel, cf, fc_rel)
             self.graph.create(c, parent_node, stc_rel, cf, fc_rel)
@@ -517,7 +520,7 @@ class Neo4jDAO:
                         self.graph.create(Relationship(c, "IS_CONSTITUTED_BY", element, order=i))
                     else:
                         print ("create_containers(): Characteristic :{} not found - not added to container {}".format(e['name'], c))
-                        logger.warning("Characteristic :{} not found - not added to container {}".format(e['name'], c))
+                        logger.error("Characteristic :{} not found - not added to container {}".format(e['name'], c))
 
     # retourne le nombre d'interface pour toutes les strates d'une stratigraphie
     # @params nom de la stratigraphie
