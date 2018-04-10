@@ -458,6 +458,7 @@ class Strata {
                 this.addDependency('interfacetransitionFamily');
                 this.addDependency('interfaceroughnessFamily');
                 this.addDependency('interfaceadherenceFamily');
+                this.addDependency('nmmCompositionNonOrganicElements');
                 break;
             case "Deposit":
                 this.addDependency('colourFamily');

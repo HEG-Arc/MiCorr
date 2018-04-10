@@ -70,6 +70,7 @@ angular.module('micorrApp')
             $scope.pomcompositionFamily = StratigraphyData.getPomcompositionFamily()['characteristics'];
 
             $scope.pomCompositionMetallicPollutants = new ElementSelector();
+            $scope.nmmCompositionNonOrganicElements = new ElementSelector();
             $scope.mCompositionMainElements = new ElementSelector();
             $scope.mCompositionSecondaryElements = new ElementSelector();
             $scope.sCompositionMainElements = new ElementSelector();
@@ -154,6 +155,7 @@ angular.module('micorrApp')
             }
 
             $scope.pomCompositionMetallicPollutants.selected = strata.getContainerElements("pomCompositionMetallicPollutants");
+            $scope.nmmCompositionNonOrganicElements.selected = strata.getContainerElements("nmmCompositionNonOrganicElements");
             $scope.mCompositionMainElements.selected = strata.getContainerElements("mCompositionMainElements");
             $scope.mCompositionSecondaryElements.selected = strata.getContainerElements("mCompositionSecondaryElements");
             $scope.sCompositionMainElements.selected = strata.getContainerElements("sCompositionMainElements");
@@ -199,6 +201,7 @@ angular.module('micorrApp')
             strata.updateCharacteristic('dCompositionFamily',$scope.selectedDcompositionFamily);
             strata.updateCharacteristic('pomCompositionFamily',$scope.selectedPomcompositionFamily);
             strata.setContainerElements('pomCompositionMetallicPollutants',$scope.pomCompositionMetallicPollutants.selected);
+            strata.setContainerElements('nmmCompositionNonOrganicElements',$scope.nmmCompositionNonOrganicElements.selected);
             strata.setContainerElements('mCompositionMainElements', $scope.mCompositionMainElements.selected);
             strata.setContainerElements('mCompositionSecondaryElements', $scope.mCompositionSecondaryElements.selected);
             strata.setContainerElements('sCompositionMainElements', $scope.sCompositionMainElements.selected);
