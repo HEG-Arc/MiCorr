@@ -89,11 +89,10 @@ angular.module('micorrApp')
                     $scope.selectedSubcmlevelofcorrosionFamily = getCharacteristicByItsName($scope.subcmlevelofcorrosionFamily, strata.getSubCharacteristicsByFamily('subcmlevelofcorrosionFamily')[0].getName());
                 }
             }
-
-            if (strata.getSubCharacteristicsByFamily('subcprimicrostructureFamily').length > 0) {
-                if (strata.findDependency('subcprimicrostructureFamily')) {
-                    $scope.selectedSubcprimicrostructureFamily = getCharacteristicByItsNameMulti($scope.subcprimicrostructureFamily, strata.getSubCharacteristicsByFamily('subcprimicrostructureFamily'));
-                }
+            let subcprimicrostructureCharacteristics = strata.getSubCharacteristicsByFamily('subcprimicrostructureFamily');
+            if (subcprimicrostructureCharacteristics.length > 0) {
+                $scope.selectedSubcprimicrostructureFamily = $scope.selectedCprimicrostructureFamily.subcharacteristics.filter(
+                    e => subcprimicrostructureCharacteristics.find(sc => sc.name == e.sub_real_name));
             }
             else{
                 $scope.selectedSubcprimicrostructureFamily = [];
@@ -185,11 +184,7 @@ angular.module('micorrApp')
 
                 strata.clearSubCharacteristicsFromFamily('subcprimicrostructureFamily');
                 for (var i = 0; i < $scope.selectedSubcprimicrostructureFamily.length; i++) {
-                    var subChar = new SubCharacteristic();
-                    var test = $scope.selectedSubcprimicrostructureFamily[i];
-                    subChar.setName($scope.selectedSubcprimicrostructureFamily[i].name);
-                    subChar.setUid($scope.selectedSubcprimicrostructureFamily[i].uid);
-                    subChar.setFamily('subcprimicrostructureFamily')
+                    var subChar = new SubCharacteristic('subcprimicrostructureFamily',$scope.selectedSubcprimicrostructureFamily[i]);
                     strata.addSubCharacteristic(subChar);
                 }
             }

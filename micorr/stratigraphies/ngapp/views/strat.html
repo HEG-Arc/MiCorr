@@ -411,8 +411,8 @@
                                                    title="visual impact on the stratum"></span>
                     <span title="{{ descriptions.subcprimicrostructureFamily }}">Sub Microstructure</span>
                 </label>
-                <picklist element-name="sub-characteristics" size="10" data-picklist="" data-pick-model="secondaryComponent.selectedSubcprimicrostructureFamily"
-                          data-pick-options="v.name for v in subcprimicrostructureFamily"/>
+                <picklist element-name="sub-characteristics" size="10" data-picklist="" data-pick-model="selectedSubcprimicrostructureFamily"
+                          data-pick-options="v.sub_real_name for v in selectedCprimicrostructureFamily.subcharacteristics"/>
             </div>
         </div>
         <div class="row-fluid">
