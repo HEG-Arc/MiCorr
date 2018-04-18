@@ -97,16 +97,14 @@ angular.module('micorrApp')
             else{
                 $scope.selectedSubcprimicrostructureFamily = [];
             }
-
-            if (strata.getSubCharacteristicsByFamily('submmicrostructureFamily').length > 0) {
-                if (strata.findDependency('submmicrostructureFamily')) {
-                    $scope.selectedSubmmicrostructureFamily = getCharacteristicByItsNameMulti($scope.submmicrostructureFamily, strata.getSubCharacteristicsByFamily('submmicrostructureFamily'));
-                }
+            let submmicrostructureCharacteristics = strata.getSubCharacteristicsByFamily('submmicrostructureFamily');
+            if (submmicrostructureCharacteristics.length > 0) {
+                $scope.selectedSubmmicrostructureFamily = $scope.selectedMmicrostructureFamily.subcharacteristics.filter(
+                    e => submmicrostructureCharacteristics.find(sc => sc.name == e.sub_real_name));
             }
             else{
                 $scope.selectedSubmmicrostructureFamily = [];
             }
-
         });
 
         /* Met à jour les données de la strate en fonction des valeurs dans le formulaire
@@ -171,22 +169,14 @@ angular.module('micorrApp')
 
             if (strata.findDependency('submmicrostructureFamily')) {
                 strata.clearSubCharacteristicsFromFamily('submmicrostructureFamily');
-                for (var i = 0; i < $scope.selectedSubmmicrostructureFamily.length; i++) {
-                    var subChar = new SubCharacteristic();
-                    subChar.setName($scope.selectedSubmmicrostructureFamily[i].name);
-                    subChar.setUid($scope.selectedSubmmicrostructureFamily[i].uid);
-                    subChar.setFamily('submmicrostructureFamily');
-                    strata.addSubCharacteristic(subChar);
-                }
+                for (let sc of $scope.selectedSubmmicrostructureFamily)
+                    strata.addSubCharacteristic(new SubCharacteristic('submmicrostructureFamily',sc));
             }
 
             if (strata.findDependency('subcprimicrostructureFamily')) {
-
                 strata.clearSubCharacteristicsFromFamily('subcprimicrostructureFamily');
-                for (var i = 0; i < $scope.selectedSubcprimicrostructureFamily.length; i++) {
-                    var subChar = new SubCharacteristic('subcprimicrostructureFamily',$scope.selectedSubcprimicrostructureFamily[i]);
-                    strata.addSubCharacteristic(subChar);
-                }
+                for (let sc of $scope.selectedSubcprimicrostructureFamily)
+                    strata.addSubCharacteristic(new SubCharacteristic('subcprimicrostructureFamily',sc));
             }
 
             if (strata.getNature() == 'Corroded metal') {

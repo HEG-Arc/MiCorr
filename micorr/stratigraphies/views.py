@@ -36,7 +36,7 @@ def getStratigraphyDetails(request, stratigraphy):
 
 # retourne toutes les sous caracteristiques et sous caracteristiques
 # @ params
-@cache_page(60 * 15)
+#@cache_page(60 * 15)
 def getallcharacteristic(request):
     ms = micorrservice.MiCorrService()
     return HttpResponse(json.dumps(ms.getAllCharacteristic()), content_type='application/json')
