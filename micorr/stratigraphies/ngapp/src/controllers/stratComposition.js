@@ -2,8 +2,7 @@
 
 import {Characteristic} from "../business/characteristic";
 import {
-    getCharacteristicByItsName, getCharacteristicByItsNameMulti, Ratio,
-    returnSubCharacteristicsFromParent
+    getSelectedFamilyCharacteristic, Ratio
 } from "../init";
 
 /**
@@ -123,36 +122,10 @@ angular.module('micorrApp')
             emptyFields();
             var strata = StratigraphyData.getStratigraphy().getStratas()[StratigraphyData.getSelectedStrata()];
 
-            function getSelectedFamilyCharacteristic(familyUid,allCharacteristics)
-            {
-                let characteristics = strata.getCharacteristicsByFamily(familyUid);
-                if (characteristics.length>0)
-                    return getCharacteristicByItsName(allCharacteristics, characteristics[0].getName());
-                else
-                    return null;
-            }
-            function getSelectedFamilyCharacteristicList(familyUid,allCharacteristics)
-            {
-                let stratumCharacteristics = strata.getCharacteristicsByFamily(familyUid);
-                if (stratumCharacteristics.length>0)
-                    return getCharacteristicByItsNameMulti(allCharacteristics, stratumCharacteristics );
-                else
-                    return [];
-            }
-            if (strata.getCharacteristicsByFamily("sCompositionFamily").length > 0) {
-                $scope.selectedScompositionFamily = getCharacteristicByItsName($scope.scompositionFamily, strata.getCharacteristicsByFamily("sCompositionFamily")[0].getName());
-            }
-
-            if (strata.getCharacteristicsByFamily("nmCompositionFamily").length > 0) {
-                $scope.selectedNmcompositionFamily = getCharacteristicByItsName($scope.nmcompositionFamily, strata.getCharacteristicsByFamily("nmCompositionFamily")[0].getName());
-            }
-
-            if (strata.getCharacteristicsByFamily("dCompositionFamily").length > 0) {
-                $scope.selectedDcompositionFamily = getCharacteristicByItsName($scope.dcompositionFamily, strata.getCharacteristicsByFamily("dCompositionFamily")[0].getName());
-            }
-            if (strata.getCharacteristicsByFamily("pomCompositionFamily").length > 0) {
-                $scope.selectedPomcompositionFamily = getCharacteristicByItsName($scope.pomcompositionFamily, strata.getCharacteristicsByFamily("pomCompositionFamily")[0].getName());
-            }
+            $scope.selectedScompositionFamily = getSelectedFamilyCharacteristic(strata, "sCompositionFamily", $scope.scompositionFamily);
+            $scope.selectedNmmcompositionFamily = getSelectedFamilyCharacteristic(strata, "nmmCompositionFamily", $scope.nmmCompositionFamily);
+            $scope.selectedDcompositionFamily = getSelectedFamilyCharacteristic(strata, "dCompositionFamily", $scope.dcompositionFamily);
+            $scope.selectedPomcompositionFamily = getSelectedFamilyCharacteristic(strata, "pomCompositionFamily", $scope.pomcompositionFamily);
 
             $scope.pomCompositionMetallicPollutants.selected = strata.getContainerElements("pomCompositionMetallicPollutants");
             $scope.nmmCompositionNonOrganicElements.selected = strata.getContainerElements("nmmCompositionNonOrganicElements");

@@ -153,6 +153,22 @@ export function getCharacteristicByItsNameMulti(data, name) {
 
     return t;
 }
+export function getSelectedFamilyCharacteristicList(stratum, familyUid,allCharacteristics) {
+    let stratumCharacteristics = stratum.getCharacteristicsByFamily(familyUid);
+    if (stratumCharacteristics.length > 0)
+        return getCharacteristicByItsNameMulti(allCharacteristics, stratumCharacteristics);
+    else
+        return [];
+}
+
+export function getSelectedFamilyCharacteristic(stratum, familyUid, allCharacteristics) {
+    let characteristics = stratum.getCharacteristicsByFamily(familyUid);
+    if (characteristics.length > 0)
+        return getCharacteristicByItsName(allCharacteristics, characteristics[0].getName());
+    else
+        return null;
+}
+
 
 /* Compare deux strates et définit si elle est identique ou pas
  * @params deux strates
