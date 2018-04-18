@@ -14,17 +14,17 @@ class Characteristic{
         if (sourceC) {
             if ('uid' in sourceC)
             {
-                this.uid = sourceC.uid ;
-                this.name = sourceC.name;
+                this.setUid(sourceC.uid);
+                this.setName(sourceC.name);
             }
             else if ('symbol' in sourceC)
             {
-                this.name = sourceC.symbol; //name is currently used as uid on save...
+                this.setName(sourceC.symbol); //name is currently used as uid on save...
             }
             else
             {
-                this.name = sourceC.name ;
-                this.real_name = sourceC.real_name;
+                this.setName(sourceC.name) ;
+                this.setRealName(sourceC.real_name);
             }
         }
     }
