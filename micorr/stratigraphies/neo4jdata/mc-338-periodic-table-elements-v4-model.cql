@@ -114,6 +114,8 @@ MERGE (f:Family {uid:"compoundFamily", name:"Compound"}) WITH f
 //
 // MC-340 Strate CM - tableau periodique des éléments
 // Create new Families for cmm / cmcp / cmcpag Additional Elements
+// MC-335, MC-336 Soil and deposit main and secondary elements
+// MC-220 NMM Non Organic Elements
 */
 UNWIND [
   {nature:'cp', uid: 'cpCompositionMainElements', name: 'CP Composition Main elements', upto: 0, list_elem_family:"elementFamily"},
@@ -126,7 +128,8 @@ UNWIND [
   {nature:'soil', uid: 'sCompositionMainElements', name: 'S Composition Main elements', upto: 0, list_elem_family:"elementFamily"},
   {nature:'soil', uid: 'sCompositionSecondaryElements', name: 'S Composition Secondary elements', upto: 0, list_elem_family:"elementFamily"},
   {nature:'deposit', uid: 'dCompositionMainElements', name: 'D Composition Main elements', upto: 0, list_elem_family:"elementFamily"},
-  {nature:'deposit', uid: 'dCompositionSecondaryElements', name: 'D Composition Secondary elements', upto: 0, list_elem_family:"elementFamily"}
+  {nature:'deposit', uid: 'dCompositionSecondaryElements', name: 'D Composition Secondary elements', upto: 0, list_elem_family:"elementFamily"},
+  {nature:'nmm', uid: 'nmmCompositionNonOrganicElements', name: 'NMM Composition Non organic elements', upto: 0, list_elem_family:"elementFamily"}
 ] AS new_f
 MERGE (f:Family {uid: new_f.uid, name: new_f.name})
   ON CREATE SET f+=$common_props
@@ -138,3 +141,37 @@ WITH n, f, new_f
 MATCH (ef:Family {uid: new_f.list_elem_family})
 MERGE (f)-[r:IS_LIST_OF {upto: new_f.upto}]->(ef)
 RETURN n, f, ef, r;
+
+/**************************
+ MC-220 Strate Non metallic material
+ adds pomCompositionMetallicPollutants
+*/
+
+
+// Set remaining characteristics in alphabetical order but for other
+// and change uids for consistency with  other characteristics Families
+
+UNWIND [
+  {uid: "enamelCharacteristic", new_uid: "nmmEnamelCharacteristic", order: 0},
+  {uid: "nielloCharacteristic", new_uid: "nmmNielloCharacteristic", order: 2}]
+  AS updt
+  MATCH (c:Characteristic {uid: updt.uid})
+  SET c.order = updt.order, c.uid = updt.new_uid
+RETURN c;
+
+// add a copy of existing characteristics from POM (Leather, textile, and wood)
+// todo we should share identical characteristics among multiple families instead (like elements)
+// but current code only supports single Family characteristics
+UNWIND [
+  {uid: "nmmLeatherCharacteristic", name: "leather", order: 1},
+  {uid: "nmmTextileCharacteristic", name: "textile", order: 3},
+  {uid: "nmmWoodCharacteristic", name: "wood", order: 4},
+  {uid: "nmmOtherCharacteristic", name: "other", order: 5}]
+  AS new_c
+    MERGE (c:Characteristic {uid: new_c.uid, name: new_c.name})
+      ON CREATE SET c+=$common_props, c.order=new_c.order, c.comparisonIndicator1=1
+      ON MATCH SET c.order=new_c.order
+    WITH c
+    MATCH (f:Family {uid: "nmmCompositionFamily"})
+    MERGE  (c)-[:BELONGS_TO]->(f)
+    RETURN c;
