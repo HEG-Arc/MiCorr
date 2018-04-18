@@ -131,7 +131,7 @@ APP_GIT_REV = env('APP_GIT_REV')
 SENTRY_CLIENT = env('DJANGO_SENTRY_CLIENT', default='raven.contrib.django.raven_compat.DjangoClient')
 LOGGING = {
     'version': 1,
-    'disable_existing_loggers': True,
+    'disable_existing_loggers': False,
     'root': {
         'level': 'INFO',
         'handlers': ['sentry','console'],
@@ -154,6 +154,11 @@ LOGGING = {
         }
     },
     'loggers': {
+        '': {
+            'level': 'INFO',
+            'handlers': ['console','sentry'],
+            'propagate': True,
+        },
         'django': {
             'level': 'INFO',
             'handlers': ['console','sentry'],
