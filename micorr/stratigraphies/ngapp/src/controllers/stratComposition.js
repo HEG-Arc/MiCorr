@@ -65,7 +65,7 @@ angular.module('micorrApp')
         var initStratComposition = function () {
             // On récupère les valeurs qui vont aller dans les champs de notre formulaire
             $scope.scompositionFamily = StratigraphyData.getScompositionFamily()['characteristics'];
-            $scope.nmmcompositionFamily = StratigraphyData.getNmmcompositionFamily()['characteristics'];
+            $scope.nmmCompositionFamily = StratigraphyData.getNmmcompositionFamily()['characteristics'];
             $scope.dcompositionFamily = StratigraphyData.getDcompositionFamily()['characteristics'];
             $scope.pomcompositionFamily = StratigraphyData.getPomcompositionFamily()['characteristics'];
 

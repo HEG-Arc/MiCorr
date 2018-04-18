@@ -241,7 +241,7 @@ let StratigraphyData =  angular.module('micorrApp').factory('StratigraphyData', 
                 this.compoundFamily = parseCharasteristic('compoundFamily');
 */
                 this.scompositionFamily = parseCharasteristic('sCompositionFamily');
-                this.nmmcompositionFamily = parseCharasteristic('nmmCompositionFamily');
+                this.nmmCompositionFamily = parseCharasteristic('nmmCompositionFamily');
                 this.dcompositionFamily = parseCharasteristic('dCompositionFamily');
                 this.pomcompositionFamily = parseCharasteristic('pomCompositionFamily');
 
@@ -344,11 +344,11 @@ let StratigraphyData =  angular.module('micorrApp').factory('StratigraphyData', 
             getDcompositionFamily: function () {
                 return this.dcompositionFamily;
             },
-            setNmmCompositionFamily: function (nmmcompositionFamily) {
-                this.nmmcompositionFamily = nmmcompositionFamily;
+            setNmmCompositionFamily: function (nmmCompositionFamily) {
+                this.nmmCompositionFamily = nmmCompositionFamily;
             },
             getNmmcompositionFamily: function () {
-                return this.nmmcompositionFamily;
+                return this.nmmCompositionFamily;
             },
             setScompositionFamily: function (scompositionFamily) {
                 this.scompositionFamily = scompositionFamily;

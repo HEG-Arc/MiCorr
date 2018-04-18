@@ -100,7 +100,7 @@ angular.module('micorrApp')
             $scope.showHardness = false;
             $scope.showCracking = false;
             $scope.showScomposition = false;
-            $scope.showNmmcomposition = false;
+            $scope.shownmmComposition = false;
             $scope.showDcomposition = false;
             $scope.showPomcomposition = false;
 
@@ -408,7 +408,7 @@ angular.module('micorrApp')
                 $scope.showsCompositionMainElements = str.findDependency('sCompositionMainElements');
                 $scope.showsCompositionSecondaryElements = str.findDependency('sCompositionSecondaryElements');
 
-                $scope.showNmmcomposition = str.findDependency('nmmcompositionFamily');
+                $scope.shownmmComposition = str.findDependency('nmmCompositionFamily');
 
                 $scope.showDcomposition = str.findDependency('dcompositionFamily');
                 // to replace by

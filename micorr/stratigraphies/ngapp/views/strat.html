@@ -557,13 +557,13 @@
             </div>
             <!-- End Soil composition -->
 
-            <div ng-show="showNmmComposition" class="col-md-6 form-group">
+            <div ng-show="shownmmComposition" class="col-md-6 form-group">
                 <label for="nmmCompositionFamily">Composition</label>
                 <select id="nmmCompositionFamily" class="form-control" ng-model="selectedNmmcompositionFamily"
-                        ng-options="x.real_name for x in nmmcompositionFamily" ng-change="upComposition()">
+                        ng-options="x.real_name for x in nmmCompositionFamily" ng-change="upComposition()">
                 </select>
             </div>
-            <div ng-show="showNmmComposition" class="col-md-6 form-group">
+            <div ng-show="shownmmComposition" class="col-md-6 form-group">
                 <label for="nmmCompositionNonOrganicElements"> <span class="glyphicon glyphicon-eye-close"
                                                             title="no visual impact on the stratum"></span>
                     Non organic element(s)</label>
