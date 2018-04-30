@@ -1,7 +1,7 @@
 'use strict';
 import {Characteristic} from "../business/characteristic";
 import {SubCharacteristic} from "../business/subCharacteristic";
-import {getCharacteristicByItsName, getCharacteristicByItsNameMulti, returnSubCharacteristicsFromParent} from "../init";
+import {getSelectedFamilyCharacteristic, getSelectedFamilyCharacteristicList} from "../init";
 
 /**
  * @ngdoc function
@@ -63,30 +63,21 @@ angular.module('micorrApp')
 
             var strata = StratigraphyData.getStratigraphy().getStratas()[StratigraphyData.getSelectedStrata()];
 
-            if (strata.getCharacteristicsByFamily("cpriMicrostructureFamily").length > 0) {
-                $scope.selectedCprimicrostructureFamily = getCharacteristicByItsName($scope.cprimicrostructureFamily, strata.getCharacteristicsByFamily("cpriMicrostructureFamily")[0].getName());
-            }
-
-            if (strata.getCharacteristicsByFamily("mMicrostructureFamily").length > 0) {
-                $scope.selectedMmicrostructureFamily = getCharacteristicByItsName($scope.mmicrostructureFamily, strata.getCharacteristicsByFamily("mMicrostructureFamily")[0].getName());
-            }
-            if (strata.getCharacteristicsByFamily("cmLevelOfCorrosionFamily").length > 0) {
-                $scope.selectedCmlevelofcorrosionFamily = getCharacteristicByItsName($scope.cmlevelofcorrosionFamily, strata.getCharacteristicsByFamily("cmLevelOfCorrosionFamily")[0].getName());
-            }
+            $scope.selectedCprimicrostructureFamily = getSelectedFamilyCharacteristic(strata, "cpriMicrostructureFamily", $scope.cprimicrostructureFamily);
+            $scope.selectedMmicrostructureFamily = getSelectedFamilyCharacteristic(strata, "mMicrostructureFamily", $scope.mmicrostructureFamily);
+            $scope.selectedCmlevelofcorrosionFamily = getSelectedFamilyCharacteristic(strata, "cmLevelOfCorrosionFamily", $scope.cmlevelofcorrosionFamily);
 
             //Reprise des characteristiques de microstructure pour la strate CM
             if (strata.getNature() == 'Corroded metal') {
-                var CPChild = strata.getChildStrataByNature('Corrosion products');
-                if (CPChild.getCharacteristicsByFamily("cmCpMicrostructureFamily").length > 0) {
-                    $scope.selectedCmcpmicrostructureFamily = getCharacteristicByItsNameMulti($scope.cmcpmicrostructureFamily, CPChild.getCharacteristicsByFamily("cmCpMicrostructureFamily"));
-                }
+                let CPChild = strata.getChildStrataByNature('Corrosion products');
+                $scope.selectedCmcpmicrostructureFamily = getSelectedFamilyCharacteristicList(CPChild, "cmCpMicrostructureFamily", $scope.cmcpmicrostructureFamily);
             }
 
 
-            if (strata.getSubCharacteristicsByFamily('subcmlevelofcorrosionFamily').length > 0) {
+            let subcmlevelofcorrosionCharacteristics = strata.getSubCharacteristicsByFamily('subcmlevelofcorrosionFamily');
+            if (subcmlevelofcorrosionCharacteristics.length > 0) {
                 if (strata.findDependency('subcmlevelofcorrosionFamily')) {
-
-                    $scope.selectedSubcmlevelofcorrosionFamily = getCharacteristicByItsName($scope.subcmlevelofcorrosionFamily, strata.getSubCharacteristicsByFamily('subcmlevelofcorrosionFamily')[0].getName());
+                    $scope.selectedSubcmlevelofcorrosionFamily = getCharacteristicByItsName($scope.subcmlevelofcorrosionFamily, subcmlevelofcorrosionCharacteristics[0].getName());
                 }
             }
             let subcprimicrostructureCharacteristics = strata.getSubCharacteristicsByFamily('subcprimicrostructureFamily');
