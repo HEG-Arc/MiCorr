@@ -409,7 +409,7 @@
             <div class="col-md-12 form-group" ng-show="showsubcprimicrostructureFamily">
                 <label class="control-label"><span class="glyphicon glyphicon-eye-open"
                                                    title="visual impact on the stratum"></span>
-                    <span title="{{ descriptions.subcprimicrostructureFamily }}">Sub Microstructure</span>
+                    <span title="{{ descriptions.subcprimicrostructureFamily }}">{{ selectedCprimicrostructureFamily.real_name | capitalize }}</span>
                 </label>
                 <picklist element-name="sub-characteristics" size="10" data-picklist="" data-pick-model="selectedSubcprimicrostructureFamily"
                           data-pick-options="v.sub_real_name for v in selectedCprimicrostructureFamily.subcharacteristics"/>
@@ -419,7 +419,7 @@
             <div class="col-md-12 form-group" ng-show="showsubmmicrostructureFamily">
                 <label class="control-label"><span class="glyphicon glyphicon-eye-open"
                                                    title="visual impact on the stratum"></span>
-                 <span title="{{ descriptions.submmicrostructureFamily }}">Sub Microstructure</span>
+                 <span title="{{ descriptions.submmicrostructureFamily }}">{{ selectedMmicrostructureFamily.real_name | capitalize}}</span>
                 </label>
                 <picklist element-name="sub-characteristics" size="10" data-picklist="" data-pick-model="selectedSubmmicrostructureFamily"
                           data-pick-options="v.sub_real_name for v in selectedMmicrostructureFamily.subcharacteristics"/>

@@ -62,4 +62,14 @@ export default angular
 
 import {strata, stratainfo} from "./directives/directives";
 
-angular.module('micorrApp').directive('strata', strata).directive('stratainfo',stratainfo);
+angular.module('micorrApp').directive('strata', strata).directive('stratainfo', stratainfo)
+.filter('capitalize', function () {
+    //register a "title" like capitalize ng filter
+    // changing text to lowercase but first char to uppercase
+    return function (input, scope) {
+        if (input) {
+            input = input.toLowerCase();
+            return input.substring(0, 1).toUpperCase() + input.substring(1);
+        }
+    };
+});

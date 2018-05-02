@@ -109,52 +109,38 @@ angular.module('micorrApp')
 
             if ($scope.selectedCprimicrostructureFamily != null) {
                 if (strata.findDependency('cprimicrostructureFamily')) {
-                    var char = new Characteristic();
-                    char.setFamily("cpriMicrostructureFamily");
-                    char.setName($scope.selectedCprimicrostructureFamily.name);
-                    char.setRealName($scope.selectedCprimicrostructureFamily.real_name);
-                    strata.replaceCharacteristic(char);
+                    let previousCprimicrostructureFamily = getSelectedFamilyCharacteristic(strata, "cpriMicrostructureFamily", $scope.cprimicrostructureFamily);
+                    if (previousCprimicrostructureFamily != $scope.selectedCprimicrostructureFamily)
+                    {
+                        strata.replaceCharacteristic(new Characteristic("cpriMicrostructureFamily", $scope.selectedCprimicrostructureFamily));
+                        $scope.selectedSubcprimicrostructureFamily = [];
+                    }
                 }
             }
 
 
             if ($scope.selectedMmicrostructureFamily != null) {
                 if (strata.findDependency('mmicrostructureFamily')) {
-                    var char = new Characteristic();
-                    char.setFamily("mMicrostructureFamily");
-
-
-                    char.setName($scope.selectedMmicrostructureFamily.name);
-                    char.setRealName($scope.selectedMmicrostructureFamily.real_name);
-
-
-                    strata.replaceCharacteristic(char);
+                    let previousmMicrostructureFamily = getSelectedFamilyCharacteristic(strata, "mMicrostructureFamily", $scope.mmicrostructureFamily);
+                    if (previousmMicrostructureFamily != $scope.selectedMmicrostructureFamily) {
+                        strata.replaceCharacteristic(new Characteristic("mMicrostructureFamily", $scope.selectedMmicrostructureFamily));
+                        $scope.selectedSubmmicrostructureFamily = [];
+                    }
                 }
             }
 
             if ($scope.selectedCmlevelofcorrosionFamily != null) {
 
                 if (strata.findDependency('cmlevelofcorrosionFamily')) {
-                    var char = new Characteristic();
-                    char.setFamily("cmLevelOfCorrosionFamily");
-
-                    char.setName($scope.selectedCmlevelofcorrosionFamily.name);
-                    char.setRealName($scope.selectedCmlevelofcorrosionFamily.real_name);
-
-                    strata.replaceCharacteristic(char);
+                    strata.replaceCharacteristic(new Characteristic("cmLevelOfCorrosionFamily", $scope.selectedCmlevelofcorrosionFamily));
                 }
             }
 
 
             if ($scope.selectedSubcmlevelofcorrosionFamily != null) {
                 if (strata.findDependency('subcmlevelofcorrosionFamily')) {
-                    var subChar = new SubCharacteristic();
-                    subChar.setFamily('subcmlevelofcorrosionFamily');
-
-                    subChar.setName($scope.selectedSubcmlevelofcorrosionFamily.name);
-
-
-                    strata.replaceSubCharacteristic(subChar);
+                    strata.replaceSubCharacteristic(new SubCharacteristic('subcmlevelofcorrosionFamily',
+                        $scope.selectedSubcmlevelofcorrosionFamily ));
                 }
             }
 
@@ -172,15 +158,10 @@ angular.module('micorrApp')
 
             if (strata.getNature() == 'Corroded metal') {
                 //Strate enfant CP
-                var childCP = strata.getChildStrataByNature('Corrosion products');
+                let childCP = strata.getChildStrataByNature('Corrosion products');
                 childCP.clearCharacteristicsFromFamily('cmCpMicrostructureFamily');
-                for (var i = 0; i < $scope.selectedCmcpmicrostructureFamily.length; i++) {
-                    var char = new Characteristic();
-                    char.setFamily("cmCpMicrostructureFamily");
-                    char.setName($scope.selectedCmcpmicrostructureFamily[i].name);
-                    char.setRealName($scope.selectedCmcpmicrostructureFamily[i].real_name);
-                    childCP.addCharacteristic(char);
-                }
+                for (let sc of $scope.selectedCmcpmicrostructureFamily)
+                    childCP.addCharacteristic(new Characteristic("cmCpMicrostructureFamily", sc));
             }
 
             $scope.$emit('updateSelectedStrata');
