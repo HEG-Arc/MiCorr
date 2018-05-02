@@ -1,4 +1,4 @@
-
+:param common_props {version:4, date:"2018-05-02"}
 /**************************
 // MC-331 Rename M and CP Microstructure sub-characteristics
   to remove the parent characteristic name that was redundantly
@@ -81,3 +81,17 @@ AS updt
     SET sc.name = updt.name
   RETURN sc.uid, sc.name;
 
+/**************************
+// MC-331 Adds inclusions sub-characteristic for M No Microstructure characteristic
+
+*/
+UNWIND [
+  {cuid: 'mnoMicrostructureCharacteristic', uid: 'inclusionsNoMicrostructure', name: 'inclusions'}
+]
+AS updt
+  MERGE (sc:SubCharacteristic {uid: updt.uid})
+    ON CREATE SET sc+=$common_props, sc.name = updt.name
+  WITH sc,updt
+  MATCH (c:Characteristic {uid:updt.cuid})
+  MERGE (c)-[:HAS_SPECIALIZATION]->(sc)
+  RETURN sc;
