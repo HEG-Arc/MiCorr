@@ -1,6 +1,6 @@
 :param common_props {version:4, date:"2018-05-02"}
 /**************************
-// MC-331 Rename M and CP Microstructure sub-characteristics
+// MC-311 Rename M and CP Microstructure sub-characteristics
   to remove the parent characteristic name that was redundantly
   copied into each Sub Characterist name
  e.g :
@@ -82,7 +82,7 @@ AS updt
   RETURN sc.uid, sc.name;
 
 /**************************
-// MC-331 Adds inclusions sub-characteristic for M No Microstructure characteristic
+// MC-311 Adds inclusions sub-characteristic for M No Microstructure characteristic
 
 */
 UNWIND [
