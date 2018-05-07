@@ -7,6 +7,8 @@
   slipLinesGrainLarge : "slip Lines Grain Large" =>  "slip lines"
   twinLinesGrainLarge : "twin Lines Grain Large" => "twin lines"
   etc...
+
+  MC-209 rename "twin lines" M Microstructure sub-characteristics to "twin lines / Newmann bands"
 */
 
 
@@ -14,27 +16,27 @@ UNWIND [
   {uid: 'eutecticPhaseDeformedDendritic', name: 'eutectic phase'},
   {uid: 'inclusionsDeformedDendritic', name: 'inclusions'},
   {uid: 'slipLinesDeformedDendritic', name: 'slip lines'},
-  {uid: 'twinLinesDeformedDendritic', name: 'twin lines'},
+  {uid: 'twinLinesDeformedDendritic', name: 'twin lines / Newmann bands'},
 
   {uid: 'eutecticPhaseGrainElongated', name: 'eutectic phase'},
   {uid: 'inclusionsGrainElongated', name: 'inclusions'},
   {uid: 'slipLinesGrainElongated', name: 'slip lines'},
-  {uid: 'twinLinesGrainElongated', name: 'twin lines'},
+  {uid: 'twinLinesGrainElongated', name: 'twin lines / Newmann bands'},
 
   {uid: 'eutecticPhaseGrainSmall', name: 'eutectic phase'},
   {uid: 'inclusionsGrainSmall', name: 'inclusions'},
   {uid: 'slipLinesGrainSmall', name: 'slip lines'},
-  {uid: 'twinLinesGrainSmall', name: 'twin lines'},
+  {uid: 'twinLinesGrainSmall', name: 'twin lines / Newmann bands'},
 
   {uid: 'eutecticPhaseGrainLarge', name: 'eutectic phase'},
   {uid: 'inclusionsGrainLarge', name: 'inclusions'},
   {uid: 'slipLinesGrainLarge', name: 'slip lines'},
-  {uid: 'twinLinesGrainLarge', name: 'twin lines'},
+  {uid: 'twinLinesGrainLarge', name: 'twin lines / Newmann bands'},
 
   {uid: 'eutecticPhaseDendritic', name: 'eutectic phase'},
   {uid: 'inclusionsDendritic', name: 'inclusions'},
   {uid: 'slipLinesDendritic', name: 'slip lines'},
-  {uid: 'twinLinesDendritic', name: 'twin lines'},
+  {uid: 'twinLinesDendritic', name: 'twin lines / Newmann bands'},
 
   {uid: 'twinLinesPseudomorphOfGranularCpri', name: 'twin lines'},
   {uid: 'slipLinesPseudomorphOfGranularCpri', name: 'slip lines'},
