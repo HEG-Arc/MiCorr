@@ -136,20 +136,13 @@ class Strata {
     }
 
     /**
-     * Cette méthode indique si une sous-caracterisitique existe dans une strate.
-     * @param le nom de la sous caracteristique à vérifier
-     * @returns boolean indiquant si la sous-caracteristique existe
+     * Cette méthode indique si au moins une des sous-caracterisitiques existe dans une strate.
+     * @param (...uids) de la ou des sous caracteristique(s) à vérifier
+     * @returns boolean indiquant si un des uids fait partie des sous characteristiques de la strate
      */
-    isSubCharacteristic(name) {
-        var exists = false;
-        var i = 0;
-        while (exists == false && i < this.subCharacteristics.length) {
-            if (this.subCharacteristics[i].getUid() == name) {
-                exists = true;
-            }
-            i++;
-        }
-        return exists;
+    isSubCharacteristic(...uids) {
+        // find if any of the uids passed as arguments
+        return this.subCharacteristics.find(sc => uids.includes(sc.getUid()));
     }
 
     /**

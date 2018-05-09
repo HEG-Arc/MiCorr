@@ -556,6 +556,9 @@ class GraphGenerationUtil {
         else if (strata.isSubCharacteristic('twinLinesGrainLarge')) {
             this.addImage(draw, "../static/micorr/images/c/M/TwinLines/M_TwinLinesGrainLarge_" + height + "x" + width + ".svg", width, height);
         }
+        if (strata.isSubCharacteristic('elongatedInclusionsGrainSmall','elongatedInclusionsGrainLarge','elongatedInclusionsGrainElongated')) {
+            this.addImage(draw, "../static/micorr/images/c/M/elongatedInclusions/elongatedInclusions_" + height + "x" + width + ".svg", width, height);
+        }
 
 
         if (strata.isSubCharacteristic('slipLinesDendritic') || strata.isSubCharacteristic('slipLinesGrainSmall')) {
