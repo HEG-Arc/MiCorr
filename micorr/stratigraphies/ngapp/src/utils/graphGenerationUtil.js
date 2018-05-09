@@ -560,6 +560,13 @@ class GraphGenerationUtil {
             this.addImage(draw, "../static/micorr/images/c/M/elongatedInclusions/elongatedInclusions_" + height + "x" + width + ".svg", width, height);
         }
 
+        if (strata.isSubCharacteristic('eutecticPhaseGraphiteLamellas','eutecticPhaseMartensite','eutecticPhaseBainite')) {
+            this.addImage(draw, "../static/micorr/images/c/M/eutecticPhase/eutecticPhaseGraphiteLamellas_" + height + "x" + width + ".svg", width, height);
+        }
+
+        if (strata.isSubCharacteristic('inclusionsGraphiteLamellas','inclusionsMartensite','inclusionsBainite')) {
+            this.addImage(draw, "../static/micorr/images/c/M/Inclusion/InclusionsGraphiteLamellas_" + height + "x" + width + ".svg", width, height);
+        }
 
         if (strata.isSubCharacteristic('slipLinesDendritic') || strata.isSubCharacteristic('slipLinesGrainSmall')) {
             this.addImage(draw, "../static/micorr/images/c/M/SlipLines/M_SlipLinesGrainSmall_" + height + "x" + width + ".svg", width, height);

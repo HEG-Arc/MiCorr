@@ -103,3 +103,29 @@ AS updt
   MATCH (c:Characteristic {uid:updt.cuid})
   MERGE (c)-[:HAS_SPECIALIZATION]->(sc)
   RETURN sc;
+
+/**************************
+// MC-207 Adds new M Microstructures "graphite lamellas", "Martensite" and "Bainite"
+//       and their sub-characteristics : "eutectic phase" and "inclusions"
+*/
+UNWIND [
+  {cuid: 'graphiteLamellasCharacteristic', cname: 'graphite lamellas', uid: 'eutecticPhaseGraphiteLamellas', name: 'eutectic phase'},
+  {cuid: 'graphiteLamellasCharacteristic', cname: 'graphite lamellas', uid: 'inclusionsGraphiteLamellas', name: 'inclusions'},
+  {cuid: 'martensiteCharacteristic', cname: 'martensite', uid: 'eutecticPhaseMartensite', name: 'eutectic phase'},
+  {cuid: 'martensiteCharacteristic', cname: 'martensite', uid: 'inclusionsMartensite', name: 'inclusions'},
+  {cuid: 'bainiteCharacteristic', cname: 'bainite', uid: 'eutecticPhaseBainite', name: 'eutectic phase'},
+  {cuid: 'bainiteCharacteristic', cname: 'bainite', uid: 'inclusionsBainite', name: 'inclusions'}
+]
+AS updt
+  MERGE (sc:SubCharacteristic {uid: updt.uid})
+    ON CREATE SET sc+=$common_props, sc.name = updt.name
+  WITH sc,updt
+    MERGE (c:Characteristic {uid:updt.cuid})
+    ON CREATE SET c+=$common_props, c.name = updt.cname, c.visible = TRUE
+  WITH sc,c
+    MERGE (c)-[:HAS_SPECIALIZATION]->(sc)
+  WITH sc,c
+    MATCH (f:Family {uid:"mMicrostructureFamily"})
+    WITH c,f,sc
+    MERGE (c)-[:BELONGS_TO]->(f)
+  RETURN c,sc;
