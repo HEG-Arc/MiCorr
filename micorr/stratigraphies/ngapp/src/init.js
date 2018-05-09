@@ -127,12 +127,7 @@ export const natures = {"natures": [
  * €returns nom de la caractéristique trouvée dans la liste
  */
 export function getCharacteristicByItsName(data, name) {
-    for (var i = 0; i < data.length; i++) {
-        if (data[i].name == name) {
-            return data[i];
-        }
-    }
-    return "";
+    return (data.find(c => c.name == name) || "");
 }
 
 /* fonction qui parcourt une liste de caractéristique et qui retourne toutes les caractéristiques si elle sont trouvée en fonction du paramètre
@@ -162,9 +157,9 @@ export function getSelectedFamilyCharacteristicList(stratum, familyUid,allCharac
 }
 
 export function getSelectedFamilyCharacteristic(stratum, familyUid, allCharacteristics) {
-    let characteristics = stratum.getCharacteristicsByFamily(familyUid);
-    if (characteristics.length > 0)
-        return getCharacteristicByItsName(allCharacteristics, characteristics[0].getName());
+    let characteristicName = stratum.getFirstCharacteristicByFamily(familyUid, 'name');
+    if (characteristicName)
+        return getCharacteristicByItsName(allCharacteristics, characteristicName);
     else
         return null;
 }
