@@ -84,11 +84,17 @@ AS updt
   RETURN sc.uid, sc.name;
 
 /**************************
-// MC-311 Adds inclusions sub-characteristic for M No Microstructure characteristic
+// MC-311 Adds inclusions sub-characteristic for M "No Microstructure" characteristic
+// MC-210 Adds "elongated inclusions" sub-c for M "grain large", "grain small" and "grain elongated" characteristics
 
 */
 UNWIND [
-  {cuid: 'mnoMicrostructureCharacteristic', uid: 'inclusionsNoMicrostructure', name: 'inclusions'}
+  // MC-311
+  {cuid: 'mnoMicrostructureCharacteristic', uid: 'inclusionsNoMicrostructure', name: 'inclusions'},
+  // MC-210
+  {cuid: 'grainSmallCharacteristic', uid: 'elongatedInclusionsGrainSmall', name: 'elongated inclusions'},
+  {cuid: 'grainLargeCharacteristic', uid: 'elongatedInclusionsGrainLarge', name: 'elongated inclusions'},
+  {cuid: 'grainElongatedCharacteristic', uid: 'elongatedInclusionsGrainElongated', name: 'elongated inclusions'}
 ]
 AS updt
   MERGE (sc:SubCharacteristic {uid: updt.uid})
