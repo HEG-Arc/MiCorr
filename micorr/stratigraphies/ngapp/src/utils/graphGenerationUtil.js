@@ -510,7 +510,7 @@ class GraphGenerationUtil {
             this.addImage(draw, "../static/micorr/images/c/M/eutecticPhase/eutecticPhaseGraphiteLamellas_" + height + "x" + width + ".svg", width, height);
         }
 
-        if (strata.isSubCharacteristic('inclusionsGraphiteLamellas','inclusionsMartensite','inclusionsBainite')) {
+        if (strata.isSubCharacteristic('inclusionsGraphiteLamellas','inclusionsMartensite','inclusionsBainite', 'inclusionsNoMicrostructure')) {
             this.addImage(draw, "../static/micorr/images/c/M/Inclusion/InclusionsGraphiteLamellas_" + height + "x" + width + ".svg", width, height);
         }
 
