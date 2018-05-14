@@ -464,6 +464,8 @@ class GraphGenerationUtil {
         //MmicrostructureFamily
         switch (strata.getFirstCharacteristicByFamily('mMicrostructureFamily', 'name')) {
             case "dendriticCharacteristic":
+            case "martensiteCharacteristic":
+            case "bainiteCharacteristic":
                 this.addImage(draw, "../static/micorr/images/c/M/Dendrites/M_Dendrites_" + height + "x" + width + ".svg", width, height);
                 break;
             case "deformedDendritesCharacteristic":
@@ -477,6 +479,9 @@ class GraphGenerationUtil {
                 break;
             case "grainElongatedCharacteristic":
                 this.addImage(draw, "../static/micorr/images/c/M/Grain/M_GrainElongated_" + height + "x" + width + ".svg", width, height);
+                break;
+            case "graphiteLamellasCharacteristic":
+                this.addImage(draw, "../static/micorr/images/c/M/GraphiteLamellas/GraphiteLamellas_" + height + "x" + width + ".svg", width, height);
                 break;
         }
 
