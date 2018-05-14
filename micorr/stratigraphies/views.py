@@ -6,6 +6,7 @@ from django.http import HttpResponse, HttpResponseForbidden
 from django.shortcuts import render, redirect
 from django.views.decorators.cache import cache_page
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.gzip import gzip_page
 from django.views.decorators.http import require_http_methods
 
 from stratigraphies import micorrservice
@@ -36,7 +37,8 @@ def getStratigraphyDetails(request, stratigraphy):
 
 # retourne toutes les sous caracteristiques et sous caracteristiques
 # @ params
-#@cache_page(60 * 15)
+@cache_page(60 * 15)
+@gzip_page
 def getallcharacteristic(request):
     ms = micorrservice.MiCorrService()
     return HttpResponse(json.dumps(ms.getAllCharacteristic()), content_type='application/json')
