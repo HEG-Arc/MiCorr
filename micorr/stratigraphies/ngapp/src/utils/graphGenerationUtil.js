@@ -464,8 +464,6 @@ class GraphGenerationUtil {
         //MmicrostructureFamily
         switch (strata.getFirstCharacteristicByFamily('mMicrostructureFamily', 'name')) {
             case "dendriticCharacteristic":
-            case "martensiteCharacteristic":
-            case "bainiteCharacteristic":
                 this.addImage(draw, "../static/micorr/images/c/M/Dendrites/M_Dendrites_" + height + "x" + width + ".svg", width, height);
                 break;
             case "deformedDendritesCharacteristic":
