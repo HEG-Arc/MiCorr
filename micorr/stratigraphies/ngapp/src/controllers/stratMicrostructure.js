@@ -107,41 +107,32 @@ angular.module('micorrApp')
             var strata = StratigraphyData.getStratigraphy().getStratas()[StratigraphyData.getSelectedStrata()];
 
 
-            if ($scope.selectedCprimicrostructureFamily != null) {
-                if (strata.findDependency('cprimicrostructureFamily')) {
-                    let previousCprimicrostructureFamily = getSelectedFamilyCharacteristic(strata, "cpriMicrostructureFamily", $scope.cprimicrostructureFamily);
-                    if (previousCprimicrostructureFamily != $scope.selectedCprimicrostructureFamily)
-                    {
-                        strata.replaceCharacteristic(new Characteristic("cpriMicrostructureFamily", $scope.selectedCprimicrostructureFamily));
-                        $scope.selectedSubcprimicrostructureFamily = [];
-                    }
+            if (strata.findDependency('cprimicrostructureFamily')) {
+                let previousCprimicrostructureFamily = getSelectedFamilyCharacteristic(strata, "cpriMicrostructureFamily", $scope.cprimicrostructureFamily);
+                if (previousCprimicrostructureFamily != $scope.selectedCprimicrostructureFamily)
+                {
+                    strata.replaceCharacteristic(new Characteristic("cpriMicrostructureFamily", $scope.selectedCprimicrostructureFamily));
+                    $scope.selectedSubcprimicrostructureFamily = [];
                 }
             }
 
 
-            if ($scope.selectedMmicrostructureFamily != null) {
-                if (strata.findDependency('mmicrostructureFamily')) {
-                    let previousmMicrostructureFamily = getSelectedFamilyCharacteristic(strata, "mMicrostructureFamily", $scope.mmicrostructureFamily);
-                    if (previousmMicrostructureFamily != $scope.selectedMmicrostructureFamily) {
-                        strata.replaceCharacteristic(new Characteristic("mMicrostructureFamily", $scope.selectedMmicrostructureFamily));
-                        $scope.selectedSubmmicrostructureFamily = [];
-                    }
+            if (strata.findDependency('mmicrostructureFamily')) {
+                let previousmMicrostructureFamily = getSelectedFamilyCharacteristic(strata, "mMicrostructureFamily", $scope.mmicrostructureFamily);
+                if (previousmMicrostructureFamily != $scope.selectedMmicrostructureFamily) {
+                    strata.replaceCharacteristic(new Characteristic("mMicrostructureFamily", $scope.selectedMmicrostructureFamily));
+                    $scope.selectedSubmmicrostructureFamily = [];
                 }
             }
 
-            if ($scope.selectedCmlevelofcorrosionFamily != null) {
-
-                if (strata.findDependency('cmlevelofcorrosionFamily')) {
-                    strata.replaceCharacteristic(new Characteristic("cmLevelOfCorrosionFamily", $scope.selectedCmlevelofcorrosionFamily));
-                }
+            if (strata.findDependency('cmlevelofcorrosionFamily')) {
+                strata.replaceCharacteristic(new Characteristic("cmLevelOfCorrosionFamily", $scope.selectedCmlevelofcorrosionFamily));
             }
 
 
-            if ($scope.selectedSubcmlevelofcorrosionFamily != null) {
-                if (strata.findDependency('subcmlevelofcorrosionFamily')) {
-                    strata.replaceSubCharacteristic(new SubCharacteristic('subcmlevelofcorrosionFamily',
-                        $scope.selectedSubcmlevelofcorrosionFamily ));
-                }
+            if (strata.findDependency('subcmlevelofcorrosionFamily')) {
+                strata.replaceSubCharacteristic(new SubCharacteristic('subcmlevelofcorrosionFamily',
+                    $scope.selectedSubcmlevelofcorrosionFamily ));
             }
 
             if (strata.findDependency('submmicrostructureFamily')) {

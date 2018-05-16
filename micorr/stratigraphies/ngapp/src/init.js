@@ -33,8 +33,7 @@ export function natureFactory(nature) {
 }
 
 export function returnNatureCharacteristic(nature){
-    var natureChar = new Characteristic();
-    natureChar.setFamily('natureFamily');
+    var natureChar = new Characteristic('natureFamily');
     if (nature == "cmCharacteristic" || nature == "CM"){
          natureChar.setName('cmCharacteristic');
         natureChar.setRealName("Corroded metal");

@@ -152,20 +152,36 @@ class Strata {
     addSubCharacteristic(subCharacteristic) {
         this.subCharacteristics.push(subCharacteristic);
     }
-     /**
-     * Remplace une sous caractéristique de la famille de celle donnée en paramètre
-     * @param characteristic / subcharacteristic
-      * inArrayProperty ("characteristics", "subCharacteristics", etc..)
-     */
+
+    /*
+    * Replace, add or suppress a characteristic (resp. sub-characteristic) of the same family
+    *
+    * @param characteristic: ( Characteristic / SubCharacteristic)
+    *  characteristic to assign to the stratum.
+    *  if !characteristic.name then any stratum characteristic of family (characteristic.family)
+    *  will be suppressed
+    *
+    *  @param inArrayProperty: ("characteristics", "subCharacteristics", etc..)
+    */
     replaceCharacteristic(characteristic, inArrayProperty="characteristics") {
         //todo refactoring switch characteristics and subCharacteristics to Map instead of Array
         if (typeof(inArrayProperty)==="string")
             inArrayProperty=this[inArrayProperty];
-        var i = inArrayProperty.findIndex(e => e.family == characteristic.family );
-        if (i==-1)
-            inArrayProperty.push(characteristic);
+        let i = inArrayProperty.findIndex(e => e.family == characteristic.family );
+        if (characteristic.getName())
+        {
+            if (i==-1) //no existing characteristic found
+                // add characteristic
+                inArrayProperty.push(characteristic);
+            else
+                // replace existing one with characteristic
+                inArrayProperty[i] = characteristic;
+        }
         else
-            inArrayProperty[i] = characteristic;
+            // Characteristic without name/uid
+            if (i!=-1)
+                //clear existing characteristic of same family
+                inArrayProperty.splice(i,1);
     }
 
     /**
