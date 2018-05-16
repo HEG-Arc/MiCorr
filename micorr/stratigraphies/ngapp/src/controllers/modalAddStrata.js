@@ -26,7 +26,7 @@ angular.module('micorrApp')
                     function ($scope, scopeParent, $modalInstance) {
                         $scope.ok = function () {
 
-                            var nature = returnNatureCharacteristic($scope.nature);
+                            var nature = returnNatureCharacteristic($scope.nature.code);
                             if (nature != undefined) {
                                 var newStrata = new Strata(nature.getRealName(), false);
                                 newStrata.replaceCharacteristic(nature);
