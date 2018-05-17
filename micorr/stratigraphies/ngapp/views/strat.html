@@ -331,7 +331,7 @@
             <div ng-show="showPorosity" class="col-md-6 form-group">
                 <label for="texturePorosity"><span class="glyphicon glyphicon-eye-open"
                                                    title="visual impact on the stratum"></span><span title="{{descriptions.porosityFamily}}"> Compactness</span></label>
-                <select id="texturePorosity" class="form-control" ng-model="selectedPorosityFamily"
+                <select id="texturePorosity" class="form-control" ng-model="selected.porosityFamily"
                         ng-options="x.real_name for x in porosityFamily" ng-change="upTexture()">
                     <option value="" ></option>
                 </select>
@@ -339,7 +339,7 @@
             <div ng-show="showCohesion" class="col-md-6 form-group">
                 <label for="textureCohesion"><span class="glyphicon glyphicon-eye-open"
                                                    title="visual impact on the stratum"></span> <span title="{{descriptions.cohesionFamily}}">Cohesion</span></label>
-                <select id="textureCohesion" class="form-control" ng-model="selectedCohesionFamily"
+                <select id="textureCohesion" class="form-control" ng-model="selected.cohesionFamily"
                         ng-options="x.real_name for x in cohesionFamily" ng-change="upTexture()">
                     <option value="" ></option>
                 </select>
@@ -349,7 +349,7 @@
             <div ng-show="showHardness" class="col-md-6 form-group">
                 <label for="textureHardness"><span class="glyphicon glyphicon-eye-close"
                                                    title="no visual impact on the stratum"></span> <span title="{{descriptions.hardnessFamily}}">Hardness</span></label>
-                <select id="textureHardness" class="form-control" ng-model="selectedHardnessFamily"
+                <select id="textureHardness" class="form-control" ng-model="selected.hardnessFamily"
                         ng-options="x.real_name for x in hardnessFamily" ng-change="upTexture()">
                     <option value="" ></option>
                 </select>
@@ -357,7 +357,7 @@
             <div ng-show="showCracking" class="col-md-6 form-group">
                 <label for="textureCracking"><span class="glyphicon glyphicon-eye-open"
                                                    title="visual impact on the stratum"></span> <span title="{{descriptions.crackingFamily}}">Cracking</span></label>
-                <select id="textureCracking" class="form-control" ng-model="selectedCrackingFamily"
+                <select id="textureCracking" class="form-control" ng-model="selected.crackingFamily"
                         ng-options="x.real_name for x in crackingFamily" ng-change="upTexture()">
                     <option value="" ></option>
                 </select>
