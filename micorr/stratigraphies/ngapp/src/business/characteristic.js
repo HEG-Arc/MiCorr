@@ -26,6 +26,10 @@ class Characteristic{
                 this.setName(sourceC.name) ;
                 this.setRealName(sourceC.real_name);
             }
+            if ('int' in sourceC)
+                this.int = sourceC.int;
+            else
+                this.int = this.family.startsWith("interface");
         }
     }
 
