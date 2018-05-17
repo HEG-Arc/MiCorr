@@ -423,10 +423,10 @@ angular.module('micorrApp')
                 $scope.showcpCompositionAdditionalElements = str.findDependency('cpCompositionAdditionalElements');
 
                 $scope.showmCompositionMainElements = str.findDependency('mCompositionMainElements');
-                $scope.showinterfaceprofileFamily = str.findDependency('interfaceprofileFamily');
-                $scope.showinterfacetransition = str.findDependency('interfacetransitionFamily');
-                $scope.showinterfaceroughness = str.findDependency('interfaceroughnessFamily');
-                $scope.showinterfaceadherence = str.findDependency('interfaceadherenceFamily');
+                $scope.showinterfaceprofileFamily = str.findDependency('interfaceProfileFamily');
+                $scope.showinterfacetransition = str.findDependency('interfaceTransitionFamily');
+                $scope.showinterfaceroughness = str.findDependency('interfaceRoughnessFamily');
+                $scope.showinterfaceadherence = str.findDependency('interfaceAdherenceFamily');
                 $scope.showCmlevelofcorrosionFamily = str.findDependency('cmlevelofcorrosionFamily');
 
                 $scope.showsubcmlevelofcorrosionFamily = str.findDependency('subcmlevelofcorrosionFamily');

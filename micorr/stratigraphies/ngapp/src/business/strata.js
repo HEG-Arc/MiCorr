@@ -427,7 +427,7 @@ class Strata {
 
         //Les strates CM n'ont pas d'interface
         if (this.nature != "Corroded metal") {
-            this.addDependency('interfaceprofileFamily');
+            this.addDependency('interfaceProfileFamily');
         }
         switch (this.nature) {
             case "Corroded metal":
@@ -450,9 +450,9 @@ class Strata {
                 this.addDependency('sCompositionMainElements');
                 this.addDependency('sCompositionSecondaryElements');
 
-                this.addDependency('interfacetransitionFamily');
-                this.addDependency('interfaceroughnessFamily');
-                this.addDependency('interfaceadherenceFamily');
+                this.addDependency('interfaceTransitionFamily');
+                this.addDependency('interfaceRoughnessFamily');
+                this.addDependency('interfaceAdherenceFamily');
                 break;
             case "Non-Metallic material":
                 this.addDependency('colourFamily');
@@ -464,9 +464,9 @@ class Strata {
                 this.addDependency('hardnessFamily');
                 this.addDependency('crackingFamily');
                 this.addDependency('nmmCompositionFamily');
-                this.addDependency('interfacetransitionFamily');
-                this.addDependency('interfaceroughnessFamily');
-                this.addDependency('interfaceadherenceFamily');
+                this.addDependency('interfaceTransitionFamily');
+                this.addDependency('interfaceRoughnessFamily');
+                this.addDependency('interfaceAdherenceFamily');
                 this.addDependency('nmmCompositionNonOrganicElements');
                 break;
             case "Deposit":
@@ -484,9 +484,9 @@ class Strata {
                 this.addDependency('dCompositionMainElements');
                 this.addDependency('dCompositionSecondaryElements');
 
-                this.addDependency('interfacetransitionFamily');
-                this.addDependency('interfaceroughnessFamily');
-                this.addDependency('interfaceadherenceFamily');
+                this.addDependency('interfaceTransitionFamily');
+                this.addDependency('interfaceRoughnessFamily');
+                this.addDependency('interfaceAdherenceFamily');
                 break;
             case "Pseudomorph of organic material":
                 this.addDependency('colourFamily');
@@ -499,9 +499,9 @@ class Strata {
                 this.addDependency('crackingFamily');
                 this.addDependency('pomcompositionFamily');
                 this.addDependency('pomCompositionMetallicPollutants');
-                this.addDependency('interfacetransitionFamily');
-                this.addDependency('interfaceroughnessFamily');
-                this.addDependency('interfaceadherenceFamily');
+                this.addDependency('interfaceTransitionFamily');
+                this.addDependency('interfaceRoughnessFamily');
+                this.addDependency('interfaceAdherenceFamily');
                 break;
             case "Corrosion products":
                 this.addDependency('colourFamily');
@@ -512,9 +512,9 @@ class Strata {
                 this.addDependency('cohesionFamily');
                 this.addDependency('hardnessFamily');
                 this.addDependency('crackingFamily');
-                this.addDependency('interfacetransitionFamily');
-                this.addDependency('interfaceroughnessFamily');
-                this.addDependency('interfaceadherenceFamily');
+                this.addDependency('interfaceTransitionFamily');
+                this.addDependency('interfaceRoughnessFamily');
+                this.addDependency('interfaceAdherenceFamily');
 
                 this.addDependency('cpCompositionMainElements');
                 this.addDependency('cpCompositionSecondaryElements');
@@ -540,9 +540,9 @@ class Strata {
                 this.addDependency('crackingFamily');
                 this.addDependency('mCompositionMainElements');
                 this.addDependency('mCompositionSecondaryElements');
-                this.addDependency('interfacetransitionFamily');
-                this.addDependency('interfaceroughnessFamily');
-                this.addDependency('interfaceadherenceFamily');
+                this.addDependency('interfaceTransitionFamily');
+                this.addDependency('interfaceRoughnessFamily');
+                this.addDependency('interfaceAdherenceFamily');
                 this.addDependency('submmicrostructureFamily');
                 break;
         }

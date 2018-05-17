@@ -1,7 +1,7 @@
 'use strict';
 
 import {Characteristic} from "../business/characteristic";
-import {getCharacteristicByItsName} from "../init";
+import {getCharacteristicByItsName, getSelectedFamilyCharacteristic} from "../init";
 
 /**
  * @ngdoc function
@@ -15,46 +15,52 @@ angular.module('micorrApp')
 
         var initStratInterface = function () {
             // On récupère les valeurs qui vont aller dans les champs de notre formulaire
-            $scope.interfaceprofileFamily = StratigraphyData.getInterfaceprofileFamily()['characteristics'];
-            $scope.interfacetransitionFamily = StratigraphyData.getInterfacetransitionFamily()['characteristics'];
-            $scope.interfaceroughnessFamily = StratigraphyData.getInterfaceroughnessFamily()['characteristics'];
-            $scope.interfaceadherenceFamily = StratigraphyData.getInterfaceadherenceFamily()['characteristics'];
+            $scope.interfaceProfileFamily = StratigraphyData.getInterfaceprofileFamily()['characteristics'];
+            $scope.interfaceTransitionFamily = StratigraphyData.getInterfacetransitionFamily()['characteristics'];
+            $scope.interfaceRoughnessFamily = StratigraphyData.getInterfaceroughnessFamily()['characteristics'];
+            $scope.interfaceAdherenceFamily = StratigraphyData.getInterfaceadherenceFamily()['characteristics'];
             $scope.descriptions = StratigraphyData.descriptions;
         };
 
         $scope.$on('initShowStrat', function (event) {
             initStratInterface();
         });
-
-        function emptyFields() {
-            $scope.selectedInterfaceprofileFamily = null;
-            $scope.selectedInterfacetransitionFamily = null;
-            $scope.selectedInterfaceroughnessFamily = null;
-            $scope.selectedInterfaceadherenceFamily = null;
+         function emptyFields() {
+            $scope.selectedInterfaceProfileFamily = null;
+            $scope.selectedInterfaceTransitionFamily = null;
+            $scope.selectedInterfaceRoughnessFamily = null;
+            $scope.selectedInterfaceAdherenceFamily = null;
         }
+        const scopeVarToFamily = {
+            selectedInterfaceProfileFamily: "interfaceProfileFamily",
+            selectedInterfaceTransitionFamily: "interfaceTransitionFamily",
+            selectedInterfaceRoughnessFamily: "interfaceRoughnessFamily",
+            selectedInterfaceAdherenceFamily: "interfaceAdherenceFamily",
+        };
 
         /*
          * Met à jour les valeurs dans les champs quand on change de strate. Est appelé par un événement parent
          * On met à jour les valeurs sélectionnées en fonction des valeurs qui se trouvent dans la strate actuelle
          */
         $scope.$on('updateInterface', function () {
-
             emptyFields();
-
-            var strata = StratigraphyData.getStratigraphy().getStratas()[StratigraphyData.getSelectedStrata()];
+            let strata = StratigraphyData.getStratigraphy().getStratas()[StratigraphyData.getSelectedStrata()];
+            //for (let v in scopeVarToFamily)
+            //    $scope[v]=getSelectedFamilyCharacteristic(strata, scopeVarToFamily[v], $scope[scopeVarToFamily[v]]);
+                // e.g $scope.selectedInterfaceProfileFamily = getSelectedFamilyCharacteristic(strata, "interfaceProfileFamily", $scope.interfaceProfileFamily);
 
             if (strata.getCharacteristicsByFamily("interfaceProfileFamily").length > 0) {
-                $scope.selectedInterfaceprofileFamily = getCharacteristicByItsName($scope.interfaceprofileFamily, strata.getCharacteristicsByFamily("interfaceProfileFamily")[0].getName());
+                $scope.selectedInterfaceProfileFamily = getCharacteristicByItsName($scope.interfaceProfileFamily, strata.getCharacteristicsByFamily("interfaceProfileFamily")[0].getName());
             }
 
             if (strata.getCharacteristicsByFamily("interfaceTransitionFamily").length > 0) {
-                $scope.selectedInterfacetransitionFamily = getCharacteristicByItsName($scope.interfacetransitionFamily, strata.getCharacteristicsByFamily("interfaceTransitionFamily")[0].getName());
+                $scope.selectedInterfaceTransitionFamily = getCharacteristicByItsName($scope.interfaceTransitionFamily, strata.getCharacteristicsByFamily("interfaceTransitionFamily")[0].getName());
             }
             if (strata.getCharacteristicsByFamily("interfaceRoughnessFamily").length > 0) {
-                $scope.selectedInterfaceroughnessFamily = getCharacteristicByItsName($scope.interfaceroughnessFamily, strata.getCharacteristicsByFamily("interfaceRoughnessFamily")[0].getName());
+                $scope.selectedInterfaceRoughnessFamily = getCharacteristicByItsName($scope.interfaceRoughnessFamily, strata.getCharacteristicsByFamily("interfaceRoughnessFamily")[0].getName());
             }
             if (strata.getCharacteristicsByFamily("interfaceAdherenceFamily").length > 0) {
-                $scope.selectedInterfaceadherenceFamily = getCharacteristicByItsName($scope.interfaceadherenceFamily, strata.getCharacteristicsByFamily("interfaceAdherenceFamily")[0].getName());
+                $scope.selectedInterfaceAdherenceFamily = getCharacteristicByItsName($scope.interfaceAdherenceFamily, strata.getCharacteristicsByFamily("interfaceAdherenceFamily")[0].getName());
             }
 
         });
@@ -65,43 +71,43 @@ angular.module('micorrApp')
         $scope.upInterface = function () {
             var strata = StratigraphyData.getStratigraphy().getStratas()[StratigraphyData.getSelectedStrata()];
 
-            if ($scope.selectedInterfaceprofileFamily != null) {
-                if (strata.findDependency('interfaceprofileFamily')) {
+            if ($scope.selectedInterfaceProfileFamily != null) {
+                if (strata.findDependency('interfaceProfileFamily')) {
                     var char = new Characteristic();
                     char.setFamily("interfaceProfileFamily");
-                    char.setName($scope.selectedInterfaceprofileFamily.name);
-                    char.setRealName($scope.selectedInterfaceprofileFamily.real_name);
+                    char.setName($scope.selectedInterfaceProfileFamily.name);
+                    char.setRealName($scope.selectedInterfaceProfileFamily.real_name);
                     char.setInterface(true);
                     strata.replaceCharacteristic(char);
                 }
             }
-            if ($scope.selectedInterfacetransitionFamily != null) {
-                if (strata.findDependency('interfacetransitionFamily')) {
+            if ($scope.selectedInterfaceTransitionFamily != null) {
+                if (strata.findDependency('interfaceTransitionFamily')) {
                     var char = new Characteristic();
                     char.setFamily("interfaceTransitionFamily");
-                    char.setName($scope.selectedInterfacetransitionFamily.name);
-                    char.setRealName($scope.selectedInterfacetransitionFamily.real_name);
+                    char.setName($scope.selectedInterfaceTransitionFamily.name);
+                    char.setRealName($scope.selectedInterfaceTransitionFamily.real_name);
                     char.setInterface(true);
                     strata.replaceCharacteristic(char);
                 }
             }
-            if ($scope.selectedInterfaceroughnessFamily != null) {
-                if (strata.findDependency('interfaceroughnessFamily')) {
+            if ($scope.selectedInterfaceRoughnessFamily != null) {
+                if (strata.findDependency('interfaceRoughnessFamily')) {
                     var char = new Characteristic();
                     char.setFamily("interfaceRoughnessFamily");
-                    char.setName($scope.selectedInterfaceroughnessFamily.name);
-                    char.setRealName($scope.selectedInterfaceroughnessFamily.real_name);
+                    char.setName($scope.selectedInterfaceRoughnessFamily.name);
+                    char.setRealName($scope.selectedInterfaceRoughnessFamily.real_name);
                     char.setInterface(true);
                     strata.replaceCharacteristic(char);
                 }
             }
 
-            if ($scope.selectedInterfaceadherenceFamily != null) {
-                if (strata.findDependency('interfaceadherenceFamily')) {
+            if ($scope.selectedInterfaceAdherenceFamily != null) {
+                if (strata.findDependency('interfaceAdherenceFamily')) {
                     var char = new Characteristic();
                     char.setFamily("interfaceAdherenceFamily");
-                    char.setName($scope.selectedInterfaceadherenceFamily.name);
-                    char.setRealName($scope.selectedInterfaceadherenceFamily.real_name);
+                    char.setName($scope.selectedInterfaceAdherenceFamily.name);
+                    char.setRealName($scope.selectedInterfaceAdherenceFamily.real_name);
                     char.setInterface(true);
                     strata.replaceCharacteristic(char);
                 }

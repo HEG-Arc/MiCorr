@@ -250,10 +250,10 @@ let StratigraphyData =  angular.module('micorrApp').factory('StratigraphyData', 
                 this.cprimicrostructureFamily = parseCharasteristic('cpriMicrostructureFamily');
                 this.cmcpmicrostructureFamily = parseCharasteristic('cmCpMicrostructureFamily');
                 this.mmicrostructureFamily = parseCharasteristic('mMicrostructureFamily');
-                this.interfaceprofileFamily = parseCharasteristic('interfaceProfileFamily');
-                this.interfacetransitionFamily = parseCharasteristic('interfaceTransitionFamily');
-                this.interfaceroughnessFamily = parseCharasteristic('interfaceRoughnessFamily');
-                this.interfaceadherenceFamily = parseCharasteristic('interfaceAdherenceFamily');
+                this.interfaceProfileFamily = parseCharasteristic('interfaceProfileFamily');
+                this.interfaceTransitionFamily = parseCharasteristic('interfaceTransitionFamily');
+                this.interfaceRoughnessFamily = parseCharasteristic('interfaceRoughnessFamily');
+                this.interfaceAdherenceFamily = parseCharasteristic('interfaceAdherenceFamily');
                 this.submmicrostructureFamily = getSubCharacteristicsFromFamily('mMicrostructureFamily', 'sub');
                 this.subcprimicrostructureFamily = getSubCharacteristicsFromFamily('cpriMicrostructureFamily', 'sub');
 
@@ -308,29 +308,29 @@ let StratigraphyData =  angular.module('micorrApp').factory('StratigraphyData', 
             getSubmmicrostructureFamily: function () {
                 return this.submmicrostructureFamily;
             },
-            setInterfaceadherenceFamily: function (interfaceadherenceFamily) {
-                this.interfaceadherenceFamily = interfaceadherenceFamily;
+            setInterfaceadherenceFamily: function (interfaceAdherenceFamily) {
+                this.interfaceAdherenceFamily = interfaceAdherenceFamily;
             },
             getInterfaceadherenceFamily: function () {
-                return this.interfaceadherenceFamily;
+                return this.interfaceAdherenceFamily;
             },
-            setInterfaceroughnessFamily: function (interfaceroughnessFamily) {
-                this.interfaceroughnessFamily = interfaceroughnessFamily;
+            setInterfaceroughnessFamily: function (interfaceRoughnessFamily) {
+                this.interfaceRoughnessFamily = interfaceRoughnessFamily;
             },
             getInterfaceroughnessFamily: function () {
-                return this.interfaceroughnessFamily;
+                return this.interfaceRoughnessFamily;
             },
-            setInterfacetransitionFamily: function (interfacetransitionFamily) {
-                this.interfacetransitionFamily = interfacetransitionFamily;
+            setInterfacetransitionFamily: function (interfaceTransitionFamily) {
+                this.interfaceTransitionFamily = interfaceTransitionFamily;
             },
             getInterfacetransitionFamily: function () {
-                return this.interfacetransitionFamily;
+                return this.interfaceTransitionFamily;
             },
-            setInterfaceprofileFamily: function (interfaceprofileFamily) {
-                this.interfaceprofileFamily = interfaceprofileFamily;
+            setInterfaceprofileFamily: function (interfaceProfileFamily) {
+                this.interfaceProfileFamily = interfaceProfileFamily;
             },
             getInterfaceprofileFamily: function () {
-                return this.interfaceprofileFamily;
+                return this.interfaceProfileFamily;
             },
             setPomcompositionFamily: function (pomcompositionFamily) {
                 this.pomcompositionFamily = pomcompositionFamily;
