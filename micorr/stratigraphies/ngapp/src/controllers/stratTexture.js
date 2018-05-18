@@ -2,6 +2,7 @@
 
 import {Characteristic} from "../business/characteristic";
 import {getSelectedFamilyCharacteristic} from "../init";
+import {initStratTab, updateStratModelFromTab, updateStratTabFromModel} from "./stratLib";
 
 /**
  * @ngdoc function
@@ -12,38 +13,17 @@ import {getSelectedFamilyCharacteristic} from "../init";
  */
 angular.module('micorrApp')
     .controller('StratTextureCtrl', function ($scope, $route, $window, StratigraphyData) {
-
         const textureFamilies = ["porosityFamily","cohesionFamily", "hardnessFamily", "crackingFamily"];
         $scope.$on('initShowStrat', function (event) {
-            for (let f of textureFamilies)
-                $scope[f] = StratigraphyData[f].characteristics;
-            $scope.selected = {};
-            for (let f of textureFamilies)
-                $scope.selected[f] = null;
-            $scope.descriptions = StratigraphyData.descriptions;
+            initStratTab($scope,StratigraphyData, textureFamilies);
         });
 
-
-        /* Met à jour les données de la strate en fonction des valeurs dans le formulaire
-         * @params
-         * @returns
-         */
         $scope.$on('updateTexture', function () {
-            let strata = StratigraphyData.getStratigraphy().getStratas()[StratigraphyData.getSelectedStrata()];
-            for (let f of textureFamilies)
-                $scope.selected[f]=getSelectedFamilyCharacteristic(strata, f, $scope[f]);
-                // e.g $scope.selected["porosityFamily"] = getSelectedFamilyCharacteristic(strata, "porosityFamily", $scope.porosityFamily);
+            updateStratTabFromModel($scope,StratigraphyData, textureFamilies);
         });
 
-        /* Met à jour les données de la strate en fonction des valeurs dans le formulaire
-         * @params
-         * @returns
-         */
         $scope.upTexture = function () {
-            let strata = StratigraphyData.getStratigraphy().getStratas()[StratigraphyData.getSelectedStrata()];
-            for (let f of textureFamilies)
-                strata.replaceCharacteristic(new Characteristic(f, $scope.selected[f]));
-                // e.g strata.replaceCharacteristic(new Characteristic("porosityFamily", $scope.selected["porosityFamily"]));
+            updateStratModelFromTab($scope, StratigraphyData, textureFamilies);
             $scope.$emit('updateSelectedStrata');
         };
     });
