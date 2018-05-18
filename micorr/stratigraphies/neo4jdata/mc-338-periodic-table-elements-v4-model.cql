@@ -166,14 +166,35 @@ RETURN c;
 // but current code only supports single Family characteristics
 UNWIND [
   {uid: "nmmLeatherCharacteristic", name: "leather", order: 1},
-  {uid: "nmmTextileCharacteristic", name: "textile", order: 3},
-  {uid: "nmmWoodCharacteristic", name: "wood", order: 4},
-  {uid: "nmmOtherCharacteristic", name: "other", order: 5}]
+  {uid: "nmmPaintCharacteristic", name: "paint", order: 3},
+  {uid: "nmmTextileCharacteristic", name: "textile", order: 4},
+  {uid: "nmmVarnishCharacteristic", name: "varnish", order: 5},
+  {uid: "nmmWaxCharacteristic", name: "wax", order: 6},
+  {uid: "nmmWoodCharacteristic", name: "wood", order: 7},
+  {uid: "nmmOtherCharacteristic", name: "other", order: 8}]
   AS new_c
     MERGE (c:Characteristic {uid: new_c.uid, name: new_c.name})
-      ON CREATE SET c+=$common_props, c.order=new_c.order, c.comparisonIndicator1=1
+      ON CREATE SET c+=$common_props, c.order=new_c.order, c.comparisonIndicator1=1, c.visible = false
       ON MATCH SET c.order=new_c.order
     WITH c
     MATCH (f:Family {uid: "nmmCompositionFamily"})
+    MERGE  (c)-[:BELONGS_TO]->(f)
+    RETURN c;
+
+/**************************
+ MC-330 Morphology
+ Ajouter dans la direction des strates : Multi directionnal
+*/
+
+// Add this characteristic at the end of the directionFamily (longitudinal, oblique, transversal, -> multi directionnal)
+UNWIND [
+  {uid: "multidirectionalCharacteristic", name: "multidirectional", order: 4}
+ ]
+  AS new_c
+    MERGE (c:Characteristic {uid: new_c.uid, name: new_c.name})
+      ON CREATE SET c+=$common_props, c.order=new_c.order, c.comparisonIndicator1=1, c.visible = false
+      ON MATCH SET c.order=new_c.order
+    WITH c
+    MATCH (f:Family {uid: "directionFamily"})
     MERGE  (c)-[:BELONGS_TO]->(f)
     RETURN c;
