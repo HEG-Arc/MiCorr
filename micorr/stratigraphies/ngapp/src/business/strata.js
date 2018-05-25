@@ -553,7 +553,7 @@ class Strata {
         var childStrata = [],i;
 
         var jsonStrata = {
-            name: this.getUid(), characteristics: [], interfaces: [], children: [], secondaryComponents: [],
+            name: this.getUid(), characteristics: [], subCharacteristics: [], interfaces: [], children: [], secondaryComponents: [],
             containers: {}
         };
 
@@ -565,8 +565,8 @@ class Strata {
         }
         //On récupère les sous caractéristiques
         for (i = 0; i < this.subCharacteristics.length; i++) {
-            jsonStrata.characteristics.push({name: this.subCharacteristics[i].getUid()});
-        }
+            jsonStrata.subCharacteristics.push({name: this.subCharacteristics[i].getUid()});
+       }
 
         //On récupère les caractéristiques d'interface
         for (i = 0; i < this.characteristics.length; i++) {

@@ -424,13 +424,20 @@ class Neo4jDAO:
         self.query = "MATCH (a:Interface),(b) WHERE a.uid = '" + interface + "' AND b.uid= '" + characteristic + "' CREATE (a)-[r:IS_CONSTITUTED_BY]->(b)"
         self.graph.cypher.execute(self.query)
 
-    # attache une caracteristique,sous-caracteristique a une strate
-    # @params nom de la strate etnom de la caracteristique, sous-caracteristique
+    # attache une caracteristique a une strate
+    # @params nom de la strate et nom de la caracteristique
     # @returns
-    def attachCharacteristicToStrata(self, strata, characteristic):
-        self.query = "MATCH (a:Strata),(b) WHERE a.uid = '" + strata + "' AND b.uid= '" + characteristic + "' CREATE (a)-[r:IS_CONSTITUTED_BY]->(b)"
-        print(self.query)
-        self.graph.cypher.execute(self.query)
+    def attachCharacteristicToStrata(self, strata, c_uid, label="Characteristic"):
+        self.graph.cypher.execute("""
+      MATCH (s:Strata),(c:{label}) WHERE s.uid = "{strata}" AND c.uid="{c_uid}"
+      CREATE (s)-[r:IS_CONSTITUTED_BY]->(c)""".
+                                  format(strata=strata, c_uid=c_uid, label=label))
+
+    # attache une sous-caracteristique a une strate
+    # @params nom de la strate et nom de la sous-caracteristique
+    # @returns
+    def attachSubCharacteristicToStrata(self, strata, sub_characteristic):
+        self.attachCharacteristicToStrata(strata, sub_characteristic, "SubCharacteristic")
 
     # attache une caracteristique ou sous-caracteristique a un node (Strata, Interface, ...)
     # @params nom de la strate etnom de la caracteristique, sous-caracteristique
@@ -553,8 +560,11 @@ class Neo4jDAO:
 
             # pour chaque strate on attache une caracteristique ou sous caracteristique
             for characteristic in stratum['characteristics']:
-                if len(characteristic) > 0:
+                if characteristic:
                     self.attachCharacteristicToStrata(stratum_name, characteristic['name'])
+            for sc in stratum['subCharacteristics']:
+                if sc:
+                    self.attachSubCharacteristicToStrata(stratum_name, sc['name'])
 
             # pour chaque strate on cree une interface et on y attache des caracteristiques
             interface_name = stratum_name + "_interface" + str(self.getNbInterfaceByStratigraphy(stratigraphy_name) + 1)
@@ -570,9 +580,12 @@ class Neo4jDAO:
                     child_name = s['name']
                     self.createChildStrata(child_name, stratum_name)
 
-                    for sc in s['characteristics']:
-                        if len(sc) > 0:
-                            self.attachCharacteristicToStrata(child_name, sc['name'])
+                    for c in s['characteristics']:
+                        if c:
+                            self.attachCharacteristicToStrata(child_name, c['name'])
+                    for sc in s['subCharacteristics']:
+                        if sc:
+                            self.attachSubCharacteristicToStrata(stratum_name, sc['name'])
 
             self.create_secondary_components(stratum_node, stratum['secondaryComponents'])
             self.create_containers(stratum_node, stratum['containers'])
@@ -596,30 +609,36 @@ class Neo4jDAO:
         nbStrata = len(data['stratas'])
 
         listChar = []
+        listSubChar = []
         listCharInt = []
 
         for t in data['stratas']:
             for c in t['characteristics']:
                 if len(c) > 0:
                     listChar.append(c['name'])
+            for sc in t['subCharacteristics']:
+                if sc:
+                    listSubChar.append(sc['name'])
             for i in t['interfaces']:
                 if len(i) > 0:
                     listCharInt.append(i['name'])
 
         listChar = set(listChar)
         listCharInt = set(listCharInt)
+        listSubChar = set(listSubChar)
 
-        qry = "MATCH (a:Artefact)-->(s:Stratigraphy)-->(st:Strata) "
+        qry = "MATCH (a:Artefact)-->(s:Stratigraphy)-->(st:Strata) WHERE a.uid <> 'Search' and s.public = true "
 
         cpt = 1
         for c in listChar:
-            qry += "OPTIONAL MATCH (st)-[:IS_CONSTITUTED_BY]->(m" + str(cpt) + "{uid:'" + c + "'}) "
+            qry += "OPTIONAL MATCH (st)-[:IS_CONSTITUTED_BY]->(m{}:Characteristic {{uid:'{}'}}) ".format(cpt,c)
             cpt += 1
-
+        for c in listSubChar:
+            qry += "OPTIONAL MATCH (st)-[:IS_CONSTITUTED_BY]->(m{}:SubCharacteristic {{uid:'{}'}}) ".format(cpt,c)
+            cpt += 1
         for c in listCharInt:
-            qry += "OPTIONAL MATCH (st)-[:HAS_UPPER_INTERFACE]->(i:Interface)-[:IS_CONSTITUTED_BY]->(m" + str(
-                cpt) + "{uid:'" + c + "'}) "
-            cpt += 1
+            qry += "OPTIONAL MATCH (st)-[:HAS_UPPER_INTERFACE]->(i:Interface)-[:IS_CONSTITUTED_BY]->(m{} {{uid:'{}'}}) ".format(cpt,c)
+            cpt +=1
 
         nbChar = len(listChar) + len(listCharInt)
 
@@ -649,7 +668,7 @@ class Neo4jDAO:
         qry += "MATCH(a:Artefact)-->(s:Stratigraphy)-->(st:Strata)-[:HAS_UPPER_INTERFACE]->(i:Interface)-[r1:IS_CONSTITUTED_BY]->(o1) WHERE a.uid=auid AND s.public=true "
         qry += "with auid, artefact_id, stratigraphy_uid, stratum, DiffNombreStratum, TotalComparisonIndicator1, TotalMatching, count(r1) + countrelations as TotalRelations "
         qry += "RETURN auid, artefact_id, stratigraphy_uid, stratum, DiffNombreStratum, TotalComparisonIndicator1, TotalMatching, TotalRelations, 100*TotalMatching/TotalRelations as Matching100 "
-        qry += "ORDER BY Matching100 DESC, TotalComparisonIndicator1 DESC "
+        qry += "ORDER BY Matching100 DESC, TotalComparisonIndicator1 DESC LIMIT 10"
         logger.debug("MATCHING QUERY: %s" % qry)
         old_list = []
 
