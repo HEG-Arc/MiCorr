@@ -615,21 +615,16 @@ class Neo4jDAO:
         listCharInt = []
 
         for t in data['stratas']:
-            for c in t['characteristics']:
-                if len(c) > 0:
-                    listChar.append(c['name'])
-            for sc in t['subCharacteristics']:
-                if sc:
-                    listSubChar.append(sc['name'])
-            for i in t['interfaces']:
-                if len(i) > 0:
-                    listCharInt.append(i['name'])
-
+            listChar += [c['name'] for c in t['characteristics']]
+            listSubChar += [c['name'] for c in t['subCharacteristics']]
+            listCharInt += [c['name'] for c in t['interfaces']]
+        logger.debug("Source stratum: {} Total number of characteristics:{}".format(data['stratigraphy'],len(listChar)+len(listSubChar)+len(listCharInt)))
         listChar = set(listChar)
         listCharInt = set(listCharInt)
         listSubChar = set(listSubChar)
+        logger.debug("Unique characteristics:{}".format(len(listChar) + len(listSubChar) + len(listCharInt)))
 
-        qry = "MATCH (a:Artefact)-->(s:Stratigraphy)-->(st:Strata) WHERE a.uid <> 'Search' and s.public = true "
+        qry = "MATCH (s:Stratigraphy)-[:POSSESSES]->(st:Strata) WHERE s.public = true "
 
         cpt = 1
         for c in listChar:
@@ -639,76 +634,52 @@ class Neo4jDAO:
             qry += "OPTIONAL MATCH (st)-[:IS_CONSTITUTED_BY]->(m{}:SubCharacteristic {{uid:'{}'}}) ".format(cpt,c)
             cpt += 1
         for c in listCharInt:
-            qry += "OPTIONAL MATCH (st)-[:HAS_UPPER_INTERFACE]->(i:Interface)-[:IS_CONSTITUTED_BY]->(m{} {{uid:'{}'}}) ".format(cpt,c)
+            qry += "OPTIONAL MATCH (st)-[:HAS_UPPER_INTERFACE]->(:Interface)-[:IS_CONSTITUTED_BY]->(m{} {{uid:'{}'}}) ".format(cpt,c)
             cpt +=1
 
-        nbChar = len(listChar) + len(listCharInt)
+        nbChar = cpt -1
 
-        qry += "with a.uid as auid, a.artefact_id as artefact_id, s.uid as stratigraphy_uid, count(st) as stratum, count(st)-" + str(
-            nbStrata) + " as diffnbstratum, "
+        qry += "WITH s, count(st) as stratum, count(st)-" + str(nbStrata) + " as diffnbstratum, "
 
-        qry += "( "
-        cpt = 1
-        while cpt <= nbChar:
-            qry += "sum(m" + str(cpt) + ".comparisonIndicator1) "
-            if cpt != nbChar:
-                qry += "+ "
-            cpt += 1
-        qry += ") as TotalComparisonIndicator1, "
+        qry += '+'.join(["sum(m{}.comparisonIndicator1)".format(i + 1) for i in range(nbChar)]) + " as tci, "
+        qry += '+'.join(["count(m{})".format(i + 1) for i in range(nbChar)]) + " as totalmatching \n"
 
-        qry += "( "
-        cpt = 1
-        while cpt <= nbChar:
-            qry += "count(m" + str(cpt) + ") "
-            if cpt != nbChar:
-                qry += "+ "
-            cpt += 1
-        qry += ") as TotalMatching "
-
-        qry += "MATCH (a:Artefact)-->(s:Stratigraphy)-->(st:Strata)-[r:IS_CONSTITUTED_BY]-(o) WHERE a.uid=auid "
-        qry += "with auid, artefact_id, stratigraphy_uid, stratum, diffnbstratum, TotalComparisonIndicator1, TotalMatching, count(r) as countrelations "
-        qry += "MATCH(a:Artefact)-->(s:Stratigraphy)-->(st:Strata)-[:HAS_UPPER_INTERFACE]->(i:Interface)-[r1:IS_CONSTITUTED_BY]->(o1) WHERE a.uid=auid AND s.public=true "
-        qry += "with auid, artefact_id, stratigraphy_uid, stratum, diffnbstratum, TotalComparisonIndicator1, TotalMatching, count(r1) + countrelations as TotalRelations "
-        qry += "RETURN auid, artefact_id, stratigraphy_uid, stratum, diffnbstratum, TotalComparisonIndicator1, TotalMatching, TotalRelations, 100*TotalMatching/TotalRelations as Matching100 "
-        qry += "ORDER BY Matching100 DESC, TotalComparisonIndicator1 DESC LIMIT 10"
+        qry += "MATCH (s)-[:POSSESSES]->(st:Strata)-[r:IS_CONSTITUTED_BY]->(o) "
+        qry += "WITH s, stratum, diffnbstratum, tci, totalmatching, count(r) as countrelations "
+        qry += "MATCH (s)-->(:Strata)-[:HAS_UPPER_INTERFACE]->(:Interface)-[r1:IS_CONSTITUTED_BY]->() "
+        qry += "WITH s, stratum, diffnbstratum, tci, totalmatching, count(r1) + countrelations as totalrelation "
+        qry += 'MATCH (s)<-[:IS_REPRESENTED_BY]-(a:Artefact) WHERE (a.uid <> "Search")'
+        qry += "RETURN a.uid as artefact, a.artefact_id AS artefact_id, s.uid as stratigraphy_uid, stratum, diffnbstratum, tci, totalmatching, totalrelation, 100*totalmatching/totalrelation as matching100 "
+        qry += "ORDER BY matching100 DESC, tci"
         logger.debug("MATCHING QUERY: %s" % qry)
-        old_list = []
+        result_list = []
 
         res = self.graph.cypher.execute(qry)
-
-        for i in res:
-            line = {'node_base_url': '', 'artefact': '', 'artefact_id': '', 'stratigraphy_uid': '', 'stratum': '', 'diffnbstratum': '', 'tci': '',
-                    'totalmatching': '', 'totalrelation': '', 'matching100': ''}
-            line['node_base_url'] = node_base_url
-            line['artefact'] = i['auid']
-            line['artefact_id'] = i['artefact_id']
-            line['stratigraphy_uid'] = i['stratigraphy_uid']
-            line['stratum'] = i['stratum']
-            line['diffnbstratum'] = i['diffnbstratum']
-            line['tci'] = i['TotalComparisonIndicator1']
-            line['totalmatching'] = i['TotalMatching']
-            line['totalrelation'] = i['TotalRelations']
-            line['matching100'] = i['Matching100']
+        logger.debug(res)
+        for r in  res:
             # Add artefact characteristics
-            if i['artefact_id']:
-                artefact = Artefact.objects.get(pk=i['artefact_id'])
-                # Quick fix
-                published_artefact = artefact.object.artefact_set.filter(published=True).first()
-                if published_artefact:
-                    artefact = published_artefact
-                    # else todo check artefact.user against logged in user to list only published or own artefacts
-                    # but there (in api context) we are missing the request.user
-                    line['artefact_id'] = artefact.pk
-                line['artefact_metal1'] = artefact.metal1.element
-                line['artefact_alloy'] = artefact.alloy.name
-                line['artefact_type'] = artefact.type.name
-                line['artefact_chronology_category'] = artefact.chronology_period.chronology_category.name
-                line['artefact_technology'] = artefact.technology.name
-                line['artefact_microstructure'] = artefact.microstructure.name
-                if published_artefact:
-                    old_list.append(line)
-        print(old_list)
-        return old_list
+            artefact = Artefact.objects.filter(pk=r.artefact_id).first()
+            # for now (query tuning, and not enough published artefact) we don't filter unpublished artefacts
+            # published_artefact = artefact.object.artefact_set.filter(published=True).first() if a else None
+            published_artefact = artefact
+            if published_artefact:
+                # else todo check artefact.user against logged in user to list only published or own artefacts
+                # but there (in api context) we are missing the request.user
+
+                line = {k: r[k] for k in res.columns}
+                line['node_base_url'] = node_base_url
+
+                line['artefact_id'] = published_artefact.pk
+                line['artefact_metal1'] = published_artefact.metal1.element
+                line['artefact_alloy'] = published_artefact.alloy.name
+                line['artefact_type'] = published_artefact.type.name
+                line['artefact_chronology_category'] = published_artefact.chronology_period.chronology_category.name
+                line['artefact_technology'] = published_artefact.technology.name
+                line['artefact_microstructure'] = published_artefact.microstructure.name
+                result_list.append(line)
+
+        # logger.debug(result_list)
+        return result_list
 
     # Ajout d'un artefact
     # @params nom de l'artefact
