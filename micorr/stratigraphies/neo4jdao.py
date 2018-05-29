@@ -84,9 +84,11 @@ class Neo4jDAO:
     def getStratigraphyDetails(self, stratigraphy_uid):
         # on cherche d'abord toutes les strates
         strata_records = self.graph.cypher.execute(
-            "MATCH (sg:Stratigraphy)-[r:POSSESSES]->(st:Strata) where sg.uid={uid}\
-               RETURN sg.description as description, st.uid as uid order by st.uid",
-            uid=stratigraphy_uid )
+            """MATCH (sg:Stratigraphy)-[r:POSSESSES]->(st:Strata) where sg.uid={uid}
+               RETURN sg.description as description, st.uid as uid,
+                toInteger(replace(st.uid, {sg_strata_prefix}, "")) as strata_num
+                order by strata_num""",
+            uid=stratigraphy_uid,sg_strata_prefix= stratigraphy_uid +"_Strata")
         # todo optimization something like the following query would be enough
         # stratigraphy_records = self.graph.cypher.execute(
         # MATCH (sg:Stratigraphy)-[:POSSESSES]->(st:Strata),(st)-[:IS_CONSTITUTED_BY]->(csc)-[b:BELONGS_TO]->(f:Family) where sg.uid={uid}
@@ -643,7 +645,7 @@ class Neo4jDAO:
         nbChar = len(listChar) + len(listCharInt)
 
         qry += "with a.uid as auid, a.artefact_id as artefact_id, s.uid as stratigraphy_uid, count(st) as stratum, count(st)-" + str(
-            nbStrata) + " as DiffNombreStratum, "
+            nbStrata) + " as diffnbstratum, "
 
         qry += "( "
         cpt = 1
@@ -664,10 +666,10 @@ class Neo4jDAO:
         qry += ") as TotalMatching "
 
         qry += "MATCH (a:Artefact)-->(s:Stratigraphy)-->(st:Strata)-[r:IS_CONSTITUTED_BY]-(o) WHERE a.uid=auid "
-        qry += "with auid, artefact_id, stratigraphy_uid, stratum, DiffNombreStratum, TotalComparisonIndicator1, TotalMatching, count(r) as countrelations "
+        qry += "with auid, artefact_id, stratigraphy_uid, stratum, diffnbstratum, TotalComparisonIndicator1, TotalMatching, count(r) as countrelations "
         qry += "MATCH(a:Artefact)-->(s:Stratigraphy)-->(st:Strata)-[:HAS_UPPER_INTERFACE]->(i:Interface)-[r1:IS_CONSTITUTED_BY]->(o1) WHERE a.uid=auid AND s.public=true "
-        qry += "with auid, artefact_id, stratigraphy_uid, stratum, DiffNombreStratum, TotalComparisonIndicator1, TotalMatching, count(r1) + countrelations as TotalRelations "
-        qry += "RETURN auid, artefact_id, stratigraphy_uid, stratum, DiffNombreStratum, TotalComparisonIndicator1, TotalMatching, TotalRelations, 100*TotalMatching/TotalRelations as Matching100 "
+        qry += "with auid, artefact_id, stratigraphy_uid, stratum, diffnbstratum, TotalComparisonIndicator1, TotalMatching, count(r1) + countrelations as TotalRelations "
+        qry += "RETURN auid, artefact_id, stratigraphy_uid, stratum, diffnbstratum, TotalComparisonIndicator1, TotalMatching, TotalRelations, 100*TotalMatching/TotalRelations as Matching100 "
         qry += "ORDER BY Matching100 DESC, TotalComparisonIndicator1 DESC LIMIT 10"
         logger.debug("MATCHING QUERY: %s" % qry)
         old_list = []
@@ -682,7 +684,7 @@ class Neo4jDAO:
             line['artefact_id'] = i['artefact_id']
             line['stratigraphy_uid'] = i['stratigraphy_uid']
             line['stratum'] = i['stratum']
-            line['diffnbstratum'] = i['DiffNombreStratum']
+            line['diffnbstratum'] = i['diffnbstratum']
             line['tci'] = i['TotalComparisonIndicator1']
             line['totalmatching'] = i['TotalMatching']
             line['totalrelation'] = i['TotalRelations']
@@ -705,12 +707,8 @@ class Neo4jDAO:
                 line['artefact_microstructure'] = artefact.microstructure.name
                 if published_artefact:
                     old_list.append(line)
-        result = []
-        for j in old_list:
-            if j['artefact_id'] and j['matching100'] < 100:
-                result.append(j)
-        print(result)
-        return result
+        print(old_list)
+        return old_list
 
     # Ajout d'un artefact
     # @params nom de l'artefact
