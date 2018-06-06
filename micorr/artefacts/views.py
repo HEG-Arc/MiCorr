@@ -82,6 +82,13 @@ def displayOntology(request):
     return render(request, "artefacts/artefact_ontology_answer.html", locals())
 """
 
+# here we cache SectionCategory model instances "frequently accessesed" in all views
+SC_ARTEFACT = SectionCategory.objects.get(name=SectionCategory.ARTEFACT)
+SC_SAMPLE = SectionCategory.objects.get(name=SectionCategory.SAMPLE)
+SC_ANALYSIS_AND_RESULTS = SectionCategory.objects.get(name=SectionCategory.ANALYSIS_AND_RESULTS)
+SC_CONCLUSION = SectionCategory.objects.get(name=SectionCategory.CONCLUSION)
+SC_REFERENCES = SectionCategory.objects.get(name=SectionCategory.REFERENCES)
+
 
 def searchStratigraphy(self):
     neo = Neo4jDAO()
@@ -168,17 +175,17 @@ class ArtefactsUpdateView(generic.UpdateView):
 
         formObject = ObjectUpdateForm(instance=obj)
 
-        object_section = Section.objects.get_or_create(order=1, artefact=artefact, section_category=SectionCategory.objects.get(name='AR'), title='The object')[0]
-        description_section = Section.objects.get_or_create(order=2, artefact=artefact, section_category=SectionCategory.objects.get(name='AR'), title='Description and visual observation')[0]
-        zone_section = Section.objects.get_or_create(order=3, artefact=artefact, section_category=SectionCategory.objects.get(name='SA'), title='Zones of the artefact submitted to visual observation and location of sampling areas')[0]
-        macroscopic_section = Section.objects.get_or_create(order=4, artefact=artefact, section_category=SectionCategory.objects.get(name='SA'), title='Macroscopic observation')[0]
-        sample_section = Section.objects.get_or_create(order=5, artefact=artefact, section_category=SectionCategory.objects.get(name='SA'), title='Sample')[0]
-        analyses_performed = Section.objects.get_or_create(order=6, artefact=artefact, section_category=SectionCategory.objects.get(name='AN'), title='Analyses and results')[0].content
-        metal_section = Section.objects.get_or_create(order=7, artefact=artefact, section_category=SectionCategory.objects.get(name='AN'), title='Metal')[0]
-        corrosion_section = Section.objects.get_or_create(order=8, artefact=artefact, section_category=SectionCategory.objects.get(name='AN'), title='Corrosion layers')[0]
-        synthesis_section = Section.objects.get_or_create(order=9, artefact=artefact, section_category=SectionCategory.objects.get(name='AN'), title='Synthesis of the macroscopic / microscopic observation of corrosion layers')[0]
-        conclusion_text = Section.objects.get_or_create(order=10, artefact=artefact, section_category=SectionCategory.objects.get(name='CO'), title='Conclusion')[0].content
-        references_text = Section.objects.get_or_create(order=11, artefact=artefact, section_category=SectionCategory.objects.get(name='RE'), title='References')[0].content
+        object_section = Section.objects.get_or_create(order=1, artefact=artefact, section_category=SC_ARTEFACT, title='The object')[0]
+        description_section = Section.objects.get_or_create(order=2, artefact=artefact, section_category=SC_ARTEFACT, title='Description and visual observation')[0]
+        zone_section = Section.objects.get_or_create(order=3, artefact=artefact, section_category=SC_SAMPLE, title='Zones of the artefact submitted to visual observation and location of sampling areas')[0]
+        macroscopic_section = Section.objects.get_or_create(order=4, artefact=artefact, section_category=SC_SAMPLE, title='Macroscopic observation')[0]
+        sample_section = Section.objects.get_or_create(order=5, artefact=artefact, section_category=SC_SAMPLE, title='Sample')[0]
+        analyses_performed = Section.objects.get_or_create(order=6, artefact=artefact, section_category=SC_ANALYSIS_AND_RESULTS, title='Analyses and results')[0].content
+        metal_section = Section.objects.get_or_create(order=7, artefact=artefact, section_category=SC_ANALYSIS_AND_RESULTS, title='Metal')[0]
+        corrosion_section = Section.objects.get_or_create(order=8, artefact=artefact, section_category=SC_ANALYSIS_AND_RESULTS, title='Corrosion layers')[0]
+        synthesis_section = Section.objects.get_or_create(order=9, artefact=artefact, section_category=SC_ANALYSIS_AND_RESULTS, title='Synthesis of the macroscopic / microscopic observation of corrosion layers')[0]
+        conclusion_text = Section.objects.get_or_create(order=10, artefact=artefact, section_category=SC_CONCLUSION, title='Conclusion')[0].content
+        references_text = Section.objects.get_or_create(order=11, artefact=artefact, section_category=SC_REFERENCES, title='References')[0].content
         stratigraphies = artefact.stratigraphy_set.all
         return render(request, 'artefacts/artefact_update_form.html', self.get_context_data(form=form, formObject=formObject, object_section=object_section, description_section=description_section,
                                                              zone_section=zone_section, macroscopic_section=macroscopic_section,
@@ -196,42 +203,42 @@ class ArtefactsUpdateView(generic.UpdateView):
         objForm = ObjectUpdateForm(request.POST, instance=obj)
         if objForm.is_valid():
             objForm.save()
-        section_1 = Section.objects.update_or_create(order=1, artefact=artefact, section_category=SectionCategory.objects.get(name='AR'), title='The object')[0]
+        section_1 = Section.objects.update_or_create(order=1, artefact=artefact, section_category=SC_ARTEFACT, title='The object')[0]
         artefact.section_set.add(section_1)
         section_2 = Section.objects.update_or_create(defaults={'complementary_information':request.POST['complementary_information']},
-                    order=2, artefact=artefact, section_category=SectionCategory.objects.get(name='AR'), title='Description and visual observation')[0]
+                    order=2, artefact=artefact, section_category=SC_ARTEFACT, title='Description and visual observation')[0]
         artefact.section_set.add(section_2)
 
-        section_3 = Section.objects.update_or_create(order=3, artefact=artefact, section_category=SectionCategory.objects.get(name='SA'), title='Zones of the artefact submitted to visual observation and location of sampling areas')[0]
+        section_3 = Section.objects.update_or_create(order=3, artefact=artefact, section_category=SC_SAMPLE, title='Zones of the artefact submitted to visual observation and location of sampling areas')[0]
         artefact.section_set.add(section_3)
 
         section_4 = Section.objects.update_or_create(defaults={'content':request.POST['macroscopic_text']},
-                    order=4, artefact=artefact, section_category=SectionCategory.objects.get(name='SA'), title='Macroscopic observation')[0]
+                    order=4, artefact=artefact, section_category=SC_SAMPLE, title='Macroscopic observation')[0]
         artefact.section_set.add(section_4)
         section_5 = Section.objects.update_or_create(defaults={'complementary_information':request.POST['sample_complementary_information']},
-                                                     order=5, artefact=artefact, section_category=SectionCategory.objects.get(name='SA'), title='Sample')[0]
+                                                     order=5, artefact=artefact, section_category=SC_SAMPLE, title='Sample')[0]
         # images sample
         artefact.section_set.add(section_5)
         section_6 = Section.objects.update_or_create(defaults={'content':request.POST['analyses_performed']},
-                                                     order=6, artefact=artefact, section_category=SectionCategory.objects.get(name='AN'), title='Analyses and results')[0]
+                                                     order=6, artefact=artefact, section_category=SC_ANALYSIS_AND_RESULTS, title='Analyses and results')[0]
         artefact.section_set.add(section_6)
         section_7 = Section.objects.update_or_create(defaults={'content':request.POST['metal_text'],
                                                                'complementary_information':request.POST['metal_complementary_information']},
-                                                     order=7, artefact=artefact, section_category=SectionCategory.objects.get(name='AN'), title='Metal')[0]
+                                                     order=7, artefact=artefact, section_category=SC_ANALYSIS_AND_RESULTS, title='Metal')[0]
         # images metal
         artefact.section_set.add(section_7)
         section_8 = Section.objects.update_or_create(defaults={'content':request.POST['corrosion_text'],
                                                                'complementary_information': request.POST['corrosion_complementary_information']},
-                                                     order=8, artefact=artefact, section_category=SectionCategory.objects.get(name='AN'), title='Corrosion layers')[0]
+                                                     order=8, artefact=artefact, section_category=SC_ANALYSIS_AND_RESULTS, title='Corrosion layers')[0]
         artefact.section_set.add(section_8)
         section_9 = Section.objects.update_or_create(defaults={'content':request.POST['synthesis_text']},
-                                                               order=9, artefact=artefact, section_category=SectionCategory.objects.get(name='AN'), title='Synthesis of the macroscopic / microscopic observation of corrosion layers')[0]
+                                                               order=9, artefact=artefact, section_category=SC_ANALYSIS_AND_RESULTS, title='Synthesis of the macroscopic / microscopic observation of corrosion layers')[0]
         artefact.section_set.add(section_9)
         section_10 = Section.objects.update_or_create(defaults={'content':request.POST['conclusion_text']},
-                                                      order=10, artefact=artefact, section_category=SectionCategory.objects.get(name='CO'), title='Conclusion')[0]
+                                                      order=10, artefact=artefact, section_category=SC_CONCLUSION, title='Conclusion')[0]
         artefact.section_set.add(section_10)
         section_11 = Section.objects.update_or_create(defaults={'content':request.POST['references_text']},
-                                                      order=11, artefact=artefact, section_category=SectionCategory.objects.get(name='RE'), title='References')[0]
+                                                      order=11, artefact=artefact, section_category=SC_REFERENCES, title='References')[0]
         artefact.section_set.add(section_11)
         return super(ArtefactsUpdateView, self).post(request, **kwargs)
 
@@ -932,17 +939,17 @@ class CollaborationUpdateView(generic.UpdateView):
                         unreadCommentsSection[sectionShortTitle] = True
 
 
-        object_section = Section.objects.get_or_create(order=1, artefact=artefact, section_category=SectionCategory.objects.get(name='AR'), title='The object')[0]
-        description_section = Section.objects.get_or_create(order=2, artefact=artefact, section_category=SectionCategory.objects.get(name='AR'), title='Description and visual observation')[0]
-        zone_section = Section.objects.get_or_create(order=3, artefact=artefact, section_category=SectionCategory.objects.get(name='SA'), title='Zones of the artefact submitted to visual observation and location of sampling areas')[0]
-        macroscopic_section = Section.objects.get_or_create(order=4, artefact=artefact, section_category=SectionCategory.objects.get(name='SA'), title='Macroscopic observation')[0]
-        sample_section = Section.objects.get_or_create(order=5, artefact=artefact, section_category=SectionCategory.objects.get(name='SA'), title='Sample')[0]
-        analyses_performed = Section.objects.get_or_create(order=6, artefact=artefact, section_category=SectionCategory.objects.get(name='AN'), title='Analyses and results')[0].content
-        metal_section = Section.objects.get_or_create(order=7, artefact=artefact, section_category=SectionCategory.objects.get(name='AN'), title='Metal')[0]
-        corrosion_section = Section.objects.get_or_create(order=8, artefact=artefact, section_category=SectionCategory.objects.get(name='AN'), title='Corrosion layers')[0]
-        synthesis_section = Section.objects.get_or_create(order=9, artefact=artefact, section_category=SectionCategory.objects.get(name='AN'), title='Synthesis of the macroscopic / microscopic observation of corrosion layers')[0]
-        conclusion_text = Section.objects.get_or_create(order=10, artefact=artefact, section_category=SectionCategory.objects.get(name='CO'), title='Conclusion')[0].content
-        references_text = Section.objects.get_or_create(order=11, artefact=artefact, section_category=SectionCategory.objects.get(name='RE'), title='References')[0].content
+        object_section = Section.objects.get_or_create(order=1, artefact=artefact, section_category=SC_ARTEFACT, title='The object')[0]
+        description_section = Section.objects.get_or_create(order=2, artefact=artefact, section_category=SC_ARTEFACT, title='Description and visual observation')[0]
+        zone_section = Section.objects.get_or_create(order=3, artefact=artefact, section_category=SC_SAMPLE, title='Zones of the artefact submitted to visual observation and location of sampling areas')[0]
+        macroscopic_section = Section.objects.get_or_create(order=4, artefact=artefact, section_category=SC_SAMPLE, title='Macroscopic observation')[0]
+        sample_section = Section.objects.get_or_create(order=5, artefact=artefact, section_category=SC_SAMPLE, title='Sample')[0]
+        analyses_performed = Section.objects.get_or_create(order=6, artefact=artefact, section_category=SC_ANALYSIS_AND_RESULTS, title='Analyses and results')[0].content
+        metal_section = Section.objects.get_or_create(order=7, artefact=artefact, section_category=SC_ANALYSIS_AND_RESULTS, title='Metal')[0]
+        corrosion_section = Section.objects.get_or_create(order=8, artefact=artefact, section_category=SC_ANALYSIS_AND_RESULTS, title='Corrosion layers')[0]
+        synthesis_section = Section.objects.get_or_create(order=9, artefact=artefact, section_category=SC_ANALYSIS_AND_RESULTS, title='Synthesis of the macroscopic / microscopic observation of corrosion layers')[0]
+        conclusion_text = Section.objects.get_or_create(order=10, artefact=artefact, section_category=SC_CONCLUSION, title='Conclusion')[0].content
+        references_text = Section.objects.get_or_create(order=11, artefact=artefact, section_category=SC_REFERENCES, title='References')[0].content
         stratigraphies = artefact.stratigraphy_set.all
         return render(request, 'artefacts/collaboration_artefact_update.html', self.get_context_data(artefact=artefact, form=form, object_section=object_section, description_section=description_section,
                                                              zone_section=zone_section, macroscopic_section=macroscopic_section,
@@ -957,39 +964,39 @@ class CollaborationUpdateView(generic.UpdateView):
     def post(self, request, *args, **kwargs):
         token = get_object_or_404(Token, pk=self.kwargs['token_id'])
         artefact = get_object_or_404(Artefact, pk=token.artefact.id)
-        section_1 = Section.objects.get_or_create(order=1, artefact=artefact, section_category=SectionCategory.objects.get(name='AR'), title='The object')[0]
+        section_1 = Section.objects.get_or_create(order=1, artefact=artefact, section_category=SC_ARTEFACT, title='The object')[0]
         artefact.section_set.add(section_1)
-        section_2 = Section.objects.get_or_create(order=2, artefact=artefact, section_category=SectionCategory.objects.get(name='AR'), title='Description and visual observation')[0]
+        section_2 = Section.objects.get_or_create(order=2, artefact=artefact, section_category=SC_ARTEFACT, title='Description and visual observation')[0]
         section_2.complementary_information = request.POST['complementary_information']
         artefact.section_set.add(section_2)
-        section_3 = Section.objects.get_or_create(order=3, artefact=artefact, section_category=SectionCategory.objects.get(name='SA'), title='Zones of the artefact submitted to visual observation and location of sampling areas')[0]
+        section_3 = Section.objects.get_or_create(order=3, artefact=artefact, section_category=SC_SAMPLE, title='Zones of the artefact submitted to visual observation and location of sampling areas')[0]
         artefact.section_set.add(section_3)
-        section_4 = Section.objects.get_or_create(order=4, artefact=artefact, section_category=SectionCategory.objects.get(name='SA'), title='Macroscopic observation')[0]
+        section_4 = Section.objects.get_or_create(order=4, artefact=artefact, section_category=SC_SAMPLE, title='Macroscopic observation')[0]
         section_4.content = request.POST['macroscopic_text']
         artefact.section_set.add(section_4)
-        section_5 = Section.objects.get_or_create(order=5, artefact=artefact, section_category=SectionCategory.objects.get(name='SA'), title='Sample')[0]
+        section_5 = Section.objects.get_or_create(order=5, artefact=artefact, section_category=SC_SAMPLE, title='Sample')[0]
         section_5.complementary_information = request.POST['sample_complementary_information']
         # images sample
         artefact.section_set.add(section_5)
-        section_6 = Section.objects.get_or_create(order=6, artefact=artefact, section_category=SectionCategory.objects.get(name='AN'), title='Analyses and results')[0]
+        section_6 = Section.objects.get_or_create(order=6, artefact=artefact, section_category=SC_ANALYSIS_AND_RESULTS, title='Analyses and results')[0]
         section_6.content = request.POST['analyses_performed']
         artefact.section_set.add(section_6)
-        section_7 = Section.objects.get_or_create(order=7, artefact=artefact, section_category=SectionCategory.objects.get(name='AN'), title='Metal')[0]
+        section_7 = Section.objects.get_or_create(order=7, artefact=artefact, section_category=SC_ANALYSIS_AND_RESULTS, title='Metal')[0]
         section_7.content = request.POST['metal_text']
         section_7.complementary_information = request.POST['metal_complementary_information']
         # images metal
         artefact.section_set.add(section_7)
-        section_8 = Section.objects.get_or_create(order=8, artefact=artefact, section_category=SectionCategory.objects.get(name='AN'), title='Corrosion layers')[0]
+        section_8 = Section.objects.get_or_create(order=8, artefact=artefact, section_category=SC_ANALYSIS_AND_RESULTS, title='Corrosion layers')[0]
         section_8.content = request.POST['corrosion_text']
         section_8.complementary_information = request.POST['corrosion_complementary_information']
         artefact.section_set.add(section_8)
-        section_9 = Section.objects.get_or_create(order=9, artefact=artefact, section_category=SectionCategory.objects.get(name='AN'), title='Synthesis of the macroscopic / microscopic observation of corrosion layers')[0]
+        section_9 = Section.objects.get_or_create(order=9, artefact=artefact, section_category=SC_ANALYSIS_AND_RESULTS, title='Synthesis of the macroscopic / microscopic observation of corrosion layers')[0]
         section_9.content=request.POST['synthesis_text']
         artefact.section_set.add(section_9)
-        section_10 = Section.objects.get_or_create(order=10, artefact=artefact, section_category=SectionCategory.objects.get(name='CO'), title='Conclusion')[0]
+        section_10 = Section.objects.get_or_create(order=10, artefact=artefact, section_category=SC_CONCLUSION, title='Conclusion')[0]
         section_10.content = request.POST['conclusion_text']
         artefact.section_set.add(section_10)
-        section_11 = Section.objects.get_or_create(order=11, artefact=artefact, section_category=SectionCategory.objects.get(name='RE'), title='References')[0]
+        section_11 = Section.objects.get_or_create(order=11, artefact=artefact, section_category=SC_REFERENCES, title='References')[0]
         section_11.content = request.POST['references_text']
         artefact.section_set.add(section_11)
         return super(CollaborationUpdateView, self).post(request, **kwargs)
