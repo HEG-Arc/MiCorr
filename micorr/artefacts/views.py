@@ -26,7 +26,8 @@ from .forms import ArtefactsUpdateForm, ArtefactsCreateForm, DocumentUpdateForm,
     MicrostructureCreateForm, MetalCreateForm, CorrosionFormCreateForm, CorrosionTypeCreateForm, \
     RecoveringDateCreateForm, ImageCreateForm, TypeCreateForm, ContactAuthorForm, ShareArtefactForm, \
     ShareWithFriendForm, ObjectCreateForm, ObjectUpdateForm, CollaborationCommentForm, TokenHideForm, \
-    PublicationDecisionForm, PublicationDelegateForm, PublicationRejectDecisionForm, StratigraphyCreateForm
+    PublicationDecisionForm, PublicationDelegateForm, PublicationRejectDecisionForm, StratigraphyCreateForm, \
+    ArfactsUpdateDescriptionForm
 
 from .models import Artefact, Document, Collaboration_comment, Field, Object, Section, SectionCategory, Image, Stratigraphy, Token, \
     Publication
@@ -156,45 +157,79 @@ class ArtefactsUpdateView(generic.UpdateView):
     """
 
     model = Artefact
+    description_form_class = ArfactsUpdateDescriptionForm
     form_class = ArtefactsUpdateForm
 
-    def get_object(self, queryset=None):
-        obj = Artefact.objects.get(id=self.kwargs['pk'])
-        return obj
+    template_name_suffix = '_update_page'
 
-    def get(self, request, **kwargs):
-        artefact = Artefact.objects.get(id=self.kwargs['pk'])
+    # def get_object(self, queryset=None):
+    #     obj = Artefact.objects.get(id=self.kwargs['pk'])
+    #     return obj
+
+
+    #def get(self, request, **kwargs):
+    def get_context_data(self, **kwargs):
+        context = super(ArtefactsUpdateView,self).get_context_data(**kwargs)
+        description_form = self.description_form_class(instance=self.object,label_suffix = '')
+
+        artefact = self.object
         obj = Object.objects.get(id=artefact.object.id)
 
         #if user want to update an artefact with parent (= artefact for publication), raise 404
         errorUpdatePublicationArtefact(self.kwargs['pk'])
 
-        self.object = artefact
-        form_class = self.get_form_class()
-        form = self.get_form(form_class)
-
         formObject = ObjectUpdateForm(instance=obj)
+
 
         object_section = Section.objects.get_or_create(order=1, artefact=artefact, section_category=SC_ARTEFACT, title='The object')[0]
         description_section = Section.objects.get_or_create(order=2, artefact=artefact, section_category=SC_ARTEFACT, title='Description and visual observation')[0]
+
         zone_section = Section.objects.get_or_create(order=3, artefact=artefact, section_category=SC_SAMPLE, title='Zones of the artefact submitted to visual observation and location of sampling areas')[0]
         macroscopic_section = Section.objects.get_or_create(order=4, artefact=artefact, section_category=SC_SAMPLE, title='Macroscopic observation')[0]
         sample_section = Section.objects.get_or_create(order=5, artefact=artefact, section_category=SC_SAMPLE, title='Sample')[0]
-        analyses_performed = Section.objects.get_or_create(order=6, artefact=artefact, section_category=SC_ANALYSIS_AND_RESULTS, title='Analyses and results')[0].content
+
+        analyses_performed = Section.objects.get_or_create(order=6, artefact=artefact, section_category=SC_ANALYSIS_AND_RESULTS, title='Analyses and results')[0]
+        analyses_performed_text = analyses_performed.content
         metal_section = Section.objects.get_or_create(order=7, artefact=artefact, section_category=SC_ANALYSIS_AND_RESULTS, title='Metal')[0]
         corrosion_section = Section.objects.get_or_create(order=8, artefact=artefact, section_category=SC_ANALYSIS_AND_RESULTS, title='Corrosion layers')[0]
         synthesis_section = Section.objects.get_or_create(order=9, artefact=artefact, section_category=SC_ANALYSIS_AND_RESULTS, title='Synthesis of the macroscopic / microscopic observation of corrosion layers')[0]
-        conclusion_text = Section.objects.get_or_create(order=10, artefact=artefact, section_category=SC_CONCLUSION, title='Conclusion')[0].content
-        references_text = Section.objects.get_or_create(order=11, artefact=artefact, section_category=SC_REFERENCES, title='References')[0].content
-        stratigraphies = artefact.stratigraphy_set.all
-        return render(request, 'artefacts/artefact_update_form.html', self.get_context_data(form=form, formObject=formObject, object_section=object_section, description_section=description_section,
-                                                             zone_section=zone_section, macroscopic_section=macroscopic_section,
-                                                             sample_section=sample_section, analyses_performed=analyses_performed,
-                                                             metal_section=metal_section, corrosion_section=corrosion_section,
-                                                             synthesis_section=synthesis_section, conclusion_text=conclusion_text,
-                                                             references_text=references_text,
-                                                             node_base_url=settings.NODE_BASE_URL,
-                                                             view='ArtefactsUpdateView'))
+
+        conclusion = Section.objects.get_or_create(order=10, artefact=artefact, section_category=SC_CONCLUSION, title='Conclusion')[0]
+        conclusion_text = conclusion.content
+
+        references = Section.objects.get_or_create(order=11, artefact=artefact, section_category=SC_REFERENCES, title='References')[0]
+        references_text = references.content
+        section_groups = [
+            [{'section': object_section, 'level': 1, 'form': formObject}
+             ],
+            [{'section': description_section, 'level': 1, 'form': description_form},
+             {'section': zone_section, 'level': 2, 'form': None},
+             {'section': macroscopic_section, 'level': 2, 'form': None}
+             ],
+            [{'section': sample_section, 'level': 1, 'form': context['form']}
+             ],
+            [{'section': analyses_performed, 'level': 1, 'form': None},
+             {'section': metal_section, 'level': 2, 'form': None},
+             {'section': corrosion_section, 'level': 2, 'form': None}
+             ],
+            [{'section': synthesis_section, 'level': 1, 'form': None}
+             ],
+            [{'section': conclusion, 'level': 1, 'form': None}
+             ],
+            [{'section': references, 'level': 1, 'form': None}
+             ]
+        ]
+        context.update(formObject=formObject, description_form=description_form, object_section=object_section,
+                       description_section=description_section,
+                       section_groups=section_groups,
+                       zone_section=zone_section, macroscopic_section=macroscopic_section,
+                       sample_section=sample_section, analyses_performed=analyses_performed,
+                       metal_section=metal_section, corrosion_section=corrosion_section,
+                       synthesis_section=synthesis_section, conclusion_text=conclusion_text,
+                       references_text=references_text,
+                       node_base_url=settings.NODE_BASE_URL,
+                       view='ArtefactsUpdateView')
+        return context
 
     def post(self, request, *args, **kwargs):
         artefact = get_object_or_404(Artefact, pk=self.kwargs['pk'])

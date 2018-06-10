@@ -747,20 +747,12 @@
                         built using the MiCorr application.</i></p>
                     <br>
                     <div class="row">
-                        <div class="c3"><em>Stratigraphies</em></div>
+                        <div class="c3"><em>Stratigraph{{artefact.stratigraphy_set.count|pluralize:"y,ies" }}</em></div>
                         <div class="c8">
                             <div id="stratigraphy">
-                                {% for stratigraphy in artefact.stratigraphy_set.all %}
-                                    <div class="c6">
-                                        <a href="/micorr/#/stratigraphy/{{ stratigraphy.uid }}" target="_blank"><img
-                                                src="{{ node_base_url }}getStratigraphySvg?name={{ stratigraphy.uid }}&width=200"
-                                                class="img-responsive"></a>
-                                    </div>
-                                    <div class="c6">
-                                        <a onclick="window.open('{% url 'artefacts:stratigraphy-delete' stratigraphy.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><i
-                                                class="fa fa-trash"></i></a>
-                                    </div>
-                                {% endfor %}
+                                {% with section=sample_section %}
+                                {% include "artefacts/stratigraphy.html" %}
+                                {% endwith %}
                             </div>
                         </div>
                         <div class="c1">

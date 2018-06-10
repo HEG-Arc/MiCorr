@@ -353,7 +353,9 @@ class Section(TimeStampedModel):
     title = models.CharField(max_length=100, blank=True, default='', help_text='The section title')
     content = tinymce_models.HTMLField(blank=True, help_text='The content of the section')
     order = models.IntegerField(blank=True, null=True, help_text='The order of a section for a given artefact')
+    # heading_level = models.IntegerField(default=1,help_text='The heading level of the section')
     complementary_information = tinymce_models.HTMLField(blank=True, default='', help_text='Complementary information')
+    # form_name = models.CharField(max_length=100, blank=True, default='', help_text='Class Name of associated form')
 
     class Meta:
         ordering = ['order']

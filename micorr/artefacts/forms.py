@@ -1,4 +1,5 @@
 from django import forms
+from django.db.models.fields.related import ForeignKey, ManyToManyField
 from django.forms import TextInput, Textarea
 from django.template.loader import render_to_string
 
@@ -25,6 +26,42 @@ class MultipleSelectWithPop(forms.SelectMultiple):
         html = super(MultipleSelectWithPop, self).render(name, *args, **kwargs)
         popupplus = render_to_string("form/popupplus.html", {'field': name})
         return html+popupplus
+#
+# class ArfactsUpdateObjectForm(forms.ModelForm):
+#     class Meta:
+#         model = Artefact
+
+
+class ArfactsUpdateDescriptionForm(forms.ModelForm):
+
+    class Meta:
+        model = Artefact
+
+        fields = [  # hand picked from existing description_section. template
+            'description',
+            'type', # fk
+            'origin',# fk
+            'recovering_date',# fk
+            'chronology_period',# fk
+            'environment',# fk
+            'location',# fk
+            'owner',# fk
+            'inventory_number',
+            'recorded_conservation_data',
+        ]
+        widgets = {}
+
+        for f_name in fields:
+            # field = filter(lambda f: f.name == (lambda f_name : f_name), Artefact._meta.get_fields())[0]
+            for meta_field in Artefact._meta.get_fields():
+                if f_name == meta_field.name:
+                    if meta_field.db_type.im_class == ForeignKey:
+                        widgets[f_name] = SelectWithPop
+                    elif meta_field.db_type.im_class == ManyToManyField:
+                        widgets[f_name] = MultipleSelectWithPop
+
+
+        # f.db_type.im_class == ForeignKey
 
 
 class ArtefactsUpdateForm(forms.ModelForm):
@@ -34,13 +71,6 @@ class ArtefactsUpdateForm(forms.ModelForm):
         fk_fields = [ # hand picked from [f.name for f in Artefact._meta.get_fields() if f.db_type.im_class==ForeignKey]
             'metal1',
             'alloy',
-            'type',
-            'origin',
-            'recovering_date',
-            'chronology_period',
-            'environment',
-            'location',
-            'owner',
             'technology',
             'sample_location',
             'responsible_institution',
@@ -56,9 +86,6 @@ class ArtefactsUpdateForm(forms.ModelForm):
         widgets.update({f: MultipleSelectWithPop for f in m2m_fields})
 
         other_fields = [  # hand picked from [f.name for f in Artefact._meta.get_fields()]
-            'description',
-            'inventory_number',
-            'recorded_conservation_data',
             'sample_description',
             'sample_number',
             'date_aim_sampling'

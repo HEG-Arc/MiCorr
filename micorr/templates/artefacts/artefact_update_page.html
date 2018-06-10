@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+{% load static %}
+{% block custom_header_script %}
+    <script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
+    <script>tinymce.init({selector: 'textarea', plugins: "table", statusbar: false});</script>
+{% endblock custom_header_script %}
+
+{% block sidemenu %}
+    <div class="c3" id="sidemenu">
+        <!-- no-active-hilight : do not highlight the "active" node of the menu. It is difficult for the affix to work when elements in the page are close one to the other (i.e. folded elements), therefore, it is less confusing to NOT hilight the .active nodes of the menu -->
+        <div class="sidemenu-container">
+            <ul class="nav smooth-scroll"> <!-- smooth-scroll to the element in the page instead of jumping -->
+                <li><a href="#title1">The object</a></li>
+                <li>
+                    <a href="#title2">Description and visual observation</a>
+                    <ul class="nav subnav">
+                        <li><a href="#title21">Zones of the artefact submitted to visual observation and location of
+                            sampling areas</a></li>
+                        <li><a href="#title22">Macroscopic observation</a></li>
+                    </ul>
+                </li>
+                <li><a href="#title3">Sample</a></li>
+                <li>
+                    <a href="#title4">Analyses and results</a>
+                    <ul class="nav subnav">
+                        <!-- subnav indicates that we will unfold the parent before jumping to a child to make sure that the element is visible -->
+                        <li><a href="#title41">Metal</a></li>
+                        <li><a href="#title42">Corrosion layers</a></li>
+                    </ul>
+                </li>
+                <li><a href="#title5">Synthesis of the macroscopic / microscopic observation of corrosion layers</a>
+                </li>
+                <li><a href="#title6">Conclusion</a></li>
+                <li><a href="#title7">References</a></li>
+            </ul>
+        </div>
+    </div>
+{% endblock sidemenu %}
+
+{% block content %}
+  <div class="c9">
+    <h1>New artefact</h1>
+    <form action="{% url 'artefacts:artefact-update' form.instance.pk %}" method="post">{% csrf_token %}
+        {% if form.errors %}
+            {% for field in form %}
+                {% for error in field.errors %}
+                    <div class="alert alert-error">
+                        <strong>{{ field.name }} {{ error|escape }}</strong>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+            {% for error in form.non_field_errors %}
+                <div class="alert alert-error">
+                    <strong>{{ field.name }} {{ error|escape }}</strong>
+                </div>
+            {% endfor %}
+        {% endif %}
+        <div class="row">
+            <div class="c3"><em>Author(s)</em></div>
+            <div class="c9">
+                <p>{{ form.author }}</p>
+                <p><i>{{ form.author.help_text }}</i></p></div>
+        </div>
+
+        <div id="accordionN1" aria-multiselectable="true">
+        {% for sections in section_groups %}
+            {% for s in sections %}
+
+                    {%  if forloop.first %}
+                     <div class="row accordion-title1" id="title{{ s.section.order }}">
+                        <a class="line" data-toggle="collapse" data-parent="#accordionN{{ s.section.order }}"
+                           href="#content{{ s.section.order }}" aria-expanded="true"
+                           aria-controls="content{{ s.section.order }}">{{ s.section.title }}</a>
+                    </div>
+                     <div class="row accordion-content1 collapse in" id="content{{ s.section.order }}"
+                         aria-labelledby="title{{ s.section.order }}">
+                        <div class="line palebox">
+                    {% endif %}
+
+                {% if forloop.first == False%}
+                     <!--section level 2-->
+                         <div class="line">
+                            <div id="accordionN2" aria-multiselectable="true">
+                            <!--ZONES-->
+                                <div class="row accordion-title2" id="title2{{ s.section.order }}">
+                                    <a class="line" data-toggle="collapse" data-parent="#accordionN2" href="#content2{{ s.section.order }}"
+                                    aria-expanded="true" aria-controls="content21">Zones of the artefact submitted to visual
+                                    observation and location of sampling areas</a>
+                                </div>
+                                <div class="row accordion-content2 collapse in" id="content21" aria-labelledby="title21">
+                                    <div class="line lightbox">
+                {% endif %}
+                        <div class="row">
+                            <div  class="c6" id="image_section_{{ s.section.order }}">
+                                {% for image in s.section.image_set.all %}
+                                    <div class="row">
+                                        {% if image.image %}
+                                            <div class="c6">
+                                                <a href="{{ image.image.url }}" class="image-popup"><img
+                                                        src="{{ image.image.url }}" class="img-responsive"></a>
+                                            </div>
+                                            <div class="c6">
+                                                <p><a name="fig1"></a>{{ image.legend | safe }} <a
+                                                        onclick="window.open('{% url 'artefacts:image-update' section_id=s.section.order pk=image.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><i
+                                                        class="fa fa-pencil"></i></a>
+                                                    <a
+                                                            onclick="window.open('{% url 'artefacts:image-delete' image.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><i
+                                                            class="fa fa-trash"></i></a></p>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <div class="c9">
+                                <p> <!-- Upload Photos -->
+                                    <a class="add-another" id="image_add_"{{ s.section.order }}
+                                       title="Add a picture, a figure or a table"
+                                       onclick="window.open('{% url 'artefacts:image-create' section_id=s.section.order %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');">
+                                        <span class="glyphicon glyphicon-plus"></span>
+                                    </a>
+                                </p>
+                                <p>Figures and tables are referred as Fig. 1, Table 1.</p>
+                            </div>
+                        </div>
+                        <p><i>General picture of the object should contain a scale and a chart colour. The caption gives
+                            the
+                            name of the artefact, the type of alloy and any relevant information</i></p>
+                {% if s.form %}
+                        <div class="line lightbox">
+                                  {% for field in s.form %}
+                                      <div class="row">
+                                        <div class="c3">
+                                            {{ field.label_tag }}
+                                        </div>
+                                        <div class="c9">
+                                            <p>{{ field }}</p>
+                                            {% if field.help_text %}
+                                            <p><i>{{ field.help_text|safe }}</i></p>
+                                            {% endif %}
+                                        </div>
+                                      </div>
+                                {% endfor %}
+                        </div>
+                {% endif %}
+                {% if forloop.first == False%}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                {% if forloop.last%}
+                        </div>
+                    </div>
+                 {% endif %}
+            {% endfor %}
+
+        {% endfor %}
+        </div>
+    </form>
+</div>
+{% endblock content %}
+
+{% block custom_bottom_script %}
+    {% include "artefacts/dj_admin_related_object_lookups.html" %}
+    {% include "artefacts/refresh-divs-script.html" %}
+{% endblock custom_bottom_script %}
