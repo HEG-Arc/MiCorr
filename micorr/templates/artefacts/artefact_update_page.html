@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load getattr %}
 {% block custom_header_script %}
     <script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
     <script>tinymce.init({selector: 'textarea', plugins: "table", statusbar: false});</script>
@@ -40,7 +41,9 @@
 {% block content %}
   <div class="c9">
     <h1>New artefact</h1>
+   {% if form %}
     <form action="{% url 'artefacts:artefact-update' form.instance.pk %}" method="post">{% csrf_token %}
+    {% endif %}
         {% if form.errors %}
             {% for field in form %}
                 {% for error in field.errors %}
@@ -75,9 +78,7 @@
                      <div class="row accordion-content1 collapse in" id="content{{ s.section.order }}"
                          aria-labelledby="title{{ s.section.order }}">
                         <div class="line palebox">
-                    {% endif %}
-
-                {% if forloop.first == False%}
+                    {% else %}
                      <!--section level 2-->
                          <div class="line">
                             <div id="accordionN2" aria-multiselectable="true">
@@ -89,7 +90,7 @@
                                 </div>
                                 <div class="row accordion-content2 collapse in" id="content21" aria-labelledby="title21">
                                     <div class="line lightbox">
-                {% endif %}
+                    {% endif %}
                         <div class="row">
                             <div  class="c6" id="image_section_{{ s.section.order }}">
                                 {% for image in s.section.image_set.all %}
@@ -133,7 +134,11 @@
                                             {{ field.label_tag }}
                                         </div>
                                         <div class="c9">
+                                        {% if form %}
                                             <p>{{ field }}</p>
+                                        {% else %}
+                                            <p>{{ s.form.instance | getattr:field.name |safe}}</p>
+                                        {% endif %}
                                             {% if field.help_text %}
                                             <p><i>{{ field.help_text|safe }}</i></p>
                                             {% endif %}
@@ -156,7 +161,9 @@
 
         {% endfor %}
         </div>
+  {% if form %}
     </form>
+  {% endif %}
 </div>
 {% endblock content %}
 

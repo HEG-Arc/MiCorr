@@ -134,19 +134,37 @@ class ArtefactsDetailView(generic.DetailView):
     queryset = Artefact.objects.select_related('alloy', 'type', 'origin', 'recovering_date', 'chronology_period',
                                                'environment', 'location', 'owner', 'technology', 'sample_location',
                                                'responsible_institution', 'microstructure', 'corrosion_form', 'corrosion_type')
-
+    template_name = 'artefacts/artefact_update_page.html'
     def get_context_data(self, **kwargs):
         """
         Allows the template to use the selected artefact as well as its foreign keys pointers
         """
         context = super(ArtefactsDetailView, self).get_context_data(**kwargs)
-        artefact = get_object_or_404(Artefact, pk=self.kwargs['pk'])
-        sections = artefact.section_set.all()
-        documents = artefact.document_set.all()
-        context['artefact'] = artefact
-        context['sections'] = sections
-        context['documents'] = documents
+        context['artefact'] = get_object_or_404(Artefact, pk=self.kwargs['pk'])
+        context['sections'] = context['artefact'].section_set.all()
+        context['documents'] = context['artefact'].document_set.all()
         context['node_base_url'] = settings.NODE_BASE_URL
+
+        forms = {SectionCategory.ARTEFACT: ObjectUpdateForm(instance=context['artefact'].object),
+                 SectionCategory.SAMPLE: ArfactsUpdateDescriptionForm(instance=self.object, label_suffix='')
+                 }
+        for section_category,form in forms.items():
+            for fieldname,field in form.fields.items():
+                field.disabled = True
+
+        section_groups, group = [], []
+        current_category = None
+        for s in context['sections']:
+            if current_category != s.section_category:
+                if len(group):
+                    section_groups.append(group)
+                current_category = s.section_category
+                group = []
+            group.append({'section': s, 'form': forms.get(s.section_category.name)})
+        if len(group):
+            section_groups.append(group)
+        context['section_groups'] = section_groups
+
         return context
 
 
