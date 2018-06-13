@@ -18,19 +18,23 @@ from django.contrib import messages
 from django.http import Http404
 
 from contacts.forms import ContactCreateForm
+from contacts.models import Contact
 from stratigraphies.neo4jdao import Neo4jDAO
 from users.models import User
 
-from .forms import ArtefactsUpdateForm, ArtefactsCreateForm, DocumentUpdateForm, DocumentCreateForm, ArtefactFilter, \
+from .forms import ArtefactsForm, ArtefactsCreateForm, DocumentUpdateForm, DocumentCreateForm, ArtefactFilter, \
     OriginCreateForm, ChronologyCreateForm, AlloyCreateForm, TechnologyCreateForm, EnvironmentCreateForm, \
     MicrostructureCreateForm, MetalCreateForm, CorrosionFormCreateForm, CorrosionTypeCreateForm, \
     RecoveringDateCreateForm, ImageCreateForm, TypeCreateForm, ContactAuthorForm, ShareArtefactForm, \
     ShareWithFriendForm, ObjectCreateForm, ObjectUpdateForm, CollaborationCommentForm, TokenHideForm, \
     PublicationDecisionForm, PublicationDelegateForm, PublicationRejectDecisionForm, StratigraphyCreateForm, \
-    ArfactsUpdateDescriptionForm
+    ArfactsDescriptionForm
 
-from .models import Artefact, Document, Collaboration_comment, Field, Object, Section, SectionCategory, Image, Stratigraphy, Token, \
-    Publication
+from .models import Artefact, Document, Collaboration_comment, Field, Object, Section, SectionCategory, Image, \
+    Stratigraphy, Token, \
+    Publication, ChronologyPeriod
+from . import models
+
 import logging
 
 logger = logging.getLogger(__name__)
@@ -146,7 +150,7 @@ class ArtefactsDetailView(generic.DetailView):
         context['node_base_url'] = settings.NODE_BASE_URL
 
         forms = {SectionCategory.ARTEFACT: ObjectUpdateForm(instance=context['artefact'].object),
-                 SectionCategory.SAMPLE: ArfactsUpdateDescriptionForm(instance=self.object, label_suffix='')
+                 SectionCategory.SAMPLE: ArfactsDescriptionForm(instance=self.object, label_suffix='')
                  }
         for section_category,form in forms.items():
             for fieldname,field in form.fields.items():
@@ -175,8 +179,8 @@ class ArtefactsUpdateView(generic.UpdateView):
     """
 
     model = Artefact
-    description_form_class = ArfactsUpdateDescriptionForm
-    form_class = ArtefactsUpdateForm
+    description_form_class = ArfactsDescriptionForm
+    form_class = ArtefactsForm
 
     template_name_suffix = '_update_page'
 
@@ -870,7 +874,7 @@ class CollaborationUpdateView(generic.UpdateView):
 
     model = Artefact
     template_name_suffix = '_collaboration_update'
-    form_class = ArtefactsUpdateForm
+    form_class = ArtefactsForm
 
     def get_object(self, queryset=None):
         token = Token.tokenManager.get(id=self.kwargs['token_id'])
@@ -2061,5 +2065,59 @@ class CountryAutocomplete(autocomplete.Select2QuerySetView):
 
         if self.q:
             qs = qs.filter(name__istartswith=self.q)
+
+        return qs
+class BaseAutocomplete(autocomplete.Select2QuerySetView):
+
+    def get_queryset(self):
+        if not self.request.user.is_authenticated():
+            return self.model.objects.none()
+
+        qs = self.model.objects.all()
+
+        if self.q:
+            qs = qs.filter(name__contains=self.q)
+
+        return qs
+
+class ChronologyPeriodAutoComplete(BaseAutocomplete):
+    model = ChronologyPeriod
+
+class GenericAutoComplete(BaseAutocomplete):
+
+    def get_queryset(self):
+        model_class = getattr(models,self.kwargs['model'])
+
+        if not self.request.user.is_authenticated():
+            return model_class.objects.none()
+
+        qs = model_class.objects.all()
+
+        if self.q:
+            qs = qs.filter(name__contains=self.q)
+
+        return qs
+
+# class ChronologyPeriodAutoComplete(autocomplete.Select2QuerySetView):
+#     def get_queryset(self):
+#         if not self.request.user.is_authenticated():
+#             return ChronologyPeriod.objects.none()
+#
+#         qs = ChronologyPeriod.objects.all()
+#
+#         if self.q:
+#             qs = qs.filter(name__contains=self.q)
+#
+#         return qs
+
+class ContactAutoComplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        if not self.request.user.is_authenticated():
+            return Contact.objects.none()
+
+        qs = Contact.objects.all()
+
+        if self.q:
+            qs = qs.filter(name__contains=self.q)
 
         return qs

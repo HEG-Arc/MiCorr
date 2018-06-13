@@ -31,8 +31,40 @@ class MultipleSelectWithPop(forms.SelectMultiple):
 #     class Meta:
 #         model = Artefact
 
+def get_updated_widgets(widgets, model_class, fields):
+    for f_name in fields:
+        # field = filter(lambda f: f.name == (lambda f_name : f_name), model_class._meta.get_fields())[0]
+        for meta_field in model_class._meta.get_fields():
+            if f_name == meta_field.name:
+                if meta_field.db_type.im_class == ForeignKey:
+                    widgets[f_name] = SelectWithPop
+                elif meta_field.db_type.im_class == ManyToManyField:
+                    widgets[f_name] = MultipleSelectWithPop
+    return widgets
 
-class ArfactsUpdateDescriptionForm(forms.ModelForm):
+class ArfactsDescriptionForm(forms.ModelForm):
+
+    class Meta:
+        model = Artefact
+
+        fields = [  # hand picked from existing description_section. template
+            'description',
+            'type', # fk
+            'origin',# fk
+            'recovering_date',# fk
+            'chronology_period',# fk
+            'environment',# fk
+            'location',# fk
+            'owner',# fk
+            'inventory_number',
+            'recorded_conservation_data',
+        ]
+        widgets = get_updated_widgets({}, Artefact, fields)
+        widgets['chronology_period'] = autocomplete.ModelSelect2(url='artefacts:chronology-period-autocomplete')
+
+
+        # f.db_type.im_class == ForeignKey
+class ArfactsSampleForm(forms.ModelForm):
 
     class Meta:
         model = Artefact
@@ -51,20 +83,8 @@ class ArfactsUpdateDescriptionForm(forms.ModelForm):
         ]
         widgets = {}
 
-        for f_name in fields:
-            # field = filter(lambda f: f.name == (lambda f_name : f_name), Artefact._meta.get_fields())[0]
-            for meta_field in Artefact._meta.get_fields():
-                if f_name == meta_field.name:
-                    if meta_field.db_type.im_class == ForeignKey:
-                        widgets[f_name] = SelectWithPop
-                    elif meta_field.db_type.im_class == ManyToManyField:
-                        widgets[f_name] = MultipleSelectWithPop
 
-
-        # f.db_type.im_class == ForeignKey
-
-
-class ArtefactsUpdateForm(forms.ModelForm):
+class ArtefactsForm(forms.ModelForm):
 
     class Meta:
         model = Artefact
@@ -84,6 +104,7 @@ class ArtefactsUpdateForm(forms.ModelForm):
         # all model attributes including help_text...
         widgets = {f: SelectWithPop for f in fk_fields}
         widgets.update({f: MultipleSelectWithPop for f in m2m_fields})
+        widgets['author'] = autocomplete.ModelSelect2Multiple(url='artefacts:contact-autocomplete')
 
         other_fields = [  # hand picked from [f.name for f in Artefact._meta.get_fields()]
             'sample_description',

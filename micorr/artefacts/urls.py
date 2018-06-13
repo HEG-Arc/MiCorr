@@ -90,5 +90,8 @@ urlpatterns = [
     url(r'^city-autocomplete/$', artefacts_views.CityAutocomplete.as_view(), name='city-autocomplete'),
     url(r'^region-autocomplete/$', artefacts_views.RegionAutocomplete.as_view(), name='region-autocomplete'),
     url(r'^country-autocomplete/$', artefacts_views.CountryAutocomplete.as_view(), name='country-autocomplete'),
+    url(r'^chronology-period-autocomplete/$', artefacts_views.ChronologyPeriodAutoComplete.as_view(), name='chronology-period-autocomplete'),
+    url(r'^contact-autocomplete/$', artefacts_views.ContactAutoComplete.as_view(), name='contact-autocomplete'),
+    url(r'^generic-autocomplete/(?P<model>[\w-]+)/$', artefacts_views.GenericAutoComplete.as_view(), name='generic-autocomplete'),
     # url(r'^test-ontology/$', displayOntology),
 ]

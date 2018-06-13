@@ -170,6 +170,7 @@
 {% endblock content %}
 
 {% block custom_bottom_script %}
+    {{ description_form.media }}
     {% include "artefacts/dj_admin_related_object_lookups.html" %}
     {% include "artefacts/refresh-divs-script.html" %}
 {% endblock custom_bottom_script %}
