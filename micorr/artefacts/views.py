@@ -28,7 +28,7 @@ from .forms import ArtefactsForm, ArtefactsCreateForm, DocumentUpdateForm, Docum
     RecoveringDateCreateForm, ImageCreateForm, TypeCreateForm, ContactAuthorForm, ShareArtefactForm, \
     ShareWithFriendForm, ObjectCreateForm, ObjectUpdateForm, CollaborationCommentForm, TokenHideForm, \
     PublicationDecisionForm, PublicationDelegateForm, PublicationRejectDecisionForm, StratigraphyCreateForm, \
-    ArfactsDescriptionForm
+    ArfactsDescriptionForm, ArfactsSampleForm
 
 from .models import Artefact, Document, Collaboration_comment, Field, Object, Section, SectionCategory, Image, \
     Stratigraphy, Token, \
@@ -149,8 +149,9 @@ class ArtefactsDetailView(generic.DetailView):
         context['documents'] = context['artefact'].document_set.all()
         context['node_base_url'] = settings.NODE_BASE_URL
 
-        forms = {SectionCategory.ARTEFACT: ObjectUpdateForm(instance=context['artefact'].object),
-                 SectionCategory.SAMPLE: ArfactsDescriptionForm(instance=self.object, label_suffix='')
+        forms = {SectionCategory.ARTEFACT: ArfactsDescriptionForm(instance=self.object, label_suffix=''),
+                 SectionCategory.SAMPLE: ArfactsSampleForm(instance=self.object, label_suffix=''),
+                 SectionCategory.ANALYSIS_AND_RESULTS: ObjectUpdateForm(instance=context['artefact'].object)
                  }
         for section_category,form in forms.items():
             for fieldname,field in form.fields.items():
@@ -228,7 +229,7 @@ class ArtefactsUpdateView(generic.UpdateView):
              {'section': zone_section, 'level': 2, 'form': None},
              {'section': macroscopic_section, 'level': 2, 'form': None}
              ],
-            [{'section': sample_section, 'level': 1, 'form': context['form']}
+            [{'section': sample_section, 'level': 1, 'form': ArfactsSampleForm} #context['form']
              ],
             [{'section': analyses_performed, 'level': 1, 'form': None},
              {'section': metal_section, 'level': 2, 'form': None},

@@ -2,6 +2,7 @@ from django import forms
 from django.db.models.fields.related import ForeignKey, ManyToManyField
 from django.forms import TextInput, Textarea
 from django.template.loader import render_to_string
+from django.urls import reverse_lazy
 
 from contacts.models import Contact
 from users.models import User
@@ -14,32 +15,18 @@ from dal import autocomplete
 from tinymce.widgets import TinyMCE
 import django_filters
 
-class SelectWithPop(forms.Select):
-    def render(self, name, *args, **kwargs):
-        html = super(SelectWithPop, self).render(name, *args, **kwargs)
-        popupplus = render_to_string("form/popupplus.html", {'field': name})
-        return html+popupplus
-
-
-class MultipleSelectWithPop(forms.SelectMultiple):
-    def render(self, name, *args, **kwargs):
-        html = super(MultipleSelectWithPop, self).render(name, *args, **kwargs)
-        popupplus = render_to_string("form/popupplus.html", {'field': name})
-        return html+popupplus
-#
-# class ArfactsUpdateObjectForm(forms.ModelForm):
-#     class Meta:
-#         model = Artefact
-
 def get_updated_widgets(widgets, model_class, fields):
     for f_name in fields:
-        # field = filter(lambda f: f.name == (lambda f_name : f_name), model_class._meta.get_fields())[0]
         for meta_field in model_class._meta.get_fields():
             if f_name == meta_field.name:
                 if meta_field.db_type.im_class == ForeignKey:
-                    widgets[f_name] = SelectWithPop
+                    widgets[f_name] = autocomplete.ModelSelect2Multiple(
+                        url=reverse_lazy('artefacts:generic-autocomplete',
+                                         args=[meta_field.related_model.__name__]))
                 elif meta_field.db_type.im_class == ManyToManyField:
-                    widgets[f_name] = MultipleSelectWithPop
+                    widgets[f_name] = autocomplete.ModelSelect2Multiple(
+                        url=reverse_lazy('artefacts:generic-autocomplete',
+                                         args=[meta_field.related_model.__name__]))
     return widgets
 
 class ArfactsDescriptionForm(forms.ModelForm):
@@ -60,7 +47,6 @@ class ArfactsDescriptionForm(forms.ModelForm):
             'recorded_conservation_data',
         ]
         widgets = get_updated_widgets({}, Artefact, fields)
-        widgets['chronology_period'] = autocomplete.ModelSelect2(url='artefacts:chronology-period-autocomplete')
 
 
         # f.db_type.im_class == ForeignKey
@@ -70,19 +56,15 @@ class ArfactsSampleForm(forms.ModelForm):
         model = Artefact
 
         fields = [  # hand picked from existing description_section. template
-            'description',
-            'type', # fk
-            'origin',# fk
-            'recovering_date',# fk
-            'chronology_period',# fk
-            'environment',# fk
-            'location',# fk
-            'owner',# fk
-            'inventory_number',
-            'recorded_conservation_data',
+            'sample_description',
+            'alloy', # fk
+            'technology',# fk
+            'sample_number',
+            'sample_location',# fk
+            'responsible_institution',# fk
+            'date_aim_sampling',
         ]
-        widgets = {}
-
+        widgets = get_updated_widgets({}, Artefact, fields)
 
 class ArtefactsForm(forms.ModelForm):
 
@@ -99,19 +81,13 @@ class ArtefactsForm(forms.ModelForm):
             'corrosion_type']
         m2m_fields = ['author', 'metalx']
 
-        # Here we only customize widget of selected fk_fields and m2m_fields
-        # whereas redefining fields in the Form for this purpose would override
-        # all model attributes including help_text...
-        widgets = {f: SelectWithPop for f in fk_fields}
-        widgets.update({f: MultipleSelectWithPop for f in m2m_fields})
-        widgets['author'] = autocomplete.ModelSelect2Multiple(url='artefacts:contact-autocomplete')
-
         other_fields = [  # hand picked from [f.name for f in Artefact._meta.get_fields()]
             'sample_description',
             'sample_number',
             'date_aim_sampling'
         ]
         fields = fk_fields + m2m_fields + other_fields
+        widgets = get_updated_widgets({}, Artefact, fields)
 
     # Non Artefact/form only fields (coming from related model Section )
     complementary_information = forms.CharField(widget=TinyMCE(), required=False)
