@@ -91,6 +91,7 @@
                                 <div class="row accordion-content2 collapse in" id="content2{{ s.section.order }}" aria-labelledby="title2{{ s.section.order }}">
                                     <div class="line lightbox">
                     {% endif %}
+                                        <textarea name="s{{forloop.parentloop.counter}}-{{forloop.counter}}_content">{{ s.section.content }}</textarea>
                                         <div class="row">
                                                 <div  class="c6" id="image_section_{{ s.section.order }}">
                                                     {% for image in s.section.image_set.all %}
@@ -148,6 +149,11 @@
                                                     {% endfor %}
                                             </div>
                                     {% endif %}
+                                    <div class="line palebox">
+                                        <h4 class="underline">Complementary information</h4>
+                                        <textarea name="s{{forloop.parentloop.counter}}-{{forloop.counter}}_complementary_information">{{ s.section.complementary_information }}</textarea>
+                                        <p><i>Any important information that does not fit to the previous fields</i></p>
+                                    </div>
                 {% if forloop.first == False%}
                                     </div>
                                 </div>

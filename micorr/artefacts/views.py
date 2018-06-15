@@ -180,7 +180,6 @@ class ArtefactsUpdateView(generic.UpdateView):
     """
 
     model = Artefact
-    description_form_class = ArfactsDescriptionForm
     form_class = ArtefactsForm
 
     template_name_suffix = '_update_page'
@@ -193,7 +192,7 @@ class ArtefactsUpdateView(generic.UpdateView):
     #def get(self, request, **kwargs):
     def get_context_data(self, **kwargs):
         context = super(ArtefactsUpdateView,self).get_context_data(**kwargs)
-        description_form = self.description_form_class(instance=self.object,label_suffix = '')
+        description_form = ArfactsDescriptionForm(instance=self.object,label_suffix = '')
 
         artefact = self.object
         obj = Object.objects.get(id=artefact.object.id)
@@ -2077,12 +2076,12 @@ class BaseAutocomplete(autocomplete.Select2QuerySetView):
         qs = self.model.objects.all()
 
         if self.q:
-            qs = qs.filter(name__contains=self.q)
+            qs = qs.filter(name__icontains=self.q)
 
         return qs
 
-class ChronologyPeriodAutoComplete(BaseAutocomplete):
-    model = ChronologyPeriod
+#class ChronologyPeriodAutoComplete(BaseAutocomplete):
+#    model = ChronologyPeriod
 
 class GenericAutoComplete(BaseAutocomplete):
 
@@ -2099,26 +2098,3 @@ class GenericAutoComplete(BaseAutocomplete):
 
         return qs
 
-# class ChronologyPeriodAutoComplete(autocomplete.Select2QuerySetView):
-#     def get_queryset(self):
-#         if not self.request.user.is_authenticated():
-#             return ChronologyPeriod.objects.none()
-#
-#         qs = ChronologyPeriod.objects.all()
-#
-#         if self.q:
-#             qs = qs.filter(name__contains=self.q)
-#
-#         return qs
-
-class ContactAutoComplete(autocomplete.Select2QuerySetView):
-    def get_queryset(self):
-        if not self.request.user.is_authenticated():
-            return Contact.objects.none()
-
-        qs = Contact.objects.all()
-
-        if self.q:
-            qs = qs.filter(name__contains=self.q)
-
-        return qs
