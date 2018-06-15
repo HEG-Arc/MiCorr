@@ -1,10 +1,11 @@
+from collections import OrderedDict
+from itertools import chain
+
 from django import forms
 from django.db.models.fields.related import ForeignKey, ManyToManyField
-from django.forms import TextInput, Textarea
-from django.template.loader import render_to_string
+from django.forms import TextInput
 from django.urls import reverse_lazy
 
-from contacts.models import Contact
 from users.models import User
 
 from .models import Artefact, Document, Metal, CorrosionForm, CorrosionType, Environment, Object, Origin, ChronologyPeriod, \
@@ -14,8 +15,17 @@ from cities_light.models import Country, City
 from dal import autocomplete
 from tinymce.widgets import TinyMCE
 import django_filters
+from .fieldset_form import FieldsetForm
 
 def get_updated_widgets(widgets, model_class, fields):
+    """
+    Updates ModelForm.Meta widgets dictionary for all ForeignKey/ManyToManyField fields of a model_class
+    to use dal-autocomplete instead of standard widgets
+    :param widgets: existing widgets attribute of Form Meta class or empty initial dict
+    :param model_class: Model class to check the type of fields
+    :param fields: list of field names to adapt in the form
+    :return: updated input widgets dict
+    """
     for f_name in fields:
         for meta_field in model_class._meta.get_fields():
             if f_name == meta_field.name:
@@ -29,65 +39,61 @@ def get_updated_widgets(widgets, model_class, fields):
                                          args=[meta_field.related_model.__name__]))
     return widgets
 
-class ArfactsDescriptionForm(forms.ModelForm):
+class ArtefactsForm(FieldsetForm):
 
     class Meta:
         model = Artefact
-
-        fields = [  # hand picked from existing description_section. template
-            'description',
-            'type', # fk
-            'origin',# fk
-            'recovering_date',# fk
-            'chronology_period',# fk
-            'environment',# fk
-            'location',# fk
-            'owner',# fk
-            'inventory_number',
-            'recorded_conservation_data',
-        ]
+        fieldsets = (
+            {
+                "name": "description",
+                "title": None,
+                "is_fieldset": True,
+                "fields": [
+                    'description',
+                    'type',  # fk
+                    'origin',  # fk
+                    'recovering_date',  # fk
+                    'chronology_period',  # fk
+                    'environment',  # fk
+                    'location',  # fk
+                    'owner',  # fk
+                    'inventory_number',
+                    'recorded_conservation_data',
+                ]
+            },
+            {
+                "name": "sample",
+                "title": u"optional fields",
+                "is_fieldset": True,
+                "fields": [
+                    'sample_description',
+                    'alloy',  # fk
+                    'technology',  # fk
+                    'sample_number',
+                    'sample_location',  # fk
+                    'responsible_institution',  # fk
+                    'date_aim_sampling']
+            },
+            {
+                "name": "metal",
+                "title": None,
+                "is_fieldset": True,
+                "fields": ['microstructure',
+                           'metal1',
+                           'metalx']
+            },
+            {
+                "name": "corrosion",
+                "title": None,
+                "is_fieldset": True,
+                "fields": ['corrosion_form',
+                           'corrosion_type']
+            }
+        )
+        fields = sum([fs['fields'] for fs in fieldsets],[])
         widgets = get_updated_widgets({}, Artefact, fields)
 
-
-        # f.db_type.im_class == ForeignKey
-class ArfactsSampleForm(forms.ModelForm):
-
-    class Meta:
-        model = Artefact
-
-        fields = [  # hand picked from existing description_section. template
-            'sample_description',
-            'alloy', # fk
-            'technology',# fk
-            'sample_number',
-            'sample_location',# fk
-            'responsible_institution',# fk
-            'date_aim_sampling',
-        ]
-        widgets = get_updated_widgets({}, Artefact, fields)
-
-class ArtefactsForm(forms.ModelForm):
-
-    class Meta:
-        model = Artefact
-        fk_fields = [ # hand picked from [f.name for f in Artefact._meta.get_fields() if f.db_type.im_class==ForeignKey]
-            'metal1',
-            'alloy',
-            'technology',
-            'sample_location',
-            'responsible_institution',
-            'microstructure',
-            'corrosion_form',
-            'corrosion_type']
-        m2m_fields = ['author', 'metalx']
-
-        other_fields = [  # hand picked from [f.name for f in Artefact._meta.get_fields()]
-            'sample_description',
-            'sample_number',
-            'date_aim_sampling'
-        ]
-        fields = fk_fields + m2m_fields + other_fields
-        widgets = get_updated_widgets({}, Artefact, fields)
+    fieldsets = Meta.fieldsets
 
     # Non Artefact/form only fields (coming from related model Section )
     complementary_information = forms.CharField(widget=TinyMCE(), required=False)

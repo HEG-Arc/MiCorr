@@ -321,14 +321,18 @@ class SectionCategory(TimeStampedModel):
     A section belongs to a section category, which can be i.e. "Sample" or "References"
     """
     ARTEFACT = 'AR'
+    DESCRIPTION = 'DE'
     SAMPLE = 'SA'
     ANALYSIS_AND_RESULTS = 'AN'
+    SYNTHESIS = 'SY'
     CONCLUSION = 'CO'
     REFERENCES = 'RE'
     SECTION_CATEGORY_CHOICES = (
         (ARTEFACT, 'Artefact'),
+        (DESCRIPTION, 'Description'),
         (SAMPLE, 'Sample'),
         (ANALYSIS_AND_RESULTS, 'Analysis and Results'),
+        (SYNTHESIS, 'Synthesis'),
         (CONCLUSION, 'Conclusion'),
         (REFERENCES, 'References'),
     )

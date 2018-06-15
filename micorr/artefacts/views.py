@@ -27,8 +27,7 @@ from .forms import ArtefactsForm, ArtefactsCreateForm, DocumentUpdateForm, Docum
     MicrostructureCreateForm, MetalCreateForm, CorrosionFormCreateForm, CorrosionTypeCreateForm, \
     RecoveringDateCreateForm, ImageCreateForm, TypeCreateForm, ContactAuthorForm, ShareArtefactForm, \
     ShareWithFriendForm, ObjectCreateForm, ObjectUpdateForm, CollaborationCommentForm, TokenHideForm, \
-    PublicationDecisionForm, PublicationDelegateForm, PublicationRejectDecisionForm, StratigraphyCreateForm, \
-    ArfactsDescriptionForm, ArfactsSampleForm
+    PublicationDecisionForm, PublicationDelegateForm, PublicationRejectDecisionForm, StratigraphyCreateForm
 
 from .models import Artefact, Document, Collaboration_comment, Field, Object, Section, SectionCategory, Image, \
     Stratigraphy, Token, \
@@ -144,18 +143,19 @@ class ArtefactsDetailView(generic.DetailView):
         Allows the template to use the selected artefact as well as its foreign keys pointers
         """
         context = super(ArtefactsDetailView, self).get_context_data(**kwargs)
-        context['artefact'] = get_object_or_404(Artefact, pk=self.kwargs['pk'])
-        context['sections'] = context['artefact'].section_set.all()
-        context['documents'] = context['artefact'].document_set.all()
+        context['artefact'] = self.object
+        context['sections'] = self.object.section_set.all()
+        context['documents'] = self.object.document_set.all()
         context['node_base_url'] = settings.NODE_BASE_URL
+        form = ArtefactsForm(instance=self.object, label_suffix='')
 
-        forms = {SectionCategory.ARTEFACT: ArfactsDescriptionForm(instance=self.object, label_suffix=''),
-                 SectionCategory.SAMPLE: ArfactsSampleForm(instance=self.object, label_suffix=''),
-                 SectionCategory.ANALYSIS_AND_RESULTS: ObjectUpdateForm(instance=context['artefact'].object)
+        forms_n_fieldsets = {SectionCategory.ARTEFACT: dict(form=form, fieldset=form.get_fieldset('description')),
+                 SectionCategory.SAMPLE: dict(form=form, fieldset=form.get_fieldset('sample')),
+                 SectionCategory.ANALYSIS_AND_RESULTS: dict(form=form, fieldset=form.get_fieldset('description'))
                  }
-        for section_category,form in forms.items():
-            for fieldname,field in form.fields.items():
-                field.disabled = True
+        # for section_category,form in forms_n_fieldsets.items():
+        #     for fieldname,field in form.fields.items():
+        #         field.disabled = True
 
         section_groups, group = [], []
         current_category = None
@@ -165,7 +165,8 @@ class ArtefactsDetailView(generic.DetailView):
                     section_groups.append(group)
                 current_category = s.section_category
                 group = []
-            group.append({'section': s, 'form': forms.get(s.section_category.name)})
+            fnfs = forms_n_fieldsets.get(s.section_category.name)
+            group.append({'section': s, 'form':fnfs['form'] if fnfs else None, 'fieldset':fnfs['fieldset'] if fnfs else None})
         if len(group):
             section_groups.append(group)
         context['section_groups'] = section_groups
@@ -192,15 +193,13 @@ class ArtefactsUpdateView(generic.UpdateView):
     #def get(self, request, **kwargs):
     def get_context_data(self, **kwargs):
         context = super(ArtefactsUpdateView,self).get_context_data(**kwargs)
-        description_form = ArfactsDescriptionForm(instance=self.object,label_suffix = '')
-
         artefact = self.object
-        obj = Object.objects.get(id=artefact.object.id)
 
         #if user want to update an artefact with parent (= artefact for publication), raise 404
         errorUpdatePublicationArtefact(self.kwargs['pk'])
 
-        formObject = ObjectUpdateForm(instance=obj)
+        formObject = ObjectUpdateForm(instance=self.object.object)
+        form=context['form']
 
 
         object_section = Section.objects.get_or_create(order=1, artefact=artefact, section_category=SC_ARTEFACT, title='The object')[0]
@@ -222,17 +221,17 @@ class ArtefactsUpdateView(generic.UpdateView):
         references = Section.objects.get_or_create(order=11, artefact=artefact, section_category=SC_REFERENCES, title='References')[0]
         references_text = references.content
         section_groups = [
-            [{'section': object_section, 'level': 1, 'form': formObject}
+            [{'section': object_section, 'level': 1, 'form': formObject, 'fieldset': formObject}
              ],
-            [{'section': description_section, 'level': 1, 'form': description_form},
+            [{'section': description_section, 'level': 1, 'form': form, 'fieldset': form.get_fieldset('description')},
              {'section': zone_section, 'level': 2, 'form': None},
              {'section': macroscopic_section, 'level': 2, 'form': None}
              ],
-            [{'section': sample_section, 'level': 1, 'form': ArfactsSampleForm} #context['form']
+            [{'section': sample_section, 'level': 1, 'form': form, 'fieldset': form.get_fieldset('sample')}
              ],
             [{'section': analyses_performed, 'level': 1, 'form': None},
-             {'section': metal_section, 'level': 2, 'form': None},
-             {'section': corrosion_section, 'level': 2, 'form': None}
+             {'section': metal_section, 'level': 2, 'form': form, 'fieldset': form.get_fieldset('metal')},
+             {'section': corrosion_section, 'level': 2, 'form': form, 'fieldset': form.get_fieldset('corrosion')}
              ],
             [{'section': synthesis_section, 'level': 1, 'form': None}
              ],
@@ -241,7 +240,7 @@ class ArtefactsUpdateView(generic.UpdateView):
             [{'section': references, 'level': 1, 'form': None}
              ]
         ]
-        context.update(formObject=formObject, description_form=description_form, object_section=object_section,
+        context.update(object_section=object_section,
                        description_section=description_section,
                        section_groups=section_groups,
                        zone_section=zone_section, macroscopic_section=macroscopic_section,

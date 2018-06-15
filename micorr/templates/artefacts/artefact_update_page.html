@@ -76,7 +76,6 @@
                     </div>
                      <div class="row accordion-content1 collapse in" id="content{{ s.section.order }}"
                          aria-labelledby="title{{ s.section.order }}">
-                        <div class="line palebox">
                     {% else %}
                      <!--section level 2-->
                          {% if forloop.counter == 2 %}
@@ -89,9 +88,15 @@
                                     aria-expanded="true" aria-controls="content2{{ s.section.order }}">{{s.section.title}}</a>
                                 </div>
                                 <div class="row accordion-content2 collapse in" id="content2{{ s.section.order }}" aria-labelledby="title2{{ s.section.order }}">
-                                    <div class="line lightbox">
                     {% endif %}
-                                        <textarea name="s{{forloop.parentloop.counter}}-{{forloop.counter}}_content">{{ s.section.content }}</textarea>
+                                <div class="line palebox">
+                                        {% if form %}
+                                            <textarea name="s{{forloop.parentloop.counter}}-{{forloop.counter}}_content">{{ s.section.content }}</textarea>
+                                        {% else %}
+                                            <p>{{ s.section.content|safe }}</p>
+                                        {% endif %}
+                                </div>
+                                    <div class="line lightbox">
                                         <div class="row">
                                                 <div  class="c6" id="image_section_{{ s.section.order }}">
                                                     {% for image in s.section.image_set.all %}
@@ -128,9 +133,10 @@
                                                 the
                                                 name of the artefact, the type of alloy and any relevant information</i>
                                         </p>
+                                    </div>
                                     {% if s.form %}
                                         <div class="line lightbox">
-                                                      {% for field in s.form %}
+                                                      {% for field in s.fieldset %}
                                                           <div class="row">
                                                             <div class="c3">
                                                                 {{ field.label_tag }}
@@ -149,13 +155,20 @@
                                                     {% endfor %}
                                             </div>
                                     {% endif %}
+                                    {% if form or s.section.complementary_information %}
                                     <div class="line palebox">
                                         <h4 class="underline">Complementary information</h4>
-                                        <textarea name="s{{forloop.parentloop.counter}}-{{forloop.counter}}_complementary_information">{{ s.section.complementary_information }}</textarea>
-                                        <p><i>Any important information that does not fit to the previous fields</i></p>
+                                    {% endif %}
+                                     {% if form %}
+                                         <textarea name="s{{forloop.parentloop.counter}}-{{forloop.counter}}_complementary_information">{{ s.section.complementary_information }}</textarea>
+                                         <p><i>Any important information that does not fit to the previous fields</i></p>
+                                     {% elif s.section.complementary_information %}
+                                         <p>{{ s.section.complementary_information|safe }}</p>
+                                    {% endif %}
+                                    {% if form or s.section.complementary_information %}
                                     </div>
+                                    {% endif %}
                 {% if forloop.first == False%}
-                                    </div>
                                 </div>
                 {% endif %}
                 {% if forloop.last%}
@@ -164,7 +177,6 @@
                         </div>
                      {% endif %}
                     </div>
-                </div>
                 {% endif %}
             {% endfor %}
         {% endfor %}
@@ -176,7 +188,7 @@
 {% endblock content %}
 
 {% block custom_bottom_script %}
-    {{ description_form.media }}
+    {{ form.media }}
     {% include "artefacts/dj_admin_related_object_lookups.html" %}
     {% include "artefacts/refresh-divs-script.html" %}
 {% endblock custom_bottom_script %}
