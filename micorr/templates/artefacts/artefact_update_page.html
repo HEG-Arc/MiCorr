@@ -134,6 +134,18 @@
                                                 name of the artefact, the type of alloy and any relevant information</i>
                                         </p>
                                     </div>
+                                    <div class="row accordion-title2" id="title23">
+                                        <a class="line" data-toggle="collapse" data-parent="#accordionN2" href="#content23"
+                                           aria-expanded="true" aria-controls="content23">Stratigraphies</a>
+                                    </div>
+                                    <div class="row accordion-content2 collapse in" id="content23"
+                                         aria-labelledby="title23">
+                                        <div class="line lightbox">
+                                            {% with section=sections.3 %}
+                                                {% include "artefacts/stratigraphy.html" %}
+                                            {% endwith %}
+                                        </div>
+                                    </div>
                                     {% if s.form %}
                                         <div class="line lightbox">
                                                       {% for field in s.fieldset %}
