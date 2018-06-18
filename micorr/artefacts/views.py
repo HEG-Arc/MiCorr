@@ -221,23 +221,23 @@ class ArtefactsUpdateView(generic.UpdateView):
         references = Section.objects.get_or_create(order=11, artefact=artefact, section_category=SC_REFERENCES, title='References')[0]
         references_text = references.content
         section_groups = [
-            [{'section': object_section, 'level': 1, 'form': formObject, 'fieldset': formObject}
+            [{'section': object_section, 'has_content':False, 'has_complementary_information': False, 'form': formObject, 'fieldset': formObject}
              ],
-            [{'section': description_section, 'level': 1, 'form': form, 'fieldset': form.get_fieldset('description')},
-             {'section': zone_section, 'level': 2, 'form': None},
-             {'section': macroscopic_section, 'level': 2, 'form': None}
+            [{'section': description_section, 'has_content':False, 'has_complementary_information': True, 'form': form, 'fieldset': form.get_fieldset('description')},
+             {'section': zone_section,  'form': None},
+             {'section': macroscopic_section,  'has_content':True, 'has_complementary_information': False, 'form': None}
              ],
-            [{'section': sample_section, 'level': 1, 'form': form, 'fieldset': form.get_fieldset('sample')}
+            [{'section': sample_section, 'has_content':False, 'has_complementary_information': True, 'form': form, 'fieldset': form.get_fieldset('sample')}
              ],
-            [{'section': analyses_performed, 'level': 1, 'form': None},
-             {'section': metal_section, 'level': 2, 'form': form, 'fieldset': form.get_fieldset('metal')},
-             {'section': corrosion_section, 'level': 2, 'form': form, 'fieldset': form.get_fieldset('corrosion')}
+            [{'section': analyses_performed, 'has_content':True, 'has_complementary_information': False,  'form': None},
+             {'section': metal_section,  'has_content':True, 'has_complementary_information': True, 'form': form, 'fieldset': form.get_fieldset('metal')},
+             {'section': corrosion_section, 'has_content':True, 'has_complementary_information': True,  'form': form, 'fieldset': form.get_fieldset('corrosion')}
              ],
-            [{'section': synthesis_section, 'level': 1, 'form': None}
+            [{'section': synthesis_section, 'has_content':True, 'has_complementary_information': False, 'form': None}
              ],
-            [{'section': conclusion, 'level': 1, 'form': None}
+            [{'section': conclusion, 'has_content':True, 'has_complementary_information': False,  'form': None}
              ],
-            [{'section': references, 'level': 1, 'form': None}
+            [{'section': references, 'has_content':True, 'has_complementary_information': False, 'form': None}
              ]
         ]
         context.update(object_section=object_section,
@@ -261,39 +261,39 @@ class ArtefactsUpdateView(generic.UpdateView):
             objForm.save()
         section_1 = Section.objects.update_or_create(order=1, artefact=artefact, section_category=SC_ARTEFACT, title='The object')[0]
         artefact.section_set.add(section_1)
-        section_2 = Section.objects.update_or_create(defaults={'complementary_information':request.POST['complementary_information']},
+        section_2 = Section.objects.update_or_create(defaults={'complementary_information':request.POST['s2_complementary_information']},
                     order=2, artefact=artefact, section_category=SC_ARTEFACT, title='Description and visual observation')[0]
         artefact.section_set.add(section_2)
 
         section_3 = Section.objects.update_or_create(order=3, artefact=artefact, section_category=SC_SAMPLE, title='Zones of the artefact submitted to visual observation and location of sampling areas')[0]
         artefact.section_set.add(section_3)
 
-        section_4 = Section.objects.update_or_create(defaults={'content':request.POST['macroscopic_text']},
+        section_4 = Section.objects.update_or_create(defaults={'content':request.POST['s4_content']},
                     order=4, artefact=artefact, section_category=SC_SAMPLE, title='Macroscopic observation')[0]
         artefact.section_set.add(section_4)
-        section_5 = Section.objects.update_or_create(defaults={'complementary_information':request.POST['sample_complementary_information']},
+        section_5 = Section.objects.update_or_create(defaults={'complementary_information':request.POST['s5_complementary_information']},
                                                      order=5, artefact=artefact, section_category=SC_SAMPLE, title='Sample')[0]
         # images sample
         artefact.section_set.add(section_5)
-        section_6 = Section.objects.update_or_create(defaults={'content':request.POST['analyses_performed']},
+        section_6 = Section.objects.update_or_create(defaults={'content':request.POST['s6_content']},
                                                      order=6, artefact=artefact, section_category=SC_ANALYSIS_AND_RESULTS, title='Analyses and results')[0]
         artefact.section_set.add(section_6)
-        section_7 = Section.objects.update_or_create(defaults={'content':request.POST['metal_text'],
-                                                               'complementary_information':request.POST['metal_complementary_information']},
+        section_7 = Section.objects.update_or_create(defaults={'content':request.POST['s7_content'],
+                                                               'complementary_information':request.POST['s7_complementary_information']},
                                                      order=7, artefact=artefact, section_category=SC_ANALYSIS_AND_RESULTS, title='Metal')[0]
         # images metal
         artefact.section_set.add(section_7)
-        section_8 = Section.objects.update_or_create(defaults={'content':request.POST['corrosion_text'],
-                                                               'complementary_information': request.POST['corrosion_complementary_information']},
+        section_8 = Section.objects.update_or_create(defaults={'content':request.POST['s8_content'],
+                                                               'complementary_information': request.POST['s8_complementary_information']},
                                                      order=8, artefact=artefact, section_category=SC_ANALYSIS_AND_RESULTS, title='Corrosion layers')[0]
         artefact.section_set.add(section_8)
-        section_9 = Section.objects.update_or_create(defaults={'content':request.POST['synthesis_text']},
+        section_9 = Section.objects.update_or_create(defaults={'content':request.POST['s9_content']},
                                                                order=9, artefact=artefact, section_category=SC_ANALYSIS_AND_RESULTS, title='Synthesis of the macroscopic / microscopic observation of corrosion layers')[0]
         artefact.section_set.add(section_9)
-        section_10 = Section.objects.update_or_create(defaults={'content':request.POST['conclusion_text']},
+        section_10 = Section.objects.update_or_create(defaults={'content':request.POST['s10_content']},
                                                       order=10, artefact=artefact, section_category=SC_CONCLUSION, title='Conclusion')[0]
         artefact.section_set.add(section_10)
-        section_11 = Section.objects.update_or_create(defaults={'content':request.POST['references_text']},
+        section_11 = Section.objects.update_or_create(defaults={'content':request.POST['s11_content']},
                                                       order=11, artefact=artefact, section_category=SC_REFERENCES, title='References')[0]
         artefact.section_set.add(section_11)
         return super(ArtefactsUpdateView, self).post(request, **kwargs)

@@ -89,13 +89,15 @@
                                 </div>
                                 <div class="row accordion-content2 collapse in" id="content2{{ s.section.order }}" aria-labelledby="title2{{ s.section.order }}">
                     {% endif %}
+                {% if s.has_content %}
                                 <div class="line palebox">
                                         {% if form %}
-                                            <textarea name="s{{forloop.parentloop.counter}}-{{forloop.counter}}_content">{{ s.section.content }}</textarea>
+                                            <textarea name="s{{s.section.order}}_content">{{ s.section.content }}</textarea>
                                         {% else %}
                                             <p>{{ s.section.content|safe }}</p>
                                         {% endif %}
                                 </div>
+                {% endif %}
                                     <div class="line lightbox">
                                         <div class="row">
                                                 <div  class="c6" id="image_section_{{ s.section.order }}">
@@ -134,17 +136,30 @@
                                                 name of the artefact, the type of alloy and any relevant information</i>
                                         </p>
                                     </div>
-                                    <div class="row accordion-title2" id="title23">
-                                        <a class="line" data-toggle="collapse" data-parent="#accordionN2" href="#content23"
-                                           aria-expanded="true" aria-controls="content23">Stratigraphies</a>
+                                    {% if False %}
+                                    <div class="row accordion-title2" id="title2{{ s.section.order }}2">
+                                        <a class="line" data-toggle="collapse" data-parent="#accordionN{{forloop.parentloop.counter|add:1}}" href="#content2{{ s.section.order }}"
+                                            aria-expanded="true" aria-controls="content2{{ s.section.order }}2">Stratigraphies</a>
                                     </div>
-                                    <div class="row accordion-content2 collapse in" id="content23"
-                                         aria-labelledby="title23">
-                                        <div class="line lightbox">
-                                            {% with section=sections.3 %}
-                                                {% include "artefacts/stratigraphy.html" %}
-                                            {% endwith %}
+                                    <div class="row accordion-content2 collapse in" id="content2{{ s.section.order }}2" aria-labelledby="title2{{ s.section.order }}2">
+                                    {% else %}
+                                    <div class="line palebox">
+                                    {% endif %}
+                                    <div id="stratigraphy_section_{{ s.section.id }}">
+                                    {% with section=s.section %}
+                                        {% include "artefacts/stratigraphy.html" %}
+                                    {% endwith %}
+                                    </div>
+                {% if form %}
+                                        <div class="c9">
+                                            <p>
+                                                <a class="add-another" id="stratigraphy_add"
+                                                   onclick="window.open('{% url 'artefacts:stratigraphy-list' s.section.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');">
+                                                    <span class="glyphicon glyphicon-plus"></span>
+                                                </a>
+                                            </p>
                                         </div>
+                {%  endif %}
                                     </div>
                                     {% if s.form %}
                                         <div class="line lightbox">
@@ -167,18 +182,20 @@
                                                     {% endfor %}
                                             </div>
                                     {% endif %}
-                                    {% if form or s.section.complementary_information %}
-                                    <div class="line palebox">
-                                        <h4 class="underline">Complementary information</h4>
-                                    {% endif %}
-                                     {% if form %}
-                                         <textarea name="s{{forloop.parentloop.counter}}-{{forloop.counter}}_complementary_information">{{ s.section.complementary_information }}</textarea>
-                                         <p><i>Any important information that does not fit to the previous fields</i></p>
-                                     {% elif s.section.complementary_information %}
-                                         <p>{{ s.section.complementary_information|safe }}</p>
-                                    {% endif %}
-                                    {% if form or s.section.complementary_information %}
-                                    </div>
+                                    {% if s.has_complementary_information %}
+                                        {% if form or s.section.complementary_information %}
+                                        <div class="line palebox">
+                                            <h4 class="underline">Complementary information</h4>
+                                        {% endif %}
+                                         {% if form %}
+                                             <textarea name="s{{s.section.order}}_complementary_information">{{ s.section.complementary_information }}</textarea>
+                                             <p><i>Any important information that does not fit to the previous fields</i></p>
+                                         {% elif s.section.complementary_information %}
+                                             <p>{{ s.section.complementary_information|safe }}</p>
+                                        {% endif %}
+                                        {% if form or s.section.complementary_information %}
+                                        </div>
+                                        {% endif %}
                                     {% endif %}
                 {% if forloop.first == False%}
                                 </div>
@@ -192,6 +209,7 @@
                 {% endif %}
             {% endfor %}
         {% endfor %}
+            <input class="btn btn-default btn-lg" type="submit" value="Save">
         </div>
   {% if form %}
     </form>

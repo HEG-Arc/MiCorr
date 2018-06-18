@@ -348,9 +348,42 @@ class SectionCategory(TimeStampedModel):
         return self.name
 
 
+class SectionTemplate(TimeStampedModel):
+    page_template = models.IntegerField(blank=False, null=False, default=1, help_text='Page template identifier')
+    section_category = models.ForeignKey(SectionCategory, blank=True, null=True,
+                                         help_text='The corresponding section category')
+    title = models.CharField(max_length=100, blank=True, default='', help_text='The section title')
+    fieldset = models.CharField(max_length=50, blank=True, default='',
+                                help_text='Name of the Form fieldset associated with the section (if any)')
+    is_fieldset_first = models.BooleanField(default=False,  help_text='If true fieldset displayed before images and stratigraphies in section')
+    order = models.IntegerField(blank=False, null=False, default=1,
+                                help_text='The order of the section in page template')
+    has_content = models.BooleanField(default=False)
+    content_help_text = models.TextField(blank=True, default='', help_text='Help text of content for author')
+
+    has_complementary_information = models.BooleanField(default=False)
+    complementary_information_help_text = models.TextField(blank=True, default='', help_text='Help text of complementary information for author')
+
+    has_images = models.BooleanField(default=False)
+    images_help_text = models.TextField(blank=True, default='', help_text='Help text of complementary information for author')
+
+    has_stratigraphies = models.BooleanField(default=False)
+    stratigraphies_help_text = models.TextField(blank=True, default='', help_text='Help text of stratigraphies for author')
+
+
+    class Meta:
+        ordering = ['order']
+        verbose_name = 'Section Template'
+        verbose_name_plural = 'Section Templates'
+        unique_together = ("page_template", "order")
+
+    def __unicode__(self):
+        return "%d, %s, %s, %s" % (self.page_template, self.order, self.section_category, self.title)
+
+
 class Section(TimeStampedModel):
     """
-    An artefact may have many sections with images inside
+    An artefact may have many sections with images, stratigraphies inside
     """
     artefact = models.ForeignKey(Artefact, blank=True, null=True, help_text='The corresponding artefact')
     section_category = models.ForeignKey(SectionCategory, blank=True, null=True, help_text='The corresponding section category')
@@ -367,7 +400,7 @@ class Section(TimeStampedModel):
         verbose_name_plural = 'Sections'
 
     def __unicode__(self):
-        return "%s, %s, %s" % (self.title, self.artefact, self.section_category)
+        return "%s, %s, %s" % (self.artefact, self.section_category, self.title)
 
 
 
