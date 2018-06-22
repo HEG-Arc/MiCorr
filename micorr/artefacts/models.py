@@ -336,6 +336,7 @@ class SectionCategory(TimeStampedModel):
         (CONCLUSION, 'Conclusion'),
         (REFERENCES, 'References'),
     )
+    page_template = models.IntegerField(blank=False, null=False, default=1, help_text='Page template identifier')
     name = models.CharField(max_length=2, choices=SECTION_CATEGORY_CHOICES)
     order = models.IntegerField(blank=True, null=True, help_text='The order of a section category for a given artefact')
 
@@ -343,6 +344,7 @@ class SectionCategory(TimeStampedModel):
         ordering = ['order']
         verbose_name = 'Section Category'
         verbose_name_plural = 'Section Categories'
+        unique_together = (("page_template", "order"), ("page_template", "name"))
 
     def __unicode__(self):
         return self.name
@@ -386,6 +388,7 @@ class Section(TimeStampedModel):
     An artefact may have many sections with images, stratigraphies inside
     """
     artefact = models.ForeignKey(Artefact, blank=True, null=True, help_text='The corresponding artefact')
+    template = models.ForeignKey(SectionTemplate, on_delete=models.SET_NULL,blank=True, null=True, default=None, help_text='The Section template')
     section_category = models.ForeignKey(SectionCategory, blank=True, null=True, help_text='The corresponding section category')
     title = models.CharField(max_length=100, blank=True, default='', help_text='The section title')
     content = tinymce_models.HTMLField(blank=True, help_text='The content of the section')
