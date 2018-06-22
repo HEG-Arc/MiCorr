@@ -73,15 +73,12 @@
         {% endif %}
         {% for field in authors_fieldset %}
               <div class="row">
-                <div class="c2">
+                <div class="c2" title="{{ field.help_text}}">
                     {{ field.label_tag }}
                 </div>
                 <div class="c10">
                 {% if form %}
                     <p>{{ field }}</p>
-                    {% if field.help_text %}
-                    <p><i>{{ field.help_text|safe }}</i></p>
-                    {% endif %}
                 {% else %}
                     <p>{{  object.get_authors }}</p>
                 {% endif %}
@@ -205,7 +202,7 @@
                     <div class="line lightbox">
                                   {% for field in s.fieldset %}
                                       <div class="row">
-                                        <div class="c3">
+                                        <div class="c3" title="{{ field.help_text}}">
                                             {{ field.label_tag }}
                                         </div>
                                         <div class="c9">
@@ -214,9 +211,6 @@
                                         {% else %}
                                             <p>{{ s.form.instance | getattr:field.name |safe}}</p>
                                         {% endif %}
-                                            {% if field.help_text %}
-                                            <p><i>{{ field.help_text|safe }}</i></p>
-                                            {% endif %}
                                         </div>
                                       </div>
                                 {% endfor %}
