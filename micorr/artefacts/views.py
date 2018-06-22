@@ -31,7 +31,7 @@ from .forms import ArtefactsForm, ArtefactsCreateForm, DocumentUpdateForm, Docum
 
 from .models import Artefact, Document, Collaboration_comment, Field, Object, Section, SectionCategory, Image, \
     Stratigraphy, Token, \
-    Publication, ChronologyPeriod
+    Publication, ChronologyPeriod, SectionTemplate
 from . import models
 
 import logging
@@ -129,6 +129,32 @@ class ArtefactsListView(generic.ListView):
                       {'search': artefactssearch, 'results': filtered_artefacts_list, 'filter': artefactsfilter,
                        'self': self, 'node_base_url': settings.NODE_BASE_URL})
 
+def get_section_groups(artefact, form, formObject):
+    """
+    Utility function shared by ArtefactDetailView and ArtefactUpdateView
+    build a list of list of Section instances grouped by categories for the given artefact object
+    associate actual form and fieldset with each group based on their name as saved in SectionTemplate records
+
+    :param artefact: instance of Artefact
+    :param form: instance of ArtefactsForm (FieldsetForm based)
+    :param formObject: instance of ObjectUpdateForm
+    :return: section_groups
+    """
+    # we group the sections by category
+    # and associate corresponding form and fieldset with each group
+    section_groups, group = [], []
+    current_category = None
+    for s in artefact.section_set.all():
+        if current_category != s.template.section_category:
+            if len(group):
+                section_groups.append(group)
+            current_category = s.template.section_category
+            group = []
+        group.append({'section': s, 'fieldset': form.get_fieldset(s.template.fieldset),
+                      'form': formObject if s.template.fieldset == 'artefact' else form})
+    if len(group):  # last group case
+        section_groups.append(group)
+    return section_groups
 
 class ArtefactsDetailView(generic.DetailView):
     """
@@ -143,33 +169,13 @@ class ArtefactsDetailView(generic.DetailView):
         Allows the template to use the selected artefact as well as its foreign keys pointers
         """
         context = super(ArtefactsDetailView, self).get_context_data(**kwargs)
-        context['artefact'] = self.object
-        context['sections'] = self.object.section_set.all()
         context['documents'] = self.object.document_set.all()
         context['node_base_url'] = settings.NODE_BASE_URL
         form = ArtefactsForm(instance=self.object, label_suffix='')
+        formObject = ObjectUpdateForm(instance=self.object.object, label_suffix='')
 
-        forms_n_fieldsets = {SectionCategory.ARTEFACT: dict(form=form, fieldset=form.get_fieldset('description')),
-                 SectionCategory.SAMPLE: dict(form=form, fieldset=form.get_fieldset('sample')),
-                 SectionCategory.ANALYSIS_AND_RESULTS: dict(form=form, fieldset=form.get_fieldset('description'))
-                 }
-        # for section_category,form in forms_n_fieldsets.items():
-        #     for fieldname,field in form.fields.items():
-        #         field.disabled = True
-
-        section_groups, group = [], []
-        current_category = None
-        for s in context['sections']:
-            if current_category != s.section_category:
-                if len(group):
-                    section_groups.append(group)
-                current_category = s.section_category
-                group = []
-            fnfs = forms_n_fieldsets.get(s.section_category.name)
-            group.append({'section': s, 'form':fnfs['form'] if fnfs else None, 'fieldset':fnfs['fieldset'] if fnfs else None})
-        if len(group):
-            section_groups.append(group)
-        context['section_groups'] = section_groups
+        context['section_groups'] = get_section_groups(self.object, form, formObject)
+        context['authors_fieldset'] = form.get_fieldset('authors')
 
         return context
 
@@ -185,15 +191,8 @@ class ArtefactsUpdateView(generic.UpdateView):
 
     template_name_suffix = '_update_page'
 
-    # def get_object(self, queryset=None):
-    #     obj = Artefact.objects.get(id=self.kwargs['pk'])
-    #     return obj
-
-
-    #def get(self, request, **kwargs):
     def get_context_data(self, **kwargs):
         context = super(ArtefactsUpdateView,self).get_context_data(**kwargs)
-        artefact = self.object
 
         #if user want to update an artefact with parent (= artefact for publication), raise 404
         errorUpdatePublicationArtefact(self.kwargs['pk'])
@@ -201,53 +200,8 @@ class ArtefactsUpdateView(generic.UpdateView):
         formObject = ObjectUpdateForm(instance=self.object.object)
         form=context['form']
 
-
-        object_section = Section.objects.get_or_create(order=1, artefact=artefact, section_category=SC_ARTEFACT, title='The object')[0]
-        description_section = Section.objects.get_or_create(order=2, artefact=artefact, section_category=SC_ARTEFACT, title='Description and visual observation')[0]
-
-        zone_section = Section.objects.get_or_create(order=3, artefact=artefact, section_category=SC_SAMPLE, title='Zones of the artefact submitted to visual observation and location of sampling areas')[0]
-        macroscopic_section = Section.objects.get_or_create(order=4, artefact=artefact, section_category=SC_SAMPLE, title='Macroscopic observation')[0]
-        sample_section = Section.objects.get_or_create(order=5, artefact=artefact, section_category=SC_SAMPLE, title='Sample')[0]
-
-        analyses_performed = Section.objects.get_or_create(order=6, artefact=artefact, section_category=SC_ANALYSIS_AND_RESULTS, title='Analyses and results')[0]
-        analyses_performed_text = analyses_performed.content
-        metal_section = Section.objects.get_or_create(order=7, artefact=artefact, section_category=SC_ANALYSIS_AND_RESULTS, title='Metal')[0]
-        corrosion_section = Section.objects.get_or_create(order=8, artefact=artefact, section_category=SC_ANALYSIS_AND_RESULTS, title='Corrosion layers')[0]
-        synthesis_section = Section.objects.get_or_create(order=9, artefact=artefact, section_category=SC_ANALYSIS_AND_RESULTS, title='Synthesis of the macroscopic / microscopic observation of corrosion layers')[0]
-
-        conclusion = Section.objects.get_or_create(order=10, artefact=artefact, section_category=SC_CONCLUSION, title='Conclusion')[0]
-        conclusion_text = conclusion.content
-
-        references = Section.objects.get_or_create(order=11, artefact=artefact, section_category=SC_REFERENCES, title='References')[0]
-        references_text = references.content
-        section_groups = [
-            [{'section': object_section, 'has_content':False, 'has_complementary_information': False, 'form': formObject, 'fieldset': formObject}
-             ],
-            [{'section': description_section, 'has_content':False, 'has_complementary_information': True, 'form': form, 'fieldset': form.get_fieldset('description')},
-             {'section': zone_section,  'form': None},
-             {'section': macroscopic_section,  'has_content':True, 'has_complementary_information': False, 'form': None}
-             ],
-            [{'section': sample_section, 'has_content':False, 'has_complementary_information': True, 'form': form, 'fieldset': form.get_fieldset('sample')}
-             ],
-            [{'section': analyses_performed, 'has_content':True, 'has_complementary_information': False,  'form': None},
-             {'section': metal_section,  'has_content':True, 'has_complementary_information': True, 'form': form, 'fieldset': form.get_fieldset('metal')},
-             {'section': corrosion_section, 'has_content':True, 'has_complementary_information': True,  'form': form, 'fieldset': form.get_fieldset('corrosion')}
-             ],
-            [{'section': synthesis_section, 'has_content':True, 'has_complementary_information': False, 'form': None}
-             ],
-            [{'section': conclusion, 'has_content':True, 'has_complementary_information': False,  'form': None}
-             ],
-            [{'section': references, 'has_content':True, 'has_complementary_information': False, 'form': None}
-             ]
-        ]
-        context.update(object_section=object_section,
-                       description_section=description_section,
-                       section_groups=section_groups,
-                       zone_section=zone_section, macroscopic_section=macroscopic_section,
-                       sample_section=sample_section, analyses_performed=analyses_performed,
-                       metal_section=metal_section, corrosion_section=corrosion_section,
-                       synthesis_section=synthesis_section, conclusion_text=conclusion_text,
-                       references_text=references_text,
+        context.update(authors_fieldset=form.get_fieldset('authors'),
+                       section_groups=get_section_groups(self.object, form, formObject),
                        node_base_url=settings.NODE_BASE_URL,
                        view='ArtefactsUpdateView')
         return context
@@ -259,43 +213,13 @@ class ArtefactsUpdateView(generic.UpdateView):
         objForm = ObjectUpdateForm(request.POST, instance=obj)
         if objForm.is_valid():
             objForm.save()
-        section_1 = Section.objects.update_or_create(order=1, artefact=artefact, section_category=SC_ARTEFACT, title='The object')[0]
-        artefact.section_set.add(section_1)
-        section_2 = Section.objects.update_or_create(defaults={'complementary_information':request.POST['s2_complementary_information']},
-                    order=2, artefact=artefact, section_category=SC_ARTEFACT, title='Description and visual observation')[0]
-        artefact.section_set.add(section_2)
-
-        section_3 = Section.objects.update_or_create(order=3, artefact=artefact, section_category=SC_SAMPLE, title='Zones of the artefact submitted to visual observation and location of sampling areas')[0]
-        artefact.section_set.add(section_3)
-
-        section_4 = Section.objects.update_or_create(defaults={'content':request.POST['s4_content']},
-                    order=4, artefact=artefact, section_category=SC_SAMPLE, title='Macroscopic observation')[0]
-        artefact.section_set.add(section_4)
-        section_5 = Section.objects.update_or_create(defaults={'complementary_information':request.POST['s5_complementary_information']},
-                                                     order=5, artefact=artefact, section_category=SC_SAMPLE, title='Sample')[0]
-        # images sample
-        artefact.section_set.add(section_5)
-        section_6 = Section.objects.update_or_create(defaults={'content':request.POST['s6_content']},
-                                                     order=6, artefact=artefact, section_category=SC_ANALYSIS_AND_RESULTS, title='Analyses and results')[0]
-        artefact.section_set.add(section_6)
-        section_7 = Section.objects.update_or_create(defaults={'content':request.POST['s7_content'],
-                                                               'complementary_information':request.POST['s7_complementary_information']},
-                                                     order=7, artefact=artefact, section_category=SC_ANALYSIS_AND_RESULTS, title='Metal')[0]
-        # images metal
-        artefact.section_set.add(section_7)
-        section_8 = Section.objects.update_or_create(defaults={'content':request.POST['s8_content'],
-                                                               'complementary_information': request.POST['s8_complementary_information']},
-                                                     order=8, artefact=artefact, section_category=SC_ANALYSIS_AND_RESULTS, title='Corrosion layers')[0]
-        artefact.section_set.add(section_8)
-        section_9 = Section.objects.update_or_create(defaults={'content':request.POST['s9_content']},
-                                                               order=9, artefact=artefact, section_category=SC_ANALYSIS_AND_RESULTS, title='Synthesis of the macroscopic / microscopic observation of corrosion layers')[0]
-        artefact.section_set.add(section_9)
-        section_10 = Section.objects.update_or_create(defaults={'content':request.POST['s10_content']},
-                                                      order=10, artefact=artefact, section_category=SC_CONCLUSION, title='Conclusion')[0]
-        artefact.section_set.add(section_10)
-        section_11 = Section.objects.update_or_create(defaults={'content':request.POST['s11_content']},
-                                                      order=11, artefact=artefact, section_category=SC_REFERENCES, title='References')[0]
-        artefact.section_set.add(section_11)
+        # retrieve section related vars from POST
+        for st in SectionTemplate.objects.filter(page_template=1).all():
+            s_prefix = "s{}_".format(st.order)
+            section_update = {k: request.POST[s_prefix+k] for k in ['content','complementary_information'] if getattr(st,"has_"+k)}
+            section, created = Section.objects.update_or_create(artefact=artefact,template=st, order=st.order, defaults=section_update)
+            if created:
+                artefact.section_set.add(section)
         return super(ArtefactsUpdateView, self).post(request, **kwargs)
 
     def get_success_url(self):
@@ -334,31 +258,6 @@ class ObjectCreateView(generic.CreateView):
         object=get_object_or_404(Object, pk=self.object.id)
         artefact=get_object_or_404(Artefact, object_id=object.id)
         return reverse('artefacts:artefact-update', kwargs={'pk': artefact.id})
-
-"""class ArtefactsCreateView(generic.CreateView):
-
-    A view which allows the user to create an artefact
-    When the artefact is created, it redirects the user to the artefact list
-
-    model = Artefact
-    template_name_suffix = '_create_form'
-    form_class = ArtefactsCreateForm
-
-    def get_context_data(self, **kwargs):
-
-        Allows the template to use the selected object
-
-        context = super(ArtefactsCreateView, self).get_context_data(**kwargs)
-        object = get_object_or_404(Object, pk=self.kwargs['pk'])
-        context['object'] = object
-        return context
-
-    def form_valid(self, form):
-        form.instance.object = get_object_or_404(Object, pk=self.kwargs['pk'])
-        return super(ArtefactsCreateView, self).form_valid(form)
-
-    def get_success_url(self):
-        return reverse('artefacts:artefact-update', kwargs={'pk': self.object.id})"""
 
 @login_required
 def newAuthor(request):

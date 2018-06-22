@@ -45,6 +45,7 @@ services:
       - USE_DOCKER=yes
       - PYTHONPATH=/app:/app/micorr
       - NEO4J_URL=http://neo4j:secret@localhost:7474/db/data/
+      - DJANGO_DEBUG=True
     volumes:
       - .:/app
     ports:

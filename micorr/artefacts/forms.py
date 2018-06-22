@@ -45,6 +45,14 @@ class ArtefactsForm(FieldsetForm):
         model = Artefact
         fieldsets = (
             {
+                "name": "authors",
+                "title": None,
+                "is_fieldset": True,
+                "fields": [
+                    'author',
+                ]
+            },
+            {
                 "name": "description",
                 "title": None,
                 "is_fieldset": True,

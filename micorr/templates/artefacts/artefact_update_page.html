@@ -1,47 +1,60 @@
 {% extends "base.html" %}
 {% load static %}
 {% load getattr %}
+{% if form %}
 {% block custom_header_script %}
     <script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
     <script>tinymce.init({selector: 'textarea', plugins: "table", statusbar: false});</script>
 {% endblock custom_header_script %}
-
+{%  endif %}
 {% block sidemenu %}
     <div class="c3" id="sidemenu">
         <!-- no-active-hilight : do not highlight the "active" node of the menu. It is difficult for the affix to work when elements in the page are close one to the other (i.e. folded elements), therefore, it is less confusing to NOT hilight the .active nodes of the menu -->
-        <div class="sidemenu-container">
+        <div class="sidemenu-container active-highlight">
             <ul class="nav smooth-scroll"> <!-- smooth-scroll to the element in the page instead of jumping -->
-                <li><a href="#title1">The object</a></li>
-                <li>
-                    <a href="#title2">Description and visual observation</a>
-                    <ul class="nav subnav">
-                        <li><a href="#title21">Zones of the artefact submitted to visual observation and location of
-                            sampling areas</a></li>
-                        <li><a href="#title22">Macroscopic observation</a></li>
-                    </ul>
-                </li>
-                <li><a href="#title3">Sample</a></li>
-                <li>
-                    <a href="#title4">Analyses and results</a>
-                    <ul class="nav subnav">
-                        <!-- subnav indicates that we will unfold the parent before jumping to a child to make sure that the element is visible -->
-                        <li><a href="#title41">Metal</a></li>
-                        <li><a href="#title42">Corrosion layers</a></li>
-                    </ul>
-                </li>
-                <li><a href="#title5">Synthesis of the macroscopic / microscopic observation of corrosion layers</a>
-                </li>
-                <li><a href="#title6">Conclusion</a></li>
-                <li><a href="#title7">References</a></li>
+                {% for sections in section_groups %}
+                    {% for s in sections %}
+                        {% if forloop.first %}
+                            <li>
+                                <a href="#title{{ forloop.parentloop.counter }}">
+                                    {{ s.section.template.title }}</a>
+                            {% if forloop.revcounter0 %}
+                                <ul class="nav subnav">
+                            {% endif %}
+                        {% else %}
+                                    <li>
+                                        <a href="#title2{{ s.section.template.order }}">
+                                            {{ s.section.template.title }}</a>
+                                    </li>
+                        {% endif %}
+                    {% if forloop.last %}
+                        {% if forloop.counter > 1 %}
+                                </ul>
+                        {% endif %}
+                            </li>
+                    {% endif %}
+                    {% endfor %}
+                {% endfor %}
             </ul>
         </div>
     </div>
 {% endblock sidemenu %}
 
 {% block content %}
-  <div class="c9">
-    <h1>New artefact</h1>
-   {% if form %}
+    {% load terms %}
+    {% filter replace_terms %}
+    <div class="c9">
+   {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <h1>{{ object.artefact_verbose_description_short }}</h1>
+
+    {% if form %}
     <form action="{% url 'artefacts:artefact-update' form.instance.pk %}" method="post">{% csrf_token %}
     {% endif %}
         {% if form.errors %}
@@ -58,24 +71,44 @@
                 </div>
             {% endfor %}
         {% endif %}
+        {% for field in authors_fieldset %}
+              <div class="row">
+                <div class="c2">
+                    {{ field.label_tag }}
+                </div>
+                <div class="c10">
+                {% if form %}
+                    <p>{{ field }}</p>
+                    {% if field.help_text %}
+                    <p><i>{{ field.help_text|safe }}</i></p>
+                    {% endif %}
+                {% else %}
+                    <p>{{  object.get_authors }}</p>
+                {% endif %}
+                </div>
+              </div>
+        {% endfor %}
+        {% if not form %}
         <div class="row">
-            <div class="c3"><em>Author(s)</em></div>
-            <div class="c9">
-                <p>{{ form.author }}</p>
-                <p><i>{{ form.author.help_text }}</i></p></div>
+            <div class="c12 ">
+                <a class="btn btn-success" href="contact_author">
+                    <i class="fa fa-envelope"></i> Contact the author</a>
+                <a class="btn btn-success" href="{% url 'artefacts:share_artefact_with_friend' object.id %}">
+                    <i class="fa fa-share-alt"></i> Share </a>
+            </div>
         </div>
-
+        {% endif %}
         <div id="accordionN1" aria-multiselectable="true">
         {% for sections in section_groups %}
             {% for s in sections %}
                     {%  if forloop.first %}
                      <div class="row accordion-title1" id="title{{forloop.parentloop.counter}}">
                         <a class="line" data-toggle="collapse" data-parent="#accordionN1"
-                           href="#content{{ s.section.order }}" aria-expanded="true"
-                           aria-controls="content{{ s.section.order }}">{{ s.section.title }}</a>
+                           href="#content{{ s.section.template.order }}" aria-expanded="true"
+                           aria-controls="content{{ s.section.template.order }}">{{ s.section.template.title }}</a>
                     </div>
-                     <div class="row accordion-content1 collapse in" id="content{{ s.section.order }}"
-                         aria-labelledby="title{{ s.section.order }}">
+                     <div class="row accordion-content1 collapse in" id="content{{ s.section.template.order }}"
+                         aria-labelledby="title{{ s.section.template.order }}">
                     {% else %}
                      <!--section level 2-->
                          {% if forloop.counter == 2 %}
@@ -83,120 +116,127 @@
                             <div id="accordionN{{forloop.parentloop.counter|add:1}}" aria-multiselectable="true">
                          {% endif %}
                             <!--ZONES-->
-                                <div class="row accordion-title2" id="title2{{ s.section.order }}">
-                                    <a class="line" data-toggle="collapse" data-parent="#accordionN{{forloop.parentloop.counter|add:1}}" href="#content2{{ s.section.order }}"
-                                    aria-expanded="true" aria-controls="content2{{ s.section.order }}">{{s.section.title}}</a>
+                                <div class="row accordion-title2" id="title2{{ s.section.template.order }}">
+                                    <a class="line" data-toggle="collapse" data-parent="#accordionN{{forloop.parentloop.counter|add:1}}" href="#content2{{ s.section.template.order }}"
+                                    aria-expanded="true" aria-controls="content2{{ s.section.template.order }}">{{s.section.template.title}}</a>
                                 </div>
-                                <div class="row accordion-content2 collapse in" id="content2{{ s.section.order }}" aria-labelledby="title2{{ s.section.order }}">
+                                <div class="row accordion-content2 collapse in" id="content2{{ s.section.template.order }}" aria-labelledby="title2{{ s.section.template.order }}">
                     {% endif %}
-                {% if s.has_content %}
-                                <div class="line palebox">
-                                        {% if form %}
-                                            <textarea name="s{{s.section.order}}_content">{{ s.section.content }}</textarea>
-                                        {% else %}
-                                            <p>{{ s.section.content|safe }}</p>
-                                        {% endif %}
+                {% if s.section.template.has_content %}
+                    <div class="line palebox">
+                            {% if form %}
+                                <textarea name="s{{s.section.template.order}}_content">{{ s.section.content }}</textarea>
+                                {{ s.section.template.content_help_text|safe }}
+                            {% else %}
+                                <p>{{ s.section.content|safe }}</p>
+                            {% endif %}
+                    </div>
+                {% endif %} {# has_content #}
+                {% if s.section.template.has_images %}
+                    <div class="line lightbox">
+                        {% if form %}
+                        <div class="row">
+                            <div  class="c6" id="image_section_{{ s.section.template.order }}">
+                        {% endif %}{# form #}
+                            {% for image in s.section.image_set.all %}
+                                <div class="row">
+                                {% if image.image %}
+                                    <div class="c6">
+                                        <a href="{{ image.image.url }}" class="image-popup"><img
+                                                src="{{ image.image.url }}" class="img-responsive"></a>
+                                    </div>
+                                    <div class="c6">
+                                        <p><a name="fig1"></a>{{ image.legend | safe }}
+                                            {% if form %}
+                                            <a onclick="window.open('{% url 'artefacts:image-update' section_id=s.section.template.order pk=image.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><i class="fa fa-pencil"></i></a>
+                                            <a onclick="window.open('{% url 'artefacts:image-delete' image.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><i class="fa fa-trash"></i></a></p>
+                                            {% endif %}
+                                    </div>
+                                {% endif %}
                                 </div>
-                {% endif %}
-                                    <div class="line lightbox">
-                                        <div class="row">
-                                                <div  class="c6" id="image_section_{{ s.section.order }}">
-                                                    {% for image in s.section.image_set.all %}
-                                                        <div class="row">
-                                                            {% if image.image %}
-                                                                <div class="c6">
-                                                                    <a href="{{ image.image.url }}" class="image-popup"><img
-                                                                            src="{{ image.image.url }}" class="img-responsive"></a>
-                                                                </div>
-                                                                <div class="c6">
-                                                                    <p><a name="fig1"></a>{{ image.legend | safe }} <a
-                                                                            onclick="window.open('{% url 'artefacts:image-update' section_id=s.section.order pk=image.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><i
-                                                                            class="fa fa-pencil"></i></a>
-                                                                        <a
-                                                                                onclick="window.open('{% url 'artefacts:image-delete' image.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><i
-                                                                                class="fa fa-trash"></i></a></p>
-                                                                </div>
-                                                            {% endif %}
-                                                        </div>
-                                                    {% endfor %}
-                                                </div>
-                                                <div class="c9">
-                                                    <p> <!-- Upload Photos -->
-                                                        <a class="add-another" id="image_add_"{{ s.section.order }}
-                                                           title="Add a picture, a figure or a table"
-                                                           onclick="window.open('{% url 'artefacts:image-create' section_id=s.section.order %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');">
-                                                            <span class="glyphicon glyphicon-plus"></span>
-                                                        </a>
-                                                    </p>
-                                                    <p>Figures and tables are referred as Fig. 1, Table 1.</p>
-                                                </div>
-                                            </div>
-                                        <p><i>General picture of the object should contain a scale and a chart colour. The caption gives
-                                                the
-                                                name of the artefact, the type of alloy and any relevant information</i>
-                                        </p>
-                                    </div>
-                                    {% if False %}
-                                    <div class="row accordion-title2" id="title2{{ s.section.order }}2">
-                                        <a class="line" data-toggle="collapse" data-parent="#accordionN{{forloop.parentloop.counter|add:1}}" href="#content2{{ s.section.order }}"
-                                            aria-expanded="true" aria-controls="content2{{ s.section.order }}2">Stratigraphies</a>
-                                    </div>
-                                    <div class="row accordion-content2 collapse in" id="content2{{ s.section.order }}2" aria-labelledby="title2{{ s.section.order }}2">
-                                    {% else %}
-                                    <div class="line palebox">
-                                    {% endif %}
-                                    <div id="stratigraphy_section_{{ s.section.id }}">
-                                    {% with section=s.section %}
-                                        {% include "artefacts/stratigraphy.html" %}
-                                    {% endwith %}
-                                    </div>
-                {% if form %}
+                            {% endfor %}
+                        {% if form %}
+                            </div>
+                            <div class="c9">
+                                <p> <!-- Upload Photos -->
+                                    <a class="add-another" id="image_add_"{{ s.section.template.order }}
+                                       title="Add a picture, a figure or a table"
+                                       onclick="window.open('{% url 'artefacts:image-create' section_id=s.section.template.order %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');">
+                                        <span class="glyphicon glyphicon-plus"></span>
+                                    </a>
+                                </p>
+                                <p>Figures and tables are referred as Fig. 1, Table 1.</p>
+                            </div>
+                        </div>
+                        {{ s.section.template.images_help_text|safe }}
+                        {% endif %} {# form #}
+                    </div>
+                {%  endif %} {# has_images #}
+                {% if s.section.template.has_stratigraphies %}
+                    {% if False %}
+                    <div class="row accordion-title2" id="title2{{ s.section.template.order }}2">
+                        <a class="line" data-toggle="collapse" data-parent="#accordionN{{forloop.parentloop.counter|add:1}}" href="#content2{{ s.section.template.order }}"
+                            aria-expanded="true" aria-controls="content2{{ s.section.template.order }}2">Stratigraphies</a>
+                    </div>
+                    <div class="row accordion-content2 collapse in" id="content2{{ s.section.template.order }}2" aria-labelledby="title2{{ s.section.template.order }}2">
+                    {% else %}
+                    <div class="line palebox">
+                    {% endif %}
+                    <div id="stratigraphy_section_{{ s.section.id }}">
+                    {% with section=s.section %}
+                        {% include "artefacts/stratigraphy.html" %}
+                    {% endwith %}
+                    </div>
+                    {% if form %}
+                        <div class="c9">
+                            <p>
+                                <a class="add-another" id="stratigraphy_add"
+                                   onclick="window.open('{% url 'artefacts:stratigraphy-list' s.section.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');">
+                                    <span class="glyphicon glyphicon-plus"></span>
+                                </a>
+                            </p>
+                            <p>Figures and tables are referred as Fig. 1, Table 1.</p>
+                        </div>
+                        {{ s.section.template.stratigraphies_help_text|safe }}
+                    {%  endif %} {# form #}
+                </div>
+                {% endif %} {# has_stratigraphies #}
+                {% if s.form %}
+                    <div class="line lightbox">
+                                  {% for field in s.fieldset %}
+                                      <div class="row">
+                                        <div class="c3">
+                                            {{ field.label_tag }}
+                                        </div>
                                         <div class="c9">
-                                            <p>
-                                                <a class="add-another" id="stratigraphy_add"
-                                                   onclick="window.open('{% url 'artefacts:stratigraphy-list' s.section.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');">
-                                                    <span class="glyphicon glyphicon-plus"></span>
-                                                </a>
-                                            </p>
+                                        {% if form %}
+                                            <p>{{ field }}</p>
+                                        {% else %}
+                                            <p>{{ s.form.instance | getattr:field.name |safe}}</p>
+                                        {% endif %}
+                                            {% if field.help_text %}
+                                            <p><i>{{ field.help_text|safe }}</i></p>
+                                            {% endif %}
                                         </div>
-                {%  endif %}
-                                    </div>
-                                    {% if s.form %}
-                                        <div class="line lightbox">
-                                                      {% for field in s.fieldset %}
-                                                          <div class="row">
-                                                            <div class="c3">
-                                                                {{ field.label_tag }}
-                                                            </div>
-                                                            <div class="c9">
-                                                            {% if form %}
-                                                                <p>{{ field }}</p>
-                                                            {% else %}
-                                                                <p>{{ s.form.instance | getattr:field.name |safe}}</p>
-                                                            {% endif %}
-                                                                {% if field.help_text %}
-                                                                <p><i>{{ field.help_text|safe }}</i></p>
-                                                                {% endif %}
-                                                            </div>
-                                                          </div>
-                                                    {% endfor %}
-                                            </div>
-                                    {% endif %}
-                                    {% if s.has_complementary_information %}
-                                        {% if form or s.section.complementary_information %}
-                                        <div class="line palebox">
-                                            <h4 class="underline">Complementary information</h4>
-                                        {% endif %}
-                                         {% if form %}
-                                             <textarea name="s{{s.section.order}}_complementary_information">{{ s.section.complementary_information }}</textarea>
-                                             <p><i>Any important information that does not fit to the previous fields</i></p>
-                                         {% elif s.section.complementary_information %}
-                                             <p>{{ s.section.complementary_information|safe }}</p>
-                                        {% endif %}
-                                        {% if form or s.section.complementary_information %}
-                                        </div>
-                                        {% endif %}
-                                    {% endif %}
+                                      </div>
+                                {% endfor %}
+                        </div>
+                {% endif %}
+                {% if s.section.template.has_complementary_information %}
+                    {% if form or s.section.complementary_information %}
+                    <div class="line palebox">
+                        <h4 class="underline">Complementary information</h4>
+                    {% endif %}
+                     {% if form %}
+                         <textarea name="s{{s.section.template.order}}_complementary_information">{{ s.section.complementary_information }}</textarea>
+                         {{ s.section.template.complementary_information_help_text|safe }}
+                     {% elif s.section.complementary_information %}
+                         <p>{{ s.section.complementary_information|safe }}</p>
+                    {% endif %}
+                    {% if form or s.section.complementary_information %}
+                    </div>
+                    {% endif %}
+                                    {% endif %} {# has_complementary_information #}
                 {% if forloop.first == False%}
                                 </div>
                 {% endif %}
@@ -209,12 +249,17 @@
                 {% endif %}
             {% endfor %}
         {% endfor %}
-            <input class="btn btn-default btn-lg" type="submit" value="Save">
+        {% if form %}
+            <div class="row">
+              <input class="btn btn-default btn-lg" type="submit" value="Save">
+            </div>
+        {% endif %}
         </div>
   {% if form %}
     </form>
   {% endif %}
 </div>
+{% endfilter %}
 {% endblock content %}
 
 {% block custom_bottom_script %}
