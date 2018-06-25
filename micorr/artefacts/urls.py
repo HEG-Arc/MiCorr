@@ -90,6 +90,10 @@ urlpatterns = [
     url(r'^city-autocomplete/$', artefacts_views.CityAutocomplete.as_view(), name='city-autocomplete'),
     url(r'^region-autocomplete/$', artefacts_views.RegionAutocomplete.as_view(), name='region-autocomplete'),
     url(r'^country-autocomplete/$', artefacts_views.CountryAutocomplete.as_view(), name='country-autocomplete'),
-    url(r'^generic-autocomplete/(?P<model>[\w-]+)/$', artefacts_views.GenericAutoComplete.as_view(), name='generic-autocomplete'),
+    url(r'^generic-autocomplete/(?P<model>[\w-]+)/$', artefacts_views.GenericAutoComplete.as_view(create_field='name'), name='generic-autocomplete'),
+    url(r'^date-autocomplete/(?P<model>[\w-]+)/$', artefacts_views.GenericAutoComplete.as_view(create_field='date'), name='date-autocomplete'),
+    url(r'^type-autocomplete/(?P<model>[\w-]+)/$', artefacts_views.GenericAutoComplete.as_view(create_field='type'), name='type-autocomplete'),
+    url(r'^form-autocomplete/(?P<model>[\w-]+)/$', artefacts_views.GenericAutoComplete.as_view(create_field='form'), name='form-autocomplete'),
+    url(r'^element-autocomplete/(?P<model>[\w-]+)/$', artefacts_views.GenericAutoComplete.as_view(create_field='element'), name='element-autocomplete'),
     # url(r'^test-ontology/$', displayOntology),
 ]

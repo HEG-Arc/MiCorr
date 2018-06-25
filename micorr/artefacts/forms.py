@@ -4,6 +4,7 @@ from itertools import chain
 from django import forms
 from django.db.models.fields.related import ForeignKey, ManyToManyField
 from django.forms import TextInput
+from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 
 from users.models import User
@@ -17,6 +18,19 @@ from tinymce.widgets import TinyMCE
 import django_filters
 from .fieldset_form import FieldsetForm
 
+class SelectWithPop(forms.Select):
+    def render(self, name, *args, **kwargs):
+        html = super(SelectWithPop, self).render(name, *args, **kwargs)
+        popupplus = render_to_string("form/popupplus.html", {'field': name})
+        return html+popupplus
+
+
+class MultipleSelectWithPop(forms.SelectMultiple):
+    def render(self, name, *args, **kwargs):
+        html = super(MultipleSelectWithPop, self).render(name, *args, **kwargs)
+        popupplus = render_to_string("form/popupplus.html", {'field': name})
+        return html+popupplus
+
 def get_updated_widgets(widgets, model_class, fields):
     """
     Updates ModelForm.Meta widgets dictionary for all ForeignKey/ManyToManyField fields of a model_class
@@ -26,13 +40,21 @@ def get_updated_widgets(widgets, model_class, fields):
     :param fields: list of field names to adapt in the form
     :return: updated input widgets dict
     """
+    def get_url_name(model_name):
+        m2u = {
+            'RecoveringDate': 'artefacts:date-autocomplete',
+            'CorrosionType': 'artefacts:type-autocomplete',
+            'CorrosionForm': 'artefacts:form-autocomplete',
+            'Metal': 'artefacts:element-autocomplete',
+        }
+        return m2u.get(model_name, 'artefacts:generic-autocomplete')
     for f_name in fields:
         for meta_field in model_class._meta.get_fields():
             if f_name == meta_field.name:
                 if meta_field.db_type.im_class == ForeignKey:
-                    widgets[f_name] = autocomplete.ModelSelect2Multiple(
-                        url=reverse_lazy('artefacts:generic-autocomplete',
-                                         args=[meta_field.related_model.__name__]))
+                    rel_model_name = meta_field.related_model.__name__
+                    widgets[f_name] = SelectWithPop if rel_model_name in ('Origin',) else\
+                        autocomplete.ModelSelect2Multiple(url=reverse_lazy(get_url_name(rel_model_name), args=[rel_model_name]))
                 elif meta_field.db_type.im_class == ManyToManyField:
                     widgets[f_name] = autocomplete.ModelSelect2Multiple(
                         url=reverse_lazy('artefacts:generic-autocomplete',

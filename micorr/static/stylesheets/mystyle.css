@@ -3287,7 +3287,9 @@ select[multiple],
 select[size] {
   height: auto;
 }
-
+select {
+  max-width: 95%;
+}
 input[type="file"]:focus,
 input[type="radio"]:focus,
 input[type="checkbox"]:focus {

@@ -1981,7 +1981,9 @@ class BaseAutocomplete(autocomplete.Select2QuerySetView):
 #class ChronologyPeriodAutoComplete(BaseAutocomplete):
 #    model = ChronologyPeriod
 
-class GenericAutoComplete(BaseAutocomplete):
+class GenericAutoComplete(autocomplete.Select2QuerySetView):
+
+    default_search_field = 'name'
 
     def get_queryset(self):
         model_class = getattr(models,self.kwargs['model'])
@@ -1992,7 +1994,15 @@ class GenericAutoComplete(BaseAutocomplete):
         qs = model_class.objects.all()
 
         if self.q:
-            qs = qs.filter(name__contains=self.q)
+            search_field = self.create_field or self.default_search_field
+            qs = qs.filter(**{search_field + '__icontains':self.q})
 
         return qs
+
+    # post overloading is required to add support for Create option
+    # as Base class method (BaseQuerySetView.post) does not accept any args / kwargs
+    # so would break with our extra model kwargs passed
+    def post(self, request, *args, **kwargs):
+
+        return super(GenericAutoComplete, self).post(request)
 
