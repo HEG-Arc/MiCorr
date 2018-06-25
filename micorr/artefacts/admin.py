@@ -40,7 +40,7 @@ class SectionCategoryAdmin(admin.ModelAdmin):
 
 
 class SectionAdmin(admin.ModelAdmin):
-    list_display = ('order', 'artefact', 'section_category')
+    list_display = ('order', 'artefact')
 
 
 class ImageAdmin(admin.ModelAdmin):

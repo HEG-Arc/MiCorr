@@ -30,8 +30,7 @@ from .forms import ArtefactsForm, ArtefactsCreateForm, DocumentUpdateForm, Docum
     PublicationDecisionForm, PublicationDelegateForm, PublicationRejectDecisionForm, StratigraphyCreateForm
 
 from .models import Artefact, Document, Collaboration_comment, Field, Object, Section, SectionCategory, Image, \
-    Stratigraphy, Token, \
-    Publication, ChronologyPeriod, SectionTemplate
+    Stratigraphy, Token, Publication, SectionTemplate
 from . import models
 
 import logging
@@ -216,8 +215,8 @@ class ArtefactsUpdateView(generic.UpdateView):
         # retrieve section related vars from POST
         for st in SectionTemplate.objects.filter(page_template=1).all():
             s_prefix = "s{}_".format(st.order)
-            section_update = {k: request.POST[s_prefix+k] for k in ['content','complementary_information'] if getattr(st,"has_"+k)}
-            section, created = Section.objects.update_or_create(artefact=artefact,template=st, order=st.order, defaults=section_update)
+            section_update = {k: request.POST.get(s_prefix+k, '') for k in ['content','complementary_information'] if getattr(st,"has_"+k)}
+            section, created = Section.objects.update_or_create(artefact=artefact,template=st, defaults=section_update)
             if created:
                 artefact.section_set.add(section)
         return super(ArtefactsUpdateView, self).post(request, **kwargs)
@@ -857,7 +856,7 @@ class CollaborationUpdateView(generic.UpdateView):
             for comment in comments:
                 allSectionsComments.append(comment)
 
-            sectionShortTitle = getSectionShortName(section.title)
+            sectionShortTitle = getSectionShortName(section.template.title)
             unreadCommentsSection[sectionShortTitle] = False
 
         # Get first comments of all sections
@@ -888,7 +887,7 @@ class CollaborationUpdateView(generic.UpdateView):
                 if commentSectionSorted.sent or self.request.user == commentSectionSorted.user:
                     sectionComments.append(commentSectionSorted)
                     section = get_object_or_404(Section, pk=commentSectionSorted.object_model_id)
-                    sectionShortTitle = getSectionShortName(section.title)
+                    sectionShortTitle = getSectionShortName(section.template.title)
                     sectionDict[sectionShortTitle].append(commentSectionSorted)
                     if commentSectionSorted.read == False and commentSectionSorted.user != user:
                         unreadCommentsSection[sectionShortTitle] = True
@@ -1049,7 +1048,7 @@ class CollaborationCommentView(generic.CreateView):
             for comment in comments :
                 allSectionsComments.append(comment)
 
-            sectionShortTitle = getSectionShortName(section.title)
+            sectionShortTitle = getSectionShortName(section.template.title)
             unreadCommentsSection[sectionShortTitle] = False
 
         # Get first comments of all sections
@@ -1079,7 +1078,7 @@ class CollaborationCommentView(generic.CreateView):
             if commentSectionSorted.sent or self.request.user == commentSectionSorted.user :
                 sectionComments.append(commentSectionSorted)
                 section = get_object_or_404(Section, pk=commentSectionSorted.object_model_id)
-                sectionShortTitle = getSectionShortName(section.title)
+                sectionShortTitle = getSectionShortName(section.template.title)
                 sectionDict[sectionShortTitle].append(commentSectionSorted)
                 if commentSectionSorted.read == False and commentSectionSorted.user != user :
                     unreadCommentsSection[sectionShortTitle] = True
@@ -1164,7 +1163,7 @@ class CollaborationCommentView(generic.CreateView):
         except :
             token = Token.tokenManager.get(pk=self.kwargs['pk'])
             field = getSectionCompleteName(self.kwargs['field'])
-            section = Section.objects.get(title=field, artefact=token.artefact)
+            section = Section.objects.get(template__title=field, artefact=token.artefact)
             form.instance.content_object = section
             form.instance.token_for_section = token
             section_type = ContentType.objects.get(model='section')
@@ -1978,8 +1977,6 @@ class BaseAutocomplete(autocomplete.Select2QuerySetView):
 
         return qs
 
-#class ChronologyPeriodAutoComplete(BaseAutocomplete):
-#    model = ChronologyPeriod
 
 class GenericAutoComplete(autocomplete.Select2QuerySetView):
 
