@@ -1454,54 +1454,18 @@ class PublicationListView(generic.ListView):
 
         context = super(PublicationListView, self).get_context_data(**kwargs)
         user = self.request.user
-        isAdmin = False
-        publicationsUser = []
-        artefactsHistory = []
-        newPubliHistory = 0
 
         # Get currents publications and publication history (decided)
-        try :
-            publications = Publication.objects.all().order_by('-modified')
-            for publication in publications :
-                if publication.artefact.object.user == user :
-                    if publication.decision_taken :
-                        artefactsHistory.append(publication)
-                        if publication.read==False :
-                            newPubliHistory=newPubliHistory + 1
-        except :
-            pass
 
-        try :
-            publications = Publication.objects.all().order_by('-created')
-            for publication in publications :
-                if publication.artefact.object.user == user :
-                    if not publication.decision_taken :
-                        publicationsUser.append(publication)
-        except :
-            pass
+        user_publications = Publication.objects.filter(artefact__object__user=user)
+        artefactsHistory = list(user_publications.filter(decision_taken=True).order_by('-modified'))
+        newPubliHistory = sum(p.read==False for p in artefactsHistory)
 
-        artefactsPublished = []
+        publicationsUser = user_publications.filter(decision_taken=False).order_by('-created')
 
-        try :
-            objects = user.object_set.all().order_by('name')
+        artefactsPublished = Artefact.objects.filter(published=True, object__user=user).order_by('object__name', '-modified')
 
-            for object in objects :
-                artefacts = object.artefact_set.all().order_by('-modified')
-                for artefact in artefacts :
-                    if artefact.published :
-                        artefactsPublished.append(artefact)
-        except:
-            pass
-
-        try :
-            groups = user.groups.all()
-            for group in groups :
-                if group.name == 'Main administrator' or group.name == 'Delegated administrator':
-                    isAdmin = True
-        except:
-            pass
-
-        context['isAdmin'] = isAdmin
+        context['isAdmin'] = user.groups.filter(name__in=['Main administrator','Delegated administrator']).exists()
         context['publications'] = publicationsUser
         context['artefactsPublished'] = artefactsPublished
         context['artefactsHistory'] = artefactsHistory
