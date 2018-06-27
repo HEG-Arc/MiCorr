@@ -31,6 +31,25 @@ class MultipleSelectWithPop(forms.SelectMultiple):
         popupplus = render_to_string("form/popupplus.html", {'field': name})
         return html+popupplus
 
+
+class ModelSelect2WithPop(autocomplete.ModelSelect2):
+    def render(self, name, *args, **kwargs):
+        # forms/widgets Widget.render() renderer arg (new for django 1.11) is unsupported by
+        # dal/widgets.py:WidgetMixin implementation so we remove it. it's default value will be used
+        kwargs.pop('renderer',None)
+        html = super(ModelSelect2WithPop, self).render(name, *args, **kwargs)
+        popupplus = render_to_string("form/popupplus.html", {'field': name})
+        return html + popupplus
+
+class ModelSelect2MultipleWithPop(autocomplete.ModelSelect2Multiple):
+    def render(self, name, *args, **kwargs):
+        # forms/widgets Widget.render() renderer arg (new for django 1.11) is unsupported by
+        # dal/widgets.py:WidgetMixin implementation so we remove it. it's default value will be used
+        kwargs.pop('renderer', None)
+        html = super(ModelSelect2MultipleWithPop, self).render(name, *args, **kwargs)
+        popupplus = render_to_string("form/popupplus.html", {'field': name})
+        return html+popupplus
+
 def get_updated_widgets(widgets, model_class, fields):
     """
     Updates ModelForm.Meta widgets dictionary for all ForeignKey/ManyToManyField fields of a model_class
@@ -46,19 +65,21 @@ def get_updated_widgets(widgets, model_class, fields):
             'CorrosionType': 'artefacts:type-autocomplete',
             'CorrosionForm': 'artefacts:form-autocomplete',
             'Metal': 'artefacts:element-autocomplete',
+            'Contact':'artefacts:contact-autocomplete',
+            'Origin':'artefacts:origin-autocomplete'
         }
         return m2u.get(model_name, 'artefacts:generic-autocomplete')
     for f_name in fields:
         for meta_field in model_class._meta.get_fields():
-            if f_name == meta_field.name:
+            if f_name == meta_field.name and meta_field.db_type.im_class in (ForeignKey, ManyToManyField):
+                rel_model_name = meta_field.related_model.__name__
                 if meta_field.db_type.im_class == ForeignKey:
-                    rel_model_name = meta_field.related_model.__name__
-                    widgets[f_name] = SelectWithPop if rel_model_name in ('Origin',) else\
-                        autocomplete.ModelSelect2Multiple(url=reverse_lazy(get_url_name(rel_model_name), args=[rel_model_name]))
-                elif meta_field.db_type.im_class == ManyToManyField:
-                    widgets[f_name] = autocomplete.ModelSelect2Multiple(
-                        url=reverse_lazy('artefacts:generic-autocomplete',
-                                         args=[meta_field.related_model.__name__]))
+                    widget_class = ModelSelect2WithPop if rel_model_name in (
+                        'Origin', 'Contact') else autocomplete.ModelSelect2
+                else:
+                    widget_class = ModelSelect2MultipleWithPop if rel_model_name in (
+                        'Origin', 'Contact') else autocomplete.ModelSelect2Multiple
+                widgets[f_name] = widget_class(url=reverse_lazy(get_url_name(rel_model_name), args=[rel_model_name]))
     return widgets
 
 class ArtefactsForm(FieldsetForm):

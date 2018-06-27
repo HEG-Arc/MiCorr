@@ -14,8 +14,7 @@ class ContactCreateForm(forms.ModelForm):
     country = forms.ModelChoiceField(required=False,
                                   help_text=unicode(Contact._meta.get_field('country').help_text),
                                   queryset=Country.objects.all(),
-                                  widget=autocomplete.ModelSelect2(url=reverse_lazy('artefacts:generic-autocomplete',args=['Country'])),
-                                  #widget=autocomplete.ModelSelect2(url='artefacts:country-autocomplete')
+                                  widget=autocomplete.ModelSelect2(url='artefacts:country-autocomplete')
                                   )
     region = forms.ModelChoiceField(required=False,
                                   help_text=unicode(Contact._meta.get_field('region').help_text),

@@ -95,5 +95,7 @@ urlpatterns = [
     url(r'^type-autocomplete/(?P<model>[\w-]+)/$', artefacts_views.GenericAutoComplete.as_view(create_field='type'), name='type-autocomplete'),
     url(r'^form-autocomplete/(?P<model>[\w-]+)/$', artefacts_views.GenericAutoComplete.as_view(create_field='form'), name='form-autocomplete'),
     url(r'^element-autocomplete/(?P<model>[\w-]+)/$', artefacts_views.GenericAutoComplete.as_view(create_field='element'), name='element-autocomplete'),
+    url(r'^contact-autocomplete/(?P<model>[\w-]+)/$', artefacts_views.ContactAutoComplete.as_view(), name='contact-autocomplete'),
+    url(r'^origin-autocomplete/(?P<model>[\w-]+)/$', artefacts_views.OriginAutoComplete.as_view(), name='origin-autocomplete'),
     # url(r'^test-ontology/$', displayOntology),
 ]

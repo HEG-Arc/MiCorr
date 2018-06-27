@@ -5,6 +5,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.mail import EmailMultiAlternatives
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
+from django.db.models import Q
 from django.http import HttpResponse
 
 from django.shortcuts import get_object_or_404, render, redirect
@@ -1962,3 +1963,32 @@ class GenericAutoComplete(autocomplete.Select2QuerySetView):
 
         return super(GenericAutoComplete, self).post(request)
 
+class ContactAutoComplete(GenericAutoComplete):
+
+    def get_queryset(self):
+        model_class = getattr(models,self.kwargs['model'])
+
+        if not self.request.user.is_authenticated():
+            return model_class.objects.none()
+
+        qs = model_class.objects.all()
+
+        if self.q:
+            qs = qs.filter(Q(name__icontains=self.q)|Q(surname__icontains=self.q)|Q(organization_name__icontains=self.q))
+
+        return qs
+
+class OriginAutoComplete(GenericAutoComplete):
+
+    def get_queryset(self):
+        model_class = getattr(models,self.kwargs['model'])
+
+        if not self.request.user.is_authenticated():
+            return model_class.objects.none()
+
+        qs = model_class.objects.all()
+
+        if self.q:
+            qs = qs.filter(Q(site__icontains=self.q)|Q(city__name__icontains=self.q)|Q(city__country__name__icontains=self.q))
+
+        return qs
