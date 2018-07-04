@@ -61,15 +61,18 @@
   <div class="container">
     {% if messages %}
     <div class="row">
-      <div class="c9">
-      <div class="container">
+      <div class="pre3 c9">
       <div class="row">
         {% for message in messages %}
-           <div class="alert alert-{% if message.tags %}{{ message.tags }}{% endif %}" role="alert">
+           <div class="alert alert-dismissable alert-{% if message.tags %}{{ message.tags }}{% endif %} fade in" role="alert" data-auto-dismiss="4000">
+               <a class="close" data-dismiss="alert" href="#">&times;</a>
             {{ message }}
            </div>
         {% endfor %}
-      </div>
+      <div class="alert alert-dismissable alert-success fade in" role="alert" data-auto-dismiss="4000">
+               <a class="close" data-dismiss="alert" href="#">&times;</a>
+            <div id="ajax-message-div"></div>
+    </div>
       </div>
       </div>
     </div>
@@ -77,8 +80,8 @@
     <div class="row">
       {% block sidemenu %}
       {% endblock sidemenu %}
-          {% block content %}
-          {% endblock content %}
+      {% block content %}
+      {% endblock content %}
     </div>
   </div> <!-- container for content-->
 
@@ -106,6 +109,7 @@
   <!-- script src="http://code.jquery.com/jquery-1.9.1.min.js"></script -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
   <script src="{% static 'js/bootstrap.min.js' %}"></script>
+  <script src="{% static 'js/bootstrap-auto-dismiss-alert.js' %}"></script>
   <script src="{% static 'js/MagnificPopup.min.js' %}"></script>
   <script src="{% static 'js/jinplace-1.2.1.min.js' %}"></script>
   <!--script src="js/jquery.sidr.min.js"></script-->

@@ -50,13 +50,6 @@
     {% load terms %}
     {% filter replace_terms %}
     <div class="c9">
-   {% if messages %}
-        <ul class="messages">
-            {% for message in messages %}
-            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
 
     <h1>{{ object.artefact_verbose_description_short }}</h1>
 

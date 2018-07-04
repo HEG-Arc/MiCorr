@@ -2,6 +2,7 @@ from collections import defaultdict
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.messages.views import SuccessMessageMixin
 from django.core.mail import EmailMultiAlternatives
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
@@ -171,7 +172,7 @@ class ArtefactsDetailView(generic.DetailView):
         return context
 
 
-class ArtefactsUpdateView(generic.UpdateView):
+class ArtefactsUpdateView(SuccessMessageMixin, generic.UpdateView):
     """
     A view which allows the user to edit an artefact
     When the editing is finished, it redirects the user to the artefact detail page
@@ -181,6 +182,7 @@ class ArtefactsUpdateView(generic.UpdateView):
     form_class = ArtefactsForm
 
     template_name_suffix = '_update_page'
+    success_message = 'Your artefact has been saved successfully!'
 
     def get_context_data(self, **kwargs):
         context = super(ArtefactsUpdateView,self).get_context_data(**kwargs)
@@ -214,7 +216,7 @@ class ArtefactsUpdateView(generic.UpdateView):
         return super(ArtefactsUpdateView, self).post(request, **kwargs)
 
     def get_success_url(self):
-        return reverse('users:detail', kwargs={'username': self.request.user})
+        return reverse('artefacts:artefact-update',args=[self.kwargs['pk']] )
 
 
 class ArtefactsDeleteView(generic.DeleteView):
