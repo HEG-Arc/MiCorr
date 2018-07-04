@@ -2,16 +2,19 @@ from collections import OrderedDict
 from itertools import chain
 
 from django import forms
+from django.db.models import QuerySet
 from django.db.models.fields.related import ForeignKey, ManyToManyField
 from django.forms import TextInput
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy
+from django.utils.functional import lazy
 
 from users.models import User
 
-from .models import Artefact, Document, Metal, CorrosionForm, CorrosionType, Environment, Object, Origin, ChronologyPeriod, \
+from .models import Artefact, Document, Metal, CorrosionForm, CorrosionType, Environment, Object, Origin, \
+    ChronologyPeriod, \
     Alloy, Technology, Microstructure, RecoveringDate, Image, Type, Stratigraphy, Token, Collaboration_comment, \
-    Publication
+    Publication, ArtefactFormDescription
 from cities_light.models import Country, City
 from dal import autocomplete
 from tinymce.widgets import TinyMCE
@@ -82,6 +85,13 @@ def get_updated_widgets(widgets, model_class, fields):
                 widgets[f_name] = widget_class(url=reverse_lazy(get_url_name(rel_model_name), args=[rel_model_name]))
     return widgets
 
+# lazily retrieve field meta data from ArtefactFormDescription at module load time
+# to avoid accessing ArtefactFormDescription model during django init creating dependency issues on manage.py migration for ex.
+# as this is used for help_texts and labels ArtefactsForm.Meta class variables definition
+
+ARTEFACT_FORM_DESCRIPTIONS = lazy(
+    lambda: ArtefactFormDescription.objects.filter(form='ArtefactForm').values('field', 'name', 'text'), QuerySet)()
+
 class ArtefactsForm(FieldsetForm):
 
     class Meta:
@@ -141,8 +151,27 @@ class ArtefactsForm(FieldsetForm):
                            'corrosion_type']
             }
         )
-        fields = sum([fs['fields'] for fs in fieldsets],[])
+        fields = sum([fs['fields'] for fs in fieldsets], [])
         widgets = get_updated_widgets({}, Artefact, fields)
+
+        # override default model help_texts and labels (defined in Artefact)
+        # with values from ArtefactFormDescription wagtail snippet model
+        help_texts = lazy(lambda: {r['field']: r['text'] for r in ARTEFACT_FORM_DESCRIPTIONS}, dict)()
+        labels = lazy(lambda: {r['field']: r['name'] for r in ARTEFACT_FORM_DESCRIPTIONS}, dict) ()
+
+    @classmethod
+    def update_fields(cls):
+        """
+        Dynamic form fields update from db:
+        Updates Class base_fields meta data from database. which will be use for subsequent Form instance creation
+        called by ArtefactFormDescription.save when updating field description from wagtail admin for ex.
+        (no need to update Meta.help_texts and Meta.labels as they are only used at class initialisation to build cls.base_fields)
+        :return: None
+        """
+        for r in ARTEFACT_FORM_DESCRIPTIONS:
+            if r['field'] in cls.base_fields:
+                cls.base_fields[r['field']].label = r['name']
+                cls.base_fields[r['field']].help_text = r['text']
 
     fieldsets = Meta.fieldsets
 

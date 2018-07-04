@@ -11,7 +11,6 @@ from django.conf import settings
 from django_extensions.db.models import TimeStampedModel
 from tinymce import models as tinymce_models
 from cities_light.models import City
-from django.core.mail import  send_mail
 
 from artefacts import get_img_storage_path, get_img_storage_path_stratigraphy, get_doc_storage_path
 
@@ -583,3 +582,43 @@ class Collaboration_comment(TimeStampedModel):
     class Meta:
         verbose_name = 'Comment'
         verbose_name_plural = 'Comments'
+from django.db import models
+from django.utils.encoding import python_2_unicode_compatible
+
+from wagtail.wagtailsnippets.models import register_snippet
+from wagtail.wagtailadmin.edit_handlers import FieldPanel
+
+
+@python_2_unicode_compatible  # provide equivalent __unicode__ and __str__ methods on Python 2
+class FormDescription(models.Model):
+    form = models.CharField(max_length=80)
+    field = models.CharField(max_length=80,unique=True)
+    name = models.CharField(max_length=255)
+    text = models.TextField()
+    panels = [
+        FieldPanel('field'),
+        FieldPanel('name'),
+        FieldPanel('text'),
+    ]
+    def save(self, *args, **kwargs):
+        from artefacts.forms import ArtefactsForm
+        super(FormDescription, self).save(*args, **kwargs)
+        ArtefactsForm.update_fields()
+
+    def __str__(self):
+        return self.name
+        #return '{}: {}'.format(self.label, self.name)
+
+class ArtefactFormManager(models.Manager):
+    def get_queryset(self):
+        return super(ArtefactFormManager,self).get_queryset().filter(form='ArtefactForm')
+
+@register_snippet
+class ArtefactFormDescription(FormDescription):
+    def __init__(self, *args, **kwargs):
+        self._meta.get_field('form').default = "ArtefactForm"
+        super(ArtefactFormDescription, self).__init__(*args, **kwargs)
+    objects = ArtefactFormManager()
+
+    class Meta:
+        proxy = True
