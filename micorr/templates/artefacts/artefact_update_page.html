@@ -48,6 +48,17 @@
 
 {% block content %}
     {% load terms %}
+    <!-- save Modal alert-->
+    <div id="saveModal" class="modal fade" role="dialog" data-backdrop="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div id="save-modal-alert" class="alert" role="alert" style="margin-bottom: 0px;">
+                    <a class="close" data-dismiss="modal" href="#">&times;</a>
+                    <p></p>
+                </div>
+            </div>
+        </div>
+    </div>
     {% filter replace_terms %}
     <div class="c9">
 
@@ -256,6 +267,33 @@
 {% endblock content %}
 
 {% block custom_bottom_script %}
+    <script type="text/javascript">
+    $('#saveModal').on('shown.bs.modal', function (event) {
+        var element=event.target;
+        setTimeout(function () {
+            $(element).modal('hide');
+        }, 5000);
+    })
+    var frm = $('#main-form');
+    frm.submit(function () {
+        $.ajax({
+            type: frm.attr('method'),
+            url: frm.attr('action'),
+            data: frm.serialize(),
+            success: function (data) {
+                $("#save-modal-alert").removeClass('alert-danger').addClass('alert-success');
+                $("#save-modal-alert > p").html(data.message);
+                $('#saveModal').modal('show');
+            },
+            error: function(data) {
+                $("#save-modal-alert").removeClass('alert-success').addClass('alert-danger');
+                $("#save-modal-alert > p").html(data.error);
+                $('#saveModal').modal('show');
+            }
+        });
+        return false;
+    });
+    </script>
     {{ form.media }}
     {% include "artefacts/dj_admin_related_object_lookups.html" %}
     {% include "artefacts/refresh-divs-script.html" %}

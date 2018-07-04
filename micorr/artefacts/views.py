@@ -7,7 +7,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
 from django.db.models import Q
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 
 from django.shortcuts import get_object_or_404, render, redirect
 
@@ -200,10 +200,10 @@ class ArtefactsUpdateView(SuccessMessageMixin, generic.UpdateView):
         return context
 
     def post(self, request, *args, **kwargs):
-        artefact = get_object_or_404(Artefact, pk=self.kwargs['pk'])
+        self.object = self.get_object()
+        artefact = self.object
         # Save updates for the object name (4 following lines)
-        obj = get_object_or_404(Object, pk=artefact.object.id)
-        objForm = ObjectUpdateForm(request.POST, instance=obj)
+        objForm = ObjectUpdateForm(request.POST, instance=artefact.object)
         if objForm.is_valid():
             objForm.save()
         # retrieve section related vars from POST
@@ -213,8 +213,15 @@ class ArtefactsUpdateView(SuccessMessageMixin, generic.UpdateView):
             section, created = Section.objects.update_or_create(artefact=artefact,template=st, defaults=section_update)
             if created:
                 artefact.section_set.add(section)
-        return super(ArtefactsUpdateView, self).post(request, **kwargs)
-
+        if request.is_ajax():
+            form = self.get_form()
+            if form.is_valid():
+                self.object = form.save()
+                return JsonResponse(dict(message='Artefact saved successfuly'))
+            else:
+                return JsonResponse(dict(error='Error saving artefacts'))
+        else:
+            return super(ArtefactsUpdateView, self).post(request, **kwargs)
     def get_success_url(self):
         return reverse('artefacts:artefact-update',args=[self.kwargs['pk']] )
 
