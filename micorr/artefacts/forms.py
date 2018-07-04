@@ -1,6 +1,3 @@
-from collections import OrderedDict
-from itertools import chain
-
 from django import forms
 from django.db.models import QuerySet
 from django.db.models.fields.related import ForeignKey, ManyToManyField
@@ -8,6 +5,7 @@ from django.forms import TextInput
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.utils.functional import lazy
+from django.db import connection
 
 from users.models import User
 
@@ -90,7 +88,9 @@ def get_updated_widgets(widgets, model_class, fields):
 # as this is used for help_texts and labels ArtefactsForm.Meta class variables definition
 
 ARTEFACT_FORM_DESCRIPTIONS = lazy(
-    lambda: ArtefactFormDescription.objects.filter(form='ArtefactForm').values('field', 'name', 'text'), QuerySet)()
+    lambda: ArtefactFormDescription.objects.filter(form='ArtefactForm').values('field', 'name',
+                                                                               'text') if 'artefacts_formdescription' in connection.introspection.table_names() else ArtefactFormDescription.objects.none(),
+    QuerySet)()
 
 class ArtefactsForm(FieldsetForm):
 
