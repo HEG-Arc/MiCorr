@@ -132,7 +132,7 @@
                 {% if s.section.template.has_content %}
                     <div class="line palebox">
                             {% if form %}
-                                <textarea name="s{{s.section.template.order}}_content">{{ s.section.content }}</textarea>
+                                <textarea name="s{{s.section.template.order}}_content" id="s{{s.section.template.order}}_content">{{ s.section.content }} </textarea>
                                 {{ s.section.template.content_help_text|safe }}
                             {% else %}
                                 <p>{{ s.section.content|safe }}</p>
@@ -232,7 +232,7 @@
                         <h4 class="underline">Complementary information</h4>
                     {% endif %}
                      {% if form %}
-                         <textarea name="s{{s.section.template.order}}_complementary_information">{{ s.section.complementary_information }}</textarea>
+                         <textarea name="s{{s.section.template.order}}_complementary_information" id="s{{s.section.template.order}}_complementary_information">{{ s.section.complementary_information }}</textarea>
                          {{ s.section.template.complementary_information_help_text|safe }}
                      {% elif s.section.complementary_information %}
                          <p>{{ s.section.complementary_information|safe }}</p>
@@ -272,14 +272,38 @@
         var element=event.target;
         setTimeout(function () {
             $(element).modal('hide');
-        }, 5000);
+        }, 2000);
     })
     var frm = $('#main-form');
     frm.submit(function () {
+
+        var formDataArray = frm.serializeArray();
+        console.log(formDataArray);
+        //custom tinyMCE textarea serialization
+        $('textarea').each(function (index,e) {
+            console.log(e.name);
+            var ed = tinymce.get(e.name);
+            if (ed) //only textarea with tinyMCE widget
+            {
+                console.log('seeking');
+                for (var i=0;i < formDataArray.length;i++)
+                {
+                    if (formDataArray[i].name==e.name)
+                    {
+                        console.log('found');
+                        formDataArray[i].value = ed.getContent();
+                        break;
+                    }
+                }
+            }
+         });
+        console.log(formDataArray);
+        var formData = $.param(formDataArray);
+        console.log(formData);
         $.ajax({
             type: frm.attr('method'),
             url: frm.attr('action'),
-            data: frm.serialize(),
+            data: formData,
             success: function (data) {
                 $("#save-modal-alert").removeClass('alert-danger').addClass('alert-success');
                 $("#save-modal-alert > p").html(data.message);
