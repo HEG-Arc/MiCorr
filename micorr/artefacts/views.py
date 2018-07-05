@@ -1,3 +1,4 @@
+import json
 from collections import defaultdict
 
 from django.contrib.auth.decorators import login_required
@@ -17,6 +18,7 @@ from haystack.forms import SearchForm
 from django.conf import settings
 from django.contrib import messages
 from django.http import Http404
+from tinymce.widgets import TinyMCE
 
 from contacts.forms import ContactCreateForm
 from stratigraphies.neo4jdao import Neo4jDAO
@@ -193,8 +195,24 @@ class ArtefactsUpdateView(SuccessMessageMixin, generic.UpdateView):
         formObject = ObjectUpdateForm(instance=self.object.object)
         form=context['form']
 
+        # integrate with django_tinymce for content and complementary_information textareas
+        # that are not rendered by TinyMCE widget and were missing tinymce class data-mce-conf attribute to be handled by
+        # common tinmce_init . so we generate each data-mce-conf and add them to sections dict
+        # they will be added to textarea elements in the template
+        section_groups = get_section_groups(self.object, form, formObject)
+        mce_widget = TinyMCE(mce_attrs={'mode':'exact'})
+        for sections in  section_groups:
+            for s in sections:
+                s_order = s['section'].template.order
+                if s['section'].template.has_content:
+                    name = 's{}_content'.format(s_order)
+                    s['content_mce_conf']=json.dumps(mce_widget.get_mce_config({'class':'tinymce','id':name,'name':name}))
+                if s['section'].template.has_complementary_information:
+                    name = 's{}_complementary_information'.format(s_order)
+                    s['complementary_information_mce_conf']=json.dumps(mce_widget.get_mce_config({'class':'tinymce','id':name,'name':name}))
+
         context.update(authors_fieldset=form.get_fieldset('authors'),
-                       section_groups=get_section_groups(self.object, form, formObject),
+                       section_groups=section_groups,
                        node_base_url=settings.NODE_BASE_URL,
                        view='ArtefactsUpdateView')
         return context

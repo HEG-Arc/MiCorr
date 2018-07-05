@@ -1,13 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
 {% load getattr %}
-{% if form %}
-{% block custom_header_script %}
-    <script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
-    <script>tinymce.init({selector: 'textarea', plugins: "table", statusbar: false, plugins: "autoresize",
-    autoresize_min_height:100, autoresize_max_height: 500, autoresize_bottom_margin:10, autoresize_on_init:false });</script>
-{% endblock custom_header_script %}
-{%  endif %}
 {% block sidemenu %}
     <div class="c3" id="sidemenu">
         <!-- no-active-hilight : do not highlight the "active" node of the menu. It is difficult for the affix to work when elements in the page are close one to the other (i.e. folded elements), therefore, it is less confusing to NOT hilight the .active nodes of the menu -->
@@ -132,7 +125,7 @@
                 {% if s.section.template.has_content %}
                     <div class="line palebox">
                             {% if form %}
-                                <textarea name="s{{s.section.template.order}}_content" id="s{{s.section.template.order}}_content">{{ s.section.content }} </textarea>
+                                <textarea class="tinymce" data-mce-conf="{{ s.content_mce_conf }}" name="s{{s.section.template.order}}_content" id="s{{s.section.template.order}}_content">{{ s.section.content }} </textarea>
                                 {{ s.section.template.content_help_text|safe }}
                             {% else %}
                                 <p>{{ s.section.content|safe }}</p>
@@ -232,7 +225,7 @@
                         <h4 class="underline">Complementary information</h4>
                     {% endif %}
                      {% if form %}
-                         <textarea name="s{{s.section.template.order}}_complementary_information" id="s{{s.section.template.order}}_complementary_information">{{ s.section.complementary_information }}</textarea>
+                         <textarea class="tinymce" data-mce-conf="{{ s.complementary_information_mce_conf}}"name="s{{s.section.template.order}}_complementary_information" id="s{{s.section.template.order}}_complementary_information">{{ s.section.complementary_information }}</textarea>
                          {{ s.section.template.complementary_information_help_text|safe }}
                      {% elif s.section.complementary_information %}
                          <p>{{ s.section.complementary_information|safe }}</p>
@@ -273,33 +266,26 @@
         setTimeout(function () {
             $(element).modal('hide');
         }, 2000);
-    })
+    });
     var frm = $('#main-form');
     frm.submit(function () {
-
         var formDataArray = frm.serializeArray();
-        console.log(formDataArray);
         //custom tinyMCE textarea serialization
         $('textarea').each(function (index,e) {
-            console.log(e.name);
             var ed = tinymce.get(e.name);
             if (ed) //only textarea with tinyMCE widget
             {
-                console.log('seeking');
                 for (var i=0;i < formDataArray.length;i++)
                 {
                     if (formDataArray[i].name==e.name)
                     {
-                        console.log('found');
                         formDataArray[i].value = ed.getContent();
                         break;
                     }
                 }
             }
          });
-        console.log(formDataArray);
         var formData = $.param(formDataArray);
-        console.log(formData);
         $.ajax({
             type: frm.attr('method'),
             url: frm.attr('action'),

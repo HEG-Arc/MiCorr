@@ -10,6 +10,8 @@ https://docs.djangoproject.com/en/dev/ref/settings/
 """
 from __future__ import absolute_import, unicode_literals
 
+import os
+
 import environ
 
 ROOT_DIR = environ.Path(__file__) - 3  # (micorr/config/settings/common.py - 3 = micorr/)
@@ -297,3 +299,13 @@ NOTEBOOK_ARGUMENTS = [ '--notebook-dir', 'notebooks']
 # Terms template filter settings
 TERMS_ENABLED = True
 TERMS_REPLACE_FIRST_ONLY = False
+
+#DJANGO_TINYMCE
+# see http://django-tinymce.readthedocs.io/en/latest/installation.html#configuration
+# and https://www.tinymce.com/docs/configure/integration-and-setup/
+TINYMCE_JS_URL = os.path.join(STATIC_URL, "js/tinymce/tinymce.min.js")
+TINYMCE_DEFAULT_CONFIG = {"theme": "modern", "relative_urls": False, "statusbar": False, "plugins": "table autoresize",
+                          "menubar":"file edit insert view format table tools help",
+                          "autoresize_min_height":100, "autoresize_max_height": 500, "autoresize_bottom_margin":10, "autoresize_on_init":True }
+TINYMCE_COMPRESSOR = False
+TINYMCE_JS_ROOT = os.path.join(STATIC_URL, "js/tinymce")
