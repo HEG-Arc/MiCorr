@@ -263,19 +263,16 @@ class ObjectCreateView(generic.CreateView):
     form_class = ObjectCreateForm
 
     def form_valid(self, form):
-        user = self.request.user
-        form.instance.user = user
-        newObject = form.save()
-        newArtefact = Artefact()
-        newArtefact.object = newObject
-        newArtefact.save()
-        form.save()
+        form.instance.user = self.request.user
+        self.object = form.save()
+        artefact = Artefact.objects.create(object=self.object)
+        # add empty sections to new artefact based on default page template
+        for st in SectionTemplate.objects.filter(page_template=1).all():
+            artefact.section_set.create(artefact=artefact, template=st)
         return super(ObjectCreateView, self).form_valid(form)
 
     def get_success_url(self):
-        object=get_object_or_404(Object, pk=self.object.id)
-        artefact=get_object_or_404(Artefact, object_id=object.id)
-        return reverse('artefacts:artefact-update', kwargs={'pk': artefact.id})
+        return reverse('artefacts:artefact-update', kwargs={'pk': self.object.artefact_set.first().pk})
 
 @login_required
 def newAuthor(request):
