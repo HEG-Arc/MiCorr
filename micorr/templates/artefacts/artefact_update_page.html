@@ -136,7 +136,7 @@
                     <div class="line lightbox">
                         {% if form %}
                         <div class="row">
-                            <div  class="c6" id="image_section_{{ s.section.template.order }}">
+                            <div  class="c6" id="image_section_{{ s.section.id }}">
                         {% endif %}{# form #}
                             {% for image in s.section.image_set.all %}
                                 <div class="row">
@@ -148,7 +148,7 @@
                                     <div class="c6">
                                         <p><a name="fig1"></a>{{ image.legend | safe }}
                                             {% if form %}
-                                            <a onclick="window.open('{% url 'artefacts:image-update' section_id=s.section.template.order pk=image.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><i class="fa fa-pencil"></i></a>
+                                            <a onclick="window.open('{% url 'artefacts:image-update' section_id=s.section.id pk=image.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><i class="fa fa-pencil"></i></a>
                                             <a onclick="window.open('{% url 'artefacts:image-delete' image.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><i class="fa fa-trash"></i></a></p>
                                             {% endif %}
                                     </div>
@@ -159,9 +159,9 @@
                             </div>
                             <div class="c9">
                                 <p> <!-- Upload Photos -->
-                                    <a class="add-another" id="image_add_"{{ s.section.template.order }}
+                                    <a class="add-another" id="image_add_"{{ s.section.id }}
                                        title="Add a picture, a figure or a table"
-                                       onclick="window.open('{% url 'artefacts:image-create' section_id=s.section.template.order %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');">
+                                       onclick="window.open('{% url 'artefacts:image-create' section_id=s.section.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');">
                                         <span class="glyphicon glyphicon-plus"></span>
                                     </a>
                                 </p>
