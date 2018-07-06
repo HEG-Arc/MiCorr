@@ -272,7 +272,7 @@
         var formDataArray = frm.serializeArray();
         //custom tinyMCE textarea serialization
         $('textarea').each(function (index,e) {
-            var ed = tinymce.get(e.name);
+            var ed = tinymce.get(e.id);
             if (ed) //only textarea with tinyMCE widget
             {
                 for (var i=0;i < formDataArray.length;i++)
