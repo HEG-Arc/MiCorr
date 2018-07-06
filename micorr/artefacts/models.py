@@ -299,7 +299,7 @@ class Artefact(TimeStampedModel):
         return u" - ".join(artefact)
 
     def artefact_verbose_description_short(self):
-        artefact = []
+        artefact = [self.object.name]
         if self.alloy:
             artefact.append(self.alloy.name)
         if self.chronology_period:
