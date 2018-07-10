@@ -2,12 +2,16 @@ import simplejson as json
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseForbidden
 from django.shortcuts import render, redirect
 from django.views.decorators.cache import cache_page
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.gzip import gzip_page
+from django.views.decorators.http import require_http_methods
 
 from stratigraphies import micorrservice
+
+from .models import NodeDescription
 from .forms import StratigraphyDescriptionUpdateForm
 
 
@@ -34,6 +38,7 @@ def getStratigraphyDetails(request, stratigraphy):
 # retourne toutes les sous caracteristiques et sous caracteristiques
 # @ params
 @cache_page(60 * 15)
+@gzip_page
 def getallcharacteristic(request):
     ms = micorrservice.MiCorrService()
     return HttpResponse(json.dumps(ms.getAllCharacteristic()), content_type='application/json')
@@ -143,7 +148,7 @@ def save(request):
             response = ms.save(data)
         else:
             # Not allowed to save the stratigraphy!
-            response = {'res': 0}
+            return HttpResponseForbidden()
     else:
         # This stratigraphy belongs to nobody, we try to add the current user_id
         if request.user.is_authenticated():
@@ -193,3 +198,7 @@ def deleteArtefact(request, artefact):
 def getnaturefamily(request, nature):
     ms = micorrservice.MiCorrService()
     return HttpResponse(json.dumps(ms.getnaturefamily(nature)), content_type='application/json')
+
+@require_http_methods(["GET"])
+def node_descriptions(request):
+    return HttpResponse(json.dumps(dict(NodeDescription.objects.values_list('uid','text'))), content_type='application/json')

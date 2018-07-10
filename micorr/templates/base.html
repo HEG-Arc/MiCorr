@@ -61,15 +61,18 @@
   <div class="container">
     {% if messages %}
     <div class="row">
-      <div class="c9">
-      <div class="container">
+      <div class="pre3 c9">
       <div class="row">
         {% for message in messages %}
-           <div class="alert alert-{% if message.tags %}{{ message.tags }}{% endif %}" role="alert">
+           <div class="alert alert-dismissable alert-{% if message.tags %}{{ message.tags }}{% endif %} fade in" role="alert" data-auto-dismiss="4000">
+               <a class="close" data-dismiss="alert" href="#">&times;</a>
             {{ message }}
            </div>
         {% endfor %}
-      </div>
+      <div class="alert alert-dismissable alert-success fade in" role="alert" data-auto-dismiss="4000">
+               <a class="close" data-dismiss="alert" href="#">&times;</a>
+            <div id="ajax-message-div"></div>
+    </div>
       </div>
       </div>
     </div>
@@ -77,60 +80,12 @@
     <div class="row">
       {% block sidemenu %}
       {% endblock sidemenu %}
-      <div class="c9">
-
-
-          {% block content %}
-          {% endblock content %}
-
-
-
-
-
-
-         <!-- accordion test -->
-
-<!--
-
-        <h1>Demonstration</h1>
-        <h2 >Section Three - demo</h2>
-        <h1>Folded content - Title 1</h1>
-        <h2>Title 2 AVMI</h2>
-        <h3>Title 3 AVMI</h3>
-        <h4>Title 4 AVMI</h4>
-        <h4 class="underline">Title 4 AVMI</h4>
-        <p>Follow this <a href="#">link</a></p>
-        <p>
-          <ul class="bullets">
-            <li>Lorempisum</li>
-            <li>Lorem ipsum dolor sit amet.</li>
-            <li>Haec oremor siet.</li>
-          </ul>
-        </p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quae, repellendus!</p>
-        -->
-
-
-
-
-
-      </div>
+      {% block content %}
+      {% endblock content %}
     </div>
   </div> <!-- container for content-->
 
 
-<div class="modal fade animation" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-body">
-        <video width="852" height="480" controls>
-            <source src="{% static 'tour/animation.mp4' %}" type="video/mp4">
-            Your browser does not support HTML5 video.
-        </video>
-      </div>
-    </div>
-  </div>
-</div>
 
 {% block footer %}
 
@@ -154,6 +109,7 @@
   <!-- script src="http://code.jquery.com/jquery-1.9.1.min.js"></script -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
   <script src="{% static 'js/bootstrap.min.js' %}"></script>
+  <script src="{% static 'js/bootstrap-auto-dismiss-alert.js' %}"></script>
   <script src="{% static 'js/MagnificPopup.min.js' %}"></script>
   <script src="{% static 'js/jinplace-1.2.1.min.js' %}"></script>
   <!--script src="js/jquery.sidr.min.js"></script-->

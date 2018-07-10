@@ -4,6 +4,7 @@ from django.views.generic import TemplateView
 
 from artefacts import views as artefacts_views
 
+app_name="artefacts"
 
 urlpatterns = [
     url(r'^$', artefacts_views.ArtefactsListView.as_view(), name='artefact-list'),
@@ -41,11 +42,11 @@ urlpatterns = [
     url(r'^(?P<section_id>\d+)/refresh/image/$', TemplateView.as_view(template_name='artefacts/refresh.html'), name='image-refresh'),
     url(r'^(?P<section_id>\d+)/refresh/div/$', artefacts_views.RefreshDivView, name='div-refresh'),
     url(r'^image/(?P<pk>\d+)/delete/$', login_required(artefacts_views.ImageDeleteView.as_view()), name='image-delete'),
-
-    url(r'^(?P<artefact_id>\d+)/list/stratigraphy/$', artefacts_views.StratigraphyListView, name='stratigraphy-list'),
-    url(r'^(?P<artefact_id>\d+)/add/stratigraphy/(?P<stratigraphy_uid>[\w\-]+)/$', artefacts_views.StratigraphyAddView, name='add-stratigraphy'),
-    url(r'^(?P<artefact_id>\d+)/refresh/stratigraphy/$', TemplateView.as_view(template_name='artefacts/strat-refresh.html'), name='strat-refresh'),
-    url(r'^(?P<artefact_id>\d+)/refresh/strat-div/$', artefacts_views.RefreshStratDivView, name='strat-div-refresh'),
+    url(r'^(?P<section_id>\d+)/list/stratigraphy/$', artefacts_views.StratigraphyListView, name='stratigraphy-list'),
+    url(r'^(?P<section_id>\d+)/add/stratigraphy/(?P<stratigraphy_uid>[\w\-]+)/$',artefacts_views.StratigraphyAddView, name='add-stratigraphy'),
+    url(r'^(?P<section_id>\d+)/update/stratigraphy/(?P<pk>[\w\-]+)/$',login_required(artefacts_views.StratigraphyUpdateView.as_view()),name='stratigraphy-update'),
+    url(r'^(?P<section_id>\d+)/refresh/stratigraphy/$', TemplateView.as_view(template_name='artefacts/strat-refresh.html'), name='strat-refresh'),
+    url(r'^(?P<section_id>\d+)/refresh/strat-div/$', artefacts_views.RefreshStratDivView, name='strat-div-refresh'),
     url(r'^stratigraphy/(?P<pk>\d+)/delete/$', login_required(artefacts_views.StratigraphyDeleteView.as_view()), name='stratigraphy-delete'),
 
     url(r'^(?P<artefact_id>\d+)/document/(?P<pk>\d+)/update/$', login_required(artefacts_views.DocumentUpdateView.as_view()),
@@ -87,5 +88,14 @@ urlpatterns = [
     url(r'^administration/reject/(?P<pk>\d+)/$', login_required(artefacts_views.PublicationDecisionReject.as_view()), name='publication-administration-reject'),
     url(r'^administration/delegate/(?P<pk>\d+)/$', login_required(artefacts_views.PublicationDelegateView.as_view()), name='publication-administration-delegate'),
     url(r'^city-autocomplete/$', artefacts_views.CityAutocomplete.as_view(), name='city-autocomplete'),
+    url(r'^region-autocomplete/$', artefacts_views.RegionAutocomplete.as_view(), name='region-autocomplete'),
+    url(r'^country-autocomplete/$', artefacts_views.CountryAutocomplete.as_view(), name='country-autocomplete'),
+    url(r'^generic-autocomplete/(?P<model>[\w-]+)/$', artefacts_views.GenericAutoComplete.as_view(create_field='name'), name='generic-autocomplete'),
+    url(r'^date-autocomplete/(?P<model>[\w-]+)/$', artefacts_views.GenericAutoComplete.as_view(create_field='date'), name='date-autocomplete'),
+    url(r'^type-autocomplete/(?P<model>[\w-]+)/$', artefacts_views.GenericAutoComplete.as_view(create_field='type'), name='type-autocomplete'),
+    url(r'^form-autocomplete/(?P<model>[\w-]+)/$', artefacts_views.GenericAutoComplete.as_view(create_field='form'), name='form-autocomplete'),
+    url(r'^element-autocomplete/(?P<model>[\w-]+)/$', artefacts_views.GenericAutoComplete.as_view(create_field='element'), name='element-autocomplete'),
+    url(r'^contact-autocomplete/(?P<model>[\w-]+)/$', artefacts_views.ContactAutoComplete.as_view(), name='contact-autocomplete'),
+    url(r'^origin-autocomplete/(?P<model>[\w-]+)/$', artefacts_views.OriginAutoComplete.as_view(), name='origin-autocomplete'),
     # url(r'^test-ontology/$', displayOntology),
 ]

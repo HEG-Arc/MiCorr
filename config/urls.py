@@ -18,7 +18,6 @@ from wagtail.wagtailsearch.signal_handlers import register_signal_handlers as wa
 
 from config.sitemaps import ArtefactsSitemap, HomePageSitemap
 from views import HomePageView
-
 admin.autodiscover()
 wagtailsearch_register_signal_handlers()
 
@@ -51,10 +50,10 @@ urlpatterns = [
     #url(r'^dev/', include('deployment.urls')),
 
     # Artefacts management
-    url(r'^artefacts/', include('artefacts.urls', namespace="artefacts")),
+    url(r'^artefacts/', include('artefacts.urls')),
 
     # Contacts management
-    url(r'^contacts/', include('contacts.urls', namespace="contacts")),
+    url(r'^contacts/', include('contacts.urls')),
 
     # Django-terms app
     url(r'^terms/', include('terms.urls')),
@@ -70,23 +69,7 @@ urlpatterns = [
 
     # Stratigraphies
     url(r'^micorr/', include('stratigraphies.urls', namespace="stratigraphies")),
-
-    # Learn
-    url(r'^manual/$', TemplateView.as_view(template_name='manual.html')),
-    url(r'^learn/$', TemplateView.as_view(template_name='learn.html')),
-    url(r'^stratigraphy-construction/$', TemplateView.as_view(template_name='stratigraphy-construction.html')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
-# Wagtail URLS
-urlpatterns += [
-    url(r'^w/admin/', include(wagtailadmin_urls)),
-    url(r'^w/search/', include(wagtailsearch_frontend_urls)),
-    url(r'^w/documents/', include(wagtaildocs_urls)),
-
-    # For anything not caught by a more specific rule above, hand over to
-    # Wagtail's serving mechanism
-    url(r'', include(wagtail_urls)),
-]
 
 if settings.DEBUG:
     # This allows the error pages to be debugged during development, just visit
@@ -99,3 +82,15 @@ if settings.DEBUG:
         url(r'^500/$', default_views.server_error),
         url(r'^__debug__/', include(debug_toolbar.urls)),
     ]
+
+# Wagtail URLS
+urlpatterns += [
+    url(r'^w/admin/', include(wagtailadmin_urls)),
+    url(r'^w/search/', include(wagtailsearch_frontend_urls)),
+    url(r'^w/documents/', include(wagtaildocs_urls)),
+
+    # For anything not caught by a more specific rule above, hand over to
+    # Wagtail's serving mechanism
+    url(r'', include(wagtail_urls)),
+]
+

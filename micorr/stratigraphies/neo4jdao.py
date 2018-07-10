@@ -1,4 +1,4 @@
-from collections import OrderedDict
+from collections import OrderedDict, defaultdict
 
 from py2neo import Graph, authenticate
 import time
@@ -84,9 +84,17 @@ class Neo4jDAO:
     def getStratigraphyDetails(self, stratigraphy_uid):
         # on cherche d'abord toutes les strates
         strata_records = self.graph.cypher.execute(
-            "MATCH (sg:Stratigraphy)-[r:POSSESSES]->(st:Strata) where sg.uid={uid}\
-               RETURN sg.description as description, st.uid as uid order by st.uid",
-            uid=stratigraphy_uid )
+            """MATCH (sg:Stratigraphy)-[r:POSSESSES]->(st:Strata) where sg.uid={uid}
+               RETURN sg.description as description, st.uid as uid,
+                toInteger(replace(st.uid, {sg_strata_prefix}, "")) as strata_num
+                order by strata_num""",
+            uid=stratigraphy_uid,sg_strata_prefix= stratigraphy_uid +"_Strata")
+        # todo optimization something like the following query would be enough
+        # stratigraphy_records = self.graph.cypher.execute(
+        # MATCH (sg:Stratigraphy)-[:POSSESSES]->(st:Strata),(st)-[:IS_CONSTITUTED_BY]->(csc)-[b:BELONGS_TO]->(f:Family) where sg.uid={uid}
+        # OPTIONAL MATCH (st)-[:HAS_UPPER_INTERFACE]->(ui:Interface)-[:IS_CONSTITUTED_BY]->(uicsc)-[:BELONGS_TO]->(uif:Family)
+        # return sg,st,csc,f,ui,uicsc,uif
+        # , uid=stratigraphy_uid)
 
         stratigraphy = {'uid':stratigraphy_uid,
                         'description': strata_records[0].description if len(strata_records) else None,
@@ -96,18 +104,28 @@ class Neo4jDAO:
 
         # pour chaque strates on va faire une requete
         for strata in strata_records:
-            st = {'name': strata.uid, 'characteristics': '', 'subcharacteristics': '', 'interfaces': '', 'children': ''}
+            st = {'name': strata.uid, 'characteristics': '', 'subcharacteristics': '', 'interfaces': '',
+                  'children': '', 'containers': defaultdict(list)}
             print ("***" + strata.uid)
 
             # Chaque strates a des caracteristiques
             charactList = self.graph.cypher.execute(
-                "MATCH (n:Strata)-[r:IS_CONSTITUTED_BY]->(c:Characteristic)-[b:BELONGS_TO]->(f:Family) where n.uid='" + strata.uid + "' RETURN c.uid as uid, f.uid as family, c.name as real_name, c.visible as visible, c.order as order")
+                """MATCH (n:Strata)-[r:IS_CONSTITUTED_BY]->(c:Characteristic)-[b:BELONGS_TO]->(f:Family) where n.uid={strata_uid}
+                   RETURN c,f
+                """, strata_uid=strata.uid)
             print ("======Characteristic")
+            # c.uid as uid, f.uid as family, c.name as real_name, c.visible as visible, c.order as order
             clist = []
             for charact in charactList:
-                clist.append({'name': charact.uid, 'family': charact.family, 'real_name': charact.real_name,
-                              'order': charact.order, 'visible': charact.visible})
-                print ("         " + charact.uid)
+                cp=charact.c.properties
+                fp=charact.f.properties
+                if fp['uid']=='elementFamily':
+                        clist.append({'name': cp['uid'], 'family': fp['uid'], 'real_name': cp['name'],
+                                  'symbol': cp['symbol'], 'category':cp['category'], 'order':0, 'visible': True})
+                else:
+                    clist.append({'name': cp['uid'], 'family': fp['uid'], 'real_name': cp['name'],
+                              'order': cp['order'], 'visible': cp['visible']})
+                print ("         " + cp['uid'])
 
             # Chaque strate a des sous-caracteristiques
             print ("======subCharacteristic")
@@ -117,6 +135,54 @@ class Neo4jDAO:
             for subCharact in subCharactList:
                 slist.append({'name': subCharact.uid, 'real_name': subCharact.real_name})
                 print("         " + subCharact.uid)
+
+            print ("======Components")
+
+            def convert_elem_or_cpnd(elem_or_cpnd):
+                # to be consistent with getAllCharacteristic name/uid renaming scheme
+                # and remaining client code we still need to "convert" the original Element and Compound Characteristics
+                # before returning to client
+                hacked_characteristic = elem_or_cpnd.copy()
+                hacked_characteristic['real_name'] = hacked_characteristic['name']
+                hacked_characteristic['name'] = hacked_characteristic['uid']
+                del hacked_characteristic['uid']
+                return hacked_characteristic
+
+            component_records = self.graph.cypher.execute(
+                """MATCH (sg:Stratigraphy {uid:{stratigraphy_uid}})-[POSSESSES]->(s:Strata {uid:{strata_uid}})-[r:INCLUDES]->(cpnt:Component)
+                    OPTIONAL MATCH (cpnt)-[r_const_or_incl]->(char_or_ctn)-[:BELONGS_TO]->(family:Family)
+                    OPTIONAL MATCH (char_or_ctn)-[ce_r:IS_CONSTITUTED_BY]->(elem_or_cpnd:Characteristic)
+                   RETURN s.uid,id(cpnt),char_or_ctn, family.uid, ce_r.order, elem_or_cpnd
+                   ORDER BY s.uid, id(cpnt), family.uid, ce_r.order
+                """, strata_uid=strata.uid,stratigraphy_uid=stratigraphy_uid)
+            secondary_components = [{'characteristics': [], 'subCharacteristics': [], 'containers': defaultdict(list)}]
+            for record in component_records:
+                if record.char_or_ctn:
+                    if 'SubCharacteristic' in record.char_or_ctn.labels:
+                        secondary_components[0]['subCharacteristics'].append(
+                            {'name': record.char_or_ctn['uid'], 'real_name': record.char_or_ctn['name']})
+                    elif 'Characteristic' in record.char_or_ctn.labels:
+                        secondary_components[0]['characteristics'].append(
+                            {'name': record.char_or_ctn['uid'], 'family': record['family.uid'],
+                             'real_name': record.char_or_ctn['name'],
+                             'order': record.char_or_ctn['order'], 'visible': record.char_or_ctn['visible']})
+                    elif 'Container' in record.char_or_ctn.labels and record.elem_or_cpnd:
+                        secondary_components[0]['containers'][record['family.uid']].append(
+                            convert_elem_or_cpnd(record.elem_or_cpnd.properties))
+
+                print("         " + str(record.char_or_ctn))
+
+            if len(secondary_components[0]['characteristics']) or len(
+                secondary_components[0]['subCharacteristics']) or len(secondary_components[0]['containers']):
+                st['secondaryComponents'] = secondary_components
+
+            print ("======Containers")
+            container_records = self.graph.cypher.execute(
+                """MATCH (s:Strata { uid:{strata_uid} })-[r:INCLUDES]->(c:Container)-[ce_r:IS_CONSTITUTED_BY]->(elem_or_cpnd:Characteristic)
+                   MATCH (c)-[BELONGS_TO]->(f:Family) RETURN s,c,ce_r,elem_or_cpnd,f ORDER BY f.uid, ce_r.order""",
+                strata_uid=strata.uid)
+            for r in container_records:
+                st['containers'][r.f['uid']].append(convert_elem_or_cpnd(r.elem_or_cpnd.properties))
 
             # Chaque strates a des interfaces
             print("======interface")
@@ -200,12 +266,17 @@ class Neo4jDAO:
             if not family_dic.has_key(f_uid):
                 family_dic[f_uid] = {'family': f_uid, 'fam_real_name': record.f['name'],
                                      'characteristics': OrderedDict()}
-            c_uid = record.c['uid']
-            if not family_dic[f_uid]['characteristics'].has_key(c_uid):
-                family_dic[f_uid]['characteristics'][c_uid] = {'name': c_uid, 'real_name': record.c['name'],
-                                                               'description': record.c['description'],
-                                                               'visible': record.c['visible'],
-                                                               'subcharacteristics': OrderedDict()}
+            if record.c:
+                c_uid = record.c['uid']
+                if not family_dic[f_uid]['characteristics'].has_key(c_uid):
+                    c_dic = {'name': c_uid, 'real_name': record.c['name'], 'subcharacteristics': OrderedDict()}
+                    if f_uid == 'elementFamily':
+                        c_dic.update({'symbol': record.c['symbol'], 'category': record.c['category'], 'order': 0, 'visible': True})
+                    else:
+                        c_dic.update({'description': record.c['description'], 'order': record.c['order'], 'visible': record.c['visible']})
+                    family_dic[f_uid]['characteristics'][c_uid] = c_dic
+            else:
+                print 'no characteristic in : ',record
             if record.sc:
                 sc_uid = record.sc['uid']
                 if not family_dic[f_uid]['characteristics'][c_uid]['subcharacteristics'].has_key(sc_uid):
@@ -317,14 +388,18 @@ class Neo4jDAO:
     # @params nom de la stratigraphie
     # @returns
     def deleteAllStrataFromAStratigraphy(self, stratigraphy):
-        #supression des strates enfant
-        self.query = "MATCH (n:Stratigraphy)-[p:POSSESSES]->(b:Strata)-[i:IS_PARENT_OF]->(c:Strata) where n.uid='" + stratigraphy + "' optional match (c)-[z]-() DELETE z, i ,c"
-        self.graph.cypher.execute(self.query)
-        #supression des strates
-        self.query = "MATCH (n:Stratigraphy)-[p:POSSESSES]->(b:Strata)-[h:HAS_UPPER_INTERFACE]->(i:Interface) where n.uid='" + stratigraphy + "' optional match (i)-[x]-() optional match (b)-[y]-() optional match (b)-[z]-()  delete x, y, z, h, p, i, b"
-        self.graph.cypher.execute(self.query)
+        # supression des strates enfants, interfaces, components et containers
+        self.graph.cypher.execute('''
+            MATCH (sg:Stratigraphy {uid:{stratigraphy}})
+            OPTIONAL MATCH (sg)-[:POSSESSES]->(parent_st:Strata)-[:IS_PARENT_OF]->(child_st:Strata)
+            DETACH DELETE child_st
+            WITH sg MATCH (sg)-[:POSSESSES]->(st:Strata)-[:HAS_UPPER_INTERFACE]->(i:Interface)
+            OPTIONAL MATCH (st)-[:INCLUDES]->(c) WHERE c:Component OR c:Container
+            DETACH DELETE c,i,st
+        ''', stratigraphy=stratigraphy)
+        # optional "WHERE c:Component OR c:Container" is there to be explicit on types of Node INCLUDED
 
-    # supprime une stratigraphie
+    # # supprime une stratigraphie
     # @params nom de la stratigraphie
     # @returns
     def deleteStratigraphy(self, stratigraphy):
@@ -351,23 +426,42 @@ class Neo4jDAO:
         self.query = "MATCH (a:Interface),(b) WHERE a.uid = '" + interface + "' AND b.uid= '" + characteristic + "' CREATE (a)-[r:IS_CONSTITUTED_BY]->(b)"
         self.graph.cypher.execute(self.query)
 
-    # attache une caracteristique,sous-caracteristique a une strate
+    # attache une caracteristique a une strate
+    # @params nom de la strate et nom de la caracteristique
+    # @returns
+    def attachCharacteristicToStrata(self, strata, c_uid, label="Characteristic"):
+        self.graph.cypher.execute("""
+      MATCH (s:Strata),(c:{label}) WHERE s.uid = "{strata}" AND c.uid="{c_uid}"
+      CREATE (s)-[r:IS_CONSTITUTED_BY]->(c)""".
+                                  format(strata=strata, c_uid=c_uid, label=label))
+
+    # attache une sous-caracteristique a une strate
+    # @params nom de la strate et nom de la sous-caracteristique
+    # @returns
+    def attachSubCharacteristicToStrata(self, strata, sub_characteristic):
+        self.attachCharacteristicToStrata(strata, sub_characteristic, "SubCharacteristic")
+
+    # attache une caracteristique ou sous-caracteristique a un node (Strata, Interface, ...)
     # @params nom de la strate etnom de la caracteristique, sous-caracteristique
     # @returns
-    def attachCharacteristicToStrata(self, strata, characteristic):
-        self.query = "MATCH (a:Strata),(b) WHERE a.uid = '" + strata + "' AND b.uid= '" + characteristic + "' CREATE (a)-[r:IS_CONSTITUTED_BY]->(b)"
-        print(self.query)
-        self.graph.cypher.execute(self.query)
+    def attachCharacteristic(self, node_uid, characteristic_uid):
+        self.graph.cypher.execute("""MATCH (n),(c)
+                                WHERE n.uid = {node_uid} AND c.uid={characteristic_uid}
+                                CREATE (a)-[r:IS_CONSTITUTED_BY]->(b)""",
+                                  node_uid=node_uid,characteristic=characteristic_uid)
 
     # cree une strate
     # @params nom de la strate et nom de la stratigraphie
-    # @returns
-    def createStrata(self, strata, stratigraphy):
-        self.query = "CREATE(strata:Strata{uid:'" + strata + "',date:'" + time.strftime(
-            "%Y-%m-%d") + "',stratigraphy_uid: '" + stratigraphy + "',label:'strata'})"
-        self.graph.cypher.execute(self.query)
-        self.query = "MATCH (a:Stratigraphy),(b:Strata) WHERE a.uid = '" + stratigraphy + "' AND b.uid= '" + strata + "' CREATE (a)-[:POSSESSES]->(b)"
-        self.graph.cypher.execute(self.query)
+    # @returns Strata node py2neo object
+    def createStrata(self, strata_uid, stratigraphy_uid):
+        today = time.strftime("%Y-%m-%d")
+        res = self.graph.cypher.execute("""
+               CREATE(strata:Strata{uid:{strata_uid}, date:{today}, stratigraphy_uid: {stratigraphy_uid}})
+               WITH strata 
+               MATCH (stgy:Stratigraphy {uid:{stratigraphy_uid}})
+               CREATE (stgy)-[:POSSESSES]->(strata) RETURN strata""",
+                                  strata_uid=strata_uid, today=today, stratigraphy_uid=stratigraphy_uid)
+        return res[0]['strata']
 
     # cree une strate enfant
     # @params nom de la strate et nom de la strate parent
@@ -378,6 +472,64 @@ class Neo4jDAO:
         self.graph.cypher.execute(self.query)
         self.query = "MATCH (a:Strata),(b:Strata) WHERE a.uid = '" + strata + "' AND b.uid= '" + parentstrata + "' CREATE (b)-[:IS_PARENT_OF]->(a)"
         self.graph.cypher.execute(self.query)
+
+    def create_secondary_components(self, stratum_node, components):
+        """
+        :param stratum_node:
+        :param components:
+        :return:
+        """
+        if not len(components):
+            return
+        for i, component in enumerate(components):
+            c = Node("Component", order=i)
+            stc = Relationship(stratum_node, "INCLUDES", c)
+            self.graph.create(c, stratum_node, stc)
+
+            def find_and_attach_node_to_component(label,key,value,component):
+                node = self.graph.find_one(label, key, value)
+                if node:
+                    self.graph.create(Relationship(component, "IS_CONSTITUTED_BY", node))
+                else:
+                    print(u"{}: with {}={} not found".format(label, key, value))
+
+            for characteristic in component["characteristics"]:
+                find_and_attach_node_to_component("Characteristic","uid", characteristic["name"], c)
+
+            for sub_characteristic in component["subCharacteristics"]:
+                find_and_attach_node_to_component("SubCharacteristic", "uid", sub_characteristic["name"], c)
+
+            if len(component["containers"]):
+                self.create_containers(c, component["containers"])
+
+    def create_containers(self, parent_node, containers):
+        """
+        :param parent_node: (stratum or component node)
+        :param containers: dictionary of Elements/Compound list
+        :return:
+        """
+        if not len(containers):
+            return
+        for family, elements in containers.iteritems():
+            c = Node("Container")
+            stc_rel = Relationship(parent_node, "INCLUDES", c)
+
+            cf = self.graph.find_one("Family", "uid", family)
+            if not cf:
+                logger.error('missing family "{}" in graph db. elements not saved'.format(family))
+                continue
+            fc_rel = Relationship(c, "BELONGS_TO", cf)
+            print(c, parent_node, stc_rel, cf, fc_rel)
+            self.graph.create(c, parent_node, stc_rel, cf, fc_rel)
+
+            if len(elements):
+                for i,e in enumerate(elements):
+                    element = self.graph.find_one("Characteristic", "uid", e['name'])
+                    if element:
+                        self.graph.create(Relationship(c, "IS_CONSTITUTED_BY", element, order=i))
+                    else:
+                        print ("create_containers(): Characteristic :{} not found - not added to container {}".format(e['name'], c))
+                        logger.error("Characteristic :{} not found - not added to container {}".format(e['name'], c))
 
     # retourne le nombre d'interface pour toutes les strates d'une stratigraphie
     # @params nom de la stratigraphie
@@ -397,39 +549,48 @@ class Neo4jDAO:
     # @params details d'une stratigraphie au format json
     # @returns 1 si ok
     def save(self, data):
-        stratigraphyName = data['stratigraphy']
-        print stratigraphyName
+        stratigraphy_name = data['stratigraphy']
+        print('save:',stratigraphy_name)
         # on supprime entierement toutes les strates de l'ancienne stratigraphie pour en creer une nouvelle
         # on fait ca pour partir sur une base vierge et on reconstruit de graphe a chaque sauvegarde
-        self.deleteAllStrataFromAStratigraphy(stratigraphyName)
+        self.deleteAllStrataFromAStratigraphy(stratigraphy_name)
 
         # on parcourt toutes les strates
-        for t in data['stratas']:
-            strataName = stratigraphyName + "_Strata" + str(self.getNbStratasByStratigraphy(stratigraphyName) + 1)
-            self.createStrata(strataName, stratigraphyName)
+        for i,stratum in enumerate(data['stratas']):
+            stratum_name = "{}_Strata{}".format(stratigraphy_name,i+1)
+            stratum_node = self.createStrata(stratum_name, stratigraphy_name)
 
             # pour chaque strate on attache une caracteristique ou sous caracteristique
-            for c in t['characteristics']:
-                if len(c) > 0:
-                    self.attachCharacteristicToStrata(strataName, c['name'])
+            for characteristic in stratum['characteristics']:
+                if characteristic:
+                    self.attachCharacteristicToStrata(stratum_name, characteristic['name'])
+            for sc in stratum['subCharacteristics']:
+                if sc:
+                    self.attachSubCharacteristicToStrata(stratum_name, sc['name'])
 
             # pour chaque strate on cree une interface et on y attache des caracteristiques
-            interfaceName = strataName + "_interface" + str(self.getNbInterfaceByStratigraphy(stratigraphyName) + 1)
-            self.createInterface(strataName, interfaceName)
-            for i in t['interfaces']:
-                if len(i) > 0:
-                    self.attachCharacteristicToInterface(interfaceName, i['name'])
+            interface_name = stratum_name + "_interface" + str(self.getNbInterfaceByStratigraphy(stratigraphy_name) + 1)
+            self.createInterface(stratum_name, interface_name)
+            for interface in stratum['interfaces']:
+                if len(interface) > 0:
+                    self.attachCharacteristicToInterface(interface_name, interface['name'])
 
 
             #Pour chaque strate on attache les strates enfants
-            for s in t['children']:
+            for s in stratum['children']:
                 if len(s) > 0:
-                    childName = s['name']
-                    self.createChildStrata(childName, strataName)
+                    child_name = s['name']
+                    self.createChildStrata(child_name, stratum_name)
 
-                    for sc in s['characteristics']:
-                        if len(sc) > 0:
-                            self.attachCharacteristicToStrata(childName, sc['name'])
+                    for c in s['characteristics']:
+                        if c:
+                            self.attachCharacteristicToStrata(child_name, c['name'])
+                    for sc in s['subCharacteristics']:
+                        if sc:
+                            self.attachSubCharacteristicToStrata(stratum_name, sc['name'])
+
+            self.create_secondary_components(stratum_node, stratum['secondaryComponents'])
+            self.create_containers(stratum_node, stratum['containers'])
 
         return {'res': 1}
 
@@ -450,102 +611,75 @@ class Neo4jDAO:
         nbStrata = len(data['stratas'])
 
         listChar = []
+        listSubChar = []
         listCharInt = []
 
         for t in data['stratas']:
-            for c in t['characteristics']:
-                if len(c) > 0:
-                    listChar.append(c['name'])
-            for i in t['interfaces']:
-                if len(i) > 0:
-                    listCharInt.append(i['name'])
-
+            listChar += [c['name'] for c in t['characteristics']]
+            listSubChar += [c['name'] for c in t['subCharacteristics']]
+            listCharInt += [c['name'] for c in t['interfaces']]
+        logger.debug("Source stratum: {} Total number of characteristics:{}".format(data['stratigraphy'],len(listChar)+len(listSubChar)+len(listCharInt)))
         listChar = set(listChar)
         listCharInt = set(listCharInt)
+        listSubChar = set(listSubChar)
+        logger.debug("Unique characteristics:{}".format(len(listChar) + len(listSubChar) + len(listCharInt)))
 
-        qry = "MATCH (a:Artefact)-->(s:Stratigraphy)-->(st:Strata) "
+        qry = "MATCH (s:Stratigraphy)-[:POSSESSES]->(st:Strata) WHERE s.public = true "
 
         cpt = 1
         for c in listChar:
-            qry += "OPTIONAL MATCH (st)-[:IS_CONSTITUTED_BY]->(m" + str(cpt) + "{uid:'" + c + "'}) "
+            qry += "OPTIONAL MATCH (st)-[:IS_CONSTITUTED_BY]->(m{}:Characteristic {{uid:'{}'}}) ".format(cpt,c)
             cpt += 1
-
+        for c in listSubChar:
+            qry += "OPTIONAL MATCH (st)-[:IS_CONSTITUTED_BY]->(m{}:SubCharacteristic {{uid:'{}'}}) ".format(cpt,c)
+            cpt += 1
         for c in listCharInt:
-            qry += "OPTIONAL MATCH (st)-[:HAS_UPPER_INTERFACE]->(i:Interface)-[:IS_CONSTITUTED_BY]->(m" + str(
-                cpt) + "{uid:'" + c + "'}) "
-            cpt += 1
+            qry += "OPTIONAL MATCH (st)-[:HAS_UPPER_INTERFACE]->(:Interface)-[:IS_CONSTITUTED_BY]->(m{} {{uid:'{}'}}) ".format(cpt,c)
+            cpt +=1
 
-        nbChar = len(listChar) + len(listCharInt)
+        nbChar = cpt -1
 
-        qry += "with a.uid as auid, a.artefact_id as artefact_id, s.uid as stratigraphy_uid, count(st) as stratum, count(st)-" + str(
-            nbStrata) + " as DiffNombreStratum, "
+        qry += "WITH s, count(st) as stratum, count(st)-" + str(nbStrata) + " as diffnbstratum, "
 
-        qry += "( "
-        cpt = 1
-        while cpt <= nbChar:
-            qry += "sum(m" + str(cpt) + ".comparisonIndicator1) "
-            if cpt != nbChar:
-                qry += "+ "
-            cpt += 1
-        qry += ") as TotalComparisonIndicator1, "
+        qry += '+'.join(["sum(m{}.comparisonIndicator1)".format(i + 1) for i in range(nbChar)]) + " as tci, "
+        qry += '+'.join(["count(m{})".format(i + 1) for i in range(nbChar)]) + " as totalmatching \n"
 
-        qry += "( "
-        cpt = 1
-        while cpt <= nbChar:
-            qry += "count(m" + str(cpt) + ") "
-            if cpt != nbChar:
-                qry += "+ "
-            cpt += 1
-        qry += ") as TotalMatching "
-
-        qry += "MATCH (a:Artefact)-->(s:Stratigraphy)-->(st:Strata)-[r:IS_CONSTITUTED_BY]-(o) WHERE a.uid=auid "
-        qry += "with auid, artefact_id, stratigraphy_uid, stratum, DiffNombreStratum, TotalComparisonIndicator1, TotalMatching, count(r) as countrelations "
-        qry += "MATCH(a:Artefact)-->(s:Stratigraphy)-->(st:Strata)-[:HAS_UPPER_INTERFACE]->(i:Interface)-[r1:IS_CONSTITUTED_BY]->(o1) WHERE a.uid=auid AND s.public=true "
-        qry += "with auid, artefact_id, stratigraphy_uid, stratum, DiffNombreStratum, TotalComparisonIndicator1, TotalMatching, count(r1) + countrelations as TotalRelations "
-        qry += "RETURN auid, artefact_id, stratigraphy_uid, stratum, DiffNombreStratum, TotalComparisonIndicator1, TotalMatching, TotalRelations, 100*TotalMatching/TotalRelations as Matching100 "
-        qry += "ORDER BY Matching100 DESC, TotalComparisonIndicator1 DESC "
+        qry += "MATCH (s)-[:POSSESSES]->(st:Strata)-[r:IS_CONSTITUTED_BY]->(o) "
+        qry += "WITH s, stratum, diffnbstratum, tci, totalmatching, count(r) as countrelations "
+        qry += "MATCH (s)-->(:Strata)-[:HAS_UPPER_INTERFACE]->(:Interface)-[r1:IS_CONSTITUTED_BY]->() "
+        qry += "WITH s, stratum, diffnbstratum, tci, totalmatching, count(r1) + countrelations as totalrelation "
+        qry += 'MATCH (s)<-[:IS_REPRESENTED_BY]-(a:Artefact) WHERE (a.uid <> "Search")'
+        qry += "RETURN a.uid as artefact, a.artefact_id AS artefact_id, s.uid as stratigraphy_uid, stratum, diffnbstratum, tci, totalmatching, totalrelation, 100*totalmatching/totalrelation as matching100 "
+        qry += "ORDER BY matching100 DESC, tci"
         logger.debug("MATCHING QUERY: %s" % qry)
-        old_list = []
+        result_list = []
 
         res = self.graph.cypher.execute(qry)
-
-        for i in res:
-            line = {'node_base_url': '', 'artefact': '', 'artefact_id': '', 'stratigraphy_uid': '', 'stratum': '', 'diffnbstratum': '', 'tci': '',
-                    'totalmatching': '', 'totalrelation': '', 'matching100': ''}
-            line['node_base_url'] = node_base_url
-            line['artefact'] = i['auid']
-            line['artefact_id'] = i['artefact_id']
-            line['stratigraphy_uid'] = i['stratigraphy_uid']
-            line['stratum'] = i['stratum']
-            line['diffnbstratum'] = i['DiffNombreStratum']
-            line['tci'] = i['TotalComparisonIndicator1']
-            line['totalmatching'] = i['TotalMatching']
-            line['totalrelation'] = i['TotalRelations']
-            line['matching100'] = i['Matching100']
+        logger.debug(res)
+        for r in  res:
             # Add artefact characteristics
-            if i['artefact_id']:
-                artefact = Artefact.objects.get(pk=i['artefact_id'])
-                # Quick fix
-                published_artefact = artefact.object.artefact_set.filter(published=True).first()
-                if published_artefact:
-                    artefact = published_artefact
-                    # else todo check artefact.user against logged in user to list only published or own artefacts
-                    # but there (in api context) we are missing the request.user
-                    line['artefact_id'] = artefact.pk
-                line['artefact_metal1'] = artefact.metal1.element
-                line['artefact_alloy'] = artefact.alloy.name
-                line['artefact_type'] = artefact.type.name
-                line['artefact_chronology_category'] = artefact.chronology_period.chronology_category.name
-                line['artefact_technology'] = artefact.technology.name
-                line['artefact_microstructure'] = artefact.microstructure.name
-                if published_artefact:
-                    old_list.append(line)
-        result = []
-        for j in old_list:
-            if j['artefact_id'] and j['matching100'] < 100:
-                result.append(j)
-        print result
-        return result
+            artefact = Artefact.objects.filter(pk=r.artefact_id).first()
+            # for now (query tuning, and not enough published artefact) we don't filter unpublished artefacts
+            # published_artefact = artefact.object.artefact_set.filter(published=True).first() if a else None
+            published_artefact = artefact
+            if published_artefact:
+                # else todo check artefact.user against logged in user to list only published or own artefacts
+                # but there (in api context) we are missing the request.user
+
+                line = {k: r[k] for k in res.columns}
+                line['node_base_url'] = node_base_url
+
+                line['artefact_id'] = published_artefact.pk
+                line['artefact_metal1'] = published_artefact.metal1.element
+                line['artefact_alloy'] = published_artefact.alloy.name
+                line['artefact_type'] = published_artefact.type.name
+                line['artefact_chronology_category'] = published_artefact.chronology_period.chronology_category.name
+                line['artefact_technology'] = published_artefact.technology.name
+                line['artefact_microstructure'] = published_artefact.microstructure.name
+                result_list.append(line)
+
+        # logger.debug(result_list)
+        return result_list
 
     # Ajout d'un artefact
     # @params nom de l'artefact

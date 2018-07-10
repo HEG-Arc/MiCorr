@@ -1,0 +1,310 @@
+{% extends "base.html" %}
+{% load static %}
+{% load getattr %}
+{% block sidemenu %}
+    <div class="c3" id="sidemenu">
+        <!-- no-active-hilight : do not highlight the "active" node of the menu. It is difficult for the affix to work when elements in the page are close one to the other (i.e. folded elements), therefore, it is less confusing to NOT hilight the .active nodes of the menu -->
+       {% if form %}
+        <div style="position:fixed; width: 263px; top:86px">
+          <input form="main-form" class="btn btn-default btn-lg" type="submit" value="Save">
+        </div>
+        {% endif %}
+        <div class="sidemenu-container active-highlight">
+            <ul class="nav smooth-scroll"> <!-- smooth-scroll to the element in the page instead of jumping -->
+                {% for sections in section_groups %}
+                    {% for s in sections %}
+                        {% if forloop.first %}
+                            <li>
+                                <a href="#title{{ forloop.parentloop.counter }}">
+                                    {{ s.section.template.title }}</a>
+                            {% if forloop.revcounter0 %}
+                                <ul class="nav subnav">
+                            {% endif %}
+                        {% else %}
+                                    <li>
+                                        <a href="#title2{{ s.section.template.order }}">
+                                            {{ s.section.template.title }}</a>
+                                    </li>
+                        {% endif %}
+                    {% if forloop.last %}
+                        {% if forloop.counter > 1 %}
+                                </ul>
+                        {% endif %}
+                            </li>
+                    {% endif %}
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+{% endblock sidemenu %}
+
+{% block content %}
+    {% load terms %}
+    <!-- save Modal alert-->
+    <div id="saveModal" class="modal fade" role="dialog" data-backdrop="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div id="save-modal-alert" class="alert" role="alert" style="margin-bottom: 0px;">
+                    <a class="close" data-dismiss="modal" href="#">&times;</a>
+                    <p></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% filter replace_terms %}
+    <div class="c9">
+
+    <h1>{{ object.artefact_verbose_description_short }}</h1>
+
+    {% if form %}
+    <form id="main-form" action="{% url 'artefacts:artefact-update' form.instance.pk %}" method="post">{% csrf_token %}
+    {% endif %}
+        {% if form.errors %}
+            {% for field in form %}
+                {% for error in field.errors %}
+                    <div class="alert alert-error">
+                        <strong>{{ field.name }} {{ error|escape }}</strong>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+            {% for error in form.non_field_errors %}
+                <div class="alert alert-error">
+                    <strong>{{ field.name }} {{ error|escape }}</strong>
+                </div>
+            {% endfor %}
+        {% endif %}
+        {% for field in authors_fieldset %}
+              <div class="row">
+                <div class="c2" title="{{ field.help_text}}">
+                    {{ field.label_tag }}
+                </div>
+                <div class="c10">
+                {% if form %}
+                    <p>{{ field }}</p>
+                {% else %}
+                    <p>{{  object.get_authors }}</p>
+                {% endif %}
+                </div>
+              </div>
+        {% endfor %}
+        {% if not form %}
+        <div class="row">
+            <div class="c12 ">
+                <a class="btn btn-success" href="contact_author">
+                    <i class="fa fa-envelope"></i> Contact the author</a>
+                <a class="btn btn-success" href="{% url 'artefacts:share_artefact_with_friend' object.id %}">
+                    <i class="fa fa-share-alt"></i> Share </a>
+            </div>
+        </div>
+        {% endif %}
+        <div id="accordionN1" aria-multiselectable="true">
+        {% for sections in section_groups %}
+            {% for s in sections %}
+                    {%  if forloop.first %}
+                     <div class="row accordion-title1" id="title{{forloop.parentloop.counter}}">
+                        <a class="line" data-toggle="collapse" data-parent="#accordionN1"
+                           href="#content{{ s.section.template.order }}" aria-expanded="true"
+                           aria-controls="content{{ s.section.template.order }}">{{ s.section.template.title }}</a>
+                    </div>
+                     <div class="row accordion-content1 collapse in" id="content{{ s.section.template.order }}"
+                         aria-labelledby="title{{ s.section.template.order }}">
+                    {% else %}
+                     <!--section level 2-->
+                         {% if forloop.counter == 2 %}
+                          <div class="line">
+                            <div id="accordionN{{forloop.parentloop.counter|add:1}}" aria-multiselectable="true">
+                         {% endif %}
+                            <!--ZONES-->
+                                <div class="row accordion-title2" id="title2{{ s.section.template.order }}">
+                                    <a class="line" data-toggle="collapse" data-parent="#accordionN{{forloop.parentloop.counter|add:1}}" href="#content2{{ s.section.template.order }}"
+                                    aria-expanded="true" aria-controls="content2{{ s.section.template.order }}">{{s.section.template.title}}</a>
+                                </div>
+                                <div class="row accordion-content2 collapse in" id="content2{{ s.section.template.order }}" aria-labelledby="title2{{ s.section.template.order }}">
+                    {% endif %}
+                {% if s.section.template.has_content %}
+                    <div class="line palebox">
+                            {% if form %}
+                                <textarea class="tinymce" data-mce-conf="{{ s.content_mce_conf }}" name="s{{s.section.template.order}}_content" id="s{{s.section.template.order}}_content">{{ s.section.content }} </textarea>
+                                {{ s.section.template.content_help_text|safe }}
+                            {% else %}
+                                <p>{{ s.section.content|safe }}</p>
+                            {% endif %}
+                    </div>
+                {% endif %} {# has_content #}
+                {% if s.section.template.has_images %}
+                    <div class="line lightbox">
+                        {% if form %}
+                        <div class="row">
+                            <div  class="c6" id="image_section_{{ s.section.id }}">
+                        {% endif %}{# form #}
+                            {% for image in s.section.image_set.all %}
+                                <div class="row">
+                                {% if image.image %}
+                                    <div class="c6">
+                                        <a href="{{ image.image.url }}" class="image-popup"><img
+                                                src="{{ image.image.url }}" class="img-responsive"></a>
+                                    </div>
+                                    <div class="c6">
+                                        <p><a name="fig1"></a>{{ image.legend | safe }}
+                                            {% if form %}
+                                            <a onclick="window.open('{% url 'artefacts:image-update' section_id=s.section.id pk=image.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><i class="fa fa-pencil"></i></a>
+                                            <a onclick="window.open('{% url 'artefacts:image-delete' image.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><i class="fa fa-trash"></i></a></p>
+                                            {% endif %}
+                                    </div>
+                                {% endif %}
+                                </div>
+                            {% endfor %}
+                        {% if form %}
+                            </div>
+                            <div class="c9">
+                                <p> <!-- Upload Photos -->
+                                    <a class="add-another" id="image_add_"{{ s.section.id }}
+                                       title="Add a picture, a figure or a table"
+                                       onclick="window.open('{% url 'artefacts:image-create' section_id=s.section.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');">
+                                        <span class="glyphicon glyphicon-plus"></span>
+                                    </a>
+                                </p>
+                                <p>Figures and tables are referred as Fig. 1, Table 1.</p>
+                            </div>
+                        </div>
+                        {{ s.section.template.images_help_text|safe }}
+                        {% endif %} {# form #}
+                    </div>
+                {%  endif %} {# has_images #}
+                {% if s.section.template.has_stratigraphies %}
+                    {% if False %}
+                    <div class="row accordion-title2" id="title2{{ s.section.template.order }}2">
+                        <a class="line" data-toggle="collapse" data-parent="#accordionN{{forloop.parentloop.counter|add:1}}" href="#content2{{ s.section.template.order }}"
+                            aria-expanded="true" aria-controls="content2{{ s.section.template.order }}2">Stratigraphies</a>
+                    </div>
+                    <div class="row accordion-content2 collapse in" id="content2{{ s.section.template.order }}2" aria-labelledby="title2{{ s.section.template.order }}2">
+                    {% else %}
+                    <div class="line palebox">
+                    {% endif %}
+                    <div id="stratigraphy_section_{{ s.section.id }}">
+                    {% with section=s.section %}
+                        {% include "artefacts/stratigraphy.html" %}
+                    {% endwith %}
+                    </div>
+                    {% if form %}
+                        <div class="c9">
+                            <p>
+                                <a class="add-another" id="stratigraphy_add"
+                                   onclick="window.open('{% url 'artefacts:stratigraphy-list' s.section.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');">
+                                    <span class="glyphicon glyphicon-plus"></span>
+                                </a>
+                            </p>
+                            <p>Figures and tables are referred as Fig. 1, Table 1.</p>
+                        </div>
+                        {{ s.section.template.stratigraphies_help_text|safe }}
+                    {%  endif %} {# form #}
+                </div>
+                {% endif %} {# has_stratigraphies #}
+                {% if s.form %}
+                    <div class="line lightbox">
+                                  {% for field in s.fieldset %}
+                                      <div class="row">
+                                        <div class="c3" title="{{ field.help_text}}">
+                                            {{ field.label_tag }}
+                                        </div>
+                                        <div class="c9">
+                                        {% if form %}
+                                            <p>{{ field }}</p>
+                                        {% else %}
+                                            <p>{{ s.form.instance | getattr:field.name |safe}}</p>
+                                        {% endif %}
+                                        </div>
+                                      </div>
+                                {% endfor %}
+                        </div>
+                {% endif %}
+                {% if s.section.template.has_complementary_information %}
+                    {% if form or s.section.complementary_information %}
+                    <div class="line palebox">
+                        <h4 class="underline">Complementary information</h4>
+                    {% endif %}
+                     {% if form %}
+                         <textarea class="tinymce" data-mce-conf="{{ s.complementary_information_mce_conf}}"name="s{{s.section.template.order}}_complementary_information" id="s{{s.section.template.order}}_complementary_information">{{ s.section.complementary_information }}</textarea>
+                         {{ s.section.template.complementary_information_help_text|safe }}
+                     {% elif s.section.complementary_information %}
+                         <p>{{ s.section.complementary_information|safe }}</p>
+                    {% endif %}
+                    {% if form or s.section.complementary_information %}
+                    </div>
+                    {% endif %}
+                                    {% endif %} {# has_complementary_information #}
+                {% if forloop.first == False%}
+                                </div>
+                {% endif %}
+                {% if forloop.last%}
+                     {% if forloop.counter > 1 %}
+                            </div>
+                        </div>
+                     {% endif %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+        {% if form %}
+            <div class="row">
+              <input class="btn btn-default btn-lg" type="submit" value="Save">
+            </div>
+        {% endif %}
+        </div>
+  {% if form %}
+    </form>
+  {% endif %}
+</div>
+{% endfilter %}
+{% endblock content %}
+
+{% block custom_bottom_script %}
+    <script type="text/javascript">
+    $('#saveModal').on('shown.bs.modal', function (event) {
+        var element=event.target;
+        setTimeout(function () {
+            $(element).modal('hide');
+        }, 2000);
+    });
+    var frm = $('#main-form');
+    frm.submit(function () {
+        var formDataArray = frm.serializeArray();
+        //custom tinyMCE textarea serialization
+        $('textarea').each(function (index,e) {
+            var ed = tinymce.get(e.id);
+            if (ed) //only textarea with tinyMCE widget
+            {
+                for (var i=0;i < formDataArray.length;i++)
+                {
+                    if (formDataArray[i].name==e.name)
+                    {
+                        formDataArray[i].value = ed.getContent();
+                        break;
+                    }
+                }
+            }
+         });
+        var formData = $.param(formDataArray);
+        $.ajax({
+            type: frm.attr('method'),
+            url: frm.attr('action'),
+            data: formData,
+            success: function (data) {
+                $("#save-modal-alert").removeClass('alert-danger').addClass('alert-success');
+                $("#save-modal-alert > p").html(data.message);
+                $('#saveModal').modal('show');
+            },
+            error: function(data) {
+                $("#save-modal-alert").removeClass('alert-success').addClass('alert-danger');
+                $("#save-modal-alert > p").html(data.error);
+                $('#saveModal').modal('show');
+            }
+        });
+        return false;
+    });
+    </script>
+    {{ form.media }}
+    {% include "artefacts/dj_admin_related_object_lookups.html" %}
+    {% include "artefacts/refresh-divs-script.html" %}
+{% endblock custom_bottom_script %}

@@ -1,14 +1,23 @@
 # Local development dependencies go here
 -r base.txt
-coverage #couverture des tests
-Sphinx #génère doc
-flake8 #contrôle la grammaire du code
-django-extensions
-pydot2 #génère des graphiques
-django-nose #fait tourner les tests
-factory-boy #generate data to test models
+#couverture des tests
+coverage==4.5.1
 
+# doc generation
+Sphinx==1.7.5
 
-# django-debug-toolbar that works with Django 1.5+
-django-debug-toolbar
-werkzeug
+# source code checker
+flake8==3.5.0
+
+# python interface to Graphviz dot language
+pydot2==1.0.33
+
+# test runner
+django-nose==1.4.5
+
+# generate data to test models
+factory-boy==2.11.1
+
+# debugging tools
+django-debug-toolbar==1.9.1
+werkzeug==0.14.1

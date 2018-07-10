@@ -33,8 +33,14 @@ INSTALLED_APPS += ('raven.contrib.django.raven_compat', )
 
 # Use Whitenoise to serve static files
 # See: https://whitenoise.readthedocs.io/
-WHITENOISE_MIDDLEWARE = ('whitenoise.middleware.WhiteNoiseMiddleware', )
-MIDDLEWARE_CLASSES = WHITENOISE_MIDDLEWARE + MIDDLEWARE_CLASSES
+
+# insert whitenoise middleware after SecurityMiddleware
+# (see http://whitenoise.evans.io/en/stable/#quickstart-for-django-apps)
+middleware_classes = list(MIDDLEWARE_CLASSES)
+middleware_classes.insert(1+MIDDLEWARE_CLASSES.index('django.middleware.security.SecurityMiddleware'),
+                          'whitenoise.middleware.WhiteNoiseMiddleware')
+MIDDLEWARE_CLASSES = tuple(middleware_classes)
+
 RAVEN_MIDDLEWARE = ('raven.contrib.django.raven_compat.middleware.SentryResponseErrorIdMiddleware', )
 MIDDLEWARE_CLASSES = RAVEN_MIDDLEWARE + MIDDLEWARE_CLASSES
 
@@ -125,7 +131,7 @@ APP_GIT_REV = env('APP_GIT_REV')
 SENTRY_CLIENT = env('DJANGO_SENTRY_CLIENT', default='raven.contrib.django.raven_compat.DjangoClient')
 LOGGING = {
     'version': 1,
-    'disable_existing_loggers': True,
+    'disable_existing_loggers': False,
     'root': {
         'level': 'INFO',
         'handlers': ['sentry','console'],
@@ -148,6 +154,11 @@ LOGGING = {
         }
     },
     'loggers': {
+        '': {
+            'level': 'INFO',
+            'handlers': ['console','sentry'],
+            'propagate': True,
+        },
         'django': {
             'level': 'INFO',
             'handlers': ['console','sentry'],

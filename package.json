@@ -1,29 +1,42 @@
 {
   "name": "micorr",
   "version": "0.1.0",
+  "scripts": {
+    "start": "babel-node micorr/stratigraphies/ngapp/src/nodeServices/server.js --presets env,stage-2",
+    "build": "babel micorr/stratigraphies/ngapp/src/ -d  dist/ --presets env,stage-2 --source-maps && babel micorr/stratigraphies/static/micorr/images/ -d dist/static/micorr/images/ --copy-files"
+  },
   "dependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.0",
+    "babel-preset-stage-2": "^6.24.1",
     "datauri": "^1.0.5",
     "httpdispatcher": "1.0.0",
     "inkscape": "1.1.1",
     "jsdom": "9.2.1",
     "phantomjs-prebuilt": "^2.1.14",
+    "svg.js": "^2.6.4",
     "svg2png": "^4.1.1",
-    "svg.js": "^2.6.3",
     "svgdom": "^0.0.15"
   },
   "devDependencies": {
-    "babel-cli": "^6.26.0",
     "babel-plugin-transform-es2015-modules-umd": "^6.24.1",
-    "babel-preset-env": "1.6.0",
+    "babel-preset-es2015": "^6.24.1",
     "connect-livereload": "~0.3.2",
+    "eslint": "^4.18.2",
     "grunt": "^1.0.1",
     "grunt-babel": "7.0.0",
     "grunt-bg-shell": "2.3.3",
     "grunt-cli": "1.2.0",
     "grunt-contrib-compass": "1.1.1",
     "grunt-contrib-watch": "1.0.0",
+    "jasmine": "^3.0.0",
+    "karma": "^2.0.0",
+    "karma-chrome-launcher": "^2.2.0",
+    "karma-firefox-launcher": "^1.1.0",
+    "karma-jasmine": "^1.1.1",
     "load-grunt-tasks": "^3.5.2",
-    "time-grunt": "1.4.0"
+    "time-grunt": "1.4.0",
+    "webpack": "^4.1.1"
   },
   "engines": {
     "node": ">=4.4.3"

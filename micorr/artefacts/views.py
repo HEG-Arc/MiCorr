@@ -1,35 +1,40 @@
+import json
 from collections import defaultdict
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.messages.views import SuccessMessageMixin
 from django.core.mail import EmailMultiAlternatives
 from django.core.mail import send_mail
-from django.core.urlresolvers import reverse, reverse_lazy
-from django.http import HttpResponse
-from django.http import HttpResponseRedirect
+from django.core.urlresolvers import reverse
+from django.db.models import Q
+from django.http import HttpResponse, JsonResponse
+
 from django.shortcuts import get_object_or_404, render, redirect
-from django.template import RequestContext
-from django.template.loader import render_to_string
+
 from django.utils.html import escape
 from django.views import generic
 from haystack.forms import SearchForm
 from django.conf import settings
 from django.contrib import messages
 from django.http import Http404
+from tinymce.widgets import TinyMCE
 
 from contacts.forms import ContactCreateForm
 from stratigraphies.neo4jdao import Neo4jDAO
 from users.models import User
 
-from .forms import ArtefactsUpdateForm, ArtefactsCreateForm, DocumentUpdateForm, DocumentCreateForm, ArtefactFilter,\
+from .forms import ArtefactsForm, ArtefactsCreateForm, DocumentUpdateForm, DocumentCreateForm, ArtefactFilter, \
     OriginCreateForm, ChronologyCreateForm, AlloyCreateForm, TechnologyCreateForm, EnvironmentCreateForm, \
     MicrostructureCreateForm, MetalCreateForm, CorrosionFormCreateForm, CorrosionTypeCreateForm, \
     RecoveringDateCreateForm, ImageCreateForm, TypeCreateForm, ContactAuthorForm, ShareArtefactForm, \
     ShareWithFriendForm, ObjectCreateForm, ObjectUpdateForm, CollaborationCommentForm, TokenHideForm, \
-    PublicationDecisionForm, PublicationDelegateForm, PublicationRejectDecisionForm
+    PublicationDecisionForm, PublicationDelegateForm, PublicationRejectDecisionForm, StratigraphyCreateForm
 
-from .models import Artefact, Document, Collaboration_comment, Field, Object, Section, SectionCategory, Image, Stratigraphy, Token, \
-    Publication
+from .models import Artefact, Document, Collaboration_comment, Field, Object, Section, Image, \
+    Stratigraphy, Token, Publication, SectionTemplate
+from . import models
+
 import logging
 
 logger = logging.getLogger(__name__)
@@ -118,6 +123,32 @@ class ArtefactsListView(generic.ListView):
                       {'search': artefactssearch, 'results': filtered_artefacts_list, 'filter': artefactsfilter,
                        'self': self, 'node_base_url': settings.NODE_BASE_URL})
 
+def get_section_groups(artefact, form, formObject):
+    """
+    Utility function shared by ArtefactDetailView and ArtefactUpdateView
+    build a list of list of Section instances grouped by categories for the given artefact object
+    associate actual form and fieldset with each group based on their name as saved in SectionTemplate records
+
+    :param artefact: instance of Artefact
+    :param form: instance of ArtefactsForm (FieldsetForm based)
+    :param formObject: instance of ObjectUpdateForm
+    :return: section_groups
+    """
+    # we group the sections by category
+    # and associate corresponding form and fieldset with each group
+    section_groups, group = [], []
+    current_category = None
+    for s in artefact.section_set.all():
+        if current_category != s.template.section_category:
+            if len(group):
+                section_groups.append(group)
+            current_category = s.template.section_category
+            group = []
+        group.append({'section': s, 'fieldset': form.get_fieldset(s.template.fieldset),
+                      'form': formObject if s.template.fieldset == 'artefact' else form})
+    if len(group):  # last group case
+        section_groups.append(group)
+    return section_groups
 
 class ArtefactsDetailView(generic.DetailView):
     """
@@ -126,116 +157,91 @@ class ArtefactsDetailView(generic.DetailView):
     queryset = Artefact.objects.select_related('alloy', 'type', 'origin', 'recovering_date', 'chronology_period',
                                                'environment', 'location', 'owner', 'technology', 'sample_location',
                                                'responsible_institution', 'microstructure', 'corrosion_form', 'corrosion_type')
-
+    template_name = 'artefacts/artefact_update_page.html'
     def get_context_data(self, **kwargs):
         """
         Allows the template to use the selected artefact as well as its foreign keys pointers
         """
         context = super(ArtefactsDetailView, self).get_context_data(**kwargs)
-        artefact = get_object_or_404(Artefact, pk=self.kwargs['pk'])
-        sections = artefact.section_set.all()
-        documents = artefact.document_set.all()
-        stratigraphies = artefact.stratigraphy_set.all()
-        context['artefact'] = artefact
-        context['sections'] = sections
-        context['documents'] = documents
-        context['stratigraphies'] = stratigraphies
+        context['documents'] = self.object.document_set.all()
         context['node_base_url'] = settings.NODE_BASE_URL
+        form = ArtefactsForm(instance=self.object, label_suffix='')
+        formObject = ObjectUpdateForm(instance=self.object.object, label_suffix='')
+
+        context['section_groups'] = get_section_groups(self.object, form, formObject)
+        context['authors_fieldset'] = form.get_fieldset('authors')
+
         return context
 
 
-class ArtefactsUpdateView(generic.UpdateView):
+class ArtefactsUpdateView(SuccessMessageMixin, generic.UpdateView):
     """
     A view which allows the user to edit an artefact
     When the editing is finished, it redirects the user to the artefact detail page
     """
 
     model = Artefact
-    form_class = ArtefactsUpdateForm
+    form_class = ArtefactsForm
 
-    def get_object(self, queryset=None):
-        obj = Artefact.objects.get(id=self.kwargs['pk'])
-        return obj
+    template_name_suffix = '_update_page'
+    success_message = 'Your artefact has been saved successfully!'
 
-    def get(self, request, **kwargs):
-        artefact = Artefact.objects.get(id=self.kwargs['pk'])
-        obj = Object.objects.get(id=artefact.object.id)
+    def get_context_data(self, **kwargs):
+        context = super(ArtefactsUpdateView,self).get_context_data(**kwargs)
 
         #if user want to update an artefact with parent (= artefact for publication), raise 404
         errorUpdatePublicationArtefact(self.kwargs['pk'])
 
-        self.object = artefact
-        form_class = self.get_form_class()
-        form = self.get_form(form_class)
+        formObject = ObjectUpdateForm(instance=self.object.object)
+        form=context['form']
 
-        formObject = ObjectUpdateForm(instance=obj)
+        # integrate with django_tinymce for content and complementary_information textareas
+        # that are not rendered by TinyMCE widget and were missing tinymce class data-mce-conf attribute to be handled by
+        # common tinmce_init . so we generate each data-mce-conf and add them to sections dict
+        # they will be added to textarea elements in the template
+        section_groups = get_section_groups(self.object, form, formObject)
+        mce_widget = TinyMCE(mce_attrs={'mode':'exact'})
+        for sections in  section_groups:
+            for s in sections:
+                s_order = s['section'].template.order
+                if s['section'].template.has_content:
+                    name = 's{}_content'.format(s_order)
+                    s['content_mce_conf']=json.dumps(mce_widget.get_mce_config({'class':'tinymce','id':name,'name':name}))
+                if s['section'].template.has_complementary_information:
+                    name = 's{}_complementary_information'.format(s_order)
+                    s['complementary_information_mce_conf']=json.dumps(mce_widget.get_mce_config({'class':'tinymce','id':name,'name':name}))
 
-        object_section = Section.objects.get_or_create(order=1, artefact=artefact, section_category=SectionCategory.objects.get(name='AR'), title='The object')[0]
-        description_section = Section.objects.get_or_create(order=2, artefact=artefact, section_category=SectionCategory.objects.get(name='AR'), title='Description and visual observation')[0]
-        zone_section = Section.objects.get_or_create(order=3, artefact=artefact, section_category=SectionCategory.objects.get(name='SA'), title='Zones of the artefact submitted to visual observation and location of sampling areas')[0]
-        macroscopic_section = Section.objects.get_or_create(order=4, artefact=artefact, section_category=SectionCategory.objects.get(name='SA'), title='Macroscopic observation')[0]
-        sample_section = Section.objects.get_or_create(order=5, artefact=artefact, section_category=SectionCategory.objects.get(name='SA'), title='Sample')[0]
-        analyses_performed = Section.objects.get_or_create(order=6, artefact=artefact, section_category=SectionCategory.objects.get(name='AN'), title='Analyses and results')[0].content
-        metal_section = Section.objects.get_or_create(order=7, artefact=artefact, section_category=SectionCategory.objects.get(name='AN'), title='Metal')[0]
-        corrosion_section = Section.objects.get_or_create(order=8, artefact=artefact, section_category=SectionCategory.objects.get(name='AN'), title='Corrosion layers')[0]
-        synthesis_section = Section.objects.get_or_create(order=9, artefact=artefact, section_category=SectionCategory.objects.get(name='AN'), title='Synthesis of the macroscopic / microscopic observation of corrosion layers')[0]
-        conclusion_text = Section.objects.get_or_create(order=10, artefact=artefact, section_category=SectionCategory.objects.get(name='CO'), title='Conclusion')[0].content
-        references_text = Section.objects.get_or_create(order=11, artefact=artefact, section_category=SectionCategory.objects.get(name='RE'), title='References')[0].content
-        stratigraphies = artefact.stratigraphy_set.all
-        return render(request, 'artefacts/artefact_update_form.html', self.get_context_data(form=form, formObject=formObject, object_section=object_section, description_section=description_section,
-                                                             zone_section=zone_section, macroscopic_section=macroscopic_section,
-                                                             sample_section=sample_section, analyses_performed=analyses_performed,
-                                                             metal_section=metal_section, corrosion_section=corrosion_section,
-                                                             synthesis_section=synthesis_section, conclusion_text=conclusion_text,
-                                                             references_text=references_text, stratigraphies=stratigraphies,
-                                                             node_base_url=settings.NODE_BASE_URL))
+        context.update(authors_fieldset=form.get_fieldset('authors'),
+                       section_groups=section_groups,
+                       node_base_url=settings.NODE_BASE_URL,
+                       view='ArtefactsUpdateView')
+        return context
 
     def post(self, request, *args, **kwargs):
-        artefact = get_object_or_404(Artefact, pk=self.kwargs['pk'])
+        self.object = self.get_object()
+        artefact = self.object
         # Save updates for the object name (4 following lines)
-        obj = get_object_or_404(Object, pk=artefact.object.id)
-        objForm = ObjectUpdateForm(request.POST, instance=obj)
+        objForm = ObjectUpdateForm(request.POST, instance=artefact.object)
         if objForm.is_valid():
             objForm.save()
-        section_1 = Section.objects.get_or_create(order=1, artefact=artefact, section_category=SectionCategory.objects.get(name='AR'), title='The object')[0]
-        artefact.section_set.add(section_1)
-        section_2 = Section.objects.get_or_create(order=2, artefact=artefact, section_category=SectionCategory.objects.get(name='AR'), title='Description and visual observation')[0]
-        section_2.complementary_information = request.POST['complementary_information']
-        artefact.section_set.add(section_2)
-        section_3 = Section.objects.get_or_create(order=3, artefact=artefact, section_category=SectionCategory.objects.get(name='SA'), title='Zones of the artefact submitted to visual observation and location of sampling areas')[0]
-        artefact.section_set.add(section_3)
-        section_4 = Section.objects.get_or_create(order=4, artefact=artefact, section_category=SectionCategory.objects.get(name='SA'), title='Macroscopic observation')[0]
-        section_4.content = request.POST['macroscopic_text']
-        artefact.section_set.add(section_4)
-        section_5 = Section.objects.get_or_create(order=5, artefact=artefact, section_category=SectionCategory.objects.get(name='SA'), title='Sample')[0]
-        section_5.complementary_information = request.POST['sample_complementary_information']
-        # images sample
-        artefact.section_set.add(section_5)
-        section_6 = Section.objects.get_or_create(order=6, artefact=artefact, section_category=SectionCategory.objects.get(name='AN'), title='Analyses and results')[0]
-        section_6.content = request.POST['analyses_performed']
-        artefact.section_set.add(section_6)
-        section_7 = Section.objects.get_or_create(order=7, artefact=artefact, section_category=SectionCategory.objects.get(name='AN'), title='Metal')[0]
-        section_7.content = request.POST['metal_text']
-        section_7.complementary_information = request.POST['metal_complementary_information']
-        # images metal
-        artefact.section_set.add(section_7)
-        section_8 = Section.objects.get_or_create(order=8, artefact=artefact, section_category=SectionCategory.objects.get(name='AN'), title='Corrosion layers')[0]
-        section_8.content = request.POST['corrosion_text']
-        section_8.complementary_information = request.POST['corrosion_complementary_information']
-        artefact.section_set.add(section_8)
-        section_9 = Section.objects.get_or_create(order=9, artefact=artefact, section_category=SectionCategory.objects.get(name='AN'), title='Synthesis of the macroscopic / microscopic observation of corrosion layers')[0]
-        section_9.content=request.POST['synthesis_text']
-        artefact.section_set.add(section_9)
-        section_10 = Section.objects.get_or_create(order=10, artefact=artefact, section_category=SectionCategory.objects.get(name='CO'), title='Conclusion')[0]
-        section_10.content = request.POST['conclusion_text']
-        artefact.section_set.add(section_10)
-        section_11 = Section.objects.get_or_create(order=11, artefact=artefact, section_category=SectionCategory.objects.get(name='RE'), title='References')[0]
-        section_11.content = request.POST['references_text']
-        artefact.section_set.add(section_11)
-        return super(ArtefactsUpdateView, self).post(request, **kwargs)
-
+        # retrieve section related vars from POST
+        for st in SectionTemplate.objects.filter(page_template=1).all():
+            s_prefix = "s{}_".format(st.order)
+            section_update = {k: request.POST.get(s_prefix+k, '') for k in ['content','complementary_information'] if getattr(st,"has_"+k)}
+            section, created = Section.objects.update_or_create(artefact=artefact,template=st, defaults=section_update)
+            if created:
+                artefact.section_set.add(section)
+        if request.is_ajax():
+            form = self.get_form()
+            if form.is_valid():
+                self.object = form.save()
+                return JsonResponse(dict(message='Artefact saved successfuly'))
+            else:
+                return JsonResponse(dict(error='Error saving artefacts'))
+        else:
+            return super(ArtefactsUpdateView, self).post(request, **kwargs)
     def get_success_url(self):
-        return reverse('users:detail', kwargs={'username': self.request.user})
+        return reverse('artefacts:artefact-update',args=[self.kwargs['pk']] )
 
 
 class ArtefactsDeleteView(generic.DeleteView):
@@ -257,44 +263,16 @@ class ObjectCreateView(generic.CreateView):
     form_class = ObjectCreateForm
 
     def form_valid(self, form):
-        user = self.request.user
-        form.instance.user = user
-        newObject = form.save()
-        newArtefact = Artefact()
-        newArtefact.object = newObject
-        newArtefact.save()
-        form.save()
+        form.instance.user = self.request.user
+        self.object = form.save()
+        artefact = Artefact.objects.create(object=self.object)
+        # add empty sections to new artefact based on default page template
+        for st in SectionTemplate.objects.filter(page_template=1).all():
+            artefact.section_set.create(artefact=artefact, template=st)
         return super(ObjectCreateView, self).form_valid(form)
 
     def get_success_url(self):
-        object=get_object_or_404(Object, pk=self.object.id)
-        artefact=get_object_or_404(Artefact, object_id=object.id)
-        return reverse('artefacts:artefact-update', kwargs={'pk': artefact.id})
-
-"""class ArtefactsCreateView(generic.CreateView):
-
-    A view which allows the user to create an artefact
-    When the artefact is created, it redirects the user to the artefact list
-
-    model = Artefact
-    template_name_suffix = '_create_form'
-    form_class = ArtefactsCreateForm
-
-    def get_context_data(self, **kwargs):
-
-        Allows the template to use the selected object
-
-        context = super(ArtefactsCreateView, self).get_context_data(**kwargs)
-        object = get_object_or_404(Object, pk=self.kwargs['pk'])
-        context['object'] = object
-        return context
-
-    def form_valid(self, form):
-        form.instance.object = get_object_or_404(Object, pk=self.kwargs['pk'])
-        return super(ArtefactsCreateView, self).form_valid(form)
-
-    def get_success_url(self):
-        return reverse('artefacts:artefact-update', kwargs={'pk': self.object.id})"""
+        return reverse('artefacts:artefact-update', kwargs={'pk': self.object.artefact_set.first().pk})
 
 @login_required
 def newAuthor(request):
@@ -363,12 +341,12 @@ def newMicrostructure(request):
 
 @login_required
 def newMetal1(request):
-    return handlePopAdd(request, MetalCreateForm, 'metal1')
+    return handlePopAdd(request, MetalCreateForm, 'metal1', 'metal')
 
 
 @login_required
 def newMetalX(request):
-    return handlePopAdd(request, MetalCreateForm, 'metalx')
+    return handlePopAdd(request, MetalCreateForm, 'metalx', 'metal')
 
 
 @login_required
@@ -381,7 +359,7 @@ def newCorrosionType(request):
     return handlePopAdd(request, CorrosionTypeCreateForm, 'corrosion_type')
 
 
-def handlePopAdd(request, addForm, field):
+def handlePopAdd(request, addForm, field, field_name=None):
     if request.method == "POST":
         form = addForm(request.POST)
         if form.is_valid():
@@ -393,7 +371,9 @@ def handlePopAdd(request, addForm, field):
                 return HttpResponse('<script type="text/javascript">opener.dismissAddAnotherPopup(window, "%s", "%s");</script>' % (escape(newObject._get_pk_val()), escape(newObject)))
     else:
         form = addForm()
-    pageContext = {'form': form, 'field': field}
+        if not field_name:
+            field_name = field
+    pageContext = {'form': form, 'field': field, 'field_name':field_name}
     return render(request, "artefacts/popadd.html", pageContext)
 
 
@@ -545,7 +525,7 @@ def isArtefactOfConnectedUser(request, artefact_id):
 def hasWriteRight(request, artefact_id, token_uuid):
     has_write_right = False
 
-    if (isArtefactOfConnectedUser(request, artefact_id)) or (getTokenRightByUuid(token_uuid) == 'W'):
+    if request.user.is_superuser or (isArtefactOfConnectedUser(request, artefact_id)) or (getTokenRightByUuid(token_uuid) == 'W'):
         has_write_right = True
     return has_write_right
 
@@ -556,7 +536,7 @@ def hasWriteRight(request, artefact_id, token_uuid):
 # artefact was validated by a micorr admin
 def hasReadRight(request, artefact_id, token_uuid):
     has_write_right = False
-    if (isArtefactOfConnectedUser(request, artefact_id)) or (getTokenRightByUuid(token_uuid) == 'R') or isValidatedById(artefact_id):
+    if request.user.is_superuser or isArtefactOfConnectedUser(request, artefact_id) or getTokenRightByUuid(token_uuid) == 'R' or isValidatedById(artefact_id):
         has_write_right = True
     return has_write_right
 
@@ -640,16 +620,29 @@ def RefreshDivView(request, section_id):
     return render(request, 'artefacts/image_section.html', {'object_section': object_section})
 
 
-def StratigraphyListView(request, artefact_id):
+def StratigraphyListView(request, section_id):
     stratigraphies = Neo4jDAO().getStratigraphiesByUser(request.user.id)
-    return render(request, 'artefacts/stratigraphies_list.html', {'stratigraphies': stratigraphies, 'artefact_id': artefact_id})
+    return render(request, 'artefacts/stratigraphies_list.html', {'node_base_url': settings.NODE_BASE_URL, 'stratigraphies': stratigraphies, 'section_id': section_id})
 
 
-def StratigraphyAddView(request, artefact_id, stratigraphy_uid):
-    stratigraphy = Stratigraphy.objects.get_or_create(uid=stratigraphy_uid, artefact=get_object_or_404(Artefact, id=artefact_id))[0]
+def StratigraphyAddView(request, section_id, stratigraphy_uid):
+    stratigraphy = Stratigraphy.objects.get_or_create(uid=stratigraphy_uid, section=get_object_or_404(Section, id=section_id))[0]
     stratigraphy.image = settings.NODE_BASE_URL + 'exportStratigraphy?name='+ stratigraphy_uid +'&width=300&format=png'
     stratigraphy.save()
-    return render(request, 'artefacts/strat-refresh.html', {'artefact_id': artefact_id})
+    return render(request, 'artefacts/strat-refresh.html', {'section_id': section_id})
+
+class StratigraphyUpdateView(generic.UpdateView):
+    model = Stratigraphy
+    template_name_suffix="_update_form"
+    form_class = StratigraphyCreateForm
+
+    def get(self, request, **kwargs):
+        self.object = get_object_or_404(self.model, pk=self.kwargs['pk'])
+        return self.render_to_response(self.get_context_data(form=self.get_form(),section_id=kwargs['section_id'], pk=self.object.pk))
+
+    def get_success_url(self):
+        return reverse('artefacts:strat-refresh', kwargs={'section_id': self.object.section_id})
+
 
 
 class StratigraphyDeleteView(generic.DeleteView):
@@ -657,13 +650,13 @@ class StratigraphyDeleteView(generic.DeleteView):
     template_name_suffix = '_confirm_delete'
 
     def get_success_url(self):
-        artefact_id = get_object_or_404(Stratigraphy, pk=self.kwargs['pk']).artefact.id
-        return reverse('artefacts:strat-refresh', kwargs={'artefact_id': artefact_id})
+        section_id = get_object_or_404(Stratigraphy, pk=self.kwargs['pk']).section.id
+        return reverse('artefacts:strat-refresh', kwargs={'section_id': section_id})
 
 
-def RefreshStratDivView(request, artefact_id):
-    artefact = get_object_or_404(Artefact, pk=artefact_id)
-    return render(request, 'artefacts/stratigraphy.html', {'artefact': artefact, 'node_base_url': settings.NODE_BASE_URL})
+def RefreshStratDivView(request, section_id):
+    section = get_object_or_404(Section, pk=section_id)
+    return render(request, 'artefacts/stratigraphy.html', { 'view':'ArtefactsUpdateView', 'section': section, 'node_base_url': settings.NODE_BASE_URL})
 
 
 class DocumentUpdateView(generic.UpdateView):
@@ -794,7 +787,7 @@ class CollaborationUpdateView(generic.UpdateView):
 
     model = Artefact
     template_name_suffix = '_collaboration_update'
-    form_class = ArtefactsUpdateForm
+    form_class = ArtefactsForm
 
     def get_object(self, queryset=None):
         token = Token.tokenManager.get(id=self.kwargs['token_id'])
@@ -879,7 +872,7 @@ class CollaborationUpdateView(generic.UpdateView):
             for comment in comments:
                 allSectionsComments.append(comment)
 
-            sectionShortTitle = getSectionShortName(section.title)
+            sectionShortTitle = getSectionShortName(section.template.title)
             unreadCommentsSection[sectionShortTitle] = False
 
         # Get first comments of all sections
@@ -910,23 +903,24 @@ class CollaborationUpdateView(generic.UpdateView):
                 if commentSectionSorted.sent or self.request.user == commentSectionSorted.user:
                     sectionComments.append(commentSectionSorted)
                     section = get_object_or_404(Section, pk=commentSectionSorted.object_model_id)
-                    sectionShortTitle = getSectionShortName(section.title)
+                    sectionShortTitle = getSectionShortName(section.template.title)
                     sectionDict[sectionShortTitle].append(commentSectionSorted)
                     if commentSectionSorted.read == False and commentSectionSorted.user != user:
                         unreadCommentsSection[sectionShortTitle] = True
+        # get section templates (for default page (#1) )
+        templates=list(SectionTemplate.objects.filter(page_template=1).all())
 
-
-        object_section = Section.objects.get_or_create(order=1, artefact=artefact, section_category=SectionCategory.objects.get(name='AR'), title='The object')[0]
-        description_section = Section.objects.get_or_create(order=2, artefact=artefact, section_category=SectionCategory.objects.get(name='AR'), title='Description and visual observation')[0]
-        zone_section = Section.objects.get_or_create(order=3, artefact=artefact, section_category=SectionCategory.objects.get(name='SA'), title='Zones of the artefact submitted to visual observation and location of sampling areas')[0]
-        macroscopic_section = Section.objects.get_or_create(order=4, artefact=artefact, section_category=SectionCategory.objects.get(name='SA'), title='Macroscopic observation')[0]
-        sample_section = Section.objects.get_or_create(order=5, artefact=artefact, section_category=SectionCategory.objects.get(name='SA'), title='Sample')[0]
-        analyses_performed = Section.objects.get_or_create(order=6, artefact=artefact, section_category=SectionCategory.objects.get(name='AN'), title='Analyses and results')[0].content
-        metal_section = Section.objects.get_or_create(order=7, artefact=artefact, section_category=SectionCategory.objects.get(name='AN'), title='Metal')[0]
-        corrosion_section = Section.objects.get_or_create(order=8, artefact=artefact, section_category=SectionCategory.objects.get(name='AN'), title='Corrosion layers')[0]
-        synthesis_section = Section.objects.get_or_create(order=9, artefact=artefact, section_category=SectionCategory.objects.get(name='AN'), title='Synthesis of the macroscopic / microscopic observation of corrosion layers')[0]
-        conclusion_text = Section.objects.get_or_create(order=10, artefact=artefact, section_category=SectionCategory.objects.get(name='CO'), title='Conclusion')[0].content
-        references_text = Section.objects.get_or_create(order=11, artefact=artefact, section_category=SectionCategory.objects.get(name='RE'), title='References')[0].content
+        object_section = Section.objects.get_or_create(template=templates[0], artefact=artefact)[0]
+        description_section = Section.objects.get_or_create(template=templates[1], artefact=artefact)[0]
+        zone_section = Section.objects.get_or_create(template=templates[2], artefact=artefact)[0]
+        macroscopic_section = Section.objects.get_or_create(template=templates[3], artefact=artefact)[0]
+        sample_section = Section.objects.get_or_create(template=templates[4], artefact=artefact)[0]
+        analyses_performed = Section.objects.get_or_create(template=templates[5], artefact=artefact)[0].content
+        metal_section = Section.objects.get_or_create(template=templates[6], artefact=artefact)[0]
+        corrosion_section = Section.objects.get_or_create(template=templates[7], artefact=artefact)[0]
+        synthesis_section = Section.objects.get_or_create(template=templates[8], artefact=artefact)[0]
+        conclusion_text = Section.objects.get_or_create(template=templates[9], artefact=artefact)[0].content
+        references_text = Section.objects.get_or_create(template=templates[10], artefact=artefact)[0].content
         stratigraphies = artefact.stratigraphy_set.all
         return render(request, 'artefacts/collaboration_artefact_update.html', self.get_context_data(artefact=artefact, form=form, object_section=object_section, description_section=description_section,
                                                              zone_section=zone_section, macroscopic_section=macroscopic_section,
@@ -941,39 +935,42 @@ class CollaborationUpdateView(generic.UpdateView):
     def post(self, request, *args, **kwargs):
         token = get_object_or_404(Token, pk=self.kwargs['token_id'])
         artefact = get_object_or_404(Artefact, pk=token.artefact.id)
-        section_1 = Section.objects.get_or_create(order=1, artefact=artefact, section_category=SectionCategory.objects.get(name='AR'), title='The object')[0]
+
+        # get section templates (for default page (#1) )
+        templates = list(SectionTemplate.objects.filter(page_template=1).all())
+        section_1 = Section.objects.get_or_create(template=templates[0], artefact=artefact)[0]
         artefact.section_set.add(section_1)
-        section_2 = Section.objects.get_or_create(order=2, artefact=artefact, section_category=SectionCategory.objects.get(name='AR'), title='Description and visual observation')[0]
+        section_2 = Section.objects.get_or_create(template=templates[1], artefact=artefact)[0]
         section_2.complementary_information = request.POST['complementary_information']
         artefact.section_set.add(section_2)
-        section_3 = Section.objects.get_or_create(order=3, artefact=artefact, section_category=SectionCategory.objects.get(name='SA'), title='Zones of the artefact submitted to visual observation and location of sampling areas')[0]
+        section_3 = Section.objects.get_or_create(template=templates[1], artefact=artefact)[0]
         artefact.section_set.add(section_3)
-        section_4 = Section.objects.get_or_create(order=4, artefact=artefact, section_category=SectionCategory.objects.get(name='SA'), title='Macroscopic observation')[0]
+        section_4 = Section.objects.get_or_create(template=templates[3], artefact=artefact)[0]
         section_4.content = request.POST['macroscopic_text']
         artefact.section_set.add(section_4)
-        section_5 = Section.objects.get_or_create(order=5, artefact=artefact, section_category=SectionCategory.objects.get(name='SA'), title='Sample')[0]
+        section_5 = Section.objects.get_or_create(template=templates[4], artefact=artefact)[0]
         section_5.complementary_information = request.POST['sample_complementary_information']
         # images sample
         artefact.section_set.add(section_5)
-        section_6 = Section.objects.get_or_create(order=6, artefact=artefact, section_category=SectionCategory.objects.get(name='AN'), title='Analyses and results')[0]
+        section_6 = Section.objects.get_or_create(template=templates[5], artefact=artefact)[0]
         section_6.content = request.POST['analyses_performed']
         artefact.section_set.add(section_6)
-        section_7 = Section.objects.get_or_create(order=7, artefact=artefact, section_category=SectionCategory.objects.get(name='AN'), title='Metal')[0]
+        section_7 = Section.objects.get_or_create(template=templates[6], artefact=artefact)[0]
         section_7.content = request.POST['metal_text']
         section_7.complementary_information = request.POST['metal_complementary_information']
         # images metal
         artefact.section_set.add(section_7)
-        section_8 = Section.objects.get_or_create(order=8, artefact=artefact, section_category=SectionCategory.objects.get(name='AN'), title='Corrosion layers')[0]
+        section_8 = Section.objects.get_or_create(template=templates[7], artefact=artefact)[0]
         section_8.content = request.POST['corrosion_text']
         section_8.complementary_information = request.POST['corrosion_complementary_information']
         artefact.section_set.add(section_8)
-        section_9 = Section.objects.get_or_create(order=9, artefact=artefact, section_category=SectionCategory.objects.get(name='AN'), title='Synthesis of the macroscopic / microscopic observation of corrosion layers')[0]
+        section_9 = Section.objects.get_or_create(template=templates[8], artefact=artefact)[0]
         section_9.content=request.POST['synthesis_text']
         artefact.section_set.add(section_9)
-        section_10 = Section.objects.get_or_create(order=10, artefact=artefact, section_category=SectionCategory.objects.get(name='CO'), title='Conclusion')[0]
+        section_10 = Section.objects.get_or_create(template=templates[9], artefact=artefact)[0]
         section_10.content = request.POST['conclusion_text']
         artefact.section_set.add(section_10)
-        section_11 = Section.objects.get_or_create(order=11, artefact=artefact, section_category=SectionCategory.objects.get(name='RE'), title='References')[0]
+        section_11 = Section.objects.get_or_create(template=templates[10], artefact=artefact)[0]
         section_11.content = request.POST['references_text']
         artefact.section_set.add(section_11)
         return super(CollaborationUpdateView, self).post(request, **kwargs)
@@ -1071,7 +1068,7 @@ class CollaborationCommentView(generic.CreateView):
             for comment in comments :
                 allSectionsComments.append(comment)
 
-            sectionShortTitle = getSectionShortName(section.title)
+            sectionShortTitle = getSectionShortName(section.template.title)
             unreadCommentsSection[sectionShortTitle] = False
 
         # Get first comments of all sections
@@ -1101,7 +1098,7 @@ class CollaborationCommentView(generic.CreateView):
             if commentSectionSorted.sent or self.request.user == commentSectionSorted.user :
                 sectionComments.append(commentSectionSorted)
                 section = get_object_or_404(Section, pk=commentSectionSorted.object_model_id)
-                sectionShortTitle = getSectionShortName(section.title)
+                sectionShortTitle = getSectionShortName(section.template.title)
                 sectionDict[sectionShortTitle].append(commentSectionSorted)
                 if commentSectionSorted.read == False and commentSectionSorted.user != user :
                     unreadCommentsSection[sectionShortTitle] = True
@@ -1186,7 +1183,7 @@ class CollaborationCommentView(generic.CreateView):
         except :
             token = Token.tokenManager.get(pk=self.kwargs['pk'])
             field = getSectionCompleteName(self.kwargs['field'])
-            section = Section.objects.get(title=field, artefact=token.artefact)
+            section = Section.objects.get(template__title=field, artefact=token.artefact)
             form.instance.content_object = section
             form.instance.token_for_section = token
             section_type = ContentType.objects.get(model='section')
@@ -1477,54 +1474,18 @@ class PublicationListView(generic.ListView):
 
         context = super(PublicationListView, self).get_context_data(**kwargs)
         user = self.request.user
-        isAdmin = False
-        publicationsUser = []
-        artefactsHistory = []
-        newPubliHistory = 0
 
         # Get currents publications and publication history (decided)
-        try :
-            publications = Publication.objects.all().order_by('-modified')
-            for publication in publications :
-                if publication.artefact.object.user == user :
-                    if publication.decision_taken :
-                        artefactsHistory.append(publication)
-                        if publication.read==False :
-                            newPubliHistory=newPubliHistory + 1
-        except :
-            pass
 
-        try :
-            publications = Publication.objects.all().order_by('-created')
-            for publication in publications :
-                if publication.artefact.object.user == user :
-                    if not publication.decision_taken :
-                        publicationsUser.append(publication)
-        except :
-            pass
+        user_publications = Publication.objects.filter(artefact__object__user=user)
+        artefactsHistory = list(user_publications.filter(decision_taken=True).order_by('-modified'))
+        newPubliHistory = sum(p.read==False for p in artefactsHistory)
 
-        artefactsPublished = []
+        publicationsUser = user_publications.filter(decision_taken=False).order_by('-created')
 
-        try :
-            objects = user.object_set.all().order_by('name')
+        artefactsPublished = Artefact.objects.filter(published=True, object__user=user).order_by('object__name', '-modified')
 
-            for object in objects :
-                artefacts = object.artefact_set.all().order_by('-modified')
-                for artefact in artefacts :
-                    if artefact.published :
-                        artefactsPublished.append(artefact)
-        except:
-            pass
-
-        try :
-            groups = user.groups.all()
-            for group in groups :
-                if group.name == 'Main administrator' or group.name == 'Delegated administrator':
-                    isAdmin = True
-        except:
-            pass
-
-        context['isAdmin'] = isAdmin
+        context['isAdmin'] = user.groups.filter(name__in=['Main administrator','Delegated administrator']).exists()
         context['publications'] = publicationsUser
         context['artefactsPublished'] = artefactsPublished
         context['artefactsHistory'] = artefactsHistory
@@ -1949,7 +1910,7 @@ class PublicationDelegateView(generic.UpdateView):
 
 from dal import autocomplete
 
-from cities_light.models import City
+from cities_light.models import City, Country, Region
 
 class CityAutocomplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):
@@ -1961,5 +1922,97 @@ class CityAutocomplete(autocomplete.Select2QuerySetView):
 
         if self.q:
             qs = qs.filter(name__istartswith=self.q)
+
+        return qs
+
+class RegionAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        if not self.request.user.is_authenticated():
+            return Region.objects.none()
+
+        qs = Region.objects.all()
+
+        if self.q:
+            qs = qs.filter(name__istartswith=self.q)
+
+        return qs
+
+class CountryAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        if not self.request.user.is_authenticated():
+            return Country.objects.none()
+
+        qs = Country.objects.all()
+
+        if self.q:
+            qs = qs.filter(name__istartswith=self.q)
+
+        return qs
+class BaseAutocomplete(autocomplete.Select2QuerySetView):
+
+    def get_queryset(self):
+        if not self.request.user.is_authenticated():
+            return self.model.objects.none()
+
+        qs = self.model.objects.all()
+
+        if self.q:
+            qs = qs.filter(name__icontains=self.q)
+
+        return qs
+
+
+class GenericAutoComplete(autocomplete.Select2QuerySetView):
+
+    default_search_field = 'name'
+
+    def get_queryset(self):
+        model_class = getattr(models,self.kwargs['model'])
+
+        if not self.request.user.is_authenticated():
+            return model_class.objects.none()
+
+        qs = model_class.objects.all()
+
+        if self.q:
+            search_field = self.create_field or self.default_search_field
+            qs = qs.filter(**{search_field + '__icontains':self.q})
+
+        return qs
+
+    # post overloading is required to add support for Create option
+    # as Base class method (BaseQuerySetView.post) does not accept any args / kwargs
+    # so would break with our extra model kwargs passed
+    def post(self, request, *args, **kwargs):
+
+        return super(GenericAutoComplete, self).post(request)
+
+class ContactAutoComplete(GenericAutoComplete):
+
+    def get_queryset(self):
+        model_class = getattr(models,self.kwargs['model'])
+
+        if not self.request.user.is_authenticated():
+            return model_class.objects.none()
+
+        qs = model_class.objects.all()
+
+        if self.q:
+            qs = qs.filter(Q(name__icontains=self.q)|Q(surname__icontains=self.q)|Q(organization_name__icontains=self.q))
+
+        return qs
+
+class OriginAutoComplete(GenericAutoComplete):
+
+    def get_queryset(self):
+        model_class = getattr(models,self.kwargs['model'])
+
+        if not self.request.user.is_authenticated():
+            return model_class.objects.none()
+
+        qs = model_class.objects.all()
+
+        if self.q:
+            qs = qs.filter(Q(site__icontains=self.q)|Q(city__name__icontains=self.q)|Q(city__country__name__icontains=self.q))
 
         return qs

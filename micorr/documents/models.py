@@ -27,8 +27,8 @@ from django.db import models
 
 # Third-party app imports
 from wagtail.wagtailcore.models import Page, Orderable
-from wagtail.wagtailcore.fields import RichTextField
-from wagtail.wagtailadmin.edit_handlers import FieldPanel, MultiFieldPanel, InlinePanel, PageChooserPanel
+from wagtail.wagtailcore.fields import RichTextField, StreamField
+from wagtail.wagtailadmin.edit_handlers import FieldPanel, MultiFieldPanel, InlinePanel, PageChooserPanel, StreamFieldPanel
 from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
 from wagtail.wagtailimages.models import Image
 from wagtail.wagtaildocs.edit_handlers import DocumentChooserPanel
@@ -39,6 +39,10 @@ from wagtail.wagtailsearch import index
 from modelcluster.fields import ParentalKey
 from modelcluster.tags import ClusterTaggableManager
 
+from wagtail.wagtailcore import blocks
+from wagtail.wagtailadmin.edit_handlers import FieldPanel, StreamFieldPanel
+from wagtail.wagtailimages.blocks import ImageChooserBlock
+from wagtail.wagtailembeds.blocks import EmbedBlock
 # MiCorr imports
 
 
@@ -160,7 +164,47 @@ GenericPage.promote_panels = [
     ImageChooserPanel('feed_image'),
 ]
 
+#Steamfield Page
 
+class StreamfieldPage(Page):
+    feed_image = models.ForeignKey(
+        'wagtailimages.Image',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+'
+    )
+
+    body = StreamField([
+        ('heading', blocks.CharBlock(classname="full title",template="documents/blocks/heading.html")),
+        ('paragraph', blocks.RichTextBlock()),
+        ('rawparagraph', blocks.RawHTMLBlock()),
+        ('image', ImageChooserBlock()),
+        ('video', EmbedBlock()),
+        ('figure', blocks.StreamBlock(
+            [
+                ('image', ImageChooserBlock()),
+                ('video', EmbedBlock()),
+                ('meta', blocks.StructBlock([
+                    ('fignum', blocks.IntegerBlock()),
+                    ('legend', blocks.TextBlock()),
+                    ('credit', blocks.CharBlock()),
+                ])),
+            ],
+            icon='cogs'
+        )),
+        ('animation',blocks.StaticBlock(
+            admin_text='Default tour animation: no configuration needed.',
+            # or admin_text=mark_safe('<b>Latest posts</b>: no configuration needed.'),
+            template='documents/blocks/animation.html'))
+    ])
+
+    content_panels = Page.content_panels + [
+        StreamFieldPanel('body'),
+    ]
+    promote_panels = Page.promote_panels + [
+        ImageChooserPanel('feed_image'),
+    ]
 # Documentation index page
 
 
@@ -233,3 +277,38 @@ HelpPage.promote_panels = [
     MultiFieldPanel(Page.promote_panels, "Common page configuration"),
     ImageChooserPanel('feed_image'),
 ]
+
+
+from wagtail.wagtailembeds.finders.base import EmbedFinder
+
+class OwnEmbedFinder(EmbedFinder):
+    def __init__(self, **options):
+        pass
+
+    def accept(self, url):
+        """
+        Returns True if this finder knows how to fetch an embed for the URL.
+
+        This should not have any side effects (no requests to external servers)
+        """
+        pass
+
+    def find_embed(self, url, max_width=None):
+        """
+        Takes a URL and max width and returns a dictionary of information about the
+        content to be used for embedding it on the site.
+
+        This is the part that may make requests to external APIs.
+        """
+        # TODO: Perform the request
+
+        return {
+            'title': "Title of the content",
+            'author_name': "Author name",
+            'provider_name': "Provider name (eg. YouTube, Vimeo, etc)",
+            'type': "Either 'photo', 'video', 'link' or 'rich'",
+            'thumbnail_url': "URL to thumbnail image",
+            'width': 320,
+            'height': 200,
+            'html': "<h2>The Embed HTML</h2>",
+        }

@@ -43,7 +43,7 @@ if ( typeof Object.create !== 'function' ) {
 
 			self.opt = $.extend( {},  this.opt, options );
 
-			self.headers = self.$elem.find( 'h1, h2, h3, h4, h5, h6' );
+			self.headers = self.$elem.find( self.opt.headers );
 			self.previous = 0;
 
 			// Fix bug #1
@@ -56,6 +56,7 @@ if ( typeof Object.create !== 'function' ) {
 
 		opt: {
 			navigation: '.anchorific', // position of navigation
+			headers: 'h1, h2, h3, h4, h5, h6', // custom headers selector
 			speed: 200, // speed of sliding back to top
 			anchorClass: 'anchor', // class of anchor links
 			anchorText: '#', // prepended or appended to anchor headings
@@ -115,7 +116,7 @@ if ( typeof Object.create !== 'function' ) {
 			} else if ( which > self.first ) {
 				li.last().append( '<ul />' );
 				// can't use cache ul; need to find ul once more
-				$( self.opt.navigation ).find( 'ul' ).last().append( a );
+				$( self.opt.navigation ).find( 'ul' ).last().addClass( which>2 ? "collapse" : "").append( a );
 				self.previous = a.parent();
 			} else {
 				$( 'li[data-tag=' + which + ']' ).last().parent().append( a );
@@ -174,7 +175,7 @@ if ( typeof Object.create !== 'function' ) {
 		spy: function() {
 			var self = this, previous, current, list, top, prev;
 
-			$( window ).scroll( function( e ) {
+			$( window ).on("scroll hashchange", function( e ) {
 				// show links back to top
 				self.top( this );
 				// get all the header on top of the viewport
@@ -197,6 +198,8 @@ if ( typeof Object.create !== 'function' ) {
 					list.addClass( 'active' );
 					prev = list;
 				}
+                $('nav.anchorific>ul>li:not(.active)>ul').addClass('collapse');
+				$('nav.anchorific>ul>li.active>ul').removeClass('collapse');
 			});
 		}
 	};

@@ -1,10 +1,13 @@
-version: '2'
+version: '3'
+
+volumes:
+  postgres_data:
 
 services:
   postgres:
     build: ./compose/postgres
     volumes:
-      #- ./data/psql:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
       - ./data/psql-backup:/backups
     environment:
       - POSTGRES_USER=micorr
@@ -17,39 +20,46 @@ services:
       - ./data/neo4j:/data
     environment:
       - NEO4J_AUTH=neo4j/secret
-      - NEO4J_dbms_allowFormatMigration=true
+      - NEO4J_dbms_allow__upgrade=true
+      - NEO4J_dbms_memory_heap_initial__size=1024M
+      - NEO4J_dbms_memory_heap_max__size=1024M
+      # to load initial data in neo4j graph.db
+      # copy a neo4j-admin dump file to compose/neo4j/initial_neo4j-admin.dump
+      # remove it on subsequent builds to avoid overriding data
+      - EXTENSION_SCRIPT=/bootstrap_data.sh
+      #- EXTENSION_SCRIPT=/backup.sh
     ports:
       - "7474:7474"
       - "7687:7687"
-
-  node:
-    build:
-      context: .
-      dockerfile: ./compose/node/Dockerfile
-    volumes_from:
-      - django
-    ports:
-      - "8080:8080"
-    depends_on:
-      - django
 
   django:
     build:
       context: .
       dockerfile: ./compose/django/Dockerfile-dev
-    command: sh -c "python /app/manage.py collectstatic --noinput && python /app/manage.py migrate && python /app/manage.py runserver_plus 0.0.0.0:8000"
-    depends_on:
-      - postgres
-      - neo4j
+    command: /start-dev.sh
+#    depends_on:
+#      - postgres
+#      - neo4j
     environment:
       - POSTGRES_USER=micorr
       - USE_DOCKER=yes
+      - PYTHONPATH=/app:/app/micorr
+      - NEO4J_URL=http://neo4j:secret@localhost:7474/db/data/
+      - DJANGO_DEBUG=True
     volumes:
       - .:/app
     ports:
       - "8000:8000"
-# TODO in v2 should use networks and not use link
-    links:
-      - postgres:postgres
-      - neo4j:neo4j
+  node:
+    build:
+      context: .
+      dockerfile: ./compose/node/Dockerfile-dev
+    environment:
+      - DJANGO_SERVICE_URL=http://django:8000/micorr
+    volumes:
+      - .:/app
+    ports:
+      - "8080:8080"
+    depends_on:
+      - django
 

@@ -1,6 +1,8 @@
 from django.conf.urls import url
 from stratigraphies import views as stratigraphies_views
 
+app_name = "stratigraphies"
+
 urlpatterns = [
     url(r'^$', stratigraphies_views.home, name='list'),
     url(r'^test$', stratigraphies_views.test),
@@ -22,5 +24,6 @@ urlpatterns = [
     url(r'^update-description/(?P<stratigraphy>[\w-]+)/$', stratigraphies_views.update_stratigraphy_description, name='update-description'),
     url(r'^delete-user/(?P<stratigraphy>[\w-]+)/$', stratigraphies_views.delete_stratigraphy_user, name='delete-user'),
     url(r'^email$', stratigraphies_views.sendEmail, name='send_email'),
+    url(r'^node_descriptions/$', stratigraphies_views.node_descriptions, name='node_descriptions'),
 ]
 
