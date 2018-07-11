@@ -1,5 +1,5 @@
 #!/bin/bash
-if [! -f compose/nginx/dhparams.pem]
+if  [ ! -f ./compose/nginx/dhparams.pem ]
 then
     openssl dhparam -out compose/nginx/dhparams.pem 2048
 fi
