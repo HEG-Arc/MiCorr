@@ -81,6 +81,7 @@ services:
       - ./data/etc-letsencrypt:/etc/letsencrypt
       - ./data/lib-letsencrypt:/var/lib/letsencrypt
       - ./micorr/media:/media
+      - ./data/maintenance:/usr/share/nginx/html
 
   certbot:
     image: certbot/certbot

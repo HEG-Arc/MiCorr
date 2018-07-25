@@ -198,22 +198,23 @@ angular.module('micorrApp')
                     }
 
                     //Boucle sur les caracteristiques d'interface
-                    for (var j = 0; j < currentStrata.interfaces.characteristics.length; j++) {
-                        var currentCharacteristic = currentStrata.interfaces.characteristics[j];
-                        var char = new Characteristic();
-                        char.setName(currentCharacteristic.name);
-                        char.setFamily(currentCharacteristic.family);
-                        char.setInterface(true);
+                    if ('characteristics' in currentStrata.interfaces)
+                        for (var j = 0; j < currentStrata.interfaces.characteristics.length; j++) {
+                            var currentCharacteristic = currentStrata.interfaces.characteristics[j];
+                            var char = new Characteristic();
+                            char.setName(currentCharacteristic.name);
+                            char.setFamily(currentCharacteristic.family);
+                            char.setInterface(true);
 
-                        //Si c'est une caracteristique d'une de ces familles on peut en ajouter plusieurs
-                        if (char.getFamily() == "cpcompositionextensionFamily" || char.getFamily() == "cprimicrostructureaggregatecompositionextensionFamily") {
-                            str.addCharacteristic(char)
+                            //Si c'est une caracteristique d'une de ces familles on peut en ajouter plusieurs
+                            if (char.getFamily() == "cpcompositionextensionFamily" || char.getFamily() == "cprimicrostructureaggregatecompositionextensionFamily") {
+                                str.addCharacteristic(char)
+                            }
+                            else {
+                                //Sinon, il n'y en a que une donc on la remplace
+                                str.replaceCharacteristic(char);
+                            }
                         }
-                        else {
-                            //Sinon, il n'y en a que une donc on la remplace
-                            str.replaceCharacteristic(char);
-                        }
-                    }
 
                     //Récupération des sous caractéristiques:
                     var subCharacteristicsList = currentStrata['subcharacteristics'];
