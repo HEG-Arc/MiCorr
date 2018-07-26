@@ -52,7 +52,6 @@
             </div>
         </div>
     </div>
-    {% filter replace_terms %}
     <div class="c9">
 
     <h1>{{ object.artefact_verbose_description_short }}</h1>
@@ -128,7 +127,9 @@
                                 <textarea class="tinymce" data-mce-conf="{{ s.content_mce_conf }}" name="s{{s.section.template.order}}_content" id="s{{s.section.template.order}}_content">{{ s.section.content }} </textarea>
                                 {{ s.section.template.content_help_text|safe }}
                             {% else %}
+                                {% filter replace_terms %}
                                 <p>{{ s.section.content|safe }}</p>
+                                {% endfilter %}
                             {% endif %}
                     </div>
                 {% endif %} {# has_content #}
@@ -146,7 +147,10 @@
                                                 src="{{ image.image.url }}" class="img-responsive"></a>
                                     </div>
                                     <div class="c6">
-                                        <p><a name="fig1"></a>{{ image.legend | safe }}
+                                        <p><a name="fig1"></a>
+                                            {% filter replace_terms %}
+                                            {{ image.legend | safe }}
+                                            {% endfilter %}
                                             {% if form %}
                                             <a onclick="window.open('{% url 'artefacts:image-update' section_id=s.section.id pk=image.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><i class="fa fa-pencil"></i></a>
                                             <a onclick="window.open('{% url 'artefacts:image-delete' image.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><i class="fa fa-trash"></i></a></p>
@@ -212,7 +216,9 @@
                                         {% if form %}
                                             <p>{{ field }}</p>
                                         {% else %}
+                                             {% filter replace_terms %}
                                             <p>{{ s.form.instance | getattr:field.name |safe}}</p>
+                                            {%  endfilter %}
                                         {% endif %}
                                         </div>
                                       </div>
@@ -228,7 +234,9 @@
                          <textarea class="tinymce" data-mce-conf="{{ s.complementary_information_mce_conf}}"name="s{{s.section.template.order}}_complementary_information" id="s{{s.section.template.order}}_complementary_information">{{ s.section.complementary_information }}</textarea>
                          {{ s.section.template.complementary_information_help_text|safe }}
                      {% elif s.section.complementary_information %}
+                         {% filter replace_terms %}
                          <p>{{ s.section.complementary_information|safe }}</p>
+                         {% endfilter %}
                     {% endif %}
                     {% if form or s.section.complementary_information %}
                     </div>
@@ -256,7 +264,6 @@
     </form>
   {% endif %}
 </div>
-{% endfilter %}
 {% endblock content %}
 
 {% block custom_bottom_script %}
