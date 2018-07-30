@@ -393,7 +393,8 @@ class Neo4jDAO:
             MATCH (sg:Stratigraphy {uid:{stratigraphy}})
             OPTIONAL MATCH (sg)-[:POSSESSES]->(parent_st:Strata)-[:IS_PARENT_OF]->(child_st:Strata)
             DETACH DELETE child_st
-            WITH sg MATCH (sg)-[:POSSESSES]->(st:Strata)-[:HAS_UPPER_INTERFACE]->(i:Interface)
+            WITH sg MATCH (sg)-[:POSSESSES]->(st:Strata)
+            OPTIONAL MATCH (st)-[:HAS_UPPER_INTERFACE]->(i:Interface)
             OPTIONAL MATCH (st)-[:INCLUDES]->(c) WHERE c:Component OR c:Container
             DETACH DELETE c,i,st
         ''', stratigraphy=stratigraphy)
