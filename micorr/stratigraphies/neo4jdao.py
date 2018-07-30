@@ -410,15 +410,14 @@ class Neo4jDAO:
         return {'res': 1}
 
     # cree une interface
-    # @params nom de la strate et nom de l'interface
+    # @params uid de la strate et uid de l'interface
     # @returns
-    def createInterface(self, strata, interface):
-        self.query = "CREATE (interface:Interface {uid:'" + interface + "', date:'" + time.strftime(
-            "%Y-%m-%d") + "', strata_uid:'" + strata + "', label:'interface'})"
-        self.queryMatch = (
-        "MATCH (a:Strata),(b:Interface) WHERE a.uid = '" + strata + "' AND b.uid= '" + interface + "' CREATE (a)-[:HAS_UPPER_INTERFACE]->(b)")
-        self.graph.cypher.execute(self.query)
-        self.graph.cypher.execute(self.queryMatch)
+    def createInterface(self, strata_uid, interface_uid):
+        self.graph.cypher.execute('''
+                MATCH(s:Strata {uid:{strata_uid}})
+                CREATE (s)-[:HAS_UPPER_INTERFACE]->(interface:Interface {uid:{interface_uid},date:{date}})
+                ''', strata_uid=strata_uid, interface_uid=interface_uid, date=time.strftime("%Y-%m-%d") )
+    # we removes redundant interface's strata_uid and label property, strata_uid:{strata_uid}, label:'interface'
 
     # attache une caracteristique a une interface
     # @params nom de l'interface et nom de la caracteristique
@@ -532,13 +531,6 @@ class Neo4jDAO:
                         print ("create_containers(): Characteristic :{} not found - not added to container {}".format(e['name'], c))
                         logger.error("Characteristic :{} not found - not added to container {}".format(e['name'], c))
 
-    # retourne le nombre d'interface pour toutes les strates d'une stratigraphie
-    # @params nom de la stratigraphie
-    # @returns nombre d'interface pour toutes les strates d'une stratigrpahie
-    def getNbInterfaceByStratigraphy(self, stratigraphy):
-        self.query = "MATCH (n:Stratigraphy)-[p:POSSESSES]->(s:Strata)-[u:HAS_UPPER_INTERFACE]->(i:Interface) where n.uid='" + stratigraphy + "' RETURN  count(i) as nb"
-        return self.graph.cypher.execute(self.query)[0].nb
-
     # retourne le nombre de strates pour une stratigraphie
     # @params nom de la stratigraphie
     # @returns nombre de strates pour cette stratigraphie
@@ -570,7 +562,7 @@ class Neo4jDAO:
                     self.attachSubCharacteristicToStrata(stratum_name, sc['name'])
 
             # pour chaque strate on cree une interface et on y attache des caracteristiques
-            interface_name = stratum_name + "_interface" + str(self.getNbInterfaceByStratigraphy(stratigraphy_name) + 1)
+            interface_name = stratum_name + "_interface" + str(i + 1)
             self.createInterface(stratum_name, interface_name)
             for interface in stratum['interfaces']:
                 if len(interface) > 0:
