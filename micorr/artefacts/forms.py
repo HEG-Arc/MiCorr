@@ -76,7 +76,7 @@ def get_updated_widgets(widgets, model_class, fields):
                 rel_model_name = meta_field.related_model.__name__
                 if meta_field.db_type.im_class == ForeignKey:
                     widget_class = ModelSelect2WithPop if rel_model_name in (
-                        'Origin', 'Contact') else autocomplete.ModelSelect2
+                        'Origin', 'Contact', 'ChronologyPeriod') else autocomplete.ModelSelect2
                 else:
                     widget_class = ModelSelect2MultipleWithPop if rel_model_name in (
                         'Origin', 'Contact') else autocomplete.ModelSelect2Multiple
