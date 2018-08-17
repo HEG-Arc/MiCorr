@@ -1565,7 +1565,6 @@ class PublicationCreateView(generic.CreateView):
         artefact = get_object_or_404(Artefact, pk=self.kwargs['pk'])
         sections = artefact.section_set.all()
         documents = artefact.document_set.all()
-        stratigraphies = artefact.stratigraphy_set.all()
         authors = artefact.author.all()
         metX = artefact.metalx.all()
         childArtefacts = Artefact.objects.filter(parent_id=artefact.id).order_by('-modified')
@@ -1573,6 +1572,7 @@ class PublicationCreateView(generic.CreateView):
 
         for section in sections :
             images = section.image_set.all()
+            stratigraphies = section.stratigraphy_set.all()
             section.pk = None
             section.artefact = newArtefact
             section.save()
@@ -1580,6 +1580,10 @@ class PublicationCreateView(generic.CreateView):
                 image.pk = None
                 image.section = section
                 image.save()
+            for stratigraphy in stratigraphies:
+                stratigraphy.pk = None
+                stratigraphy.section = section
+                stratigraphy.save()
 
         for auth in authors :
             newArtefact.author.add(auth)
@@ -1592,10 +1596,6 @@ class PublicationCreateView(generic.CreateView):
             document.artefact = newArtefact
             document.save()
 
-        for stratigraphie in stratigraphies :
-            stratigraphie.pk = None
-            stratigraphie.artefact = newArtefact
-            stratigraphie.save()
 
         mainAdmins = []
         users = User.objects.all()

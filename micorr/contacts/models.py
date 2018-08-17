@@ -57,8 +57,8 @@ class Contact(TimeStampedModel):
     zip_code = models.CharField(verbose_name=_("zip code"), max_length=250, blank=True, default='', help_text=_("Zip code of the city."))
     url = models.URLField(verbose_name=_("url"), max_length=250, blank=True, null=True, help_text=_("URL of the personal or organization website."))
     email = models.EmailField(verbose_name=_("email"), max_length=250, blank=True, null=True, help_text=_("Email address."))
-    fon = models.CharField(verbose_name=_("fon number"), max_length=20, blank=True, default='', help_text=_("Enter the number in the format: +41 32 930 2088 (without dashes or non numerical characters)."))
-    mobile = models.CharField(verbose_name=_("mobile fon number"), max_length=20, blank=True, default='', help_text=_("Enter the number in the format: +41 79 930 2088 (without dashes or non numerical characters)."))
+    phone = models.CharField(verbose_name=_("phone number"), max_length=20, blank=True, default='', help_text=_("Enter the number in the format: +41 32 930 2088 (without dashes or non numerical characters)."))
+    mobile = models.CharField(verbose_name=_("mobile phone number"), max_length=20, blank=True, default='', help_text=_("Enter the number in the format: +41 79 930 2088 (without dashes or non numerical characters)."))
 
     class Meta:
         verbose_name = _('Contact')
