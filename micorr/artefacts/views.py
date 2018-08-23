@@ -235,7 +235,7 @@ class ArtefactsUpdateView(SuccessMessageMixin, generic.UpdateView):
             form = self.get_form()
             if form.is_valid():
                 self.object = form.save()
-                return JsonResponse(dict(message='Artefact saved successfuly'))
+                return JsonResponse(dict(message='Artefact saved successfully'))
             else:
                 return JsonResponse(dict(error='Error saving artefacts'))
         else:
