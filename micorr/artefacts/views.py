@@ -525,7 +525,7 @@ def isArtefactOfConnectedUser(request, artefact_id):
 def hasWriteRight(request, artefact_id, token_uuid):
     has_write_right = False
 
-    if request.user.is_superuser or (isArtefactOfConnectedUser(request, artefact_id)) or (getTokenRightByUuid(token_uuid) == 'W'):
+    if request.user.is_superuser or request.user.has_perm('artefacts.change_artefact') or  (isArtefactOfConnectedUser(request, artefact_id)) or (getTokenRightByUuid(token_uuid) == 'W'):
         has_write_right = True
     return has_write_right
 
@@ -536,7 +536,7 @@ def hasWriteRight(request, artefact_id, token_uuid):
 # artefact was validated by a micorr admin
 def hasReadRight(request, artefact_id, token_uuid):
     has_write_right = False
-    if request.user.is_superuser or isArtefactOfConnectedUser(request, artefact_id) or getTokenRightByUuid(token_uuid) == 'R' or isValidatedById(artefact_id):
+    if request.user.is_superuser or request.user.has_perm('artefacts.change_artefact') or ('foo.view_bar')or isArtefactOfConnectedUser(request, artefact_id) or getTokenRightByUuid(token_uuid) == 'R' or isValidatedById(artefact_id):
         has_write_right = True
     return has_write_right
 
