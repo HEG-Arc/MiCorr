@@ -1,7 +1,31 @@
 from django.contrib import admin
+from django.urls import reverse
+from django.utils.html import format_html
+
 from .models import Metal, Alloy, Type, Origin, RecoveringDate, ChronologyCategory, ChronologyPeriod, Environment, \
     Technology, Microstructure, CorrosionForm, CorrosionType, Artefact, SectionCategory, Section, Image, \
-    Document, Stratigraphy, Object, Publication, Collaboration_comment, Token
+    Document, Stratigraphy, Object, Publication, Collaboration_comment
+
+def linkify(field_name):
+    """
+    Converts a foreign key value into clickable links.
+
+    If field_name is 'parent', link text will be str(obj.parent)
+    Link will be admin url for the admin url for obj.parent.id:change
+    """
+    def _linkify(obj):
+        linked_obj = getattr(obj, field_name)
+        if linked_obj:
+            model_name = linked_obj._meta.model_name
+            app_label = linked_obj._meta.app_label
+            view_name = u'admin:{}_{}_change'.format(app_label, model_name)
+            link_url = reverse(view_name, args=[linked_obj.id])
+            return format_html(u'<a href="{}">{}</a>', link_url, linked_obj)
+        else:
+            return u'-'
+
+    _linkify.short_description = field_name # Sets column name
+    return _linkify
 
 
 class ArtefactAdmin(admin.ModelAdmin):
@@ -14,8 +38,20 @@ class ArtefactAdmin(admin.ModelAdmin):
                        'environment', 'location', 'owner', 'technology', 'sample_location',
                        'responsible_institution', 'microstructure', 'corrosion_form', 'corrosion_type', 'object']})
     ]
-    ordering = ['-id']
-    list_display = ('id', 'inventory_number', 'alloy', 'chronology_category', 'origin_country')
+    ordering = ['-modified']
+
+    def url(self, obj):
+        return '<a href="%s">view on site</a>' % obj.get_absolute_url()
+
+    url.allow_tags = True
+    def user(self, obj):
+        return obj.object.user if obj.object else '-' # obj.get_authors_email()
+    user.admin_order_field = 'object__user'
+
+
+    list_display = ('id','url',linkify('object'), 'user','modified','inventory_number', 'alloy', 'chronology_category', linkify('chronology_period'),'origin_country')
+    list_filter = ['chronology_period__chronology_category','object__user','chronology_period']
+    date_hierarchy = 'modified'
 
     def origin_country(self, obj):
         country = ""
@@ -32,15 +68,37 @@ class ArtefactAdmin(admin.ModelAdmin):
 
 
 class ChronologyCategoryAdmin(admin.ModelAdmin):
-    list_display = ('order', 'name')
+    list_display = ('name','order')
 
+
+class ArtefactInline(admin.StackedInline):
+    model = Artefact
+    fieldsets = [
+        ('Foreign keys', {
+            'fields': ['object', 'type', 'origin','author','chronology_period']})
+    ]
+
+
+class ChronologyPeriodAdmin(admin.ModelAdmin):
+
+    list_filter = ['chronology_category']
+
+
+    def artefact_count(self, instance):
+        return instance.artefact_set.count()
+
+    artefact_count.short_description = "Artefact Count"
+
+    inlines = (ArtefactInline,)
+
+    list_display = ('name', linkify('chronology_category'), 'artefact_count')
 
 class SectionCategoryAdmin(admin.ModelAdmin):
-    list_display = ('order', 'name')
+    list_display = ('name', 'order')
 
 
 class SectionAdmin(admin.ModelAdmin):
-    list_display = ('order', 'artefact')
+    list_display = ('artefact','order')
 
 
 class ImageAdmin(admin.ModelAdmin):
@@ -55,7 +113,10 @@ class StratigraphyAdmin(admin.ModelAdmin):
     list_display = ('artefact', 'order', 'uid', 'url')
 
 class ObjectAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'user')
+    list_display = ('id', 'name', linkify('user'),'modified')
+    inlines = (ArtefactInline,)
+    list_filter = ['user']
+    ordering = ['-modified']
 
 class PublicationAdmin(admin.ModelAdmin):
     list_display = ('id', 'user')
@@ -66,7 +127,7 @@ admin.site.register(Type)
 admin.site.register(Origin)
 admin.site.register(RecoveringDate)
 admin.site.register(ChronologyCategory, ChronologyCategoryAdmin)
-admin.site.register(ChronologyPeriod)
+admin.site.register(ChronologyPeriod, ChronologyPeriodAdmin)
 admin.site.register(Environment)
 admin.site.register(Technology)
 admin.site.register(Microstructure)

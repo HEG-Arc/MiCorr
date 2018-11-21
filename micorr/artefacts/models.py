@@ -3,6 +3,7 @@ import os
 import uuid
 
 from django.db import models
+from django.utils.encoding import python_2_unicode_compatible
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from contacts.models import Contact
@@ -14,7 +15,10 @@ from cities_light.models import City
 
 from artefacts import get_img_storage_path, get_img_storage_path_stratigraphy, get_doc_storage_path
 
+from wagtail.wagtailsnippets.models import register_snippet
+from wagtail.wagtailadmin.edit_handlers import FieldPanel
 
+@python_2_unicode_compatible
 class Metal(TimeStampedModel):
     """
     A metal is made of one element
@@ -26,10 +30,11 @@ class Metal(TimeStampedModel):
         verbose_name = 'Metal'
         verbose_name_plural = 'Metals'
 
-    def __unicode__(self):
+    def __str__(self):
         return self.element
 
 
+@python_2_unicode_compatible
 class Alloy(TimeStampedModel):
     """
     The artefact alloy
@@ -42,10 +47,11 @@ class Alloy(TimeStampedModel):
         verbose_name = 'Alloy'
         verbose_name_plural = 'Alloys'
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
+@python_2_unicode_compatible
 class Type(TimeStampedModel):
     """
     What the artefact was used for
@@ -57,10 +63,11 @@ class Type(TimeStampedModel):
         verbose_name = 'Type'
         verbose_name_plural = 'Types'
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
+@python_2_unicode_compatible
 class Origin(TimeStampedModel):
     """
     Where the artefact was located
@@ -84,10 +91,11 @@ class Origin(TimeStampedModel):
         verbose_name = 'Origin'
         verbose_name_plural = 'Origins'
 
-    def __unicode__(self):
+    def __str__(self):
         return self.origin_verbose_description()
 
 
+@python_2_unicode_compatible
 class RecoveringDate(TimeStampedModel):
     """
     The date when the artefact was found
@@ -98,10 +106,11 @@ class RecoveringDate(TimeStampedModel):
         verbose_name = 'Recovering Date'
         verbose_name_plural = 'Recovering Dates'
 
-    def __unicode__(self):
+    def __str__(self):
         return self.date
 
 
+@python_2_unicode_compatible
 class ChronologyCategory(TimeStampedModel):
     """
     The dating of the artefact
@@ -114,10 +123,11 @@ class ChronologyCategory(TimeStampedModel):
         verbose_name = 'Chronology Category'
         verbose_name_plural = 'Chronology Categories'
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
+@python_2_unicode_compatible
 class ChronologyPeriod(TimeStampedModel):
     """
     A more precise dating of the artefact
@@ -132,10 +142,11 @@ class ChronologyPeriod(TimeStampedModel):
         verbose_name = 'Chronology Period'
         verbose_name_plural = 'Chronology Periods'
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
+@python_2_unicode_compatible
 class Environment(TimeStampedModel):
     """
     What the burial conditions of the artefact were
@@ -147,10 +158,11 @@ class Environment(TimeStampedModel):
         verbose_name = 'Environment'
         verbose_name_plural = 'Environments'
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
+@python_2_unicode_compatible
 class Technology(TimeStampedModel):
     """
     The manufacturing techniques used
@@ -162,10 +174,11 @@ class Technology(TimeStampedModel):
         verbose_name = 'Technology'
         verbose_name_plural = 'Technologies'
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
+@python_2_unicode_compatible
 class Microstructure(TimeStampedModel):
     """
     What the artefact is made of
@@ -177,10 +190,11 @@ class Microstructure(TimeStampedModel):
         verbose_name = 'Microstructure'
         verbose_name_plural = 'Microstructures'
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
+@python_2_unicode_compatible
 class CorrosionForm(TimeStampedModel):
     """
     The corrosion form observed
@@ -192,10 +206,11 @@ class CorrosionForm(TimeStampedModel):
         verbose_name = 'Corrosion Form'
         verbose_name_plural = 'Corrosion Forms'
 
-    def __unicode__(self):
+    def __str__(self):
         return self.form
 
 
+@python_2_unicode_compatible
 class CorrosionType(TimeStampedModel):
     """
     The corrosion type observed
@@ -207,9 +222,10 @@ class CorrosionType(TimeStampedModel):
         verbose_name = 'Corrosion Type'
         verbose_name_plural = 'Corrosion Types'
 
-    def __unicode__(self):
+    def __str__(self):
         return self.type
 
+@python_2_unicode_compatible
 class Object(TimeStampedModel):
     """
     An object can be linked to more than one card (artefact)
@@ -223,6 +239,10 @@ class Object(TimeStampedModel):
         verbose_name = 'Object'
         verbose_name_plural = 'Objects'
 
+    def __str__(self):
+        return self.name if len(self.name) else '[blank]'
+
+@python_2_unicode_compatible
 class Artefact(TimeStampedModel):
     """
     An artefact has many foreign keys, corresponding to its characteristics55
@@ -311,10 +331,15 @@ class Artefact(TimeStampedModel):
                     artefact.append(self.origin.city.country.name)
         return u" - ".join(artefact)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.artefact_verbose_description()
 
+    def get_absolute_url(self):
+        from django.urls import reverse
+        return reverse('artefacts:artefact-detail', args=[str(self.id)])
 
+
+@python_2_unicode_compatible
 class SectionCategory(TimeStampedModel):
     """
     A section belongs to a section category, which can be i.e. "Sample" or "References"
@@ -345,10 +370,11 @@ class SectionCategory(TimeStampedModel):
         verbose_name_plural = 'Section Categories'
         unique_together = (("page_template", "order"), ("page_template", "name"))
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
+@python_2_unicode_compatible
 class SectionTemplate(TimeStampedModel):
     page_template = models.IntegerField(blank=False, null=False, default=1, help_text='Page template identifier')
     section_category = models.ForeignKey(SectionCategory, blank=True, null=True, help_text='The corresponding section category')#section_category = enumfields.EnumField(SectionCat, max_lentgh=2, help_text='Category of the section')
@@ -377,10 +403,11 @@ class SectionTemplate(TimeStampedModel):
         verbose_name_plural = 'Section Templates'
         unique_together = ("page_template", "order")
 
-    def __unicode__(self):
+    def __str__(self):
         return "%d, %s, %s, %s" % (self.page_template, self.order, self.section_category, self.title)
 
 
+@python_2_unicode_compatible
 class Section(TimeStampedModel):
     """
     An artefact may have many sections with images, stratigraphies inside
@@ -399,11 +426,12 @@ class Section(TimeStampedModel):
         verbose_name = 'Section'
         verbose_name_plural = 'Sections'
 
-    def __unicode__(self):
+    def __str__(self):
         return "%s, %s, %s" % (self.artefact, self.template.section_category, self.template.title)
 
 
 
+@python_2_unicode_compatible
 class Image(TimeStampedModel):
     """
     An image refers to a section
@@ -418,11 +446,12 @@ class Image(TimeStampedModel):
         verbose_name = 'Image'
         verbose_name_plural = 'Images'
 
-    def __unicode__(self):
+    def __str__(self):
         return self.legend
 
 
 
+@python_2_unicode_compatible
 class Stratigraphy(TimeStampedModel):
     """
     An artefact can be represented by one or more stratigraphies
@@ -439,10 +468,11 @@ class Stratigraphy(TimeStampedModel):
         verbose_name = 'Stratigraphy'
         verbose_name_plural = 'Stratigraphies'
 
-    def __unicode__(self):
+    def __str__(self):
         return self.uid
 
 
+@python_2_unicode_compatible
 class Document(TimeStampedModel):
     """
     A document (PDF, Word, ...) can be attached to an artefact to add information
@@ -473,7 +503,7 @@ class Document(TimeStampedModel):
         verbose_name = 'Document'
         verbose_name_plural = 'Documents'
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
@@ -491,6 +521,7 @@ class TokenManager(models.Manager):
         token = self.get(recipient=recipient)
 
 
+@python_2_unicode_compatible
 class Token(TimeStampedModel):
     """
     A token is used to give a read or write right when you share an artefact
@@ -549,6 +580,7 @@ class Publication(TimeStampedModel) :
         verbose_name='Publication'
         verbose_name_plural='Publications'
 
+@python_2_unicode_compatible
 class Field(TimeStampedModel):
     """
     A field is a part of an artefact
@@ -559,6 +591,9 @@ class Field(TimeStampedModel):
     class Meta:
         verbose_name = 'Field'
         verbose_name_plural = 'Fields'
+
+    def __str__(self):
+        return self.name
 
 class Collaboration_comment(TimeStampedModel):
     """
@@ -582,12 +617,6 @@ class Collaboration_comment(TimeStampedModel):
     class Meta:
         verbose_name = 'Comment'
         verbose_name_plural = 'Comments'
-from django.db import models
-from django.utils.encoding import python_2_unicode_compatible
-
-from wagtail.wagtailsnippets.models import register_snippet
-from wagtail.wagtailadmin.edit_handlers import FieldPanel
-
 
 @python_2_unicode_compatible  # provide equivalent __unicode__ and __str__ methods on Python 2
 class FormDescription(models.Model):
