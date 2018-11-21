@@ -73,9 +73,11 @@ class ChronologyCategoryAdmin(admin.ModelAdmin):
 
 class ArtefactInline(admin.StackedInline):
     model = Artefact
+    extra = 0
     fieldsets = [
+        ('Own fields', {'fields': ['id','validated','published']}),
         ('Foreign keys', {
-            'fields': ['object', 'type', 'origin','author','chronology_period']})
+            'fields': ['object', 'type', 'origin', 'author', 'chronology_period']})
     ]
 
 
