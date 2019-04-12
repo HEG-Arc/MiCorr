@@ -272,7 +272,7 @@
         var element=event.target;
         setTimeout(function () {
             $(element).modal('hide');
-        }, 2000);
+        }, 20000);
     });
     var frm = $('#main-form');
     frm.submit(function () {
@@ -304,7 +304,10 @@
             },
             error: function(data) {
                 $("#save-modal-alert").removeClass('alert-success').addClass('alert-danger');
-                $("#save-modal-alert > p").html(data.error);
+                $("#save-modal-alert > p").html(data.responseJSON.error);
+                $.each(data.responseJSON.errors, function (field, error) {
+                    $("#save-modal-alert > p").append('<BR>' + field + ' : ' + error)
+                });
                 $('#saveModal').modal('show');
             }
         });

@@ -237,7 +237,7 @@ class ArtefactsUpdateView(SuccessMessageMixin, generic.UpdateView):
                 self.object = form.save()
                 return JsonResponse(dict(message='Artefact saved successfully'))
             else:
-                return JsonResponse(dict(error='Error saving artefacts'))
+                return JsonResponse(dict(error='Error saving artefacts', errors=form.errors),status=422)
         else:
             return super(ArtefactsUpdateView, self).post(request, **kwargs)
     def get_success_url(self):

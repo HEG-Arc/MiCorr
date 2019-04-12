@@ -115,6 +115,10 @@ class ArtefactsForm(FieldsetForm):
                     'origin',  # fk
                     'recovering_date',  # fk
                     'chronology_period',  # fk
+                    'chronology_category',  # fk
+                    'chronology_tpq',
+                    'chronology_taq',
+                    'chronology_comment',
                     'environment',  # fk
                     'location',  # fk
                     'owner',  # fk

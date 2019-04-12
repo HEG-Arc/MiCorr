@@ -18,6 +18,8 @@ from artefacts import get_img_storage_path, get_img_storage_path_stratigraphy, g
 from wagtail.wagtailsnippets.models import register_snippet
 from wagtail.wagtailadmin.edit_handlers import FieldPanel
 
+from year_field import YearField
+
 @python_2_unicode_compatible
 class Metal(TimeStampedModel):
     """
@@ -117,6 +119,8 @@ class ChronologyCategory(TimeStampedModel):
     """
     order = models.IntegerField(blank=True, null=True, help_text='The category chronology')
     name = models.CharField(max_length=100, blank=True, help_text='The dating of the artefact')
+    tpq = YearField(blank=True, default=0, help_text='Category TPQ (Terminus post quem) e.g. "3000 B.C."')
+    taq = YearField(blank=True, default=0, help_text='Category TAQ (Terminus ante quem) e.g. "200 A.D."')
 
     class Meta:
         ordering = ['order']
@@ -271,6 +275,11 @@ class Artefact(TimeStampedModel):
     recovering_date = models.ForeignKey(RecoveringDate, verbose_name='date of recovering', blank=True, null=True, help_text='The date of excavation for archaeological objects, of production and use for other artefacts')
     chronology_period = models.ForeignKey(ChronologyPeriod, verbose_name='dating of artefact (Tpq _ Taq)', blank=True, null=True,
                                           help_text='The dating of the artefact')
+    chronology_category = models.ForeignKey(ChronologyCategory, blank=True, null=True, help_text='A general dating of the artefact')
+    chronology_tpq = YearField( blank=True, default=0, help_text='Dating of artefact TPQ (Terminus post quem) e.g. "3000 B.C."')
+    chronology_taq = YearField( blank=True, default=0, help_text='Dating of artefact TAQ (Terminus ante quem) e.g. "200 A.D."')
+    chronology_comment = models.CharField(max_length=100, blank=True, default='', help_text='Dating of artefact comment')
+
     environment = models.ForeignKey(Environment, verbose_name='burial conditions / environment', blank=True, null=True,
                                          help_text='The environment where the artefact was found')
     location = models.ForeignKey(Contact, verbose_name='artefact location', blank=True, null=True, related_name='artefacts_locations', help_text='The actual location of the artefact')

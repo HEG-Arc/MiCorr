@@ -68,7 +68,7 @@ class ArtefactAdmin(admin.ModelAdmin):
 
 
 class ChronologyCategoryAdmin(admin.ModelAdmin):
-    list_display = ('name','order')
+    list_display = ('name','order','tpq','taq')
 
 
 class ArtefactInline(admin.StackedInline):
