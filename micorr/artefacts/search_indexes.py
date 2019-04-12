@@ -19,7 +19,7 @@ class ArtefactIndex(indexes.SearchIndex, indexes.Indexable):
     type = indexes.CharField(model_attr='type')
     origin = indexes.CharField(model_attr='origin')
     recovering_date = indexes.CharField(model_attr='recovering_date')
-    chronology_period = indexes.CharField(model_attr='chronology_period')
+    chronology_category = indexes.CharField(model_attr='chronology_category')
     environment = indexes.CharField(model_attr='environment')
     location = indexes.CharField(model_attr='location')
     owner = indexes.CharField(model_attr='owner')

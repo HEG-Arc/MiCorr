@@ -32,9 +32,9 @@ class ArtefactAdmin(admin.ModelAdmin):
     fieldsets = [
         ('Own fields', {
             'fields': ['description', 'inventory_number', 'recorded_conservation_data',
-                       'sample_description', 'sample_number', 'date_aim_sampling']}),
+                       'sample_description', 'sample_number', 'date_aim_sampling','chronology_tpq','chronology_taq','chronology_comment']}),
         ('Foreign keys', {
-            'fields': ['author', 'metal1', 'metalx', 'alloy', 'type', 'origin', 'recovering_date', 'chronology_period',
+            'fields': ['author', 'metal1', 'metalx', 'alloy', 'type', 'origin', 'recovering_date', 'chronology_category',
                        'environment', 'location', 'owner', 'technology', 'sample_location',
                        'responsible_institution', 'microstructure', 'corrosion_form', 'corrosion_type', 'object']})
     ]
@@ -49,8 +49,8 @@ class ArtefactAdmin(admin.ModelAdmin):
     user.admin_order_field = 'object__user'
 
 
-    list_display = ('id','url',linkify('object'), 'user','modified','inventory_number', 'alloy', 'chronology_category', linkify('chronology_period'),'origin_country')
-    list_filter = ['chronology_period__chronology_category','object__user','chronology_period']
+    list_display = ('id','url',linkify('object'), 'user','modified','inventory_number', 'alloy', 'origin_country', linkify('chronology_category'),'chronology_tpq','chronology_taq','chronology_comment')
+    list_filter = ['chronology_category','object__user']
     date_hierarchy = 'modified'
 
     def origin_country(self, obj):
@@ -59,12 +59,6 @@ class ArtefactAdmin(admin.ModelAdmin):
             if obj.origin.city:
                 country = obj.origin.city.country.name
         return country
-
-    def chronology_category(self, obj):
-        chronology = ""
-        if obj.chronology_period:
-            chronology = obj.chronology_period.chronology_category
-        return chronology
 
 
 class ChronologyCategoryAdmin(admin.ModelAdmin):
@@ -77,7 +71,7 @@ class ArtefactInline(admin.StackedInline):
     fieldsets = [
         ('Own fields', {'fields': ['id','validated','published']}),
         ('Foreign keys', {
-            'fields': ['object', 'type', 'origin', 'author', 'chronology_period']})
+            'fields': ['object', 'type', 'origin', 'author', 'chronology_category']})
     ]
 
 

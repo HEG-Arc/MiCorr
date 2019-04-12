@@ -666,7 +666,7 @@ class Neo4jDAO:
                 line['artefact_metal1'] = published_artefact.metal1.element
                 line['artefact_alloy'] = published_artefact.alloy.name
                 line['artefact_type'] = published_artefact.type.name
-                line['artefact_chronology_category'] = published_artefact.chronology_period.chronology_category.name
+                line['artefact_chronology_category'] = published_artefact.chronology_category.name
                 line['artefact_technology'] = published_artefact.technology.name
                 line['artefact_microstructure'] = published_artefact.microstructure.name
                 result_list.append(line)

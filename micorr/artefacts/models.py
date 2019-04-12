@@ -274,7 +274,7 @@ class Artefact(TimeStampedModel):
                                help_text='The place, city and country where the artefact comes from or the object to which the section considered belongs to')
     recovering_date = models.ForeignKey(RecoveringDate, verbose_name='date of recovering', blank=True, null=True, help_text='The date of excavation for archaeological objects, of production and use for other artefacts')
     chronology_period = models.ForeignKey(ChronologyPeriod, verbose_name='dating of artefact (Tpq _ Taq)', blank=True, null=True,
-                                          help_text='The dating of the artefact')
+                                          help_text='The dating of the artefact', editable=False)
     chronology_category = models.ForeignKey(ChronologyCategory, blank=True, null=True, help_text='A general dating of the artefact')
     chronology_tpq = YearField( blank=True, default=0, help_text='Dating of artefact TPQ (Terminus post quem) e.g. "3000 B.C."')
     chronology_taq = YearField( blank=True, default=0, help_text='Dating of artefact TAQ (Terminus ante quem) e.g. "200 A.D."')
@@ -297,7 +297,7 @@ class Artefact(TimeStampedModel):
     class Meta:
         verbose_name = 'Artefact'
         verbose_name_plural = 'Artefacts'
-        ordering = ['metal1', 'alloy', 'chronology_period__chronology_category', 'type']
+        ordering = ['metal1', 'alloy', 'chronology_category', 'type']
 
     def get_authors(self):
         authors_list = []
@@ -319,9 +319,8 @@ class Artefact(TimeStampedModel):
             artefact.append(self.inventory_number)
         if self.alloy:
             artefact.append(self.alloy.name)
-        if self.chronology_period:
-            if self.chronology_period.chronology_category:
-                artefact.append(self.chronology_period.chronology_category.name)
+        if self.chronology_category:
+            artefact.append(self.chronology_category.name)
         if self.origin:
             if self.origin.city:
                 artefact.append(self.origin.city.country.name)
@@ -331,9 +330,8 @@ class Artefact(TimeStampedModel):
         artefact = [self.object.name]
         if self.alloy:
             artefact.append(self.alloy.name)
-        if self.chronology_period:
-            if self.chronology_period.chronology_category:
-                artefact.append(self.chronology_period.chronology_category.name)
+        if self.chronology_category:
+            artefact.append(self.chronology_category.name)
         if self.origin:
             if self.origin.city:
                 if self.origin.city.country:

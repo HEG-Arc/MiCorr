@@ -114,7 +114,6 @@ class ArtefactsForm(FieldsetForm):
                     'type',  # fk
                     'origin',  # fk
                     'recovering_date',  # fk
-                    'chronology_period',  # fk
                     'chronology_category',  # fk
                     'chronology_tpq',
                     'chronology_taq',
@@ -203,7 +202,6 @@ class ArtefactsCreateForm(forms.ModelForm):
         widgets = {
             'type': TextInput(),
             'recovering_date': TextInput(),
-            'chronology_period': TextInput(),
         }
 
 class ImageCreateForm(forms.ModelForm):

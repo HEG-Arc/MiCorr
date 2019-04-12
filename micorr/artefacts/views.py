@@ -99,7 +99,7 @@ class ArtefactsListView(generic.ListView):
     """
     A list of all the artefacts in the filter
     """
-    queryset = Artefact.objects.select_related('alloy', 'type', 'chronology_period', 'technology',
+    queryset = Artefact.objects.select_related('alloy', 'type', 'chronology_category', 'technology',
                                                'microstructure')
 
     def get(self, request, *args, **kwargs):
@@ -154,7 +154,7 @@ class ArtefactsDetailView(generic.DetailView):
     """
     A detail view of a selected artefact
     """
-    queryset = Artefact.objects.select_related('alloy', 'type', 'origin', 'recovering_date', 'chronology_period',
+    queryset = Artefact.objects.select_related('alloy', 'type', 'origin', 'recovering_date', 'chronology_category',
                                                'environment', 'location', 'owner', 'technology', 'sample_location',
                                                'responsible_institution', 'microstructure', 'corrosion_form', 'corrosion_type')
     template_name = 'artefacts/artefact_update_page.html'
@@ -293,10 +293,6 @@ def newOrigin(request):
 def newRecoveringDate(request):
     return handlePopAdd(request, RecoveringDateCreateForm, 'recovering_date')
 
-
-@login_required
-def newChronologyPeriod(request):
-    return handlePopAdd(request, ChronologyCreateForm, 'chronology_period')
 
 
 @login_required
@@ -987,7 +983,7 @@ class CollaborationCommentView(generic.CreateView):
     """
     A detail view of a selected artefact
     """
-    queryset = Artefact.objects.select_related('alloy', 'type', 'origin', 'recovering_date', 'chronology_period',
+    queryset = Artefact.objects.select_related('alloy', 'type', 'origin', 'recovering_date', 'chronology_category',
                                                'environment', 'location', 'owner', 'technology', 'sample_location',
                                                'responsible_institution', 'microstructure', 'corrosion_form', 'corrosion_type')
 
@@ -1691,7 +1687,7 @@ class AdministrationArtefactDetailView(generic.DetailView):
     model = Publication
     template_name_suffix = '_administration_detail'
 
-    """queryset = Artefact.objects.select_related('alloy', 'type', 'origin', 'recovering_date', 'chronology_period',
+    """queryset = Artefact.objects.select_related('alloy', 'type', 'origin', 'recovering_date', 'chronology_category',
                                                'environment', 'location', 'owner', 'technology', 'sample_location',
                                                'responsible_institution', 'microstructure', 'corrosion_form', 'corrosion_type')
 """

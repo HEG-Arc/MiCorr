@@ -23,7 +23,6 @@ urlpatterns = [
     url(r'^add/type/?$', artefacts_views.newType),
     url(r'^add/origin/?$', artefacts_views.newOrigin),
     url(r'^add/recovering_date/?$', artefacts_views.newRecoveringDate),
-    url(r'^add/chronology_period/?$', artefacts_views.newChronologyPeriod),
     url(r'^add/environment/?$', artefacts_views.newEnvironment),
     url(r'^add/location/?$', artefacts_views.newLocation),
     url(r'^add/owner/?$', artefacts_views.newOwner),
