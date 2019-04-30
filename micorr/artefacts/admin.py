@@ -89,6 +89,19 @@ class ChronologyPeriodAdmin(admin.ModelAdmin):
 
     list_display = ('name', linkify('chronology_category'), 'artefact_count')
 
+
+class AlloyAdmin(admin.ModelAdmin):
+
+    def artefact_count(self, instance):
+        return instance.artefact_set.count()
+
+    artefact_count.short_description = "Artefact Count"
+
+    inlines = (ArtefactInline,)
+
+    list_display = ('id', 'name', 'order', 'artefact_count')
+
+
 class SectionCategoryAdmin(admin.ModelAdmin):
     list_display = ('name', 'order')
 
@@ -118,7 +131,7 @@ class PublicationAdmin(admin.ModelAdmin):
     list_display = ('id', 'user')
 
 admin.site.register(Metal)
-admin.site.register(Alloy)
+admin.site.register(Alloy, AlloyAdmin)
 admin.site.register(Type)
 admin.site.register(Origin)
 admin.site.register(RecoveringDate)
