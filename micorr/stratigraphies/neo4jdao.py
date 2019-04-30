@@ -78,6 +78,23 @@ class Neo4jDAO:
         n.properties["description"] = description
         n.push()
 
+    def getStratigraphyElement(self, stratigraphy_uid):
+        """
+         get main element of first Metal stratum in stratigraphy  (uid:stratigraphy_uid}
+
+        :param stratigraphy_uid
+        :return: main element uid/symbol
+        """
+        records = self.graph.cypher.execute(
+            """
+                MATCH (sg:Stratigraphy)-[r:POSSESSES]->(st:Strata)-[:IS_CONSTITUTED_BY]->(c:Characteristic)-[:BELONGS_TO]->(f:Family {uid:"natureFamily"}),
+                (st)-[:INCLUDES]->(ctn:Container)-->(e:Element),(ctn)-[:BELONGS_TO]->(ctn_f:Family {uid:"mCompositionMainElements"})
+                 where c.uid="mCharacteristic" and sg.uid={uid}
+                RETURN e.uid as main_element,toInteger(replace(st.uid, (sg.uid+"_Strata"), "")) as strata_num
+                order by -strata_num limit 1
+            """, uid=stratigraphy_uid)
+        return records[0]['main_element']
+
     # retourne tous les details d'une stratigraphie, caracteristiques, sous-caracteristiques et interfaces
     # @params le nom de la stratigraphie
     # @returns tous les details de la stratigraphie voulue
