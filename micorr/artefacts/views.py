@@ -32,7 +32,7 @@ from .forms import ArtefactsForm, ArtefactsCreateForm, DocumentUpdateForm, Docum
     PublicationDecisionForm, PublicationDelegateForm, PublicationRejectDecisionForm, StratigraphyCreateForm
 
 from .models import Artefact, Document, Collaboration_comment, Field, Object, Section, Image, \
-    Stratigraphy, Token, Publication, SectionTemplate
+    Stratigraphy, Token, Publication, SectionTemplate, Element
 from . import models
 
 import logging
@@ -1971,10 +1971,13 @@ class GenericAutoComplete(autocomplete.Select2QuerySetView):
         qs = model_class.objects.all()
 
         if self.q:
-            search_field = self.create_field or self.default_search_field
-            qs = qs.filter(**{search_field + '__icontains':self.q})
+            qs=self.filter_queryset(qs)
 
         return qs
+
+    def filter_queryset(self, qs):
+        search_field = self.create_field or self.default_search_field
+        return qs.filter(**{search_field + '__icontains': self.q})
 
     # post overloading is required to add support for Create option
     # as Base class method (BaseQuerySetView.post) does not accept any args / kwargs
@@ -1985,30 +1988,15 @@ class GenericAutoComplete(autocomplete.Select2QuerySetView):
 
 class ContactAutoComplete(GenericAutoComplete):
 
-    def get_queryset(self):
-        model_class = getattr(models,self.kwargs['model'])
-
-        if not self.request.user.is_authenticated():
-            return model_class.objects.none()
-
-        qs = model_class.objects.all()
-
-        if self.q:
-            qs = qs.filter(Q(name__icontains=self.q)|Q(surname__icontains=self.q)|Q(organization_name__icontains=self.q))
-
-        return qs
+    def filter_queryset(self, qs):
+        return qs.filter(Q(name__icontains=self.q)|Q(surname__icontains=self.q)|Q(organization_name__icontains=self.q))
 
 class OriginAutoComplete(GenericAutoComplete):
 
-    def get_queryset(self):
-        model_class = getattr(models,self.kwargs['model'])
+    def filter_queryset(self, qs):
+        return qs.filter(Q(site__icontains=self.q)|Q(city__name__icontains=self.q)|Q(city__country__name__icontains=self.q))
 
-        if not self.request.user.is_authenticated():
-            return model_class.objects.none()
+class ElementAutoCompleteFromList(GenericAutoComplete):
 
-        qs = model_class.objects.all()
-
-        if self.q:
-            qs = qs.filter(Q(site__icontains=self.q)|Q(city__name__icontains=self.q)|Q(city__country__name__icontains=self.q))
-
-        return qs
+    def filter_queryset(self, qs):
+        return qs.filter(Q(symbol__icontains=self.q)|Q(name__icontains=self.q))

@@ -65,7 +65,8 @@ def get_updated_widgets(widgets, model_class, fields):
             'RecoveringDate': 'artefacts:date-autocomplete',
             'CorrosionType': 'artefacts:type-autocomplete',
             'CorrosionForm': 'artefacts:form-autocomplete',
-            'Metal': 'artefacts:element-autocomplete',
+            'Metal': 'artefacts:metal-autocomplete',
+            'Element': 'artefacts:element-autocomplete',
             'Contact':'artefacts:contact-autocomplete',
             'Origin':'artefacts:origin-autocomplete'
         }
@@ -144,7 +145,9 @@ class ArtefactsForm(FieldsetForm):
                 "is_fieldset": True,
                 "fields": ['microstructure',
                            'metal1',
-                           'metalx']
+                           'metalx',
+                           'metal_e_1',
+                           'metal_e_x']
             },
             {
                 "name": "corrosion",

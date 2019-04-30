@@ -20,6 +20,19 @@ from wagtail.wagtailadmin.edit_handlers import FieldPanel
 
 from year_field import YearField
 
+
+@python_2_unicode_compatible
+class Element(TimeStampedModel):
+    symbol = models.CharField(max_length=2, blank=False, help_text='Symbol of the element')
+    name = models.CharField(max_length=50, blank=False, help_text='Name of the element')
+    phase = models.CharField(max_length=10, blank=True, help_text='Natural phase of the element at room temperature')
+    category = models.CharField(max_length=50, blank=True, help_text='Category of the element')
+    number = models.IntegerField(blank=False, null=False, help_text='Atomic number of the element')
+
+    def __str__(self):
+        return '{} {}'.format(self.symbol, self.name)
+
+
 @python_2_unicode_compatible
 class Metal(TimeStampedModel):
     """
@@ -267,6 +280,8 @@ class Artefact(TimeStampedModel):
     author = models.ManyToManyField(Contact, verbose_name='authors', blank=True, related_name='artefacts', help_text='The author(s) of this file is (are) responsible for the information provided. Author(s) should provide after the abbreviation of their institution affiliation their last name and initial of their first name in brackets such as HE-Arc CR (Degrigny C.). Hold down "Control", or "Command" on a Mac, to select more than one')
     metal1 = models.ForeignKey(Metal, verbose_name='1st metal element', blank=True, null=True, related_name='first_metal_artefacts', help_text='The primary metal element of the artefact')
     metalx = models.ManyToManyField(Metal, verbose_name='other metal elements', blank=True, related_name='other_metal_artefacts', help_text='The other metal elements of the artefact, several elements can be selected by clicking on Ctrl + elements selected')
+    metal_e_1 = models.ForeignKey(Element, verbose_name='first metal element', blank=True, null=True, related_name='first_metal_artefacts', help_text='The primary metal element of the artefact')
+    metal_e_x = models.ManyToManyField(Element, verbose_name='other metal elements', blank=True, related_name='other_metal_artefacts', help_text='The other metal elements of the artefact, several elements can be selected by clicking on Ctrl + elements selected')
     alloy = models.ForeignKey(Alloy, blank=True, null=True, help_text='The alloy the artefact is made of')
     type = models.ForeignKey(Type, verbose_name='type of artefact', blank=True, null=True,
                              help_text='The name of the artefact, its typology')
