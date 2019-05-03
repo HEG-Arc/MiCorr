@@ -476,6 +476,9 @@ class Stratigraphy(TimeStampedModel):
     """
     An artefact can be represented by one or more stratigraphies
     """
+    # caution stratigraphies are not linked directly to artefact anymore
+    # but indirectly through section
+    # todo migrate remaining old stratigraphy_set found in Artefact to section ?
     artefact = models.ForeignKey(Artefact, blank=True, null=True, help_text='The artefact the stratigraphy represents')
     section = models.ForeignKey(Section, blank=True, null=True, help_text='The section in which the stratigraphy is displayed')
     order = models.IntegerField(blank=True, null=True, help_text='The order of a stratigraphy for a given artefact')

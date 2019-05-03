@@ -33,8 +33,8 @@ class UserDetailView(LoginRequiredMixin, generic.DetailView):
         pg_stratigraphies = Stratigraphy.objects.filter(uid__in=[s['uid'] for s in stratigraphies])
         for i, s in enumerate(stratigraphies):
             pg_s = pg_stratigraphies.filter(uid=s['uid']).first()
-            if pg_s and pg_s.artefact:
-                s['origin'] = pg_s.artefact.origin
+            if pg_s and pg_s.section and pg_s.section.artefact:
+                s['origin'] = pg_s.section.artefact.origin
             else:
                 s['origin'] = ''
         # Add all the objects of the user in a variable
