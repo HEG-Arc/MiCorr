@@ -169,5 +169,4 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RunPython(insert_elements, remove_elements),
-        migrations.RunPython(insert_elements, remove_elements),
     ]

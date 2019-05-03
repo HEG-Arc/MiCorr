@@ -20,7 +20,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('created', django_extensions.db.fields.CreationDateTimeField(auto_now_add=True, verbose_name='created')),
                 ('modified', django_extensions.db.fields.ModificationDateTimeField(auto_now=True, verbose_name='modified')),
-                ('symbol', models.CharField(help_text=b'Symbol of the element', max_length=2)),
+                ('symbol', models.CharField(help_text=b'Symbol of the element', max_length=2, unique=True)),
                 ('name', models.CharField(help_text=b'Name of the element', max_length=50)),
                 ('phase', models.CharField(blank=True, help_text=b'Natural phase of the element at room temperature', max_length=10)),
                 ('category', models.CharField(blank=True, help_text=b'Category of the element', max_length=50)),

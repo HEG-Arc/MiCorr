@@ -23,7 +23,7 @@ from year_field import YearField
 
 @python_2_unicode_compatible
 class Element(TimeStampedModel):
-    symbol = models.CharField(max_length=2, blank=False, help_text='Symbol of the element')
+    symbol = models.CharField(max_length=2, blank=False, unique=True, help_text='Symbol of the element')
     name = models.CharField(max_length=50, blank=False, help_text='Name of the element')
     phase = models.CharField(max_length=10, blank=True, help_text='Natural phase of the element at room temperature')
     category = models.CharField(max_length=50, blank=True, help_text='Category of the element')
