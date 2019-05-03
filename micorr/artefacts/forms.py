@@ -81,7 +81,9 @@ def get_updated_widgets(widgets, model_class, fields):
                 else:
                     widget_class = ModelSelect2MultipleWithPop if rel_model_name in (
                         'Origin', 'Contact') else autocomplete.ModelSelect2Multiple
-                widgets[f_name] = widget_class(url=reverse_lazy(get_url_name(rel_model_name), args=[rel_model_name]))
+                widgets[f_name] = widget_class(url=reverse_lazy(get_url_name(rel_model_name), args=[rel_model_name]),
+                                               attrs={'data-html ': True} if rel_model_name=='Element' else {})
+
     return widgets
 
 # lazily retrieve field meta data from ArtefactFormDescription at module load time

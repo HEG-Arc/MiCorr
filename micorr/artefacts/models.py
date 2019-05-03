@@ -30,7 +30,7 @@ class Element(TimeStampedModel):
     number = models.IntegerField(blank=False, null=False, help_text='Atomic number of the element')
 
     def __str__(self):
-        return '{} {}'.format(self.symbol, self.name)
+        return self.symbol
 
 
 @python_2_unicode_compatible

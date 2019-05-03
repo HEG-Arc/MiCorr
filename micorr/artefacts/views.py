@@ -1984,7 +1984,14 @@ class OriginAutoComplete(GenericAutoComplete):
     def filter_queryset(self, qs):
         return qs.filter(Q(site__icontains=self.q)|Q(city__name__icontains=self.q)|Q(city__country__name__icontains=self.q))
 
+
 class ElementAutoCompleteFromList(GenericAutoComplete):
 
     def filter_queryset(self, qs):
-        return qs.filter(Q(symbol__icontains=self.q)|Q(name__icontains=self.q))
+        return qs.filter(Q(symbol__icontains=self.q) | Q(name__icontains=self.q))
+
+    def get_result_label(self, result):
+        return '{} {}'.format(result.symbol, result.name)
+
+    def get_selected_result_label(self, result):
+        return str(result)

@@ -35,6 +35,7 @@ DJANGO_APPS = (
     # 'django.contrib.humanize',
     'dal',
     'dal_select2',
+    'dal_legacy_static',
     # Admin
     'django.contrib.admin',
 )
