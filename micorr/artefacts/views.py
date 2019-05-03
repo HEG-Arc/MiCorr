@@ -335,15 +335,6 @@ def newMicrostructure(request):
     return handlePopAdd(request, MicrostructureCreateForm, 'microstructure')
 
 
-@login_required
-def newMetal1(request):
-    return handlePopAdd(request, MetalCreateForm, 'metal1', 'metal')
-
-
-@login_required
-def newMetalX(request):
-    return handlePopAdd(request, MetalCreateForm, 'metalx', 'metal')
-
 
 @login_required
 def newCorrosionForm(request):
@@ -1561,8 +1552,6 @@ class PublicationCreateView(generic.CreateView):
         artefact = get_object_or_404(Artefact, pk=self.kwargs['pk'])
         sections = artefact.section_set.all()
         documents = artefact.document_set.all()
-        authors = artefact.author.all()
-        metX = artefact.metalx.all()
         childArtefacts = Artefact.objects.filter(parent_id=artefact.id).order_by('-modified')
         newArtefact = childArtefacts[0]
 
@@ -1581,11 +1570,10 @@ class PublicationCreateView(generic.CreateView):
                 stratigraphy.section = section
                 stratigraphy.save()
 
-        for auth in authors :
-            newArtefact.author.add(auth)
-
-        for met in metX :
-            newArtefact.metalx.add(met)
+        if artefact.author.exists():
+            newArtefact.author.add(*artefact.author)
+        if artefact.metal_e_x.exists():
+            newArtefact.metal_e_x.add(*artefact.metal_e_x)
 
         for document in documents :
             document.pk = None

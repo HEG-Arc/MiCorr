@@ -59,7 +59,7 @@
               </tr>
               {% for artefact in results %}
                   <tr onmouseover="this.style.cursor='pointer'" onclick="document.location = '{% url 'artefacts:artefact-detail' artefact.pk %}'">
-                      <td>{{ artefact.metal1|default:"" }}</td>
+                      <td>{{ artefact.metal_e_1|default:"" }}</td>
                       <td>{{ artefact.alloy|default:"" }}</td>
                       <td>{{ artefact.type|default:"" }}</td>
                       <td>{{ artefact.object.name|default:"" }}</td>

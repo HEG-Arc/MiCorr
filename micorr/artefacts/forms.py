@@ -12,7 +12,7 @@ from users.models import User
 from .models import Artefact, Document, Metal, CorrosionForm, CorrosionType, Environment, Object, Origin, \
     ChronologyPeriod, \
     Alloy, Technology, Microstructure, RecoveringDate, Image, Type, Stratigraphy, Token, Collaboration_comment, \
-    Publication, ArtefactFormDescription
+    Publication, ArtefactFormDescription, Element
 from cities_light.models import Country, City
 from dal import autocomplete
 from tinymce.widgets import TinyMCE
@@ -144,8 +144,6 @@ class ArtefactsForm(FieldsetForm):
                 "title": None,
                 "is_fieldset": True,
                 "fields": ['microstructure',
-                           'metal1',
-                           'metalx',
                            'metal_e_1',
                            'metal_e_x']
             },
@@ -374,8 +372,8 @@ class ArtefactFilter(django_filters.FilterSet):
     """
     origin__city__country = django_filters.ModelChoiceFilter(label='Country', queryset=Country.objects.filter(
         id__in=Artefact.objects.values_list("origin__city__country").distinct()), empty_label='All Countries')
-    metal1 = django_filters.ModelChoiceFilter(label='Metal Family', queryset=Metal.objects.filter(
-        id__in=Artefact.objects.values_list("metal1").distinct()), empty_label='All Metal Families')
+    metal_e_1 = django_filters.ModelChoiceFilter(label='Metal Family', queryset=Element.objects.filter(
+        id__in=Artefact.objects.values_list("metal_e_1").distinct()), empty_label='All Metal Families')
     corrosion_form = django_filters.ModelChoiceFilter(label='Corrosion Forms', queryset=CorrosionForm.objects.filter(
         id__in=Artefact.objects.values_list("corrosion_form")), empty_label='All Corrosion Forms')
     environment = django_filters.ModelChoiceFilter(label='Environment', queryset=Environment.objects.all(),
@@ -383,7 +381,7 @@ class ArtefactFilter(django_filters.FilterSet):
 
     class Meta:
         model = Artefact
-        fields = ['origin__city__country', 'metal1', 'corrosion_form', 'environment']
+        fields = ['origin__city__country', 'metal_e_1', 'corrosion_form', 'environment']
 
 
 class ContactAuthorForm(forms.Form):

@@ -13,8 +13,8 @@ class ArtefactIndex(indexes.SearchIndex, indexes.Indexable):
     date_aim_sampling = indexes.CharField(model_attr='date_aim_sampling')
 
     # Foreign Keys
-    metal1 = indexes.CharField(model_attr='metal1')
-    metalx = indexes.CharField(model_attr='metalx')
+    metal_e_1 = indexes.CharField(model_attr='metal_e_1')
+    metal_e_x = indexes.CharField(model_attr='metal_e_x')
     alloy = indexes.CharField(model_attr='alloy')
     type = indexes.CharField(model_attr='type')
     origin = indexes.CharField(model_attr='origin')

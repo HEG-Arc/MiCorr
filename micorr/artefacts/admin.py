@@ -34,7 +34,7 @@ class ArtefactAdmin(admin.ModelAdmin):
             'fields': ['description', 'inventory_number', 'recorded_conservation_data',
                        'sample_description', 'sample_number', 'date_aim_sampling','chronology_tpq','chronology_taq','chronology_comment']}),
         ('Foreign keys', {
-            'fields': ['author', 'metal1', 'metalx', 'alloy', 'type', 'origin', 'recovering_date', 'chronology_category',
+            'fields': ['author', 'metal_e_1', 'metal_e_x', 'alloy', 'type', 'origin', 'recovering_date', 'chronology_category',
                        'environment', 'location', 'owner', 'technology', 'sample_location',
                        'responsible_institution', 'microstructure', 'corrosion_form', 'corrosion_type', 'object']})
     ]

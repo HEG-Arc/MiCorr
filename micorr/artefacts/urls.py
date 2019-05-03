@@ -31,8 +31,6 @@ urlpatterns = [
     url(r'^add/sample_location/?$', artefacts_views.newSampleLocation),
     url(r'^add/responsible_institution/?$', artefacts_views.newResponsibleInstitution),
     url(r'^add/microstructure/?$', artefacts_views.newMicrostructure),
-    url(r'^add/metal1/?$', artefacts_views.newMetal1),
-    url(r'^add/metalx/?$', artefacts_views.newMetalX),
     url(r'^add/corrosion_form/?$', artefacts_views.newCorrosionForm),
     url(r'^add/corrosion_type/?$', artefacts_views.newCorrosionType),
 
