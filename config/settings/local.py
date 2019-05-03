@@ -72,8 +72,15 @@ ALLOWED_HOSTS = env.list('DJANGO_ALLOWED_HOSTS', default=['django','localhost','
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose'
+        }
+    },
     'root': {
-        'level': 'INFO',
+        'level': 'WARNING',
         'handlers': ['console'],
     },
     'formatters': {
@@ -82,29 +89,15 @@ LOGGING = {
                       '%(process)d %(thread)d %(message)s'
         },
     },
-    'handlers': {
-        'console': {
-            'level': 'DEBUG',
-            'class': 'logging.StreamHandler',
-            'formatter': 'verbose'
-        }
-    },
     'loggers': {
-        '': {
-            'handlers': ['console'],
-            'level': 'DEBUG',
-            'propagate': True
-        },
         'django': {
             'level': 'INFO',
-            'handlers': ['console'],
-            'propagate': False,
         },
-
         'django.security.DisallowedHost': {
             'level': 'ERROR',
-            'handlers': ['console'],
-            'propagate': False,
         },
+        'stratigraphies.neo4jdao': {
+            'level': 'WARNING',
+        }
     },
 }
