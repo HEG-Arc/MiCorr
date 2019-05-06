@@ -33,21 +33,6 @@ class Element(TimeStampedModel):
         return self.symbol
 
 
-@python_2_unicode_compatible
-class Metal(TimeStampedModel):
-    """
-    A metal is made of one element
-    """
-    element = models.CharField(max_length=2, blank=True, help_text='An element which is part of the artefact composition')
-
-    class Meta:
-        ordering = ['element']
-        verbose_name = 'Metal'
-        verbose_name_plural = 'Metals'
-
-    def __str__(self):
-        return self.element
-
 
 @python_2_unicode_compatible
 class Alloy(TimeStampedModel):

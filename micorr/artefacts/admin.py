@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.urls import reverse
 from django.utils.html import format_html
 
-from .models import Metal, Alloy, Type, Origin, RecoveringDate, ChronologyCategory, ChronologyPeriod, Environment, \
+from .models import Alloy, Type, Origin, RecoveringDate, ChronologyCategory, ChronologyPeriod, Environment, \
     Technology, Microstructure, CorrosionForm, CorrosionType, Artefact, SectionCategory, Section, Image, \
     Document, Stratigraphy, Object, Publication, Collaboration_comment
 
@@ -130,7 +130,6 @@ class ObjectAdmin(admin.ModelAdmin):
 class PublicationAdmin(admin.ModelAdmin):
     list_display = ('id', 'user')
 
-admin.site.register(Metal)
 admin.site.register(Alloy, AlloyAdmin)
 admin.site.register(Type)
 admin.site.register(Origin)

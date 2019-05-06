@@ -9,7 +9,7 @@ from django.db import connection
 
 from users.models import User
 
-from .models import Artefact, Document, Metal, CorrosionForm, CorrosionType, Environment, Object, Origin, \
+from .models import Artefact, Document, CorrosionForm, CorrosionType, Environment, Object, Origin, \
     ChronologyPeriod, \
     Alloy, Technology, Microstructure, RecoveringDate, Image, Type, Stratigraphy, Token, Collaboration_comment, \
     Publication, ArtefactFormDescription, Element
@@ -65,7 +65,6 @@ def get_updated_widgets(widgets, model_class, fields):
             'RecoveringDate': 'artefacts:date-autocomplete',
             'CorrosionType': 'artefacts:type-autocomplete',
             'CorrosionForm': 'artefacts:form-autocomplete',
-            'Metal': 'artefacts:metal-autocomplete',
             'Element': 'artefacts:element-autocomplete',
             'Contact':'artefacts:contact-autocomplete',
             'Origin':'artefacts:origin-autocomplete'
@@ -306,15 +305,6 @@ class MicrostructureCreateForm(forms.ModelForm):
         model = Microstructure
         exclude = []
 
-
-class MetalCreateForm(forms.ModelForm):
-    """
-    Create a new metal
-    """
-
-    class Meta:
-        model = Metal
-        exclude = []
 
 
 class CorrosionFormCreateForm(forms.ModelForm):
