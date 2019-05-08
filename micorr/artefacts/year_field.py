@@ -73,3 +73,15 @@ class YearField(models.IntegerField):
         defaults = {'form_class': SplitYearField}
         defaults.update(kwargs)
         return super(YearField, self).formfield(**defaults)
+
+    def render_readonly_widget(self, attribute, value):
+        """
+        render the field's widget in readonly for displaying value outside of form
+        :param attribute:
+        :param value:
+        :return: html rendering
+        """
+        widget = self.formfield().widget
+        widget.attrs.update(disabled='disabled', readonly='readonly')
+        return widget.render(attribute, value)
+

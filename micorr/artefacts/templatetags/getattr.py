@@ -29,4 +29,10 @@ def getattr (obj, args):
     if hasattr(value, 'all'):
         value = ', '.join([str(e) for e in value.all()])
 
+    # using custom formfield widget for readonly rendering in detail view
+    if hasattr(obj,'_meta'):
+        field = obj._meta.get_field(attribute)
+        if hasattr(field, 'render_readonly_widget'):
+            value = field.render_readonly_widget(attribute, value)
+
     return value
