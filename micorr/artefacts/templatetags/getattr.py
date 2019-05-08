@@ -16,8 +16,17 @@ def getattr (obj, args):
     else:
         (attribute, default) = args, ''
     try:
-        return obj.__getattribute__(attribute)
+        value = obj.__getattribute__(attribute)
     except AttributeError:
-         return  obj.__dict__.get(attribute, default)
+         value =  obj.__dict__.get(attribute, default)
     except:
-        return default
+        value = default
+
+    # handling ManyToManyField case (django.db.models.fields.related_descriptors.ManyRelatedManager)
+    # ManyRelatedManager is a private class defined inside create_forward_many_to_many_manager()
+    # we can't use isinstance to identify ManyToMany field
+    # so we use duck types instead
+    if hasattr(value, 'all'):
+        value = ', '.join([str(e) for e in value.all()])
+
+    return value
