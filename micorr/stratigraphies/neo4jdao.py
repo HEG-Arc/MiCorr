@@ -680,7 +680,7 @@ class Neo4jDAO:
                 line['node_base_url'] = node_base_url
 
                 line['artefact_id'] = published_artefact.pk
-                line['artefact_metal_e_1'] = published_artefact.metal_e_1.element
+                line['artefact_metal_e_1'] = published_artefact.metal_e_1.symbol
                 line['artefact_alloy'] = published_artefact.alloy.name
                 line['artefact_type'] = published_artefact.type.name
                 line['artefact_chronology_category'] = published_artefact.chronology_category.name
