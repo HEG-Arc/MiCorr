@@ -4,7 +4,8 @@
  * et redirige les requêtes au bon service Node.js
  */
 var http = require('http');
-var dispatcher = require('httpdispatcher');
+var HttpDispatcher = require('httpdispatcher');
+var dispatcher     = new HttpDispatcher();
 var url = require('url');
 var querystring = require('querystring');
 
