@@ -133,7 +133,7 @@ LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'root': {
-        'level': 'INFO',
+        'level': 'WARNING',
         'handlers': ['sentry','console'],
     },
     'formatters': {
@@ -154,15 +154,8 @@ LOGGING = {
         }
     },
     'loggers': {
-        '': {
+       'django': {
             'level': 'INFO',
-            'handlers': ['console','sentry'],
-            'propagate': True,
-        },
-        'django': {
-            'level': 'INFO',
-            'handlers': ['console','sentry'],
-            'propagate': False,
         },
         'raven': {
             'level': 'DEBUG',
@@ -176,8 +169,6 @@ LOGGING = {
         },
         'django.security.DisallowedHost': {
             'level': 'ERROR',
-            'handlers': ['console', 'sentry'],
-            'propagate': False,
         },
     },
 }
