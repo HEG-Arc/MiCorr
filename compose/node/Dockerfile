@@ -1,11 +1,11 @@
-FROM node:8.10.0-stretch
+FROM node:10.15.3-stretch
 
 EXPOSE 8080
 
 # we must use at least inkscape 0.91 for svg export (default stretch version is now ok)
 RUN apt-get update && apt-get install -y inkscape
 RUN mkdir -p /app/dist
-RUN npm install -g forever@0.15.3
+RUN npm install -g forever@1.0.0
 
 WORKDIR /app
 COPY package.json /app/

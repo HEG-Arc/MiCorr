@@ -1,6 +1,6 @@
 # Here we use multi-stage build https://docs.docker.com/develop/develop-images/multistage-build/#use-multi-stage-builds
 # to avoid adding node and build-time dependencies to final django image
-FROM node:8.10.0-stretch as webpackbuilder
+FROM node:10.15.3-stretch as webpackbuilder
 
 RUN mkdir -p /app/micorr/stratigraphies/ngapp
 RUN mkdir -p /app/micorr/stratigraphies/static/micorr/dist
