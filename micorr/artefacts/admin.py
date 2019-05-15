@@ -69,7 +69,7 @@ class ArtefactInline(admin.StackedInline):
     model = Artefact
     extra = 0
     fieldsets = [
-        ('Own fields', {'fields': ['id','validated','published']}),
+        ('Own fields', {'fields': ['id','validated','published','chronology_tpq','chronology_taq','chronology_comment']}),
         ('Foreign keys', {
             'fields': ['object', 'type', 'origin', 'author', 'chronology_category']})
     ]
