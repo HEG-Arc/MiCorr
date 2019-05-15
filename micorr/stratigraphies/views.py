@@ -67,9 +67,7 @@ def stratigraphyExists(request, stratigraphy):
 # @ params
 def getStratigraphyByArtefact(request, artefact):
     ms = micorrservice.MiCorrService()
-    strats = {'strats' : []}
-    for strat in ms.getStratigraphyByArtefact(artefact):
-        strats['strats'].append({'name' : strat.name, 'description' : strat.description})
+    strats = {'strats' : ms.getStratigraphyByArtefact(artefact)}
     return HttpResponse(json.dumps(strats), content_type='application/json')
 
 
@@ -92,9 +90,7 @@ def sendEmail(request):
 # @ params
 def getallartefacts(request):
     ms = micorrservice.MiCorrService()
-    artefacts = {'artefacts' : []}
-    for artefact in ms.getAllArtefacts():
-        artefacts['artefacts'].append({'name' : artefact.name})
+    artefacts = {'artefacts' : ms.getAllArtefacts()}
     return HttpResponse(json.dumps(artefacts), content_type='application/json')
 
 
@@ -126,7 +122,7 @@ def delete_stratigraphy_user(request, stratigraphy):
     if user_id:
         if user_id == request.user.id:
             # We remove the property
-            msg = ms.delStratigraphyUser(stratigraphy)
+            ms.delStratigraphyUser(stratigraphy)
             messages.success(request, 'The stratigraphy was deleted!')
             return redirect('users:detail', request.user.username)
     messages.warning(request, 'Unable to delete the stratigraphy!')
