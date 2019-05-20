@@ -2,84 +2,79 @@ from .neo4jdao import Neo4jDAO
 
 
 class MiCorrService:
-    db = None
 
     def __init__(self):
-        if not MiCorrService.db:
-            MiCorrService.db = Neo4jDAO()
+        self.db = Neo4jDAO()
 
     def getStratigraphyUser(self, stratigraphy):
-        MiCorrService.db.begin()
-        return MiCorrService.db.getStratigraphyUser(stratigraphy)
+        with self.db.transaction():
+            return self.db.getStratigraphyUser(stratigraphy)
 
     def setStratigraphyUser(self, stratigraphy, user_id):
-        MiCorrService.db.begin()
-        return MiCorrService.db.setStratigraphyUser(stratigraphy, user_id)
+        with self.db.transaction():
+            return self.db.setStratigraphyUser(stratigraphy, user_id)
 
     def delStratigraphyUser(self, stratigraphy):
-        MiCorrService.db.begin()
-        return MiCorrService.db.delStratigraphyUser(stratigraphy)
+        with self.db.transaction():
+            return self.db.delStratigraphyUser(stratigraphy)
 
     def updateStratigraphyDescription(self, stratigraphy, description):
-        MiCorrService.db.begin()
-        return MiCorrService.db.updateStratigraphyDescription(stratigraphy, description)
+        with self.db.transaction():
+            return self.db.updateStratigraphyDescription(stratigraphy, description)
 
     def getAllArtefacts(self):
-        MiCorrService.db.begin()
-        return MiCorrService.db.getAllArtefacts()
+        with self.db.transaction():
+            return self.db.getAllArtefacts()
 
     def getStratigraphyByArtefact(self, artefact):
-        MiCorrService.db.begin()
-        return MiCorrService.db.getStratigraphyByArtefact(artefact)
+        with self.db.transaction():
+            return self.db.getStratigraphyByArtefact(artefact)
 
     def stratigraphyExists(self, stratigraphy):
-        MiCorrService.db.begin()
-        return MiCorrService.db.stratigraphyExists(stratigraphy)
+        with self.db.transaction():
+            return self.db.stratigraphyExists(stratigraphy)
 
     def addStratigraphy(self, artefact, stratigraphy):
-        MiCorrService.db.begin()
-        ret = MiCorrService.db.addStratigraphy(artefact, stratigraphy)
-        MiCorrService.db.commit()
-        return ret
+        with self.db.transaction():
+            return self.db.addStratigraphy(artefact, stratigraphy)
+
 
     def getAllCharacteristic(self):
-        MiCorrService.db.begin()
-        return MiCorrService.db.getAllCharacteristic()
+        with self.db.transaction():
+            return self.db.getAllCharacteristic()
 
     def getStratigraphyDetails(self, stratigraphy):
-        MiCorrService.db.begin()
-        return MiCorrService.db.getStratigraphyDetails(stratigraphy)
+        with self.db.transaction():
+            return self.db.getStratigraphyDetails(stratigraphy)
+
+    def getStratigraphiesByUser(self, user_id, order_by='description'):
+        with self.db.transaction():
+            return self.db.getStratigraphiesByUser(user_id,order_by)
 
     def save(self, data):
-        MiCorrService.db.begin()
-        ret = MiCorrService.db.save(data)
-        MiCorrService.db.commit()
-        return ret
+        with self.db.transaction():
+            return self.db.save(data)
 
     def match(self, data):
-        MiCorrService.db.begin()
-        return MiCorrService.db.match(data)
+        with self.db.transaction():
+            return self.db.match(data)
 
     def deleteStratigrapy(self, stratigraphy):
-        MiCorrService.db.begin()
-        MiCorrService.db.deleteAllStrataFromAStratigraphy(stratigraphy)
-        ret = MiCorrService.db.deleteStratigraphy(stratigraphy)
-        MiCorrService.db.commit()
-        return ret
+        with self.db.transaction():
+            self.db.deleteAllStrataFromAStratigraphy(stratigraphy)
+            return self.db.deleteStratigraphy(stratigraphy)
 
     def addArtefact(self, artefact):
-        MiCorrService.db.begin()
-        return MiCorrService.db.addArtefact(artefact)
+        with self.db.transaction():
+            return self.db.addArtefact(artefact)
 
     def delArtefact(self, artefact):
-        MiCorrService.db.begin()
-        ret = MiCorrService.db.delArtefact(artefact)
-        MiCorrService.db.commit()
-        return ret
+        with self.db.transaction():
+            return self.db.delArtefact(artefact)
 
     def test(self):
-        return MiCorrService.db.test()
+        return self.db.test()
 
     def getnaturefamily(self, nature):
-        MiCorrService.db.begin()
-        return MiCorrService.db.getnaturefamily(nature)
+        with self.db.transaction():
+            return self.db.getnaturefamily(nature)

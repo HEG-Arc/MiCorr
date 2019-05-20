@@ -11,7 +11,7 @@ from django.views import generic
 from django.conf import settings
 
 from artefacts.models import Collaboration_comment, Publication, Token, Stratigraphy
-from stratigraphies.neo4jdao import Neo4jDAO
+from stratigraphies.micorrservice import MiCorrService
 
 from django.contrib.contenttypes.models import ContentType
 from users.models import User
@@ -28,7 +28,7 @@ class UserDetailView(LoginRequiredMixin, generic.DetailView):
         # Add the stratigraphies of the user
         stratigraphy_order_by=self.request.GET.get('stratigraphy_order_by', 'description')
         artefact_order_by=self.request.GET.get('artefact_order_by', 'name')
-        stratigraphies = Neo4jDAO().getStratigraphiesByUser(self.request.user.id,stratigraphy_order_by)
+        stratigraphies = MiCorrService().getStratigraphiesByUser(self.request.user.id,stratigraphy_order_by)
         # Add stratigraphy information from django model
         pg_stratigraphies = Stratigraphy.objects.filter(uid__in=[s['uid'] for s in stratigraphies])
         for i, s in enumerate(stratigraphies):

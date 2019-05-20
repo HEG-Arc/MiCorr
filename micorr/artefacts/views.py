@@ -21,7 +21,7 @@ from django.http import Http404
 from tinymce.widgets import TinyMCE
 
 from contacts.forms import ContactCreateForm
-from stratigraphies.neo4jdao import Neo4jDAO
+from stratigraphies.micorrservice import MiCorrService
 from users.models import User
 
 from .forms import ArtefactsForm, ArtefactsCreateForm, DocumentUpdateForm, DocumentCreateForm, ArtefactFilter, \
@@ -89,8 +89,7 @@ def displayOntology(request):
 
 
 def searchStratigraphy(self):
-    neo = Neo4jDAO()
-    stratigraphy = Neo4jDAO.addStratigraphy(neo, "Search", "search")
+    stratigraphy = MiCorrService().addStratigraphy("Search", "search")
     if stratigraphy:
         return redirect("/micorr/#/stratigraphy/" + stratigraphy)
 
@@ -608,7 +607,7 @@ def RefreshDivView(request, section_id):
 
 
 def StratigraphyListView(request, section_id):
-    stratigraphies = Neo4jDAO().getStratigraphiesByUser(request.user.id)
+    stratigraphies = MiCorrService().getStratigraphiesByUser(request.user.id)
     return render(request, 'artefacts/stratigraphies_list.html', {'node_base_url': settings.NODE_BASE_URL, 'stratigraphies': stratigraphies, 'section_id': section_id})
 
 
