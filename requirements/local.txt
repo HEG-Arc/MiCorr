@@ -5,6 +5,11 @@
 django-debug-toolbar==1.11
 werkzeug==0.15.2
 
+#test dependencies
+django-test-plus==1.2.0
+jsoncompare==0.1.2
+deepdiff==3.3.0
+
 ### unused for now
 # test coverage
 #coverage==4.5.3

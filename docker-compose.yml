@@ -24,10 +24,10 @@ services:
 
     env_file: .env.neo4j #for setting NEO4J_AUTH var in user/password format
     environment:
-      - NEO4J_dbms_allowFormatMigration=true
       - NEO4J_dbms_allow__upgrade=true
       - NEO4J_dbms_memory_heap_initial__size=1024M
       - NEO4J_dbms_memory_heap_max__size=1024M
+      - NEO4J_ULIMIT_NOFILE=60000
       # to load initial data in neo4j graph.db
       # copy a neo4j-admin dump file to compose/neo4j/initial_neo4j-admin.dump
       # remove it on subsequent builds to avoid overriding data
