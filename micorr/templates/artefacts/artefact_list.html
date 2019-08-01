@@ -22,9 +22,12 @@
           <div class="row">
               <form action="." method="get">
                   <div class="c6">
-                      <h3 class="underline">Search by keywords</h3>
+                      <h3 class="underline">Search by fields</h3>
+{% comment %}
+disabled until improvement
                       <p>{{ search.q }}</p>
                       <br/>
+{% endcomment %}
                       {% crispy filter.form %}
                       <div class="line">
                           <button type="submit" class="btn btn-primary btn-lg">Search database <span class="glyphicon glyphicon-search faded"></span></button>
