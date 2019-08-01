@@ -1571,9 +1571,9 @@ class PublicationCreateView(generic.CreateView):
                 stratigraphy.save()
 
         if artefact.author.exists():
-            newArtefact.author.add(*artefact.author)
+            newArtefact.author.add(*artefact.author.all())
         if artefact.metal_e_x.exists():
-            newArtefact.metal_e_x.add(*artefact.metal_e_x)
+            newArtefact.metal_e_x.add(*artefact.metal_e_x.all())
 
         for document in documents :
             document.pk = None
