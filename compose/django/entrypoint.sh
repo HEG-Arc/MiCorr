@@ -22,7 +22,8 @@ import sys
 import psycopg2
 try:
     conn = psycopg2.connect(dbname="$POSTGRES_USER", user="$POSTGRES_USER", password="$POSTGRES_PASSWORD", host="postgres")
-except psycopg2.OperationalError:
+except psycopg2.OperationalError as e:
+    print(e)
     sys.exit(-1)
 sys.exit(0)
 END
