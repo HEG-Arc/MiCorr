@@ -22,7 +22,7 @@
           <div class="row">
               <form action="." method="get">
                   <div class="c6">
-                      <h3 class="underline">Search by keywords</h3>
+                      <h3 class="underline">by keywords</h3>
                       <p>{{ search.q }}</p>
                       <br/>
                       {% crispy filter.form %}
@@ -32,7 +32,7 @@
                   </div>
               </form>
               <div class="c6">
-                  <h3 class="underline">Search by stratigraphy representation</h3>
+                  <h3 class="underline">by stratigraphy representation</h3>
                   <a href="{% url 'artefacts:searchStratigraphy' %}"><img src="{% static 'pics/stratigraphy.png' %}" class="img-responsive"></a>
               </div>
           </div>
