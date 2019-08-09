@@ -31,6 +31,10 @@ services:
     ports:
       - "7474:7474"
       - "7687:7687"
+  elasticsearch:
+    image: blacktop/elasticsearch:2.4
+    ports:
+      - "9200:9200"
 
   django:
     build:
@@ -42,6 +46,7 @@ services:
 #      - neo4j
     environment:
       - POSTGRES_USER=micorr
+      - POSTGRES_PASSWORD=mysecretpass
       - USE_DOCKER=yes
       - PYTHONPATH=/app:/app/micorr
       - NEO4J_URL=http://neo4j:secret@localhost:7474/db/data/

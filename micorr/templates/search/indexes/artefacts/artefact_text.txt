@@ -1,0 +1,8 @@
+{{ object.metal_e_1}}
+{{ object.alloy}}
+{{ object.type}}
+{{ object.object.name}}
+{{ object.origin}}
+{{object.chronology_category.name}}
+{{object.technology}}
+{{object.location}}

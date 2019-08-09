@@ -36,6 +36,11 @@ services:
       - "7474:7474"
       - "7687:7687"
 
+  elasticsearch:
+    # we use non official elasticsearch image as elasticsearch only provides docker images version >6.8.2
+    # and haystack is not compatible with elasticsearch >2.4
+    image: blacktop/elasticsearch:2.4
+
   django:
     build:
       context: .

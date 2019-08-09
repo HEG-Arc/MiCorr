@@ -286,9 +286,14 @@ ADMIN_URL = r'^admin/'
 # Your common stuff: Below this line define 3rd party library settings
 HAYSTACK_CONNECTIONS = {
     'default': {
-        'ENGINE': 'haystack.backends.simple_backend.SimpleEngine',
+        'ENGINE': 'haystack.backends.elasticsearch2_backend.Elasticsearch2SearchEngine',
+        'URL': 'http://elasticsearch:9200/',
+        'INDEX_NAME': 'haystack',
+        #'ENGINE': 'haystack.backends.simple_backend.SimpleEngine',
     },
 }
+# cause haystack/elasticsearch index to be updated in realtime (inside request/response cycle) on indexed model save/delete
+HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
 
 NODE_BASE_URL = env('NODE_BASE_URL', default='http://node:8080/')
 
