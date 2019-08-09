@@ -99,8 +99,8 @@ class ArtefactsListView(generic.ListView):
     """
     A list of all the artefacts in the filter
     """
-    queryset = Artefact.objects.select_related('alloy', 'type', 'chronology_category', 'technology',
-                                               'microstructure')
+    queryset = Artefact.objects.filter(published=True).select_related('metal_e_1','alloy', 'type', 'object','origin__city','origin__city__region','origin__city__country',
+                                               'chronology_category', 'technology','location__city','location__region')
 
     def get(self, request, *args, **kwargs):
         """
@@ -108,19 +108,17 @@ class ArtefactsListView(generic.ListView):
         The user can make a full text search and/or a filter-based search
         """
         artefactssearch = SearchForm(request.GET)
-        artefactsfilter = ArtefactFilter(request.GET)
+        artefactsfilter = ArtefactFilter(request.GET, queryset=self.queryset)
         searchresults = artefactssearch.search()
-        filtered_artefacts_list = []
-        if request.GET.get('q'):
-            for artefact in searchresults:
-                if artefact.object in artefactsfilter.qs:
-                    filtered_artefacts_list.append(artefact.object)
+        # only return result on form submit not default get
+        if request.GET:
+            results = artefactsfilter.qs
+            if request.GET.get('q'):
+                results = results.filter(pk__in=[r.pk for r in searchresults])
         else:
-            for artefact in artefactsfilter.qs:
-                if artefact.published :
-                    filtered_artefacts_list.append(artefact)
+            results = None
         return render(request, "artefacts/artefact_list.html",
-                      {'search': artefactssearch, 'results': filtered_artefacts_list, 'filter': artefactsfilter,
+                      {'search': artefactssearch, 'results': results, 'filter': artefactsfilter,
                        'self': self, 'node_base_url': settings.NODE_BASE_URL})
 
 def get_section_groups(artefact, form, formObject):
