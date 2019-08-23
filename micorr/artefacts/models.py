@@ -444,6 +444,8 @@ class Image(TimeStampedModel):
     section = models.ForeignKey(Section, blank=True, null=True, help_text='The corresponding section')
     image = models.ImageField(upload_to=get_img_storage_path, blank=True, null=True, help_text='The image file')
     legend = models.CharField(max_length=500, blank=True, help_text='The image description')
+    credit = models.CharField(max_length=200, blank=True, help_text='Identifies the copyright holder of the image')
+    credit_url = models.CharField(max_length=500, blank=True, help_text='Optional URL associated with the credit line')
     order = models.IntegerField(blank=True, null=True, help_text='The order of an image for a given section')
 
     class Meta:
