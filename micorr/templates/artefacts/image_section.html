@@ -1,8 +1,16 @@
 {% for image in object_section.image_set.all %}
   <div class="row">
-    <div class="c6">
-      <a href="{{ image.image.url }}" class="image-popup"><img src="{{ image.image.url }}" class="img-responsive"></a>
-    </div>
+      <div class="c6">
+          <a href="{{ image.image.url }}" class="image-popup"><img src="{{ image.image.url }}" class="img-responsive"></a>
+          {% if image.credit_url %}
+              <i>credit:</i>
+              <a href="{{ image.credit_url  | safe }}" target="_blank">
+                  <i>{{ image.credit | safe }}</i>
+              </a>
+          {% else %}
+              <i>credit: {{ image.credit | safe }}</i>
+          {% endif %}
+      </div>
     <div class="c6">
       <p>
           {{ image.legend | safe }}
