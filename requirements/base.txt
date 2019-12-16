@@ -59,6 +59,8 @@ django-autocomplete-light==3.3.4
 django-filter==1.1.0 #1.1.0 is last python2 compatible version
 django-haystack==2.8.1
 lxml==4.3.3
+elasticsearch==2.4.1
+lxml==4.2.1
 django-terms==1.2.0
 django-robots==3.1.0
 py2neo==4.3

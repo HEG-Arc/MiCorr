@@ -32,6 +32,10 @@ services:
     ports:
       - "7474:7474"
       - "7687:7687"
+  elasticsearch:
+    image: blacktop/elasticsearch:2.4
+    ports:
+      - "9200:9200"
 
   django:
     build:

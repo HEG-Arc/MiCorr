@@ -22,7 +22,7 @@
           <div class="row">
               <form action="." method="get">
                   <div class="c6">
-                      <h3 class="underline">Search by keywords</h3>
+                      <h3 class="underline">by keywords</h3>
                       <p>{{ search.q }}</p>
                       <br/>
                       {% crispy filter.form %}
@@ -32,12 +32,12 @@
                   </div>
               </form>
               <div class="c6">
-                  <h3 class="underline">Search by stratigraphy representation</h3>
+                  <h3 class="underline">by stratigraphy representation</h3>
                   <a href="{% url 'artefacts:searchStratigraphy' %}"><img src="{% static 'pics/stratigraphy.png' %}" class="img-responsive"></a>
               </div>
           </div>
       </div>
-
+{% if request.GET %}
   <div class="row">
       <div class="line">
           <h1>Results</h1>
@@ -69,11 +69,12 @@
                       <td>{{ artefact.location|default:"" }}</td>
                   </tr>
               {% empty %}
-                  <tr><td colspan="5">No results found</td></tr>
+                  <tr><td colspan="8">No results found</td></tr>
               {% endfor %}
           </table>
       </div>
   </div>
+  {% endif %}
 
 <!--
   { if request.user.is_authenticated %}
