@@ -1,66 +1,28 @@
+{% extends "base_root.html" %}
+
+
 {% load static documents_tags %}
-<!DOCTYPE html>
+{% block html_tag %}
 <!--[if lt IE 7]> <html class="lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
 <!--[if IE 7]>    <html class="lt-ie9 lt-ie8" lang="en"> <![endif]-->
 <!--[if IE 8]> <html class="lt-ie9" lang="en"> <![endif]-->
-<!--[if gt IE 8]><!-->
-<html lang="en" class="slideshow"> <!--<![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en" class="slideshow"> <!--<![endif]-->
+{%  endblock html_tag %}
 
-<head>
-    <meta charset="utf-8">
-    <!-- Set the viewport width to device width for mobile -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>MiCorr</title>
-
-  <style type="text/css">
-      @font-face {
-          font-family: "Miso";
-          src: url("{% static 'fonts/Miso.woff' %}") format('woff');
-      }
-      @font-face {
-          font-family: "DIN Next Pro Light";
-          src: url("{% static 'fonts/DINNextLight.woff' %}") format('woff');
-      }
-      @font-face {
-          font-family: "DIN Next Pro Regular";
-          src: url("{% static 'fonts/DINNextRegular.woff' %}") format('woff');
-      }
-      @font-face {
-          font-family: "DIN Next Pro Medium";
-          src: url("{% static 'fonts/DINNextMedium.woff' %}") format('woff');
-      }
-  </style>
-
-    <style type="text/css">#mfPreviewBar {
-        display: none !important;
-    }</style>
-
-
-    <!-- IE Fix for HTML5 Tags -->
-    <!--[if lte IE 8]>
-    <link rel="stylesheet" href="stylesheets/mystyle.css" media="all">
-    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-
-  <![endif]-->
-    <!--[if gt IE 8]><!-->
-
-    <link rel="stylesheet" href="{% static 'stylesheets/mystyle.css' %}" media="all"><!---responsive-->
-
-    <!--<![endif]-->
-
-    <link rel="shortcut icon" href="{% static 'landing/img/favicon/favicon.ico' %}" type="image/x-icon"/>
-
-
-</head>
-<!-- body class="intro" -->
-
+{% block custom_header_script %}
+      <style type="text/css">#mfPreviewBar {
+          display: none !important;
+      }</style>
+{% endblock custom_header_script %}
+{% block body_tag %}
 <body class="slideshow">
-
+{% endblock %}
+{% block banner %}
 <div id="headlogo">
     <div class="container">
         <div class="row">
             <div class="w3">
-                <a href=""><img src="{% static 'stylesheets/logo-intro.png' %}" class="img-responsive" alt="logo"/></a>
+                <a href=""><img src="{% static 'pics/logo-intro.png' %}" class="img-responsive" alt="logo"/></a>
             </div>
         </div>
     </div>
@@ -87,6 +49,8 @@
         </div>
     </div>
 </div>
+{% endblock banner %}
+{% block content_container %}
 <!--  carrousel -->
 <div id="slideshow-container" class="fullh1 hidden-xs">
     <div class="fullh2">
@@ -431,29 +395,5 @@
         </div>
     </div>
 </div>
+{% endblock content_container %}
 
-<div id="footer">
-    <div class="container">
-        <div class="row">
-            <div class="c8 pre2 center">
-                <a href="/conditions-use">Conditions of use</a> | <a href="/contact/">Contact</a> | <a href="/privacy">Privacy</a> | <a href="/impressum">Impressum</a>
-
-            </div>
-            <div class="c2">
-                <img src="{% static 'stylesheets/logo-arc.png' %}" alt="" class="img-responsive">
-            </div>
-
-        </div>
-    </div>
-</div>
-
-<!-- script src="http://code.jquery.com/jquery-1.9.1.min.js"></script -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-<script src="{% static 'js/bootstrap.js' %}"></script>
-<script src="{% static 'js/MagnificPopup.min.js' %}"></script>
-<!--script src="js/jquery.sidr.min.js"></script-->
-<script src="{% static 'js/all-init.js' %}"></script>
-
-
-</body>
-</html>

@@ -1,0 +1,133 @@
+{% load static documents_tags %}
+<!DOCTYPE html>
+{% block html_tag %}
+<!--[if lt IE 7]> <html class="lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]> <html class="lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en"> <!--<![endif]-->
+{%  endblock html_tag %}
+
+<head>
+  <meta charset="utf-8">
+  <!-- Set the viewport width to device width for mobile -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  {% block title %}
+      <title>MiCorr</title>
+  {% endblock title %}
+
+  <style type="text/css">
+      @font-face {
+          font-family: "Miso";
+          src: url("{% static 'fonts/Miso.woff' %}") format('woff');
+      }
+      @font-face {
+          font-family: "DIN Next Pro Light";
+          src: url("{% static 'fonts/DINNextLight.woff' %}") format('woff');
+      }
+      @font-face {
+          font-family: "DIN Next Pro Regular";
+          src: url("{% static 'fonts/DINNextRegular.woff' %}") format('woff');
+      }
+      @font-face {
+          font-family: "DIN Next Pro Medium";
+          src: url("{% static 'fonts/DINNextMedium.woff' %}") format('woff');
+      }
+  </style>
+
+  {% block custom_header_script %}{% endblock custom_header_script %}
+
+  <!-- IE Fix for HTML5 Tags -->
+    <!--[if lte IE 8]>
+      <link rel="stylesheet" href="{% static 'stylesheets/mystyle.css' %}" media="all">
+      <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  <!--[if gt IE 8]><!-->
+    <link rel="stylesheet" href="{% static 'stylesheets/mystyle.css' %}" media="all"><!---responsive-->
+  <!--<![endif]-->
+
+  <link rel="shortcut icon" href="{% static 'landing/img/favicon/favicon.ico' %}" type="image/x-icon" />
+
+</head>
+<!-- body class="intro" -->
+
+{% block body_tag %}
+<body class="sticky-footer">
+{% endblock %}
+{% block banner %}
+  <div id="banner">
+    <div class="container">
+        {% block menu %}
+            {% get_site_root as site_root %}
+            {% top_menu parent=site_root calling_page=self %}
+        {% endblock menu %}
+    </div>
+  </div>
+{% endblock banner %}
+{% block content_container %}
+
+{% endblock %}
+
+
+{% block footer %}
+
+  <div id="footer">
+    <div class="container">
+      <div class="row">
+            <div class="c2">
+                <a href="https://www.interreg-francesuisse.eu" target="_blank"><img
+                        src="{% static 'pics/interreg_France-Suisse_RVB.jpg' %}"
+                        alt="Interreg France Suisse web site" class="img-responsive"></a>
+            </div>
+            <div class="c6 pre1 center">
+                <a href="/conditions-use">Conditions of use</a> | <a href="/contact/">Contact</a> | <a href="/privacy">Privacy</a>
+                | <a href="/impressum">Impressum</a>
+
+            </div>
+          <div class="c3">
+              <div class="row">
+                  <div class="c4">
+                      <a href="http://www.iramat-lmc.cnrs.fr/spip/" target="_blank"> <img
+                              src="{% static 'pics/Logo_IRAMAT_white.png' %}"
+                              alt="Laboratoire Métallurgies et Cultures web site" class="img-responsive"> </a>
+                  </div>
+                  <div class="c4">
+                      <a href="http://iramis.cea.fr/nimbe/lapa/index.php" target="_blank"> <img
+                              src="{% static 'pics/Logo_LAPA_white.png' %}"
+                              alt="Laboratoire archéomatériaux et prévision de l'altération web site"
+                              class="img-responsive"> </a>
+                  </div>
+                  <div class="c4">
+                      <a href="https://he-arc.ch" target="_blank"> <img src="{% static 'pics/logo-arc.png' %}"
+                                                                        alt="Haute Ecole Arc web site"
+                                                                        class="img-responsive"> </a>
+                  </div>
+              </div>
+          </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock footer %}
+
+  <!-- script src="http://code.jquery.com/jquery-1.9.1.min.js"></script -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="{% static 'js/bootstrap.min.js' %}"></script>
+  <script src="{% static 'js/bootstrap-auto-dismiss-alert.js' %}"></script>
+  <script src="{% static 'js/MagnificPopup.min.js' %}"></script>
+  <script src="{% static 'js/jinplace-1.2.1.min.js' %}"></script>
+  <!--script src="js/jquery.sidr.min.js"></script-->
+  <script src="{% static 'js/all-init.js' %}"></script>
+  <!-- Google Analytics is your evil friend -->
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-56549629-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+
+{% block custom_bottom_script %}{% endblock custom_bottom_script %}
+
+</body>
+</html>
