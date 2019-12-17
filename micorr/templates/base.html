@@ -1,63 +1,6 @@
-{% load static documents_tags %}
-<!DOCTYPE html>
-<!--[if lt IE 7]> <html class="lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
-<!--[if IE 7]>    <html class="lt-ie9 lt-ie8" lang="en"> <![endif]-->
-<!--[if IE 8]> <html class="lt-ie9" lang="en"> <![endif]-->
-<!--[if gt IE 8]><!--> <html lang="en"> <!--<![endif]-->
+{% extends "base_root.html" %}
 
-<head>
-  <meta charset="utf-8">
-  <!-- Set the viewport width to device width for mobile -->
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  {% block title %}
-      <title>MiCorr</title>
-  {% endblock title %}
-
-  <style type="text/css">
-      @font-face {
-          font-family: "Miso";
-          src: url("{% static 'fonts/Miso.woff' %}") format('woff');
-      }
-      @font-face {
-          font-family: "DIN Next Pro Light";
-          src: url("{% static 'fonts/DINNextLight.woff' %}") format('woff');
-      }
-      @font-face {
-          font-family: "DIN Next Pro Regular";
-          src: url("{% static 'fonts/DINNextRegular.woff' %}") format('woff');
-      }
-      @font-face {
-          font-family: "DIN Next Pro Medium";
-          src: url("{% static 'fonts/DINNextMedium.woff' %}") format('woff');
-      }
-  </style>
-
-  {% block custom_header_script %}{% endblock custom_header_script %}
-
-  <!-- IE Fix for HTML5 Tags -->
-    <!--[if lte IE 8]>
-      <link rel="stylesheet" href="{% static 'stylesheets/mystyle.css' %}" media="all">
-      <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-  <!--[if gt IE 8]><!-->
-    <link rel="stylesheet" href="{% static 'stylesheets/mystyle.css' %}" media="all"><!---responsive-->
-  <!--<![endif]-->
-
-  <link rel="shortcut icon" href="{% static 'landing/img/favicon/favicon.ico' %}" type="image/x-icon" />
-
-</head>
-<!-- body class="intro" -->
-
-<body class="sticky-footer">
-
-  <div id="banner">
-    <div class="container">
-        {% block menu %}
-            {% get_site_root as site_root %}
-            {% top_menu parent=site_root calling_page=self %}
-        {% endblock menu %}
-    </div>
-  </div>
+{% block content_container %}
   <div class="container">
     {% if messages %}
     <div class="row">
@@ -84,47 +27,4 @@
       {% endblock content %}
     </div>
   </div> <!-- container for content-->
-
-
-
-{% block footer %}
-
-  <div id="footer">
-    <div class="container">
-      <div class="row">
-        <div class="c8 pre2 center">
-          <a href="/conditions-use">Conditions of use</a> | <a href="/contact/">Contact</a> | <a href="/privacy">Privacy</a> | <a href="/impressum">Impressum</a> | Version: <a href="https://github.com/HEG-Arc/MiCorr/commit/{{ REVISION }}" target="_blank">{{ TAG }}</a>
-
-        </div>
-        <div class="c2">
-          <img src="{% static 'stylesheets/logo-arc.png' %}" alt="" class="img-responsive">
-        </div>
-
-      </div>
-    </div>
-  </div>
-
-{% endblock footer %}
-
-  <!-- script src="http://code.jquery.com/jquery-1.9.1.min.js"></script -->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-  <script src="{% static 'js/bootstrap.min.js' %}"></script>
-  <script src="{% static 'js/bootstrap-auto-dismiss-alert.js' %}"></script>
-  <script src="{% static 'js/MagnificPopup.min.js' %}"></script>
-  <script src="{% static 'js/jinplace-1.2.1.min.js' %}"></script>
-  <!--script src="js/jquery.sidr.min.js"></script-->
-  <script src="{% static 'js/all-init.js' %}"></script>
-  <!-- Google Analytics is your evil friend -->
-  <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-      ga('create', 'UA-56549629-1', 'auto');
-      ga('send', 'pageview');
-  </script>
-
-{% block custom_bottom_script %}{% endblock custom_bottom_script %}
-
-</body>
-</html>
+{% endblock %}
