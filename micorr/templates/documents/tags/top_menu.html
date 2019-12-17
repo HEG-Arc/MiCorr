@@ -5,7 +5,7 @@
         {% if not hidetoplogo%}
             <div class="w3"><a href="
                                  {% if site_root %} {% pageurl site_root %} {% endif %}">
-                <img src="{% static 'stylesheets/logo.png' %}" class="img-responsive"></a>
+                <img src="{% static 'pics/logo.png' %}" class="img-responsive"></a>
             </div>
         {% endif %}
         <div class="w9 {% if not cssclass %}menu{% else %}{{ cssclass }}{% endif %}">
@@ -16,13 +16,11 @@
                     <a href="{% pageurl menuitem %}" {% if calling_page.url == menuitem.url %} class="current"{% endif %}>{{ menuitem.title }}</a>
                 {% endif %}
             {% endfor %}
-          <a href="/learn/tour/" onmouseover="this.style.cursor='pointer'"><i class="fa fa-video-camera"></i>Tour</a>
             {% if request.user.is_authenticated %}
                 <a href="{% url 'users:detail' request.user.username %}">{% trans "My Profile" %}</a>
-                <a href="{% url 'account_logout' %}"><i class="fa fa-user"></i>{% trans "Logout" %}</a>
+                <a href="{% url 'account_logout' %}"><i class="fa fa-user"></i>{% trans "Sign Out" %}</a>
             {% else %}
-              <a href="{% url 'account_login' %}"><i class="fa fa-user"></i>{% trans "Log In" %}</a>
-              <a href="{% url 'account_signup' %}"><i class="fa fa-pencil"></i>{% trans "Register" %}</a>
+              <a href="{% url 'account_login' %}"><i class="fa fa-user"></i>{% trans "Sign In" %}</a>
             {% endif %}
             <a href="/contact/">{% trans "Contact" %}</a>
 
