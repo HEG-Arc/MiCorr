@@ -1580,7 +1580,12 @@ img {
   max-width: 100%;
   height: auto;
 }
-
+.img-logos {
+  display: inline;
+  float:left;
+  height: 50px;
+  padding-left:20px;
+}
 .img-rounded {
   border-radius: 6px;
 }
