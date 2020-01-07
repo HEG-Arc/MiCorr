@@ -129,23 +129,6 @@ class ChronologyCategory(TimeStampedModel):
         return self.name
 
 
-@python_2_unicode_compatible
-class ChronologyPeriod(TimeStampedModel):
-    """
-    A more precise dating of the artefact
-    Has a foreign key on the ChronologyCategory class
-    """
-    chronology_category = models.ForeignKey(ChronologyCategory, blank=True, null=True,
-                                            help_text='A general dating of the artefact')
-    name = models.CharField(max_length=100, blank=True)
-
-    class Meta:
-        ordering = ['name']
-        verbose_name = 'Chronology Period'
-        verbose_name_plural = 'Chronology Periods'
-
-    def __str__(self):
-        return self.name
 
 
 @python_2_unicode_compatible
@@ -271,8 +254,6 @@ class Artefact(TimeStampedModel):
     origin = models.ForeignKey(Origin, blank=True, null=True, related_name='artefacts',
                                help_text='The place, city and country where the artefact comes from or the object to which the section considered belongs to')
     recovering_date = models.ForeignKey(RecoveringDate, verbose_name='date of recovering', blank=True, null=True, help_text='The date of excavation for archaeological objects, of production and use for other artefacts')
-    chronology_period = models.ForeignKey(ChronologyPeriod, verbose_name='dating of artefact (Tpq _ Taq)', blank=True, null=True,
-                                          help_text='The dating of the artefact', editable=False)
     chronology_category = models.ForeignKey(ChronologyCategory, blank=True, null=True, help_text='A general dating of the artefact')
     chronology_tpq = YearField( blank=True, default=0, help_text='Dating of artefact TPQ (Terminus post quem) e.g. "3000 B.C."')
     chronology_taq = YearField( blank=True, default=0, help_text='Dating of artefact TAQ (Terminus ante quem) e.g. "200 A.D."')

@@ -66,7 +66,13 @@
             </div>
             <div class="row">
                 <div class="c3"><em>Dating of artefact (Tpq _ Taq)</em></div>
-                <div class="c9"><p>{{ artefact.chronology_period }}</p></div>
+                <div class="c9">
+                    <p>{{ artefact.chronology_comment }}
+                        {% if artefact.chronology_tpq or artefact.chronology_taq %}
+                            ({{ artefact.chronology_tpq }} _ {{ artefact.chronology_taq }})
+                        {% endif %}
+                    </p>
+                </div>
             </div>
             <div class="row">
                 <div class="c3"><em>Chronology</em></div>
