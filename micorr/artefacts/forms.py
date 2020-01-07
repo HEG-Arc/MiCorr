@@ -10,7 +10,6 @@ from django.db import connection
 from users.models import User
 
 from .models import Artefact, Document, CorrosionForm, CorrosionType, Environment, Object, Origin, \
-    ChronologyPeriod, \
     Alloy, Technology, Microstructure, RecoveringDate, Image, Type, Stratigraphy, Token, Collaboration_comment, \
     Publication, ArtefactFormDescription, Element
 from cities_light.models import Country, City
@@ -76,7 +75,7 @@ def get_updated_widgets(widgets, model_class, fields):
                 rel_model_name = meta_field.related_model.__name__
                 if meta_field.db_type.im_class == ForeignKey:
                     widget_class = ModelSelect2WithPop if rel_model_name in (
-                        'Origin', 'Contact', 'ChronologyPeriod') else autocomplete.ModelSelect2
+                        'Origin', 'Contact') else autocomplete.ModelSelect2
                 else:
                     widget_class = ModelSelect2MultipleWithPop if rel_model_name in (
                         'Origin', 'Contact') else autocomplete.ModelSelect2Multiple
@@ -255,15 +254,6 @@ class RecoveringDateCreateForm(forms.ModelForm):
         model = RecoveringDate
         exclude = []
 
-
-class ChronologyCreateForm(forms.ModelForm):
-    """
-    Create a new chronology
-    """
-
-    class Meta:
-        model = ChronologyPeriod
-        exclude = []
 
 
 class EnvironmentCreateForm(forms.ModelForm):

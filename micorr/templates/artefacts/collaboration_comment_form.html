@@ -271,9 +271,15 @@
 
               <!--ArtefactDate -->
               <div class="row">
-                <div class="c3"><em>Dating of artefact (Tpq _ Taq)</em></div>
-                <div class="c8"><p>{{ artefact.chronology_period }}</p></div>
-                <div class="c1">
+                  <div class="c3"><em>Dating of artefact (Tpq _ Taq)</em></div>
+                  <div class="c8">
+                      <p>{{ artefact.chronology_comment }}
+                          {% if artefact.chronology_tpq or artefact.chronology_taq %}
+                              ({{ artefact.chronology_tpq }} _ {{ artefact.chronology_taq }})
+                          {% endif %}
+                      </p>
+                  </div>
+                  <div class="c1">
                     <div class="pull-right">
                         {% for key, values in tokenComments.items %}
                             {% if 'dateArtefact' == key %}

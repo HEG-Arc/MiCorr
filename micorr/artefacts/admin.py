@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.urls import reverse
 from django.utils.html import format_html
 
-from .models import Alloy, Type, Origin, RecoveringDate, ChronologyCategory, ChronologyPeriod, Environment, \
+from .models import Alloy, Type, Origin, RecoveringDate, ChronologyCategory, Environment, \
     Technology, Microstructure, CorrosionForm, CorrosionType, Artefact, SectionCategory, Section, Image, \
     Document, Stratigraphy, Object, Publication, Collaboration_comment
 
@@ -75,20 +75,6 @@ class ArtefactInline(admin.StackedInline):
     ]
 
 
-class ChronologyPeriodAdmin(admin.ModelAdmin):
-
-    list_filter = ['chronology_category']
-
-
-    def artefact_count(self, instance):
-        return instance.artefact_set.count()
-
-    artefact_count.short_description = "Artefact Count"
-
-    inlines = (ArtefactInline,)
-
-    list_display = ('name', linkify('chronology_category'), 'artefact_count')
-
 
 class AlloyAdmin(admin.ModelAdmin):
 
@@ -135,7 +121,6 @@ admin.site.register(Type)
 admin.site.register(Origin)
 admin.site.register(RecoveringDate)
 admin.site.register(ChronologyCategory, ChronologyCategoryAdmin)
-admin.site.register(ChronologyPeriod, ChronologyPeriodAdmin)
 admin.site.register(Environment)
 admin.site.register(Technology)
 admin.site.register(Microstructure)

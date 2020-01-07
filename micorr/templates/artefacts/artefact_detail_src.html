@@ -60,8 +60,13 @@
 <br/>
 
   <div class="row">
-    <div class="col-xs-4 column1">Dating of artefact</div>
-    <div class="col-xs-8 column2">{{ artefact.chronology_period }}</div>
+      <div class="col-xs-4 column1">Dating of artefact</div>
+      <div class="col-xs-8 column2">
+          {{ artefact.chronology_comment }}
+              {% if artefact.chronology_tpq or artefact.chronology_taq %}
+                  ({{ artefact.chronology_tpq }} _ {{ artefact.chronology_taq }})
+              {% endif %}
+      </div>
   </div>
 
 <br/>
