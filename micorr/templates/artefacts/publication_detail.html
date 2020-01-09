@@ -1,100 +1,69 @@
-{% extends "base.html" %}
+{% extends "./artefact_update_page.html" %}
 
-    {% block title %}
-        <title>MiCorr | {{ artefact.artefact_verbose_description_short }}</title>
-    {% endblock title %}
+{% block title %}
+    <title>MiCorr | {{ artefact.artefact_verbose_description_short }}</title>
+{% endblock title %}
 
-      {% block sidemenu %}
-      <div class="c3" id="sidemenu"> <!-- no-active-hilight : do not highlight the "active" node of the menu. It is difficult for the affix to work when elements in the page are close one to the other (i.e. folded elements), therefore, it is less confusing to NOT hilight the .active nodes of the menu -->
-          <div class="sidemenu-container">
-              <ul class="nav smooth-scroll"> <!-- smooth-scroll to the element in the page instead of jumping -->
-                  <li><a href="#title1">{{ sections.0.template.title }}</a></li>
-                  <li>
-                      <a href="#title2">{{ sections.1.template.title }}</a>
-                      <ul class="nav subnav">
-                          <li><a href="#title21">{{ sections.2.template.title }}</a></li>
-                          <li><a href="#title22">{{ sections.3.template.title }}</a></li>
-                      </ul>
-                  </li>
-                  <li><a href="#title3">{{ sections.4.template.title }}</a></li>
-                  <li>
-                       <a href="#title4">{{ sections.5.template.title }}</a>
-                       <ul class="nav subnav"> <!-- subnav indicates that we will unfold the parent before jumping to a child to make sure that the element is visible -->
-                          <li><a href="#title41">{{ sections.6.template.title }}</a></li>
-                          <li><a href="#title42">{{ sections.7.template.title }}</a></li>
-                       </ul>
-                  </li>
-                  <li><a href="#title5">{{ sections.8.template.title }}</a></li>
-                  <li><a href="#title6">{{ sections.9.template.title }}</a></li>
-                  <li><a href="#title7">{{ sections.10.template.title }}</a></li>
-              </ul>
-          </div>
-      </div>
-      {% endblock sidemenu %}
+{% block content %}
+    <div class="c9">
 
-      {% block content %}
-<div class="c9">
-
-        {% if messages %}
-        <ul class="messages">
-            {% for message in messages %}
-            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-            {% endfor %}
-        </ul>
-        {% endif %}
-
-      <a href="{% url 'artefacts:publication-menu' %}" class="btn btn-primary btn-md">Return to Publication menu</a><br><br>
-      <h1>{{ artefact.artefact_verbose_description_short }}</h1>
-      {% if publication.decision_taken %}
-          <div class="row">
-            <hr>
-            <div class="c12">
-                <h2>Informations about the decision</h2>
-            </div>
-            <div class="c2">
-                <b>Decision :</b>
-            </div>
-            <div class="c10">
-                {% if publication.artefact.validated %}
-                    <b style="color: green">Validated</b>
-                {% else %}
-                    <b style="color: red">Refused</b>
+        <a href="{% url 'artefacts:publication-menu' %}" class="btn btn-primary btn-md">Return to Publication
+            menu</a><br><br>
+        <h1>{{ artefact.artefact_verbose_description_short }}</h1>
+        {% if publication.decision_taken %}
+            <div class="row">
+                <hr>
+                <div class="c12">
+                    <h2>Informations about the decision</h2>
+                </div>
+                <div class="c2">
+                    <b>Decision :</b>
+                </div>
+                <div class="c10">
+                    {% if publication.artefact.validated %}
+                        <b style="color: green">Validated</b>
+                    {% else %}
+                        <b style="color: red">Refused</b>
+                    {% endif %}
+                </div>
+                <div class="c2">
+                    <b>Analyzed by :</b>
+                </div>
+                <div class="c10">
+                    {% if publication.delegated_user %}
+                        {{ publication.delegated_user.username }}
+                        {% if publication.delegated_user.first_name != '' and publication.delegated_user.last_name != '' %}
+                            ({{ publication.delegated_user.first_name }}
+                            {{ publication.delegated_user.last_name }})
+                        {% endif %}
+                    {% else %}
+                        {{ publication.user.username }}
+                        {% if publication.user.first_name != '' and publication.user.last_name != '' %}
+                            ({{ publication.user.first_name }} {{ publication.user.last_name }})
+                        {% endif %}
+                    {% endif %}
+                </div>
+                {% if publication.comment_to_user and publication.comment_to_user != '' %}
+                    <div class="c12">
+                        <b>Comment :</b>
+                        <br>
+                        {{ publication.comment_to_user|safe }}
+                    </div>
                 {% endif %}
             </div>
-            <div class="c2">
-                <b>Analyzed by :</b>
+            <div class="row">
+                <hr>
             </div>
-          <div class="c10">
-              {% if publication.delegated_user %}
-                  {{ publication.delegated_user.username }}
-                  {% if publication.delegated_user.first_name != '' and publication.delegated_user.last_name != '' %}
-                      ({{ publication.delegated_user.first_name }} {{ publication.delegated_user.last_name }})
-                  {% endif %}
-              {% else %}
-                  {{ publication.user.username }}
-                  {% if publication.user.first_name != '' and publication.user.last_name != '' %}
-                      ({{ publication.user.first_name }} {{ publication.user.last_name }})
-                  {% endif %}
-              {% endif %}
-          </div>
-            {% if publication.comment_to_user and publication.comment_to_user != '' %}
-                <div class="c12">
-                    <b>Comment :</b>
-                    <br>
-                    {{ publication.comment_to_user|safe }}
-                </div>
-            {% endif %}
-          </div>
-          <div class="row">
-            <hr>
-          </div>
-      {% endif %}
-          <div class="row">
+        {% endif %}
+        <div class="row">
             <div class="c12">
                 <h2>Visualization of the artefact</h2>
             </div>
-          </div>
-          {% include "./artefact_detail_body.html" %}
-
-</div>
-      {% endblock content %}
+        </div>
+    </div>
+    <div class="c3">
+    </div>
+    {% with object=artefact %}
+        {{ block.super }}
+    {% endwith %}
+{% endblock content %}
