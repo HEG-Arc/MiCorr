@@ -40,10 +40,10 @@
         <div class="container">
             <div class="row">
                 <div class="w9 pre3">
-                    <a href="#search"><i class="fa fa-search"></i>Search tools</a>
-                    <a href="#submit"><i class="fa fa-arrow-circle-up"></i>Submit new artefact</a>
-                    <a href="#learn"><i class="fa fa-book"></i>Learn</a>
-                    <a href="#news"><i class="fa fa-calendar-o"></i>News</a>
+                    <a href="#search"><i class="fa fa-search"></i>Search</a>
+                    <a href="#submit"><i class="fa fa-arrow-circle-up"></i>Contribute</a>
+                    <a href="#network"><i class="fa fa-random"></i>MiCorr Network</a>
+                    <a href="#news"><i class="fa fa-calendar"></i>News</a>
                 </div>
             </div>
         </div>
@@ -230,129 +230,46 @@
 <div id="search" class="container">
     <div class="row">
         <div class="line center">
-            <h1>Search tools</h1>
-            <p class="smooth-scroll"><a href="#learn" class="no-underline"><i class="fa fa-book faded"></i> Learn how to
-                efficiently use the search tool</a></p>
+            <h1>Search</h1>
         </div>
     </div>
-    <div class="c6">
-        <h3 class="underline">by keywords</h3>
-        <a href="{% url 'artefacts:artefact-list' %}"><img src="{% static 'pics/keywords.png' %}"
-                                                           class="img-responsive"></a>
+    <div class="row center">
+        <p>A corrosion form / corrosion model in MiCorr databsase</p>
     </div>
-    <div class="c6">
-        <h3 class="underline">by stratigraphy representation</h3>
-        <a href="{% url 'artefacts:searchStratigraphy' %}"><img src="{% static 'pics/stratigraphy.png' %}"
-                                                                class="img-responsive"></a>
-    </div>
-</div>
-
-<div id="submit" class="lightframe">
-    <div class="container">
-        <div class="row center">
-            <h1>Submit new artefact</h1>
-            <div class="submit">
-                <p>This page allows you to create a file that describes a corrosion form that you have observed on an
-                    artefact that you are examining.</p>
-                <p>For this you need to enter the following information:</p>
-                <br>
-                <ul>
-                    <li>the metadata related to the artefact</li>
-                    <li>the stratigraphy of the corrosion form observed (created with the search tool “By stratigraphy
-                        representation”
-                    </li>
-                </ul>
-                <br>
-                <p>You have the possibility to keep this file as a working document and to continue completing it (alone
-                    or through a collaborative work with other MiCorr contributors). Once complete you have several
-                    options:</p>
-                <br>
-                <ul>
-                    <li>you keep it under your profile without sharing it</li>
-                    <li>you share it with the MiCorr community (recommended)</li>
-                </ul>
-                <br>
-                <p>For the second option, your file will be reviewed by the MiCorr scientific committee.</p>
-                <p>If accepted it will be made available to the MiCorr community (from the search tools).</p>
-            </div>
-            <br>
-            <p class="right">
-                <a href="/artefacts/create">
-                    <button type="button" class="btn btn-default btn-lg" data-toggle="modal">
-                        <i class="fa fa-arrow-circle-up"></i> Create new artefact
-                    </button>
-                </a>
-            </p>
+    <div class="row">
+        <div class="c6">
+            <h3 class="underline">by keywords</h3>
+            <a href="{% url 'artefacts:artefact-list' %}"><img src="{% static 'pics/search-by-keyword.jpg' %}"
+                                                               class="img-responsive"></a>
+        </div>
+        <div class="c6">
+            <h3 class="underline">by stratigraphy representation</h3>
+            <a href="{% url 'artefacts:searchStratigraphy' %}"><img src="{% static 'pics/stratigraphy.png' %}"
+                                                                    class="img-responsive"></a>
         </div>
     </div>
 </div>
 
-<div id="learn" class="paleframe">
-    <div class="container">
-        <div class="row center">
-            <div class="line">
-                <h1>Learn</h1>
-            </div>
-{% comment %}
-            <div class="c4">
-                <i class="fa fa-compass disc fa-3x"></i>
-                <h3>Contextual help</h3>
-                <p></p>
-            </div>
-{% endcomment %}
-            <a href="learn/manual2">
-                <div class="c4">
-                    <i class="fa fa-book disc fa-3x"></i>
-                    <h3>Manual</h3>
-                    <p>A guide to use properly the website</p>
-                </div>
-            </a>
-            <a href="learn/stratigraphy-construction/">
-                <div class="c4">
-                    <i class="fa fa-bars disc fa-3x"></i>
-                    <h3>Stratigraphy construction</h3>
-                    <p>Learn how to construct schematically a stratigraphy</p>
-                </div>
-            </a>
-            <a href="learn/tour/">
-            <div class="c4">
-                <i class="fa fa-video-camera disc fa-3x"></i>
-                <h3>Tour</h3>
-                <p>An animated discovery of MiCorr</p>
-            </div>
-            </a>
-        </div>
-{% comment %}
-        <div class="row center">
-            <div class="c4">
-                <i class="fa fa-question disc fa-3x"></i>
-                <h3>FAQ and more information</h3>
-                <p>Help tool and responses to basic questions</p>
+    <div id="submit" class="lightframe">
+        <div class="container">
+            <div class="row center">
+                <h1>Contribute</h1>
             </div>
         </div>
-{% endcomment %}
+        <div class="row center">
+            <div class="c4 pre4">
+                <a href="/artefacts/create"><img src="{% static 'pics/28532_competition-icon-png.png' %}"
+                                                 class="img-responsive"
+                                                 alt="logo"/>Add a corrosion form / corrosion model in MiCorr
+                    database</a>
+            </div>
+        </div>
     </div>
 </div>
 
 <div id="news" class="lightframe">
     <div class="container">
-        <div class="c6" >
-            <h1>News <i class="fa fa-calendar-o faded"></i></h1>
-            <div class="lightframe">
-                <div class="row underline">
-                    <div class="c4">
-                        <h2>29 September 2016</h2>
-                    </div>
-                    <div class="c8">
-                        <h3>Launching of the MiCorr application</h3>
-                        <p class="small">the MiCorr application will be presented to the conservation community during Metal 2016 in New Delhi.</p>
-                        <p><i class="fa fa-chevron-right faded"></i> <a href="../static/news/workshop.pdf" target=_blank>more</a></p>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-        <div class="c6" id="network">
+        <div class="c12" id="network">
             <h1>MiCorr network <i class="fa fa-random faded"></i></h1>
             <div class="row">
                 <div class="c6">
@@ -372,7 +289,6 @@
                             <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Analysis</a></li>
                         </ul>
                     </div>
-
                 </div>
                 <div class="c6">
                     <h3><i class="fa fa-university faded"></i> Find institutions</h3>
@@ -393,6 +309,23 @@
                 </div>
             </div>
         </div>
+        <div class="c12" >
+            <h1>News <i class="fa fa-calendar-o faded"></i></h1>
+            <div class="lightframe">
+                <div class="row underline">
+                    <div class="c4">
+                        <h2>29 September 2016</h2>
+                    </div>
+                    <div class="c8">
+                        <h3>Launching of the MiCorr application</h3>
+                        <p class="small">the MiCorr application will be presented to the conservation community during Metal 2016 in New Delhi.</p>
+                        <p><i class="fa fa-chevron-right faded"></i> <a href="../static/news/workshop.pdf" target=_blank>more</a></p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
     </div>
 </div>
 {% endblock content_container %}
