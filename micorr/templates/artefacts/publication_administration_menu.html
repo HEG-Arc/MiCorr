@@ -22,7 +22,7 @@
 
             <div class="row">
                 <div class="col-sm-12 ">
-                    {% if adminType == 'Main' %}
+                    {% if admin_user_type == 'Main' %}
                         <div class="panel-group">
                             <div class="panel panel-default">
                                 <div class="panel-heading">
@@ -139,7 +139,7 @@
                                 </div>
                             </div>
                         </div>
-                    {% elif adminType == 'Delegated' %}
+                    {% elif admin_user_type == 'Delegated' %}
                         <div class="panel-group">
                             <div class="panel panel-default">
                                 <div class="panel-heading">

@@ -1,6 +1,7 @@
 import json
 from collections import defaultdict
 
+from django.contrib.auth.models import Group
 from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.messages.views import SuccessMessageMixin
@@ -8,16 +9,16 @@ from django.core.mail import EmailMultiAlternatives
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
 from django.db.models import Q
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, Http404,HttpResponse, HttpResponseNotAllowed
 
 from django.shortcuts import get_object_or_404, render, redirect
 
 from django.utils.html import escape
 from django.views import generic
+from django.views.generic.base import ContextMixin
 from haystack.forms import SearchForm
 from django.conf import settings
 from django.contrib import messages
-from django.http import Http404
 from tinymce.widgets import TinyMCE
 
 from contacts.forms import ContactCreateForm
@@ -32,7 +33,7 @@ from .forms import ArtefactsForm, ArtefactsCreateForm, DocumentUpdateForm, Docum
     PublicationDecisionForm, PublicationDelegateForm, PublicationRejectDecisionForm, StratigraphyCreateForm
 
 from .models import Artefact, Document, Collaboration_comment, Field, Object, Section, Image, \
-    Stratigraphy, Token, Publication, SectionTemplate, Element
+    Stratigraphy, Token, Publication, SectionTemplate
 from . import models
 
 import logging
@@ -147,7 +148,28 @@ def get_section_groups(artefact, form, formObject):
         section_groups.append(group)
     return section_groups
 
-class ArtefactsDetailView(generic.DetailView):
+class BaseArtefactContextMixin(ContextMixin):
+    """
+    ContextMixin creating common context_data for
+    Artefact and Publication based views and templates
+    """
+    def get_context_data(self, **kwargs):
+        context_data = super(BaseArtefactContextMixin, self).get_context_data(**kwargs)
+        if isinstance(self.object,Artefact):
+            artefact = self.object
+        else:
+            # Publication case
+            artefact = self.object.artefact
+        context_data['artefact'] = artefact
+        context_data['documents'] = artefact.document_set.all()
+        form=ArtefactsForm(instance=artefact, label_suffix='')
+        context_data['section_groups'] = get_section_groups(artefact, form,
+                                                            ObjectUpdateForm(instance=artefact.object, label_suffix=''))
+        context_data['authors_fieldset'] = form.get_fieldset('authors')
+        context_data['node_base_url'] = settings.NODE_BASE_URL
+        return context_data
+
+class ArtefactsDetailView(generic.DetailView, BaseArtefactContextMixin):
     """
     A detail view of a selected artefact
     """
@@ -156,19 +178,8 @@ class ArtefactsDetailView(generic.DetailView):
                                                'responsible_institution', 'microstructure', 'corrosion_form', 'corrosion_type')
     template_name = 'artefacts/artefact_update_page.html'
     def get_context_data(self, **kwargs):
-        """
-        Allows the template to use the selected artefact as well as its foreign keys pointers
-        """
-        context = super(ArtefactsDetailView, self).get_context_data(**kwargs)
-        context['documents'] = self.object.document_set.all()
-        context['node_base_url'] = settings.NODE_BASE_URL
-        form = ArtefactsForm(instance=self.object, label_suffix='')
-        formObject = ObjectUpdateForm(instance=self.object.object, label_suffix='')
+        return super(ArtefactsDetailView, self).get_context_data(**kwargs)
 
-        context['section_groups'] = get_section_groups(self.object, form, formObject)
-        context['authors_fieldset'] = form.get_fieldset('authors')
-
-        return context
 
 
 class ArtefactsUpdateView(SuccessMessageMixin, generic.UpdateView):
@@ -187,7 +198,7 @@ class ArtefactsUpdateView(SuccessMessageMixin, generic.UpdateView):
         context = super(ArtefactsUpdateView,self).get_context_data(**kwargs)
 
         #if user want to update an artefact with parent (= artefact for publication), raise 404
-        errorUpdatePublicationArtefact(self.kwargs['pk'])
+        errorUpdatePublicationArtefact(self.object)
 
         formObject = ObjectUpdateForm(instance=self.object.object)
         form=context['form']
@@ -697,8 +708,7 @@ class DocumentCreateView(generic.CreateView):
     def get_success_url(self):
         return reverse('artefacts:artefact-detail', kwargs={'pk': self.kwargs.get('artefact_id', None)}, )
 
-def errorUpdatePublicationArtefact(artefact_id) :
-    artefact = get_object_or_404(Artefact, pk=artefact_id)
+def errorUpdatePublicationArtefact(artefact):
     if artefact.parent :
         raise Http404
 
@@ -1477,7 +1487,7 @@ class PublicationListView(generic.ListView):
         context['newPubliHistory'] = newPubliHistory
         return context
 
-class PublicationArtefactDetailView(generic.DetailView):
+class PublicationArtefactDetailView(generic.DetailView, BaseArtefactContextMixin):
 
     model = Publication
     template_name_suffix = '_detail'
@@ -1485,55 +1495,32 @@ class PublicationArtefactDetailView(generic.DetailView):
     def get_context_data(self, **kwargs):
 
         context = super(PublicationArtefactDetailView, self).get_context_data(**kwargs)
-        publication = get_object_or_404(Publication, pk=self.kwargs['pk'])
+        publication = self.object
         artefact = publication.artefact
-        typeUser = adminType(self.request.user)
-        if artefact.object.user != self.request.user and typeUser==None :
+        admin_user_type = admin_type(self.request.user)
+        if artefact.object.user != self.request.user and admin_user_type==None :
             raise Http404
-        sections = artefact.section_set.all()
-        documents = artefact.document_set.all()
-        stratigraphies = artefact.stratigraphy_set.all()
 
         if publication.decision_taken and publication.read==False :
             publication.read = True
             publication.save()
 
-        context['artefact'] = artefact
         context['publication'] = publication
-        context['sections'] = sections
-        context['documents'] = documents
-        context['stratigraphies'] = stratigraphies
-        context['node_base_url'] = settings.NODE_BASE_URL
         return context
 
-class PublicationCreateView(generic.CreateView):
+class PublicationCreateView(generic.CreateView, BaseArtefactContextMixin):
     model = Artefact
     template_name_suffix = '_publication_create'
     form_class = ArtefactsCreateForm
 
     def get_context_data(self, **kwargs):
-        artefact = get_object_or_404(Artefact, pk=self.kwargs['pk'])
-        if artefact.object.user != self.request.user :
-            raise Http404
-        sections = artefact.section_set.all()
-        documents = artefact.document_set.all()
-        stratigraphies = artefact.stratigraphy_set.all()
-        user = self.request.user
-        typeUser = adminType(user)
-
         context = super(PublicationCreateView, self).get_context_data(**kwargs)
+        artefact = self.object
+        if artefact.object.user != self.request.user:
+            raise Http404
 
-        if typeUser == 'Main':
-            context['admin'] = True
-        else:
-            context['admin'] = False
-
-        context['artefact'] = artefact
-        context['sections'] = sections
-        context['documents'] = documents
-        context['stratigraphies'] = stratigraphies
-        context['user'] = user
-        context['node_base_url'] = settings.NODE_BASE_URL
+        context['user'] = self.request.user
+        context['admin_user_type'] = admin_type(self.request.user)
 
         return context
 
@@ -1578,24 +1565,12 @@ class PublicationCreateView(generic.CreateView):
             document.save()
 
 
-        mainAdmins = []
-        users = User.objects.all()
-        isCurrentUserMainAdmin = False
+        main_administrator = Group.objects.get(name='Main administrator').user_set.first()
 
-        for user in users :
-            groups = user.groups.all()
-            for group in groups :
-                if group.name=='Main administrator' :
-                    mainAdmins.append(user)
-                    if user==self.request.user :
-                        isCurrentUserMainAdmin = True
-
-        mainAdmin = mainAdmins[0]
-
-        publication = Publication(artefact=newArtefact, user=mainAdmin)
+        publication = Publication(artefact=newArtefact, user=main_administrator)
         publication.save()
 
-        if isCurrentUserMainAdmin == True :
+        if self.request.user == main_administrator:
             return reverse('artefacts:publication-administration-delegate', kwargs={'pk': publication.id})
         else :
             return reverse('users:detail', kwargs={'username': self.request.user})
@@ -1608,9 +1583,9 @@ class AdministrationListView(generic.ListView):
 
         context = super(AdministrationListView, self).get_context_data(**kwargs)
         user = self.request.user
-        typeUser = adminType(user)
+        admin_user_type = admin_type(user)
 
-        if typeUser == 'Main' :
+        if admin_user_type == 'Main' :
             try :
                 requestsPubAll = Publication.objects.filter(user=user, delegated_user=None, decision_taken=False).order_by('-modified')
                 requestsPub = []
@@ -1637,7 +1612,7 @@ class AdministrationListView(generic.ListView):
             except:
                 context['delegPubProgress'] = None
 
-        elif typeUser == 'Delegated' :
+        elif admin_user_type == 'Delegated' :
             try:
                 delegPub = Publication.objects.filter(delegated_user=user, decision_taken=False, decision_delegated_user=None).order_by('-modified')
                 context['delegPub'] = delegPub
@@ -1648,7 +1623,7 @@ class AdministrationListView(generic.ListView):
         else :
             raise Http404
 
-        context['adminType'] = typeUser
+        context['admin_user_type'] = admin_user_type
         context['user'] = user
         return context
 
@@ -1667,7 +1642,7 @@ def accessAdministration(publication_id, user, accessType) :
         if publication.delegated_user != user or publication.decision_delegated_user != None :
             raise Http404
 
-class AdministrationArtefactDetailView(generic.DetailView):
+class AdministrationArtefactDetailView(generic.DetailView, BaseArtefactContextMixin):
 
     model = Publication
     template_name_suffix = '_administration_detail'
@@ -1677,40 +1652,26 @@ class AdministrationArtefactDetailView(generic.DetailView):
                                                'responsible_institution', 'microstructure', 'corrosion_form', 'corrosion_type')
 """
     def get_context_data(self, **kwargs):
-        typeUser = adminType(self.request.user)
-        if typeUser == None :
+        admin_user_type = admin_type(self.request.user)
+        if admin_user_type == None :
             raise Http404
         else :
             context = super(AdministrationArtefactDetailView, self).get_context_data(**kwargs)
-            publication = get_object_or_404(Publication, pk=self.kwargs['pk'])
+            publication = self.object
 
             accessAdministration(publication.id, self.request.user, self.kwargs['accessType'])
 
-            artefact = publication.artefact
-            sections = artefact.section_set.all()
-            documents = artefact.document_set.all()
-            stratigraphies = artefact.stratigraphy_set.all()
-
             context['publication'] = publication
             context['accessType'] = self.kwargs['accessType']
-            context['artefact'] = artefact
-            context['sections'] = sections
-            context['documents'] = documents
-            context['stratigraphies'] = stratigraphies
-            context['node_base_url'] = settings.NODE_BASE_URL
             return context
 
-def adminType(user) :
-    adminType = None
-    groups = user.groups.all()
-    for group in groups:
-        if group.name == 'Delegated administrator':
-            adminType = 'Delegated'
+def admin_type(user) :
+    groups = user.groups.values_list('name', flat=True)
+    if 'Main administrator' in groups:
+        return 'Main'
+    elif 'Delegated administrator' in groups:
+            return 'Delegated'
 
-    for group in groups:
-        if group.name == 'Main administrator':
-            adminType = 'Main'
-    return adminType
 
 class PublicationUpdateDecision(generic.UpdateView):
 
@@ -1723,10 +1684,10 @@ class PublicationUpdateDecision(generic.UpdateView):
         publication = get_object_or_404(Publication, pk=self.kwargs['pk'])
 
         user = self.request.user
-        typeUser = adminType(user)
+        admin_user_type = admin_type(user)
 
         # if main admin, change directly artefact status
-        if typeUser=='Main':
+        if admin_user_type=='Main':
             # Change validated attribut of the artefact
             if 'refuse' in self.request.POST :
                 self.object.artefact.validated = False
@@ -1747,7 +1708,7 @@ class PublicationUpdateDecision(generic.UpdateView):
             self.object.artefact.save()
             self.object.decision_taken = True
         # if delegated admin, change decision_delegated_user attribut value
-        elif typeUser=='Delegated' and user==publication.delegated_user :
+        elif admin_user_type=='Delegated' and user==publication.delegated_user :
             if 'refuse' in self.request.POST :
                 self.object.decision_delegated_user = False
             elif 'validate' in self.request.POST :
@@ -1763,7 +1724,7 @@ class PublicationUpdateDecision(generic.UpdateView):
     def get_context_data(self, **kwargs):
         user = self.request.user
         publication = get_object_or_404(Publication, pk=self.kwargs['pk'])
-        typeAdmin = adminType(user)
+        typeAdmin = admin_type(user)
         if typeAdmin==None :
             raise Http404
         if typeAdmin=='Delegated' :
@@ -1788,7 +1749,7 @@ def confirmDecisionDelegatedAdmin(request, publication_id):
     if request.POST :
         user = request.user
         publication = get_object_or_404(Publication, pk=publication_id)
-        typeAdmin = adminType(user)
+        typeAdmin = admin_type(user)
         if typeAdmin=='Main' and publication.decision_delegated_user != None and publication.decision_taken == False :
             publication = get_object_or_404(Publication, pk=publication_id)
             artefact = publication.artefact
@@ -1822,7 +1783,7 @@ class PublicationDecisionReject(generic.UpdateView) :
     def get_context_data(self, **kwargs):
         user = self.request.user
         publication = get_object_or_404(Publication, pk=self.kwargs['pk'])
-        typeAdmin = adminType(user)
+        typeAdmin = admin_type(user)
 
         if typeAdmin!='Main' :
             raise Http404
@@ -1840,9 +1801,9 @@ class PublicationDecisionReject(generic.UpdateView) :
             return context
 
     def form_valid(self, form):
-        typeUser = adminType(self.request.user)
+        admin_user_type = admin_type(self.request.user)
 
-        if typeUser != 'Main' :
+        if admin_user_type != 'Main' :
             raise Http404
         else :
             self.object = form.save(commit=False)
@@ -1862,8 +1823,8 @@ class PublicationDelegateView(generic.UpdateView):
     def get_context_data(self, **kwargs):
         user = self.request.user
         publication = get_object_or_404(Publication, pk=self.kwargs['pk'])
-        typeAdmin = adminType(user)
-        if typeAdmin!='Main' :
+        admin_user_type = admin_type(user)
+        if admin_user_type!='Main' :
             raise Http404
         else :
             self.object = publication
@@ -1871,7 +1832,6 @@ class PublicationDelegateView(generic.UpdateView):
             form = self.get_form(form_class)
 
             context = super(PublicationDelegateView, self).get_context_data(**kwargs)
-            # context['typeAdmin'] = typeAdmin
             context['form'] = form
             context['publication'] = publication
             context['user'] = user
@@ -1879,8 +1839,8 @@ class PublicationDelegateView(generic.UpdateView):
             return context
 
     def form_valid(self, form):
-        typeUser = adminType(self.request.user)
-        if typeUser != 'Main' :
+        admin_user_type = admin_type(self.request.user)
+        if admin_user_type != 'Main' :
             raise Http404
 
         return super(PublicationDelegateView, self).form_valid(form)
