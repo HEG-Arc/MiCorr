@@ -10,9 +10,19 @@
 {%  endblock html_tag %}
 
 {% block custom_header_script %}
-      <style type="text/css">#mfPreviewBar {
-          display: none !important;
-      }</style>
+<style type="text/css">
+  #mfPreviewBar {
+    display: none !important;
+  }
+  h1 {
+    font-size: 4em;
+    margin-top: 0.5em;
+  }
+  p.home-p {
+    font-size: 1.6em;
+    margin-bottom: 1.6em;
+  }
+</style>
 {% endblock custom_header_script %}
 {% block body_tag %}
 <body class="slideshow">
@@ -41,7 +51,7 @@
             <div class="row">
                 <div class="w9 pre3">
                     <a href="#search"><i class="fa fa-search"></i>Search</a>
-                    <a href="#submit"><i class="fa fa-arrow-circle-up"></i>Contribute</a>
+                    <a href="#submit"><i class="fa icon-puzzle"></i>Contribute</a>
                     <a href="#network"><i class="fa fa-random"></i>MiCorr Network</a>
                     <a href="#news"><i class="fa fa-calendar"></i>News</a>
                 </div>
@@ -226,107 +236,112 @@
     </div>
 </div>
 
-
-<div id="search" class="container">
-    <div class="row">
-        <div class="line center">
-            <h1>Search</h1>
-        </div>
+<div id="search" class="paleframe">
+  <div class="container">
+    <div class="row center">
+      <div class="line center">
+        <h1>Search</h1>
+      </div>
     </div>
     <div class="row center">
-        <p>A corrosion form / corrosion model in MiCorr databsase</p>
+      <p class="home-p">A corrosion form / corrosion model in MiCorr database</p>
     </div>
-    <div class="row">
+    <div class="row center">
+      <a href="{% url 'artefacts:artefact-list' %}">
         <div class="c6">
-            <h3 class="underline">by keywords</h3>
-            <a href="{% url 'artefacts:artefact-list' %}"><img src="{% static 'pics/search-by-keyword.jpg' %}"
-                                                               class="img-responsive"></a>
+          <i class="icon-searchbox disc fa-4x"></i>
+          <h3>By keywords</h3>
         </div>
+      </a>
+      <a href="{% url 'artefacts:searchStratigraphy' %}">
         <div class="c6">
-            <h3 class="underline">by stratigraphy representation</h3>
-            <a href="{% url 'artefacts:searchStratigraphy' %}"><img src="{% static 'pics/stratigraphy.png' %}"
-                                                                    class="img-responsive"></a>
+          <i class="icon-micorr disc fa-4x"></i>
+          <h3>By stratigraphy representation</h3>
         </div>
+      </a>
     </div>
+  </div>
 </div>
 
-    <div id="submit" class="lightframe">
-        <div class="container">
-            <div class="row center">
-                <h1>Contribute</h1>
-            </div>
-        </div>
-        <div class="row center">
-            <div class="c4 pre4">
-                <a href="/artefacts/create"><img src="{% static 'pics/28532_competition-icon-png.png' %}"
-                                                 class="img-responsive"
-                                                 alt="logo"/>Add a corrosion form / corrosion model in MiCorr
-                    database</a>
-            </div>
-        </div>
+<div id="submit" class="lightframe">
+  <div class="container mb-4 mt-4">
+    <div class="line center">
+      <h1>Contribute</h1>
     </div>
+    <div class="row center">
+      <p class="home-p">Add a corrosion form / corrosion model in MiCorr database</p>
+    </div>
+    <div class="row center">
+      <a href="{% url 'artefacts:object-create' %}">
+        <div class="c12">
+          <i class="icon-collaboration disc fa-4x"></i>
+          <h3>Enrich the database</h3>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>
+
+<div id="network" class="paleframe">
+  <div class="container mb-4 mt-4">
+    <div class="line center">
+      <h1>MiCorr network</h1>
+    </div>
+    <div class="c12" id="network">
+      <div class="row" style="margin-bottom: 1em;">
+        <div class="c6">
+          <h3><i class="fa fa-users faded"></i> Find specialists</h3>
+          <div class="dropdown">
+            <button class="btn btn-default dropdown-toggle fill" type="button" id="dropdownMenu1" data-toggle="dropdown">
+              Select expertise <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+              <li role="presentation"><a role="menuitem" tabindex="-1" href="/network#conservation">Conservation</a></li>
+              <li role="presentation"><a role="menuitem" tabindex="-1" href="/network#corrosion">Corrosion science</a></li>
+              <li role="presentation"><a role="menuitem" tabindex="-1" href="/network#archeometry">Archaeometry</a></li>
+              <li role="presentation"><a role="menuitem" tabindex="-1" href="/network#archaeometallurgy">Archaeometallurgy</a></li>
+              <li role="presentation"><a role="menuitem" tabindex="-1" href="/network#metallography">Metallography</a></li>
+              <li role="presentation"><a role="menuitem" tabindex="-1" href="/network#analysis">Analysis</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="c6">
+          <h3><i class="fa fa-university faded"></i> Find institutions</h3>
+          <div class="dropdown">
+            <button class="btn btn-default dropdown-toggle fill" type="button" id="dropdownMenu1" data-toggle="dropdown">
+              Filter by... <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+              <li role="presentation"><a role="menuitem" tabindex="-1" href="/network#museums">Museums</a></li>
+              <li role="presentation"><a role="menuitem" tabindex="-1" href="/network#conservation">Conservation laboratories / Centers</a></li>
+              <li role="presentation"><a role="menuitem" tabindex="-1" href="/network#research">Research laboratories</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div id="news" class="lightframe">
-    <div class="container">
-        <div class="c12" id="network">
-            <h1>MiCorr network <i class="fa fa-random faded"></i></h1>
-            <div class="row">
-                <div class="c6">
-                    <h3><i class="fa fa-users faded"></i> Find specialists</h3>
-                    <div class="dropdown">
-                        <button class="btn btn-default dropdown-toggle fill" type="button" id="dropdownMenu1"
-                                data-toggle="dropdown">
-                            Select expertise
-                            <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Conservation</a></li>
-                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Corrosion science</a></li>
-                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Archaeometry</a></li>
-                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Archaeometallurgy</a></li>
-                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Metallography</a></li>
-                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Analysis</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="c6">
-                    <h3><i class="fa fa-university faded"></i> Find institutions</h3>
-                    <div class="dropdown">
-                        <button class="btn btn-default dropdown-toggle fill" type="button" id="dropdownMenu1"
-                                data-toggle="dropdown">
-                            Filter by...
-                            <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Museums</a></li>
-                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Conservation laboratories /
-                                Centers</a></li>
-                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Research laboratories</a></li>
-                        </ul>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-        <div class="c12" >
-            <h1>News <i class="fa fa-calendar-o faded"></i></h1>
-            <div class="lightframe">
-                <div class="row underline">
-                    <div class="c4">
-                        <h2>29 September 2016</h2>
-                    </div>
-                    <div class="c8">
-                        <h3>Launching of the MiCorr application</h3>
-                        <p class="small">the MiCorr application will be presented to the conservation community during Metal 2016 in New Delhi.</p>
-                        <p><i class="fa fa-chevron-right faded"></i> <a href="../static/news/workshop.pdf" target=_blank>more</a></p>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
+  <div class="container">
+    <div class="line center">
+      <h1>News</h1>
     </div>
+    <div class="c12" >
+      <div class="row underline">
+        <div class="c4">
+          <h2>February 6, 2020</h2>
+          <i class="fa fa-calendar-o faded fa-3x"></i>
+        </div>
+        <div class="c8">
+          <h3>First plenary session of the MetalPAT project</h3>
+          <p class="small">More than 30 partner institutions from Switzerland and France will gather in Neuchâtel for the official launch of the MetalPAT Interreg project.</p>
+          <p><i class="fa fa-chevron-right faded"></i> <a href="/metalpat-interreg/reunion-6-fevrier-2020/">more</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
-{% endblock content_container %}
 
+{% endblock content_container %}
