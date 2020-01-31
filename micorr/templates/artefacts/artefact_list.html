@@ -12,29 +12,23 @@
       <div class="lightframe">
 
           <div class="row">
-              <div class="c6">
+              <div class="c6 pre3">
                   <h1>Search</h1>
               </div>
-              <div class="c6 right"> <h1><span class="glyphicon glyphicon-search faded"></span></h1></div>
-
           </div>
 
           <div class="row">
               <form action="." method="get">
-                  <div class="c6">
+                  <div class="c6 pre3">
                       <h3 class="underline">by keywords</h3>
                       <p>{{ search.q }}</p>
                       <br/>
                       {% crispy filter.form %}
-                      <div class="line">
+                      <div class="line center">
                           <button type="submit" class="btn btn-primary btn-lg">Search database <span class="glyphicon glyphicon-search faded"></span></button>
                       </div>
                   </div>
               </form>
-              <div class="c6">
-                  <h3 class="underline">by stratigraphy representation</h3>
-                  <a href="{% url 'artefacts:searchStratigraphy' %}"><img src="{% static 'pics/stratigraphy.png' %}" class="img-responsive"></a>
-              </div>
           </div>
       </div>
 {% if request.GET %}
