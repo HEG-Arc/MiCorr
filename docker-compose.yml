@@ -40,6 +40,9 @@ services:
     # we use non official elasticsearch image as elasticsearch only provides docker images version >6.8.2
     # and haystack is not compatible with elasticsearch >2.4
     image: blacktop/elasticsearch:2.4
+    environment:
+      - cluster.routing.allocation.disk.watermark.low=800mb
+      - cluster.routing.allocation.disk.watermark.high=500mb
 
   django:
     build:
