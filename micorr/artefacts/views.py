@@ -717,8 +717,7 @@ def errorUpdatePublicationArtefact(artefact):
     if artefact.parent :
         raise Http404
 
-def errorAccessToken(token_id, user) :
-    token = get_object_or_404(Token, pk=token_id)
+def errorAccessToken(token, user):
     if token.user != user and token.recipient != user.email :
         raise Http404
 
@@ -795,9 +794,8 @@ class CollaborationUpdateView(generic.UpdateView):
 
     def get(self, request, **kwargs):
 
-        errorAccessToken(self.kwargs['token_id'], self.request.user)
-
         token = Token.tokenManager.get(id=self.kwargs['token_id'])
+        errorAccessToken(token, self.request.user)
         artefact = Artefact.objects.get(id=token.artefact.id)
         sections = artefact.section_set.all()
         obj = Object.objects.get(id=artefact.object.id)
@@ -994,9 +992,9 @@ class CollaborationCommentView(generic.CreateView,BaseArtefactContextMixin):
     def get_context_data(self, **kwargs):
 
         user = self.request.user
-        errorAccessToken(self.kwargs['token_id'], self.request.user)
         context = super(CollaborationCommentView, self).get_context_data(**self.kwargs)
         token = get_object_or_404(Token, pk=self.kwargs['token_id'])
+        errorAccessToken(token, user)
         section_comments = Collaboration_comment.objects.filter(content_type=ContentType.objects.get(model='section'), token_for_section_id=token.pk)
         field_comments =  defaultdict(list)
 
@@ -1124,7 +1122,7 @@ def getSectionShortName(sectionTitle):
 def sendComments(request, token_id) :
     if request.method == 'POST':
         token = get_object_or_404(Token, pk=token_id)
-        errorAccessToken(token_id, request.user)
+        errorAccessToken(token, request.user)
         artefact = get_object_or_404(Artefact, pk=token.artefact.id)
         sections = artefact.section_set.all()
         token_type = ContentType.objects.get(model='token')
@@ -1159,8 +1157,8 @@ class CommentReadView(generic.UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(CommentReadView, self).get_context_data(**kwargs)
-        token = Token.tokenManager.get(id=self.kwargs['pk'])
-        errorAccessToken(self.kwargs['pk'], self.request.user)
+        token = self.object
+        errorAccessToken(token, self.request.user)
         context['token'] = token
         return context
 
@@ -1239,10 +1237,10 @@ class CollaborationHideView(generic.UpdateView):
         return super(CollaborationHideView, self).post(request, **kwargs)
 
     def get_context_data(self, **kwargs):
-        errorAccessToken(self.kwargs['pk'], self.request.user)
         context = super(CollaborationHideView, self).get_context_data(**kwargs)
+        errorAccessToken(self.object, self.request.user)
         context['action'] = reverse('artefacts:collaboration-hide',
-                                    kwargs={'pk': self.get_object().id})
+                                    kwargs={'pk': self.object.pk})
 
         return context
 
@@ -1285,7 +1283,7 @@ class CollaborationDeletedListView(generic.ListView):
 
 def retrieveDeletedCollaboration(request, token_id) :
     token = get_object_or_404(Token, pk=token_id)
-    errorAccessToken(token_id, request.user)
+    errorAccessToken(token, request.user)
 
     if token.user == request.user :
         token.hidden_by_author = False
