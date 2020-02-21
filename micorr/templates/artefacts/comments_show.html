@@ -17,7 +17,7 @@
               </div>
               <div class="c1">
                   {% if not value.sent and value.user == user %}
-                    <a href="{% url 'artefacts:delete-comment' pk=value.id token_id=token.id%}"><i class="fa fa-trash"></i></a>
+                    <a href="{% url 'artefacts:delete-comment' pk=value.id%}"><i class="fa fa-trash"></i></a>
                   {% endif %}
                   {% if value.user != user and not value.read %}
                       <div class="commentsNotReadInfo">
@@ -38,7 +38,7 @@
               </div>
               <div class="c1">
                   {% if not value.sent and value.user == user %}
-                    <a href="{% url 'artefacts:delete-comment' pk=value.id token_id=token.id%}"><i class="fa fa-trash"></i></a>
+                    <a href="{% url 'artefacts:delete-comment' pk=value.id%}"><i class="fa fa-trash"></i></a>
                   {% endif %}
                   {% if value.user != user and not value.read %}
                       <div class="commentsNotReadInfo">

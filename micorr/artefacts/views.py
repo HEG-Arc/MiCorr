@@ -1206,59 +1206,20 @@ class CommentDeleteView(generic.DeleteView):
     def get_context_data(self, **kwargs):
 
         context = super(CommentDeleteView, self).get_context_data(**kwargs)
-        comment = get_object_or_404(Collaboration_comment, pk=self.kwargs['pk'])
-
-        token = get_object_or_404(Token, pk=self.kwargs['token_id'])
-        errorAccessToken(self.kwargs['token_id'], self.request.user)
+        comment = self.object
+        token = comment.token_for_section
+        errorAccessToken(token.pk, self.request.user)
 
         if token.read == False :
             token.read = True
             token.save()
 
-        parent = 0
-        child = 0
-
-        try :
-            parentComm = get_object_or_404(Collaboration_comment, pk=comment.parent_id)
-            parent = parentComm.id
-        except:
-            pass
-
-        try :
-            childComm = get_object_or_404(Collaboration_comment, parent_id=comment.id)
-            child = childComm.id
-        except:
-            pass
-
         context['token'] = token
         context['comment'] = comment
-        context['parent_id'] = parent
-        context['child_id'] = child
         return context
 
     def get_success_url(self):
-
-        token = get_object_or_404(Token, pk=self.kwargs['token_id'])
-        try :
-            parent = self.kwargs['parent_id']
-        except:
-            pass
-        try :
-            child = self.kwargs['child_id']
-        except:
-            pass
-
-        if child!=0 :
-            childComm = get_object_or_404(Collaboration_comment, pk=child)
-            if parent!=0 :
-                childComm.parent_id = parent
-                childComm.save()
-
-            else :
-                childComm.parent_id = None
-                childComm.save()
-
-        return reverse('artefacts:collaboration-comment', kwargs={'pk': self.kwargs['token_id'], 'field': 'none'})
+        return reverse('artefacts:collaboration-comment', kwargs={'token_id': self.object.token_for_section.pk})
 
 class CollaborationHideView(generic.UpdateView):
     model = Token

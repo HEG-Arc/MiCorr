@@ -72,9 +72,7 @@ urlpatterns = [
 
     url(r'^collaboration/(?P<token_id>\d+)/send/$', login_required(artefacts_views.sendComments), name='send-comments'),
     url(r'collaboration/(?P<pk>\d+)/read/$', login_required(artefacts_views.CommentReadView.as_view()), name='read-comments'),
-    url(r'^collaboration/(?P<pk>\d+)/delete/(?P<token_id>\d+)/$', login_required(artefacts_views.CommentDeleteView.as_view()), name='delete-comment-without-relation'),
-    url(r'^collaboration/(?P<pk>\d+)/delete/(?P<token_id>\d+)/(?P<child_id>\d+)/$', login_required(artefacts_views.CommentDeleteView.as_view()), name='delete-comment-without-parent'),
-    url(r'^collaboration/(?P<pk>\d+)/delete/(?P<token_id>\d+)/(?P<parent_id>\d+)/(?P<child_id>\d+)/$', login_required(artefacts_views.CommentDeleteView.as_view()), name='delete-comment'),
+    url(r'^collaboration/(?P<pk>\d+)/delete/$', login_required(artefacts_views.CommentDeleteView.as_view()), name='delete-comment'),
 
     url(r'^publication/$', login_required(artefacts_views.PublicationListView.as_view()), name='publication-menu'),
     url(r'^publication/create/(?P<pk>\d+)/$', login_required(artefacts_views.PublicationCreateView.as_view()), name='publication-create'),
