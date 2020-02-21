@@ -156,11 +156,15 @@ class BaseArtefactContextMixin(ContextMixin):
     """
     def get_context_data(self, **kwargs):
         context_data = super(BaseArtefactContextMixin, self).get_context_data(**kwargs)
-        if isinstance(self.object,Artefact):
-            artefact = self.object
+        if self.object is None and kwargs.get('token_id'):
+            token = get_object_or_404(Token, pk=kwargs['token_id'])
+            artefact = token.artefact
         else:
-            # Publication case
-            artefact = self.object.artefact
+            if isinstance(self.object,Artefact):
+                artefact = self.object
+            else:
+                # Publication case
+                artefact = self.object.artefact
         context_data['artefact'] = artefact
         context_data['documents'] = artefact.document_set.all()
         form=ArtefactsForm(instance=artefact, label_suffix='')
@@ -973,10 +977,10 @@ class CollaborationUpdateView(generic.UpdateView):
     def get_success_url(self):
         return reverse('artefacts:collaboration_menu')
 
-class CollaborationCommentView(generic.CreateView):
+class CollaborationCommentView(generic.CreateView,BaseArtefactContextMixin):
 
     model = Collaboration_comment
-    template_name_suffix = '_form'
+    template_name = 'artefacts/artefact_update_page.html'
     form_class = CollaborationCommentForm
 
     """
@@ -990,126 +994,35 @@ class CollaborationCommentView(generic.CreateView):
     def get_context_data(self, **kwargs):
 
         user = self.request.user
-        errorAccessToken(self.kwargs['pk'], self.request.user)
-        context = super(CollaborationCommentView, self).get_context_data(**kwargs)
-        token = get_object_or_404(Token, pk=self.kwargs['pk'])
-        artefact = token.artefact
-        sections = artefact.section_set.all()
-        documents = artefact.document_set.all()
-        stratigraphies = artefact.stratigraphy_set.all()
+        errorAccessToken(self.kwargs['token_id'], self.request.user)
+        context = super(CollaborationCommentView, self).get_context_data(**self.kwargs)
+        token = get_object_or_404(Token, pk=self.kwargs['token_id'])
+        section_comments = Collaboration_comment.objects.filter(content_type=ContentType.objects.get(model='section'), token_for_section_id=token.pk)
+        field_comments =  defaultdict(list)
+
+        for comment in section_comments.filter(parent_id__isnull=True): #, field_name__isnull=False):
+            # get the first comment for each field (it has no parent comment)
+            while True:
+                if comment.field_name:
+                    field_comments[comment.field_name].append(comment)
+                else:
+                    field_comments[comment.object_model_id].append(comment)
+                try:
+                    # then add "replies" if any
+                    comment=section_comments.get(parent_id=comment.id)
+                except Collaboration_comment.DoesNotExist:
+                    break
 
         if token.read == False :
             token.read = True
             token.save()
 
-        sectionComments = []
-        sectionDict = defaultdict(list)
-        tokenComments = []
-        tokenDict = defaultdict(list)
-        token_type = ContentType.objects.get(model='token')
-        unreadCommentsField = {}
-        unreadCommentsSection = {}
-        fields = Field.objects.all()
-        try :
-            # Get all comments for the current token
-            allTokenComments = Collaboration_comment.objects.filter(content_type_id=token_type.id, object_model_id = token.id)
-
-            # Get first comments of all fields
-            firstTokenComments = []
-            for tokenComm in allTokenComments :
-                if not tokenComm.parent :
-                    firstTokenComments.append(tokenComm)
-
-            # Sort comments using parent_id
-            allTokenCommentsSorted = []
-            for firstToken in firstTokenComments :
-                idToken = firstToken.id
-                allTokenCommentsSorted.append(firstToken)
-                while idToken != 0 :
-                    try :
-                        currentToken = allTokenComments.get(parent_id=idToken)
-                        allTokenCommentsSorted.append(currentToken)
-                        idToken = currentToken.id
-                    except :
-                        idToken = 0
-
-            # Filter only sent comments or comments from user connected
-            for tokenComm in allTokenCommentsSorted :
-                if tokenComm.sent or user == tokenComm.user :
-                    tokenComments.append(tokenComm)
-
-            # Create a dictonary 'key-list' with field title as a key
-            for tokenComment in tokenComments :
-                tokenDict[tokenComment.field.title].append(tokenComment)
-
-            # Research fields with unread comments
-            for field in fields :
-                unreadCommentsField[field.title] = False
-
-            for tokenComment in tokenComments :
-                if tokenComment.read == False and tokenComment.user != user :
-                    unreadCommentsField[tokenComment.field.title] = True
-
-
-        except :
-            pass
-
-        section_type = ContentType.objects.get(model='section')
-        allSectionsComments = []
-
-        for section in sections :
-            # Get all comments from each section
-            comments = Collaboration_comment.objects.filter(content_type_id=section_type.id, object_model_id=section.id, token_for_section_id = token.id)
-            for comment in comments :
-                allSectionsComments.append(comment)
-
-            sectionShortTitle = getSectionShortName(section.template.title)
-            unreadCommentsSection[sectionShortTitle] = False
-
-        # Get first comments of all sections
-        firstSectionComments = []
-        for sectionComm in allSectionsComments:
-            if not sectionComm.parent:
-                firstSectionComments.append(sectionComm)
-
-        # Sort comments using parent_id
-        allSectionCommentsSorted = []
-        for firstSection in firstSectionComments:
-            idSection = firstSection.id
-            allSectionCommentsSorted.append(firstSection)
-            isFound = None
-            while idSection != 0:
-                for comm in allSectionsComments :
-                    isFound = 0
-                    if comm.parent_id == idSection :
-                        allSectionCommentsSorted.append(comm)
-                        idSection = comm.id
-                        isFound = 1
-                if isFound==0 :
-                    idSection=0
-
-        for commentSectionSorted in allSectionCommentsSorted :
-            # Filter only sent comments or comments from user connected
-            if commentSectionSorted.sent or self.request.user == commentSectionSorted.user :
-                sectionComments.append(commentSectionSorted)
-                section = get_object_or_404(Section, pk=commentSectionSorted.object_model_id)
-                sectionShortTitle = getSectionShortName(section.template.title)
-                sectionDict[sectionShortTitle].append(commentSectionSorted)
-                if commentSectionSorted.read == False and commentSectionSorted.user != user :
-                    unreadCommentsSection[sectionShortTitle] = True
-
 
         context['user'] = user
         context['token'] = token
-        context['artefact'] = artefact
-        context['sections'] = sections
-        context['documents'] = documents
-        context['stratigraphies'] = stratigraphies
-        context['unreadCommentsField'] = unreadCommentsField
-        context['unreadCommentsSection'] = unreadCommentsSection
-        context['tokenComments'] = dict(tokenDict)
-        context['sectionComments'] = dict(sectionDict)
-        context['node_base_url'] = settings.NODE_BASE_URL
+        context['field_comments'] = field_comments
+        context['comment_form'] = context.pop('form')
+        context['object']=context['artefact']
         return context
 
     def get_field_last_comment_id(self, token, field, model):
@@ -1164,62 +1077,27 @@ class CollaborationCommentView(generic.CreateView):
 
     def form_valid(self, form, **kwargs):
 
-        try :
-            token = Token.tokenManager.get(pk=self.kwargs['pk'])
-            field = get_object_or_404(Field, title=self.kwargs['field'])
-            form.instance.field = field
-            form.instance.content_object = token
-            token_type = ContentType.objects.get(model='token')
+        token = Token.tokenManager.get(pk=self.kwargs['token_id'])
+        section = Section.objects.get(pk=self.kwargs['section_id'])
+        form.instance.field_name = self.kwargs['field']
+        form.instance.fieldset_name = section.template.fieldset
 
-            if self.get_field_last_comment_id(token, field, token_type) != 0 :
-                lastId = self.get_field_last_comment_id(token, field, token_type)
-                form.instance.parent_id = lastId
+        form.instance.content_object = section
+        form.instance.token_for_section = token
+        section_type = ContentType.objects.get(model='section')
 
-        except :
-            token = Token.tokenManager.get(pk=self.kwargs['pk'])
-            field = getSectionCompleteName(self.kwargs['field'])
-            section = Section.objects.get(template__title=field, artefact=token.artefact)
-            form.instance.content_object = section
-            form.instance.token_for_section = token
-            section_type = ContentType.objects.get(model='section')
+        if self.get_section_last_comment_id(section, section_type, token) != 0 :
+            lastId = self.get_section_last_comment_id(section, section_type, token)
+            form.instance.parent_id = lastId
 
-            if self.get_section_last_comment_id(section, section_type, token) != 0 :
-                lastId = self.get_section_last_comment_id(section, section_type, token)
-                form.instance.parent_id = lastId
-
-            form.instance.token_for_section = token
-
-        user = self.request.user
-        form.instance.user = user
+        form.instance.user = self.request.user
 
         return super(CollaborationCommentView, self).form_valid(form)
 
 
     def get_success_url(self):
 
-        return reverse('artefacts:collaboration-comment', kwargs={'pk' : self.kwargs['pk'], 'field' : 'none'})
-
-def getSectionCompleteName(sectionTitle):
-    if sectionTitle == 'object' :
-        return 'The object'
-    elif sectionTitle == 'zones' :
-        return 'Zones of the artefact submitted to visual observation and location of sampling areas'
-    elif sectionTitle == 'macroscopic' :
-        return 'Macroscopic observation'
-    elif sectionTitle == 'sample' :
-        return 'Sample'
-    elif sectionTitle == 'anaResults' :
-        return 'Analyses and results'
-    elif sectionTitle == 'metal' :
-        return 'Metal'
-    elif sectionTitle == 'corrLayers' :
-        return 'Corrosion layers'
-    elif sectionTitle == 'synthesis' :
-        return 'Synthesis of the macroscopic / microscopic observation of corrosion layers'
-    elif sectionTitle == 'conclusion' :
-        return 'Conclusion'
-    elif sectionTitle == 'references' :
-        return 'References'
+        return reverse('artefacts:collaboration-comment', kwargs={'token_id' : self.kwargs['token_id']})
 
 def getSectionShortName(sectionTitle):
     if sectionTitle == 'The object' :
@@ -1319,7 +1197,7 @@ class CommentReadView(generic.UpdateView):
         return super(CommentReadView, self).post(request, **kwargs)
 
     def get_success_url(self):
-        return reverse('artefacts:collaboration-comment', kwargs={'pk': self.kwargs['pk'], 'field': 'none'})
+        return reverse('artefacts:collaboration-comment', kwargs={'token_id': self.kwargs['pk']})
 
 class CommentDeleteView(generic.DeleteView):
     model = Collaboration_comment
@@ -1360,8 +1238,6 @@ class CommentDeleteView(generic.DeleteView):
 
     def get_success_url(self):
 
-        parent = 0
-        child = 0
         token = get_object_or_404(Token, pk=self.kwargs['token_id'])
         try :
             parent = self.kwargs['parent_id']

@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 {% load getattr %}
+{% load keyvalue %}
 {% block sidemenu %}
     <div class="c3" id="sidemenu">
         <!-- no-active-hilight : do not highlight the "active" node of the menu. It is difficult for the affix to work when elements in the page are close one to the other (i.e. folded elements), therefore, it is less confusing to NOT hilight the .active nodes of the menu -->
@@ -56,7 +57,7 @@
 
     <h1>{{ object.artefact_verbose_description_short }}</h1>
 
-    {% if form %}
+    {% if form and form.instance.pk%}
     <form id="main-form" action="{% url 'artefacts:artefact-update' form.instance.pk %}" method="post">{% csrf_token %}
     {% endif %}
         {% if form.errors %}
@@ -127,10 +128,42 @@
                                 <textarea class="tinymce" data-mce-conf="{{ s.content_mce_conf }}" name="s{{s.section.template.order}}_content" id="s{{s.section.template.order}}_content">{{ s.section.content }} </textarea>
                                 {{ s.section.template.content_help_text|safe }}
                             {% else %}
+                                <div class="row">
+                                    <div class="c11">
                                 {% filter replace_terms %}
                                 <p>{{ s.section.content|safe }}</p>
                                 {% endfilter %}
-                            {% endif %}
+                                    </div>
+                                {% if token_id %}
+                                    <div class="c1">
+                                        <div class="pull-right">
+                                            <a href="#comment_{{s.section.template.order}}_content" data-toggle="collapse" aria-expanded="false"
+                                               aria-controls="#comment_{{s.section.template.order}}_content">
+                                                <i class="fa fa-comment {%if field_comments|keyvalue:s.section.id%} redicon {%endif%}"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                </div>
+                                {% if token_id %}
+                                    <form action="{% url 'artefacts:collaboration-comment' token_id=token_id section_id=s.section.id field='' %}"
+                                          method="post">{% csrf_token %}
+                                        <div class="row collapse" id="comment_{{ s.section.template.order }}_content"
+                                             aria-expanded="false">
+                                            <div class="line middlebox">
+                                                {% if field_comments|keyvalue:s.section.id %}
+                                                    {% with values=field_comments|keyvalue:s.section.id %}
+                                                        {% include "./comments_show.html" %}
+                                                    {% endwith %}
+                                                {% endif %}
+                                                {% with form=comment_form %}
+                                                    {% include "./comment_form.html" %}
+                                                {% endwith %}
+                                            </div>
+                                        </div>
+                                    </form>
+                                {% endif %}
+                            {% endif %} {# form #}
                     </div>
                 {% endif %} {# has_content #}
                 {% if s.section.template.has_images %}
@@ -230,8 +263,39 @@
                                             <p>{{ s.form.instance | getattr:field.name |safe}}</p>
                                             {%  endfilter %}
                                         {% endif %}
+                                        {% if token_id %}
+                                          <a href="#{{ field.auto_id }}_comment" data-toggle="collapse"
+                                             aria-expanded="false" aria-controls=#{{field.auto_id }}_comment">
+                                              <i class="iconover fa fa-comment {%if field_comments|keyvalue:field.auto_id%} redicon {%endif%}"></i>
+                                          </a>
+                                        {% endif %}
                                         </div>
                                       </div>
+                                      {% if token_id %}
+                                      <div class="row collapse" id="{{ field.auto_id }}_comment"
+                                           aria-expanded="false">
+                                          <form action="{% url 'artefacts:collaboration-comment' token_id=token_id section_id=s.section.id field=field.auto_id %}"
+                                                method="post">
+                                              {% csrf_token %}
+
+                                              <div class="line middlebox">
+
+                                              {% for key, values in field_comments.items %}
+                                                  <p>{{key}}</p>
+                                              {% endfor %}
+
+                                              {% if field_comments|keyvalue:field.auto_id %}
+                                                {% with values=field_comments|keyvalue:field.auto_id%}
+                                                    {% include "./comments_show.html" %}
+                                                  {% endwith %}
+                                              {% endif %}
+                                               {% with form=comment_form %}
+                                                  {% include "./comment_form.html" %}
+                                               {% endwith %}
+                                              </div>
+                                          </form>
+                                      </div>
+                                      {% endif %}
                                 {% endfor %}
                         </div>
                 {% endif %}
@@ -324,7 +388,12 @@
         return false;
     });
     </script>
-    {{ form.media }}
+    {% if form %}
+        {{ form.media }}
+    {% else %}
+        {{ comment_form.media }}
+    {% endif %}
+
     {% include "artefacts/dj_admin_related_object_lookups.html" %}
     {% include "artefacts/refresh-divs-script.html" %}
 {% endblock custom_bottom_script %}

@@ -600,6 +600,8 @@ class Collaboration_comment(TimeStampedModel):
     content_type = models.ForeignKey(ContentType, blank=True, null=True)
     parent = models.ForeignKey('self', on_delete=models.SET_NULL, blank=True, null=True, help_text='The comment from which this comment is the child')
     field = models.ForeignKey(Field, blank=True, null=True, help_text='The field concerned by the comment')
+    fieldset_name =  models.CharField(max_length=80, null=True, blank=True)
+    field_name = models.CharField(max_length=80, null=True, blank=True)
     object_model_id = models.PositiveIntegerField(blank=True, null=True)
     content_object = GenericForeignKey('content_type', 'object_model_id')
     user = models.ForeignKey(User, related_name='user_commenting', blank=True, null=True, help_text='The user who wrote the comment')

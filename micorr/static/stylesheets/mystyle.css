@@ -6597,7 +6597,14 @@ button.close {
   border-width: 0 5px 5px;
   border-bottom-color: black;
 }
-
+.iconover {
+   top: 0;
+  right: 0;
+  margin-right: .5em;
+  position: absolute;
+  z-index: 1060;
+  text-shadow: -3px 2px 3px;
+}
 .popover {
   position: absolute;
   top: 0;
