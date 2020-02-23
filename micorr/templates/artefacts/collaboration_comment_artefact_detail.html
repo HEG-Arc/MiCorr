@@ -1,0 +1,33 @@
+{% extends "./artefact_update_page.html" %}
+
+{% block title %}
+    <title>MiCorr | {{ artefact.artefact_verbose_description_short }}</title>
+{% endblock title %}
+
+ {% block actions %}
+     <div class="row">
+         <form action="{% url 'artefacts:send-comments' token_id=token.id %}" method="post">{% csrf_token %}
+             <a href="{% url 'artefacts:read-comments' pk=token.id %}" class="btn btn-primary btn-md"><i
+                     class="fa fa-eye"></i>&nbsp;&nbsp;I have read all comments</a>
+             <div class="pull-right">
+                 <button class="btn btn-primary btn-md" type="submit"
+                         onclick="return confirm('Are you sure you want to send comments? You will not be allowed to delete sent comments')">
+                     <i class="fa fa-paper-plane"></i>&nbsp;&nbsp;Send comments
+                 </button>
+             </div>
+         </form>
+     </div>
+    <br>
+{% endblock actions %}
+
+{% block content %}
+    <div class="c9">
+        <a href="{% url 'artefacts:collaboration-menu' %}" class="btn btn-primary btn-md">Return to Collaboration menu
+            menu</a><br><br>
+    </div>
+    <div class="c3">
+    </div>
+    {% with object=artefact %}
+        {{ block.super }}
+    {% endwith %}
+{% endblock content %}

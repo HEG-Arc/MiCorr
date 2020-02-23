@@ -88,16 +88,18 @@
                 </div>
               </div>
         {% endfor %}
-        {% if not form %}
-        <div class="row">
-            <div class="c12 ">
-                <a class="btn btn-success" href="contact_author">
-                    <i class="fa fa-envelope"></i> Contact the author</a>
-                <a class="btn btn-success" href="{% url 'artefacts:share_artefact_with_friend' object.id %}">
-                    <i class="fa fa-share-alt"></i> Share </a>
+        {% block actions %}
+            {% if not form %}
+            <div class="row">
+                <div class="c12 ">
+                    <a class="btn btn-success" href="contact_author">
+                        <i class="fa fa-envelope"></i> Contact the author</a>
+                    <a class="btn btn-success" href="{% url 'artefacts:share_artefact_with_friend' object.id %}">
+                        <i class="fa fa-share-alt"></i> Share </a>
+                </div>
             </div>
-        </div>
-        {% endif %}
+            {% endif %}
+        {% endblock actions %}
         <div id="accordionN1" aria-multiselectable="true">
         {% for sections in section_groups %}
             {% for s in sections %}
