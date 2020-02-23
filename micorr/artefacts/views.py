@@ -1141,14 +1141,7 @@ def sendComments(request, token_id) :
             for section in sections :
                 commentsSectionEach = Collaboration_comment.objects.filter(content_type_id=section_type.id, object_model_id=section.id, token_for_section_id=token.id)
 
-                for comment in commentsSectionEach :
-                    if comment.user == request.user and comment.sent == False:
-                        comment.sent = True
-                        comment.save()
-        except:
-            pass
-
-        return redirect('artefacts:collaboration_menu')
+        return redirect('artefacts:collaboration-menu')
 
 class CommentReadView(generic.UpdateView):
     model = Token
@@ -1245,7 +1238,7 @@ class CollaborationHideView(generic.UpdateView):
         return context
 
     def get_success_url(self):
-        return reverse('artefacts:collaboration_menu')
+        return reverse('artefacts:collaboration-menu')
 
 class CollaborationDeletedListView(generic.ListView):
     model = Token
@@ -1293,7 +1286,7 @@ def retrieveDeletedCollaboration(request, token_id) :
         token.hidden_by_recipient = False
         token.save()
 
-    return redirect('artefacts:collaboration_deleted_menu')
+    return redirect('artefacts:collaboration-deleted-menu')
 
 class PublicationListView(generic.ListView):
     model = Publication
