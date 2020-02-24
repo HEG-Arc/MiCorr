@@ -8,6 +8,7 @@ app_name="artefacts"
 
 urlpatterns = [
     url(r'^$', artefacts_views.ArtefactsListView.as_view(), name='artefact-list'),
+    url(r'^keywords/$', artefacts_views.ArtefactsListView.as_view(), name='artefact-search-by-keywords'),
     url(r'^(?P<pk>\d+)/$', artefacts_views.ArtefactsDetailView.as_view(), name='artefact-detail'),
 
     url(r'^(?P<pk>\d+)/update/$', login_required(artefacts_views.ArtefactsUpdateView.as_view()),
