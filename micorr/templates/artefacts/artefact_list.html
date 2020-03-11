@@ -12,23 +12,39 @@
       <div class="lightframe">
 
           <div class="row">
-              <div class="c6 pre3">
+              {% if current_url == 'artefact-search-by-keywords'%}
+                <div class="c6 pre3">
+              {% else %}
+                <div class="c6">
+              {% endif %}
                   <h1>Search</h1>
               </div>
           </div>
 
           <div class="row">
               <form action="." method="get">
-                  <div class="c6 pre3">
-                      <h3 class="underline">by keywords</h3>
+                  {% if current_url == 'artefact-search-by-keywords'%}
+                      <div class="c6 pre3">
+                  {% else %}
+                    <div class="c6">
+                  {% endif %}
+                  <h3 class="underline">by keywords</h3>
                       <p>{{ search.q }}</p>
                       <br/>
                       {% crispy filter.form %}
-                      <div class="line center">
+                      <div class="line">
                           <button type="submit" class="btn btn-primary btn-lg">Search database <span class="glyphicon glyphicon-search faded"></span></button>
                       </div>
                   </div>
               </form>
+              {% if current_url != 'artefact-search-by-keywords'%}
+                <a href="{% url 'artefacts:searchStratigraphy' %}">
+                     <h3 class="underline">By stratigraphy representation</h3>
+                <div class="c6">
+                    <i class="icon-micorr disc fa-4x"></i>
+                </div>
+                </a>
+             {% endif %}
           </div>
       </div>
 {% if request.GET %}

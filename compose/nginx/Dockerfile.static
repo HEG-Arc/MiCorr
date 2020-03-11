@@ -1,0 +1,18 @@
+FROM nginx:1.13.3
+
+# installs the `ps` command in the nginx image
+RUN apt-get update && apt-get install -y procps
+
+ADD dhparams.pem /etc/ssl/private/dhparams.pem
+
+# copy nginx static certificate template
+
+ADD nginx-static-cert.conf /etc/nginx/nginx.conf
+# valid bundled certificate and key must be mounted into /etc/nginx/certs/ as domain.bundle.crt domain.key
+
+# script will update domain name in nginx.conf based on MY_DOMAIN_NAME env var
+ADD start-static-cert.sh /
+
+CMD /start-static-cert.sh
+
+

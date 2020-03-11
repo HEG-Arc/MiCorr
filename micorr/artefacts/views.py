@@ -7,7 +7,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.mail import EmailMultiAlternatives
 from django.core.mail import send_mail
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse,resolve
 from django.db.models import Q
 from django.http import HttpResponse, JsonResponse, Http404,HttpResponse, HttpResponseNotAllowed
 
@@ -110,16 +110,17 @@ class ArtefactsListView(generic.ListView):
         """
         artefactssearch = SearchForm(request.GET)
         artefactsfilter = ArtefactFilter(request.GET, queryset=self.queryset)
-        searchresults = artefactssearch.search()
-        # only return result on form submit not default get
+        current_url = resolve(request.path_info).url_name
         if request.GET:
+            searchresults = artefactssearch.search()
+            # only return result on form submit not default get
             results = artefactsfilter.qs
             if request.GET.get('q'):
                 results = results.filter(pk__in=[r.pk for r in searchresults])
         else:
             results = None
         return render(request, "artefacts/artefact_list.html",
-                      {'search': artefactssearch, 'results': results, 'filter': artefactsfilter,
+                      {'current_url':current_url, 'search': artefactssearch, 'results': results, 'filter': artefactsfilter,
                        'self': self, 'node_base_url': settings.NODE_BASE_URL})
 
 def get_section_groups(artefact, form, formObject,add_mce_widget=False):

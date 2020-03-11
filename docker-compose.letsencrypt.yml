@@ -1,0 +1,29 @@
+version: '2'
+
+services:
+
+  nginx:
+    build:
+      context: ./compose/nginx
+      dockerfile: Dockerfile
+
+
+    volumes:
+      - ./data/etc-letsencrypt:/etc/letsencrypt
+      - ./data/lib-letsencrypt:/var/lib/letsencrypt
+      - ./micorr/media:/media
+      - ./data/maintenance:/usr/share/nginx/html
+
+  certbot:
+    image: certbot/certbot
+    command: /bin/sh -c "sleep 6 && certbot certonly -n --standalone -d ${MY_DOMAIN_NAME} --agree-tos --email micorr@he-arc.ch --server https://acme-v01.api.letsencrypt.org/directory --rsa-key-size 4096 --verbose --keep-until-expiring --preferred-challenges http-01"
+    entrypoint: ""
+    volumes:
+      - ./data/etc-letsencrypt:/etc/letsencrypt
+      - ./data/lib-letsencrypt:/var/lib/letsencrypt
+    ports:
+      - "80"
+      - "443"
+    environment:
+      - TERM=xterm
+
