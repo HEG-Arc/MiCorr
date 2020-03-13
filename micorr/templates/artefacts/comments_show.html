@@ -1,14 +1,13 @@
 {% for value in values %}
 <div class="row">
-    {% if not value.parent %}
     <div class="c11">
-    {% else %}
-    <div class="c1"></div>
-    <div class="c10">
-    {% endif %}
         <span class="user_name_comment">{{ value.user.username }}</span>
-        <span class="comment_timestamp"> {{ value.created }}</span>
-    {% if value.user != user and not value.read %}
+        <span class="comment_timestamp"> {{ value.created }}
+            {% if value.user == user and value.read %}
+                <i class="fa fa-check"></i>
+            {% endif %}
+        </span>
+        {% if value.user != user and not value.read %}
         <div class="commentsNotRead"><i>{{ value.comment|safe }}</i></div>
     {% else %}
         <div class="comments">{{ value.comment|safe }}</div>
