@@ -6612,6 +6612,23 @@ button.close {
   z-index: 1060;
   text-shadow: -3px 2px 3px;
 }
+.hidden-iconover {
+  top: 0;
+  right: 0;
+  margin-right: .5em;
+  position: absolute;
+  z-index: 1060;
+  text-shadow: -3px 2px 3px;
+  /*visibility: hidden;*/
+  opacity: 0.1;
+  filter: alpha(opacity=10);
+}
+.hidden-iconover:hover {
+  /*visibility: visible;*/
+    opacity: 1;
+  filter: alpha(opacity=100);
+}
+
 .popover {
   position: absolute;
   top: 0;

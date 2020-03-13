@@ -142,10 +142,11 @@
                                             <a href="#comment_{{s.section.template.order}}_content" data-toggle="collapse" aria-expanded="false"
                                                aria-controls="#comment_{{s.section.template.order}}_content">
                                             {% if field_comments|keyvalue:s.section.id %}
-                                                <span class="iconover ">{{ field_comments|keyvalue:s.section.id|length }}><i
-                                                        class="fa fa-comment {% if field_comments|keyvalue:s.section.id %} redicon {% endif %}"></i></span>
+                                                <span class="iconover ">{{ field_comments|keyvalue:s.section.id|length }}
+                                                    <i class="fa fa-comment {% if field_comments|keyvalue:s.section.id %} redicon {% endif %}"></i>
+                                                </span>
                                                 {%  else %}
-                                                <i class="iconover fa fa-comment"></i>
+                                                <i class="hidden-iconover fa fa-comment"></i>
                                                 {% endif %}
                                             </a>
                                         </div>
@@ -274,9 +275,9 @@
                                             <a href="#{{ field.auto_id }}_comment" data-toggle="collapse"
                                                aria-expanded="false" aria-controls=#{{ field.auto_id }}_comment">
                                                 {% if field_comments|keyvalue:field.auto_id %}
-                                                    <span class="iconover ">{{ field_comments|keyvalue:field.auto_id|length }} <i class="fa fa-comment redicon "></i></span>
+                                                    <span class="iconover"> {{field_comments|keyvalue:field.auto_id|length}} <i class="fa fa-comment redicon "></i></span>
                                                 {% else %}
-                                                    <i class="iconover fa fa-comment"></i>
+                                                    <i class="hidden-iconover fa fa-comment"></i>
                                                 {% endif %}
 
                                             </a>
