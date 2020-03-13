@@ -805,7 +805,8 @@ class CollaborationUpdateView(ArtefactsUpdateView): #BaseArtefactContextMixin
         context = super(CollaborationUpdateView, self).get_context_data(**self.kwargs)
         token = get_object_or_404(Token, pk=self.kwargs['token_id'])
         errorAccessToken(token, user)
-        section_comments = Collaboration_comment.objects.filter(content_type=ContentType.objects.get(model='section'), token_for_section_id=token.pk)
+        section_comments = Collaboration_comment.objects.filter(content_type=ContentType.objects.get(model='section'),
+                                                    token_for_section_id=token.pk).filter(Q(user=user) | Q(sent=True))
         field_comments =  defaultdict(list)
 
         for comment in section_comments.filter(parent_id__isnull=True): #, field_name__isnull=False):
@@ -855,7 +856,8 @@ class CollaborationCommentView(generic.CreateView,BaseArtefactContextMixin):
         context = super(CollaborationCommentView, self).get_context_data(**self.kwargs)
         token = get_object_or_404(Token, pk=self.kwargs['token_id'])
         errorAccessToken(token, user)
-        section_comments = Collaboration_comment.objects.filter(content_type=ContentType.objects.get(model='section'), token_for_section_id=token.pk)
+        section_comments = Collaboration_comment.objects.filter(content_type=ContentType.objects.get(model='section'),
+                                                    token_for_section_id=token.pk).filter(Q(user=user) | Q(sent=True))
         field_comments =  defaultdict(list)
 
         for comment in section_comments.filter(parent_id__isnull=True): #, field_name__isnull=False):
@@ -951,27 +953,6 @@ class CollaborationCommentView(generic.CreateView,BaseArtefactContextMixin):
 
         return reverse('artefacts:collaboration-comment', kwargs={'token_id' : self.kwargs['token_id']})
 
-def getSectionShortName(sectionTitle):
-    if sectionTitle == 'The object' :
-        return 'object'
-    elif sectionTitle == 'Zones of the artefact submitted to visual observation and location of sampling areas' :
-        return 'zones'
-    elif sectionTitle == 'Macroscopic observation' :
-        return 'macroscopic'
-    elif sectionTitle == 'Sample' :
-        return 'sample'
-    elif sectionTitle == 'Analyses and results' :
-        return 'anaResults'
-    elif sectionTitle == 'Metal' :
-        return 'metal'
-    elif sectionTitle == 'Corrosion layers' :
-        return 'corrLayers'
-    elif sectionTitle == 'Synthesis of the macroscopic / microscopic observation of corrosion layers' :
-        return 'synthesis'
-    elif sectionTitle == 'Conclusion' :
-        return 'conclusion'
-    elif sectionTitle == 'References' :
-        return 'references'
 
 def sendComments(request, token_id) :
     if request.method == 'POST':
@@ -983,7 +964,7 @@ def sendComments(request, token_id) :
 
         unsent_comments = Collaboration_comment.objects.filter(content_type_id=section_type.id,
                                                                token_for_section_id=token.id,
-                                                               object_model_id__in=(sections.values_list('pk')),
+                                                               object_model_id__in=sections.values('pk'),
                                                                sent=False, user=request.user)
         unsent_comments.update(sent=True)
 
@@ -1008,28 +989,11 @@ class CommentReadView(generic.UpdateView):
         token_type = ContentType.objects.get(model='token')
         section_type = ContentType.objects.get(model='section')
 
-        try:
-            commentsTokenAll = Collaboration_comment.objects.filter(content_type_id=token_type.id,
-                                                                    object_model_id=token.id)
-            for comment in commentsTokenAll:
-                if comment.user != request.user and comment.sent == True and comment.read == False:
-                    comment.read = True
-                    comment.save()
-        except:
-            pass
+        Collaboration_comment.objects.exclude(user_id=request.user.id).filter(
+            content_type_id=section_type.id, object_model_id__in=sections.values('pk'),
+            token_for_section_id=token.id,
+            sent=True, read=False).update(**dict(read=True))
 
-        try:
-            for section in sections:
-                commentsSectionEach = Collaboration_comment.objects.filter(content_type_id=section_type.id,
-                                                                           object_model_id=section.id,
-                                                                           token_for_section_id=token.id)
-
-                for comment in commentsSectionEach:
-                    if comment.user != request.user and comment.sent == True and comment.read == False:
-                        comment.read = True
-                        comment.save()
-        except:
-            pass
 
         return super(CommentReadView, self).post(request, **kwargs)
 
