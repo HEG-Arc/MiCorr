@@ -1726,10 +1726,17 @@ p {
 }
 
 .user_name_comment {
-  font-size: 14px;
+  font-size: 18px;
   margin-top : 0px;
   margin-bottom: 0px;
   font-weight: bolder;
+}
+.comment_timestamp {
+  margin-top : 0px;
+  margin-bottom: 0px;
+  margin-left: 10px;
+  font-size : small;
+  font-weight: lighter;
 }
 
 .comments {
