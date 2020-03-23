@@ -177,9 +177,15 @@ class BaseArtefactContextMixin(ContextMixin):
         context_data = super(BaseArtefactContextMixin, self).get_context_data(**kwargs)
         artefact_form = None
         add_mce_widget = False
-        if self.object is None and kwargs.get('token_id'):
-            token = get_object_or_404(Token, pk=kwargs['token_id'])
-            artefact = token.artefact
+        if self.object is None:
+            if kwargs.get('token_id'):
+                token = get_object_or_404(Token, pk=kwargs['token_id'])
+                artefact = token.artefact
+            elif self.kwargs.get('pk'):
+                # CreatePublication case get artefact to copy in new Publication
+                artefact = get_object_or_404(Artefact, pk=self.kwargs['pk'])
+            else:
+                raise Http404
         else:
             if isinstance(self.object,Artefact):
                 artefact = self.object
@@ -1154,8 +1160,8 @@ class PublicationCreateView(generic.CreateView, BaseArtefactContextMixin):
 
     def get_context_data(self, **kwargs):
         context = super(PublicationCreateView, self).get_context_data(**kwargs)
-        artefact = self.object
-        if artefact.object.user != self.request.user:
+        artefact = context.get('artefact')
+        if not artefact or artefact.object.user != self.request.user:
             raise Http404
 
         context['user'] = self.request.user
