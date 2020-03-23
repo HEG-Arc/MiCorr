@@ -1015,7 +1015,7 @@ class CommentDeleteView(generic.DeleteView):
         context = super(CommentDeleteView, self).get_context_data(**kwargs)
         comment = self.object
         token = comment.token_for_section
-        errorAccessToken(token.pk, self.request.user)
+        errorAccessToken(token, self.request.user)
 
         if token.read == False :
             token.read = True
