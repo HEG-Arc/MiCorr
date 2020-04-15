@@ -39,7 +39,7 @@ django-redis==4.10.0
 redis==3.2.1
 
 # Useful things
-django-avatar==4.1.0
+django-avatar==5.0.0
 
 # Git revision
 dealer==2.1.0
