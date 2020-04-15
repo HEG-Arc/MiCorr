@@ -40,6 +40,9 @@ services:
     # we use non official elasticsearch image as elasticsearch only provides docker images version >6.8.2
     # and haystack is not compatible with elasticsearch >2.4
     image: blacktop/elasticsearch:2.4
+    environment:
+      - cluster.routing.allocation.disk.watermark.low=800mb
+      - cluster.routing.allocation.disk.watermark.high=500mb
 
   django:
     build:
@@ -60,45 +63,32 @@ services:
   node:
     build:
       context: .
-      dockerfile: ./compose/node/Dockerfile
+      dockerfile: ./compose/node/Dockerfile-static
     restart: always
-    ports:
-      - "8080:8080"
     depends_on:
       - django
 
   nginx:
-    build: ./compose/nginx
+    build:
+      context: ./compose/nginx
+      dockerfile: Dockerfile.static
+
     depends_on:
       - django
       - node
-      - certbot
+
     environment:
       # MY_DOMAIN_NAME is used by both nginx (for allowed hosts) and certbot for getting ssl certificate
-      # set MY_DOMAIN_NAME env var to eg.: micorr.org
+      # set MY_DOMAIN_NAME env var to eg.: micorr.org in .env
       - MY_DOMAIN_NAME=${MY_DOMAIN_NAME}
 
     ports:
       - "0.0.0.0:80:80"
       - "0.0.0.0:443:443"
     volumes:
-      - ./data/etc-letsencrypt:/etc/letsencrypt
-      - ./data/lib-letsencrypt:/var/lib/letsencrypt
+      - ./data/certs:/etc/nginx/certs
       - ./micorr/media:/media
       - ./data/maintenance:/usr/share/nginx/html
-
-  certbot:
-    image: certbot/certbot
-    command: /bin/sh -c "sleep 6 && certbot certonly -n --standalone -d ${MY_DOMAIN_NAME} --agree-tos --email micorr@he-arc.ch --server https://acme-v01.api.letsencrypt.org/directory --rsa-key-size 4096 --verbose --keep-until-expiring --preferred-challenges http-01"
-    entrypoint: ""
-    volumes:
-      - ./data/etc-letsencrypt:/etc/letsencrypt
-      - ./data/lib-letsencrypt:/var/lib/letsencrypt
-    ports:
-      - "80"
-      - "443"
-    environment:
-      - TERM=xterm
 
 
   redis:

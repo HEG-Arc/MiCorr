@@ -600,6 +600,8 @@ class Collaboration_comment(TimeStampedModel):
     content_type = models.ForeignKey(ContentType, blank=True, null=True)
     parent = models.ForeignKey('self', on_delete=models.SET_NULL, blank=True, null=True, help_text='The comment from which this comment is the child')
     field = models.ForeignKey(Field, blank=True, null=True, help_text='The field concerned by the comment')
+    fieldset_name =  models.CharField(max_length=80, null=True, blank=True)
+    field_name = models.CharField(max_length=80, null=True, blank=True)
     object_model_id = models.PositiveIntegerField(blank=True, null=True)
     content_object = GenericForeignKey('content_type', 'object_model_id')
     user = models.ForeignKey(User, related_name='user_commenting', blank=True, null=True, help_text='The user who wrote the comment')
@@ -608,6 +610,16 @@ class Collaboration_comment(TimeStampedModel):
     class Meta:
         verbose_name = 'Comment'
         verbose_name_plural = 'Comments'
+
+    def delete(self, *args, **kwargs):
+        if self.parent:
+            # self has parent we update its children's parent before deleting
+            # else (no parent) children parents will be set to Null by on_delete SET_NULL
+            children = self.__class__.objects.filter(parent_id=self._get_pk_val())
+            for child in children:
+                child.parent = self.parent
+                child.save()
+        super(Collaboration_comment,self).delete(*args, **kwargs)
 
 @python_2_unicode_compatible  # provide equivalent __unicode__ and __str__ methods on Python 2
 class FormDescription(models.Model):

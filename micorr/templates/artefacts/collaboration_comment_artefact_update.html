@@ -1,0 +1,18 @@
+{% extends "./artefact_update_page.html" %}
+
+{% block title %}
+    <title>MiCorr | {{ artefact.artefact_verbose_description_short }}</title>
+{% endblock title %}
+
+
+{% block content %}
+    <div class="c9">
+        <a href="{% url 'artefacts:collaboration-menu' %}" class="btn btn-primary btn-md">Return to Collaboration menu
+            menu</a><br><br>
+    </div>
+    <div class="c3">
+    </div>
+    {% with object=artefact %}
+        {{ block.super }}
+    {% endwith %}
+{% endblock content %}

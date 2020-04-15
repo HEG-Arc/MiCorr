@@ -1,51 +1,28 @@
 {% for value in values %}
-      <div class="row">
-          {% if not value.parent %}
-              <div class="c11">
-                <!--{ if value.user == user %}
-                    <div class="user_name_comment">You</div>
-                { else %}
-                    <div class="user_name_comment">{ value.user.username }}</div>
-                { endif %}-->
-                <div class="user_name_comment">{{ value.user.username }}</div>
-                {% if value.user != user and not value.read %}
-                    <div class="commentsNotRead"><i>{{ value.comment|safe }}</i></div>
-                {% else %}
-                    <div class="comments">{{ value.comment|safe }}</div>
-                {% endif %}
-                <hr class="comment">
-              </div>
-              <div class="c1">
-                  {% if not value.sent and value.user == user %}
-                    <a href="{% url 'artefacts:delete-comment' token_id=token.id pk=value.id parent_id=0 child_id=0 %}"><i class="fa fa-trash"></i></a>
-                  {% endif %}
-                  {% if value.user != user and not value.read %}
-                      <div class="commentsNotReadInfo">
-                        Unread
-                      </div>
-                  {% endif %}
-              </div>
-          {% else %}
-              <div class="c1"></div>
-              <div class="c10">
-                <div class="user_name_comment">{{ value.user.username }}</div>
-                {% if value.user != user and not value.read %}
-                    <div class="commentsNotRead"><i>{{ value.comment|safe }}</i></div>
-                {% else %}
-                    <div class="comments">{{ value.comment|safe }}</div>
-                {% endif %}
-                <hr class="comment">
-              </div>
-              <div class="c1">
-                  {% if not value.sent and value.user == user %}
-                    <a href="{% url 'artefacts:delete-comment' token_id=token.id pk=value.id parent_id=0 child_id=0 %}"><i class="fa fa-trash"></i></a>
-                  {% endif %}
-                  {% if value.user != user and not value.read %}
-                      <div class="commentsNotReadInfo">
-                        Unread
-                      </div>
-                  {% endif %}
-              </div>
-          {% endif %}
-      </div>
+<div class="row">
+    <div class="c11">
+        <span class="user_name_comment">{{ value.user.username }}</span>
+        <span class="comment_timestamp"> {{ value.created }}
+            {% if value.user == user and value.read %}
+                <i class="fa fa-check"></i>
+            {% endif %}
+        </span>
+        {% if value.user != user and not value.read %}
+        <div class="commentsNotRead"><i>{{ value.comment|safe }}</i></div>
+    {% else %}
+        <div class="comments">{{ value.comment|safe }}</div>
+    {% endif %}
+    <hr class="comment">
+    </div>
+    <div class="c1">
+        {% if not value.sent and value.user == user %}
+            <a href="{% url 'artefacts:delete-comment' pk=value.id %}"><i class="fa fa-trash"></i></a>
+        {% endif %}
+        {% if value.user != user and not value.read %}
+            <div class="commentsNotReadInfo">
+                Unread
+            </div>
+        {% endif %}
+    </div>
+</div>
 {% endfor %}

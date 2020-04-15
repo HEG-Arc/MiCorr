@@ -8,6 +8,7 @@ app_name="artefacts"
 
 urlpatterns = [
     url(r'^$', artefacts_views.ArtefactsListView.as_view(), name='artefact-list'),
+    url(r'^keywords/$', artefacts_views.ArtefactsListView.as_view(), name='artefact-search-by-keywords'),
     url(r'^(?P<pk>\d+)/$', artefacts_views.ArtefactsDetailView.as_view(), name='artefact-detail'),
 
     url(r'^(?P<pk>\d+)/update/$', login_required(artefacts_views.ArtefactsUpdateView.as_view()),
@@ -62,18 +63,17 @@ urlpatterns = [
     url(r'^(?P<artefact_id>\d+)/token/(?P<pk>\d+)/delete/$',
         login_required(artefacts_views.TokenDeleteView.as_view()), name='delete_token'),
 
-    url(r'^collaboration/$', login_required(artefacts_views.CollaborationListView.as_view()), name='collaboration_menu'),
-    url(r'^collaboration/deleted/$', login_required(artefacts_views.CollaborationDeletedListView.as_view()), name='collaboration_deleted_menu'),
+    url(r'^collaboration/$', login_required(artefacts_views.CollaborationListView.as_view()), name='collaboration-menu'),
+    url(r'^collaboration/deleted/$', login_required(artefacts_views.CollaborationDeletedListView.as_view()), name='collaboration-deleted-menu'),
     url(r'^(?P<token_id>\d+)/collaboration/update/$', login_required(artefacts_views.CollaborationUpdateView.as_view()), name='collaboration-update'),
-    url(r'^(?P<pk>\d+)/collaboration/comment/(?P<field>\w+)/$', login_required(artefacts_views.CollaborationCommentView.as_view()), name='collaboration-comment'),
+    url(r'^collaboration/(?P<token_id>\d+)/comment/$', login_required(artefacts_views.CollaborationCommentView.as_view()), name='collaboration-comment'),
+    url(r'^collaboration/(?P<token_id>\d+)/comment/(?P<section_id>\d+)/(?P<field>\w*)/$', login_required(artefacts_views.CollaborationCommentView.as_view()), name='collaboration-comment'),
     url(r'^(?P<pk>\d+)/collaboration/hide/$', login_required(artefacts_views.CollaborationHideView.as_view()), name='collaboration-hide'),
     url(r'^(?P<token_id>\d+)/collaboration/retrieve/$', login_required(artefacts_views.retrieveDeletedCollaboration), name='collaboration-retrieve'),
 
-    url(r'^(?P<token_id>\d+)/collaboration/send/$', login_required(artefacts_views.sendComments), name='send-comments'),
-    url(r'^(?P<pk>\d+)/collaboration/read/$', login_required(artefacts_views.CommentReadView.as_view()), name='read-comments'),
-    url(r'^collaboration/(?P<pk>\d+)/delete/(?P<token_id>\d+)/$', login_required(artefacts_views.CommentDeleteView.as_view()), name='delete-comment-without-relation'),
-    url(r'^collaboration/(?P<pk>\d+)/delete/(?P<token_id>\d+)/(?P<child_id>\d+)/$', login_required(artefacts_views.CommentDeleteView.as_view()), name='delete-comment-without-parent'),
-    url(r'^collaboration/(?P<pk>\d+)/delete/(?P<token_id>\d+)/(?P<parent_id>\d+)/(?P<child_id>\d+)/$', login_required(artefacts_views.CommentDeleteView.as_view()), name='delete-comment'),
+    url(r'^collaboration/(?P<token_id>\d+)/send/$', login_required(artefacts_views.sendComments), name='send-comments'),
+    url(r'collaboration/(?P<pk>\d+)/read/$', login_required(artefacts_views.CommentReadView.as_view()), name='read-comments'),
+    url(r'^collaboration/(?P<pk>\d+)/delete/$', login_required(artefacts_views.CommentDeleteView.as_view()), name='delete-comment'),
 
     url(r'^publication/$', login_required(artefacts_views.PublicationListView.as_view()), name='publication-menu'),
     url(r'^publication/create/(?P<pk>\d+)/$', login_required(artefacts_views.PublicationCreateView.as_view()), name='publication-create'),

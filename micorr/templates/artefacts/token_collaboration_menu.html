@@ -66,7 +66,7 @@
                                                 <td>{{ tokenSha.recipient }}</td>
                                                 <td>
                                                     <a href="{% url 'artefacts:collaboration-update' tokenSha.id %}" title="Modify artefact"><i class="fa fa-pencil"></i></a> |
-                                                    <a href="{% url 'artefacts:collaboration-comment' pk=tokenSha.id field='none' %}" title="Comment artefact"><i class="fa fa-comment"></i></a> |
+                                                    <a href="{% url 'artefacts:collaboration-comment' token_id=tokenSha.id %}" title="Comment artefact"><i class="fa fa-comment"></i></a> |
                                                     <a href="{% url 'artefacts:collaboration-hide' pk=tokenSha.id %}" title="Delete collaboration"><i class="fa fa-trash"></i></a>
                                                 </td>
                                             </tr>
@@ -137,7 +137,7 @@
                                                 </td>
                                                 <td>{{ tokenRec.user.username }}</td>
                                                 <td>
-                                                    <a href="{% url 'artefacts:collaboration-comment' pk=tokenRec.id field='none' %}" title="Comment artefact"><i class="fa fa-comment"></i></a> |
+                                                    <a href="{% url 'artefacts:collaboration-comment' token_id=tokenRec.id %}" title="Comment artefact"><i class="fa fa-comment"></i></a> |
                                                     <a href="{% url 'artefacts:collaboration-hide' pk=tokenRec.id %}" title="Delete collaboration"><i class="fa fa-trash"></i></a>
                                                 </td>
                                             </tr>
@@ -150,7 +150,7 @@
                         </div>
                     </div>
                     <br>
-                    <a href="{% url 'artefacts:collaboration_deleted_menu' %}" class="btn btn-primary btn-md"><i class="fa fa-recycle"></i> Retrieve deleted collaborations</a>
+                    <a href="{% url 'artefacts:collaboration-deleted-menu' %}" class="btn btn-primary btn-md"><i class="fa fa-recycle"></i> Retrieve deleted collaborations</a>
                 </div>
             </div>
         {% endif %}

@@ -3,7 +3,7 @@
 
 # debugging tools
 django-debug-toolbar==1.11
-werkzeug==0.15.2
+werkzeug==0.15.3
 
 #test dependencies
 django-test-plus==1.2.0

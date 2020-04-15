@@ -1,23 +1,24 @@
 import json
 from collections import defaultdict
 
+from django.contrib.auth.models import Group
 from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.mail import EmailMultiAlternatives
 from django.core.mail import send_mail
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse,resolve
 from django.db.models import Q
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, Http404,HttpResponse, HttpResponseNotAllowed
 
 from django.shortcuts import get_object_or_404, render, redirect
 
 from django.utils.html import escape
 from django.views import generic
+from django.views.generic.base import ContextMixin
 from haystack.forms import SearchForm
 from django.conf import settings
 from django.contrib import messages
-from django.http import Http404
 from tinymce.widgets import TinyMCE
 
 from contacts.forms import ContactCreateForm
@@ -32,7 +33,7 @@ from .forms import ArtefactsForm, ArtefactsCreateForm, DocumentUpdateForm, Docum
     PublicationDecisionForm, PublicationDelegateForm, PublicationRejectDecisionForm, StratigraphyCreateForm
 
 from .models import Artefact, Document, Collaboration_comment, Field, Object, Section, Image, \
-    Stratigraphy, Token, Publication, SectionTemplate, Element
+    Stratigraphy, Token, Publication, SectionTemplate
 from . import models
 
 import logging
@@ -108,19 +109,20 @@ class ArtefactsListView(generic.ListView):
         """
         artefactssearch = SearchForm(request.GET)
         artefactsfilter = ArtefactFilter(request.GET, queryset=self.queryset)
-        searchresults = artefactssearch.search()
-        # only return result on form submit not default get
+        current_url = resolve(request.path_info).url_name
         if request.GET:
+            searchresults = artefactssearch.search()
+            # only return result on form submit not default get
             results = artefactsfilter.qs
             if request.GET.get('q'):
                 results = results.filter(pk__in=[r.pk for r in searchresults])
         else:
             results = None
         return render(request, "artefacts/artefact_list.html",
-                      {'search': artefactssearch, 'results': results, 'filter': artefactsfilter,
+                      {'current_url':current_url, 'search': artefactssearch, 'results': results, 'filter': artefactsfilter,
                        'self': self, 'node_base_url': settings.NODE_BASE_URL})
 
-def get_section_groups(artefact, form, formObject):
+def get_section_groups(artefact, form, formObject,add_mce_widget=False):
     """
     Utility function shared by ArtefactDetailView and ArtefactUpdateView
     build a list of list of Section instances grouped by categories for the given artefact object
@@ -145,9 +147,63 @@ def get_section_groups(artefact, form, formObject):
                       'form': formObject if s.template.fieldset == 'artefact' else form})
     if len(group):  # last group case
         section_groups.append(group)
+    if add_mce_widget:
+        # integrate with django_tinymce for content and complementary_information textareas
+        # that are not rendered by TinyMCE widget and were missing tinymce class data-mce-conf attribute to be handled by
+        # common tinmce_init . so we generate each data-mce-conf and add them to sections dict
+        # they will be added to textarea elements in the template
+        mce_widget = TinyMCE(mce_attrs={'mode': 'exact'})
+        for sections in section_groups:
+            for s in sections:
+                s_order = s['section'].template.order
+                if s['section'].template.has_content:
+                    name = 's{}_content'.format(s_order)
+                    s['content_mce_conf'] = json.dumps(
+                        mce_widget.get_mce_config({'class': 'tinymce', 'id': name, 'name': name}))
+                if s['section'].template.has_complementary_information:
+                    name = 's{}_complementary_information'.format(s_order)
+                    s['complementary_information_mce_conf'] = json.dumps(
+                        mce_widget.get_mce_config({'class': 'tinymce', 'id': name, 'name': name}))
+
     return section_groups
 
-class ArtefactsDetailView(generic.DetailView):
+class BaseArtefactContextMixin(ContextMixin):
+    """
+    ContextMixin creating common context_data for
+    Artefact and Publication based views and templates
+    """
+    def get_context_data(self, **kwargs):
+        context_data = super(BaseArtefactContextMixin, self).get_context_data(**kwargs)
+        artefact_form = None
+        add_mce_widget = False
+        if self.object is None:
+            if kwargs.get('token_id'):
+                token = get_object_or_404(Token, pk=kwargs['token_id'])
+                artefact = token.artefact
+            elif self.kwargs.get('pk'):
+                # CreatePublication case get artefact to copy in new Publication
+                artefact = get_object_or_404(Artefact, pk=self.kwargs['pk'])
+            else:
+                raise Http404
+        else:
+            if isinstance(self.object,Artefact):
+                artefact = self.object
+                artefact_form = context_data.get('form')
+                add_mce_widget = True
+            else:
+                # Publication case
+                artefact = self.object.artefact
+        context_data['artefact'] = artefact
+        context_data['documents'] = artefact.document_set.all()
+        artefact_form= artefact_form or ArtefactsForm(instance=artefact, label_suffix='')
+        context_data['section_groups'] = get_section_groups(artefact, artefact_form,
+                                                            ObjectUpdateForm(instance=artefact.object, label_suffix=''),
+                                                            add_mce_widget)
+        context_data['authors_fieldset'] = artefact_form.get_fieldset('authors')
+        context_data['node_base_url'] = settings.NODE_BASE_URL
+        return context_data
+
+class ArtefactsDetailView(generic.DetailView, BaseArtefactContextMixin):
     """
     A detail view of a selected artefact
     """
@@ -156,19 +212,8 @@ class ArtefactsDetailView(generic.DetailView):
                                                'responsible_institution', 'microstructure', 'corrosion_form', 'corrosion_type')
     template_name = 'artefacts/artefact_update_page.html'
     def get_context_data(self, **kwargs):
-        """
-        Allows the template to use the selected artefact as well as its foreign keys pointers
-        """
-        context = super(ArtefactsDetailView, self).get_context_data(**kwargs)
-        context['documents'] = self.object.document_set.all()
-        context['node_base_url'] = settings.NODE_BASE_URL
-        form = ArtefactsForm(instance=self.object, label_suffix='')
-        formObject = ObjectUpdateForm(instance=self.object.object, label_suffix='')
+        return super(ArtefactsDetailView, self).get_context_data(**kwargs)
 
-        context['section_groups'] = get_section_groups(self.object, form, formObject)
-        context['authors_fieldset'] = form.get_fieldset('authors')
-
-        return context
 
 
 class ArtefactsUpdateView(SuccessMessageMixin, generic.UpdateView):
@@ -187,26 +232,12 @@ class ArtefactsUpdateView(SuccessMessageMixin, generic.UpdateView):
         context = super(ArtefactsUpdateView,self).get_context_data(**kwargs)
 
         #if user want to update an artefact with parent (= artefact for publication), raise 404
-        errorUpdatePublicationArtefact(self.kwargs['pk'])
+        errorUpdatePublicationArtefact(self.object)
 
         formObject = ObjectUpdateForm(instance=self.object.object)
         form=context['form']
 
-        # integrate with django_tinymce for content and complementary_information textareas
-        # that are not rendered by TinyMCE widget and were missing tinymce class data-mce-conf attribute to be handled by
-        # common tinmce_init . so we generate each data-mce-conf and add them to sections dict
-        # they will be added to textarea elements in the template
-        section_groups = get_section_groups(self.object, form, formObject)
-        mce_widget = TinyMCE(mce_attrs={'mode':'exact'})
-        for sections in  section_groups:
-            for s in sections:
-                s_order = s['section'].template.order
-                if s['section'].template.has_content:
-                    name = 's{}_content'.format(s_order)
-                    s['content_mce_conf']=json.dumps(mce_widget.get_mce_config({'class':'tinymce','id':name,'name':name}))
-                if s['section'].template.has_complementary_information:
-                    name = 's{}_complementary_information'.format(s_order)
-                    s['complementary_information_mce_conf']=json.dumps(mce_widget.get_mce_config({'class':'tinymce','id':name,'name':name}))
+        section_groups = get_section_groups(self.object, form, formObject,add_mce_widget=True)
 
         context.update(authors_fieldset=form.get_fieldset('authors'),
                        section_groups=section_groups,
@@ -697,13 +728,11 @@ class DocumentCreateView(generic.CreateView):
     def get_success_url(self):
         return reverse('artefacts:artefact-detail', kwargs={'pk': self.kwargs.get('artefact_id', None)}, )
 
-def errorUpdatePublicationArtefact(artefact_id) :
-    artefact = get_object_or_404(Artefact, pk=artefact_id)
+def errorUpdatePublicationArtefact(artefact):
     if artefact.parent :
         raise Http404
 
-def errorAccessToken(token_id, user) :
-    token = get_object_or_404(Token, pk=token_id)
+def errorAccessToken(token, user):
     if token.user != user and token.recipient != user.email :
         raise Http404
 
@@ -767,205 +796,55 @@ class CollaborationListView(generic.ListView):
         context['user'] = user
         return context
 
-class CollaborationUpdateView(generic.UpdateView):
+class CollaborationUpdateView(ArtefactsUpdateView): #BaseArtefactContextMixin
 
-    model = Artefact
-    template_name_suffix = '_collaboration_update'
-    form_class = ArtefactsForm
+    template_name = 'artefacts/collaboration_comment_artefact_update.html'
 
     def get_object(self, queryset=None):
         token = Token.tokenManager.get(id=self.kwargs['token_id'])
         obj = Artefact.objects.get(id=token.artefact.id)
         return obj
 
-    def get(self, request, **kwargs):
+    def get_context_data(self, **kwargs):
+        user = self.request.user
+        context = super(CollaborationUpdateView, self).get_context_data(**self.kwargs)
+        token = get_object_or_404(Token, pk=self.kwargs['token_id'])
+        errorAccessToken(token, user)
+        section_comments = Collaboration_comment.objects.filter(content_type=ContentType.objects.get(model='section'),
+                                                    token_for_section_id=token.pk).filter(Q(user=user) | Q(sent=True))
+        field_comments =  defaultdict(list)
 
-        errorAccessToken(self.kwargs['token_id'], self.request.user)
-
-        token = Token.tokenManager.get(id=self.kwargs['token_id'])
-        artefact = Artefact.objects.get(id=token.artefact.id)
-        sections = artefact.section_set.all()
-        obj = Object.objects.get(id=artefact.object.id)
-        user=self.request.user
+        for comment in section_comments.filter(parent_id__isnull=True): #, field_name__isnull=False):
+            # get the first comment for each field (it has no parent comment)
+            while True:
+                if comment.field_name:
+                    field_comments[comment.field_name].append(comment)
+                else:
+                    field_comments[comment.object_model_id].append(comment)
+                try:
+                    # then add "replies" if any
+                    comment=section_comments.get(parent_id=comment.id)
+                except Collaboration_comment.DoesNotExist:
+                    break
 
         if token.read == False :
             token.read = True
             token.save()
 
-        self.object = artefact
-        form_class = self.get_form_class()
-        form = self.get_form(form_class)
+        context['user'] = user
+        context['token'] = token
+        context['field_comments'] = field_comments
+        context['comment_form'] = self.get_form(CollaborationCommentForm)
+        return context
 
-        sectionComments = []
-        sectionDict = defaultdict(list)
-        tokenComments = []
-        tokenDict = defaultdict(list)
-        token_type = ContentType.objects.get(model='token')
-        unreadCommentsField = {}
-        unreadCommentsSection = {}
-        fields = Field.objects.all()
-        try:
-            # Get all comments for the current token
-            allTokenComments = Collaboration_comment.objects.filter(content_type_id=token_type.id, object_model_id=token.id)
-
-            # Get first comments of all fields
-            firstTokenComments = []
-            for tokenComm in allTokenComments:
-                if not tokenComm.parent:
-                    firstTokenComments.append(tokenComm)
-
-            # Sort comments using parent_id
-            allTokenCommentsSorted = []
-            for firstToken in firstTokenComments:
-                idToken = firstToken.id
-                allTokenCommentsSorted.append(firstToken)
-                while idToken != 0:
-                    try:
-                        currentToken = allTokenComments.get(parent_id=idToken)
-                        allTokenCommentsSorted.append(currentToken)
-                        idToken = currentToken.id
-                    except:
-                        idToken = 0
-
-            # Filter only sent comments or comments from user connected
-            for tokenComm in allTokenCommentsSorted:
-                if tokenComm.sent or self.request.user == tokenComm.user:
-                    tokenComments.append(tokenComm)
-
-            # Create a dictonary 'key-list' with field title as a key
-            for tokenComment in tokenComments:
-                tokenDict[tokenComment.field.title].append(tokenComment)
-
-            # Research fields with unread comments
-            for field in fields :
-                unreadCommentsField[field.title] = False
-
-            for tokenComment in tokenComments :
-                if tokenComment.read == False and tokenComment.user != self.request.user :
-                    unreadCommentsField[tokenComment.field.title] = True
-
-        except:
-            pass
-
-        section_type = ContentType.objects.get(model='section')
-        allSectionsComments = []
-
-        for section in sections:
-            # Get all comments from each section
-            comments = Collaboration_comment.objects.filter(content_type_id=section_type.id, object_model_id=section.id, token_for_section_id=token.id)
-            for comment in comments:
-                allSectionsComments.append(comment)
-
-            sectionShortTitle = getSectionShortName(section.template.title)
-            unreadCommentsSection[sectionShortTitle] = False
-
-        # Get first comments of all sections
-        firstSectionComments = []
-        for sectionComm in allSectionsComments:
-            if not sectionComm.parent:
-                firstSectionComments.append(sectionComm)
-
-        # Sort comments using parent_id
-        allSectionCommentsSorted = []
-        for firstSection in firstSectionComments:
-            idSection = firstSection.id
-            allSectionCommentsSorted.append(firstSection)
-            isFound = None
-            while idSection != 0:
-                for comm in allSectionsComments:
-                    isFound = 0
-                    if comm.parent_id == idSection:
-                        allSectionCommentsSorted.append(comm)
-                        idSection = comm.id
-                        isFound = 1
-                if isFound == 0:
-                    idSection = 0
-
-        for commentSectionSorted in allSectionCommentsSorted:
-            # Filter only sent comments or comments from user connected
-            if commentSectionSorted.token_for_section == token:
-                if commentSectionSorted.sent or self.request.user == commentSectionSorted.user:
-                    sectionComments.append(commentSectionSorted)
-                    section = get_object_or_404(Section, pk=commentSectionSorted.object_model_id)
-                    sectionShortTitle = getSectionShortName(section.template.title)
-                    sectionDict[sectionShortTitle].append(commentSectionSorted)
-                    if commentSectionSorted.read == False and commentSectionSorted.user != user:
-                        unreadCommentsSection[sectionShortTitle] = True
-        # get section templates (for default page (#1) )
-        templates=list(SectionTemplate.objects.filter(page_template=1).all())
-
-        object_section = Section.objects.get_or_create(template=templates[0], artefact=artefact)[0]
-        description_section = Section.objects.get_or_create(template=templates[1], artefact=artefact)[0]
-        zone_section = Section.objects.get_or_create(template=templates[2], artefact=artefact)[0]
-        macroscopic_section = Section.objects.get_or_create(template=templates[3], artefact=artefact)[0]
-        sample_section = Section.objects.get_or_create(template=templates[4], artefact=artefact)[0]
-        analyses_performed = Section.objects.get_or_create(template=templates[5], artefact=artefact)[0].content
-        metal_section = Section.objects.get_or_create(template=templates[6], artefact=artefact)[0]
-        corrosion_section = Section.objects.get_or_create(template=templates[7], artefact=artefact)[0]
-        synthesis_section = Section.objects.get_or_create(template=templates[8], artefact=artefact)[0]
-        conclusion_text = Section.objects.get_or_create(template=templates[9], artefact=artefact)[0].content
-        references_text = Section.objects.get_or_create(template=templates[10], artefact=artefact)[0].content
-        stratigraphies = artefact.stratigraphy_set.all
-        return render(request, 'artefacts/collaboration_artefact_update.html', self.get_context_data(artefact=artefact, form=form, object_section=object_section, description_section=description_section,
-                                                             zone_section=zone_section, macroscopic_section=macroscopic_section,
-                                                             sample_section=sample_section, analyses_performed=analyses_performed,
-                                                             metal_section=metal_section, corrosion_section=corrosion_section,
-                                                             synthesis_section=synthesis_section, conclusion_text=conclusion_text,
-                                                             references_text=references_text, stratigraphies=stratigraphies,
-                                                             tokenComments=dict(tokenDict), sectionComments=dict(sectionDict),
-                                                             unreadCommentsField=unreadCommentsField, unreadCommentsSection=unreadCommentsSection,
-                                                             user=user, node_base_url=settings.NODE_BASE_URL))
-
-    def post(self, request, *args, **kwargs):
-        token = get_object_or_404(Token, pk=self.kwargs['token_id'])
-        artefact = get_object_or_404(Artefact, pk=token.artefact.id)
-
-        # get section templates (for default page (#1) )
-        templates = list(SectionTemplate.objects.filter(page_template=1).all())
-        section_1 = Section.objects.get_or_create(template=templates[0], artefact=artefact)[0]
-        artefact.section_set.add(section_1)
-        section_2 = Section.objects.get_or_create(template=templates[1], artefact=artefact)[0]
-        section_2.complementary_information = request.POST['complementary_information']
-        artefact.section_set.add(section_2)
-        section_3 = Section.objects.get_or_create(template=templates[1], artefact=artefact)[0]
-        artefact.section_set.add(section_3)
-        section_4 = Section.objects.get_or_create(template=templates[3], artefact=artefact)[0]
-        section_4.content = request.POST['macroscopic_text']
-        artefact.section_set.add(section_4)
-        section_5 = Section.objects.get_or_create(template=templates[4], artefact=artefact)[0]
-        section_5.complementary_information = request.POST['sample_complementary_information']
-        # images sample
-        artefact.section_set.add(section_5)
-        section_6 = Section.objects.get_or_create(template=templates[5], artefact=artefact)[0]
-        section_6.content = request.POST['analyses_performed']
-        artefact.section_set.add(section_6)
-        section_7 = Section.objects.get_or_create(template=templates[6], artefact=artefact)[0]
-        section_7.content = request.POST['metal_text']
-        section_7.complementary_information = request.POST['metal_complementary_information']
-        # images metal
-        artefact.section_set.add(section_7)
-        section_8 = Section.objects.get_or_create(template=templates[7], artefact=artefact)[0]
-        section_8.content = request.POST['corrosion_text']
-        section_8.complementary_information = request.POST['corrosion_complementary_information']
-        artefact.section_set.add(section_8)
-        section_9 = Section.objects.get_or_create(template=templates[8], artefact=artefact)[0]
-        section_9.content=request.POST['synthesis_text']
-        artefact.section_set.add(section_9)
-        section_10 = Section.objects.get_or_create(template=templates[9], artefact=artefact)[0]
-        section_10.content = request.POST['conclusion_text']
-        artefact.section_set.add(section_10)
-        section_11 = Section.objects.get_or_create(template=templates[10], artefact=artefact)[0]
-        section_11.content = request.POST['references_text']
-        artefact.section_set.add(section_11)
-        return super(CollaborationUpdateView, self).post(request, **kwargs)
 
     def get_success_url(self):
-        return reverse('artefacts:collaboration_menu')
+        return reverse('artefacts:collaboration-update',args=[self.kwargs['token_id']] )
 
-class CollaborationCommentView(generic.CreateView):
+class CollaborationCommentView(generic.CreateView,BaseArtefactContextMixin):
 
     model = Collaboration_comment
-    template_name_suffix = '_form'
+    template_name = 'artefacts/collaboration_comment_artefact_detail.html'
     form_class = CollaborationCommentForm
 
     """
@@ -979,289 +858,122 @@ class CollaborationCommentView(generic.CreateView):
     def get_context_data(self, **kwargs):
 
         user = self.request.user
-        errorAccessToken(self.kwargs['pk'], self.request.user)
-        context = super(CollaborationCommentView, self).get_context_data(**kwargs)
-        token = get_object_or_404(Token, pk=self.kwargs['pk'])
-        artefact = token.artefact
-        sections = artefact.section_set.all()
-        documents = artefact.document_set.all()
-        stratigraphies = artefact.stratigraphy_set.all()
+        context = super(CollaborationCommentView, self).get_context_data(**self.kwargs)
+        token = get_object_or_404(Token, pk=self.kwargs['token_id'])
+        errorAccessToken(token, user)
+        section_comments = Collaboration_comment.objects.filter(content_type=ContentType.objects.get(model='section'),
+                                                    token_for_section_id=token.pk).filter(Q(user=user) | Q(sent=True))
+        field_comments =  defaultdict(list)
+
+        for comment in section_comments.filter(parent_id__isnull=True): #, field_name__isnull=False):
+            # get the first comment for each field (it has no parent comment)
+            while True:
+                if comment.field_name:
+                    field_comments[comment.field_name].append(comment)
+                else:
+                    field_comments[comment.object_model_id].append(comment)
+                try:
+                    # then add "replies" if any
+                    comment=section_comments.get(parent_id=comment.id)
+                except Collaboration_comment.DoesNotExist:
+                    break
 
         if token.read == False :
             token.read = True
             token.save()
 
-        sectionComments = []
-        sectionDict = defaultdict(list)
-        tokenComments = []
-        tokenDict = defaultdict(list)
-        token_type = ContentType.objects.get(model='token')
-        unreadCommentsField = {}
-        unreadCommentsSection = {}
-        fields = Field.objects.all()
-        try :
-            # Get all comments for the current token
-            allTokenComments = Collaboration_comment.objects.filter(content_type_id=token_type.id, object_model_id = token.id)
-
-            # Get first comments of all fields
-            firstTokenComments = []
-            for tokenComm in allTokenComments :
-                if not tokenComm.parent :
-                    firstTokenComments.append(tokenComm)
-
-            # Sort comments using parent_id
-            allTokenCommentsSorted = []
-            for firstToken in firstTokenComments :
-                idToken = firstToken.id
-                allTokenCommentsSorted.append(firstToken)
-                while idToken != 0 :
-                    try :
-                        currentToken = allTokenComments.get(parent_id=idToken)
-                        allTokenCommentsSorted.append(currentToken)
-                        idToken = currentToken.id
-                    except :
-                        idToken = 0
-
-            # Filter only sent comments or comments from user connected
-            for tokenComm in allTokenCommentsSorted :
-                if tokenComm.sent or user == tokenComm.user :
-                    tokenComments.append(tokenComm)
-
-            # Create a dictonary 'key-list' with field title as a key
-            for tokenComment in tokenComments :
-                tokenDict[tokenComment.field.title].append(tokenComment)
-
-            # Research fields with unread comments
-            for field in fields :
-                unreadCommentsField[field.title] = False
-
-            for tokenComment in tokenComments :
-                if tokenComment.read == False and tokenComment.user != user :
-                    unreadCommentsField[tokenComment.field.title] = True
-
-
-        except :
-            pass
-
-        section_type = ContentType.objects.get(model='section')
-        allSectionsComments = []
-
-        for section in sections :
-            # Get all comments from each section
-            comments = Collaboration_comment.objects.filter(content_type_id=section_type.id, object_model_id=section.id, token_for_section_id = token.id)
-            for comment in comments :
-                allSectionsComments.append(comment)
-
-            sectionShortTitle = getSectionShortName(section.template.title)
-            unreadCommentsSection[sectionShortTitle] = False
-
-        # Get first comments of all sections
-        firstSectionComments = []
-        for sectionComm in allSectionsComments:
-            if not sectionComm.parent:
-                firstSectionComments.append(sectionComm)
-
-        # Sort comments using parent_id
-        allSectionCommentsSorted = []
-        for firstSection in firstSectionComments:
-            idSection = firstSection.id
-            allSectionCommentsSorted.append(firstSection)
-            isFound = None
-            while idSection != 0:
-                for comm in allSectionsComments :
-                    isFound = 0
-                    if comm.parent_id == idSection :
-                        allSectionCommentsSorted.append(comm)
-                        idSection = comm.id
-                        isFound = 1
-                if isFound==0 :
-                    idSection=0
-
-        for commentSectionSorted in allSectionCommentsSorted :
-            # Filter only sent comments or comments from user connected
-            if commentSectionSorted.sent or self.request.user == commentSectionSorted.user :
-                sectionComments.append(commentSectionSorted)
-                section = get_object_or_404(Section, pk=commentSectionSorted.object_model_id)
-                sectionShortTitle = getSectionShortName(section.template.title)
-                sectionDict[sectionShortTitle].append(commentSectionSorted)
-                if commentSectionSorted.read == False and commentSectionSorted.user != user :
-                    unreadCommentsSection[sectionShortTitle] = True
-
 
         context['user'] = user
         context['token'] = token
-        context['artefact'] = artefact
-        context['sections'] = sections
-        context['documents'] = documents
-        context['stratigraphies'] = stratigraphies
-        context['unreadCommentsField'] = unreadCommentsField
-        context['unreadCommentsSection'] = unreadCommentsSection
-        context['tokenComments'] = dict(tokenDict)
-        context['sectionComments'] = dict(sectionDict)
-        context['node_base_url'] = settings.NODE_BASE_URL
+        context['field_comments'] = field_comments
+        context['comment_form'] = context.pop('form')
+        context['object']=context['artefact']
         return context
 
     def get_field_last_comment_id(self, token, field, model):
-        lastId = 0
+        lastId = None
         try :
             commentsExisting = Collaboration_comment.objects.filter(content_type_id=model.id, object_model_id=token.id, field_id=field.id)
             if commentsExisting:
-                lastId = 0
-                idComm = 0
+                lastId = None
+                idComm = None
                 for comment in commentsExisting:
                     if not comment.parent:
                         idComm = comment.id
 
-                while lastId == 0:
-                    isFound = 0
+                while lastId is None:
+                    isFound = False
                     for comment in commentsExisting:
                         if comment.parent_id == idComm:
                             idComm = comment.id
-                            isFound = 1
-                    if isFound == 0:
+                            isFound = True
+                    if not isFound:
                         lastId = idComm
-                return lastId
-            else :
-                return lastId
+            return lastId
         except :
-            return 0
+            return None
 
     def get_section_last_comment_id(self, section, model, token):
-        lastId = 0
+        lastId = None
         try :
             commentsExisting = Collaboration_comment.objects.filter(content_type_id=model.id, object_model_id=section.id, token_for_section_id=token.id)
             if commentsExisting:
-                lastId = 0
-                idComm = 0
+                lastId = None
+                idComm = None
                 for comment in commentsExisting:
                     if not comment.parent:
                         idComm = comment.id
 
-                while lastId == 0:
-                    isFound = 0
+                while lastId is None:
+                    isFound = False
                     for comment in commentsExisting:
                         if comment.parent_id == idComm:
                             idComm = comment.id
-                            isFound = 1
-                    if isFound == 0:
+                            isFound = True
+                    if not isFound:
                         lastId = idComm
-                return lastId
-            else :
-                return lastId
+            return lastId
         except :
-            return 0
+            return None
 
     def form_valid(self, form, **kwargs):
 
-        try :
-            token = Token.tokenManager.get(pk=self.kwargs['pk'])
-            field = get_object_or_404(Field, title=self.kwargs['field'])
-            form.instance.field = field
-            form.instance.content_object = token
-            token_type = ContentType.objects.get(model='token')
+        token = Token.tokenManager.get(pk=self.kwargs['token_id'])
+        section = Section.objects.get(pk=self.kwargs['section_id'])
+        form.instance.field_name = self.kwargs['field']
+        form.instance.fieldset_name = section.template.fieldset
 
-            if self.get_field_last_comment_id(token, field, token_type) != 0 :
-                lastId = self.get_field_last_comment_id(token, field, token_type)
-                form.instance.parent_id = lastId
+        form.instance.content_object = section
+        form.instance.token_for_section = token
+        section_type = ContentType.objects.get(model='section')
 
-        except :
-            token = Token.tokenManager.get(pk=self.kwargs['pk'])
-            field = getSectionCompleteName(self.kwargs['field'])
-            section = Section.objects.get(template__title=field, artefact=token.artefact)
-            form.instance.content_object = section
-            form.instance.token_for_section = token
-            section_type = ContentType.objects.get(model='section')
+        form.instance.parent_id = self.get_section_last_comment_id(section, section_type, token)
 
-            if self.get_section_last_comment_id(section, section_type, token) != 0 :
-                lastId = self.get_section_last_comment_id(section, section_type, token)
-                form.instance.parent_id = lastId
-
-            form.instance.token_for_section = token
-
-        user = self.request.user
-        form.instance.user = user
+        form.instance.user = self.request.user
 
         return super(CollaborationCommentView, self).form_valid(form)
 
 
     def get_success_url(self):
 
-        return reverse('artefacts:collaboration-comment', kwargs={'pk' : self.kwargs['pk'], 'field' : 'none'})
+        return reverse('artefacts:collaboration-comment', kwargs={'token_id' : self.kwargs['token_id']})
 
-def getSectionCompleteName(sectionTitle):
-    if sectionTitle == 'object' :
-        return 'The object'
-    elif sectionTitle == 'zones' :
-        return 'Zones of the artefact submitted to visual observation and location of sampling areas'
-    elif sectionTitle == 'macroscopic' :
-        return 'Macroscopic observation'
-    elif sectionTitle == 'sample' :
-        return 'Sample'
-    elif sectionTitle == 'anaResults' :
-        return 'Analyses and results'
-    elif sectionTitle == 'metal' :
-        return 'Metal'
-    elif sectionTitle == 'corrLayers' :
-        return 'Corrosion layers'
-    elif sectionTitle == 'synthesis' :
-        return 'Synthesis of the macroscopic / microscopic observation of corrosion layers'
-    elif sectionTitle == 'conclusion' :
-        return 'Conclusion'
-    elif sectionTitle == 'references' :
-        return 'References'
-
-def getSectionShortName(sectionTitle):
-    if sectionTitle == 'The object' :
-        return 'object'
-    elif sectionTitle == 'Zones of the artefact submitted to visual observation and location of sampling areas' :
-        return 'zones'
-    elif sectionTitle == 'Macroscopic observation' :
-        return 'macroscopic'
-    elif sectionTitle == 'Sample' :
-        return 'sample'
-    elif sectionTitle == 'Analyses and results' :
-        return 'anaResults'
-    elif sectionTitle == 'Metal' :
-        return 'metal'
-    elif sectionTitle == 'Corrosion layers' :
-        return 'corrLayers'
-    elif sectionTitle == 'Synthesis of the macroscopic / microscopic observation of corrosion layers' :
-        return 'synthesis'
-    elif sectionTitle == 'Conclusion' :
-        return 'conclusion'
-    elif sectionTitle == 'References' :
-        return 'references'
 
 def sendComments(request, token_id) :
     if request.method == 'POST':
         token = get_object_or_404(Token, pk=token_id)
-        errorAccessToken(token_id, request.user)
+        errorAccessToken(token, request.user)
         artefact = get_object_or_404(Artefact, pk=token.artefact.id)
         sections = artefact.section_set.all()
-        token_type = ContentType.objects.get(model='token')
         section_type = ContentType.objects.get(model='section')
 
-        try :
-            commentsTokenAll = Collaboration_comment.objects.filter(content_type_id=token_type.id, object_model_id=token.id)
-            for comment in commentsTokenAll:
-                if comment.user == request.user and comment.sent == False:
-                    comment.sent = True
-                    comment.save()
-        except:
-            pass
+        unsent_comments = Collaboration_comment.objects.filter(content_type_id=section_type.id,
+                                                               token_for_section_id=token.id,
+                                                               object_model_id__in=sections.values('pk'),
+                                                               sent=False, user=request.user)
+        unsent_comments.update(sent=True)
 
-        try :
-            for section in sections :
-                commentsSectionEach = Collaboration_comment.objects.filter(content_type_id=section_type.id, object_model_id=section.id, token_for_section_id=token.id)
-
-                for comment in commentsSectionEach :
-                    if comment.user == request.user and comment.sent == False:
-                        comment.sent = True
-                        comment.save()
-        except:
-            pass
-
-        return redirect('artefacts:collaboration_menu')
+        return redirect('artefacts:collaboration-menu')
 
 class CommentReadView(generic.UpdateView):
     model = Token
@@ -1270,8 +982,8 @@ class CommentReadView(generic.UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(CommentReadView, self).get_context_data(**kwargs)
-        token = Token.tokenManager.get(id=self.kwargs['pk'])
-        errorAccessToken(self.kwargs['pk'], self.request.user)
+        token = self.object
+        errorAccessToken(token, self.request.user)
         context['token'] = token
         return context
 
@@ -1282,33 +994,16 @@ class CommentReadView(generic.UpdateView):
         token_type = ContentType.objects.get(model='token')
         section_type = ContentType.objects.get(model='section')
 
-        try:
-            commentsTokenAll = Collaboration_comment.objects.filter(content_type_id=token_type.id,
-                                                                    object_model_id=token.id)
-            for comment in commentsTokenAll:
-                if comment.user != request.user and comment.sent == True and comment.read == False:
-                    comment.read = True
-                    comment.save()
-        except:
-            pass
+        Collaboration_comment.objects.exclude(user_id=request.user.id).filter(
+            content_type_id=section_type.id, object_model_id__in=sections.values('pk'),
+            token_for_section_id=token.id,
+            sent=True, read=False).update(**dict(read=True))
 
-        try:
-            for section in sections:
-                commentsSectionEach = Collaboration_comment.objects.filter(content_type_id=section_type.id,
-                                                                           object_model_id=section.id,
-                                                                           token_for_section_id=token.id)
-
-                for comment in commentsSectionEach:
-                    if comment.user != request.user and comment.sent == True and comment.read == False:
-                        comment.read = True
-                        comment.save()
-        except:
-            pass
 
         return super(CommentReadView, self).post(request, **kwargs)
 
     def get_success_url(self):
-        return reverse('artefacts:collaboration-comment', kwargs={'pk': self.kwargs['pk'], 'field': 'none'})
+        return reverse('artefacts:collaboration-comment', kwargs={'token_id': self.kwargs['pk']})
 
 class CommentDeleteView(generic.DeleteView):
     model = Collaboration_comment
@@ -1317,61 +1012,20 @@ class CommentDeleteView(generic.DeleteView):
     def get_context_data(self, **kwargs):
 
         context = super(CommentDeleteView, self).get_context_data(**kwargs)
-        comment = get_object_or_404(Collaboration_comment, pk=self.kwargs['pk'])
-
-        token = get_object_or_404(Token, pk=self.kwargs['token_id'])
-        errorAccessToken(self.kwargs['token_id'], self.request.user)
+        comment = self.object
+        token = comment.token_for_section
+        errorAccessToken(token, self.request.user)
 
         if token.read == False :
             token.read = True
             token.save()
 
-        parent = 0
-        child = 0
-
-        try :
-            parentComm = get_object_or_404(Collaboration_comment, pk=comment.parent_id)
-            parent = parentComm.id
-        except:
-            pass
-
-        try :
-            childComm = get_object_or_404(Collaboration_comment, parent_id=comment.id)
-            child = childComm.id
-        except:
-            pass
-
         context['token'] = token
         context['comment'] = comment
-        context['parent_id'] = parent
-        context['child_id'] = child
         return context
 
     def get_success_url(self):
-
-        parent = 0
-        child = 0
-        token = get_object_or_404(Token, pk=self.kwargs['token_id'])
-        try :
-            parent = self.kwargs['parent_id']
-        except:
-            pass
-        try :
-            child = self.kwargs['child_id']
-        except:
-            pass
-
-        if child!=0 :
-            childComm = get_object_or_404(Collaboration_comment, pk=child)
-            if parent!=0 :
-                childComm.parent_id = parent
-                childComm.save()
-
-            else :
-                childComm.parent_id = None
-                childComm.save()
-
-        return reverse('artefacts:collaboration-comment', kwargs={'pk': self.kwargs['token_id'], 'field': 'none'})
+        return reverse('artefacts:collaboration-comment', kwargs={'token_id': self.object.token_for_section.pk})
 
 class CollaborationHideView(generic.UpdateView):
     model = Token
@@ -1391,15 +1045,15 @@ class CollaborationHideView(generic.UpdateView):
         return super(CollaborationHideView, self).post(request, **kwargs)
 
     def get_context_data(self, **kwargs):
-        errorAccessToken(self.kwargs['pk'], self.request.user)
         context = super(CollaborationHideView, self).get_context_data(**kwargs)
+        errorAccessToken(self.object, self.request.user)
         context['action'] = reverse('artefacts:collaboration-hide',
-                                    kwargs={'pk': self.get_object().id})
+                                    kwargs={'pk': self.object.pk})
 
         return context
 
     def get_success_url(self):
-        return reverse('artefacts:collaboration_menu')
+        return reverse('artefacts:collaboration-menu')
 
 class CollaborationDeletedListView(generic.ListView):
     model = Token
@@ -1437,7 +1091,7 @@ class CollaborationDeletedListView(generic.ListView):
 
 def retrieveDeletedCollaboration(request, token_id) :
     token = get_object_or_404(Token, pk=token_id)
-    errorAccessToken(token_id, request.user)
+    errorAccessToken(token, request.user)
 
     if token.user == request.user :
         token.hidden_by_author = False
@@ -1447,7 +1101,7 @@ def retrieveDeletedCollaboration(request, token_id) :
         token.hidden_by_recipient = False
         token.save()
 
-    return redirect('artefacts:collaboration_deleted_menu')
+    return redirect('artefacts:collaboration-deleted-menu')
 
 class PublicationListView(generic.ListView):
     model = Publication
@@ -1477,7 +1131,7 @@ class PublicationListView(generic.ListView):
         context['newPubliHistory'] = newPubliHistory
         return context
 
-class PublicationArtefactDetailView(generic.DetailView):
+class PublicationArtefactDetailView(generic.DetailView, BaseArtefactContextMixin):
 
     model = Publication
     template_name_suffix = '_detail'
@@ -1485,55 +1139,32 @@ class PublicationArtefactDetailView(generic.DetailView):
     def get_context_data(self, **kwargs):
 
         context = super(PublicationArtefactDetailView, self).get_context_data(**kwargs)
-        publication = get_object_or_404(Publication, pk=self.kwargs['pk'])
+        publication = self.object
         artefact = publication.artefact
-        typeUser = adminType(self.request.user)
-        if artefact.object.user != self.request.user and typeUser==None :
+        admin_user_type = admin_type(self.request.user)
+        if artefact.object.user != self.request.user and admin_user_type==None :
             raise Http404
-        sections = artefact.section_set.all()
-        documents = artefact.document_set.all()
-        stratigraphies = artefact.stratigraphy_set.all()
 
         if publication.decision_taken and publication.read==False :
             publication.read = True
             publication.save()
 
-        context['artefact'] = artefact
         context['publication'] = publication
-        context['sections'] = sections
-        context['documents'] = documents
-        context['stratigraphies'] = stratigraphies
-        context['node_base_url'] = settings.NODE_BASE_URL
         return context
 
-class PublicationCreateView(generic.CreateView):
+class PublicationCreateView(generic.CreateView, BaseArtefactContextMixin):
     model = Artefact
     template_name_suffix = '_publication_create'
     form_class = ArtefactsCreateForm
 
     def get_context_data(self, **kwargs):
-        artefact = get_object_or_404(Artefact, pk=self.kwargs['pk'])
-        if artefact.object.user != self.request.user :
-            raise Http404
-        sections = artefact.section_set.all()
-        documents = artefact.document_set.all()
-        stratigraphies = artefact.stratigraphy_set.all()
-        user = self.request.user
-        typeUser = adminType(user)
-
         context = super(PublicationCreateView, self).get_context_data(**kwargs)
+        artefact = context.get('artefact')
+        if not artefact or artefact.object.user != self.request.user:
+            raise Http404
 
-        if typeUser == 'Main':
-            context['admin'] = True
-        else:
-            context['admin'] = False
-
-        context['artefact'] = artefact
-        context['sections'] = sections
-        context['documents'] = documents
-        context['stratigraphies'] = stratigraphies
-        context['user'] = user
-        context['node_base_url'] = settings.NODE_BASE_URL
+        context['user'] = self.request.user
+        context['admin_user_type'] = admin_type(self.request.user)
 
         return context
 
@@ -1578,24 +1209,12 @@ class PublicationCreateView(generic.CreateView):
             document.save()
 
 
-        mainAdmins = []
-        users = User.objects.all()
-        isCurrentUserMainAdmin = False
+        main_administrator = Group.objects.get(name='Main administrator').user_set.first()
 
-        for user in users :
-            groups = user.groups.all()
-            for group in groups :
-                if group.name=='Main administrator' :
-                    mainAdmins.append(user)
-                    if user==self.request.user :
-                        isCurrentUserMainAdmin = True
-
-        mainAdmin = mainAdmins[0]
-
-        publication = Publication(artefact=newArtefact, user=mainAdmin)
+        publication = Publication(artefact=newArtefact, user=main_administrator)
         publication.save()
 
-        if isCurrentUserMainAdmin == True :
+        if self.request.user == main_administrator:
             return reverse('artefacts:publication-administration-delegate', kwargs={'pk': publication.id})
         else :
             return reverse('users:detail', kwargs={'username': self.request.user})
@@ -1608,9 +1227,9 @@ class AdministrationListView(generic.ListView):
 
         context = super(AdministrationListView, self).get_context_data(**kwargs)
         user = self.request.user
-        typeUser = adminType(user)
+        admin_user_type = admin_type(user)
 
-        if typeUser == 'Main' :
+        if admin_user_type == 'Main' :
             try :
                 requestsPubAll = Publication.objects.filter(user=user, delegated_user=None, decision_taken=False).order_by('-modified')
                 requestsPub = []
@@ -1637,7 +1256,7 @@ class AdministrationListView(generic.ListView):
             except:
                 context['delegPubProgress'] = None
 
-        elif typeUser == 'Delegated' :
+        elif admin_user_type == 'Delegated' :
             try:
                 delegPub = Publication.objects.filter(delegated_user=user, decision_taken=False, decision_delegated_user=None).order_by('-modified')
                 context['delegPub'] = delegPub
@@ -1648,7 +1267,7 @@ class AdministrationListView(generic.ListView):
         else :
             raise Http404
 
-        context['adminType'] = typeUser
+        context['admin_user_type'] = admin_user_type
         context['user'] = user
         return context
 
@@ -1667,7 +1286,7 @@ def accessAdministration(publication_id, user, accessType) :
         if publication.delegated_user != user or publication.decision_delegated_user != None :
             raise Http404
 
-class AdministrationArtefactDetailView(generic.DetailView):
+class AdministrationArtefactDetailView(generic.DetailView, BaseArtefactContextMixin):
 
     model = Publication
     template_name_suffix = '_administration_detail'
@@ -1677,40 +1296,26 @@ class AdministrationArtefactDetailView(generic.DetailView):
                                                'responsible_institution', 'microstructure', 'corrosion_form', 'corrosion_type')
 """
     def get_context_data(self, **kwargs):
-        typeUser = adminType(self.request.user)
-        if typeUser == None :
+        admin_user_type = admin_type(self.request.user)
+        if admin_user_type == None :
             raise Http404
         else :
             context = super(AdministrationArtefactDetailView, self).get_context_data(**kwargs)
-            publication = get_object_or_404(Publication, pk=self.kwargs['pk'])
+            publication = self.object
 
             accessAdministration(publication.id, self.request.user, self.kwargs['accessType'])
 
-            artefact = publication.artefact
-            sections = artefact.section_set.all()
-            documents = artefact.document_set.all()
-            stratigraphies = artefact.stratigraphy_set.all()
-
             context['publication'] = publication
             context['accessType'] = self.kwargs['accessType']
-            context['artefact'] = artefact
-            context['sections'] = sections
-            context['documents'] = documents
-            context['stratigraphies'] = stratigraphies
-            context['node_base_url'] = settings.NODE_BASE_URL
             return context
 
-def adminType(user) :
-    adminType = None
-    groups = user.groups.all()
-    for group in groups:
-        if group.name == 'Delegated administrator':
-            adminType = 'Delegated'
+def admin_type(user) :
+    groups = user.groups.values_list('name', flat=True)
+    if 'Main administrator' in groups:
+        return 'Main'
+    elif 'Delegated administrator' in groups:
+            return 'Delegated'
 
-    for group in groups:
-        if group.name == 'Main administrator':
-            adminType = 'Main'
-    return adminType
 
 class PublicationUpdateDecision(generic.UpdateView):
 
@@ -1723,10 +1328,10 @@ class PublicationUpdateDecision(generic.UpdateView):
         publication = get_object_or_404(Publication, pk=self.kwargs['pk'])
 
         user = self.request.user
-        typeUser = adminType(user)
+        admin_user_type = admin_type(user)
 
         # if main admin, change directly artefact status
-        if typeUser=='Main':
+        if admin_user_type=='Main':
             # Change validated attribut of the artefact
             if 'refuse' in self.request.POST :
                 self.object.artefact.validated = False
@@ -1747,7 +1352,7 @@ class PublicationUpdateDecision(generic.UpdateView):
             self.object.artefact.save()
             self.object.decision_taken = True
         # if delegated admin, change decision_delegated_user attribut value
-        elif typeUser=='Delegated' and user==publication.delegated_user :
+        elif admin_user_type=='Delegated' and user==publication.delegated_user :
             if 'refuse' in self.request.POST :
                 self.object.decision_delegated_user = False
             elif 'validate' in self.request.POST :
@@ -1763,7 +1368,7 @@ class PublicationUpdateDecision(generic.UpdateView):
     def get_context_data(self, **kwargs):
         user = self.request.user
         publication = get_object_or_404(Publication, pk=self.kwargs['pk'])
-        typeAdmin = adminType(user)
+        typeAdmin = admin_type(user)
         if typeAdmin==None :
             raise Http404
         if typeAdmin=='Delegated' :
@@ -1788,7 +1393,7 @@ def confirmDecisionDelegatedAdmin(request, publication_id):
     if request.POST :
         user = request.user
         publication = get_object_or_404(Publication, pk=publication_id)
-        typeAdmin = adminType(user)
+        typeAdmin = admin_type(user)
         if typeAdmin=='Main' and publication.decision_delegated_user != None and publication.decision_taken == False :
             publication = get_object_or_404(Publication, pk=publication_id)
             artefact = publication.artefact
@@ -1822,7 +1427,7 @@ class PublicationDecisionReject(generic.UpdateView) :
     def get_context_data(self, **kwargs):
         user = self.request.user
         publication = get_object_or_404(Publication, pk=self.kwargs['pk'])
-        typeAdmin = adminType(user)
+        typeAdmin = admin_type(user)
 
         if typeAdmin!='Main' :
             raise Http404
@@ -1840,9 +1445,9 @@ class PublicationDecisionReject(generic.UpdateView) :
             return context
 
     def form_valid(self, form):
-        typeUser = adminType(self.request.user)
+        admin_user_type = admin_type(self.request.user)
 
-        if typeUser != 'Main' :
+        if admin_user_type != 'Main' :
             raise Http404
         else :
             self.object = form.save(commit=False)
@@ -1862,8 +1467,8 @@ class PublicationDelegateView(generic.UpdateView):
     def get_context_data(self, **kwargs):
         user = self.request.user
         publication = get_object_or_404(Publication, pk=self.kwargs['pk'])
-        typeAdmin = adminType(user)
-        if typeAdmin!='Main' :
+        admin_user_type = admin_type(user)
+        if admin_user_type!='Main' :
             raise Http404
         else :
             self.object = publication
@@ -1871,7 +1476,6 @@ class PublicationDelegateView(generic.UpdateView):
             form = self.get_form(form_class)
 
             context = super(PublicationDelegateView, self).get_context_data(**kwargs)
-            # context['typeAdmin'] = typeAdmin
             context['form'] = form
             context['publication'] = publication
             context['user'] = user
@@ -1879,8 +1483,8 @@ class PublicationDelegateView(generic.UpdateView):
             return context
 
     def form_valid(self, form):
-        typeUser = adminType(self.request.user)
-        if typeUser != 'Main' :
+        admin_user_type = admin_type(self.request.user)
+        if admin_user_type != 'Main' :
             raise Http404
 
         return super(PublicationDelegateView, self).form_valid(form)
