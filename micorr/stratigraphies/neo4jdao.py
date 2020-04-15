@@ -290,12 +290,12 @@ class Neo4jDAO:
         family_dic = OrderedDict()
         for record in all_characteristics:
             f_uid = record['f']['uid']
-            if not family_dic.has_key(f_uid):
+            if f_uid not in family_dic:
                 family_dic[f_uid] = {'family': f_uid, 'fam_real_name': record['f']['name'],
                                      'characteristics': OrderedDict()}
             if record['c']:
                 c_uid = record['c']['uid']
-                if not family_dic[f_uid]['characteristics'].has_key(c_uid):
+                if c_uid not in family_dic[f_uid]['characteristics']:
                     c_dic = {'name': c_uid, 'real_name': record['c']['name'], 'subcharacteristics': OrderedDict()}
                     if f_uid == 'elementFamily':
                         c_dic.update({'symbol': record['c']['symbol'], 'category': record['c']['category'], 'order': 0, 'visible': True})
@@ -306,7 +306,7 @@ class Neo4jDAO:
                 logger.debug('no characteristic in : %s',record)
             if record['sc']:
                 sc_uid = record['sc']['uid']
-                if not family_dic[f_uid]['characteristics'][c_uid]['subcharacteristics'].has_key(sc_uid):
+                if sc_uid not in family_dic[f_uid]['characteristics'][c_uid]['subcharacteristics']:
                     family_dic[f_uid]['characteristics'][c_uid]['subcharacteristics'][sc_uid] = \
                                                             {'name': sc_uid, 'sub_real_name': record['sc']['name'],
                                                              'description': record['sc']['description'],
@@ -317,11 +317,11 @@ class Neo4jDAO:
                     family_dic[f_uid]['characteristics'][c_uid]['subcharacteristics'][sc_uid][
                         'subcharacteristics'].append({'name': ssc_uid, 'subsub_real_name': record['ssc']['name']})
         # now convert the dictionaries into lists as expected by api client
-        for f_uid, f in family_dic.iteritems():
-            for c_uid, c in f['characteristics'].iteritems():
-                c['subcharacteristics'] = c['subcharacteristics'].values()
-            f['characteristics'] = f['characteristics'].values()
-        return family_dic.values()
+        for f_uid, f in list(family_dic.items()):
+            for c_uid, c in list(f['characteristics'].items()):
+                c['subcharacteristics'] = list(c['subcharacteristics'].values())
+            f['characteristics'] = list(f['characteristics'].values())
+        return list(family_dic.values())
 
     # Retourne la liste des caracteristiques pour une nature family (S, NMM, Metal, etc.)
     # @params uid de la nature family
@@ -524,7 +524,7 @@ class Neo4jDAO:
                 if node:
                     self.tx.create(Relationship(component, "IS_CONSTITUTED_BY", node))
                 else:
-                    logger.debug(u"{}: with {}={} not found".format(label, key, value))
+                    logger.debug("{}: with {}={} not found".format(label, key, value))
 
             for characteristic in component['characteristics']:
                 find_and_attach_node_to_component('Characteristic','uid', characteristic['name'], c)
@@ -543,7 +543,7 @@ class Neo4jDAO:
         """
         if not len(containers):
             return
-        for family, elements in containers.iteritems():
+        for family, elements in list(containers.items()):
             c = Node("Container")
             stc_rel = Relationship(parent_node, "INCLUDES", c)
 

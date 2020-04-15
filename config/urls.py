@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
+
 
 from django.views.generic import TemplateView
 from django.views import defaults as default_views
 from django.conf import settings
 from django.conf.urls import include, url
 from django.conf.urls.static import static
-from views import HomePageView
+from .views import HomePageView
 from django.contrib import admin
 from django.contrib.sitemaps.views import sitemap
 from wagtail.contrib.wagtailsitemaps.views import sitemap as sitemap_wagtail
@@ -17,7 +17,7 @@ from wagtail.wagtailsearch.urls import frontend as wagtailsearch_frontend_urls
 from wagtail.wagtailsearch.signal_handlers import register_signal_handlers as wagtailsearch_register_signal_handlers
 
 from config.sitemaps import ArtefactsSitemap, HomePageSitemap
-from views import HomePageView
+from .views import HomePageView
 admin.autodiscover()
 wagtailsearch_register_signal_handlers()
 

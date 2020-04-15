@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
+
 
 from django.db import models, migrations
 
@@ -22,7 +22,7 @@ class Migration(migrations.Migration):
                 ('committer_name', models.CharField(help_text='Name of the committer', max_length=50, verbose_name='committer name')),
                 ('out', models.TextField(help_text='Output of the deploy script', verbose_name='Stdout output', blank=True)),
                 ('error', models.TextField(help_text='Errors of the deploy script', verbose_name='Stdout errors', blank=True)),
-                ('update_status', models.CharField(default=b'Started', help_text='Current update status', max_length=50, verbose_name='update status', blank=True)),
+                ('update_status', models.CharField(default='Started', help_text='Current update status', max_length=50, verbose_name='update status', blank=True)),
                 ('created', models.DateTimeField(help_text='Creation date', verbose_name='created', auto_now_add=True)),
             ],
             options={

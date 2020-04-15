@@ -18,11 +18,11 @@ def linkify(field_name):
         if linked_obj:
             model_name = linked_obj._meta.model_name
             app_label = linked_obj._meta.app_label
-            view_name = u'admin:{}_{}_change'.format(app_label, model_name)
+            view_name = 'admin:{}_{}_change'.format(app_label, model_name)
             link_url = reverse(view_name, args=[linked_obj.id])
-            return format_html(u'<a href="{}">{}</a>', link_url, linked_obj)
+            return format_html('<a href="{}">{}</a>', link_url, linked_obj)
         else:
-            return u'-'
+            return '-'
 
     _linkify.short_description = field_name # Sets column name
     return _linkify

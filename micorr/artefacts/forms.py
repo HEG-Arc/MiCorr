@@ -71,9 +71,9 @@ def get_updated_widgets(widgets, model_class, fields):
         return m2u.get(model_name, 'artefacts:generic-autocomplete')
     for f_name in fields:
         for meta_field in model_class._meta.get_fields():
-            if f_name == meta_field.name and meta_field.db_type.im_class in (ForeignKey, ManyToManyField):
+            if f_name == meta_field.name and meta_field.db_type.__self__.__class__ in (ForeignKey, ManyToManyField):
                 rel_model_name = meta_field.related_model.__name__
-                if meta_field.db_type.im_class == ForeignKey:
+                if meta_field.db_type.__self__.__class__ == ForeignKey:
                     widget_class = ModelSelect2WithPop if rel_model_name in (
                         'Origin', 'Contact') else autocomplete.ModelSelect2
                 else:
@@ -128,7 +128,7 @@ class ArtefactsForm(FieldsetForm):
             },
             {
                 "name": "sample",
-                "title": u"optional fields",
+                "title": "optional fields",
                 "is_fieldset": True,
                 "fields": [
                     'sample_description',
@@ -235,7 +235,7 @@ class OriginCreateForm(forms.ModelForm):
     Create a new origin
     """
     city = forms.ModelChoiceField(required=False,
-                                  help_text=unicode(Origin._meta.get_field('city').help_text),
+                                  help_text=str(Origin._meta.get_field('city').help_text),
         queryset=City.objects.all(),
         widget=autocomplete.ModelSelect2(url='artefacts:city-autocomplete')
     )

@@ -15,7 +15,7 @@ class BoundFieldset(object):
         self.is_fieldset = is_fieldset
 
     def __iter__(self):
-        for name, field in self.fields.items():
+        for name, field in list(self.fields.items()):
             yield BoundField(self.form, field, name)
 
 
@@ -85,7 +85,7 @@ class FieldsetForm(forms.ModelForm):
         self._fieldset_fields = OrderedDict()
 
         # create matches between fieldset names and form fields
-        for name, field in self.fields.items():
+        for name, field in list(self.fields.items()):
             for fieldset in self.fieldsets:
                 fieldset_name = fieldset.get("name")
                 if name in fieldset.get('fields', []):

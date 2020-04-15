@@ -380,7 +380,7 @@ def handlePopAdd(request, addForm, field, field_name=None):
         if form.is_valid():
             try:
                 newObject = form.save()
-            except form.ValidationError, error:
+            except form.ValidationError as error:
                 newObject = None
             if newObject:
                 return HttpResponse('<script type="text/javascript">opener.dismissAddAnotherPopup(window, "%s", "%s");</script>' % (escape(newObject._get_pk_val()), escape(newObject)))

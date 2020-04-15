@@ -48,7 +48,7 @@ class artefactAccessControlMiddleware:
         if pattern_update.match(url):
             # method POST after submit the update form
             if request.method == 'POST':
-                if request.session.has_key('token_uuid'):
+                if 'token_uuid' in request.session:
                     token_uuid = request.session['token_uuid']
 
             artefact_id = view_kwargs.get('pk', None)

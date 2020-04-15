@@ -24,7 +24,7 @@
 from hashlib import sha256
 import json
 import logging
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 
 # Core Django imports
 from django.shortcuts import render_to_response, get_object_or_404

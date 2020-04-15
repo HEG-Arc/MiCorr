@@ -18,7 +18,7 @@ from artefacts import get_img_storage_path, get_img_storage_path_stratigraphy, g
 from wagtail.wagtailsnippets.models import register_snippet
 from wagtail.wagtailadmin.edit_handlers import FieldPanel
 
-from year_field import YearField
+from .year_field import YearField
 
 
 @python_2_unicode_compatible
@@ -84,7 +84,7 @@ class Origin(TimeStampedModel):
             origin.append(self.city.name)
             origin.append(self.city.region.name)
             origin.append(self.city.country.name)
-        return u", ".join(origin)
+        return ", ".join(origin)
 
     class Meta:
         ordering = ['site']
@@ -281,10 +281,10 @@ class Artefact(TimeStampedModel):
     def get_authors(self):
         authors_list = []
         for author in self.author.all():
-            authors_list.append(u"{0}. {1} ({2}, {3})".format(author.name, author.surname,
+            authors_list.append("{0}. {1} ({2}, {3})".format(author.name, author.surname,
                                                                   author.organization_name,
                                                                   author.city))
-        return u" & ".join(authors_list)
+        return " & ".join(authors_list)
 
     def get_authors_email(self):
         email_list = []
@@ -303,7 +303,7 @@ class Artefact(TimeStampedModel):
         if self.origin:
             if self.origin.city:
                 artefact.append(self.origin.city.country.name)
-        return u" - ".join(artefact)
+        return " - ".join(artefact)
 
     def artefact_verbose_description_short(self):
         artefact = [self.object.name]
@@ -315,7 +315,7 @@ class Artefact(TimeStampedModel):
             if self.origin.city:
                 if self.origin.city.country:
                     artefact.append(self.origin.city.country.name)
-        return u" - ".join(artefact)
+        return " - ".join(artefact)
 
     def __str__(self):
         return self.artefact_verbose_description()
@@ -546,7 +546,7 @@ class Token(TimeStampedModel):
         verbose_name_plural = 'Tokens'
 
     def __str__(self):
-        return u"Token {} with {} rights, for artefact {} by user {}".format(
+        return "Token {} with {} rights, for artefact {} by user {}".format(
             self.uuid, self.right, self.artefact.object.name, self.user.name)
 
 

@@ -66,7 +66,7 @@ class Contact(TimeStampedModel):
         ordering = ['organization_name', 'name', 'surname']
 
     def __unicode__(self):
-        formatted = unicode(self.organization_name)
+        formatted = str(self.organization_name)
         contact = []
         if self.name:
             if self.surname:

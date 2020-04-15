@@ -12,17 +12,17 @@ class ContactCreateForm(forms.ModelForm):
     """
     # customize ModelChoiceField widgets to use dal autocomplete
     country = forms.ModelChoiceField(required=False,
-                                  help_text=unicode(Contact._meta.get_field('country').help_text),
+                                  help_text=str(Contact._meta.get_field('country').help_text),
                                   queryset=Country.objects.all(),
                                   widget=autocomplete.ModelSelect2(url='artefacts:country-autocomplete')
                                   )
     region = forms.ModelChoiceField(required=False,
-                                  help_text=unicode(Contact._meta.get_field('region').help_text),
+                                  help_text=str(Contact._meta.get_field('region').help_text),
                                   queryset=Region.objects.all(),
                                   widget=autocomplete.ModelSelect2(url='artefacts:region-autocomplete')
                                   )
     city = forms.ModelChoiceField(required=False,
-                                  help_text=unicode(Contact._meta.get_field('city').help_text),
+                                  help_text=str(Contact._meta.get_field('city').help_text),
                                   queryset=City.objects.all(),
                                   widget=autocomplete.ModelSelect2(url='artefacts:city-autocomplete')
                                   )

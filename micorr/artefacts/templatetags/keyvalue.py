@@ -5,5 +5,5 @@ register = template.Library()
 def keyvalue(dict, key):
     try:
         return dict[key]
-    except TypeError, KeyError:
+    except TypeError as KeyError:
         return ''
