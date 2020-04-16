@@ -41,8 +41,8 @@ class Contact(TimeStampedModel):
     a user of MiCorr (somebody with an account to log in) but can be one. A contact may also be the child of another
     contact (for example, students can be children of their school contact).
     """
-    user = models.OneToOneField(User, verbose_name=_('user'), related_name=_('contact'), blank=True, null=True, help_text=_("If this contact is also a user, it's user account."))
-    parent = models.ForeignKey('Contact', verbose_name=_("parent"), related_name=_('members'), blank=True, null=True, help_text=_("Specify one parent to create dependencies between contacts."))
+    user = models.OneToOneField(User, on_delete=models.deletion.CASCADE, verbose_name=_('user'), related_name=_('contact'), blank=True, null=True, help_text=_("If this contact is also a user, it's user account."))
+    parent = models.ForeignKey('Contact', on_delete=models.deletion.CASCADE, verbose_name=_("parent"), related_name=_('members'), blank=True, null=True, help_text=_("Specify one parent to create dependencies between contacts."))
     organization_name = models.CharField(verbose_name=_("organization name"), max_length=250, blank=True, default='', help_text=_("Name of the organization (leave empty if this is an individual contact."))
     organization_complement = models.CharField(verbose_name=_("organization complement"), max_length=250, blank=True, default='', help_text=_("Complement of the organization name (could be a department, ... Leave empty if this is an individual contact."))
     name = models.CharField(verbose_name=_("name"), max_length=250, blank=True, default='', help_text=_("Name of the individual or the contact (in case of an organization contact)."))
@@ -51,9 +51,9 @@ class Contact(TimeStampedModel):
     address_line_1 = models.CharField(verbose_name=_("address line 1"), max_length=250, blank=True, default='', help_text=_("First line of the address."))
     address_line_2 = models.CharField(verbose_name=_("address line 2"), max_length=250, blank=True, default='', help_text=_("Second line of the address."))
     address_line_3 = models.CharField(verbose_name=_("address line 3"), max_length=250, blank=True, default='', help_text=_("Third line of the address."))
-    country = models.ForeignKey(Country, verbose_name=_("country"), blank=True, null=True, help_text=_("Country (from geo database)"))
-    region = models.ForeignKey(Region, verbose_name=_("region/state"), blank=True, null=True, help_text=_("Region or state (from geo database)"))
-    city = models.ForeignKey(City, verbose_name=_("city"), blank=True, null=True, help_text=_("City (from geo database)"))
+    country = models.ForeignKey(Country, on_delete=models.deletion.CASCADE, verbose_name=_("country"), blank=True, null=True, help_text=_("Country (from geo database)"))
+    region = models.ForeignKey(Region, on_delete=models.deletion.CASCADE, verbose_name=_("region/state"), blank=True, null=True, help_text=_("Region or state (from geo database)"))
+    city = models.ForeignKey(City, on_delete=models.deletion.CASCADE, verbose_name=_("city"), blank=True, null=True, help_text=_("City (from geo database)"))
     zip_code = models.CharField(verbose_name=_("zip code"), max_length=250, blank=True, default='', help_text=_("Zip code of the city."))
     url = models.URLField(verbose_name=_("url"), max_length=250, blank=True, null=True, help_text=_("URL of the personal or organization website."))
     email = models.EmailField(verbose_name=_("email"), max_length=250, blank=True, null=True, help_text=_("Email address."))

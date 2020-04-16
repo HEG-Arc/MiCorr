@@ -7,6 +7,7 @@ from django.conf import settings
 import django.utils.timezone
 import tinymce.models
 import django_extensions.db.fields
+import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
@@ -45,7 +46,7 @@ class Migration(migrations.Migration):
                 ('sample_description', tinymce.models.HTMLField(default='', help_text='A field to add more information about the artefact', verbose_name='description of sample', blank=True)),
                 ('sample_number', models.CharField(default='', help_text='The serial number of the artefact sample', max_length=100, verbose_name='lab number of sample', blank=True)),
                 ('date_aim_sampling', models.CharField(default='', help_text='The date and aim of sampling', max_length=200, verbose_name='date and aim of sampling', blank=True)),
-                ('alloy', models.ForeignKey(blank=True, to='artefacts.Alloy', help_text='The alloy the artefact is made of', null=True)),
+                ('alloy', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE,blank=True, to='artefacts.Alloy', help_text='The alloy the artefact is made of', null=True)),
                 ('author', models.ManyToManyField(related_name='the authors', to='contacts.Contact', blank=True, help_text='The author(s) of this artefact', null=True, verbose_name='authors')),
             ],
             options={
@@ -78,7 +79,7 @@ class Migration(migrations.Migration):
                 ('created', django_extensions.db.fields.CreationDateTimeField(default=django.utils.timezone.now, verbose_name='created', editable=False, blank=True)),
                 ('modified', django_extensions.db.fields.ModificationDateTimeField(default=django.utils.timezone.now, verbose_name='modified', editable=False, blank=True)),
                 ('name', models.CharField(max_length=100, blank=True)),
-                ('chronology_category', models.ForeignKey(blank=True, to='artefacts.ChronologyCategory', help_text='A general dating of the artefact', null=True)),
+                ('chronology_category', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE,blank=True, to='artefacts.ChronologyCategory', help_text='A general dating of the artefact', null=True)),
             ],
             options={
                 'ordering': ['name'],
@@ -125,7 +126,7 @@ class Migration(migrations.Migration):
                 ('modified', django_extensions.db.fields.ModificationDateTimeField(default=django.utils.timezone.now, verbose_name='modified', editable=False, blank=True)),
                 ('document', models.FileField(help_text='The attached document', upload_to=get_doc_storage_path)),
                 ('name', models.CharField(help_text='The document name', max_length=100, blank=True)),
-                ('artefact', models.ForeignKey(blank=True, to='artefacts.Artefact', help_text='The corresponding artefact', null=True)),
+                ('artefact', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE,blank=True, to='artefacts.Artefact', help_text='The corresponding artefact', null=True)),
             ],
             options={
                 'verbose_name': 'Document',
@@ -202,7 +203,7 @@ class Migration(migrations.Migration):
                 ('created', django_extensions.db.fields.CreationDateTimeField(default=django.utils.timezone.now, verbose_name='created', editable=False, blank=True)),
                 ('modified', django_extensions.db.fields.ModificationDateTimeField(default=django.utils.timezone.now, verbose_name='modified', editable=False, blank=True)),
                 ('site', models.CharField(help_text='The place where the artefact was located', max_length=100, blank=True)),
-                ('city', models.ForeignKey(blank=True, to='cities_light.City', help_text='The city where the artefact was located', null=True)),
+                ('city', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE,blank=True, to='cities_light.City', help_text='The city where the artefact was located', null=True)),
             ],
             options={
                 'verbose_name': 'Origin',
@@ -234,7 +235,7 @@ class Migration(migrations.Migration):
                 ('content', tinymce.models.HTMLField(help_text='The content of the section', blank=True)),
                 ('order', models.IntegerField(help_text='The order of a section for a given artefact', null=True, blank=True)),
                 ('complementary_information', tinymce.models.HTMLField(default='', help_text='Complementary information', blank=True)),
-                ('artefact', models.ForeignKey(blank=True, to='artefacts.Artefact', help_text='The corresponding artefact', null=True)),
+                ('artefact', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE,blank=True, to='artefacts.Artefact', help_text='The corresponding artefact', null=True)),
             ],
             options={
                 'ordering': ['order'],
@@ -269,7 +270,7 @@ class Migration(migrations.Migration):
                 ('uid', models.CharField(help_text='The identification of the stratigraphy', max_length=500, null=True, blank=True)),
                 ('url', models.CharField(help_text='The url that leads to the corresponding stratigraphy in the tool', max_length=500, null=True, blank=True)),
                 ('image', models.ImageField(help_text='The image file for a stratigraphy', null=True, upload_to=get_img_storage_path_stratigraphy, blank=True)),
-                ('artefact', models.ForeignKey(blank=True, to='artefacts.Artefact', help_text='The artefact the stratigraphy represents', null=True)),
+                ('artefact', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE,blank=True, to='artefacts.Artefact', help_text='The artefact the stratigraphy represents', null=True)),
             ],
             options={
                 'ordering': ['artefact', 'order'],
@@ -311,49 +312,49 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='section',
             name='section_category',
-            field=models.ForeignKey(blank=True, to='artefacts.SectionCategory', help_text='The corresponding section category', null=True),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE,blank=True, to='artefacts.SectionCategory', help_text='The corresponding section category', null=True),
             preserve_default=True,
         ),
         migrations.AddField(
             model_name='image',
             name='section',
-            field=models.ForeignKey(blank=True, to='artefacts.Section', help_text='The corresponding section', null=True),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE,blank=True, to='artefacts.Section', help_text='The corresponding section', null=True),
             preserve_default=True,
         ),
         migrations.AddField(
             model_name='artefact',
             name='chronology_period',
-            field=models.ForeignKey(blank=True, to='artefacts.ChronologyPeriod', help_text='The dating of the artefact', null=True, verbose_name='dating of artefact (Tpq _ Taq)'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE,blank=True, to='artefacts.ChronologyPeriod', help_text='The dating of the artefact', null=True, verbose_name='dating of artefact (Tpq _ Taq)'),
             preserve_default=True,
         ),
         migrations.AddField(
             model_name='artefact',
             name='corrosion_form',
-            field=models.ForeignKey(blank=True, to='artefacts.CorrosionForm', null=True),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE,blank=True, to='artefacts.CorrosionForm', null=True),
             preserve_default=True,
         ),
         migrations.AddField(
             model_name='artefact',
             name='corrosion_type',
-            field=models.ForeignKey(blank=True, to='artefacts.CorrosionType', help_text='', null=True),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE,blank=True, to='artefacts.CorrosionType', help_text='', null=True),
             preserve_default=True,
         ),
         migrations.AddField(
             model_name='artefact',
             name='environment',
-            field=models.ForeignKey(blank=True, to='artefacts.Environment', help_text='The environment where the artefact was found.', null=True, verbose_name='burial conditions / environment'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE,blank=True, to='artefacts.Environment', help_text='The environment where the artefact was found.', null=True, verbose_name='burial conditions / environment'),
             preserve_default=True,
         ),
         migrations.AddField(
             model_name='artefact',
             name='location',
-            field=models.ForeignKey(related_name='artefact location', blank=True, to='contacts.Contact', help_text='The actual location of the artefact', null=True, verbose_name='artefact location'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE,related_name='artefact location', blank=True, to='contacts.Contact', help_text='The actual location of the artefact', null=True, verbose_name='artefact location'),
             preserve_default=True,
         ),
         migrations.AddField(
             model_name='artefact',
             name='metal1',
-            field=models.ForeignKey(related_name='1st metal element', blank=True, to='artefacts.Metal', help_text='The primary metal element of the artefact', null=True, verbose_name='1st metal element'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE,related_name='1st metal element', blank=True, to='artefacts.Metal', help_text='The primary metal element of the artefact', null=True, verbose_name='1st metal element'),
             preserve_default=True,
         ),
         migrations.AddField(
@@ -365,55 +366,55 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='artefact',
             name='microstructure',
-            field=models.ForeignKey(blank=True, to='artefacts.Microstructure', help_text='Microstructure of the metal', null=True),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE,blank=True, to='artefacts.Microstructure', help_text='Microstructure of the metal', null=True),
             preserve_default=True,
         ),
         migrations.AddField(
             model_name='artefact',
             name='origin',
-            field=models.ForeignKey(related_name='origin', blank=True, to='artefacts.Origin', help_text='The place, city and country where the artefact comes from or the object to which the section considered belongs to', null=True),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE,related_name='origin', blank=True, to='artefacts.Origin', help_text='The place, city and country where the artefact comes from or the object to which the section considered belongs to', null=True),
             preserve_default=True,
         ),
         migrations.AddField(
             model_name='artefact',
             name='owner',
-            field=models.ForeignKey(related_name='artefact owner', blank=True, to='contacts.Contact', help_text='The owner of the artefact', null=True),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE,related_name='artefact owner', blank=True, to='contacts.Contact', help_text='The owner of the artefact', null=True),
             preserve_default=True,
         ),
         migrations.AddField(
             model_name='artefact',
             name='recovering_date',
-            field=models.ForeignKey(blank=True, to='artefacts.RecoveringDate', help_text='The date of excavation for archaeological objects, of production and use for other artefacts', null=True, verbose_name='date of recovering'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE,blank=True, to='artefacts.RecoveringDate', help_text='The date of excavation for archaeological objects, of production and use for other artefacts', null=True, verbose_name='date of recovering'),
             preserve_default=True,
         ),
         migrations.AddField(
             model_name='artefact',
             name='responsible_institution',
-            field=models.ForeignKey(related_name='responsible institution', blank=True, to='contacts.Contact', help_text='The responsible institution for the artefact sample', null=True),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE,related_name='responsible institution', blank=True, to='contacts.Contact', help_text='The responsible institution for the artefact sample', null=True),
             preserve_default=True,
         ),
         migrations.AddField(
             model_name='artefact',
             name='sample_location',
-            field=models.ForeignKey(related_name='sample location', blank=True, to='contacts.Contact', help_text='The actual location of the artefact sample', null=True),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE,related_name='sample location', blank=True, to='contacts.Contact', help_text='The actual location of the artefact sample', null=True),
             preserve_default=True,
         ),
         migrations.AddField(
             model_name='artefact',
             name='technology',
-            field=models.ForeignKey(blank=True, to='artefacts.Technology', help_text='The manufacturing techniques used to produce the artefact', null=True),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE,blank=True, to='artefacts.Technology', help_text='The manufacturing techniques used to produce the artefact', null=True),
             preserve_default=True,
         ),
         migrations.AddField(
             model_name='artefact',
             name='type',
-            field=models.ForeignKey(blank=True, to='artefacts.Type', help_text='The name of the artefact, its typology', null=True, verbose_name='type of artefact'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE,blank=True, to='artefacts.Type', help_text='The name of the artefact, its typology', null=True, verbose_name='type of artefact'),
             preserve_default=True,
         ),
         migrations.AddField(
             model_name='artefact',
             name='user',
-            field=models.ForeignKey(blank=True, to=settings.AUTH_USER_MODEL, help_text='The user who entered the artefact into the database', null=True, verbose_name="user's object"),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE,blank=True, to=settings.AUTH_USER_MODEL, help_text='The user who entered the artefact into the database', null=True, verbose_name="user's object"),
             preserve_default=True,
         ),
         migrations.AlterModelOptions(

@@ -74,7 +74,7 @@ class Origin(TimeStampedModel):
     """
     site = models.CharField(max_length=100, blank=True, verbose_name="site/object",
                             help_text='The place where the artefact was located or the object to which the section considered belongs to')
-    city = models.ForeignKey(City, blank=True, null=True, help_text='The city where the artefact was located (optional for objects)')
+    city = models.ForeignKey(City, on_delete=models.deletion.CASCADE, blank=True, null=True, help_text='The city where the artefact was located (optional for objects)')
 
     def origin_verbose_description(self):
         origin = []
@@ -216,7 +216,7 @@ class Object(TimeStampedModel):
     An object can be linked to more than one card (artefact)
     """
     name = models.CharField(max_length=100, verbose_name='name', blank=True, default='', help_text='Name of the object')
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name="user's object", blank=True, null=True,
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.deletion.CASCADE, verbose_name="user's object", blank=True, null=True,
                              help_text='The user who entered the object into the database')
 
     class Meta:
@@ -244,33 +244,33 @@ class Artefact(TimeStampedModel):
     published = models.BooleanField(default=False)
 
     # Foreign Keys
-    object = models.ForeignKey(Object, verbose_name='object described', blank=True, null=True, help_text='Name of the artefact')
+    object = models.ForeignKey(Object, on_delete=models.deletion.CASCADE, verbose_name='object described', blank=True, null=True, help_text='Name of the artefact')
     author = models.ManyToManyField(Contact, verbose_name='authors', blank=True, related_name='artefacts', help_text='The author(s) of this file is (are) responsible for the information provided. Author(s) should provide after the abbreviation of their institution affiliation their last name and initial of their first name in brackets such as HE-Arc CR (Degrigny C.). Hold down "Control", or "Command" on a Mac, to select more than one')
-    metal_e_1 = models.ForeignKey(Element, verbose_name='first metal element', blank=True, null=True, related_name='first_metal_artefacts', help_text='The primary metal element of the artefact')
+    metal_e_1 = models.ForeignKey(Element, on_delete=models.deletion.CASCADE, verbose_name='first metal element', blank=True, null=True, related_name='first_metal_artefacts', help_text='The primary metal element of the artefact')
     metal_e_x = models.ManyToManyField(Element, verbose_name='other metal elements', blank=True, related_name='other_metal_artefacts', help_text='The other metal elements of the artefact, several elements can be selected by clicking on Ctrl + elements selected')
-    alloy = models.ForeignKey(Alloy, blank=True, null=True, help_text='The alloy the artefact is made of')
-    type = models.ForeignKey(Type, verbose_name='type of artefact', blank=True, null=True,
+    alloy = models.ForeignKey(Alloy, on_delete=models.deletion.CASCADE, blank=True, null=True, help_text='The alloy the artefact is made of')
+    type = models.ForeignKey(Type, on_delete=models.deletion.CASCADE, verbose_name='type of artefact', blank=True, null=True,
                              help_text='The name of the artefact, its typology')
-    origin = models.ForeignKey(Origin, blank=True, null=True, related_name='artefacts',
+    origin = models.ForeignKey(Origin, on_delete=models.deletion.CASCADE, blank=True, null=True, related_name='artefacts',
                                help_text='The place, city and country where the artefact comes from or the object to which the section considered belongs to')
-    recovering_date = models.ForeignKey(RecoveringDate, verbose_name='date of recovering', blank=True, null=True, help_text='The date of excavation for archaeological objects, of production and use for other artefacts')
-    chronology_category = models.ForeignKey(ChronologyCategory, blank=True, null=True, help_text='A general dating of the artefact')
+    recovering_date = models.ForeignKey(RecoveringDate, on_delete=models.deletion.CASCADE, verbose_name='date of recovering', blank=True, null=True, help_text='The date of excavation for archaeological objects, of production and use for other artefacts')
+    chronology_category = models.ForeignKey(ChronologyCategory, on_delete=models.deletion.CASCADE, blank=True, null=True, help_text='A general dating of the artefact')
     chronology_tpq = YearField( blank=True, default=0, help_text='Dating of artefact TPQ (Terminus post quem) e.g. "3000 B.C."')
     chronology_taq = YearField( blank=True, default=0, help_text='Dating of artefact TAQ (Terminus ante quem) e.g. "200 A.D."')
     chronology_comment = models.CharField(max_length=100, blank=True, default='', help_text='Dating of artefact comment')
 
-    environment = models.ForeignKey(Environment, verbose_name='burial conditions / environment', blank=True, null=True,
+    environment = models.ForeignKey(Environment, on_delete=models.deletion.CASCADE, verbose_name='burial conditions / environment', blank=True, null=True,
                                          help_text='The environment where the artefact was found')
-    location = models.ForeignKey(Contact, verbose_name='artefact location', blank=True, null=True, related_name='artefacts_locations', help_text='The actual location of the artefact')
-    owner = models.ForeignKey(Contact, blank=True, null=True, related_name='artefacts_owners', help_text='The owner of the artefact')
-    technology = models.ForeignKey(Technology, blank=True, null=True,
+    location = models.ForeignKey(Contact, on_delete=models.deletion.CASCADE, verbose_name='artefact location', blank=True, null=True, related_name='artefacts_locations', help_text='The actual location of the artefact')
+    owner = models.ForeignKey(Contact, on_delete=models.deletion.CASCADE, blank=True, null=True, related_name='artefacts_owners', help_text='The owner of the artefact')
+    technology = models.ForeignKey(Technology, on_delete=models.deletion.CASCADE, blank=True, null=True,
                                    help_text='The manufacturing techniques used to produce the artefact')
-    sample_location = models.ForeignKey(Contact, blank=True, null=True, related_name='sample_location', help_text='The actual location of the artefact sample')
-    responsible_institution = models.ForeignKey(Contact, blank=True, null=True, related_name='responsible_institution', help_text='The responsible institution for the artefact sample')
-    microstructure = models.ForeignKey(Microstructure, blank=True, null=True, help_text='Microstructure of the metal')
-    corrosion_form = models.ForeignKey(CorrosionForm, blank=True, null=True, help_text='Based on observation')
-    corrosion_type = models.ForeignKey(CorrosionType, blank=True, null=True, help_text='Based on literature')
-    parent = models.ForeignKey('self', blank=True, null=True, help_text='The card from which this card is the child')
+    sample_location = models.ForeignKey(Contact, on_delete=models.deletion.CASCADE, blank=True, null=True, related_name='sample_location', help_text='The actual location of the artefact sample')
+    responsible_institution = models.ForeignKey(Contact, on_delete=models.deletion.CASCADE, blank=True, null=True, related_name='responsible_institution', help_text='The responsible institution for the artefact sample')
+    microstructure = models.ForeignKey(Microstructure, on_delete=models.deletion.CASCADE, blank=True, null=True, help_text='Microstructure of the metal')
+    corrosion_form = models.ForeignKey(CorrosionForm, on_delete=models.deletion.CASCADE, blank=True, null=True, help_text='Based on observation')
+    corrosion_type = models.ForeignKey(CorrosionType, on_delete=models.deletion.CASCADE, blank=True, null=True, help_text='Based on literature')
+    parent = models.ForeignKey('self', on_delete=models.deletion.CASCADE, blank=True, null=True, help_text='The card from which this card is the child')
 
 
     class Meta:
@@ -363,7 +363,7 @@ class SectionCategory(TimeStampedModel):
 @python_2_unicode_compatible
 class SectionTemplate(TimeStampedModel):
     page_template = models.IntegerField(blank=False, null=False, default=1, help_text='Page template identifier')
-    section_category = models.ForeignKey(SectionCategory, blank=True, null=True, help_text='The corresponding section category')#section_category = enumfields.EnumField(SectionCat, max_lentgh=2, help_text='Category of the section')
+    section_category = models.ForeignKey(SectionCategory, on_delete=models.deletion.CASCADE, blank=True, null=True, help_text='The corresponding section category')#section_category = enumfields.EnumField(SectionCat, max_lentgh=2, help_text='Category of the section')
     title = models.CharField(max_length=100, blank=True, default='', help_text='The section title')
     fieldset = models.CharField(max_length=50, blank=True, default='',
                                 help_text='Name of the Form fieldset associated with the section (if any)')
@@ -398,7 +398,7 @@ class Section(TimeStampedModel):
     """
     An artefact may have many sections with images, stratigraphies inside
     """
-    artefact = models.ForeignKey(Artefact, blank=True, null=True, help_text='The corresponding artefact')
+    artefact = models.ForeignKey(Artefact, on_delete=models.deletion.CASCADE, blank=True, null=True, help_text='The corresponding artefact')
     template = models.ForeignKey(SectionTemplate, on_delete=models.SET_NULL,blank=True, null=True, default=None, help_text='The Section template')
     content = tinymce_models.HTMLField(blank=True, help_text='The content of the section')
     complementary_information = tinymce_models.HTMLField(blank=True, default='', help_text='Complementary information')
@@ -422,7 +422,7 @@ class Image(TimeStampedModel):
     """
     An image refers to a section
     """
-    section = models.ForeignKey(Section, blank=True, null=True, help_text='The corresponding section')
+    section = models.ForeignKey(Section, on_delete=models.deletion.CASCADE, blank=True, null=True, help_text='The corresponding section')
     image = models.ImageField(upload_to=get_img_storage_path, blank=True, null=True, help_text='The image file')
     legend = models.CharField(max_length=500, blank=True, help_text='The image description')
     credit = models.CharField(max_length=200, blank=True, help_text='Identifies the copyright holder of the image')
@@ -447,8 +447,8 @@ class Stratigraphy(TimeStampedModel):
     # caution stratigraphies are not linked directly to artefact anymore
     # but indirectly through section
     # todo migrate remaining old stratigraphy_set found in Artefact to section ?
-    artefact = models.ForeignKey(Artefact, blank=True, null=True, help_text='The artefact the stratigraphy represents')
-    section = models.ForeignKey(Section, blank=True, null=True, help_text='The section in which the stratigraphy is displayed')
+    artefact = models.ForeignKey(Artefact, on_delete=models.deletion.CASCADE, blank=True, null=True, help_text='The artefact the stratigraphy represents')
+    section = models.ForeignKey(Section, on_delete=models.deletion.CASCADE, blank=True, null=True, help_text='The section in which the stratigraphy is displayed')
     order = models.IntegerField(blank=True, null=True, help_text='The order of a stratigraphy for a given artefact')
     uid = models.CharField(max_length=500, blank=True, null=True, help_text='The unique identifier of the stratigraphy')
     url = models.CharField(max_length=500, blank=True, null=True, help_text='The url that leads to the corresponding stratigraphy in the tool')
@@ -468,7 +468,7 @@ class Document(TimeStampedModel):
     """
     A document (PDF, Word, ...) can be attached to an artefact to add information
     """
-    artefact = models.ForeignKey(Artefact, blank=True, null=True, help_text='The corresponding artefact')
+    artefact = models.ForeignKey(Artefact, on_delete=models.deletion.CASCADE, blank=True, null=True, help_text='The corresponding artefact')
     document = models.FileField(upload_to=get_doc_storage_path, help_text='The attached document')
     name = models.CharField(max_length=100, blank=True, help_text='The document name')
 
@@ -535,7 +535,7 @@ class Token(TimeStampedModel):
     read = models.BooleanField(default=False)
 
     # Foreign Keys
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name="user's object", blank=True, null=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.deletion.CASCADE, verbose_name="user's object", blank=True, null=True)
     artefact = models.ForeignKey(Artefact, on_delete=models.CASCADE, null=True, help_text='The shared artefact')
 
 
@@ -563,9 +563,9 @@ class Publication(TimeStampedModel) :
     read = models.BooleanField(default=False)
 
     # Foreign keys
-    user = models.ForeignKey(User, related_name='main_user', blank=True, help_text='User analyzing the artefact')
-    artefact = models.ForeignKey(Artefact, blank=True, help_text='Artefact card sent for publication')
-    delegated_user = models.ForeignKey(User, related_name='delegated_user', blank=True, null=True, help_text='Delegated user for the analyzis of the artefact')
+    user = models.ForeignKey(User, on_delete=models.deletion.CASCADE, related_name='main_user', blank=True, help_text='User analyzing the artefact')
+    artefact = models.ForeignKey(Artefact, on_delete=models.deletion.CASCADE, blank=True, help_text='Artefact card sent for publication')
+    delegated_user = models.ForeignKey(User, on_delete=models.deletion.CASCADE, related_name='delegated_user', blank=True, null=True, help_text='Delegated user for the analyzis of the artefact')
 
     class Meta:
         verbose_name='Publication'
@@ -597,15 +597,15 @@ class Collaboration_comment(TimeStampedModel):
     read = models.BooleanField(default=False)
 
     #Foreign keys
-    content_type = models.ForeignKey(ContentType, blank=True, null=True)
+    content_type = models.ForeignKey(ContentType, on_delete=models.deletion.CASCADE, blank=True, null=True)
     parent = models.ForeignKey('self', on_delete=models.SET_NULL, blank=True, null=True, help_text='The comment from which this comment is the child')
-    field = models.ForeignKey(Field, blank=True, null=True, help_text='The field concerned by the comment')
+    field = models.ForeignKey(Field, on_delete=models.deletion.CASCADE, blank=True, null=True, help_text='The field concerned by the comment')
     fieldset_name =  models.CharField(max_length=80, null=True, blank=True)
     field_name = models.CharField(max_length=80, null=True, blank=True)
     object_model_id = models.PositiveIntegerField(blank=True, null=True)
     content_object = GenericForeignKey('content_type', 'object_model_id')
-    user = models.ForeignKey(User, related_name='user_commenting', blank=True, null=True, help_text='The user who wrote the comment')
-    token_for_section = models.ForeignKey(Token, related_name="token_for_section", blank=True, null=True, help_text='The token that allow to filter comments for a section from differents tokens')
+    user = models.ForeignKey(User, on_delete=models.deletion.CASCADE, related_name='user_commenting', blank=True, null=True, help_text='The user who wrote the comment')
+    token_for_section = models.ForeignKey(Token, on_delete=models.deletion.CASCADE, related_name="token_for_section", blank=True, null=True, help_text='The token that allow to filter comments for a section from differents tokens')
 
     class Meta:
         verbose_name = 'Comment'

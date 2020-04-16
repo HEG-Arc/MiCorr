@@ -52,12 +52,14 @@ class LinkFields(models.Model):
     link_external = models.URLField("External link", blank=True)
     link_page = models.ForeignKey(
         'wagtailcore.Page',
+        on_delete=models.deletion.CASCADE,
         null=True,
         blank=True,
         related_name='+'
     )
     link_document = models.ForeignKey(
         'wagtaildocs.Document',
+        on_delete=models.deletion.CASCADE,
         null=True,
         blank=True,
         related_name='+'
@@ -97,7 +99,7 @@ class RelatedLink(LinkFields):
 
 
 class GenericIndexPageRelatedLink(Orderable, RelatedLink):
-    page = ParentalKey('documents.GenericIndexPage', related_name='related_links')
+    page = ParentalKey('documents.GenericIndexPage', on_delete=models.deletion.CASCADE, related_name='related_links')
 
 
 class GenericIndexPage(Page):
@@ -129,7 +131,7 @@ GenericIndexPage.promote_panels = [
 
 
 class GenericPageRelatedLink(Orderable, RelatedLink):
-    page = ParentalKey('documents.GenericPage', related_name='related_links')
+    page = ParentalKey('documents.GenericPage', on_delete=models.deletion.CASCADE, related_name='related_links')
 
 
 class GenericPage(Page):
@@ -209,7 +211,7 @@ class StreamfieldPage(Page):
 
 
 class HelpIndexPageRelatedLink(Orderable, RelatedLink):
-    page = ParentalKey('documents.HelpIndexPage', related_name='related_links')
+    page = ParentalKey('documents.HelpIndexPage', on_delete=models.deletion.CASCADE, related_name='related_links')
 
 
 class HelpIndexPage(Page):
@@ -241,7 +243,7 @@ HelpIndexPage.promote_panels = [
 
 
 class HelpPageRelatedLink(Orderable, RelatedLink):
-    page = ParentalKey('documents.HelpPage', related_name='related_links')
+    page = ParentalKey('documents.HelpPage', on_delete=models.deletion.CASCADE, related_name='related_links')
 
 
 class HelpPage(Page):
