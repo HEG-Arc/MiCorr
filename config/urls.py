@@ -4,8 +4,9 @@
 from django.views.generic import TemplateView
 from django.views import defaults as default_views
 from django.conf import settings
-from django.conf.urls import include, url
+from django.conf.urls import  url
 from django.conf.urls.static import static
+from django.urls import include, path
 from .views import HomePageView
 from django.contrib import admin
 from django.contrib.sitemaps.views import sitemap
@@ -30,7 +31,7 @@ urlpatterns = [
     url(r'^$', HomePageView.as_view(), name="home"),
 
     # Uncomment the next line to enable the admin:
-    url(r'^admin/', include(admin.site.urls)),
+    path(settings.ADMIN_URL, admin.site.urls),
 
     # User management
     url(r'^users/', include("users.urls", namespace="users")),

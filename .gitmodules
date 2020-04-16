@@ -1,0 +1,3 @@
+[submodule "external-src/django-terms"]
+	path = external-src/django-terms
+	url = git@github.com:bletourmy/django-terms.git

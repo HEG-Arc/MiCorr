@@ -4,7 +4,7 @@
 from collections import defaultdict
 
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.views.generic import DetailView, ListView, RedirectView, UpdateView
 from django.contrib.contenttypes.models import ContentType
 from django.views import generic

@@ -7,7 +7,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.mail import EmailMultiAlternatives
 from django.core.mail import send_mail
-from django.core.urlresolvers import reverse,resolve
+from django.urls import reverse,resolve
 from django.db.models import Q
 from django.http import HttpResponse, JsonResponse, Http404,HttpResponse, HttpResponseNotAllowed
 

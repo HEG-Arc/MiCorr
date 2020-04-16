@@ -1,6 +1,6 @@
 from django.contrib.sitemaps import Sitemap
 from artefacts.models import Artefact
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 
 class ArtefactsSitemap(Sitemap):
