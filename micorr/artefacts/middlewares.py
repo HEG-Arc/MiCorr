@@ -6,9 +6,9 @@ from artefacts.views import hasWriteRight, hasReadRight
 from artefacts.views import sendFirstUseOfTokenEmail
 from django.core.exceptions import PermissionDenied
 from artefacts.models import Artefact
+from django.utils.deprecation import MiddlewareMixin
 
-
-class artefactAccessControlMiddleware:
+class artefactAccessControlMiddleware(MiddlewareMixin):
 
     def process_view(self, request, view_func, view_args, view_kwargs):
 
