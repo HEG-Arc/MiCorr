@@ -4,11 +4,11 @@
 
 from django.db import migrations, models
 import django.db.models.deletion
-import wagtail.wagtailcore.blocks
-import wagtail.wagtailcore.blocks.static_block
-import wagtail.wagtailcore.fields
-import wagtail.wagtailembeds.blocks
-import wagtail.wagtailimages.blocks
+import wagtail.core.blocks
+import wagtail.core.blocks.static_block
+import wagtail.core.fields
+import wagtail.embeds.blocks
+import wagtail.images.blocks
 
 
 class Migration(migrations.Migration):
@@ -24,7 +24,7 @@ class Migration(migrations.Migration):
             name='StreamfieldPage',
             fields=[
                 ('page_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='wagtailcore.Page')),
-                ('body', wagtail.wagtailcore.fields.StreamField([('heading', wagtail.wagtailcore.blocks.CharBlock(classname='full title', template='documents/blocks/heading.html')), ('paragraph', wagtail.wagtailcore.blocks.RichTextBlock()), ('rawparagraph', wagtail.wagtailcore.blocks.RawHTMLBlock()), ('image', wagtail.wagtailimages.blocks.ImageChooserBlock()), ('video', wagtail.wagtailembeds.blocks.EmbedBlock()), ('figure', wagtail.wagtailcore.blocks.StreamBlock([('image', wagtail.wagtailimages.blocks.ImageChooserBlock()), ('video', wagtail.wagtailembeds.blocks.EmbedBlock()), ('meta', wagtail.wagtailcore.blocks.StructBlock([('fignum', wagtail.wagtailcore.blocks.IntegerBlock()), ('legend', wagtail.wagtailcore.blocks.TextBlock()), ('credit', wagtail.wagtailcore.blocks.CharBlock())]))], icon='cogs')), ('animation', wagtail.wagtailcore.blocks.static_block.StaticBlock(admin_text='Default tour animation: no configuration needed.', template='documents/blocks/animation.html'))])),
+                ('body', wagtail.core.fields.StreamField([('heading', wagtail.core.blocks.CharBlock(classname='full title', template='documents/blocks/heading.html')), ('paragraph', wagtail.core.blocks.RichTextBlock()), ('rawparagraph', wagtail.core.blocks.RawHTMLBlock()), ('image', wagtail.images.blocks.ImageChooserBlock()), ('video', wagtail.embeds.blocks.EmbedBlock()), ('figure', wagtail.core.blocks.StreamBlock([('image', wagtail.images.blocks.ImageChooserBlock()), ('video', wagtail.embeds.blocks.EmbedBlock()), ('meta', wagtail.core.blocks.StructBlock([('fignum', wagtail.core.blocks.IntegerBlock()), ('legend', wagtail.core.blocks.TextBlock()), ('credit', wagtail.core.blocks.CharBlock())]))], icon='cogs')), ('animation', wagtail.core.blocks.static_block.StaticBlock(admin_text='Default tour animation: no configuration needed.', template='documents/blocks/animation.html'))])),
                 ('feed_image', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to='wagtailimages.Image')),
             ],
             options={

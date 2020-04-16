@@ -15,8 +15,8 @@ from cities_light.models import City
 
 from artefacts import get_img_storage_path, get_img_storage_path_stratigraphy, get_doc_storage_path
 
-from wagtail.wagtailsnippets.models import register_snippet
-from wagtail.wagtailadmin.edit_handlers import FieldPanel
+from wagtail.snippets.models import register_snippet
+from wagtail.admin.edit_handlers import FieldPanel
 
 from .year_field import YearField
 
