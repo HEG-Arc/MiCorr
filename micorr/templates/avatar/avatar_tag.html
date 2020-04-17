@@ -1,1 +1,2 @@
-<img src="{{ url }}" width="{{ size }}" height="{{ size }}" class="img-thumbnail">
+<img alt="avatar" class="img-avatar" height="{{ size }}" src="{{ url }}" width="{{ size }}"
+{% for key, value in kwargs.items %}{{ key }}="{{ value }}" {% endfor %}>

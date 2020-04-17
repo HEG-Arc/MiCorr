@@ -316,3 +316,8 @@ TINYMCE_DEFAULT_CONFIG = {"theme": "modern", "relative_urls": False, "statusbar"
                           "autoresize_min_height":100, "autoresize_max_height": 500, "autoresize_bottom_margin":10, "autoresize_on_init":True }
 TINYMCE_COMPRESSOR = False
 TINYMCE_JS_ROOT = os.path.join(STATIC_URL, "js/tinymce")
+
+# django-avatar settings
+# default image generated when  there no local avatar image nor gravatar image associated with user's email
+# https://en.gravatar.com/site/implement/images/#default-image
+AVATAR_GRAVATAR_DEFAULT = 'retro'  # mp, identicon, monsterid, wavatar, retro, robohash, blank

@@ -1604,6 +1604,11 @@ img {
   height: auto;
 }
 
+.img-avatar {
+  display:inline-block;
+  border-radius: 50%;
+}
+
 .img-circle {
   border-radius: 50%;
 }
