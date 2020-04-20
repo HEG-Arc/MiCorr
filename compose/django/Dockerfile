@@ -1,6 +1,6 @@
 # Here we use multi-stage build https://docs.docker.com/develop/develop-images/multistage-build/#use-multi-stage-builds
 # to avoid adding node and build-time dependencies to final django image
-FROM node:10.15.3-stretch as webpackbuilder
+FROM node:12.16.2-stretch-slim as webpackbuilder
 
 RUN mkdir -p /app/micorr/stratigraphies/ngapp
 RUN mkdir -p /app/micorr/stratigraphies/static/micorr/dist
@@ -15,7 +15,7 @@ RUN npm install
 # transpile and bundle ./ngapp/ -> static/micorr/dist/bundle.js
 RUN npm run build
 
-FROM python:2.7
+FROM python:3.7
 ENV PYTHONUNBUFFERED 1
 
 RUN groupadd -r django \
@@ -23,7 +23,7 @@ RUN groupadd -r django \
 
 # Requirements have to be pulled and installed here, otherwise caching won't work
 COPY ./requirements /requirements
-RUN pip install --no-cache-dir -r /requirements/production.freeze \
+RUN pip install --upgrade pip && pip install --no-cache-dir -r /requirements/production.txt \
     && rm -rf /requirements
 
 # patch wagtail migration for migration compatibilty

@@ -63,7 +63,7 @@ services:
   node:
     build:
       context: .
-      dockerfile: ./compose/node/Dockerfile-static
+      dockerfile: ./compose/node/Dockerfile
     restart: always
     depends_on:
       - django

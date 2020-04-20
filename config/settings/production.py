@@ -11,8 +11,9 @@ Production Configurations
 
 
 import logging
-import os
-import raven
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
+
 
 
 from .common import *  # noqa
@@ -27,22 +28,16 @@ SECRET_KEY = env('DJANGO_SECRET_KEY')
 # This ensures that Django will be able to detect a secure connection
 # properly on Heroku.
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-# raven sentry client
-# See https://docs.getsentry.com/hosted/clients/python/integrations/django/
-INSTALLED_APPS += ('raven.contrib.django.raven_compat', )
 
 # Use Whitenoise to serve static files
 # See: https://whitenoise.readthedocs.io/
 
 # insert whitenoise middleware after SecurityMiddleware
 # (see http://whitenoise.evans.io/en/stable/#quickstart-for-django-apps)
-middleware_classes = list(MIDDLEWARE)
-MIDDLEWARE.insert(1+MIDDLEWARE.index('django.middleware.security.SecurityMiddleware'),
-                          'whitenoise.middleware.WhiteNoiseMiddleware')
-MIDDLEWARE = tuple(MIDDLEWARE)
-
-RAVEN_MIDDLEWARE = ('raven.contrib.django.raven_compat.middleware.SentryResponseErrorIdMiddleware', )
-MIDDLEWARE = RAVEN_MIDDLEWARE + MIDDLEWARE
+middleware_list = list(MIDDLEWARE)
+middleware_list.insert(1 + MIDDLEWARE.index('django.middleware.security.SecurityMiddleware'),
+                       'whitenoise.middleware.WhiteNoiseMiddleware')
+MIDDLEWARE = tuple(middleware_list)
 
 
 # SECURITY CONFIGURATION
@@ -128,13 +123,13 @@ CACHES = {
 # Sentry Configuration
 SENTRY_DSN = env('DJANGO_SENTRY_DSN')
 APP_GIT_REV = env('APP_GIT_REV')
-SENTRY_CLIENT = env('DJANGO_SENTRY_CLIENT', default='raven.contrib.django.raven_compat.DjangoClient')
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'root': {
         'level': 'WARNING',
-        'handlers': ['sentry','console'],
+        'handlers': ['console'],
     },
     'formatters': {
         'verbose': {
@@ -143,10 +138,6 @@ LOGGING = {
         },
     },
     'handlers': {
-        'sentry': {
-            'level': 'ERROR',
-            'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler',
-        },
         'console': {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
@@ -157,26 +148,21 @@ LOGGING = {
        'django': {
             'level': 'INFO',
         },
-        'raven': {
-            'level': 'DEBUG',
-            'handlers': ['console'],
-            'propagate': False,
-        },
-        'sentry.errors': {
-            'level': 'DEBUG',
-            'handlers': ['console'],
-            'propagate': False,
-        },
         'django.security.DisallowedHost': {
             'level': 'ERROR',
         },
     },
 }
-RAVEN_CONFIG = {
-    'CELERY_LOGLEVEL': env.int('DJANGO_SENTRY_LOG_LEVEL', logging.INFO),
-    'dsn': SENTRY_DSN,
-    'release': APP_GIT_REV
-}
+
+sentry_sdk.init(
+    dsn=SENTRY_DSN,
+    integrations=[DjangoIntegration()],
+
+    # If you wish to associate users to errors (assuming you are using
+    # django.contrib.auth) you may enable sending PII data.
+    send_default_pii=True,
+    release=APP_GIT_REV
+)
 
 # Custom Admin URL, use {% url 'admin:index' %}
 ADMIN_URL = env('DJANGO_ADMIN_URL')
