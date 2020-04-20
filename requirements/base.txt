@@ -17,7 +17,7 @@ django-floppyforms==1.8.0
 django-model-utils==3.2.0  # last 1.11 version (4.0.0 requires django >2.1)
 
 # Images
-Pillow==7.1.1
+Pillow<6.0  # wagtail 2.2.2 has requirement Pillow<6.0,>=4.0.0, but you'll have pillow 7.1.1 which is incompatible.
 
 # For user registration, either via email or social
 # Well-built with regular release cycles!
@@ -45,10 +45,9 @@ dealer==2.1.0
 
 # Wagtail
 django-compressor==2.4
-django-modelcluster==4.4.1 #4.4.1 is last version compatible with wagtail 2.0
-django-taggit==0.24.0 #0.24.0 is last python2 compatible version
-django-libsass==0.8
-wagtail==2.0.2
+# django-modelcluster==5.0.1 #4.4.1 is last version compatible with wagtail 2.0
+# django-taggit
+wagtail==2.2.2
 
 # Your custom requirements go here
 django-tinymce==2.8.0
@@ -61,6 +60,7 @@ lxml==4.5.0
 elasticsearch==2.4.1
 git+https://github.com/bletourmy/django-terms.git@f7545e3e00ace355198ccfd60ffef1b1a91d9af6#egg=django-terms
 django-robots==4.0
+urllib3==1.24.3 # py2neo 4.3.0 has requirement urllib3<1.25,>=1.23
 py2neo==4.3
 simplejson==3.17.0
 django-extensions==2.2.9

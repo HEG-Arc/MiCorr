@@ -14,13 +14,9 @@ from wagtail.contrib.sitemaps.views import sitemap as sitemap_wagtail
 from wagtail.core import urls as wagtail_urls
 from wagtail.admin import urls as wagtailadmin_urls
 from wagtail.documents import urls as wagtaildocs_urls
-from wagtail.search.urls import frontend as wagtailsearch_frontend_urls
-from wagtail.search.signal_handlers import register_signal_handlers as wagtailsearch_register_signal_handlers
+
 
 from config.sitemaps import ArtefactsSitemap, HomePageSitemap
-from .views import HomePageView
-admin.autodiscover()
-wagtailsearch_register_signal_handlers()
 
 sitemaps = {
     'artefact': ArtefactsSitemap,
@@ -87,7 +83,6 @@ if settings.DEBUG:
 # Wagtail URLS
 urlpatterns += [
     url(r'^w/admin/', include(wagtailadmin_urls)),
-    url(r'^w/search/', include(wagtailsearch_frontend_urls)),
     url(r'^w/documents/', include(wagtaildocs_urls)),
 
     # For anything not caught by a more specific rule above, hand over to

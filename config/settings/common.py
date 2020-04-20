@@ -70,6 +70,7 @@ THIRD_PARTY_APPS = (
     'wagtail.contrib.sitemaps',
     'wagtail.contrib.settings',
     'wagtail.contrib.modeladmin',
+    'wagtail.sites', #added in wagtail v0.7...required in v2.0
     # end wagtail apps
     'robots',
     'simplejson',

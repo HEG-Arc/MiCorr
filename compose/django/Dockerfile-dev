@@ -3,7 +3,7 @@ ENV PYTHONUNBUFFERED 1
 
 # Requirements have to be pulled and installed here, otherwise caching won't work
 COPY ./requirements /requirements
-RUN pip install --upgrade pip && pip install -c /requirements/local_constraints.txt -r /requirements/local.txt
+RUN pip install --upgrade pip && pip install  -r /requirements/local.txt
 
 # patch wagtail migration for migration compatibilty
 # see https://code.micorr.org/youtrack/issue/MC-277#comment=4-151
