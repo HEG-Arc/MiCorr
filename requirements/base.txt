@@ -1,4 +1,4 @@
-Django==2.0.13
+Django==2.1.15
 # Configuration
 django-configurations==2.2
 django-secure==1.0.2
@@ -47,7 +47,7 @@ dealer==2.1.0
 django-compressor==2.4
 # django-modelcluster==5.0.1 #4.4.1 is last version compatible with wagtail 2.0
 # django-taggit
-wagtail==2.2.2
+wagtail>=2.3,<2.4
 
 # Your custom requirements go here
 django-tinymce==2.8.0
