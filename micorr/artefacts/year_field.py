@@ -1,7 +1,7 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.forms import MultiWidget, NumberInput, Select, MultiValueField, IntegerField, ChoiceField, TextInput
-from django.utils.translation import ugettext_lazy as _, ungettext_lazy
+from django.utils.translation import gettext_lazy as _, ungettext_lazy
 
 # YearField provides "Large year" support (out of datetime.date range [1-9999])
 # widget, form and model fields to support any year entry of the form: YYYYYYYY... B.C/A.D

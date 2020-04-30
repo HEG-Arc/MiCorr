@@ -23,7 +23,7 @@ RUN groupadd -r django \
 
 # Requirements have to be pulled and installed here, otherwise caching won't work
 COPY ./requirements /requirements
-RUN pip install --upgrade pip && pip install --no-cache-dir -r /requirements/production.txt \
+RUN pip install --upgrade pip && pip install --no-cache-dir -r /requirements/production.freeze \
     && rm -rf /requirements
 
 # patch wagtail migration for migration compatibilty

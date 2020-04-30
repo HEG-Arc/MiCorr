@@ -1,11 +1,9 @@
 from django.db import models
-from django.utils.encoding import python_2_unicode_compatible
 
 from wagtail.snippets.models import register_snippet
 from wagtail.admin.edit_handlers import FieldPanel
 
 
-@python_2_unicode_compatible  # provide equivalent __unicode__ and __str__ methods on Python 2
 class NodeDescription(models.Model):
     label = models.CharField(max_length=80)
     uid = models.CharField(max_length=80,unique=True)

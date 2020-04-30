@@ -3,7 +3,6 @@ import os
 import uuid
 
 from django.db import models
-from django.utils.encoding import python_2_unicode_compatible
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from contacts.models import Contact
@@ -21,7 +20,6 @@ from wagtail.admin.edit_handlers import FieldPanel
 from .year_field import YearField
 
 
-@python_2_unicode_compatible
 class Element(TimeStampedModel):
     symbol = models.CharField(max_length=2, blank=False, unique=True, help_text='Symbol of the element')
     name = models.CharField(max_length=50, blank=False, help_text='Name of the element')
@@ -34,7 +32,6 @@ class Element(TimeStampedModel):
 
 
 
-@python_2_unicode_compatible
 class Alloy(TimeStampedModel):
     """
     The artefact alloy
@@ -51,7 +48,6 @@ class Alloy(TimeStampedModel):
         return self.name
 
 
-@python_2_unicode_compatible
 class Type(TimeStampedModel):
     """
     What the artefact was used for
@@ -67,7 +63,6 @@ class Type(TimeStampedModel):
         return self.name
 
 
-@python_2_unicode_compatible
 class Origin(TimeStampedModel):
     """
     Where the artefact was located
@@ -95,7 +90,6 @@ class Origin(TimeStampedModel):
         return self.origin_verbose_description()
 
 
-@python_2_unicode_compatible
 class RecoveringDate(TimeStampedModel):
     """
     The date when the artefact was found
@@ -110,7 +104,6 @@ class RecoveringDate(TimeStampedModel):
         return self.date
 
 
-@python_2_unicode_compatible
 class ChronologyCategory(TimeStampedModel):
     """
     The dating of the artefact
@@ -131,7 +124,6 @@ class ChronologyCategory(TimeStampedModel):
 
 
 
-@python_2_unicode_compatible
 class Environment(TimeStampedModel):
     """
     What the burial conditions of the artefact were
@@ -147,7 +139,6 @@ class Environment(TimeStampedModel):
         return self.name
 
 
-@python_2_unicode_compatible
 class Technology(TimeStampedModel):
     """
     The manufacturing techniques used
@@ -163,7 +154,6 @@ class Technology(TimeStampedModel):
         return self.name
 
 
-@python_2_unicode_compatible
 class Microstructure(TimeStampedModel):
     """
     What the artefact is made of
@@ -179,7 +169,6 @@ class Microstructure(TimeStampedModel):
         return self.name
 
 
-@python_2_unicode_compatible
 class CorrosionForm(TimeStampedModel):
     """
     The corrosion form observed
@@ -195,7 +184,6 @@ class CorrosionForm(TimeStampedModel):
         return self.form
 
 
-@python_2_unicode_compatible
 class CorrosionType(TimeStampedModel):
     """
     The corrosion type observed
@@ -210,7 +198,6 @@ class CorrosionType(TimeStampedModel):
     def __str__(self):
         return self.type
 
-@python_2_unicode_compatible
 class Object(TimeStampedModel):
     """
     An object can be linked to more than one card (artefact)
@@ -227,7 +214,6 @@ class Object(TimeStampedModel):
     def __str__(self):
         return self.name if len(self.name) else '[blank]'
 
-@python_2_unicode_compatible
 class Artefact(TimeStampedModel):
     """
     An artefact has many foreign keys, corresponding to its characteristics55
@@ -325,7 +311,6 @@ class Artefact(TimeStampedModel):
         return reverse('artefacts:artefact-detail', args=[str(self.id)])
 
 
-@python_2_unicode_compatible
 class SectionCategory(TimeStampedModel):
     """
     A section belongs to a section category, which can be i.e. "Sample" or "References"
@@ -360,7 +345,6 @@ class SectionCategory(TimeStampedModel):
         return self.name
 
 
-@python_2_unicode_compatible
 class SectionTemplate(TimeStampedModel):
     page_template = models.IntegerField(blank=False, null=False, default=1, help_text='Page template identifier')
     section_category = models.ForeignKey(SectionCategory, on_delete=models.deletion.CASCADE, blank=True, null=True, help_text='The corresponding section category')#section_category = enumfields.EnumField(SectionCat, max_lentgh=2, help_text='Category of the section')
@@ -393,7 +377,6 @@ class SectionTemplate(TimeStampedModel):
         return "%d, %s, %s, %s" % (self.page_template, self.order, self.section_category, self.title)
 
 
-@python_2_unicode_compatible
 class Section(TimeStampedModel):
     """
     An artefact may have many sections with images, stratigraphies inside
@@ -417,7 +400,6 @@ class Section(TimeStampedModel):
 
 
 
-@python_2_unicode_compatible
 class Image(TimeStampedModel):
     """
     An image refers to a section
@@ -439,7 +421,6 @@ class Image(TimeStampedModel):
 
 
 
-@python_2_unicode_compatible
 class Stratigraphy(TimeStampedModel):
     """
     An artefact can be represented by one or more stratigraphies
@@ -463,7 +444,6 @@ class Stratigraphy(TimeStampedModel):
         return self.uid
 
 
-@python_2_unicode_compatible
 class Document(TimeStampedModel):
     """
     A document (PDF, Word, ...) can be attached to an artefact to add information
@@ -512,7 +492,6 @@ class TokenManager(models.Manager):
         token = self.get(recipient=recipient)
 
 
-@python_2_unicode_compatible
 class Token(TimeStampedModel):
     """
     A token is used to give a read or write right when you share an artefact
@@ -571,7 +550,6 @@ class Publication(TimeStampedModel) :
         verbose_name='Publication'
         verbose_name_plural='Publications'
 
-@python_2_unicode_compatible
 class Field(TimeStampedModel):
     """
     A field is a part of an artefact
@@ -621,7 +599,6 @@ class Collaboration_comment(TimeStampedModel):
                 child.save()
         super(Collaboration_comment,self).delete(*args, **kwargs)
 
-@python_2_unicode_compatible  # provide equivalent __unicode__ and __str__ methods on Python 2
 class FormDescription(models.Model):
     form = models.CharField(max_length=80)
     field = models.CharField(max_length=80,unique=True)

@@ -25,7 +25,7 @@
 # Core Django imports
 from django.db import models
 from django.conf import settings
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 # Third-party app imports
 from django_extensions.db.models import TimeStampedModel
