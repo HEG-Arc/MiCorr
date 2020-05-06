@@ -4,3 +4,4 @@ coverage==4.5.3
 flake8==3.7.7
 django-coverage-plugin==1.6.0
 django-test-plus==1.2.0
+jsondiff==1.2.0

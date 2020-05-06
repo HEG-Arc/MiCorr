@@ -159,7 +159,7 @@ class Neo4jDAO:
             # Chaque strates a des caracteristiques
             charactList = self.tx.run(
                 """MATCH (n:Strata)-[r:IS_CONSTITUTED_BY]->(c:Characteristic)-[b:BELONGS_TO]->(f:Family) where n.uid={strata_uid}
-                   RETURN c,f
+                   RETURN c,f ORDER by c.order,c.uid
                 """, strata_uid=strata['uid'])
             logger.debug ("======Characteristic")
             # c.uid as uid, f.uid as family, c.name as real_name, c.visible as visible, c.order as order
@@ -178,7 +178,7 @@ class Neo4jDAO:
             # Chaque strate a des sous-caracteristiques
             logger.debug ("======subCharacteristic")
             slist = self.tx.run(
-                "MATCH (s:Strata)-[r:IS_CONSTITUTED_BY]->(c:SubCharacteristic) where s.uid={strata_uid} RETURN c.uid as name, c.name as real_name order by real_name",
+                "MATCH (s:Strata)-[r:IS_CONSTITUTED_BY]->(c:SubCharacteristic) where s.uid={strata_uid} RETURN c.uid as name, c.name as real_name order by name",
                 strata_uid=strata['uid']).data()
 
             logger.debug ("======Components")
@@ -231,17 +231,18 @@ class Neo4jDAO:
 
             # Chaque strates a des interfaces
             logger.debug("======interface")
-            interfaceName = self.tx.evaluate(
+            interface_uid = self.tx.evaluate(
                 """MATCH (s:Strata)-[r:HAS_UPPER_INTERFACE]->(n:Interface) WHERE s.uid={strata_uid}
-                   RETURN n.uid as uid""", strata_uid=strata['uid'])
+                   RETURN n.uid as uid ORDER BY uid""", strata_uid=strata['uid'])
 
-            if interfaceName and len(interfaceName) > 0:
-                ilist = {'name': interfaceName, 'characteristics': ''}
+            if interface_uid and len(interface_uid) > 0:
+                # il n'y a qu'une UPPER_INTERFACE interface
+                ilist = {'name': interface_uid, 'characteristics': ''}
 
                 #Chaque interface a des caracteristiques
                 intCharactList = self.tx.run(
-                    """MATCH (i:Interface)-[r:IS_CONSTITUTED_BY]->(c:Characteristic)-[b:BELONGS_TO]->(f:Family) WHERE i.uid={interfaceName}
-                       RETURN c.uid as uid, f.uid as family""", interfaceName=interfaceName)
+                    """MATCH (i:Interface)-[r:IS_CONSTITUTED_BY]->(c:Characteristic)-[b:BELONGS_TO]->(f:Family) WHERE i.uid={interface_uid}
+                       RETURN c.uid as uid, f.uid as family ORDER BY uid""", interface_uid=interface_uid)
                 iclist = []
                 for ic in intCharactList:
                     iclist.append({'name': ic['uid'], 'family': ic['family']})
@@ -261,13 +262,13 @@ class Neo4jDAO:
 
             childList = self.tx.run(
                 """MATCH (a:Strata)-[r:IS_PARENT_OF]->(b:Strata) where a.uid={strata_uid}
-                   RETURN b.uid as uid""", strata_uid=strata['uid'])
+                   RETURN b.uid as uid ORDER BY uid""", strata_uid=strata['uid'])
 
             st['children'] = [
                 {'name': child['uid'],
                  'characteristics': self.tx.run(
                      """MATCH (n:Strata)-[r:IS_CONSTITUTED_BY]->(c:Characteristic)-[b:BELONGS_TO]->(f:Family) where n.uid={child_uid}
-                        RETURN c.uid as name, c.name as real_name, f.uid as family""", child_uid=child['uid']).data()}
+                        RETURN c.uid as name, c.name as real_name, f.uid as family ORDER BY name""", child_uid=child['uid']).data()}
                 for child in childList
             ]
             stratigraphy['strata'].append(st)
@@ -282,7 +283,7 @@ class Neo4jDAO:
          OPTIONAL MATCH (c)-[:HAS_SPECIALIZATION]->(sc:SubCharacteristic)
          OPTIONAL MATCH (sc)-[:HAS_SPECIALIZATION]->(ssc:SubCharacteristic)
          RETURN f,c,sc,ssc
-         ORDER BY f.name, c.order, sc.name, ssc.name  
+         ORDER BY f.name, c.order, sc.name, ssc.name
         """)
         # here we get a flat list of records including all family, Characteristic, SubCharacteristic, SubCharacteristic
         # convert it into hierarchical lists of f -> c -> sc -> ssc, setting field names as expected by api client
@@ -488,7 +489,7 @@ class Neo4jDAO:
     def createStrata(self, strata_uid, stratigraphy_uid):
         return self.tx.evaluate("""
                CREATE(strata:Strata{uid:{strata_uid}, date:{today}, stratigraphy_uid: {stratigraphy_uid}})
-               WITH strata 
+               WITH strata
                MATCH (stgy:Stratigraphy {uid:{stratigraphy_uid}})
                CREATE (stgy)-[:POSSESSES]->(strata) RETURN strata""",
                              strata_uid=strata_uid, today=time.strftime("%Y-%m-%d"), stratigraphy_uid=stratigraphy_uid)
@@ -719,7 +720,7 @@ class Neo4jDAO:
                            artefact=artefact, today=time.strftime("%Y-%m-%d"))
             return {'res': 1}
         """
-        todo: replace by a merge.. 
+        todo: replace by a merge..
         MERGE (n:Artefact {uid:{artefact}})
         ON CREATE SET n.date = {today}
         RETURN n.uid

@@ -8,7 +8,6 @@ werkzeug==1.0.1
 #test dependencies
 django-test-plus==1.4.0  # broken python2 install due to more-itertools >5.0.0 being installed by pluggy dependency
 jsondiff==1.2.0
-deepdiff==4.3.2
 
 ### unused for now
 # test coverage
@@ -28,3 +27,4 @@ deepdiff==4.3.2
 
 # generate data to test models
 #factory-boy==2.11.1
+

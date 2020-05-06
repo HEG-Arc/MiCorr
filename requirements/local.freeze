@@ -124,3 +124,4 @@ Werkzeug==0.15.2
 whitenoise==4.1.2
 widgetsnbextension==3.4.2
 Willow==1.0
+jsondiff==1.2.0
