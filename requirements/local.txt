@@ -21,3 +21,6 @@ factory-boy==2.11.1
 # debugging tools
 django-debug-toolbar==1.9.1
 werkzeug==0.15.3
+
+jsondiff==1.2.0
+deepdiff==3.3.0

@@ -128,7 +128,7 @@ class Neo4jDAO:
             # Chaque strates a des caracteristiques
             charactList = self.graph.cypher.execute(
                 """MATCH (n:Strata)-[r:IS_CONSTITUTED_BY]->(c:Characteristic)-[b:BELONGS_TO]->(f:Family) where n.uid={strata_uid}
-                   RETURN c,f
+                   RETURN c,f ORDER by c.order,c.uid
                 """, strata_uid=strata.uid)
             logger.debug ("======Characteristic")
             # c.uid as uid, f.uid as family, c.name as real_name, c.visible as visible, c.order as order
@@ -147,7 +147,7 @@ class Neo4jDAO:
             # Chaque strate a des sous-caracteristiques
             logger.debug ("======subCharacteristic")
             subCharactList = self.graph.cypher.execute(
-                "MATCH (s:Strata)-[r:IS_CONSTITUTED_BY]->(c:SubCharacteristic) where s.uid='" + strata.uid + "' RETURN c.uid as uid, c.name as real_name order by real_name")
+                "MATCH (s:Strata)-[r:IS_CONSTITUTED_BY]->(c:SubCharacteristic) where s.uid='" + strata.uid + "' RETURN c.uid as uid, c.name as real_name order by uid")
             slist = []
             for subCharact in subCharactList:
                 slist.append({'name': subCharact.uid, 'real_name': subCharact.real_name})
@@ -203,18 +203,16 @@ class Neo4jDAO:
 
             # Chaque strates a des interfaces
             logger.debug("======interface")
-            interfaceName = self.graph.cypher.execute(
-                "MATCH (s:Strata)-[r:HAS_UPPER_INTERFACE]->(n:Interface) where s.uid='" + strata.uid + "' RETURN n.uid as uid")
+            interfaces = self.graph.cypher.execute(
+                "MATCH (s:Strata)-[r:HAS_UPPER_INTERFACE]->(n:Interface) where s.uid='" + strata.uid + "' RETURN n.uid as uid ORDER BY uid")
 
-            if len(interfaceName) > 0:
-                ilist = {'name': interfaceName[0].uid, 'characteristics': ''}
-                interfaceList = self.graph.cypher.execute(
-                    "MATCH (s:Strata)-[r:HAS_UPPER_INTERFACE]->(i:Interface) where s.uid='" + strata.uid + "' RETURN i.uid as uid")
-
+            if len(interfaces) > 0:
+                # il n'y a qu'une UPPER_INTERFACE interface
+                ilist = {'name': interfaces[0].uid, 'characteristics': ''}
                 #Chaque interface a des caracteristiques
                 intCharactList = self.graph.cypher.execute(
                     "MATCH (i:Interface)-[r:IS_CONSTITUTED_BY]->(c:Characteristic)-[b:BELONGS_TO]->(f:Family) where i.uid='" +
-                    interfaceName[0].uid + "' RETURN c.uid as uid, f.uid as family")
+                    interfaces[0].uid + "' RETURN c.uid as uid, f.uid as family ORDER BY uid")
                 iclist = []
                 for ic in intCharactList:
                     iclist.append({'name': ic.uid, 'family': ic.family})
@@ -233,14 +231,15 @@ class Neo4jDAO:
 
             #Recuperation des enfants
 
-            childList = self.graph.cypher.execute("MATCH (a:Strata)-[r:IS_PARENT_OF]->(b:Strata) where a.uid='" + strata.uid + "' RETURN b.uid as uid")
+            childList = self.graph.cypher.execute("MATCH (a:Strata)-[r:IS_PARENT_OF]->(b:Strata) where a.uid='" + strata.uid + "' RETURN b.uid as uid ORDER BY uid")
             children = []
             for child in childList:
                 cst = {'name': child.uid, 'characteristics': ''}
 
                 # Chaque strate enfant a des caracteristiques
                 logger.debug ("======Characteristic")
-                childCharactList = self.graph.cypher.execute("MATCH (n:Strata)-[r:IS_CONSTITUTED_BY]->(c:Characteristic)-[b:BELONGS_TO]->(f:Family) where n.uid='" + child.uid + "' RETURN c.uid as uid, c.name as real_name, f.uid as family")
+                childCharactList = self.graph.cypher.execute(
+                    "MATCH (n:Strata)-[r:IS_CONSTITUTED_BY]->(c:Characteristic)-[b:BELONGS_TO]->(f:Family) where n.uid='" + child.uid + "' RETURN c.uid as uid, c.name as real_name, f.uid as family ORDER BY uid")
                 childCList = []
                 for charact in childCharactList:
                     childCList.append({'name': charact.uid, 'real_name': charact.real_name, 'family': charact.family})
@@ -272,7 +271,7 @@ class Neo4jDAO:
          OPTIONAL MATCH (c)-[:HAS_SPECIALIZATION]->(sc:SubCharacteristic)
          OPTIONAL MATCH (sc)-[:HAS_SPECIALIZATION]->(ssc:SubCharacteristic)
          RETURN f,c,sc,ssc
-         ORDER BY f.name, c.order, sc.name, ssc.name  
+         ORDER BY f.name, c.order, sc.name, ssc.name
         """)
         # here we get a flat list of records including all family, Characteristic, SubCharacteristic, SubCharacteristic
         # convert it into hierarchical lists of f -> c -> sc -> ssc, setting field names as expected by api client
@@ -474,7 +473,7 @@ class Neo4jDAO:
         today = time.strftime("%Y-%m-%d")
         res = self.graph.cypher.execute("""
                CREATE(strata:Strata{uid:{strata_uid}, date:{today}, stratigraphy_uid: {stratigraphy_uid}})
-               WITH strata 
+               WITH strata
                MATCH (stgy:Stratigraphy {uid:{stratigraphy_uid}})
                CREATE (stgy)-[:POSSESSES]->(strata) RETURN strata""",
                                   strata_uid=strata_uid, today=today, stratigraphy_uid=stratigraphy_uid)
