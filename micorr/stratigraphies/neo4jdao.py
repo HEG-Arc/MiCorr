@@ -525,7 +525,7 @@ class Neo4jDAO:
             self.tx.create(c | stratum_node | stc)
 
             def find_and_attach_node_to_component(label,key,value,component):
-                node = self.match_node(label, **{key, value}).first()
+                node = self.match_node(label, **{key: value}).first()
                 # alternative syntaxes
                 # node = self.match_node(label, uid=value).first()
                 # node = self.match_node(label).where("{}={}".format(key, value)).first()
