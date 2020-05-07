@@ -202,7 +202,14 @@ class Neo4jDAO:
                 """, strata_uid=strata['uid'],stratigraphy_uid=stratigraphy_uid)
             secondary_components = [{'characteristics': [], 'subCharacteristics': [], 'containers': defaultdict(list)}]
             for record in component_records:
-                if record['char_or_ctn']:
+                # Caution bug fix line below
+                # to verify  if the OPTIONAL MATCH char_or_ctn is in a record
+                # we must test with get method and a default value such as None
+                # testing if record['char_or_ctn'] would fail in case of Container node (that has no properties)
+                # so for ex. bool((_14056:Container {})) == False due to the empty dict of property even if an actual
+                # Container node is returned in the record and we would then skip actual Container content
+                # from elem_or_cpnd
+                if record.get('char_or_ctn',None) is not None:
                     if 'SubCharacteristic' in record['char_or_ctn'].labels:
                         secondary_components[0]['subCharacteristics'].append(
                             {'name': record['char_or_ctn']['uid'], 'real_name': record['char_or_ctn']['name']})
