@@ -147,8 +147,9 @@ def save(request):
             return HttpResponseForbidden()
     else:
         # This stratigraphy belongs to nobody, we try to add the current user_id
-        if request.user.is_authenticated():
-            print(("USER ID: %s" % request.user))
+        # old stratigrapy with missing user_id property (creator_id there although)
+        if request.user.is_authenticated:
+            print(("setStratigraphyUser to USER ID: %s" % request.user))
             ms.setStratigraphyUser(stratigraphy, request.user.id)
         print("SAVING STRATIGRAPHY")
         response = ms.save(data)
