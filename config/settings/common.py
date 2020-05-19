@@ -322,3 +322,7 @@ TINYMCE_JS_ROOT = os.path.join(STATIC_URL, "js/tinymce")
 # default image generated when  there no local avatar image nor gravatar image associated with user's email
 # https://en.gravatar.com/site/implement/images/#default-image
 AVATAR_GRAVATAR_DEFAULT = 'retro'  # mp, identicon, monsterid, wavatar, retro, robohash, blank
+AVATAR_AUTO_GENERATE_SIZES = [80, 35]
+# settings AVATAR_THUMB_FORMAT to PNG actually fixes no resize issue with png upload and still allows jpg
+# see https://github.com/grantmcconnaughey/django-avatar/issues/153 and comment in https://github.com/grantmcconnaughey/django-avatar/pull/180
+AVATAR_THUMB_FORMAT = "PNG"
