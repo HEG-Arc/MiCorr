@@ -99,7 +99,7 @@ class MicorrService(TestCase):
             self.assertEqual(save_response.status_code, 200)
             # self.assertEqual(save_response.status_code, 403,'when saving as anonymous user')
 
-            _logger.info('reloading {}/{} : {}'.format(i, len(self.stratigraphy_refs), s_uid))
+            _logger.info('reloading {}/{} : {}\n'.format(i, len(self.stratigraphy_refs), s_uid))
             reload_response = self.client.get('/micorr/json/getstratigraphydetails/{uid}'.format(uid=s_uid))
             self.assertEqual(reload_response.status_code, 200)
 

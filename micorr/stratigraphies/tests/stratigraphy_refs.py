@@ -11,7 +11,7 @@ from micorr.stratigraphies.micorrservice import MiCorrService
 ms = MiCorrService()
 ref_stratigraphies = list(map(lambda s: s['uid'], ms.getStratigraphiesByUser(2)))
 # save stratigraphy list as json
-with open('./data/{}.json'.format(public_stratigraphies), 'w') as out_f:
+with open('./data/{}.json'.format('public_stratigraphies'), 'w') as out_f:
     json.dump({'stratigraphies':ref_stratigraphies }, out_f)
 
 # save each stratigraphy as json for refererence in test
