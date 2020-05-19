@@ -98,6 +98,8 @@ class Neo4jDAO:
 
     def setStratigraphyUser(self, stratigraphy, user_id):
         n = self.tx.evaluate("MATCH (n:`Stratigraphy`) WHERE n.uid={stratigraphy} RETURN n", stratigraphy=stratigraphy)
+        if n is None:
+            return
         n['user_uid'] = user_id
         n['creator_uid'] = user_id
         self.tx.push(n)
@@ -198,7 +200,7 @@ class Neo4jDAO:
                     OPTIONAL MATCH (cpnt)-[r_const_or_incl]->(char_or_ctn)-[:BELONGS_TO]->(family:Family)
                     OPTIONAL MATCH (char_or_ctn)-[ce_r:IS_CONSTITUTED_BY]->(elem_or_cpnd:Characteristic)
                    RETURN s.uid,id(cpnt),char_or_ctn, family.uid, ce_r.order, elem_or_cpnd
-                   ORDER BY s.uid, id(cpnt), family.uid, ce_r.order
+                   ORDER BY s.uid, id(cpnt), family.uid, ce_r.order, char_or_ctn.uid
                 """, strata_uid=strata['uid'],stratigraphy_uid=stratigraphy_uid)
             secondary_components = [{'characteristics': [], 'subCharacteristics': [], 'containers': defaultdict(list)}]
             for record in component_records:
