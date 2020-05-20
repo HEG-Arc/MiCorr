@@ -7,6 +7,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.mail import EmailMultiAlternatives
 from django.core.mail import send_mail
+from django.template.loader import get_template
 from django.urls import reverse,resolve
 from django.db.models import Q
 from django.http import HttpResponse, JsonResponse, Http404,HttpResponse, HttpResponseNotAllowed
@@ -429,30 +430,30 @@ def shareArtefact(request, artefact_id):
             right = form.cleaned_data['right']
             comment = form.cleaned_data['comment']
             cc_myself = form.cleaned_data['cc_myself']
-            sender = request.user.email
+            user = request.user
 
             # create a link with a new generated token. example :
             # 'localhost:8000/artefacts/110?token=8a21008e-383b-4c13-bd9e-9c8387bf29b0'
             token = Token.tokenManager.create_token(right, artefact, request.user, comment, '-'.join(recipient))
 
             if right == 'R':
-                link = request.get_host() + '/artefacts/' + artefact_id + '/?token='+token.uuid
+                link = reverse('artefacts:artefact-detail', kwargs={'pk':artefact_id})
+                link+=f'?token={token.uuid}'
             elif right == 'W':
-                #link = request.get_host() + '/artefacts/' + artefact_id + '/update/?token='+token.uuid
-                link = request.get_host() + '/artefacts/collaboration/'
+                link = reverse('artefacts:collaboration-menu')
 
-            token.link = link
+            token.link = request.build_absolute_uri(link)
             token.save()
 
             # create text and html content to have a clickable link
-            text_message = "A MiCorr user shared an artefact with you. Please follow this " \
-                           "link : "+link
-            html_message = '<p>A MiCorr user shared an artefact with you. ' \
-                           'Please follow this link : <a href="'+link+'">'+link+'.</p>'
-            if cc_myself:
-                recipient.append(sender)
 
-            msg = EmailMultiAlternatives(subject, text_message, sender, recipient)
+            context = {'link':link, 'user':user}
+            text_message = get_template('artefacts/email/artefact_share.txt').render(context=context)
+            html_message = get_template('artefacts/email/artefact_share.html').render(context=context)
+            if cc_myself:
+                recipient.append(user.email)
+
+            msg = EmailMultiAlternatives(subject, text_message, settings.DEFAULT_FROM_EMAIL, recipient, reply_to=(user.email,))
             msg.attach_alternative(html_message, "text/html")
             msg.send()
             messages.add_message(request, messages.SUCCESS, 'New share added successfully')

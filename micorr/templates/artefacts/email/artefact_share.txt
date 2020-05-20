@@ -1,0 +1,2 @@
+{{user.name}} shared a MiCorr artefact with you.
+Please follow this link: {{link}}
