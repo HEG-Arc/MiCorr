@@ -441,8 +441,8 @@ def shareArtefact(request, artefact_id):
                 link+=f'?token={token.uuid}'
             elif right == 'W':
                 link = reverse('artefacts:collaboration-menu')
-
-            token.link = request.build_absolute_uri(link)
+            link = request.build_absolute_uri(link)
+            token.link = link
             token.save()
 
             # create text and html content to have a clickable link
