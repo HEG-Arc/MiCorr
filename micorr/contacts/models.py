@@ -65,7 +65,7 @@ class Contact(TimeStampedModel):
         verbose_name_plural = _('Contacts')
         ordering = ['organization_name', 'name', 'surname']
 
-    def __unicode__(self):
+    def __str__(self):
         formatted = str(self.organization_name)
         contact = []
         if self.name:
