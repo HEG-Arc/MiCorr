@@ -1501,7 +1501,7 @@ from cities_light.models import City, Country, Region
 class CityAutocomplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):
         # Don't forget to filter out results depending on the visitor !
-        if not self.request.user.is_authenticated():
+        if not self.request.user.is_authenticated:
             return City.objects.none()
 
         qs = City.objects.all()
@@ -1513,7 +1513,7 @@ class CityAutocomplete(autocomplete.Select2QuerySetView):
 
 class RegionAutocomplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):
-        if not self.request.user.is_authenticated():
+        if not self.request.user.is_authenticated:
             return Region.objects.none()
 
         qs = Region.objects.all()
@@ -1525,7 +1525,7 @@ class RegionAutocomplete(autocomplete.Select2QuerySetView):
 
 class CountryAutocomplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):
-        if not self.request.user.is_authenticated():
+        if not self.request.user.is_authenticated:
             return Country.objects.none()
 
         qs = Country.objects.all()
@@ -1537,7 +1537,7 @@ class CountryAutocomplete(autocomplete.Select2QuerySetView):
 class BaseAutocomplete(autocomplete.Select2QuerySetView):
 
     def get_queryset(self):
-        if not self.request.user.is_authenticated():
+        if not self.request.user.is_authenticated:
             return self.model.objects.none()
 
         qs = self.model.objects.all()
@@ -1555,7 +1555,7 @@ class GenericAutoComplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):
         model_class = getattr(models,self.kwargs['model'])
 
-        if not self.request.user.is_authenticated():
+        if not self.request.user.is_authenticated:
             return model_class.objects.none()
 
         qs = model_class.objects.all()
