@@ -10261,6 +10261,28 @@ button[disabled] {
   margin-bottom: 1em;
 }
 
+.minititle {
+  text-transform: none;
+  font-size: 1.2em;
+}
+.minititle span {
+  color: #4d4d4d;
+}
+
+.current_strata {
+  background: url(bg-current-strata.png) no-repeat left top;
+}
+
+.labelinfo {
+  text-align:center;
+  margin-top: 5px;
+  font-weight:bold;
+}
+
+#stratasvg {
+  font-size: 14px;
+}
+
 /*
 inspired from http://codepen.io/Rowno/pen/Afykb
 */
