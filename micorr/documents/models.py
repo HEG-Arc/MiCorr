@@ -28,7 +28,8 @@ from django.db import models
 # Third-party app imports
 from wagtail.core.models import Page, Orderable
 from wagtail.core.fields import RichTextField, StreamField
-from wagtail.admin.edit_handlers import FieldPanel, MultiFieldPanel, InlinePanel, PageChooserPanel, StreamFieldPanel
+from wagtail.admin.edit_handlers import FieldPanel, MultiFieldPanel, InlinePanel, PageChooserPanel, StreamFieldPanel, \
+    BaseChooserPanel
 from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.images.models import Image
 from wagtail.documents.edit_handlers import DocumentChooserPanel
@@ -43,6 +44,11 @@ from wagtail.core import blocks
 from wagtail.admin.edit_handlers import FieldPanel, StreamFieldPanel
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail.embeds.blocks import EmbedBlock
+
+from wagtailnews.models import NewsIndexMixin, AbstractNewsItem, AbstractNewsItemRevision
+from wagtailnews.decorators import newsindex
+from wagtailnews.feeds import LatestEntriesFeed
+
 # MiCorr imports
 
 
@@ -314,3 +320,53 @@ class OwnEmbedFinder(EmbedFinder):
             'height': 200,
             'html': "<h2>The Embed HTML</h2>",
         }
+
+
+class NewsItem(AbstractNewsItem):
+    title = models.CharField(max_length=100)
+    intro = RichTextField(blank=True)
+    body = RichTextField()
+    #  abstract = models.TextField()
+    panels = [
+        FieldPanel('title'),
+        FieldPanel('intro'),
+        FieldPanel('body'),
+    ]
+
+    def __str__(self):
+        return self.title
+
+# This table is used to store revisions of the news items.
+class NewsItemRevision(AbstractNewsItemRevision):
+    # This is the only field you need to define on this model.
+    # It must be a foreign key to your NewsItem model,
+    # be named 'newsitem', and have a related_name='revisions'
+    newsitem = models.ForeignKey(NewsItem, related_name='revisions', on_delete=models.CASCADE)
+
+
+
+class MyNewsFeed(LatestEntriesFeed):
+    def item_intro(self, item):
+        return item.intro
+
+class NewsChooserPanel(BaseChooserPanel):
+    object_type_name = "news"
+
+# The decorator registers this model as a news index
+@newsindex
+class NewsIndex(NewsIndexMixin, Page):
+    # Add extra fields here, as in a normal Wagtail Page class, if required
+    intro = RichTextField(blank=True)
+
+    top_news_item = models.ForeignKey(NewsItem, related_name='+', null=True, on_delete=models.SET_NULL, help_text='The selected news items is published on MiCorr home page')
+
+    newsitem_model = 'NewsItem'
+    feed_class = MyNewsFeed
+
+
+    content_panels = [
+        FieldPanel('title'),
+        FieldPanel('intro'),
+        NewsChooserPanel('top_news_item')
+    ]
+

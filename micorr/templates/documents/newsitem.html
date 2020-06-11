@@ -1,0 +1,11 @@
+{% extends "documents/base.html" %}
+
+{% block content %}
+
+    <h1>{{ newsitem.title }}</h1>
+
+    {% include "documents/includes/intro.html" with intro=newsitem.intro %}
+
+    {% include "documents/includes/body.html" with body=newsitem.body %}
+
+{% endblock %}

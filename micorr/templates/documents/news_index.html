@@ -1,0 +1,25 @@
+{% extends "documents/base.html" %}
+{% load wagtailcore_tags documents_tags terms static %}
+
+
+{% block content %}
+  <div id="content_column" class="c9">
+        {% include "documents/includes/intro.html" with intro=self.intro only %}
+      <ul>
+      {% for news in self.get_newsitems   %}
+            {% if news.live %}
+            <li>
+            <h1><a href="{{ news.url }}">{{ news.title }}</a></h1>
+            <p> {{ news.intro|richtext }}</p>
+            </li>
+            {% endif %}
+        {% endfor %}
+      </ul>
+  </div>
+    <div class="row">
+        <div class="c12">
+            {% load wagtailroutablepage_tags %}
+            <a href="{% routablepageurl page "feed" %}">RSS</a>
+        </div>
+    </div>
+{% endblock %}
