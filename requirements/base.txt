@@ -1,4 +1,4 @@
-Django==3.0.5
+Django==3.0.7
 # Configuration
 django-configurations==2.2
 django-secure==1.0.2
