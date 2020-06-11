@@ -106,8 +106,10 @@ class GraphGenerationUtil {
         let strataWidth = this.getWidths(strata.getFirstCharacteristicByFamily('widthFamily', 'name'));
         var interfaceWidth = strataWidth;
 
-        draw = draw || SVG(divID).size(interfaceWidth, interfaceHeight);
-
+        if (divID) {
+            draw = SVG(divID);
+            //draw.viewbox(0, 0, 650, interfaceHeight)
+        }
         var nestedInterface = draw.nested();
         nestedInterface.height(interfaceHeight);
         nestedInterface.width(interfaceWidth);
@@ -213,8 +215,10 @@ class GraphGenerationUtil {
         }
         var borderWidth = 8;
 
-        draw = draw || SVG(divID).size(width, height);
-
+          if (divID) {
+            draw = SVG(divID);
+            //draw.viewbox(0, 0, 650, height);
+        }
 
         //on crée un groupe pour englober la strate et pour pouvoir la réutiliser
         var nestedStrata = draw.nested();

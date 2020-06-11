@@ -20,7 +20,7 @@ strata = function ($compile, StratigraphyData) {
         restrict: 'EA',
         replace: true,
         transclude: true,
-        template: '<div class="svgcanvas col-md-10 text-center"><div></div><div></div></div>',
+        template: '<div class="svgcanvas col-xs-10 text-center"><div></div><div></div></div>',
         link: function (scope, element, attrs) {
             var index = attrs.index;
 
@@ -76,7 +76,7 @@ stratainfo = function ($compile, StratigraphyData) {
         restrict: 'EA',
         replace: true,
         transclude: true,
-        template: '<div class="col-md-2 row text-right" style="padding-top:20px"><div style="float:left"></div><div style="float:rigth"></div></div>',
+        template: '<div class="col-xs-2 text-right"><div style="float:left"></div><div style="float:rigth"></div></div>',
         link: function (scope, element, attrs) {
 
             var index = attrs.index;    // index de la strate

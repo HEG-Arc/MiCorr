@@ -940,8 +940,8 @@
 
 </div>
 <div id="hello" class="col-md-6">
-    <div id="stratasvg" class="row-fluid">
-        <div id="stratasvg_{{$index}}" class="col-md-11" ng-repeat="strata in stratas">
+    <div id="stratasvg">
+        <div id="stratasvg_{{$index}}" class="row" ng-repeat="strata in stratas">
             <stratainfo index="{{$index}}"></stratainfo>
             <strata index="{{$index}}"></strata>
         </div>

@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "base_root.html" %}
 {% load static %}
 
 {% block html_tag %}
@@ -13,9 +13,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-select/0.20.0/select.min.css" crossorigin="anonymous"/>
 {% endblock custom_header_script %}
 
+
+{% block content_container %}
+    <div class="container-fluid">
 {% block content %}
     <div ng-controller="MainCtrl" class="container-fluid" ng-view></div>
 {% endblock content %}
+    </div>
+{% endblock content_container %}
 
 {% block custom_bottom_script %}
     <script src={% static "micorr/dist/bundle.js" %}></script>
