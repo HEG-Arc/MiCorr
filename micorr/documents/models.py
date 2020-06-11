@@ -358,7 +358,7 @@ class NewsIndex(NewsIndexMixin, Page):
     # Add extra fields here, as in a normal Wagtail Page class, if required
     intro = RichTextField(blank=True)
 
-    top_news_item = models.ForeignKey(NewsItem, related_name='+', null=True, on_delete=models.SET_NULL, help_text='The selected news items is published on MiCorr home page')
+    top_news_item = models.ForeignKey(NewsItem, related_name='+', null=True, blank=True, on_delete=models.SET_NULL, help_text='The selected news items is published on MiCorr home page')
 
     newsitem_model = 'NewsItem'
     feed_class = MyNewsFeed
