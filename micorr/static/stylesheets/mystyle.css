@@ -9797,7 +9797,12 @@ body.sticky-footer #footer {
   left: 0;
   width: 100%;
 }
-
+/* mobile quick fix - prevent logo from hidding menu*/
+@media (max-width: 768px) {
+  #headlogo img {
+    display: none;
+  }
+}
 .menu {
   line-height: 2.2;
   font-size: .95em;
