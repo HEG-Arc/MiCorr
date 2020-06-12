@@ -4,10 +4,10 @@
 
 # WSGI Handler
 # ------------------------------------------------
-gevent==20.4.0
+gevent==20.6.1
 gunicorn==20.0.4
 
 
 # Raven is the Sentry client
 # --------------------------
-sentry-sdk==0.14.3
+sentry-sdk==0.14.4
