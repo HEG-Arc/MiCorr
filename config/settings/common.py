@@ -167,6 +167,19 @@ SITE_ID = 1
 
 WAGTAIL_SITE_NAME = 'MiCorr'
 
+# the new richtext editor in wagtail v2.0 (Draftail) is incompatible with image as link in content
+# https://docs.wagtail.io/en/stable/releases/2.0.html?highlight=draftail#hallo-js-customisations-are-unavailable-on-the-draftail-rich-text-editor
+# this breaks the editor (while page is still published fine)
+# open wagtail issue https://github.com/wagtail/wagtail/issues/4602 as of today
+# we depend on this for several pages for now (e.g. http://127.0.0.1:8000/w/admin/pages/29/edit/, http://127.0.0.1:8000/w/admin/pages/21/edit/ )
+# so we revert to previous editor Hallojs
+
+WAGTAILADMIN_RICH_TEXT_EDITORS = {
+    'default': {
+        'WIDGET': 'wagtail.admin.rich_text.HalloRichTextArea'
+    }
+}
+
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#use-i18n
 USE_I18N = True
 
