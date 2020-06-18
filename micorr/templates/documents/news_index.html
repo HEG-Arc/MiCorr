@@ -1,25 +1,35 @@
 {% extends "documents/base.html" %}
 {% load wagtailcore_tags documents_tags terms static %}
-
-
+{% block title %}
+    {{ self.title }}
+{% endblock title %}
 {% block content %}
-  <div id="content_column" class="c9">
+    <div class="line center">
+        <h1>{{ self.title }}</h1>
+    </div>
+    <div id="content_column" class="c12">
         {% include "documents/includes/intro.html" with intro=self.intro only %}
-      <ul>
-      {% for news in self.get_newsitems   %}
+        {% for news in self.get_newsitems %}
             {% if news.live %}
-            <li>
-            <h1><a href="{{ news.url }}">{{ news.title }}</a></h1>
-            <p> {{ news.intro|richtext }}</p>
-            </li>
+                <div class="row underline">
+                    <div class="c3">
+                        <h3><i class="fa fa-calendar-o faded"></i>
+                            {{ news.date|date:"F d, Y" }}
+                        </h3>
+                    </div>
+                    <div class="c9">
+                        <h3><a href="{{ news.url }}">{{ news.title }}</a></h3>
+                        {{ news.intro|richtext }}
+                    </div>
+                </div>
             {% endif %}
         {% endfor %}
-      </ul>
-  </div>
+    </div>
     <div class="row">
-        <div class="c12">
+        <div class="c1 pre11">
             {% load wagtailroutablepage_tags %}
-            <a href="{% routablepageurl page "feed" %}">RSS</a>
+            <i class="fa fa-rss faded"></i>
+            <a href="{% routablepageurl page "feed" %}">rss</a>
         </div>
     </div>
 {% endblock %}

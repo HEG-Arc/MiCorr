@@ -324,24 +324,29 @@
 </div>
 
 <div id="news" class="lightframe">
-  <div class="container">
-    <div class="line center">
-      <h1>News</h1>
-    </div>
-    <div class="c12" >
-      <div class="row underline">
-        <div class="c4">
-          <h2>{{ top_news.date|date:"F d, Y" }}</h2>
-          <i class="fa fa-calendar-o faded fa-3x"></i>
+    <div class="container">
+        <div class="line center">
+            <h1>News</h1>
         </div>
-        <div class="c8">
-          <h3>{{ top_news.title }}</h3>
-          <p class="small">{{ top_news.intro|richtext }}</p>
-          <p><i class="fa fa-chevron-right faded"></i> <a href="{{ top_news.url }}">more</a></p>
+        <div class="c12">
+            <div class="row">
+                <div class="c3"><h3><i class="fa fa-calendar-o faded"></i>
+                    {{ top_news.date|date:"F d, Y" }}</h3>
+                </div>
+                <div class="c9">
+                    <h3>{{ top_news.title }}</h3>
+                    <p class="small">{{ top_news.intro|richtext }}</p>
+                    <p><i class="fa fa-chevron-right faded"></i> <a href="{{ top_news.url }}">more</a></p>
+                </div>
+            </div>
+            <div class="row underline">
+                <div class="c2 pre10">
+                    <h3><a href="{% slugurl 'micorr-news' %}"> <i class="fa fa-folder disc"></i> Archives</a>
+                    </h3>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 </div>
 
 {% endblock content_container %}
