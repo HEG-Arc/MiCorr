@@ -18,7 +18,7 @@
     "webpack-cli": "^3.3.2"
   },
   "dependencies": {
-    "angular": "^1.4.0",
+    "angular": "^1.8.0",
     "angular-resource": "^1.4.0",
     "angular-route": "^1.4.0",
     "angular-sanitize": "^1.4.0",
