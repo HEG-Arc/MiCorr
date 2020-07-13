@@ -17,19 +17,12 @@ angular.module('micorrApp')
         const families = ["shapeFamily","widthFamily","thicknessFamily","continuityFamily","directionFamily","colourFamily","brightnessFamily","opacityFamily","magnetismFamily"];
         $scope.$on('initShowStrat', function (event) {
             initStratTab($scope, StratigraphyData, families);
-
-            /* uncomment for trial dynamic family templates (see comments in strat.html)
-            $scope.familyGroup = [
-                {"uid": "shapeFamily", "name": "Shape"},
-                {"uid": "magnetismFamily", "name": "Magnetism"},
-                {"uid": "thicknessFamily", "name": "Thickness"},
-                {"uid": "widthFamily", "name": "Width"},
-                {"uid": "directionFamily", "name": "Direction"},
-                {"uid": "continuityFamily", "name": "Continuity"},
-                {"uid": "brightnessFamily", "name": "Brightness"},
-                {"uid": "colourFamily", "name": "Colour"},
-                {"uid": "opacityFamily", "name": "Opacity"}];
-                */
+            $scope.familyGroup = [];
+            for (let f of families) {
+                let fname = f.split('Family')[0];
+                fname = fname.charAt(0).toUpperCase() + fname.slice(1);
+                $scope.familyGroup.push({uid:f, name: fname, 'visible': ['widthFamily','thicknessFamily','colourFamily'].includes(f)})
+            }
         });
         $scope.$on('updateMorphology', function () {
             updateStratTabFromModel($scope, StratigraphyData, families);
@@ -39,10 +32,8 @@ angular.module('micorrApp')
             updateStratModelFromTab($scope, StratigraphyData, families);
             $scope.$emit('updateSelectedStrata');
         };
-    });
-    /*
-    .directive('dynamicModel', ['$compile', '$parse', function ($compile, $parse) {
-        //used in trial dynamic family templates (see commented out template in strat.html)
+    }).directive('dynamicModel', ['$compile', '$parse', function ($compile, $parse) {
+        //used in dynamic family templates see strat.html
     return {
         restrict: 'A',
         terminal: true,
@@ -55,4 +46,3 @@ angular.module('micorrApp')
         }
      };
     }]);
-*/
