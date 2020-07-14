@@ -224,15 +224,18 @@
 <tab heading="Morphology" ng-controller="StratMorphologyCtrl" active="activeMorphologyTab" title="{{descriptions.fgMorphology}}">
     <form>
        <div class="row-fluid">
-              <div class="col-md-6 form-group" ng-repeat="family in familyGroup">
+              <div class="col-md-6 form-group" ng-repeat="family  in familyGroup">
                 <label for="{{ 'morphology' + family.name }}">
                     <span class="glyphicon" ng-class="family.visible ? 'glyphicon-eye-open' : 'glyphicon-eye-close'"}} title="{{ (family.visible ? '' :'no') + 'visual impact on the stratum'}}"></span>
                     <span title="{{ descriptions[family.uid] }}"> {{ family.name }}</span></label>
-                <select id="{{ 'morphology' + family.name }}" class="form-control" dynamic-model="'selected.'+family.uid"
-                        ng-options="x.real_name for x in this[family.uid]" ng-change="upMorpho()">
-                        <option value="" ></option>
-                </select>
-            </div>
+                  <select ng-if="!family.variable" id="{{ 'morphology' + family.name }}" class="form-control"
+                          dynamic-model="'selected.'+family.uid"
+                          ng-options="x.real_name for x in this[family.uid]" ng-change="upMorpho()">
+                      <option value=""></option>
+                  </select>
+                  <input ng-if="family.variable" id="{{ 'morphology' + family.name }}"
+                         dynamic-model="'selected.'+family.uid" type="text" smart-float placeholder="1.5e-6"></input>
+              </div>
        </div>
     </form>
 </tab>

@@ -14,22 +14,38 @@ import {initStratTab, updateStratModelFromTab, updateStratTabFromModel} from "./
 angular.module('micorrApp')
     .controller('StratMorphologyCtrl', function ($scope, $route, $window, StratigraphyData) {
 
-        const families = ["shapeFamily","widthFamily","thicknessFamily","continuityFamily","directionFamily","colourFamily","brightnessFamily","opacityFamily","magnetismFamily"];
-        $scope.$on('initShowStrat', function (event) {
-            initStratTab($scope, StratigraphyData, families);
-            $scope.familyGroup = [];
-            for (let f of families) {
-                let fname = f.split('Family')[0];
+        const familyGroup = [
+            {uid: "widthFamily", visible: true, variable: false},
+            {uid: "widthVarFamily", visible: false, variable: true, name:'Width value'},
+            {uid: "thicknessFamily", visible: true, variable: false},
+            {uid: "thicknessVarFamily", visible: false, variable: true,  name:'Thickness value'},
+            {uid: "shapeFamily", visible: false, variable: false},
+            {uid: "continuityFamily", visible: false, variable: false},
+            {uid: "directionFamily", visible: false, variable: false},
+            {uid: "colourFamily", visible: true, variable: false},
+            {uid: "brightnessFamily", visible: false, variable: false},
+            {uid: "opacityFamily", visible: false, variable: false},
+        ];
+        //add name property derived from familyName
+        for (let f of familyGroup) {
+            if (!f.name) { //Generate default name from uid if not provided
+                let fname = f.uid.split('Family')[0];
                 fname = fname.charAt(0).toUpperCase() + fname.slice(1);
-                $scope.familyGroup.push({uid:f, name: fname, 'visible': ['widthFamily','thicknessFamily','colourFamily'].includes(f)})
+                f.name = fname;
             }
+        }
+        const familyWithoutVariableUids = familyGroup.filter(f => !f.variable).map(f => f.uid);
+        $scope.$on('initShowStrat', function (event) {
+            initStratTab($scope, StratigraphyData, familyWithoutVariableUids);
+            $scope.familyGroup = familyGroup;
         });
         $scope.$on('updateMorphology', function () {
-            updateStratTabFromModel($scope, StratigraphyData, families);
+            updateStratTabFromModel($scope, StratigraphyData, familyWithoutVariableUids);
         });
 
         $scope.upMorpho = function () {
-            updateStratModelFromTab($scope, StratigraphyData, families);
+            updateStratModelFromTab($scope, StratigraphyData, familyWithoutVariableUids);
+
             $scope.$emit('updateSelectedStrata');
         };
     }).directive('dynamicModel', ['$compile', '$parse', function ($compile, $parse) {

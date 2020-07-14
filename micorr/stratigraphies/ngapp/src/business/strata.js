@@ -20,6 +20,7 @@ class Strata {
         this.childStrata = [];
         this.secondaryComponents = [{characteristics: [], subCharacteristics: [], containers: {}}];
         this.containers = {}; //map of Element list
+        this.variables = {};
         this.child = child;
 
         this.init();

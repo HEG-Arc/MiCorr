@@ -41,7 +41,7 @@ services:
     build:
       context: .
       dockerfile: ./compose/django/Dockerfile-dev
-    command: /start-dev.sh
+    command: python  manage.py runserver_plus --noreload 0.0.0.0:8000
 #    depends_on:
 #      - postgres
 #      - neo4j
