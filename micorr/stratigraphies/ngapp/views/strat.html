@@ -289,16 +289,16 @@
                 in CP</span></span>
             </label>
             <picklist element-name="sub-characteristics" size="10" data-picklist="" data-pick-model="selectedCmcpmicrostructureFamily"
-                      data-pick-options="v.real_name for v in cmcpmicrostructureFamily"/>
+                      data-pick-options="v.real_name for v in cmCpMicrostructureFamily"/>
         </div>
 
 
         <!-- Microstructure pour les autres strates-->
         <div class="row-fluid">
             <div ng-show="showCmlevelofcorrosionFamily" class="col-md-6 form-group">
-                <label for="cmlevelofcorrosionFamily">Level of corrosion</label>
-                <select id="cmlevelofcorrosionFamily" class="form-control" ng-model="selectedCmlevelofcorrosionFamily"
-                        ng-options="x.real_name for x in cmlevelofcorrosionFamily" ng-change="upMicrostructure()">
+                <label for="cmLevelOfCorrosionFamily">Level of corrosion</label>
+                <select id="cmLevelOfCorrosionFamily" class="form-control" ng-model="selectedCmlevelofcorrosionFamily"
+                        ng-options="x.real_name for x in cmLevelOfCorrosionFamily" ng-change="upMicrostructure()">
                     <option value="" ></option>
                 </select>
             </div>
@@ -307,7 +307,7 @@
                                                             title="visual impact on the stratum"></span>
                     <span title="{{descriptions.cpriMicrostructureFamily}}">Microstructure</span></label>
                 <select id="cpriMicrostructureFamily" class="form-control" ng-model="selectedCprimicrostructureFamily"
-                        ng-options="x.real_name for x in cprimicrostructureFamily" ng-change="upMicrostructure()">
+                        ng-options="x.real_name for x in cpriMicrostructureFamily" ng-change="upMicrostructure()">
                     <option value="" ></option>
                 </select>
             </div>
@@ -329,7 +329,7 @@
                                                          title="visual impact on the stratum"></span>
                     <span title="{{descriptions.mMicrostructureFamily}}">Microstructure</span></label>
                 <select id="mMicrostructureFamily" class="form-control" ng-model="selectedMmicrostructureFamily"
-                        ng-options="x.real_name for x in mmicrostructureFamily" ng-change="upMicrostructure()">
+                        ng-options="x.real_name for x in mMicrostructureFamily" ng-change="upMicrostructure()">
                     <option value="" ></option>
                 </select>
             </div>
@@ -559,7 +559,7 @@
                     Organic material
                 </label>
                 <select id="pomCompositionFamily" class="form-control" ng-model="selectedPomcompositionFamily"
-                        ng-options="x.real_name for x in pomcompositionFamily" ng-change="upComposition()">
+                        ng-options="x.real_name for x in pomCompositionFamily" ng-change="upComposition()">
                     <option value="" ></option>
                 </select>
             </div>

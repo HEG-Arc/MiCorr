@@ -449,7 +449,7 @@ class Strata {
                 this.addDependency('hardnessFamily');
                 this.addDependency('crackingFamily');
 
-                this.addDependency('scompositionFamily');
+                this.addDependency('sCompositionFamily');
                 // to replace by =>
                 this.addDependency('sCompositionMainElements');
                 this.addDependency('sCompositionSecondaryElements');
@@ -483,7 +483,7 @@ class Strata {
                 this.addDependency('hardnessFamily');
                 this.addDependency('crackingFamily');
 
-                this.addDependency('dcompositionFamily');
+                this.addDependency('dCompositionFamily');
                 // to replace by =>
                 this.addDependency('dCompositionMainElements');
                 this.addDependency('dCompositionSecondaryElements');
@@ -501,7 +501,7 @@ class Strata {
                 this.addDependency('cohesionFamily');
                 this.addDependency('hardnessFamily');
                 this.addDependency('crackingFamily');
-                this.addDependency('pomcompositionFamily');
+                this.addDependency('pomCompositionFamily');
                 this.addDependency('pomCompositionMetallicPollutants');
                 this.addDependency('interfaceTransitionFamily');
                 this.addDependency('interfaceRoughnessFamily');
@@ -525,7 +525,7 @@ class Strata {
                 this.addDependency('cpCompositionCompounds');
                 this.addDependency('cpCompositionAdditionalElements');
 
-                this.addDependency('cprimicrostructureFamily');
+                this.addDependency('cpriMicrostructureFamily');
                 this.addDependency('subcprimicrostructureFamily');
                 this.addDependency('cpSdyCptMainElements');
                 this.addDependency('cpSdyCptSecondaryElements');
@@ -538,7 +538,7 @@ class Strata {
                 this.addDependency('opacityFamily');
                 this.addDependency('magnetismFamily');
                 this.addDependency('porosityFamily');
-                this.addDependency('mmicrostructureFamily');
+                this.addDependency('mMicrostructureFamily');
                 this.addDependency('cohesionFamily');
                 this.addDependency('hardnessFamily');
                 this.addDependency('crackingFamily');

@@ -63,10 +63,10 @@ angular.module('micorrApp')
         }
         var initStratComposition = function () {
             // On récupère les valeurs qui vont aller dans les champs de notre formulaire
-            $scope.scompositionFamily = StratigraphyData.getScompositionFamily()['characteristics'];
-            $scope.nmmCompositionFamily = StratigraphyData.getNmmcompositionFamily()['characteristics'];
-            $scope.dcompositionFamily = StratigraphyData.getDcompositionFamily()['characteristics'];
-            $scope.pomcompositionFamily = StratigraphyData.getPomcompositionFamily()['characteristics'];
+            $scope.sCompositionFamily = StratigraphyData.sCompositionFamily['characteristics'];
+            $scope.nmmCompositionFamily = StratigraphyData.nmmCompositionFamily['characteristics'];
+            $scope.dCompositionFamily = StratigraphyData.dCompositionFamily['characteristics'];
+            $scope.pomCompositionFamily = StratigraphyData.pomCompositionFamily['characteristics'];
 
             $scope.pomCompositionMetallicPollutants = new ElementSelector();
             $scope.nmmCompositionNonOrganicElements = new ElementSelector();
@@ -124,8 +124,8 @@ angular.module('micorrApp')
 
             $scope.selectedScompositionFamily = getSelectedFamilyCharacteristic(strata, "sCompositionFamily", $scope.scompositionFamily);
             $scope.selectedNmmcompositionFamily = getSelectedFamilyCharacteristic(strata, "nmmCompositionFamily", $scope.nmmCompositionFamily);
-            $scope.selectedDcompositionFamily = getSelectedFamilyCharacteristic(strata, "dCompositionFamily", $scope.dcompositionFamily);
-            $scope.selectedPomcompositionFamily = getSelectedFamilyCharacteristic(strata, "pomCompositionFamily", $scope.pomcompositionFamily);
+            $scope.selectedDcompositionFamily = getSelectedFamilyCharacteristic(strata, "dCompositionFamily", $scope.dCompositionFamily);
+            $scope.selectedPomcompositionFamily = getSelectedFamilyCharacteristic(strata, "pomCompositionFamily", $scope.pomCompositionFamily);
 
             $scope.pomCompositionMetallicPollutants.selected = strata.getContainerElements("pomCompositionMetallicPollutants");
             $scope.nmmCompositionNonOrganicElements.selected = strata.getContainerElements("nmmCompositionNonOrganicElements");

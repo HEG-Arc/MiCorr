@@ -221,7 +221,7 @@ angular.module('micorrApp')
                     var sChar;
 
                     if (str.findDependency('subcmlevelofcorrosionFamily') &&
-                        (sChar = getSubCharacteristicByFamily(subCharacteristicsList, StratigraphyData.getSubcmLevelOfCorrosionFamily())))
+                        (sChar = getSubCharacteristicByFamily(subCharacteristicsList, StratigraphyData.subcmLevelOfCorrosionFamily)))
                         str.addSubCharacteristic(new SubCharacteristic('subcmlevelofcorrosionFamily', sChar));
 
                      // secondary Components
@@ -251,7 +251,7 @@ angular.module('micorrApp')
 
                     //Chargement des données pour la picklist
                     if (str.findDependency('subcprimicrostructureFamily')) {
-                        var sChars = getSubCharacteristicByFamilyMulti(subCharacteristicsList, StratigraphyData.getSubcprimicrostructureFamily());
+                        var sChars = getSubCharacteristicByFamilyMulti(subCharacteristicsList, StratigraphyData.subcprimicrostructureFamily);
                         for (var j = 0; j < sChars.length; j++) {
                             var subChar = new SubCharacteristic();
                             subChar.setFamily('subcprimicrostructureFamily');
@@ -261,7 +261,7 @@ angular.module('micorrApp')
                         }
                     }
                     if (str.findDependency('submmicrostructureFamily')) {
-                        var sChars = getSubCharacteristicByFamilyMulti(subCharacteristicsList, StratigraphyData.getSubmmicrostructureFamily());
+                        var sChars = getSubCharacteristicByFamilyMulti(subCharacteristicsList, StratigraphyData.submmicrostructureFamily);
 
                         for (var j = 0; j < sChars.length; j++) {
                             var subChar = new SubCharacteristic();
@@ -404,24 +404,24 @@ angular.module('micorrApp')
                 $scope.showOpacity = str.findDependency('opacityFamily');
                 $scope.showMagnetism = str.findDependency('magnetismFamily');
                 $scope.showPorosity = str.findDependency('porosityFamily');
-                $scope.showmmicrostructureFamily = str.findDependency('mmicrostructureFamily');
+                $scope.showmmicrostructureFamily = str.findDependency('mMicrostructureFamily');
                 $scope.showCohesion = str.findDependency('cohesionFamily');
                 $scope.showHardness = str.findDependency('hardnessFamily');
                 $scope.showCracking = str.findDependency('crackingFamily');
 
-                $scope.showScomposition = str.findDependency('scompositionFamily');
+                $scope.showScomposition = str.findDependency('sCompositionFamily');
                 // to replace by
                 $scope.showsCompositionMainElements = str.findDependency('sCompositionMainElements');
                 $scope.showsCompositionSecondaryElements = str.findDependency('sCompositionSecondaryElements');
 
                 $scope.shownmmComposition = str.findDependency('nmmCompositionFamily');
 
-                $scope.showDcomposition = str.findDependency('dcompositionFamily');
+                $scope.showDcomposition = str.findDependency('dCompositionFamily');
                 // to replace by
                 $scope.showdCompositionMainElements = str.findDependency('dCompositionMainElements');
                 $scope.showdCompositionSecondaryElements = str.findDependency('dCompositionSecondaryElements');
 
-                $scope.showPomcomposition = str.findDependency('pomcompositionFamily');
+                $scope.showPomcomposition = str.findDependency('pomCompositionFamily');
 
                 $scope.showcpCompositionMainElements = str.findDependency('cpCompositionMainElements');
                 $scope.showcpCompositionSecondaryElements = str.findDependency('cpCompositionSecondaryElements');
@@ -433,13 +433,13 @@ angular.module('micorrApp')
                 $scope.showinterfacetransition = str.findDependency('interfaceTransitionFamily');
                 $scope.showinterfaceroughness = str.findDependency('interfaceRoughnessFamily');
                 $scope.showinterfaceadherence = str.findDependency('interfaceAdherenceFamily');
-                $scope.showCmlevelofcorrosionFamily = str.findDependency('cmlevelofcorrosionFamily');
+                $scope.showCmlevelofcorrosionFamily = str.findDependency('cmLevelOfCorrosionFamily');
 
                 $scope.showsubcmlevelofcorrosionFamily = str.findDependency('subcmlevelofcorrosionFamily');
                 $scope.showsubmmicrostructureFamily = str.findDependency('submmicrostructureFamily');
 
 
-                $scope.showcprimicrostructureFamily = str.findDependency('cprimicrostructureFamily');
+                $scope.showcprimicrostructureFamily = str.findDependency('cpriMicrostructureFamily');
                 $scope.showmCompositionSecondaryElements = str.findDependency('mCompositionSecondaryElements');
 
                 var selectedcpriMicrostructureFamily=str.getFirstCharacteristicByFamily("cpriMicrostructureFamily","name");
@@ -448,7 +448,7 @@ angular.module('micorrApp')
                     ["scatteredAggregateMicrostructureCharacteristic",
                         "isolatedAggregateMicrostructureCharacteristic",
                         "alternatingBandsCharacteristic"].indexOf(selectedcpriMicrostructureFamily) !== -1 &&
-                    str.findDependency('cprimicrostructureFamily')) {
+                    str.findDependency('cpriMicrostructureFamily')) {
                     if (selectedcpriMicrostructureFamily=="alternatingBandsCharacteristic")
                         $scope.cpriMicrostructureOptionTitle = "Second band";
                     else

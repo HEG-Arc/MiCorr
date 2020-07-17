@@ -17,7 +17,7 @@ export function initStratTab($scope, StratigraphyData, families) {
     $scope.descriptions = StratigraphyData.descriptions;
 }
 
-export function updateStratTabFromModel($scope, StratigraphyData, families) {
+export function updateStratTabFromModel($scope, StratigraphyData,  families) {
     let strata = StratigraphyData.getStratigraphy().getStratas()[StratigraphyData.getSelectedStrata()];
     for (let family of families) {
         //temp support for families as list of uid (string) or list of family object
@@ -42,3 +42,6 @@ export function updateStratModelFromTab($scope, StratigraphyData, families) {
             strata.replaceCharacteristic(new Characteristic(familyUID, $scope.selected[familyUID]));
             // e.g strata.replaceCharacteristic(new Characteristic("interfaceProfileFamily", $scope.selected["interfaceProfileFamily"]));
         }
+
+    }
+}

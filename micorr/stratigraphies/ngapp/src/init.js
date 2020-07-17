@@ -164,40 +164,6 @@ export function getSelectedFamilyCharacteristic(stratum, familyUid, allCharacter
 }
 
 
-/* Compare deux strates et définit si elle est identique ou pas
- * @params deux strates
- * €returns true = identique, false = différente
- */
-export function compareTwoStratas(s1, s2) {
-    if (s1.getNatureFamily() == s2.getNatureFamily()) {
-        var s1car = s1.getJsonCharacteristics();
-        var s2car = s2.getJsonCharacteristics();
-        var s1int = s1.getJsonInterface();
-        var s2int = s2.getJsonInterface();
-
-        for (var i = 0; i < s1int.length; i++)
-            s1car.push(s1int[i]);
-        for (var i = 0; i < s2int.length; i++)
-            s2car.push(s2int[i]);
-
-        if (s1car.length != s2car.length)
-            return false;
-
-        for (var i = 0; i < s1car.length; i++) {
-            var trouve = false;
-            for (var j = 0; j < s2car.length; j++) {
-                if (s1car[i].name == s2car[j].name)
-                    trouve = true;
-            }
-            if (trouve == false)
-                return false;
-        }
-
-        return true;
-    }
-    else
-        return false;
-}
 
 /* retourne un nombre aléatoire entier entre min et max, min non inclu
  * @params min, max

@@ -31,20 +31,20 @@ angular.module('micorrApp')
         var initMicrostructure = function () {
             emptyFields(); //todo regression tests - caution here the last two lines of emptyFields were not executed in previous commit
             // On récupère les valeurs qui vont aller dans les champs de notre formulaire
-            $scope.cprimicrostructureFamily = StratigraphyData.getCprimicrostructureFamily()['characteristics'];
+            $scope.cpriMicrostructureFamily = StratigraphyData.cpriMicrostructureFamily['characteristics'];
 
-            $scope.mmicrostructureFamily = StratigraphyData.getMmicrostructureFamily()['characteristics'];
-            $scope.cmlevelofcorrosionFamily = StratigraphyData.getCmlevelofcorrosionFamily()['characteristics'];
-            $scope.subcprimicrostructureFamily = StratigraphyData.getSubcprimicrostructureFamily();
-            $scope.subcmlevelofcorrosionFamily = StratigraphyData.getSubcmLevelOfCorrosionFamily();
-            $scope.submmicrostructureFamily = StratigraphyData.getSubmmicrostructureFamily();
-            $scope.cmcpmicrostructureFamily = StratigraphyData.getCmcpmicrostructureFamily()['characteristics'];
+            $scope.mMicrostructureFamily = StratigraphyData.mMicrostructureFamily['characteristics'];
+            $scope.cmLevelOfCorrosionFamily = StratigraphyData.cmLevelOfCorrosionFamily['characteristics'];
+            $scope.subcprimicrostructureFamily = StratigraphyData.subcprimicrostructureFamily;
+            $scope.subcmlevelofcorrosionFamily = StratigraphyData.subcmLevelOfCorrosionFamily;
+            $scope.submmicrostructureFamily = StratigraphyData.submmicrostructureFamily;
+            $scope.cmCpMicrostructureFamily = StratigraphyData.cmCpMicrostructureFamily['characteristics'];
 
             $scope.descriptions = StratigraphyData.descriptions;
         };
 
         $scope.$on('initShowStrat', function (event) {
-            if (typeof StratigraphyData.getCprimicrostructureFamily() !== "undefined") {
+            if (typeof StratigraphyData.cpriMicrostructureFamily !== "undefined") {
                 initMicrostructure();
             }
         });
@@ -63,14 +63,14 @@ angular.module('micorrApp')
 
             var strata = StratigraphyData.getStratigraphy().getStratas()[StratigraphyData.getSelectedStrata()];
 
-            $scope.selectedCprimicrostructureFamily = getSelectedFamilyCharacteristic(strata, "cpriMicrostructureFamily", $scope.cprimicrostructureFamily);
-            $scope.selectedMmicrostructureFamily = getSelectedFamilyCharacteristic(strata, "mMicrostructureFamily", $scope.mmicrostructureFamily);
-            $scope.selectedCmlevelofcorrosionFamily = getSelectedFamilyCharacteristic(strata, "cmLevelOfCorrosionFamily", $scope.cmlevelofcorrosionFamily);
+            $scope.selectedCprimicrostructureFamily = getSelectedFamilyCharacteristic(strata, "cpriMicrostructureFamily", $scope.cpriMicrostructureFamily);
+            $scope.selectedMmicrostructureFamily = getSelectedFamilyCharacteristic(strata, "mMicrostructureFamily", $scope.mMicrostructureFamily);
+            $scope.selectedCmlevelofcorrosionFamily = getSelectedFamilyCharacteristic(strata, "cmLevelOfCorrosionFamily", $scope.cmLevelOfCorrosionFamily);
 
             //Reprise des characteristiques de microstructure pour la strate CM
             if (strata.getNature() == 'Corroded metal') {
                 let CPChild = strata.getChildStrataByNature('Corrosion products');
-                $scope.selectedCmcpmicrostructureFamily = getSelectedFamilyCharacteristicList(CPChild, "cmCpMicrostructureFamily", $scope.cmcpmicrostructureFamily);
+                $scope.selectedCmcpmicrostructureFamily = getSelectedFamilyCharacteristicList(CPChild, "cmCpMicrostructureFamily", $scope.cmCpMicrostructureFamily);
             }
 
 
@@ -107,8 +107,8 @@ angular.module('micorrApp')
             var strata = StratigraphyData.getStratigraphy().getStratas()[StratigraphyData.getSelectedStrata()];
 
 
-            if (strata.findDependency('cprimicrostructureFamily')) {
-                let previousCprimicrostructureFamily = getSelectedFamilyCharacteristic(strata, "cpriMicrostructureFamily", $scope.cprimicrostructureFamily);
+            if (strata.findDependency('cpriMicrostructureFamily')) {
+                let previousCprimicrostructureFamily = getSelectedFamilyCharacteristic(strata, "cpriMicrostructureFamily", $scope.cpriMicrostructureFamily);
                 if (previousCprimicrostructureFamily != $scope.selectedCprimicrostructureFamily)
                 {
                     strata.replaceCharacteristic(new Characteristic("cpriMicrostructureFamily", $scope.selectedCprimicrostructureFamily));
@@ -117,15 +117,15 @@ angular.module('micorrApp')
             }
 
 
-            if (strata.findDependency('mmicrostructureFamily')) {
-                let previousmMicrostructureFamily = getSelectedFamilyCharacteristic(strata, "mMicrostructureFamily", $scope.mmicrostructureFamily);
+            if (strata.findDependency('mMicrostructureFamily')) {
+                let previousmMicrostructureFamily = getSelectedFamilyCharacteristic(strata, "mMicrostructureFamily", $scope.mMicrostructureFamily);
                 if (previousmMicrostructureFamily != $scope.selectedMmicrostructureFamily) {
                     strata.replaceCharacteristic(new Characteristic("mMicrostructureFamily", $scope.selectedMmicrostructureFamily));
                     $scope.selectedSubmmicrostructureFamily = [];
                 }
             }
 
-            if (strata.findDependency('cmlevelofcorrosionFamily')) {
+            if (strata.findDependency('cmLevelOfCorrosionFamily')) {
                 strata.replaceCharacteristic(new Characteristic("cmLevelOfCorrosionFamily", $scope.selectedCmlevelofcorrosionFamily));
             }
 
