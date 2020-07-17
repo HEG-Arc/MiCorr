@@ -54,7 +54,7 @@ class Strata {
         return this.characteristics.filter(e => e.family == family);
     }
 
-    getSecondaryComponentCharacteristicsByFamily(family, secondaryComponentIndex=0) {
+    getSecondaryComponentCharacteristicsByFamily(family, secondaryComponentIndex = 0) {
         return this.secondaryComponents[secondaryComponentIndex].characteristics.filter(e => e.family == family);
     }
 
@@ -66,9 +66,9 @@ class Strata {
      * @param inArrayProperty: (optional default to "characteristics") Array or name of the Array property in Strata where to search for characteristic
      * @returns characteristic object / characteristic[property] value
      */
-    getFirstCharacteristicByFamily(family, property, inArrayProperty="characteristics") {
-        if (typeof(inArrayProperty)=="string")
-            inArrayProperty=this[inArrayProperty];
+    getFirstCharacteristicByFamily(family, property, inArrayProperty = "characteristics") {
+        if (typeof (inArrayProperty) == "string")
+            inArrayProperty = this[inArrayProperty];
         let c = inArrayProperty.find(e => e.getFamily() == family);
         if (!property)
             return c;
@@ -79,9 +79,11 @@ class Strata {
                 return c;
         }
     }
-    getFirstSecondaryComponentCharacteristicByFamily(family, property, secondaryComponentIndex=0) {
+
+    getFirstSecondaryComponentCharacteristicByFamily(family, property, secondaryComponentIndex = 0) {
         return this.getFirstCharacteristicByFamily(family, property, this.secondaryComponents[secondaryComponentIndex].characteristics)
     }
+
     /**
      * Returns either first subCharacteristics with requested family
      * or its requested property
@@ -92,7 +94,8 @@ class Strata {
     getFirstSubCharacteristicByFamily(family, property) {
         return this.getFirstCharacteristicByFamily(family, property, this.subCharacteristics);
     }
-    getFirstSecondaryComponentSubCharacteristicByFamily(family, property,secondaryComponentIndex=0) {
+
+    getFirstSecondaryComponentSubCharacteristicByFamily(family, property, secondaryComponentIndex = 0) {
         return this.getFirstCharacteristicByFamily(family, property, this.secondaryComponents[secondaryComponentIndex].subCharacteristics);
     }
 
@@ -105,7 +108,7 @@ class Strata {
         return this.subCharacteristics.filter(e => e.family == family);
     }
 
-    getSecondaryComponentSubCharacteristicsByFamily(family, secondaryComponentIndex=0) {
+    getSecondaryComponentSubCharacteristicsByFamily(family, secondaryComponentIndex = 0) {
         return this.secondaryComponents[secondaryComponentIndex].subCharacteristics.filter(e => e.family == family);
     }
 
@@ -113,9 +116,9 @@ class Strata {
      * Supprime toutes les characteristiques d'une famille
      * @param family
      */
-    clearCharacteristicsFromFamily(family, inArrayProperty ='characteristics') {
-        if (typeof(inArrayProperty)==="string")
-            inArrayProperty=this[inArrayProperty];
+    clearCharacteristicsFromFamily(family, inArrayProperty = 'characteristics') {
+        if (typeof (inArrayProperty) === "string")
+            inArrayProperty = this[inArrayProperty];
         for (var i = 0; i < inArrayProperty.length; i++) {
             if (inArrayProperty[i].getFamily() == family) {
                 inArrayProperty.splice(i, 1);
@@ -129,7 +132,7 @@ class Strata {
      * @param family
      */
     clearSubCharacteristicsFromFamily(family) {
-       this.clearCharacteristicsFromFamily(family,'subCharacteristics')
+        this.clearCharacteristicsFromFamily(family, 'subCharacteristics')
     }
 
     isFamily(family) {
@@ -164,38 +167,36 @@ class Strata {
     *
     *  @param inArrayProperty: ("characteristics", "subCharacteristics", etc..)
     */
-    replaceCharacteristic(characteristic, inArrayProperty="characteristics") {
+    replaceCharacteristic(characteristic, inArrayProperty = "characteristics") {
         //todo refactoring switch characteristics and subCharacteristics to Map instead of Array
-        if (typeof(inArrayProperty)==="string")
-            inArrayProperty=this[inArrayProperty];
-        let i = inArrayProperty.findIndex(e => e.family == characteristic.family );
-        if (characteristic.getName())
-        {
-            if (i==-1) //no existing characteristic found
+        if (typeof (inArrayProperty) === "string")
+            inArrayProperty = this[inArrayProperty];
+        let i = inArrayProperty.findIndex(e => e.family == characteristic.family);
+        if (characteristic.getName()) {
+            if (i == -1) //no existing characteristic found
                 // add characteristic
                 inArrayProperty.push(characteristic);
             else
                 // replace existing one with characteristic
                 inArrayProperty[i] = characteristic;
-        }
-        else
+        } else
             // Characteristic without name/uid
-            if (i!=-1)
-                //clear existing characteristic of same family
-                inArrayProperty.splice(i,1);
+        if (i != -1)
+            //clear existing characteristic of same family
+            inArrayProperty.splice(i, 1);
     }
 
     /**
      * Remplace une sous caractéristique de la famille de celle donnée en paramètre
      * @param subCharacteristic
      */
-    replaceSubCharacteristic(subCharacteristic,inArrayProperty="subCharacteristics") {
+    replaceSubCharacteristic(subCharacteristic, inArrayProperty = "subCharacteristics") {
         this.replaceCharacteristic(subCharacteristic, inArrayProperty);
     }
 
-    addCharacteristic(characteristic,inArrayProperty="characteristics") {
-        if (typeof(inArrayProperty)==="string")
-            inArrayProperty=this[inArrayProperty];
+    addCharacteristic(characteristic, inArrayProperty = "characteristics") {
+        if (typeof (inArrayProperty) === "string")
+            inArrayProperty = this[inArrayProperty];
         inArrayProperty.push(characteristic);
     }
 
@@ -277,8 +278,7 @@ class Strata {
     getName() {
         if (this.name == undefined) {
             return this.uid;
-        }
-        else {
+        } else {
             return this.name;
         }
     }
@@ -294,32 +294,33 @@ class Strata {
     setIndex(index) {
         this.index = index;
     }
+
     addDependency(dep) {
         this.dependencies.push(dep);
     }
+
     findDependency(dep) {
         // temp use of case insensitive match before refactoring and using Map instead of list
         // because of unwanted case differences between Family and dependency key. For ex.
         // cprimicrostructureaggregatecompositionFamily vs cpriMicrostructureAggregateCompositionFamily
 
-        let reIDep = new RegExp("^" + dep + "$", "i") ;
+        let reIDep = new RegExp("^" + dep + "$", "i");
         for (let dependency of this.dependencies) {
-            if (dependency.search(reIDep) == 0)
-            {
-                if (dependency!=dep)
-                    console.log('findDependency('+dep+')='+dependency);
+            if (dependency.search(reIDep) == 0) {
+                if (dependency != dep)
+                    console.log('findDependency(' + dep + ')=' + dependency);
                 return true;
             }
 
         }
         return false;
     }
+
     /**
      * Helper methods to update stratum Characteristic from controller scope variables
      * @returns true if characteristic has been updated based on stratum dependency and characteristicSource
      */
-    updateCharacteristic(familyName, characteristicSource, dependencyName=null, inArrayProperty="characteristics")
-    {
+    updateCharacteristic(familyName, characteristicSource, dependencyName = null, inArrayProperty = "characteristics") {
         dependencyName = dependencyName || familyName; //dependencyName defaults to familyName but could be different
         if (characteristicSource && this.findDependency(dependencyName)) {
             let c = new Characteristic(familyName, characteristicSource);
@@ -328,15 +329,15 @@ class Strata {
         }
         return false;
     }
-    updateSecondaryComponentCharacteristic(familyName, characteristicSource, dependencyName, secondaryComponentIndex=0)
-    {
+
+    updateSecondaryComponentCharacteristic(familyName, characteristicSource, dependencyName, secondaryComponentIndex = 0) {
         return this.updateCharacteristic(familyName, characteristicSource, dependencyName, this.secondaryComponents[secondaryComponentIndex].characteristics);
     }
 
-    updateCharacteristicList(familyName, characteristicList, dependencyName=null,  inArrayProperty="characteristics") {
+    updateCharacteristicList(familyName, characteristicList, dependencyName = null, inArrayProperty = "characteristics") {
         dependencyName = dependencyName || familyName; //dependencyName defaults to familyName but could be different
-        if (typeof(inArrayProperty)==="string")
-            inArrayProperty=this[inArrayProperty];
+        if (typeof (inArrayProperty) === "string")
+            inArrayProperty = this[inArrayProperty];
         if (this.findDependency(familyName)) {
             this.clearCharacteristicsFromFamily(familyName, inArrayProperty);
             for (let cSource of characteristicList)
@@ -345,7 +346,8 @@ class Strata {
         }
         return false;
     }
-    updateSecondaryComponentCharacteristicList(familyName, characteristicList, dependencyName, secondaryComponentIndex=0){
+
+    updateSecondaryComponentCharacteristicList(familyName, characteristicList, dependencyName, secondaryComponentIndex = 0) {
         if (this.findDependency(dependencyName)) {
             this.clearCharacteristicsFromFamily(familyName, this.secondaryComponents[0].characteristics);
             for (let cSource of characteristicList)
@@ -355,16 +357,17 @@ class Strata {
         return false;
     }
 
-    setContainerElements(familyName, elements, containers=null) {
+    setContainerElements(familyName, elements, containers = null) {
         // default target containers is this.containers
         containers = containers || this.containers;
         if (this.findDependency(familyName)) {
-            containers[familyName]=elements.slice();
+            containers[familyName] = elements.slice();
             return true;
         }
         return false;
     }
-    getContainerElements(familyName, containers=null) {
+
+    getContainerElements(familyName, containers = null) {
         // default source containers is this.containers
         containers = containers || this.containers;
         if (familyName in containers)
@@ -381,7 +384,7 @@ class Strata {
         return this.getContainerElements(familyName, this.secondaryComponents[secondaryComponentIndex].containers);
     }
 
-    updateSubCharacteristic(familyName, subCharacteristicSource, dependencyName=null, inArrayProperty="subCharacteristics") {
+    updateSubCharacteristic(familyName, subCharacteristicSource, dependencyName = null, inArrayProperty = "subCharacteristics") {
         dependencyName = dependencyName || familyName; //dependencyName defaults to familyName but could be different
         if (subCharacteristicSource && this.findDependency(dependencyName)) {
             let sc = new SubCharacteristic(familyName, subCharacteristicSource);
@@ -390,8 +393,8 @@ class Strata {
         }
         return false;
     }
-    updateSecondaryComponentSubCharacteristic(familyName, subCharacteristicSource, dependencyName, secondaryComponentIndex=0)
-    {
+
+    updateSecondaryComponentSubCharacteristic(familyName, subCharacteristicSource, dependencyName, secondaryComponentIndex = 0) {
         return this.updateSubCharacteristic(familyName, subCharacteristicSource, dependencyName, this.secondaryComponents[secondaryComponentIndex].subCharacteristics);
     }
 
@@ -551,50 +554,18 @@ class Strata {
     }
 
     toJson() {
-        var childStrata = [],i;
-
-        var jsonStrata = {
-            name: this.getUid(), characteristics: [], subCharacteristics: [], interfaces: [], children: [], secondaryComponents: [],
-            containers: {}
+        return {
+            name: this.uid,
+            characteristics: this.characteristics.filter(e => !e.isInterface()).map(e => ({name: e.name})),
+            subCharacteristics: this.subCharacteristics.map(e => ({name: e.uid})),
+            interfaces: this.characteristics.filter(e => e.isInterface()).map(e => ({name: e.name})),
+            children: this.child ? [] : this.childStrata.map(el => el.toJson()),
+            secondaryComponents: this.secondaryComponents.slice(),
+            containers: Object.fromEntries(Object.entries(this.containers).map(
+                ([family, elements]) => [family, elements.map(e => ({name: e.symbol ? e.symbol : e.name}))])),
+            variables: {...this.variables}
         };
-
-        //On récupère les caractéristiques
-        for (i = 0; i < this.characteristics.length; i++) {
-            if (!this.characteristics[i].isInterface()) {
-                jsonStrata.characteristics.push({name: this.characteristics[i].getName()});
-            }
-        }
-        //On récupère les sous caractéristiques
-        for (i = 0; i < this.subCharacteristics.length; i++) {
-            jsonStrata.subCharacteristics.push({name: this.subCharacteristics[i].getUid()});
-       }
-
-        //On récupère les caractéristiques d'interface
-        for (i = 0; i < this.characteristics.length; i++) {
-            if (this.characteristics[i].isInterface()) {
-                jsonStrata.interfaces.push({name: this.characteristics[i].getName()});
-            }
-        }
-
-        //On récupère les strates enfants si ce n'est pas une strate enfant
-        if (!this.child) {
-            for (i = 0; i < this.childStrata.length; i++) {
-                jsonStrata.children.push(this.childStrata[i].toJson());
-            }
-        }
-        // secondaryComponents
-
-        jsonStrata.secondaryComponents = this.secondaryComponents.slice();
-
-        // containers
-        for (let [family,elements] of Object.entries(this.containers)) {
-            jsonStrata.containers[family]=elements.map(e => {if (e.symbol) return {name: e.symbol}; else return {name: e.name}; } );
-        }
-        return jsonStrata;
-
     }
-
-
 }
 
 export {Strata};

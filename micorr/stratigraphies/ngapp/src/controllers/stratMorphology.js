@@ -40,14 +40,16 @@ angular.module('micorrApp')
             $scope.familyGroup = familyGroup;
         });
         $scope.$on('updateMorphology', function () {
-            updateStratTabFromModel($scope, StratigraphyData, familyWithoutVariableUids);
+            updateStratTabFromModel($scope, StratigraphyData, familyGroup);
         });
 
         $scope.upMorpho = function () {
-            updateStratModelFromTab($scope, StratigraphyData, familyWithoutVariableUids);
-
+            updateStratModelFromTab($scope, StratigraphyData, familyGroup);
+            var strata = StratigraphyData.getStratigraphy().getStratas()[StratigraphyData.getSelectedStrata()];
+            strata.replaceCharacteristic(new Characteristic("interfaceProfileFamily", $scope.selected["interfaceProfileFamily"]));
             $scope.$emit('updateSelectedStrata');
         };
+        //$scope.itemForm.$setPristine();
     }).directive('dynamicModel', ['$compile', '$parse', function ($compile, $parse) {
         //used in dynamic family templates see strat.html
     return {
@@ -61,4 +63,29 @@ angular.module('micorrApp')
             $compile(elem)(scope);
         }
      };
-    }]);
+    }]).directive('smartFloat',function(){
+				return{
+					require: "ngModel",
+					link: function(scope, elm, attrs, ctrl){
+
+						var regex=/^\d{1,3}([\.,](\d{1,2})?)?$/;
+						ctrl.$parsers.unshift(function(viewValue){
+							if( regex.test(viewValue)){
+                                var floatValue = viewValue.replace(',','.');
+                                floatValue = parseFloat(floatValue);
+                                if(floatValue >= 0 && floatValue <=100) {
+                                    ctrl.$setValidity('validFloat',true);
+                                    return parseFloat(floatValue);
+                                }
+                                else {
+                                    ctrl.$setValidity('validFloat',false);
+                                }
+							}
+                            else{
+							    ctrl.$setValidity('validFloat',false);
+                            }
+							return viewValue;
+						});
+					}
+				};
+			});

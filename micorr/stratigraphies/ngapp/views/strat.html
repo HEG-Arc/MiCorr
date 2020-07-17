@@ -234,7 +234,7 @@
                       <option value=""></option>
                   </select>
                   <input ng-if="family.variable" id="{{ 'morphology' + family.name }}"
-                         dynamic-model="'selected.'+family.uid" type="text" smart-float placeholder="1.5e-6"></input>
+                         dynamic-model="'selected.'+family.uid" type="text" smart-float placeholder="1.5e-6" ng-change="upMorpho()"></input>
               </div>
        </div>
     </form>

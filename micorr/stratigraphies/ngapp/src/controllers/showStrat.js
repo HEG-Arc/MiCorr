@@ -244,6 +244,11 @@ angular.module('micorrApp')
                     if (currentStrata.containers) {
                         str.containers = currentStrata.containers
                     }
+                    // Variables
+                    if (currentStrata.variables) {
+                        str.variables = currentStrata.variables
+                    }
+
                     //Chargement des données pour la picklist
                     if (str.findDependency('subcprimicrostructureFamily')) {
                         var sChars = getSubCharacteristicByFamilyMulti(subCharacteristicsList, StratigraphyData.getSubcprimicrostructureFamily());

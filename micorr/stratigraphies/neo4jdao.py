@@ -155,7 +155,7 @@ class Neo4jDAO:
         # pour chaque strates on va faire une requete
         for strata in strata_records:
             st = {'name': strata['uid'], 'characteristics': '', 'subcharacteristics': '', 'interfaces': '',
-                  'children': '', 'containers': defaultdict(list)}
+                  'children': '', 'containers': defaultdict(list), 'variables': {}}
             logger.debug ("***" + strata['uid'])
 
             # Chaque strates a des caracteristiques
@@ -233,10 +233,19 @@ class Neo4jDAO:
             logger.debug ("======Containers")
             container_records = self.tx.run(
                 """MATCH (s:Strata { uid:{strata_uid} })-[r:INCLUDES]->(c:Container)-[ce_r:IS_CONSTITUTED_BY]->(elem_or_cpnd:Characteristic)
-                   MATCH (c)-[BELONGS_TO]->(f:Family) RETURN s,c,ce_r,elem_or_cpnd,f ORDER BY f.uid, ce_r.order""",
+                   MATCH (c)-[:BELONGS_TO]->(f:Family) RETURN s,c,ce_r,elem_or_cpnd,f ORDER BY f.uid, ce_r.order""",
                 strata_uid=strata['uid'])
             for r in container_records:
                 st['containers'][r['f']['uid']].append(convert_elem_or_cpnd(r['elem_or_cpnd']))
+
+            logger.debug("======Variables")
+            variable_records = self.tx.run(
+                """MATCH (s:Strata { uid:{strata_uid} })-[r:HAS]->(v:Variable)
+                   MATCH (v)-[:BELONGS_TO]->(f:Family) RETURN s,v,f ORDER BY f.uid""",
+                strata_uid=strata['uid'])
+            for r in variable_records:
+                st['variables'][r['f']['uid']]=r['v']['value']  # r['v'].copy() => whole dict
+
 
             # Chaque strates a des interfaces
             logger.debug("======interface")
@@ -432,7 +441,8 @@ class Neo4jDAO:
             WITH sg MATCH (sg)-[:POSSESSES]->(st:Strata)
             OPTIONAL MATCH (st)-[:HAS_UPPER_INTERFACE]->(i:Interface)
             OPTIONAL MATCH (st)-[:INCLUDES]->(c) WHERE c:Component OR c:Container
-            DETACH DELETE c,i,st
+            OPTIONAL MATCH (st)-[:HAS]->(v:Variable)
+            DETACH DELETE c,i,st,v
         """, stratigraphy=stratigraphy)
         # optional "WHERE c:Component OR c:Container" is there to be explicit on types of Node INCLUDED
 
@@ -574,6 +584,26 @@ class Neo4jDAO:
                         logger.debug ("create_containers(): Characteristic :{} not found - not added to container {}".format(e['name'], c))
                         logger.error("Characteristic :{} not found - not added to container {}".format(e['name'], c))
 
+    def create_variables(self, parent_node, variables):
+        """
+        :param parent_node: (stratum)
+        :param variables: dictionary of variables
+        :return:
+        """
+        if not len(variables):
+            return
+        for family, value in list(variables.items()):
+            v = Node("Variable", value=value)
+            pv_rel = Relationship(parent_node, "HAS", v)
+
+            vf = self.match_node("Family", uid=family).first()
+            if not vf:
+                logger.error('missing family "{}" in graph db. variable not saved'.format(family))
+                continue
+            fv_rel = Relationship(v, "BELONGS_TO", vf)
+            logger.debug('{} {} {} {} {}'.format(v, parent_node, pv_rel, vf, fv_rel))
+            self.tx.create(v | parent_node | pv_rel | vf | fv_rel)
+
     # retourne le nombre de strates pour une stratigraphie
     # @params nom de la stratigraphie
     # @returns nombre de strates pour cette stratigraphie
@@ -626,6 +656,7 @@ class Neo4jDAO:
 
             self.create_secondary_components(stratum_node, stratum['secondaryComponents'])
             self.create_containers(stratum_node, stratum['containers'])
+            self.create_variables(stratum_node, stratum['variables'])
 
         return {'res': 1}
 
