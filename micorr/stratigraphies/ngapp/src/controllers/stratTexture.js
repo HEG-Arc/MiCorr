@@ -1,7 +1,5 @@
 'use strict';
 
-import {Characteristic} from "../business/characteristic";
-import {getSelectedFamilyCharacteristic} from "../init";
 import {initStratTab, updateStratModelFromTab, updateStratTabFromModel} from "./stratLib";
 
 /**
@@ -13,17 +11,16 @@ import {initStratTab, updateStratModelFromTab, updateStratTabFromModel} from "./
  */
 angular.module('micorrApp')
     .controller('StratTextureCtrl', function ($scope, $route, $window, StratigraphyData) {
-        const textureFamilies = ["porosityFamily","cohesionFamily", "hardnessFamily", "crackingFamily"];
         $scope.$on('initShowStrat', function (event) {
-            initStratTab($scope,StratigraphyData, textureFamilies);
+            initStratTab($scope, StratigraphyData, 'fgTexture');
         });
 
         $scope.$on('updateTexture', function () {
-            updateStratTabFromModel($scope,StratigraphyData, textureFamilies);
+            updateStratTabFromModel($scope, StratigraphyData);
         });
 
         $scope.upTexture = function () {
-            updateStratModelFromTab($scope, StratigraphyData, textureFamilies);
+            updateStratModelFromTab($scope, StratigraphyData);
             $scope.$emit('updateSelectedStrata');
         };
     });

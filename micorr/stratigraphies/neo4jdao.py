@@ -297,11 +297,13 @@ class Neo4jDAO:
     # @returns toutes les caracteristiques et sous-caracteristiques de la base
     def getAllCharacteristic(self):
         all_characteristics = self.tx.run("""
-         MATCH (f:Family) OPTIONAL MATCH (f)<-[:BELONGS_TO]-(c:Characteristic)
+         MATCH (f:Family)
+         OPTIONAL MATCH (f)<-[:SHOWS]-(fg:FamilyGroup)
+         OPTIONAL MATCH (f)<-[:BELONGS_TO]-(c:Characteristic)
          OPTIONAL MATCH (c)-[:HAS_SPECIALIZATION]->(sc:SubCharacteristic)
          OPTIONAL MATCH (sc)-[:HAS_SPECIALIZATION]->(ssc:SubCharacteristic)
-         RETURN f,c,sc,ssc
-         ORDER BY f.name, c.order, sc.name, ssc.name
+         RETURN f,fg,c,sc,ssc
+         ORDER BY fg.order,f.order, f.name, c.order, sc.name, ssc.name
         """)
         # here we get a flat list of records including all family, Characteristic, SubCharacteristic, SubCharacteristic
         # convert it into hierarchical lists of f -> c -> sc -> ssc, setting field names as expected by api client
@@ -310,8 +312,9 @@ class Neo4jDAO:
         for record in all_characteristics:
             f_uid = record['f']['uid']
             if f_uid not in family_dic:
-                family_dic[f_uid] = {'family': f_uid, 'fam_real_name': record['f']['name'],
-                                     'characteristics': OrderedDict()}
+                family_dic[f_uid] = record['f'].copy()
+                family_dic[f_uid].update({'family': f_uid, 'familyGroup':record['fg'],
+                                     'characteristics': OrderedDict()})
             if record['c']:
                 c_uid = record['c']['uid']
                 if c_uid not in family_dic[f_uid]['characteristics']:
@@ -342,53 +345,7 @@ class Neo4jDAO:
             f['characteristics'] = list(f['characteristics'].values())
         return list(family_dic.values())
 
-    # Retourne la liste des caracteristiques pour une nature family (S, NMM, Metal, etc.)
-    # @params uid de la nature family
-    # @returns la liste des caracteristiques pour une nature family (S, NMM, Metal, etc.)
-    def getnaturefamily(self, nature):
-        # on retournera n
-        n = []
 
-        # on cherche d'abord toutes les families liees a la nature family cherchee
-        familiesList = self.tx.run(
-            "MATCH (a:Nature)-[r:HAS_FAMILY]->(b:Family) where a.uid={nature} RETURN b.uid as uid order by ID(b)", nature=nature)
-        logger.debug (nature)
-
-        # pour chaque famille on va faire une requete
-        for family in familiesList:
-            fam = {'name': family['uid'], 'characteristics': []}
-            logger.debug ("***" + family['uid'])
-
-            # chaque famille a des caracteristiques
-            charactList = self.tx.run(
-                """MATCH (c:Characteristic)-[b:BELONGS_TO]->(f:Family) where f.uid={family_uid}
-                   RETURN f.uid as family, c.uid as uid, c.name as real_name, c.description as description""",
-                family_uid=family.uid)
-
-            for charact in charactList:
-                # pour chaque caracteristique on ajoute les sous-caracteristiques
-                subcharactList = self.tx.run(
-                    """MATCH (a)-[r:HAS_SPECIALIZATION]->(b) where a.uid={charact_uid}
-                       RETURN b.uid as name, b.description as description, b.name as sub_real_name order by a.uid asc""",
-                    charact_uid=charact['uid']).data()
-
-                sc = []
-                for subcharact in subcharactList:
-                    # pour chaque sous-caracteristique on ajoute les sous-sous-caracteristiques
-                    subsubcharactItems = self.tx.run(
-                        """
-                        MATCH (sub:SubCharacteristic)-[:HAS_SPECIALIZATION]->(subsub:SubCharacteristic) where sub.uid={sub_uid}
-                        RETURN subsub.uid as name, subsub.name as subsub_real_name order by subsub.uid asc")""",
-                        sub_uid=subcharact['uid']).data()
-                    subcharact['subcharacteristics'] = subsubcharactItems
-                    sc.append(subcharact)
-
-                fam['characteristics'].append(
-                    {'name': charact['name'], 'description': charact['description'], 'real_name': charact['real_name'],
-                     'subcharacteristics': sc})
-
-            n.append(fam)
-        return n
 
     # Ajout d'une stratigraphie
     # @params nom de l'artefact et description de la stratigraphie de la stratigraphie

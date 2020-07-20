@@ -164,7 +164,7 @@ let StratigraphyData =  angular.module('micorrApp').factory('StratigraphyData', 
 
             },
 
-            Fill: function (characteristics,descriptions) {
+            fill: function (characteristics, descriptions) {
 
                 /*
                  * parcours les caractéristiques et retourne les caractéristiques de la famille voulue

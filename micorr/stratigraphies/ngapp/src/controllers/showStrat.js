@@ -325,7 +325,7 @@ angular.module('micorrApp')
         MiCorrService.getFamilyDescriptions().success(function(descriptions){
             MiCorrService.getAllCharacteristic().success(function (data) {
             if (typeof data !== "undefined") {
-                StratigraphyData.Fill(data,descriptions);
+                StratigraphyData.fill(data,descriptions);
             }
         }).success(function () {
             initShowStrata();

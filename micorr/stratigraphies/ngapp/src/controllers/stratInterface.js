@@ -1,7 +1,5 @@
 'use strict';
 
-import {Characteristic} from "../business/characteristic";
-import {getSelectedFamilyCharacteristic} from "../init";
 import {initStratTab, updateStratModelFromTab, updateStratTabFromModel} from "./stratLib";
 
 /**
@@ -14,9 +12,8 @@ import {initStratTab, updateStratModelFromTab, updateStratTabFromModel} from "./
 angular.module('micorrApp')
     .controller('StratInterfaceCtrl', function ($scope, $route, $window, StratigraphyData) {
 
-        const interfaceFamilies = ["interfaceProfileFamily","interfaceTransitionFamily", "interfaceRoughnessFamily", "interfaceAdherenceFamily"];
         $scope.$on('initShowStrat', function (event) {
-            initStratTab($scope,StratigraphyData, interfaceFamilies);
+            initStratTab($scope,StratigraphyData, 'fgInterface');
         });
 
         /*
@@ -24,14 +21,14 @@ angular.module('micorrApp')
         * On met à jour les valeurs sélectionnées en fonction des valeurs qui se trouvent dans la strate actuelle
         */
        $scope.$on('updateInterface', function () {
-            updateStratTabFromModel($scope,StratigraphyData, interfaceFamilies);
+            updateStratTabFromModel($scope,StratigraphyData);
         });
 
         /*
          * Met à jour les données de la strate en fonction des valeurs dans le formulaire
          */
         $scope.upInterface = function () {
-            updateStratModelFromTab($scope, StratigraphyData, interfaceFamilies);
+            updateStratModelFromTab($scope, StratigraphyData);
             $scope.$emit('updateSelectedInterface');
         };
   });
