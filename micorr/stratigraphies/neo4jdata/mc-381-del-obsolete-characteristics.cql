@@ -1,9 +1,9 @@
+:param common_props {version:5, date:"2020-07-16"}
 /**************************
  MC-381 -  MC-383 MetalPAT-Interreg - Binocular / Cross-section Observation Mode
  removes obsolete composition family and Characteristics from db
  */
 
-:param common_props {version:5, date:"2020-07-16"}
 
 // graphdb cleanup
 // MATCH (f:Family) WHERE  f.uid CONTAINS 'Composition' AND NOT f.uid IN  ['sCompositionFamily','dCompositionFamily','nmmCompositionFamily','pomCompositionFamily']  AND NOT (f)-[:IS_LIST_OF]-(:Family)  RETURN f.uid
