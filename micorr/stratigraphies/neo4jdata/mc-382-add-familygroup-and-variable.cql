@@ -56,8 +56,8 @@ UNWIND [
   {fg:'fgMicrostructure', order:0, observation:binocular, uid:'cmCpMicrostructureFamily', name:'Microstructure', visible: true, variable: false}
   ] AS updt
 MERGE (f:Family {uid: updt.uid})
-    ON CREATE SET  f+=$common_props, f.order=updt.order, f.observation=updt.observation, f.variable=updt.variable, f.visible=updt.visible, f.name=updt.name
-    ON MATCH SET   f+=$common_props, f.order=updt.order, f.observation=updt.observation, f.variable=updt.variable, f.visible=updt.visible, f.name=updt.name
+    ON CREATE SET  f+=$common_props, f.order=updt.order, f.observation=updt.observation, f.variable=updt.variable, f.visible=updt.visible, f.name=updt.name, f.unit=updt.unit
+    ON MATCH SET   f+=$common_props, f.order=updt.order, f.observation=updt.observation, f.variable=updt.variable, f.visible=updt.visible, f.name=updt.name, f.unit=updt.unit
 WITH f, updt
 MATCH (a:FamilyGroup {uid: updt.fg})
 WITH f, a
