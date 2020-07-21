@@ -64,6 +64,14 @@ angular.module('micorrApp')
             }
         };
 
+        /*
+         * filter families in familyGroup
+         * based on current observation mode
+         */
+        $scope.showFamily = function (family)
+        {
+            return $scope.observationMode.binocular ? family.observation & 1 : family.observation & 2;
+        };
         var initShowStrata = function () {
             // variable qui permettent d'afficher les interfaces ou morphologies
             // par défaut quand on arrive sur l'application, on aterrit sur l'onglet de morphologie
@@ -83,6 +91,8 @@ angular.module('micorrApp')
             $scope.stratigraphyName = $routeParams.strat;           // nom de la stratigraphie
             $scope.stratigraphyDescription = $routeParams.stratigraphyDescription; // description de la stratigraphie
             $scope.strataName = "No strata selected";         // par défaut aucune strata n'est choisie
+            $scope.observationMode = {binocular:true};
+
             $scope.natureFamilyname = "";                           // par défaut aucune nature n'est choisie
 
             // ces variables servent à afficher/masquer dans le formulaire les champs appartenants à une nature de matériau

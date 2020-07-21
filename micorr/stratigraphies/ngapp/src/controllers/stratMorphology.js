@@ -1,7 +1,5 @@
 'use strict';
 
-import {Characteristic} from "../business/characteristic";
-import {getSelectedFamilyCharacteristic} from "../init";
 import {initStratTab, updateStratModelFromTab, updateStratTabFromModel} from "./stratLib";
 
 /**
