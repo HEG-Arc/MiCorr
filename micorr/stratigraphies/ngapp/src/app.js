@@ -20,7 +20,8 @@ export default angular
         'fxpicklist',
         'ngProgress',
         'ui.select',
-        'ngSanitize'
+        'ngSanitize',
+        'toggle-switch'
     ])
     .config(function ($routeProvider, $httpProvider) {
         $routeProvider

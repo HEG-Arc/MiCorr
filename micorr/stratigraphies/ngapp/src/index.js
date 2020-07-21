@@ -43,3 +43,5 @@ import "./controllers/tabsStrata.js";
 import "./services/services.js";
 import "./directives/directives.js";
 import "./dependencies/ngprogress.min.js";
+import "@piworks/angular-bootstrap-toggle-switch/angular-toggle-switch.min.js";
+import "@piworks/angular-bootstrap-toggle-switch/style/bootstrap2/angular-toggle-switch-bootstrap-2.css"
