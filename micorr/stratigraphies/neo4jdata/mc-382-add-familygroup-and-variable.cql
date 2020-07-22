@@ -17,6 +17,11 @@ UNWIND [
 MERGE (fg:FamilyGroup {uid:new_fg.uid})
     ON CREATE SET fg+=$common_props, fg.name=new_fg.name, fg.order=new_fg.order
 RETURN fg;
+
+// delete Family previously created erroneous uid
+MATCH (f:Family {uid:"crackingLendthVarFamily"})
+DETACH DELETE f;
+
 // Update or Create family associating them to relevant FamilyGroup for dynamic display
 WITH 1 as binocular, 2 as cross_section
 UNWIND [
@@ -25,9 +30,12 @@ UNWIND [
   {fg:'fgMorphology',order:2, observation:cross_section, uid:'areaWidthVarFamily', name:'Observed area width', visible: false, variable: true, unit:'μm'},
   {fg:'fgMorphology',order:3, observation:cross_section, uid:'percentageWidthVarFamily', name:'Percentage width', visible: false, variable: true, unit:'μm'},
   {fg:'fgMorphology',order:4, observation:binocular, uid:'thicknessFamily',name:'Thickness', visible: true, variable: false},
-  {fg:'fgMorphology',order:5, observation:binocular + cross_section, uid:'minThicknessVarFamily', name:'Minimal thickness', visible: false, variable: true, unit:'μm'},
-  {fg:'fgMorphology',order:6, observation:binocular + cross_section, uid:'maxThicknessVarFamily', name:'Maximal thickness', visible: false, variable: true, unit:'μm'},
-  {fg:'fgMorphology',order:7, observation:binocular + cross_section, uid:'avgThicknessVarFamily', name:'Average thickness', visible: false, variable: true, unit:'μm'},
+  {fg:'fgMorphology',order:5, observation:binocular, uid:'minThicknessVarFamily', name:'Minimal thickness', visible: false, variable: true, unit:'μm'},
+  {fg:'fgMorphology',order:6, observation:binocular, uid:'maxThicknessVarFamily', name:'Maximal thickness', visible: false, variable: true, unit:'μm'},
+  {fg:'fgMorphology',order:7, observation:binocular, uid:'avgThicknessVarFamily', name:'Average thickness', visible: false, variable: true, unit:'μm'},
+  {fg:'fgMorphology',order:5, observation:cross_section, uid:'minThicknessCSVarFamily', name:'Minimal thickness', visible: false, variable: true, unit:'μm'},
+  {fg:'fgMorphology',order:6, observation:cross_section, uid:'maxThicknessCSVarFamily', name:'Maximal thickness', visible: false, variable: true, unit:'μm'},
+  {fg:'fgMorphology',order:7, observation:cross_section, uid:'avgThicknessCSVarFamily', name:'Average thickness', visible: false, variable: true, unit:'μm'},
   {fg:'fgMorphology',order:8, observation:binocular, uid:'shapeFamily', name:'Shape', visible: false, variable: false},
   {fg:'fgMorphology',order:7, observation:binocular, uid:'continuityFamily', name:'Continuity', visible: false, variable: false},
   {fg:'fgMorphology',order:8, observation:binocular, uid:'directionFamily', name:'Direction', visible: false, variable: false},
@@ -40,9 +48,12 @@ UNWIND [
   {fg:'fgTexture', order:3, observation:binocular, uid:'hardnessFamily', name:'Hardness', visible: false, variable: false},
   {fg:'fgTexture', order:4, observation:cross_section, uid:'microhardnessVarFamily', name:'Microhardness', visible: false, variable: true, unit:'HV'},
   {fg:'fgTexture', order:5, observation:binocular, uid:'crackingFamily', name:'Cracking', visible: true, variable: false},
-  {fg:'fgTexture', order:6, observation:binocular + cross_section, uid:'crackingWidthVarFamily', name:'Cracking width', visible: false, variable: true, unit:'μm'},
-  {fg:'fgTexture', order:7, observation:binocular + cross_section, uid:'crackingLendthVarFamily', name:'Cracking length', visible: false, variable: true, unit:'μm'},
-  {fg:'fgTexture', order:8, observation:binocular + cross_section, uid:'crackingDepthVarFamily', name:'Cracking depth', visible: false, variable: true, unit:'μm'},
+  {fg:'fgTexture', order:6, observation:binocular, uid:'crackingWidthVarFamily', name:'Cracking width', visible: false, variable: true, unit:'μm'},
+  {fg:'fgTexture', order:7, observation:binocular, uid:'crackingLengthVarFamily', name:'Cracking length', visible: false, variable: true, unit:'μm'},
+  {fg:'fgTexture', order:8, observation:binocular, uid:'crackingDepthVarFamily', name:'Cracking depth', visible: false, variable: true, unit:'μm'},
+  {fg:'fgTexture', order:6, observation:cross_section, uid:'crackingWidthCSVarFamily', name:'Cracking width', visible: false, variable: true, unit:'μm'},
+  {fg:'fgTexture', order:7, observation:cross_section, uid:'crackingLengthCSVarFamily', name:'Cracking length', visible: false, variable: true, unit:'μm'},
+  {fg:'fgTexture', order:8, observation:cross_section, uid:'crackingDepthCSVarFamily', name:'Cracking depth', visible: false, variable: true, unit:'μm'},
   {fg:'fgInterface', order:0, observation:binocular, uid:'interfaceProfileFamily', name:'Profile', visible: true, variable: false},
   {fg:'fgInterface', order:1, observation:binocular, uid:'interfaceTransitionFamily', name:'Transition', visible: true, variable: false},
   {fg:'fgInterface', order:2, observation:binocular, uid:'interfaceRoughnessFamily', name:'Roughness', visible: true, variable: false},
