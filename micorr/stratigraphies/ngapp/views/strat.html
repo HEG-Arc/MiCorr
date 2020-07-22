@@ -229,37 +229,48 @@
 <tab heading="Morphology" ng-controller="StratMorphologyCtrl" active="activeMorphologyTab" title="{{descriptions.fgMorphology}}">
     <form>
        <div class="row-fluid">
-              <div class="col-md-6 form-group" ng-repeat="family  in familyGroup | filter : showFamily track by family.name">
+            <div class="col-md-6 form-group" ng-repeat="family  in familyGroup | filter : showFamily track by family.uid">
                 <label for="{{ 'morphology' + family.name }}">
                     <span class="glyphicon" ng-class="family.visible ? 'glyphicon-eye-open' : 'glyphicon-eye-close'"}} title="{{ (family.visible ? '' :'no') + 'visual impact on the stratum'}}"></span>
-                    <span title="{{ descriptions[family.uid] }}"> {{ family.name }}</span></label>
-                  <select ng-if="!family.variable" id="{{ 'morphology' + family.name }}" class="form-control"
-                          dynamic-model="'selected.'+family.uid"
-                          ng-options="x.real_name for x in this[family.uid]" ng-change="upMorpho()">
-                      <option value=""></option>
-                  </select>
-                  <input ng-if="family.variable" id="{{ 'morphology' + family.name }}"
-                         dynamic-model="'selected.'+family.uid" type="text" smart-float placeholder="{{'in ' + family.unit }}" ng-change="upMorpho()"></input>
+                    <span title="{{ descriptions[family.uid] }}"> {{ family.name }}
+                        <span class="unit" ng-if="family.unit" >{{'(in ' + family.unit +')'}}</span>
+                    </span>
+                </label>
+                <select ng-if="!family.variable" id="{{ 'morphology' + family.name }}" class="form-control"
+                        dynamic-model="'selected.'+family.uid"
+                        ng-options="x.real_name for x in this[family.uid]" ng-change="upMorpho()">
+                    <option value=""></option>
+                </select>
+                <input ng-if="family.variable" id="{{ 'morphology' + family.name }}" class="form-control"
+                         dynamic-model="'selected.'+family.uid" type="text" smart-float ng-change="upMorpho()">
+                </input>
               </div>
-      </div>
+       </div>
     </form>
 </tab>
 <tab heading="Texture" ng-controller="StratTextureCtrl" title="{{descriptions.fgTexture}}">
     <form>
-   <div class="row-fluid">
-              <div class="col-md-6 form-group" ng-repeat="family  in familyGroup | filter : showFamily track by family.name">
+        <div class="row-fluid">
+            <div class="col-md-6 form-group"
+                 ng-repeat="family  in familyGroup | filter : showFamily track by family.uid">
                 <label for="{{ 'texture' + family.name }}">
-                    <span class="glyphicon" ng-class="family.visible ? 'glyphicon-eye-open' : 'glyphicon-eye-close'"}} title="{{ (family.visible ? '' :'no') + 'visual impact on the stratum'}}"></span>
-                    <span title="{{ descriptions[family.uid] }}"> {{ family.name }}</span></label>
-                  <select ng-if="!family.variable" id="{{ 'texture' + family.name }}" class="form-control"
-                          dynamic-model="'selected.'+family.uid"
-                          ng-options="x.real_name for x in this[family.uid]" ng-change="upTexture()">
-                      <option value=""></option>
-                  </select>
-                  <input ng-if="family.variable" id="{{ 'texture' + family.name }}"
-                         dynamic-model="'selected.'+family.uid" type="text" smart-float placeholder="{{'in ' + family.unit }}" ng-change="upTexture()"></input>
-              </div>
-       </div>
+                <span class="glyphicon" ng-class="family.visible ? 'glyphicon-eye-open' : 'glyphicon-eye-close'" }}
+                      title="{{ (family.visible ? '' :'no') + 'visual impact on the stratum'}}"></span>
+                    <span title="{{ descriptions[family.uid] }}"> {{ family.name }}
+                    <span class="unit" ng-if="family.unit">{{ '(in ' + family.unit +')'}}</span>
+                </span>
+                </label>
+                <select ng-if="!family.variable" id="{{ 'texture' + family.name }}" class="form-control"
+                        dynamic-model="'selected.'+family.uid"
+                        ng-options="x.real_name for x in this[family.uid]" ng-change="upTexture()">
+                    <option value=""></option>
+                </select>
+                <input ng-if="family.variable" id="{{ 'texture' + family.name }}" class="form-control"
+                       dynamic-model="'selected.'+family.uid" type="text" smart-float
+                        ng-change="upTexture()">
+                </input>
+            </div>
+        </div>
     </form>
 </tab>
 <tab heading="Microstructure" ng-controller="StratMicrostructureCtrl" title="{{descriptions.fgMicrostructure}}">
@@ -793,20 +804,26 @@
     </form>
 </tab>
 <tab heading="Interface" ng-controller="StratInterfaceCtrl" active="activeTabInterface" title="{{descriptions.fgInterface}}">
-       <div class="row-fluid">
-              <div class="col-md-6 form-group" ng-repeat="family  in familyGroup | filter : showFamily track by family.name">
-                <label for="{{ 'interface' + family.name }}">
-                    <span class="glyphicon" ng-class="family.visible ? 'glyphicon-eye-open' : 'glyphicon-eye-close'"}} title="{{ (family.visible ? '' :'no') + 'visual impact on the stratum'}}"></span>
-                    <span title="{{ descriptions[family.uid] }}"> {{ family.name }}</span></label>
-                  <select ng-if="!family.variable" id="{{ 'interface' + family.name }}" class="form-control"
-                          dynamic-model="'selected.'+family.uid"
-                          ng-options="x.real_name for x in this[family.uid]" ng-change="upInterface()">
-                      <option value=""></option>
-                  </select>
-                  <input ng-if="family.variable" id="{{ 'interface' + family.name }}"
-                         dynamic-model="'selected.'+family.uid" type="text" smart-float placeholder="{{'in ' + family.unit }}" ng-change="upInterface()"></input>
-              </div>
-       </div>
+    <div class="row-fluid">
+        <div class="col-md-6 form-group" ng-repeat="family  in familyGroup | filter : showFamily track by family.uid">
+            <label for="{{ 'interface' + family.name }}">
+                <span class="glyphicon" ng-class="family.visible ? 'glyphicon-eye-open' : 'glyphicon-eye-close'" }}
+                      title="{{ (family.visible ? '' :'no') + 'visual impact on the stratum'}}"></span>
+                <span title="{{ descriptions[family.uid] }}"> {{ family.name }}
+                        <span class="unit" ng-if="family.unit">{{ '(in ' + family.unit +')'}}</span>
+                    </span>
+            </label>
+            <select ng-if="!family.variable" id="{{ 'interface' + family.name }}" class="form-control"
+                    dynamic-model="'selected.'+family.uid"
+                    ng-options="x.real_name for x in this[family.uid]" ng-change="upInterface()">
+                <option value=""></option>
+            </select>
+            <input ng-if="family.variable" id="{{ 'interface' + family.name }}" class="form-control"
+                   dynamic-model="'selected.'+family.uid" type="text" smart-float
+                    ng-change="upInterface()">
+            </input>
+        </div>
+    </div>
 </tab>
 </tabset>
 </div>

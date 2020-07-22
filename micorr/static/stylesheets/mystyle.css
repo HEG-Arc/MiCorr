@@ -3278,6 +3278,10 @@ label {
   font-weight: bold;
 }
 
+.unit {
+  font-weight: normal;
+  font-style: italic;
+}
 input[type="search"] {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
