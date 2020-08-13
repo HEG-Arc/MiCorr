@@ -221,6 +221,9 @@ let StratigraphyData =  angular.module('micorrApp').factory('StratigraphyData', 
                 // to be replaced by direct object assignment
                 for (let familyCharacteristics of characteristics) {
                     this[familyCharacteristics.family] = familyCharacteristics;
+                    if (this.descriptions[familyCharacteristics.family]) { //overwrite node's description with wagtail snipet version if any
+                        familyCharacteristics.description = this.descriptions[familyCharacteristics.family];
+                    }
                 }
                 this.submmicrostructureFamily = getSubCharacteristicsFromFamily('mMicrostructureFamily', 'sub');
                 this.subcprimicrostructureFamily = getSubCharacteristicsFromFamily('cpriMicrostructureFamily', 'sub');

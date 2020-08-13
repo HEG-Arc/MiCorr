@@ -322,7 +322,8 @@ class Neo4jDAO:
                     if f_uid == 'elementFamily':
                         c_dic.update({'symbol': record['c']['symbol'], 'category': record['c']['category'], 'order': 0, 'visible': True})
                     else:
-                        c_dic.update({'description': record['c']['description'], 'order': record['c']['order'], 'visible': record['c']['visible']})
+                        c_dic.update({'description': record['c']['description'], 'order': record['c']['order'], 'visible': record['c']['visible'],
+                                      'image_url': record['c']['image_url']})
                     family_dic[f_uid]['characteristics'][c_uid] = c_dic
             else:
                 logger.debug('no characteristic in : %s',record)

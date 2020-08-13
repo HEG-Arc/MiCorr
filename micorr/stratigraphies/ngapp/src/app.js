@@ -23,7 +23,7 @@ export default angular
         'ngSanitize',
         'toggle-switch'
     ])
-    .config(function ($routeProvider, $httpProvider) {
+    .config(function ($routeProvider, $httpProvider, $tooltipProvider) {
         $routeProvider
             // affichage de la liste des stratigraphies
             .when('/artefact/:name', {
@@ -59,6 +59,12 @@ export default angular
         // extra
         $httpProvider.defaults.headers.get['Cache-Control'] = 'no-cache';
         $httpProvider.defaults.headers.get['Pragma'] = 'no-cache';
+
+        //set ui-bootstrap tooltip directive default options
+        $tooltipProvider.options({
+            appendToBody: true, // same as tooltip-append-to-body="true" important to use inside other directives e.g. ui-select
+            placement: 'top' //  tooltip-placement="top"
+        });
     }).name;
 
 import {strata, stratainfo} from "./directives/directives";
