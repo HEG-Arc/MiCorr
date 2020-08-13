@@ -69,7 +69,7 @@ class Neo4jDAO:
 
     def getStratigraphiesByUser(self, user_id, order_by='description'):
         stratigraphies = self.tx.run(
-            "MATCH (n:Stratigraphy) WHERE n.user_uid={user_id} RETURN n ORDER BY n.%s" % (order_by,),
+            "MATCH (n:Stratigraphy) WHERE n.user_uid=$user_id RETURN n ORDER BY n.%s" % (order_by,),
             user_id=user_id)
         stratigraphies_list = []
         for stratigraphy in stratigraphies:
@@ -86,7 +86,7 @@ class Neo4jDAO:
 
     def getStratigraphyUser(self, stratigraphy):
         user_uid = self.tx.evaluate(
-            "MATCH (n:Stratigraphy) WHERE n.uid={stratigraphy} RETURN n.user_uid", stratigraphy=stratigraphy)
+            "MATCH (n:Stratigraphy) WHERE n.uid=$stratigraphy RETURN n.user_uid", stratigraphy=stratigraphy)
         if user_uid:
             try:
                 user_id = int(user_uid)
@@ -97,7 +97,7 @@ class Neo4jDAO:
         return user_uid
 
     def setStratigraphyUser(self, stratigraphy, user_id):
-        n = self.tx.evaluate("MATCH (n:`Stratigraphy`) WHERE n.uid={stratigraphy} RETURN n", stratigraphy=stratigraphy)
+        n = self.tx.evaluate("MATCH (n:`Stratigraphy`) WHERE n.uid=$stratigraphy RETURN n", stratigraphy=stratigraphy)
         if n is None:
             return
         n['user_uid'] = user_id
@@ -105,10 +105,10 @@ class Neo4jDAO:
         self.tx.push(n)
 
     def delStratigraphyUser(self, stratigraphy):
-        n=self.tx.evaluate("MATCH (n:`Stratigraphy`) WHERE n.uid={stratigraphy} REMOVE n.user_uid RETURN n", stratigraphy=stratigraphy)
+        n=self.tx.evaluate("MATCH (n:`Stratigraphy`) WHERE n.uid=$stratigraphy REMOVE n.user_uid RETURN n", stratigraphy=stratigraphy)
 
     def updateStratigraphyDescription(self, stratigraphy, description):
-        n = self.tx.evaluate("MATCH (n:`Stratigraphy`) WHERE n.uid={stratigraphy} RETURN n", stratigraphy=stratigraphy)
+        n = self.tx.evaluate("MATCH (n:`Stratigraphy`) WHERE n.uid=$stratigraphy RETURN n", stratigraphy=stratigraphy)
         n['description'] = description
         self.tx.push(n)
 
@@ -123,7 +123,7 @@ class Neo4jDAO:
             """
                 MATCH (sg:Stratigraphy)-[r:POSSESSES]->(st:Strata)-[:IS_CONSTITUTED_BY]->(c:Characteristic)-[:BELONGS_TO]->(f:Family {uid:"natureFamily"}),
                 (st)-[:INCLUDES]->(ctn:Container)-->(e:Element),(ctn)-[:BELONGS_TO]->(ctn_f:Family {uid:"mCompositionMainElements"})
-                 where c.uid="mCharacteristic" and sg.uid={uid}
+                 where c.uid="mCharacteristic" and sg.uid=$uid
                 RETURN e.uid as main_element,toInteger(replace(st.uid, (sg.uid+"_Strata"), "")) as strata_num
                 order by -strata_num limit 1
             """, uid=stratigraphy_uid)
@@ -135,14 +135,14 @@ class Neo4jDAO:
     def getStratigraphyDetails(self, stratigraphy_uid):
         # on cherche d'abord toutes les strates
         strata_records = self.tx.run(
-            """MATCH (sg:Stratigraphy)-[r:POSSESSES]->(st:Strata) where sg.uid={uid}
+            """MATCH (sg:Stratigraphy)-[r:POSSESSES]->(st:Strata) where sg.uid=$uid
                RETURN sg.description as description, st.uid as uid,
-                toInteger(replace(st.uid, {sg_strata_prefix}, "")) as strata_num
+                toInteger(replace(st.uid, $sg_strata_prefix, "")) as strata_num
                 order by strata_num""",
             uid=stratigraphy_uid,sg_strata_prefix= stratigraphy_uid +"_Strata").data()
         # todo optimization something like the following query would be enough
         # stratigraphy_records = self.tx.run(
-        # MATCH (sg:Stratigraphy)-[:POSSESSES]->(st:Strata),(st)-[:IS_CONSTITUTED_BY]->(csc)-[b:BELONGS_TO]->(f:Family) where sg.uid={uid}
+        # MATCH (sg:Stratigraphy)-[:POSSESSES]->(st:Strata),(st)-[:IS_CONSTITUTED_BY]->(csc)-[b:BELONGS_TO]->(f:Family) where sg.uid=$uid
         # OPTIONAL MATCH (st)-[:HAS_UPPER_INTERFACE]->(ui:Interface)-[:IS_CONSTITUTED_BY]->(uicsc)-[:BELONGS_TO]->(uif:Family)
         # return sg,st,csc,f,ui,uicsc,uif
         # , uid=stratigraphy_uid)
@@ -160,7 +160,7 @@ class Neo4jDAO:
 
             # Chaque strates a des caracteristiques
             charactList = self.tx.run(
-                """MATCH (n:Strata)-[r:IS_CONSTITUTED_BY]->(c:Characteristic)-[b:BELONGS_TO]->(f:Family) where n.uid={strata_uid}
+                """MATCH (n:Strata)-[r:IS_CONSTITUTED_BY]->(c:Characteristic)-[b:BELONGS_TO]->(f:Family) where n.uid=$strata_uid
                    RETURN c,f ORDER by c.order,c.uid
                 """, strata_uid=strata['uid'])
             logger.debug ("======Characteristic")
@@ -180,7 +180,7 @@ class Neo4jDAO:
             # Chaque strate a des sous-caracteristiques
             logger.debug ("======subCharacteristic")
             slist = self.tx.run(
-                "MATCH (s:Strata)-[r:IS_CONSTITUTED_BY]->(c:SubCharacteristic) where s.uid={strata_uid} RETURN c.uid as name, c.name as real_name order by name",
+                "MATCH (s:Strata)-[r:IS_CONSTITUTED_BY]->(c:SubCharacteristic) where s.uid=$strata_uid RETURN c.uid as name, c.name as real_name order by name",
                 strata_uid=strata['uid']).data()
 
             logger.debug ("======Components")
@@ -196,7 +196,7 @@ class Neo4jDAO:
                 return hacked_characteristic
 
             component_records = self.tx.run(
-                """MATCH (sg:Stratigraphy {uid:{stratigraphy_uid}})-[POSSESSES]->(s:Strata {uid:{strata_uid}})-[r:INCLUDES]->(cpnt:Component)
+                """MATCH (sg:Stratigraphy {uid:$stratigraphy_uid})-[POSSESSES]->(s:Strata {uid:$strata_uid})-[r:INCLUDES]->(cpnt:Component)
                     OPTIONAL MATCH (cpnt)-[r_const_or_incl]->(char_or_ctn)-[:BELONGS_TO]->(family:Family)
                     OPTIONAL MATCH (char_or_ctn)-[ce_r:IS_CONSTITUTED_BY]->(elem_or_cpnd:Characteristic)
                    RETURN s.uid,id(cpnt),char_or_ctn, family.uid, ce_r.order, elem_or_cpnd
@@ -232,7 +232,7 @@ class Neo4jDAO:
 
             logger.debug ("======Containers")
             container_records = self.tx.run(
-                """MATCH (s:Strata { uid:{strata_uid} })-[r:INCLUDES]->(c:Container)-[ce_r:IS_CONSTITUTED_BY]->(elem_or_cpnd:Characteristic)
+                """MATCH (s:Strata { uid:$strata_uid })-[r:INCLUDES]->(c:Container)-[ce_r:IS_CONSTITUTED_BY]->(elem_or_cpnd:Characteristic)
                    MATCH (c)-[:BELONGS_TO]->(f:Family) RETURN s,c,ce_r,elem_or_cpnd,f ORDER BY f.uid, ce_r.order""",
                 strata_uid=strata['uid'])
             for r in container_records:
@@ -240,7 +240,7 @@ class Neo4jDAO:
 
             logger.debug("======Variables")
             variable_records = self.tx.run(
-                """MATCH (s:Strata { uid:{strata_uid} })-[r:HAS]->(v:Variable)
+                """MATCH (s:Strata { uid:$strata_uid })-[r:HAS]->(v:Variable)
                    MATCH (v)-[:BELONGS_TO]->(f:Family) RETURN s,v,f ORDER BY f.uid""",
                 strata_uid=strata['uid'])
             for r in variable_records:
@@ -250,7 +250,7 @@ class Neo4jDAO:
             # Chaque strates a des interfaces
             logger.debug("======interface")
             interface_uid = self.tx.evaluate(
-                """MATCH (s:Strata)-[r:HAS_UPPER_INTERFACE]->(n:Interface) WHERE s.uid={strata_uid}
+                """MATCH (s:Strata)-[r:HAS_UPPER_INTERFACE]->(n:Interface) WHERE s.uid=$strata_uid
                    RETURN n.uid as uid ORDER BY uid""", strata_uid=strata['uid'])
 
             if interface_uid and len(interface_uid) > 0:
@@ -259,7 +259,7 @@ class Neo4jDAO:
 
                 #Chaque interface a des caracteristiques
                 intCharactList = self.tx.run(
-                    """MATCH (i:Interface)-[r:IS_CONSTITUTED_BY]->(c:Characteristic)-[b:BELONGS_TO]->(f:Family) WHERE i.uid={interface_uid}
+                    """MATCH (i:Interface)-[r:IS_CONSTITUTED_BY]->(c:Characteristic)-[b:BELONGS_TO]->(f:Family) WHERE i.uid=$interface_uid
                        RETURN c.uid as uid, f.uid as family ORDER BY uid""", interface_uid=interface_uid)
                 iclist = []
                 for ic in intCharactList:
@@ -279,13 +279,13 @@ class Neo4jDAO:
             #Recuperation des enfants
 
             childList = self.tx.run(
-                """MATCH (a:Strata)-[r:IS_PARENT_OF]->(b:Strata) where a.uid={strata_uid}
+                """MATCH (a:Strata)-[r:IS_PARENT_OF]->(b:Strata) where a.uid=$strata_uid
                    RETURN b.uid as uid ORDER BY uid""", strata_uid=strata['uid'])
 
             st['children'] = [
                 {'name': child['uid'],
                  'characteristics': self.tx.run(
-                     """MATCH (n:Strata)-[r:IS_CONSTITUTED_BY]->(c:Characteristic)-[b:BELONGS_TO]->(f:Family) where n.uid={child_uid}
+                     """MATCH (n:Strata)-[r:IS_CONSTITUTED_BY]->(c:Characteristic)-[b:BELONGS_TO]->(f:Family) where n.uid=$child_uid
                         RETURN c.uid as name, c.name as real_name, f.uid as family ORDER BY name""", child_uid=child['uid']).data()}
                 for child in childList
             ]
@@ -357,10 +357,10 @@ class Neo4jDAO:
             insertOk = False
         else:
             insertOk = name
-            self.tx.evaluate("CREATE(stratigraphy:Stratigraphy{uid:{stratigraphy_uid}, timestamp: {timestamp}, date:{date}, artefact_uid:{artefact_uid}, label:'stratigraphy', description:{description}})",
+            self.tx.evaluate("CREATE(stratigraphy:Stratigraphy{uid:$stratigraphy_uid, timestamp: $timestamp, date:$date, artefact_uid:$artefact_uid, label:'stratigraphy', description:$description})",
             stratigraphy_uid=name, timestamp=time.time(), date=time.strftime("%Y-%m-%d"), artefact_uid=artefact,description=stratigraphy)
             self.tx.evaluate(
-                "MATCH (a:Artefact),(b:Stratigraphy) WHERE a.uid = {artefact} AND b.uid={name} CREATE (a)-[:IS_REPRESENTED_BY]->(b)",
+                "MATCH (a:Artefact),(b:Stratigraphy) WHERE a.uid = $artefact AND b.uid=$name CREATE (a)-[:IS_REPRESENTED_BY]->(b)",
                 artefact=artefact, name=name)
 
         return insertOk
@@ -376,7 +376,7 @@ class Neo4jDAO:
     # @returns
     def getStratigraphyByArtefact(self, artefact):
         return self.tx.run(
-            """MATCH (n:`Artefact`)-[:`IS_REPRESENTED_BY`]->(m) where n.uid={artefact}
+            """MATCH (n:`Artefact`)-[:`IS_REPRESENTED_BY`]->(m) where n.uid=$artefact
              RETURN m.uid as name, m.description as description""", artefact=artefact).data()
 
     # verifie si une stratigraphie existe ou pas
@@ -384,7 +384,7 @@ class Neo4jDAO:
     # @returns True si existe, False sinon
     def stratigraphyExists(self, stratigraphy):
         nbo = self.tx.evaluate(
-            "MATCH (n:`Stratigraphy`) WHERE n.uid={stratigraphy} RETURN count(n) as nbo", stratigraphy=stratigraphy)
+            "MATCH (n:`Stratigraphy`) WHERE n.uid=$stratigraphy RETURN count(n) as nbo", stratigraphy=stratigraphy)
         return nbo > 0
 
     # supprime toutes les strates et sous strates d'une stratigraphie
@@ -393,7 +393,7 @@ class Neo4jDAO:
     def deleteAllStrataFromAStratigraphy(self, stratigraphy):
         # supression des strates enfants, interfaces, components et containers
         self.tx.run("""
-            MATCH (sg:Stratigraphy {uid:{stratigraphy}})
+            MATCH (sg:Stratigraphy {uid:$stratigraphy})
             OPTIONAL MATCH (sg)-[:POSSESSES]->(parent_st:Strata)-[:IS_PARENT_OF]->(child_st:Strata)
             DETACH DELETE child_st
             WITH sg MATCH (sg)-[:POSSESSES]->(st:Strata)
@@ -409,7 +409,7 @@ class Neo4jDAO:
     # @returns
     def deleteStratigraphy(self, stratigraphy):
         self.tx.run(
-            "match (a:Artefact)-[i:IS_REPRESENTED_BY]->(s:Stratigraphy) where s.uid = {stratigraphy} optional match (s)-[r]->()  delete i, r, s",
+            "match (a:Artefact)-[i:IS_REPRESENTED_BY]->(s:Stratigraphy) where s.uid = $stratigraphy optional match (s)-[r]->()  delete i, r, s",
             stratigraphy=stratigraphy)
         return {'res': 1}
 
@@ -418,15 +418,15 @@ class Neo4jDAO:
     # @returns
     def createInterface(self, strata_uid, interface_uid):
         self.tx.run("""
-                MATCH(s:Strata {uid:{strata_uid}})
-                CREATE (s)-[:HAS_UPPER_INTERFACE]->(interface:Interface {uid:{interface_uid},date:{date}})
+                MATCH(s:Strata {uid:$strata_uid})
+                CREATE (s)-[:HAS_UPPER_INTERFACE]->(interface:Interface {uid:$interface_uid,date:$date})
                 """, strata_uid=strata_uid, interface_uid=interface_uid, date=time.strftime("%Y-%m-%d") )
 
     # attache une caracteristique a une interface
     # @params nom de l'interface et nom de la caracteristique
     # @returns
     def attachCharacteristicToInterface(self, interface, characteristic):
-        self.tx.run("""MATCH (a:Interface),(b) WHERE a.uid = {interface} AND b.uid={characteristic}
+        self.tx.run("""MATCH (a:Interface),(b) WHERE a.uid = $interface AND b.uid=$characteristic
                        CREATE (a)-[r:IS_CONSTITUTED_BY]->(b)""", interface=interface, characteristic=characteristic)
 
     # attache une caracteristique a une strate
@@ -434,7 +434,7 @@ class Neo4jDAO:
     # @returns
     def attachCharacteristicToStrata(self, strata, c_uid, label="Characteristic"):
       self.tx.run("""
-      MATCH (s:Strata),(c:%s) WHERE s.uid ={strata} AND c.uid={c_uid}
+      MATCH (s:Strata),(c:%s) WHERE s.uid =$strata AND c.uid=$c_uid
       CREATE (s)-[r:IS_CONSTITUTED_BY]->(c)""" %(label,), strata=strata, c_uid=c_uid, label=label)
 
     # wip trying to use stratum_node object and subgraph
@@ -456,7 +456,7 @@ class Neo4jDAO:
     # @returns
     def attachCharacteristic(self, node_uid, characteristic_uid):
         self.tx.run("""MATCH (n),(c)
-                                WHERE n.uid = {node_uid} AND c.uid={characteristic_uid}
+                                WHERE n.uid = $node_uid AND c.uid=$characteristic_uid
                                 CREATE (a)-[r:IS_CONSTITUTED_BY]->(b)""",
                                   node_uid=node_uid,characteristic=characteristic_uid)
 
@@ -465,9 +465,9 @@ class Neo4jDAO:
     # @returns Strata node py2neo object
     def createStrata(self, strata_uid, stratigraphy_uid):
         return self.tx.evaluate("""
-               CREATE(strata:Strata{uid:{strata_uid}, date:{today}, stratigraphy_uid: {stratigraphy_uid}})
+               CREATE(strata:Strata{uid:$strata_uid, date:$today, stratigraphy_uid: $stratigraphy_uid})
                WITH strata
-               MATCH (stgy:Stratigraphy {uid:{stratigraphy_uid}})
+               MATCH (stgy:Stratigraphy {uid:$stratigraphy_uid})
                CREATE (stgy)-[:POSSESSES]->(strata) RETURN strata""",
                              strata_uid=strata_uid, today=time.strftime("%Y-%m-%d"), stratigraphy_uid=stratigraphy_uid)
 
@@ -475,10 +475,10 @@ class Neo4jDAO:
     # @params nom de la strate et nom de la strate parent
     # @returns
     def createChildStrata(self, strata, parentstrata):
-        self.tx.run("CREATE(strata:Strata{uid:{strata} ,date:{today}, label:'strata'})",
+        self.tx.run("CREATE(strata:Strata{uid:$strata ,date:$today, label:'strata'})",
                        strata=strata, today=time.strftime("%Y-%m-%d"))
         self.tx.run(
-            """MATCH (a:Strata),(b:Strata) WHERE a.uid ={strata} AND b.uid={parentstrata}
+            """MATCH (a:Strata),(b:Strata) WHERE a.uid =$strata AND b.uid=$parentstrata
                CREATE (b)-[:IS_PARENT_OF]->(a)""", strata=strata, parentstrata=parentstrata)
 
     def create_secondary_components(self, stratum_node, components):
@@ -566,7 +566,7 @@ class Neo4jDAO:
     # @params nom de la stratigraphie
     # @returns nombre de strates pour cette stratigraphie
     def getNbStratasByStratigraphy(self, stratigraphy):
-        return self.tx.evaluate("MATCH (n:Stratigraphy)-[p:POSSESSES]->(s:Strata) where n.uid={stratigraphy} RETURN  count(s) as nb")
+        return self.tx.evaluate("MATCH (n:Stratigraphy)-[p:POSSESSES]->(s:Strata) where n.uid=$stratigraphy RETURN  count(s) as nb")
 
     # sauvegarde toutes les strates d'une stratigraphie
     # @params details d'une stratigraphie au format json
@@ -709,18 +709,18 @@ class Neo4jDAO:
     # @params nom de l'artefact
     # @returns 0 si pas ok, 1 si ok
     def addArtefact(self, artefact):
-        nb = self.tx.evaluate("MATCH (n:Artefact) where n.uid={artefact} RETURN count(n.uid) as nb",
+        nb = self.tx.evaluate("MATCH (n:Artefact) where n.uid=$artefact RETURN count(n.uid) as nb",
                                  artefact=artefact)
         if nb >= 1:
             return {'res': 0}
         else:
-            self.tx.run("CREATE(artefact:Artefact{uid:{artefact}, date:{today}, label:'artefact'})",
+            self.tx.run("CREATE(artefact:Artefact{uid:$artefact, date:$today, label:'artefact'})",
                            artefact=artefact, today=time.strftime("%Y-%m-%d"))
             return {'res': 1}
         """
         todo: replace by a merge..
-        MERGE (n:Artefact {uid:{artefact}})
-        ON CREATE SET n.date = {today}
+        MERGE (n:Artefact {uid:$artefact})
+        ON CREATE SET n.date = $today
         RETURN n.uid
         """
 
@@ -729,10 +729,10 @@ class Neo4jDAO:
     # @returns
     def delArtefact(self, artefact):
         listStrat = self.tx.run(
-            "MATCH (a:Artefact)-[r:IS_REPRESENTED_BY]->(s:Stratigraphy) where a.uid={artefact} RETURN  s.uid as uid",
+            "MATCH (a:Artefact)-[r:IS_REPRESENTED_BY]->(s:Stratigraphy) where a.uid=$artefact RETURN  s.uid as uid",
             artefact=artefact)
         for strat in listStrat:
             self.deleteStratigraphy(strat['uid'])
-        self.tx.run("MATCH (a:Artefact) where a.uid={artefact} OPTIONAL MATCH (a)-[x]-() DELETE x, a",
+        self.tx.run("MATCH (a:Artefact) where a.uid=$artefact OPTIONAL MATCH (a)-[x]-() DELETE x, a",
                        artefact=artefact)
         return {'res': 1}
