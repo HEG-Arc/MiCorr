@@ -1,4 +1,4 @@
-FROM node:12.16.3-stretch-slim
+FROM node:12.18.1-stretch-slim
 
 EXPOSE 8080
 
