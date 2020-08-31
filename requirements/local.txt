@@ -8,7 +8,7 @@ werkzeug==1.0.1
 #test dependencies
 django-test-plus==1.4.0  # broken python2 install due to more-itertools >5.0.0 being installed by pluggy dependency
 jsondiff==1.2.0
-
+pipdeptree==1.0.0
 ### unused for now
 # test coverage
 #coverage==4.5.3
