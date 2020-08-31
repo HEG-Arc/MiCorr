@@ -27,7 +27,7 @@ angular.module('micorrApp')
         /*
          * Met à jour les données de la strate en fonction des valeurs dans le formulaire
          */
-        $scope.upInterface = function () {
+        $scope.upModel = function () {
             updateStratModelFromTab($scope, StratigraphyData);
             $scope.$emit('updateSelectedInterface');
         };
