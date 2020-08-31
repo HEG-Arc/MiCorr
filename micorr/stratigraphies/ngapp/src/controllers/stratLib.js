@@ -4,6 +4,16 @@ import {Characteristic} from "../business/characteristic";
 export function initStratTab($scope, StratigraphyData, familyGroupUID) {
     $scope.selected = {};
     $scope.familyGroup = StratigraphyData.rawCharacteristics.filter(f => f.familyGroup && f.familyGroup.uid == familyGroupUID)
+    // Split families in the tab group by fieldset (optionally set as string in Family properties)
+    $scope.fieldsets = {default:[]};
+    for (let f of $scope.familyGroup) {
+        let fieldset = f.fieldset || 'default';
+        if (!(fieldset in $scope.fieldsets)) {
+                $scope.fieldsets[fieldset]=[];
+        }
+        console.log(`fs[${fieldset}].push(${f})`);
+        $scope.fieldsets[fieldset].push(f);
+    }
     for (let {uid: familyUID, variable} of $scope.familyGroup)
         if (variable)
             $scope[familyUID] = null;
