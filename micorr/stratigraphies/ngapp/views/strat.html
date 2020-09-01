@@ -226,27 +226,37 @@
 </div>
 
 <tabset ng-show="showTabForms" justified="true" class="clearfix">
-<tab heading="Morphology" ng-controller="StratMorphologyCtrl" active="activeMorphologyTab" title="{{descriptions.fgMorphology}}">
+<tab heading="Morphology" ng-controller="StratMorphologyCtrl" active="activeMorphologyTab" tooltip="{{descriptions.fgMorphology}}">
     <form>
        <div class="row-fluid">
-           <fieldset ng-repeat="(fieldset, families) in fieldsets">
-                <legend ng-if="fieldset!='default'">{{ fieldset }}</legend>
-            <div class="col-md-6 form-group" ng-repeat="family  in families | filter : showFamily track by family.uid">
-                <label for="{{ 'morphology' + family.name }}">
-                    <span class="glyphicon" ng-class="family.visible ? 'glyphicon-eye-open' : 'glyphicon-eye-close'"}} title="{{ (family.visible ? '' :'no') + 'visual impact on the stratum'}}"></span>
-                    <span title="{{ descriptions[family.uid] }}"> {{ family.name }}
-                        <span class="unit" ng-if="family.unit" >{{'(in ' + family.unit +')'}}</span>
+           <fieldset ng-repeat="fieldset in fieldsets | filter:showFamily ">
+               <legend ng-if="fieldset.name!='default'">{{ fieldset.name }}</legend>
+               <div class="col-md-6 form-group" ng-repeat="family in fieldset.families track by family.uid">
+                   <label for="{{ 'morphology' + family.name }}">
+                       <span class="glyphicon" ng-class="family.visible ? 'glyphicon-eye-open' : 'glyphicon-eye-close'"
+                             }} tooltip="{{ (family.visible ? '' :'no') + 'visual impact on the stratum'}}"></span>
+                       <span tooltip="{{ descriptions[family.uid] }}"> {{ family.name }}
+                        <span class="unit" ng-if="family.unit">{{ '(in ' + family.unit +')'}}</span>
                     </span>
-                </label>
-                <select ng-if="!family.variable" id="{{ 'morphology' + family.name }}" class="form-control"
-                        dynamic-model="'selected.'+family.uid"
-                        ng-options="x.real_name for x in this[family.uid]" ng-change="upMorpho()">
-                    <option value=""></option>
-                </select>
-                <input ng-if="family.variable" id="{{ 'morphology' + family.name }}" class="form-control"
-                         dynamic-model="'selected.'+family.uid" type="text" smart-float ng-change="upMorpho()">
-                </input>
-              </div>
+                   </label>
+                   <ui-select ng-if="!family.variable" id="{{ 'morphology' + family.name }}"
+                              dynamic-model="'selected.'+family.uid" on-select="upMorpho()" on-remove="upMorpho()">
+                       <ui-select-match placeholder="Select characteristic">
+                           <span tooltip="{{ $select.selected.description }}">{{$select.selected.real_name}}</span>
+                       </ui-select-match>
+                       <ui-select-choices null-option="nullOption"
+                                          repeat="item in (this[family.uid] | filter: $select.search) track by item.name">
+                           <div tooltip="{{ item.description }}">
+                               <img ng-if="item.image_url" ng-src="{{ item.image_url }}" aria-hidden="true"
+                                    heigth="100px">
+                               <span ng-bind-html="item.real_name | highlight: $select.search"></span>
+                           </div>
+                       </ui-select-choices>
+                   </ui-select>
+                   <input ng-if="family.variable" id="{{ 'morphology' + family.name }}" class="form-control"
+                          dynamic-model="'selected.'+family.uid" type="text" smart-float ng-change="upMorpho()">
+                   </input>
+               </div>
            </fieldset>
        </div>
     </form>
@@ -254,9 +264,9 @@
 <tab heading="Texture" ng-controller="StratTextureCtrl" tooltip="{{descriptions.fgTexture}}">
     <form>
         <div class="row-fluid">
-           <fieldset ng-repeat="(fieldset, families) in fieldsets">
-                <legend ng-if="fieldset!='default'">{{ fieldset }}</legend>
-            <div class="col-md-6 form-group" ng-repeat="family in families | filter : showFamily track by family.uid">
+           <fieldset ng-repeat="fieldset in fieldsets | filter:showFamily ">
+                <legend ng-if="fieldset.name!='default'">{{ fieldset.name }}</legend>
+            <div class="col-md-6 form-group" ng-repeat="family in fieldset.families track by family.uid">
                 <label class="control-label" for="{{ 'texture' + family.name }}">
                 <span class="glyphicon" ng-class="family.visible ? 'glyphicon-eye-open' : 'glyphicon-eye-close'" }}
                       tooltip="{{ (family.visible ? '' :'no') + 'visual impact on the stratum'}}"></span>
@@ -320,7 +330,7 @@
     </form>
 </tab>
 
-<tab heading="Old Microstr." ng-controller="StratMicrostructureCtrl" title="{{descriptions.fgMicrostructure}}">
+<tab heading="OldMicro" ng-controller="StratMicrostructureCtrl" title="{{descriptions.fgMicrostructure}}">
     <form>
         <!-- Microstructure pour la couche CM -->
 
@@ -852,9 +862,9 @@
 </tab>
 <tab heading="Interface" ng-controller="StratInterfaceCtrl" active="activeTabInterface" tooltip="{{descriptions.fgInterface}}">
     <div class="row-fluid">
-           <fieldset ng-repeat="(fieldset, families) in fieldsets">
-                <legend ng-if="fieldset!='default'">{{ fieldset }}</legend>
-            <div class="col-md-6 form-group" ng-repeat="family  in families | filter : showFamily track by family.uid">
+           <fieldset ng-repeat="fieldset in fieldsets | filter:showFamily">
+                <legend ng-if="fieldset.name!='default'">{{ fieldset.name }}</legend>
+            <div class="col-md-6 form-group" ng-repeat="family  in fieldset.families track by family.uid">
             <label for="{{ 'interface' + family.name }}">
                 <span class="glyphicon" ng-class="family.visible ? 'glyphicon-eye-open' : 'glyphicon-eye-close'" }}
                       tooltip="{{ (family.visible ? '' :'no') + 'visual impact on the stratum'}}"></span>
