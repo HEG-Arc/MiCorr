@@ -24,7 +24,6 @@ angular.module('micorrApp')
             $scope.$emit('updateSelectedStrata');
         };
         $scope.getGroup = function (item) {
-            console.log(item.name, item.optgroup);
             return item.optgroup;
         }
     });

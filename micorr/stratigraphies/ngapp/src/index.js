@@ -4,7 +4,7 @@ import "jquery-ui";
 import "angular";
 import "angular-route";
 import "angular-resource";
-import "angular-ui-bootstrap/ui-bootstrap-tpls";
+import "angular-ui-bootstrap";
 import "angular-sanitize";
 import "ui-select";
 import "svg.js";
