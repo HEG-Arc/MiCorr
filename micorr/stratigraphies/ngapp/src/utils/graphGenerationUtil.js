@@ -38,10 +38,10 @@ class GraphGenerationUtil {
         var stratigraphyHeight = 0;
         var resultDraw = SVG(this.window.document.documentElement);
         resultDraw.attr("shape-rendering","auto"); //set shape rendering to default (auto) vs crispEdges
-        console.log("Nb of strata:" + this.stratig.getStratas().length);
+        //console.log("Nb of strata:" + this.stratig.getStratas().length);
         for (var i = 0; i < this.stratig.getStratas().length; i++) {
             var str = this.stratig.getStratas()[i];
-            console.log('strataUid: ' + str.getUid());
+            //console.log('strataUid: ' + str.getUid());
             var nestedInterface = this.drawInterface(str, null, resultDraw);
             if (nestedInterface)
             {
@@ -251,7 +251,7 @@ class GraphGenerationUtil {
         let strataColor = strata.getFirstCharacteristicByFamily("colourFamily","realName");
         let label = nestedStrata.plain(strata.getLabel()).attr({x:20, y:height/2, "text-anchor":"auto","font-size":18,fill:"black"});
         let labelBbox=label.bbox();
-        console.log(`stratum ${strata.getLabel()} label bbox:${labelBbox.width}, ${labelBbox.height}`);
+        //console.log(`stratum ${strata.getLabel()} label bbox:${labelBbox.width}, ${labelBbox.height}`);
         // add a translucent rectangle in text background we needed to draw the text first to get its dimension
         // then we draw the rectangle and move it before the text to have it in its background (z-order arrangement)
         const wRectRatio=1.3, hRectRatio=1.1;

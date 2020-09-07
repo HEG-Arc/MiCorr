@@ -226,9 +226,9 @@
 </div>
 
 <tabset ng-show="showTabForms" justified="true" class="clearfix">
-<tab heading="Morphology" ng-controller="StratMorphologyCtrl" active="activeMorphologyTab" tooltip="{{descriptions.fgMorphology}}">
+<tab heading="Morphology" active="activeMorphologyTab" tooltip="{{descriptions.fgMorphology}}">
     <form>
-       <div class="row-fluid">
+       <div ng-controller="StratMorphologyCtrl" class="row-fluid">
            <fieldset ng-repeat="fieldset in fieldsets | filter:showFamily ">
                <legend ng-if="fieldset.name!='default'">{{ fieldset.name }}</legend>
                <div class="col-md-6 form-group" ng-repeat="family in fieldset.families track by family.uid">
@@ -261,8 +261,8 @@
        </div>
     </form>
 </tab>
-<tab heading="Texture" ng-controller="StratTextureCtrl" tooltip="{{descriptions.fgTexture}}">
-    <form>
+<tab heading="Texture" tooltip="{{descriptions.fgTexture}}">
+    <form ng-controller="StratTextureCtrl">
         <div class="row-fluid">
            <fieldset ng-repeat="fieldset in fieldsets | filter:showFamily ">
                 <legend ng-if="fieldset.name!='default'">{{ fieldset.name }}</legend>
@@ -297,8 +297,8 @@
     </form>
 </tab>
 
-    <tab heading="Microstructure" ng-controller="StratNewMicrostructureCtrl" tooltip="{{descriptions.fgMicrostructure}}">
-    <form>
+    <tab heading="Microstructure" tooltip="{{descriptions.fgMicrostructure}}">
+    <form ng-controller="StratNewMicrostructureCtrl">
         <div class="row-fluid">
             <div class="col-md-6 form-group" ng-repeat="family in familyGroup | filter : showFamily track by family.uid">
                 <label class="control-label" for="{{ 'microstructure' + family.name }}">
@@ -330,8 +330,8 @@
     </form>
 </tab>
 
-<tab heading="OldMicro" ng-controller="StratMicrostructureCtrl" title="{{descriptions.fgMicrostructure}}">
-    <form>
+<tab heading="OldMicro"  title="{{descriptions.fgMicrostructure}}">
+    <form ng-controller="StratMicrostructureCtrl">
         <!-- Microstructure pour la couche CM -->
 
         <div class="col-md-12 form-group" ng-show="corrodedMetalStrataSelected">
@@ -410,10 +410,8 @@
 
     </form>
 </tab>
-<tab heading="Composition" ng-controller="StratCompositionCtrl" title="{{descriptions.fgComposition}}">
-
-
-    <form>
+<tab heading="Composition"  title="{{descriptions.fgComposition}}">
+    <form ng-controller="StratCompositionCtrl">
         <!-- Composition pour la couche CM -->
         <div class="row-fluid">
             <div class="col-md-12 form-group" ng-show="corrodedMetalStrataSelected">
@@ -860,8 +858,8 @@
 
     </form>
 </tab>
-<tab heading="Interface" ng-controller="StratInterfaceCtrl" active="activeTabInterface" tooltip="{{descriptions.fgInterface}}">
-    <div class="row-fluid">
+<tab heading="Interface" active="activeTabInterface" tooltip="{{descriptions.fgInterface}}">
+    <div ng-controller="StratInterfaceCtrl"  class="row-fluid">
            <fieldset ng-repeat="fieldset in fieldsets | filter:showFamily">
                 <legend ng-if="fieldset.name!='default'">{{ fieldset.name }}</legend>
             <div class="col-md-6 form-group" ng-repeat="family  in fieldset.families track by family.uid">
