@@ -31,7 +31,6 @@ class Neo4jDAO:
         return self.tx
     # commit des transaction. Si rien n'est precise, autocommit
     def commit(self):
-        self.tx.process()
         self.tx.commit()
         self.tx = None
 

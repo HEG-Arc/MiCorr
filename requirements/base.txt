@@ -59,8 +59,8 @@ lxml==4.5.1
 elasticsearch==2.4.1
 git+https://github.com/bletourmy/django-terms.git@f7545e3e00ace355198ccfd60ffef1b1a91d9af6#egg=django-terms
 django-robots==4.0
-urllib3==1.24.3 # py2neo 4.3.0 has requirement urllib3<1.25,>=1.23
-py2neo==4.3
+urllib3==1.25.10 # py2neo 4.3.0 has requirement urllib3<1.25,>=1.23
+py2neo==2020.0.0
 simplejson==3.17.0
 django-extensions==2.2.9
 # prompt-toolkit==1.0.16 # jupyter-console requires 1.x and py2neo 3 require >2.0
