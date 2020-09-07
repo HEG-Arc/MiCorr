@@ -10,8 +10,8 @@
 angular.module('micorrApp')
     .controller('ListArtefactsCtrl', function ($scope, $routeParams, MiCorrService, ngProgress) {
         // Quand on lance la page, alors il se passe une requête asynchrone qui va chercher tous les artefacts
-        MiCorrService.getAllArtefacts().success(function(data){
-            $scope.artefacts = data['artefacts'];
+        MiCorrService.getAllArtefacts().then(function(response){
+            $scope.artefacts = response.data['artefacts'];
             ngProgress.complete();
         });
     });

@@ -15,14 +15,14 @@ let MiCorrService = angular.module('micorrApp').factory('MiCorrService', functio
         },
 
         isAuthenticated: function() {
-            return $http.get('json/isauthenticated').error(function () {
+            return $http.get('json/isauthenticated').then(null, function () {
                 console.log('Problème de connexion avec le serveur');
                 alert('Erreur de chargement');
             });
         },
 
         sendEmail: function(email_to, stratigraphy) {
-            return $http.post('email' + '?email=' + email_to + '&stratigraphy=' + stratigraphy).error(function () {
+            return $http.post('email' + '?email=' + email_to + '&stratigraphy=' + stratigraphy).then(null, function () {
                 console.log('Problème de connexion avec le serveur');
                 alert('Email non envoyé');
             });
@@ -30,7 +30,7 @@ let MiCorrService = angular.module('micorrApp').factory('MiCorrService', functio
 
          getStratigraphySvg: function (name, width) {
 
-         return $http.post('node/getStratigraphySvg' + '?name=' + name + '&width=' + width).error(function () {
+         return $http.post('node/getStratigraphySvg' + '?name=' + name + '&width=' + width).then(null, function () {
             console.log('Problème de connexion avec le serveur pour récupérer le SVG');
          });
          },
@@ -41,78 +41,78 @@ let MiCorrService = angular.module('micorrApp').factory('MiCorrService', functio
 
 
         getAllArtefacts: function () {
-            return $http.get('json/getallartefacts').error(function () {
+            return $http.get('json/getallartefacts').then(null,function () {
                 console.log('Problème de connexion avec le serveur pour récupérer les artefacts');
                 alert('Erreur de chargement des artefacts');
             });
         },
         getStratigraphyByArtefact: function (artefact) {
-            return $http.get('json/getstratsbyartefact/' + artefact).error(function () {
+            return $http.get('json/getstratsbyartefact/' + artefact).then(null,function () {
                 console.log('Problème de connexion avec le serveur pour récupérer les stratigraphies');
                 alert('Erreur de chargement des stratigraphies');
             });
         },
         getDetailedStratigraphy: function (stratigraphy) {
-            return $http.get('json/getstratigraphydetails/' + stratigraphy).error(function () {
+            return $http.get('json/getstratigraphydetails/' + stratigraphy).then(null,function () {
                 console.log('Problème de connexion avec le serveur pour récupérer le détail des stratigraphies');
                 alert('Erreur de chargement du détail des stratigraphies');
             });
         },
         stratigraphyExists: function (stratigraphy) {
-            return $http.get('json/stratigraphyexists/' + stratigraphy).error(function () {
+            return $http.get('json/stratigraphyexists/' + stratigraphy).then(null,function () {
                 console.log('Problème de connexion avec le serveur pour voir si la stratigraphie existe');
                 alert('Erreur de dialogue avec le serveur');
             });
         },
         addStratigraphy: function (artefact, stratigraphy) {
-            return $http.get('json/addstratigraphy/' + artefact + '/' + stratigraphy).error(function () {
+            return $http.get('json/addstratigraphy/' + artefact + '/' + stratigraphy).then(null,function () {
                 console.log('Problème de connexion avec le serveur pour ajouter une stratigraphie');
                 alert('Erreur de dialogue avec le serveur');
             });
         },
         getAllCharacteristic: function () {
-            return $http.get('json/getallcharacteristic').error(function () {
+            return $http.get('json/getallcharacteristic').then(null,function () {
                 console.log('Problème de connexion avec le serveur pour charger les caractéristiques');
                 alert('Erreur de chargement des caractéristiques');
             });
         },
         getFamilyDescriptions: function () {
-             return $http.get('node_descriptions').error(function ()
+             return $http.get('node_descriptions').then(null,function ()
             {
                 console.log('Error loading  glossary');
                 alert('Error loading  glossary');
             })
         },
         saveStratigraphy: function (item) {
-            $http.post('json/save', item, {headers: {'Content-Type': 'application/json'} }).error(function (data, status, headers, config) {
+            $http.post('json/save', item, {headers: {'Content-Type': 'application/json'} }).then(null,function (data, status, headers, config) {
                 console.log('Could not save stratigraphy: ' +status);
                 window.alert('Error saving stratigraphy:'+ status);
-            }).success(function (data, status, headers, config) {
+            }).then(function () {
                 console.log('Saved');
             });
 
         },
 
         matchStratigraphy: function (data) {
-            return $http.post('json/match', data, {headers: {'Content-Type': 'application/json'} }).error(function () {
+            return $http.post('json/match', data, {headers: {'Content-Type': 'application/json'} }).then(null,function () {
                 console.log('Problème de connexion avec le serveur pour comparer la stratigraphie');
                 alert('Erreur de lors du match avec la stratigraphie');
             });
         },
         deleteStratigraphy: function (data) {
-            return $http.get('json/deleteStratigraphy/' + data).error(function () {
+            return $http.get('json/deleteStratigraphy/' + data).then(null,function () {
                 console.log('Problème de connexion avec le serveur pour supprimer la stratigraphie');
                 alert('Erreur de suppression de la stratigraphie');
             });
         },
         createArtefact: function (data) {
-            return $http.get('json/addartefact/' + data).error(function () {
+            return $http.get('json/addartefact/' + data).then(null,function () {
                 console.log('Problème de connexion avec le serveur pour créer un artefact');
                 alert('Erreur de création de artefact');
             });
         },
         deleteArtefact: function (data) {
-            return $http.get('json/deleteartefact/' + data).error(function () {
+            return $http.get('json/deleteartefact/' + data).then(null,function () {
                 console.log('Problème de connexion avec le serveur pour supprimer un artefact');
                 alert('Erreur de suppression de artefact');
             });

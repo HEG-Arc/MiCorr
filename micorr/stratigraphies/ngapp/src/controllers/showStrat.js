@@ -126,7 +126,7 @@ angular.module('micorrApp')
 
 
             //Chargement de la stratigraphie
-            MiCorrService.getDetailedStratigraphy($scope.stratigraphyName).success(function (data) {
+            MiCorrService.getDetailedStratigraphy($scope.stratigraphyName).then(function (response) {
 
                  /*
                  * cherche dans une liste (liste de sous-charactéristiques) une valeur et si elle correspond
@@ -141,7 +141,8 @@ angular.module('micorrApp')
                 // Subcharacteristics of 'cpCompositionFamily'
                 // todo refactoring: just synthesize and add this pseudo family to data on load from the graph
                 // todo and remove all these repeated filtering loops
-                 function getSubCharacteristicByFamily(sub, list) {
+                let data =response.data;
+                function getSubCharacteristicByFamily(sub, list) {
                     for (var i = 0; i < sub.length; i++) {
                         for (var j = 0; j < list.length; j++) {
                             if (sub[i].name == list[j].uid || sub[i].name == list[j].name)
