@@ -23,7 +23,7 @@ export default angular
         'ngSanitize',
         'toggle-switch'
     ])
-    .config(function ($routeProvider, $httpProvider, $tooltipProvider) {
+    .config(function ($routeProvider, $locationProvider, $httpProvider, $tooltipProvider) {
         $routeProvider
             // affichage de la liste des stratigraphies
             .when('/artefact/:name', {
@@ -45,6 +45,8 @@ export default angular
                 template: require('../views/listartefacts.html'),
                 controller: 'ListArtefactsCtrl'
             });
+        // angular >=1.6 compatibility
+        $locationProvider.hashPrefix('');
 
         // Désactivation de la mise en cache pour requêtes http pour IE
         // initialize get if not there

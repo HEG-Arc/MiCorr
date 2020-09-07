@@ -23,7 +23,6 @@ module.exports = {
      * @returns retourne un String contenant tout le SVG contenu dans le fichier
      */
     getSvgFileContent: function (url) {
-        console.log('SUCCESS')
         fs = require('fs')
 
         //On se place dynamiquement à la racine du projet

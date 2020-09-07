@@ -21,8 +21,8 @@ angular.module('micorrApp')
          * @params nom de l'artefact
          * @returns
          */
-        MiCorrService.getStratigraphyByArtefact($scope.artefactName).success(function(data){
-            $scope.s = data['strats'];  // on récupère toutes les stratigraphies pour cet artefact
+        MiCorrService.getStratigraphyByArtefact($scope.artefactName).then(function(response){
+            $scope.s = response.data['strats'];  // on récupère toutes les stratigraphies pour cet artefact
             // après on affiche dans la modal la stratigraphie sous forme :
             // artefact_stratigrahpyN
             $scope.strat = $scope.artefactName + "_stratigraphy" + ($scope.s.length + 1);
@@ -41,8 +41,8 @@ angular.module('micorrApp')
                 }
 
                 if (ok){    // Si tout est ok alors on ajoute la stratigraphie
-                    MiCorrService.addStratigraphy($scope.artefactName, $scope.strat).success(function (data) {
-                        if (data['insertStatus'] == true) {
+                    MiCorrService.addStratigraphy($scope.artefactName, $scope.strat).then(function (response) {
+                        if (response.data['insertStatus'] == true) {
                             $modalInstance.close();
                             $scope.route.reload();
                         }

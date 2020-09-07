@@ -15,7 +15,7 @@ angular.module('micorrApp')
                 controller: ['$scope', '$modalInstance','scopeParent', 'id',
                     function($scope, $modalInstance,scopeParent,id) {
                         $scope.ok = function() {
-                            MiCorrService.deleteStratigraphy(strat).success(function(data){
+                            MiCorrService.deleteStratigraphy(strat).then(function(response){
                                 $route.reload();
                             });
                             $modalInstance.close();

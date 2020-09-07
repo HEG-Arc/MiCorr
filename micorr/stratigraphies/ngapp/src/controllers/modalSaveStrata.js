@@ -11,8 +11,8 @@ angular.module('micorrApp')
     .controller('ModalSaveStrataCtrl', function ($scope, $route, $modal, $log, $location, MiCorrService) {
         $scope.artefactName = $scope.$parent.artefactName;
 
-        MiCorrService.isAuthenticated().success(function(data){
-            $scope.is_authenticated = data['is_authenticated'];
+        MiCorrService.isAuthenticated().then(function(response){
+            $scope.is_authenticated = response.data['is_authenticated'];
         });
 
          // appelle une méthode parent pour sauvegarder la stratigraphie qui se trouve dans le service

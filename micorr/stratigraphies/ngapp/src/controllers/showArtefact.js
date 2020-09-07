@@ -13,14 +13,14 @@ angular.module('micorrApp')
 
 
         // Quand on lance la page, alors il se passe une requête asynchrone qui va chercher toutes les stratigraphies
-        MiCorrService.getStratigraphyByArtefact($scope.artefactName).success(function (data) {
-            $scope.strats = data['strats'];
+        MiCorrService.getStratigraphyByArtefact($scope.artefactName).then(function (response) {
+            $scope.strats = response.data['strats'];
 
             //Lorsque les stratigraphies sont toutes chargées on va pour chaqune aller chercher son svg
-        }).success(function () {
+        }).then(function () {
             $scope.strats.forEach(function (listItem, index) {
-                MiCorrService.getStratigraphySvg(listItem.name, 150).success(function (svgdata) {
-                    $scope.strats[index].svg = svgdata;
+                MiCorrService.getStratigraphySvg(listItem.name, 150).then(function(response) {
+                    $scope.strats[index].svg = response.data;
                 });
             });
             ngProgress.complete();

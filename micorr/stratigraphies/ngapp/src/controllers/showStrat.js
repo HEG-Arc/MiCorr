@@ -82,9 +82,10 @@ angular.module('micorrApp')
              * Affiche l'onglet des interface quand l'utilisateur clique sur l'interface générée
              */
             $scope.setInterfaceTab = function (val) {
-                $scope.activeTabInterface = val;
-                $scope.activeMorphologyTab = !val;
-                $scope.$apply();
+                $scope.$apply(function (){
+                    $scope.activeTabInterface = val;
+                    $scope.activeMorphologyTab = !val;
+                })
             };
 
             $scope.artefactName = $routeParams.artefact;        // nom de l'artefact
@@ -126,7 +127,7 @@ angular.module('micorrApp')
 
 
             //Chargement de la stratigraphie
-            MiCorrService.getDetailedStratigraphy($scope.stratigraphyName).then(function (response) {
+            MiCorrService.getDetailedStratigraphy($scope.stratigraphyName, function (response) {
 
                  /*
                  * cherche dans une liste (liste de sous-charactéristiques) une valeur et si elle correspond
@@ -328,20 +329,21 @@ angular.module('micorrApp')
                 $scope.stratas = st.getStratas();
                 $scope.stratigraphy = st;
 
-            }).success(function () {
+            }).then(function () {
                 $scope.$broadcast('initShowStrat');
                 ngProgress.complete();
             });
         };
-        MiCorrService.getFamilyDescriptions().success(function(descriptions){
-            MiCorrService.getAllCharacteristic().success(function (data) {
-            if (typeof data !== "undefined") {
-                StratigraphyData.fill(data,descriptions);
-            }
-        }).success(function () {
-            initShowStrata();
-            ngProgress.complete();
-        });
+        MiCorrService.getFamilyDescriptions().then(function (response) {
+            let descriptions=response.data;
+            MiCorrService.getAllCharacteristic().then(function (response) {
+                if (typeof response.data !== "undefined") {
+                    StratigraphyData.fill(response.data, descriptions);
+                }
+            }).then(function () {
+                initShowStrata();
+                ngProgress.complete();
+            });
         });
 
         /*
@@ -361,32 +363,32 @@ angular.module('micorrApp')
          * @returns
          */
         $scope.update = function (index) {
-            var stratig = StratigraphyData.getStratigraphy();
-            var strat = stratig.getStratas()[index];
-            StratigraphyData.setSelectedStrata(index); // On indique au service la strate sélectionnée
-            $scope.showTabForms = true; //Affichage de formulaire
+            $scope.$apply(function () {
+                var stratig = StratigraphyData.getStratigraphy();
+                var strat = stratig.getStratas()[index];
+                StratigraphyData.setSelectedStrata(index); // On indique au service la strate sélectionnée
+                $scope.showTabForms = true; //Affichage de formulaire
 
-            $scope.highlightSelected();
-            $scope.hideShowForms(strat);
+                $scope.highlightSelected();
+                $scope.hideShowForms(strat);
 
-            if (strat != undefined) {
-                $scope.strataName = strat.getLabel();
-                $scope.natureFamilyname = strat.getNature();
+                if (strat != undefined) {
+                    $scope.strataName = strat.getLabel();
+                    $scope.natureFamilyname = strat.getNature();
 
 
-                // Dans notre formulaire on a des onglets
-                // chaque onglet a un controlleur
-                // il faut mettre à jour chaque contrôlleur
-                $scope.$broadcast('updateMorphology');
-                $scope.$broadcast('updateTexture');
-                $scope.$broadcast('updateMicrostructure');
-                $scope.$broadcast('updateComposition');
-                $scope.$broadcast('updateInterface');
+                    // Dans notre formulaire on a des onglets
+                    // chaque onglet a un controlleur
+                    // il faut mettre à jour chaque contrôlleur
+                    $scope.$broadcast('updateMorphology');
+                    $scope.$broadcast('updateTexture');
+                    $scope.$broadcast('updateMicrostructure');
+                    $scope.$broadcast('updateComposition');
+                    $scope.$broadcast('updateInterface');
 
-            }
-            // apply les mises à jour de l'interface
-            $scope.$apply();
-            $scope.askLeave = true;
+                }
+                $scope.askLeave = true;
+            });
         };
 
         /*
@@ -589,18 +591,14 @@ angular.module('micorrApp')
 
                 $scope.stratigraphy = StratigraphyData.getStratigraphy();
                 $scope.stratas = [];
-                $scope.$apply();
                 $scope.stratas = StratigraphyData.getStratigraphy().getStratas();
-                $scope.$apply();
-                //A MODIFIER!! pk on a des apply dans un controlleur? voir cycle digest...
-
                 $scope.highlightSelected();
             });
         });
 
         $scope.toPng = function () {
 
-            MiCorrService.exportStratigraphy(StratigraphyData.getStratigraphy().getUid(), 'png').success(function (data) {
+            MiCorrService.exportStratigraphy(StratigraphyData.getStratigraphy().getUid(), 'png').then(function(response) {
 
             });
 
@@ -626,7 +624,7 @@ angular.module('micorrApp')
          */
         $scope.$on('save', function () {
             var j = JSON.stringify($scope.stratigraphy.toJson());
-            console.log(j);
+            console.log(`saving stratigraphy "${$scope.stratigraphy.description}" [${$scope.stratigraphy.uid}]`);
 
             MiCorrService.saveStratigraphy(j);
             $scope.askLeave = false;

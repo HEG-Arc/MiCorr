@@ -52,8 +52,8 @@ let MiCorrService = angular.module('micorrApp').factory('MiCorrService', functio
                 alert('Erreur de chargement des stratigraphies');
             });
         },
-        getDetailedStratigraphy: function (stratigraphy) {
-            return $http.get('json/getstratigraphydetails/' + stratigraphy).then(null,function () {
+        getDetailedStratigraphy: function (stratigraphy,onSuccess) {
+            return $http.get('json/getstratigraphydetails/' + stratigraphy).then(onSuccess, function () {
                 console.log('Problème de connexion avec le serveur pour récupérer le détail des stratigraphies');
                 alert('Erreur de chargement du détail des stratigraphies');
             });
@@ -84,13 +84,12 @@ let MiCorrService = angular.module('micorrApp').factory('MiCorrService', functio
             })
         },
         saveStratigraphy: function (item) {
-            $http.post('json/save', item, {headers: {'Content-Type': 'application/json'} }).then(null,function (data, status, headers, config) {
-                console.log('Could not save stratigraphy: ' +status);
-                window.alert('Error saving stratigraphy:'+ status);
-            }).then(function () {
-                console.log('Saved');
+            $http.post('json/save', item, {headers: {'Content-Type': 'application/json'}}).then(function () {
+                console.log('successfully saved');
+            }, function (response) {
+                console.log('Could not save stratigraphy: ' + response.status);
+                window.alert('Error saving stratigraphy:' + response.status);
             });
-
         },
 
         matchStratigraphy: function (data) {
@@ -230,7 +229,7 @@ let StratigraphyData =  angular.module('micorrApp').factory('StratigraphyData', 
                 this.subcmLevelOfCorrosionFamily = getSubCharacteristicsFromFamily('cmLevelOfCorrosionFamily', 'sub');
             },
             getSelectedStrata: function () {
-                return this.selectedStrata;
+                return this.selectedStrata===undefined ? 0 :this.selectedStrata;
             },
             setSelectedStrata: function (index) {
                 this.selectedStrata = index;

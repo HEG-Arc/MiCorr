@@ -19,8 +19,8 @@ angular.module('micorrApp')
                         $scope.artefact;
                         $scope.ok = function() {
                             if (testUserInput($scope.artefact)) {
-                                MiCorrService.createArtefact($scope.artefact).success(function(data){
-                                    if (data['res'] == 0)
+                                MiCorrService.createArtefact($scope.artefact).then(function(response){
+                                    if (response.data['res'] == 0)
                                         alert("This artefact already exists in database !");
                                     else {
                                         $modalInstance.close();

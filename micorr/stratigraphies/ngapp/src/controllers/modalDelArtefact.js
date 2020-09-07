@@ -16,7 +16,7 @@ angular.module('micorrApp')
                 controller: ['$scope', '$modalInstance','scopeParent', 'artefact',
                     function($scope, $modalInstance,scopeParent,artefact) {
                         $scope.ok = function() {
-                            MiCorrService.deleteArtefact(artefact).success(function (data) {
+                            MiCorrService.deleteArtefact(artefact).then(function (response) {
                                 $modalInstance.close();
                                 $route.reload();
                             });

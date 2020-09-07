@@ -215,9 +215,15 @@ angular.module('micorrApp')
             ratioChar.setRealName(rName);
             ratioChar.setFamily('cmCorrosionRatioFamily');
             var strata = StratigraphyData.getStratigraphy().getStratas()[StratigraphyData.getSelectedStrata()];
-            strata.replaceCharacteristic(ratioChar);
-            //mise à jour du dessin
-            $scope.$emit('updateSelectedStrata');
+            if (strata) {
+                strata.replaceCharacteristic(ratioChar);
+                //mise à jour du dessin
+                $scope.$emit('updateSelectedStrata');
+            }
+            else
+            {
+                console.log('ratioChange')
+            }
         };
     })
     .filter("filterCompounds", function() { // register new angular filter
