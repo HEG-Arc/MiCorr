@@ -9,9 +9,16 @@ import {SubCharacteristic} from './subCharacteristic';
 
 class Characteristic{
     constructor(family, sourceC){
+        if (typeof family =="object" && !sourceC){
+            //in case of single object arguments it's a source characteristic
+            sourceC = family;
+            family = null;
+        }
        if (family)
             this.family = family;
         if (sourceC) {
+            if (!family && 'family' in sourceC)
+                this.family = sourceC.family;
             if ('uid' in sourceC)
             {
                 this.setUid(sourceC.uid);
@@ -30,6 +37,8 @@ class Characteristic{
                 this.int = sourceC.int;
             else
                 this.int = this.family.startsWith("interface");
+            if ('color' in sourceC)
+                this.color = sourceC.color;
         }
     }
 

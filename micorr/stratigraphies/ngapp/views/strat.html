@@ -246,7 +246,7 @@
                        </ui-select-match>
                        <ui-select-choices null-option="nullOption"
                                           repeat="item in (this[family.uid] | filter: $select.search) track by item.name">
-                           <div tooltip="{{ item.description }}">
+                           <div tooltip="{{ item.description }}" ng-style="family.uid=='colourFamily' ? {'background-color':item.color} : ''">
                                <img ng-if="item.image_url" ng-src="{{ item.image_url }}" aria-hidden="true"
                                     heigth="100px">
                                <span ng-bind-html="item.real_name | highlight: $select.search"></span>
@@ -896,7 +896,7 @@
 </div>
 
 </div>
-<div id="hello" class="col-md-6">
+<div class="col-md-6">
     <div id="stratasvg">
         <div id="stratasvg_{{$index}}" class="row" ng-repeat="strata in stratas">
             <stratainfo index="{{$index}}"></stratainfo>

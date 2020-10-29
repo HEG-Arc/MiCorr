@@ -119,60 +119,14 @@ class GraphGenerationUtil {
 
         // si on est pas à la première interface alors on change la couleur de fond du haut
         if (index > 0) {
-                let color = this.stratig.getStratas()[index - 1].getFirstCharacteristicByFamily('colourFamily', 'realName');
+                let color = this.stratig.getStratas()[index - 1].getFirstCharacteristicByFamily('colourFamily', 'color');
                 if (color) {
-                    // !!! A MODIFIER QUAND ON FERA LE REFACTORING DU DAO...
-                    if (color == "black") {
-                        upperInterfaceColor = '#474747';
-                    } else if (color == 'dark red') {
-                        upperInterfaceColor = '#bc2c14';
-                    } else if (color == 'light yellow') {
-                        upperInterfaceColor = '#fcf0be';
-                    } else if (color == 'ochre') {
-                        upperInterfaceColor = '#cab91d';
-                    } else if (color == 'dark green') {
-                        upperInterfaceColor = '#046424';
-                    } else if (color == 'medium green') {
-                        upperInterfaceColor = '#3cbc65';
-                    } else if (color == 'light green') {
-                        upperInterfaceColor = '#a2cfaf';
-                    } else if (color == 'dark blue') {
-                        upperInterfaceColor = '#441cb3';
-                    } else if (color == 'medium blue') {
-                        upperInterfaceColor = '#4cb3d4';
-                    } else if (color == 'light blue') {
-                        upperInterfaceColor = '#a0cedb';
-                    } else if (color != "" && color != "undefined") {
-                        upperInterfaceColor = color;
-                    }
+                    upperInterfaceColor = color;
                 }
         }
-        let color = strata.getFirstCharacteristicByFamily('colourFamily', 'realName');
+        let color = strata.getFirstCharacteristicByFamily('colourFamily', 'color');
         if (color) {
-            // !!! A MODIFIER QUAND ON FERA LE REFACTORING DU DAO...
-            if (color == "black") {
-                lowerInterfaceColor = "#474747";
-            } else if (color == 'dark red') {
-                lowerInterfaceColor = '#bc2c14';
-            } else if (color == 'light yellow') {
-                lowerInterfaceColor = '#fcf0be';
-            } else if (color == 'ochre') {
-                lowerInterfaceColor = '#cab91d';
-            } else if (color == 'dark green') {
-                lowerInterfaceColor = '#046424';
-            } else if (color == 'medium green') {
-                lowerInterfaceColor = '#3cbc65';
-            } else if (color == 'light green') {
-                lowerInterfaceColor = '#a2cfaf';
-            } else if (color == 'dark blue') {
-                lowerInterfaceColor = '#441cb3';
-            } else if (color == 'medium blue') {
-                lowerInterfaceColor = '#4cb3d4';
-            } else if (color == 'light blue') {
-                lowerInterfaceColor = '#a0cedb';
-            } else if (color != "" && color != "undefined"){
-                lowerInterfaceColor = color;
-            }
+            lowerInterfaceColor = color;
         }
         let transition = strata.getFirstCharacteristicByFamily('interfaceTransitionFamily', 'name');
         let diffuse = (transition == "diffuseCharacteristic");
@@ -329,8 +283,8 @@ class GraphGenerationUtil {
 
             var defs = draw.defs();
             var path = defs.path(pathString).attr({fill: 'none'});
-            if (upperStrata.getFirstCharacteristicByFamily('colourFamily', 'realName') ==
-                lowerStrata.getFirstCharacteristicByFamily('colourFamily', 'realName'))
+            if (upperStrata.getFirstCharacteristicByFamily('colourFamily', 'color') ==
+                lowerStrata.getFirstCharacteristicByFamily('colourFamily', 'color'))
                 group.path(pathString).attr({fill: 'none', 'stroke-width': '1', stroke: 'black'});
                 group.clipWith(path);
         }
@@ -366,39 +320,7 @@ class GraphGenerationUtil {
             var pds = new PoissonDiskSampler(width, height);
         }
 
-        var color = strata.getFirstCharacteristicByFamily('colourFamily','realName') || 'white';
-
-        // !!! A MODIFIER QUAND ON FERA LE REFACTORING DU DAO...
-        if (color == 'black') {
-            color = '#474747';
-        }
-        if (color == 'dark red') {
-            color = '#bc2c14';
-        }
-        if (color == 'light yellow') {
-            color = '#fcf0be';
-        }
-        if (color == 'ochre') {
-            color = '#cab91d';
-        }
-        if (color == 'dark green') {
-            color = '#046424';
-        }
-        if (color == 'medium green') {
-            color = '#3cbc65';
-        }
-        if (color == 'light green') {
-            color = '#a2cfaf';
-        }
-        if (color == 'dark blue') {
-            color = '#441cb3';
-        }
-        if (color == 'medium blue') {
-            color = '#4cb3d4';
-        }
-        if (color == 'light blue') {
-            color = '#a0cedb';
-        }
+        var color = strata.getFirstCharacteristicByFamily('colourFamily', 'color') || 'white';
 
         let rect = draw.rect(width, height).attr({fill: color, "shape-rendering": "crispEdges"});
 

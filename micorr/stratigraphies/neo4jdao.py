@@ -173,7 +173,7 @@ class Neo4jDAO:
                                   'symbol': cp['symbol'], 'category':cp['category'], 'order':0, 'visible': True})
                 else:
                     clist.append({'name': cp['uid'], 'family': fp['uid'], 'real_name': cp['name'],
-                              'order': cp['order'], 'visible': cp['visible']})
+                              'order': cp['order'], 'visible': cp['visible'], 'color':cp['color']})
                 logger.debug ("         " + cp['uid'])
 
             # Chaque strate a des sous-caracteristiques
@@ -322,7 +322,8 @@ class Neo4jDAO:
                         c_dic.update({'symbol': record['c']['symbol'], 'category': record['c']['category'], 'order': 0, 'visible': True})
                     else:
                         c_dic.update({'description': record['c']['description'], 'order': record['c']['order'], 'visible': record['c']['visible'],
-                                      'image_url': record['c']['image_url'], 'optgroup': record['c']['optgroup']})
+                                      'image_url': record['c']['image_url'], 'optgroup': record['c']['optgroup'],
+                                      'color':record['c']['color']})
                     family_dic[f_uid]['characteristics'][c_uid] = c_dic
             else:
                 logger.debug('no characteristic in : %s',record)

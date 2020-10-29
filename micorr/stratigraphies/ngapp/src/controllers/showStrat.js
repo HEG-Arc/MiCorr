@@ -200,24 +200,14 @@ angular.module('micorrApp')
                         str.setName(st.getDescription() + '_strata_' + str.getIndex());
                     }
                  //Boucle sur les caracteristiques
-                    for (var j = 0; j < currentStrata.characteristics.length; j++) {
-                        var currentCharacteristic = currentStrata.characteristics[j];
-                        var char = new Characteristic();
-                        char.setName(currentCharacteristic.name);
-                        char.setRealName(currentCharacteristic.real_name);
-                        char.setFamily(currentCharacteristic.family);
-                        str.addCharacteristic(char);
+                    for (let j = 0; j < currentStrata.characteristics.length; j++) {
+                        str.addCharacteristic(new Characteristic(currentStrata.characteristics[j]));
                     }
 
                     //Boucle sur les caracteristiques d'interface
                     if ('characteristics' in currentStrata.interfaces)
-                        for (var j = 0; j < currentStrata.interfaces.characteristics.length; j++) {
-                            var currentCharacteristic = currentStrata.interfaces.characteristics[j];
-                            var char = new Characteristic();
-                            char.setName(currentCharacteristic.name);
-                            char.setFamily(currentCharacteristic.family);
-                            char.setInterface(true);
-
+                        for (let j = 0; j < currentStrata.interfaces.characteristics.length; j++) {
+                            let char = new Characteristic(currentStrata.interfaces.characteristics[j]);
                             //Si c'est une caracteristique d'une de ces familles on peut en ajouter plusieurs
                             if (char.getFamily() == "cpcompositionextensionFamily" || char.getFamily() == "cprimicrostructureaggregatecompositionextensionFamily") {
                                 str.addCharacteristic(char)
@@ -240,7 +230,7 @@ angular.module('micorrApp')
                     if (currentStrata.secondaryComponents)
                         for (let component of currentStrata.secondaryComponents) {
                             for (let c of component.characteristics)
-                                str.addCharacteristic(new Characteristic(c.family, c), str.secondaryComponents[0].characteristics)
+                                str.addCharacteristic(new Characteristic(c), str.secondaryComponents[0].characteristics)
                             for (let sc of component.subCharacteristics) {
                                 if (sChar = getSubCharacteristicByFamily([sc], StratigraphyData.getSubcpcompositionFamily()))
                                     str.addCharacteristic(new SubCharacteristic('subcpcompositionFamily', sc), str.secondaryComponents[0].subCharacteristics);
@@ -292,13 +282,8 @@ angular.module('micorrApp')
                         var childStrata = new Strata(nat, true);
                         childStrata.setUid(curChild.name);
                         //Boucle sur les caracteristiques
-                        for (var k = 0; k < curChild.characteristics.length; k++) {
-                            var curChar = curChild.characteristics[k];
-                            var char = new Characteristic();
-                            char.setName(curChar.name);
-                            char.setRealName(curChar.real_name);
-                            char.setFamily(curChar.family);
-                            childStrata.addCharacteristic(char);
+                        for (let k = 0; k < curChild.characteristics.length; k++) {
+                            childStrata.addCharacteristic(new Characteristic(curChild.characteristics[k]));
                         }
                         str.addChildStrata(childStrata);
                     }
