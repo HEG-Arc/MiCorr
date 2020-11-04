@@ -22,6 +22,9 @@ angular.module('micorrApp')
             updateStratModelFromTab($scope, StratigraphyData);
             $scope.$emit('updateSelectedStrata');
         };
+        $scope.getGroup = function (item) {
+            return item.optgroup;
+        };
         //$scope.itemForm.$setPristine();
     }).directive('dynamicModel', ['$compile', '$parse', function ($compile, $parse) {
         //used in dynamic family templates see strat.html

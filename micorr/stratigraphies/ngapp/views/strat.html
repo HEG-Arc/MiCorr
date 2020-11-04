@@ -244,7 +244,7 @@
                        <ui-select-match placeholder="Select characteristic">
                            <span tooltip="{{ $select.selected.description }}">{{$select.selected.real_name}}</span>
                        </ui-select-match>
-                       <ui-select-choices null-option="nullOption"
+                       <ui-select-choices null-option="nullOption" group-by="getGroup"
                                           repeat="item in (this[family.uid] | filter: $select.search) track by item.name">
                            <div tooltip="{{ item.description }}" ng-style="family.uid=='colourFamily' ? {'background-color':item.color} : ''">
                                <img ng-if="item.image_url" ng-src="{{ item.image_url }}" aria-hidden="true"
