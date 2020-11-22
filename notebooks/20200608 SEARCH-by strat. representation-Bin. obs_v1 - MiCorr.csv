@@ -339,7 +339,7 @@ Microstructure,,Binocular,Fine sands,,,,,,"0,08 to 0,4 mm. Easily malleable. No 
 Microstructure,,Binocular,Limons,,,,,,"0,01 to 0,08 mm. Easily malleable. No plasticity
 Soft touch, Dusty in dry state",,Added,,,,,,,,,,,,,,x,,,
 Microstructure,,Binocular,Clay,,,,,,"< 0,01 mm. Plasticity. High kneading resistance. Sticky when wet. Very hard when dry.",,Added,,,,,,,,,,,,,,x,,,
-Microstructure,,Cross-section,,,,,,,,Assessed on the observed area. The blank option corresponds to a stratum which microstructure is not known.,Added,,,,,,,,,X,,,,,,,,
+Microstructure,Microstructure,Cross-section,,,,,,,,Assessed on the observed area. The blank option corresponds to a stratum which microstructure is not known.,Added,,,,,,,,,X,,,,,,,,
 Microstructure,,Cross-section,Blank,,,,,,,,Added,,,,,,,,,X,,,,,,,,
 Microstructure,,Cross-section,Deformed dendrites,,,,,,,Stratum containing crystals in the form of deformed trees with branches.,Added,,,,,,,,,X,,,,,,,,
 Microstructure,,Cross-section,,Eutectic phase,,,,,,,Added,,,,,,,,,X,,,,,,,,
