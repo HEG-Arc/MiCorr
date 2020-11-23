@@ -217,7 +217,6 @@ angular.module('micorrApp')
                                 str.replaceCharacteristic(char);
                             }
                         }
-
                     //Récupération des sous caractéristiques:
                     var subCharacteristicsList = currentStrata['subcharacteristics'];
                     var sChar;

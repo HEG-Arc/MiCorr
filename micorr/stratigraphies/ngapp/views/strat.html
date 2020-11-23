@@ -325,6 +325,23 @@
                        dynamic-model="'selected.'+family.uid" type="text" smart-float
                        ng-change="updateModel()">
                 </input>
+                <div class="col-md-12 form-group" ng-show="selected[family.uid].subcharacteristics.length">
+                    <label class="control-label"><span class="glyphicon glyphicon-eye-open"
+                                                       title="visual impact on the stratum"></span>
+                        <span title="{{ descriptions.submmicrostructureFamily }}">{{ selected[family.uid].real_name | capitalize }}</span>
+                    </label>
+                    <ui-select id="subMicrostructureSelect" class="form-control" multiple
+                               theme="bootstrap"
+                               ng-model="selectedSubC[family.uid]" on-remove="updateModel()" on-select="updateModel()">
+                        <ui-select-match placeholder="Select sub characteristics">
+                            {{$item.sub_real_name}}
+                        </ui-select-match>
+                        <ui-select-choices group-by="'category'"
+                                           repeat="item in (selected[family.uid].subcharacteristics | filter: $select.search) track by item.sub_real_name">
+                            <span ng-bind-html="item.sub_real_name | highlight: $select.search"></span>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
             </div>
         </div>
     </form>

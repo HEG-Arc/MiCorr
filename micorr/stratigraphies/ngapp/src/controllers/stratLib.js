@@ -1,8 +1,12 @@
 import {getSelectedFamilyCharacteristic} from "../init";
 import {Characteristic} from "../business/characteristic";
+import {SubCharacteristic} from "../business/subCharacteristic";
+
 
 export function initStratTab($scope, StratigraphyData, familyGroupUID) {
     $scope.selected = {};
+    $scope.selectedSubC = {};
+
     $scope.familyGroup = StratigraphyData.rawCharacteristics.filter(f => f.familyGroup && f.familyGroup.uid == familyGroupUID)
     // Split families in the tab group by observation mode and fieldset (optionally set as string in Family properties)
     $scope.fieldsets = [];
@@ -31,16 +35,41 @@ export function updateStratTabFromModel($scope, StratigraphyData) {
     for (let {uid, variable} of $scope.familyGroup)
         if (variable)
             $scope.selected[uid] = uid in strata.variables ? strata.variables[uid] : null;
-        else
+        else {
             $scope.selected[uid] = getSelectedFamilyCharacteristic(strata, uid, $scope[uid]);
             // e.g $scope.selected["interfaceProfileFamily"] = getSelectedFamilyCharacteristic(strata, "interfaceProfileFamily", $scope.interfaceProfileFamily);
+            if ( $scope.selected[uid] && 'subcharacteristics' in $scope.selected[uid]) {
+                let subCharacteristics = strata.getSubCharacteristicsByFamily(uid);
+                if (subCharacteristics.length > 0) {
+                    $scope.selectedSubC[uid] = $scope.selected[uid].subcharacteristics.filter(
+                        e => subCharacteristics.find(sc => sc.name == e.sub_real_name));
+                } else {
+                    $scope.selectedSubC[uid] = []
+                }
+            }
+        }
 }
 
 export function updateStratModelFromTab($scope, StratigraphyData) {
     let strata = StratigraphyData.getStratigraphy().getStratas()[StratigraphyData.getSelectedStrata()];
-    for (let {uid, variable} of $scope.familyGroup)
+    for (let {uid, variable} of $scope.familyGroup) {
         if (variable)
             strata.variables[uid] = $scope.selected[uid];
-        else
-            strata.replaceCharacteristic(new Characteristic(uid, $scope.selected[uid]));
+        else {
+            let prevSelectedCharacteristic = getSelectedFamilyCharacteristic(strata, uid, $scope[uid]);
+            if (prevSelectedCharacteristic != $scope.selected[uid]) {
+                strata.replaceCharacteristic(new Characteristic(uid, $scope.selected[uid]));
+                //if (!$scope.selected[uid] || $scope.selected[uid].subcharacteristics.length==0) {
+                $scope.selectedSubC[uid] = []
+                //}
+            } else {
+                // let prevSelectedSubC = getSelectedSubCharacteristics();
+                if (uid in $scope.selectedSubC) {
+                    strata.clearSubCharacteristicsFromFamily(uid);
+                    for (let sc of $scope.selectedSubC[uid])
+                        strata.addSubCharacteristic(new SubCharacteristic(uid, sc));
+                }
+            }
+        }
+    }
 }

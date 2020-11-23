@@ -9,28 +9,7 @@
 import {Characteristic} from "./business/characteristic";
 import {PoissonDiskSampler} from "./algorithms/poissonDisk";
 
-/* Factory qui retourne l'instance qui convient selon la nature
- * @params nature : nom de la nature dont on veut l'instance
- * €returns instance de la nature qui convient
- */
-export function natureFactory(nature) {
-    if (nature == "cmCharacteristic" || nature == "CM")
-        return new CM();
-    else if (nature == "cpCharacteristic" || nature == "CP")
-        return new CP();
-    else if (nature == "dCharacteristic" || nature == "D")
-        return new D();
-    else if (nature == "mCharacteristic" || nature == "M")
-        return new M();
-    else if (nature == "nmmCharacteristic" || nature == "NMM")
-        return new NMM();
-    else if (nature == "pomCharacteristic" || nature == "POM")
-        return new POM();
-    else if (nature == "sCharacteristic" || nature == "S")
-        return new S();
-    else if (nature == "svCharacteristic" || nature == "SV")
-        return new SV();
-}
+
 
 export function returnNatureCharacteristic(nature){
     var natureChar = new Characteristic('natureFamily');
