@@ -39,7 +39,9 @@ class Characteristic{
                 this.int = this.family.startsWith("interface");
             if ('color' in sourceC)
                 this.color = sourceC.color;
-        }
+            if ('variables' in sourceC)
+                this.variables = {...sourceC.variables};
+      }
     }
 
 

@@ -70,7 +70,34 @@ angular.module('micorrApp')
          */
         $scope.showFamily = function (family)
         {
-            return $scope.observationMode.binocular ? family.observation & 1 : family.observation & 2;
+            let showBasedOnObservation = $scope.observationMode.binocular ? family.observation & 1 : family.observation & 2;
+            if (showBasedOnObservation && family.natures) {
+                let index = parseInt(StratigraphyData.getSelectedStrata());
+                let selectedStratum  = StratigraphyData.getStratigraphy().getStratas()[index];
+                return family.natures.includes(selectedStratum.natureUID);
+            }
+            return showBasedOnObservation;
+        };
+        /*
+         * filter characteristics in family
+         * based on current strata Nature
+         */
+        $scope.showCharacteristic = function (characteristic)
+        {
+            if (characteristic.natures && characteristic.natures.length) {
+                let index = parseInt(StratigraphyData.getSelectedStrata());
+                let selectedStratum  = StratigraphyData.getStratigraphy().getStratas()[index];
+                let result = characteristic.natures.includes(selectedStratum.natureUID);
+                console.log('showCharacteristic(%s, [%s]) on %s stratum = %o',characteristic.name, characteristic.natures.join(','), selectedStratum.natureUID, result);
+                return result;
+            }
+            else
+            {
+                let index = parseInt(StratigraphyData.getSelectedStrata());
+                let selectedStratum  = StratigraphyData.getStratigraphy().getStratas()[index];
+                console.log('showCharacteristic(%s, []) on %s stratum = %o',characteristic.name, selectedStratum.natureUID, true);
+            }
+            return true;
         };
         var initShowStrata = function () {
             // variable qui permettent d'afficher les interfaces ou morphologies
@@ -165,23 +192,6 @@ angular.module('micorrApp')
                     return t;
                 }
 
-                /*
-                 * cherche dans une liste (liste de sous-charactéristiques) des valeurs et si elles correspondent
-                 * à la valeur donnée en paramètre alors on retourne les sous caractéristiques
-                 * @params sub : sous-charactéristique de cette strate
-                 *         list : liste des sous caractéristiques pour cette famille
-                 * @returns valeurs de la caractéristique
-                 */
-                function getCharacteristicByFamilyMulti(data, family) {
-                    var t = [];
-                    for (var i = 0; i < data.length; i++) {
-                        if (data[i].family == family) {
-                            t.push({'name': data[i].name});
-                        }
-                    }
-                    return t;
-                }
-
                 var st = StratigraphyData.getStratigraphy();
                 st.setUid($scope.stratigraphyName);
                 st.setArtefact($scope.artefactName);
@@ -225,6 +235,12 @@ angular.module('micorrApp')
                         (sChar = getSubCharacteristicByFamily(subCharacteristicsList, StratigraphyData.subcmLevelOfCorrosionFamily)))
                         str.addSubCharacteristic(new SubCharacteristic('subcmlevelofcorrosionFamily', sChar));
 
+                    // new subcharacteristic data loaded with parent family information for dynamic conversion
+                    for (let sc of subCharacteristicsList) {
+                        if (sc.family) {
+                            str.addSubCharacteristic(new SubCharacteristic(sc.family,  sc))
+                        }
+                    }
                      // secondary Components
                     if (currentStrata.secondaryComponents)
                         for (let component of currentStrata.secondaryComponents) {

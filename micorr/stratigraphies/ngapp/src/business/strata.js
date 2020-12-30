@@ -8,10 +8,22 @@
 import {Characteristic} from "./characteristic";
 import {SubCharacteristic} from "./subCharacteristic";
 
+let natureCharacteristicNameToNatureUID = {
+    'Corroded metal': 'cm',
+    'Soil': 'soil',
+    'Non-Metallic material': 'nmm',
+    'Deposit': 'deposit',
+    'Pseudomorph of organic material':'pom',
+    'Corrosion products': 'cp',
+    'Metal': 'metal'
+}
+
 class Strata {
 
     constructor(nature, child) {
         this.nature = nature;
+        // get uid of Nature node corresponding to natureFamily characteristic of name nature
+        this.natureUID = natureCharacteristicNameToNatureUID[nature];
         this.natureFamilyAbbrev = null;
         this.label = null;
         this.dependencies = [];

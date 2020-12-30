@@ -300,7 +300,7 @@
     <tab heading="Microstructure" tooltip="{{descriptions.fgMicrostructure}}">
     <form ng-controller="StratNewMicrostructureCtrl">
         <div class="row-fluid">
-            <div class="col-md-6 form-group" ng-repeat="family in familyGroup | filter : showFamily track by family.uid">
+            <div class="col-md-12 form-group" ng-repeat="family in familyGroup | filter : showFamily track by family.uid">
                 <label class="control-label" for="{{ 'microstructure' + family.name }}">
                 <span class="glyphicon" ng-class="family.visible ? 'glyphicon-eye-open' : 'glyphicon-eye-close'" }}
                       tooltip="{{ (family.visible ? '' :'no') + 'visual impact on the stratum'}}"></span>
@@ -314,7 +314,7 @@
                      <ui-select-match placeholder="Select characteristic">
                          <span tooltip="{{ $select.selected.description }}" >{{$select.selected.real_name}}</span>
                     </ui-select-match>
-                    <ui-select-choices null-option="nullOption" group-by="getGroup" repeat="item in (this[family.uid] | filter: $select.search) track by item.name">
+                    <ui-select-choices null-option="nullOption" group-by="getGroup" repeat="item in (this[family.uid] | filter: showCharacteristic | filter: $select.search) track by item.name">
                         <div tooltip="{{ item.description }}">
                             <img ng-if="item.image_url" ng-src="{{ item.image_url }}" aria-hidden="true" heigth="100px">
                             <span ng-bind-html="item.real_name | highlight: $select.search"></span>
@@ -328,7 +328,7 @@
                 <div class="col-md-12 form-group" ng-show="selected[family.uid].subcharacteristics.length">
                     <label class="control-label"><span class="glyphicon glyphicon-eye-open"
                                                        title="visual impact on the stratum"></span>
-                        <span title="{{ descriptions.submmicrostructureFamily }}">{{ selected[family.uid].real_name | capitalize }}</span>
+                        <span title="{{ descriptions.submmicrostructureFamily }}">{{ selected[family.uid].real_name + 'sub-characteristics' | capitalize }}</span>
                     </label>
                     <ui-select id="subMicrostructureSelect" class="form-control" multiple
                                theme="bootstrap"
@@ -337,10 +337,23 @@
                             {{$item.sub_real_name}}
                         </ui-select-match>
                         <ui-select-choices group-by="'category'"
-                                           repeat="item in (selected[family.uid].subcharacteristics | filter: $select.search) track by item.sub_real_name">
+                                           repeat="item in (selected[family.uid].subcharacteristics| filter: showCharacteristic | filter:{variable:false} | filter: $select.search) track by item.sub_real_name">
                             <span ng-bind-html="item.sub_real_name | highlight: $select.search"></span>
                         </ui-select-choices>
                     </ui-select>
+                </div>
+                <div class="col-md-6 form-group" ng-repeat="item in (selected[family.uid].subcharacteristics| filter:{variable:true}) track by item.sub_real_name">
+                    <label for="{{ 'imp_' + item.uid }}">
+                        <span class="glyphicon" ng-class="item.visible ? 'glyphicon-eye-open' : 'glyphicon-eye-close'" }}
+                            tooltip="{{ (item.visible ? '' :'no') + 'visual impact on the stratum'}}"></span>
+                        <span tooltip="{{ item.description }}"> {{ item.sub_real_name }}
+                        <span class="unit" ng-if="item.unit">{{ '(in ' + item.unit +')'}}</span>
+                        </span>
+                    </label>
+                    <input id="{{ 'imp_' + item.uid }}" class="form-control"
+                           dynamic-model="'selectedSubC.'+item.name" type="text" smart-float
+                           ng-change="updateModel()">
+                    </input>
                 </div>
             </div>
         </div>

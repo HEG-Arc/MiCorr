@@ -178,9 +178,18 @@ class Neo4jDAO:
 
             # Chaque strate a des sous-caracteristiques
             logger.debug ("======subCharacteristic")
-            slist = self.tx.run(
-                "MATCH (s:Strata)-[r:IS_CONSTITUTED_BY]->(c:SubCharacteristic) where s.uid=$strata_uid RETURN c.uid as name, c.name as real_name order by name",
+            sc_records = self.tx.run(
+                """
+                MATCH (s:Strata {uid:$strata_uid})-[r:IS_CONSTITUTED_BY]->(sc:SubCharacteristic)<-[:HAS_SPECIALIZATION*1..2]-(:Characteristic)-[:BELONGS_TO]->(f:Family)
+                 RETURN sc.uid as name, sc.name as real_name, f.uid as family order by name""",
                 strata_uid=strata['uid']).data()
+            slist=[]
+            name_seen ={}
+            for r in sc_records:
+                if r['name'] not in name_seen:
+                    name_seen[r['name']]=True
+                    slist.append(r)
+
 
             logger.debug ("======Components")
 
@@ -240,7 +249,7 @@ class Neo4jDAO:
             logger.debug("======Variables")
             variable_records = self.tx.run(
                 """MATCH (s:Strata { uid:$strata_uid })-[r:HAS]->(v:Variable)
-                   MATCH (v)-[:BELONGS_TO]->(f:Family) RETURN s,v,f ORDER BY f.uid""",
+                   MATCH (v)-[:BELONGS_TO]->(f) RETURN s,v,f ORDER BY f.uid""",
                 strata_uid=strata['uid'])
             for r in variable_records:
                 st['variables'][r['f']['uid']]=r['v']['value']  # r['v'].copy() => whole dict
@@ -301,7 +310,9 @@ class Neo4jDAO:
          OPTIONAL MATCH (f)<-[:BELONGS_TO]-(c:Characteristic)
          OPTIONAL MATCH (c)-[:HAS_SPECIALIZATION]->(sc:SubCharacteristic)
          OPTIONAL MATCH (sc)-[:HAS_SPECIALIZATION]->(ssc:SubCharacteristic)
-         RETURN f,fg,c,sc,ssc
+         OPTIONAL MATCH (c)<-[:HAS]-(nc:Nature)
+         OPTIONAL MATCH (sc)<-[:HAS]-(nsc:Nature)
+         RETURN f,fg,c,sc,ssc, nc, nsc
          ORDER BY fg.order,f.order, f.name, c.order, sc.name, ssc.name
         """)
         # here we get a flat list of records including all family, Characteristic, SubCharacteristic, SubCharacteristic
@@ -317,7 +328,8 @@ class Neo4jDAO:
             if record['c']:
                 c_uid = record['c']['uid']
                 if c_uid not in family_dic[f_uid]['characteristics']:
-                    c_dic = {'name': c_uid, 'real_name': record['c']['name'], 'subcharacteristics': OrderedDict()}
+                    c_dic = {'name': c_uid, 'real_name': record['c']['name'], 'subcharacteristics': OrderedDict(),
+                             'natures':[]}
                     if f_uid == 'elementFamily':
                         c_dic.update({'symbol': record['c']['symbol'], 'category': record['c']['category'], 'order': 0, 'visible': True})
                     else:
@@ -325,16 +337,25 @@ class Neo4jDAO:
                                       'image_url': record['c']['image_url'], 'optgroup': record['c']['optgroup'],
                                       'color':record['c']['color']})
                     family_dic[f_uid]['characteristics'][c_uid] = c_dic
+                if record['nc'] and record['nc']['uid'] not in c_dic['natures']:
+                    c_dic['natures'].append(record['nc']['uid'])
             else:
                 logger.debug('no characteristic in : %s',record)
             if record['sc']:
                 sc_uid = record['sc']['uid']
                 if sc_uid not in family_dic[f_uid]['characteristics'][c_uid]['subcharacteristics']:
                     family_dic[f_uid]['characteristics'][c_uid]['subcharacteristics'][sc_uid] = \
-                                                            {'name': sc_uid, 'sub_real_name': record['sc']['name'],
+                                                            {'name': sc_uid,
+                                                             'sub_real_name': record['sc']['name'],
                                                              'description': record['sc']['description'],
+                                                             'variable': record['sc']['variable'],
+                                                             'unit': record['sc']['unit'],
                                                              'subcharacteristics': [],
+                                                             'natures':[]
                                                              }
+                if record['nsc'] and record['nsc']['uid'] not in family_dic[f_uid]['characteristics'][c_uid]['subcharacteristics'][sc_uid]['natures']:
+                    family_dic[f_uid]['characteristics'][c_uid]['subcharacteristics'][sc_uid]['natures'].append(record['nsc']['uid'])
+
                 if record['ssc']:
                     ssc_uid = record['ssc']['uid']
                     family_dic[f_uid]['characteristics'][c_uid]['subcharacteristics'][sc_uid][
@@ -550,13 +571,12 @@ class Neo4jDAO:
         """
         if not len(variables):
             return
-        for family, value in list(variables.items()):
+        for uid, value in list(variables.items()):
             v = Node("Variable", value=value)
             pv_rel = Relationship(parent_node, "HAS", v)
-
-            vf = self.match_node("Family", uid=family).first()
+            vf = self.match_node("Family", uid=uid).first() or self.match_node("SubCharacteristic", uid=uid).first()
             if not vf:
-                logger.error('missing family "{}" in graph db. variable not saved'.format(family))
+                logger.error('missing parent node "{}" in graph db. variable not saved'.format(uid))
                 continue
             fv_rel = Relationship(v, "BELONGS_TO", vf)
             logger.debug('{} {} {} {} {}'.format(v, parent_node, pv_rel, vf, fv_rel))

@@ -38,7 +38,10 @@ export function updateStratTabFromModel($scope, StratigraphyData) {
         else {
             $scope.selected[uid] = getSelectedFamilyCharacteristic(strata, uid, $scope[uid]);
             // e.g $scope.selected["interfaceProfileFamily"] = getSelectedFamilyCharacteristic(strata, "interfaceProfileFamily", $scope.interfaceProfileFamily);
-            if ( $scope.selected[uid] && 'subcharacteristics' in $scope.selected[uid]) {
+            if ($scope.selected[uid] && 'subcharacteristics' in $scope.selected[uid]) {
+                for (let sc of $scope.selected[uid].subcharacteristics)
+                    if (sc.variable)
+                        $scope.selectedSubC[sc.name] = sc.name in strata.variables ? strata.variables[sc.name] : null;
                 let subCharacteristics = strata.getSubCharacteristicsByFamily(uid);
                 if (subCharacteristics.length > 0) {
                     $scope.selectedSubC[uid] = $scope.selected[uid].subcharacteristics.filter(
@@ -68,6 +71,10 @@ export function updateStratModelFromTab($scope, StratigraphyData) {
                     strata.clearSubCharacteristicsFromFamily(uid);
                     for (let sc of $scope.selectedSubC[uid])
                         strata.addSubCharacteristic(new SubCharacteristic(uid, sc));
+                    if ($scope.selected[uid] && 'subcharacteristics' in $scope.selected[uid])
+                        for (let sc of $scope.selected[uid].subcharacteristics)
+                            if (sc.variable)
+                                strata.variables[sc.name] = sc.name in $scope.selectedSubC ? $scope.selectedSubC[sc.name] : null;
                 }
             }
         }
