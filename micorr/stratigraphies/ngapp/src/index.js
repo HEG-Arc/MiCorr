@@ -38,6 +38,7 @@ import "./controllers/stratComposition.js";
 import "./controllers/stratInterface.js";
 import "./controllers/stratMicrostructure.js";
 import "./controllers/stratNewMicrostructure.js";
+import "./controllers/stratNewComposition.js";
 import "./controllers/stratMorphology.js";
 import "./controllers/stratTexture.js";
 import "./controllers/tabsStrata.js";

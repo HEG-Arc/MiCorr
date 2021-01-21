@@ -5,6 +5,16 @@ import {
     getSelectedFamilyCharacteristic, Ratio
 } from "../init";
 
+function CharacteristicsSelector(StratigraphyData, family)
+/**
+ * construct an objet like : {characteristics:StratigraphyData[family];characteristics, selected:[]};
+ * @param family
+ * @constructor
+ */ {
+    this.characteristics = StratigraphyData[family].characteristics;
+    this.selected = [];
+}
+
 /**
  * @ngdoc function
  * @name micorrApp.controller:StratCompositionCtrl
@@ -35,23 +45,12 @@ angular.module('micorrApp')
         };
         // $scope.filterCompoundsMethod.selected = $scope.filterCompoundsMethod.options[0];
 
-
-        function CharacteristicsSelector(family)
-        /**
-         * construct an objet like : {characteristics:StratigraphyData[family];characteristics, selected:[]};
-         * @param family
-         * @constructor
-         */ {
-            this.characteristics = StratigraphyData[family].characteristics;
-            this.selected = [];
-        }
-
         function ElementSelector()
         /**
          * specialized CharacteristicsSelector for elementFamily
          * @constructor
          */ {
-            CharacteristicsSelector.apply(this, ["elementFamily"]);
+            CharacteristicsSelector.apply(this, [StratigraphyData, "elementFamily"]);
         }
 
         function CompoundSelector()
@@ -59,7 +58,7 @@ angular.module('micorrApp')
          * specialized CharacteristicsSelector for compoundFamily
          * @constructor
          */ {
-            CharacteristicsSelector.apply(this, ["compoundFamily"]);
+            CharacteristicsSelector.apply(this, [StratigraphyData, "compoundFamily"]);
         }
         var initStratComposition = function () {
             // On récupère les valeurs qui vont aller dans les champs de notre formulaire
@@ -305,3 +304,4 @@ angular.module('micorrApp')
             });
         };
 });
+export {CharacteristicsSelector};

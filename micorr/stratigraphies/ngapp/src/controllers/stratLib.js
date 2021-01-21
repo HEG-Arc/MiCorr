@@ -1,6 +1,7 @@
 import {getSelectedFamilyCharacteristic} from "../init";
 import {Characteristic} from "../business/characteristic";
 import {SubCharacteristic} from "../business/subCharacteristic";
+import {CharacteristicsSelector} from "../controllers/stratComposition";
 
 
 export function initStratTab($scope, StratigraphyData, familyGroupUID) {
@@ -20,8 +21,29 @@ export function initStratTab($scope, StratigraphyData, familyGroupUID) {
             fieldset.families.push(f);
         }
     }
-    for (let {uid: familyUID, variable} of $scope.familyGroup)
-        if (variable)
+
+    function ElementSelector()
+    /**
+     * specialized CharacteristicsSelector for elementFamily
+     * @constructor
+     */ {
+        CharacteristicsSelector.apply(this, [StratigraphyData, "elementFamily"]);
+    }
+
+    function CompoundSelector()
+    /**
+     * specialized CharacteristicsSelector for compoundFamily
+     * @constructor
+     */ {
+        CharacteristicsSelector.apply(this, [StratigraphyData, "compoundFamily"]);
+    }
+
+    for (let {uid: familyUID, variable, IS_LIST_OF} of $scope.familyGroup)
+        if (IS_LIST_OF) {
+            $scope[familyUID] = StratigraphyData[IS_LIST_OF].characteristics;
+            $scope.selected[familyUID] = null;
+            console.log(`${familyUID} => IS_LIST_OF: ${IS_LIST_OF}`)
+        } else if (variable)
             $scope[familyUID] = null;
         else {
             $scope[familyUID] = StratigraphyData[familyUID].characteristics;

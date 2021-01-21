@@ -65,16 +65,22 @@ angular.module('micorrApp')
         };
 
         /*
-         * filter families in familyGroup
-         * based on current observation mode
+         * filter families or fieldsets in familyGroup
+         * based on current observation mode and current stratum nature
          */
         $scope.showFamily = function (family)
         {
             let showBasedOnObservation = $scope.observationMode.binocular ? family.observation & 1 : family.observation & 2;
-            if (showBasedOnObservation && family.natures) {
+            if (showBasedOnObservation)
+            {
                 let index = parseInt(StratigraphyData.getSelectedStrata());
-                let selectedStratum  = StratigraphyData.getStratigraphy().getStratas()[index];
-                return family.natures.includes(selectedStratum.natureUID);
+                let selectedStratumNature  = StratigraphyData.getStratigraphy().getStratas()[index].natureUID;
+                if (family.natures) { // family is a family object direct visibility test for current nature
+                    return family.natures.length==0 || family.natures.includes(selectedStratumNature);
+                }
+                if (family.families) { //here family is fieldset object we show the fieldset if any of its families
+                    return family.families.some(f => !f.natures || f.natures.length==0 || f.natures.includes(selectedStratumNature));
+                }
             }
             return showBasedOnObservation;
         };
@@ -88,14 +94,14 @@ angular.module('micorrApp')
                 let index = parseInt(StratigraphyData.getSelectedStrata());
                 let selectedStratum  = StratigraphyData.getStratigraphy().getStratas()[index];
                 let result = characteristic.natures.includes(selectedStratum.natureUID);
-                console.log('showCharacteristic(%s, [%s]) on %s stratum = %o',characteristic.name, characteristic.natures.join(','), selectedStratum.natureUID, result);
+                //console.log('showCharacteristic(%s, [%s]) on %s stratum = %o',characteristic.name, characteristic.natures.join(','), selectedStratum.natureUID, result);
                 return result;
             }
             else
             {
                 let index = parseInt(StratigraphyData.getSelectedStrata());
                 let selectedStratum  = StratigraphyData.getStratigraphy().getStratas()[index];
-                console.log('showCharacteristic(%s, []) on %s stratum = %o',characteristic.name, selectedStratum.natureUID, true);
+                //console.log('showCharacteristic(%s, []) on %s stratum = %o',characteristic.name, selectedStratum.natureUID, true);
             }
             return true;
         };

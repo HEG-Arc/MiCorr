@@ -307,12 +307,14 @@ class Neo4jDAO:
         all_characteristics = self.tx.run("""
          MATCH (f:Family)
          OPTIONAL MATCH (f)<-[:SHOWS]-(fg:FamilyGroup)
+         OPTIONAL MATCH (f)-[:IS_LIST_OF]->(lof:Family)
          OPTIONAL MATCH (f)<-[:BELONGS_TO]-(c:Characteristic)
+         OPTIONAL MATCH (f)<-[:HAS_FAMILY]-(nf:Nature)
          OPTIONAL MATCH (c)-[:HAS_SPECIALIZATION]->(sc:SubCharacteristic)
          OPTIONAL MATCH (sc)-[:HAS_SPECIALIZATION]->(ssc:SubCharacteristic)
          OPTIONAL MATCH (c)<-[:HAS]-(nc:Nature)
          OPTIONAL MATCH (sc)<-[:HAS]-(nsc:Nature)
-         RETURN f,fg,c,sc,ssc, nc, nsc
+         RETURN f,fg,lof,c,sc,ssc, nc, nsc, nf
          ORDER BY fg.order,f.order, f.name, c.order, sc.name, ssc.name
         """)
         # here we get a flat list of records including all family, Characteristic, SubCharacteristic, SubCharacteristic
@@ -321,10 +323,13 @@ class Neo4jDAO:
         family_dic = OrderedDict()
         for record in all_characteristics:
             f_uid = record['f']['uid']
+            lof_uid = record['lof']['uid'] if record.get('lof',None) else None
             if f_uid not in family_dic:
                 family_dic[f_uid] = record['f'].copy()
                 family_dic[f_uid].update({'family': f_uid, 'familyGroup':record['fg'],
-                                     'characteristics': OrderedDict()})
+                                     'characteristics': OrderedDict(), 'IS_LIST_OF':lof_uid, 'natures':[]})
+            if record['nf'] and record['nf']['uid'] not in family_dic[f_uid]['natures']:
+                    family_dic[f_uid]['natures'].append(record['nf']['uid'])
             if record['c']:
                 c_uid = record['c']['uid']
                 if c_uid not in family_dic[f_uid]['characteristics']:
