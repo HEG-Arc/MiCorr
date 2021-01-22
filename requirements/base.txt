@@ -57,7 +57,7 @@ django-filter==2.3.0
 django-haystack==3.0.b2
 lxml==4.5.1
 elasticsearch==2.4.1
-git+https://github.com/bletourmy/django-terms.git@f7545e3e00ace355198ccfd60ffef1b1a91d9af6#egg=django-terms
+git+https://github.com/bletourmy/django-terms.git@5e40fcd65d1a7a0553bef1965215bbcd0d75bfd6#egg=django-terms
 django-robots==4.0
 urllib3==1.25.10 # py2neo 4.3.0 has requirement urllib3<1.25,>=1.23
 py2neo==2020.0.0
