@@ -242,14 +242,18 @@
                    <ui-select ng-if="!family.variable" id="{{ 'morphology' + family.name }}"
                               dynamic-model="'selected.'+family.uid" on-select="upMorpho()" on-remove="upMorpho()">
                        <ui-select-match placeholder="Select characteristic">
-                           <span tooltip="{{ $select.selected.description }}">{{$select.selected.real_name}}</span>
+                           <span tooltip="{{ $select.selected.description }}">{{$select.selected.real_name}}
+                               <div style="display:inline-block; float: right; width:60%; height: 1em;" ng-style="$select.selected.color ? {'background-color':$select.selected.color} : ''"></div>
+                           </span>
                        </ui-select-match>
-                       <ui-select-choices null-option="nullOption" group-by="getGroup"
+                       <ui-select-choices  group-by="getGroup"
                                           repeat="item in (this[family.uid] | filter: $select.search) track by item.name">
-                           <div tooltip="{{ item.description }}" ng-style="family.uid=='colourFamily' ? {'background-color':item.color} : ''">
+                           <div tooltip="{{ item.description }}">
                                <img ng-if="item.image_url" ng-src="{{ item.image_url }}" aria-hidden="true"
                                     heigth="100px">
-                               <span ng-bind-html="item.real_name | highlight: $select.search"></span>
+                               <span ng-bind-html="item.real_name | highlight: $select.search">
+                               </span>
+                               <div style="display:inline-block; float: right; width:60%; height: 1em;" ng-style="item.color ? {'background-color':item.color} : ''" ></div>
                            </div>
                        </ui-select-choices>
                    </ui-select>
