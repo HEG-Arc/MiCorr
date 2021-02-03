@@ -1,0 +1,104 @@
+﻿f.uid,c.uid,c.name,c.order
+areaWidthVarFamily,null,null,null
+avgThicknessCSVarFamily,null,null,null
+avgThicknessVarFamily,null,null,null
+brightnessFamily,metallicCharacteristic,metallic,1
+brightnessFamily,submetallicCharacteristic,submetallic,2
+brightnessFamily,vitreousCharacteristic,vitreous,3
+brightnessFamily,resinousCharacteristic,resinous,4
+brightnessFamily,silkyCharacteristic,silky,5
+brightnessFamily,greasyCharacteristic,greasy,6
+brightnessFamily,pearlyCharacteristic,pearly,7
+brightnessFamily,adamantineCharacteristic,adamantine,8
+brightnessFamily,earthyCharacteristic,earthy,9
+brightnessFamily,matteCharacteristic,matte,10
+colourFamily,lightRedCharacteristic,Light Red,2
+colourFamily,ochreCharacteristic,ochre,3
+colourFamily,redCharacteristic,Red,3
+colourFamily,mediumRedCharacteristic,Medium Red,4
+colourFamily,darkRedCharacteristic,Dark Red,4
+colourFamily,lightOrangeCharacteristic,Light Orange,5
+colourFamily,orangeCharacteristic,Orange,6
+colourFamily,darkOrangeCharacteristic,Dark Orange,7
+colourFamily,mediumOrangeCharacteristic,Medium Orange,8
+colourFamily,lightYellowCharacteristic,Light Yellow,8
+colourFamily,yellowCharacteristic,Yellow,9
+colourFamily,darkYellowCharacteristic,Dark Yellow,10
+colourFamily,lightBrownCharacteristic,Light Brown,11
+colourFamily,mediumYellowCharacteristic,Medium Yellow,12
+colourFamily,brownCharacteristic,Brown,12
+colourFamily,darkBrownCharacteristic,Dark Brown,13
+colourFamily,lightGreenCharacteristic,Light Green,14
+colourFamily,greenCharacteristic,Green,15
+colourFamily,mediumBrownCharacteristic,Medium Brown,16
+colourFamily,darkGreenCharacteristic,Dark Green,16
+colourFamily,lightBlueCharacteristic,Light Blue,17
+colourFamily,blueCharacteristic,Blue,18
+colourFamily,darkBlueCharacteristic,Dark Blue,19
+colourFamily,lightMagentaCharacteristic,Light Magenta,20
+colourFamily,mediumGreenCharacteristic,Medium Green,20
+colourFamily,magentaCharacteristic,Magenta,21
+colourFamily,darkMagentaCharacteristic,Dark Magenta,22
+colourFamily,lightPinkCharacteristic,Light Pink,23
+colourFamily,mediumBlueCharacteristic,Medium Blue,24
+colourFamily,pinkCharacteristic,Pink,24
+colourFamily,darkPinkCharacteristic,Dark Pink,25
+colourFamily,lightGreyCharacteristic,Light Grey,26
+colourFamily,whiteCharacteristic,White,26
+colourFamily,greyCharacteristic,Grey,27
+colourFamily,darkGreyCharacteristic,Dark Grey,28
+colourFamily,mediumMagentaCharacteristic,Medium Magenta,28
+colourFamily,mediumPinkCharacteristic,Medium Pink,32
+colourFamily,mediumGreyCharacteristic,Medium Grey,36
+colourFamily,blackCharacteristic,Black,38
+continuityFamily,continuousCharacteristic,continuous,1
+continuityFamily,discontinuous1Characteristic,discontinuous1,2
+continuityFamily,discontinuous2Characteristic,discontinuous2,3
+continuityFamily,discontinuous3Characteristic,discontinuous3,4
+continuityFamily,isolatedCharacteristic,isolated,5
+continuityFamily,scatteredCharacteristic,scattered,6
+directionFamily,longitudinalCharacteristic,longitudinal,1
+directionFamily,obliqueCharacteristic,oblique,2
+directionFamily,transversalCharacteristic,transversal,3
+directionFamily,multidirectionalCharacteristic,multidirectional,4
+maxThicknessCSVarFamily,null,null,null
+maxThicknessVarFamily,null,null,null
+minThicknessCSVarFamily,null,null,null
+minThicknessVarFamily,null,null,null
+opacityFamily,opaqueCharacteristic,opaque,1
+opacityFamily,translucentCharacteristic,translucent,2
+opacityFamily,transparentCharacteristic,transparent,3
+percentageWidthVarFamily,null,null,null
+shapeFamily,ringShapedCharacteristic,circular,1
+shapeFamily,cloudCharacteristic,cloud,2
+shapeFamily,clusterCharacteristic,cluster,3
+shapeFamily,coneShapedCharacteristic,conical,4
+shapeFamily,craterCharacteristic,crater,5
+shapeFamily,crustCharacteristic,crust,6
+shapeFamily,cubicCharacteristic,cubic,7
+shapeFamily,curlyCharacteristic,curly,8
+shapeFamily,cylindricalCharacteristic,cylindrical,9
+shapeFamily,dropletCharacteristic,droplet,10
+shapeFamily,hemisphericalCharacteristic,hemispherical,11
+shapeFamily,layerFilmCoatingCharacteristic,layer/film/coating,12
+shapeFamily,lensShapedCharacteristic,lenticular,13
+shapeFamily,noduleCharacteristic,nodule,14
+shapeFamily,ovoidCharacteristic,ovoid,15
+shapeFamily,parallelepipedalCharacteristic,parallelepipedal,16
+shapeFamily,pitCharacteristic,pit,17
+shapeFamily,prismaticCharacteristic,prismatic,18
+shapeFamily,pustuleCharacteristic,pustule,19
+shapeFamily,pyramidalCharacteristic,pyramidal,20
+shapeFamily,sectorOfASphereCharacteristic,sector of a sphere,21
+shapeFamily,sphericalCharacteristic,spherical,22
+shapeFamily,sphericalCapCharacteristic,spherical cap,23
+shapeFamily,vainsOrSeamsCharacteristic,veins or seams,24
+stratumWidthVarFamily,null,null,null
+thicknessFamily,thickCharacteristic,thick,1
+thicknessFamily,normalThicknessCharacteristic,medium,2
+thicknessFamily,thinCharacteristic,thin,3
+thicknessVarFamily,null,null,null
+widthFamily,largeCharacteristic,large,1
+widthFamily,normalWidthCharacteristic,medium,2
+widthFamily,smallCharacteristic,small,3
+widthVarFamily,null,null,null

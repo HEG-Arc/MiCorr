@@ -45,7 +45,7 @@ UNWIND [
   {fg:'fgMorphology',order:16, observation:binocular, uid:'opacityFamily', name:'Opacity', visible: false, variable: false},
   {fg:'fgTexture', order:0, observation:binocular, uid:'porosityFamily', name:'Compactness', visible: true, variable: false,
    description:'Assessed on the observed area. The blank option corresponds to a stratum which compactness is not known.'},
-  {fg:'fgTexture', order:1, observation:cross_section, uid:'compactnessVarFamily', name:'Compactness amount', visible: true, variable: true, unit:'%',
+  {fg:'fgTexture', order:1, observation:cross_section, uid:'compactnessVarFamily', name:'Compactness amount', visible: false, variable: true, unit:'%',
    description:'Amount of porosities determined on the observed area.'},
   {fg:'fgTexture', order:2, observation:binocular, uid:'cohesionFamily', name:'Cohesion', visible: true, variable: false,
    description:'Assessed on the observed area. Only the powdery option is made visible. The blank option corresponds to a stratum which cohesion is not known.'},

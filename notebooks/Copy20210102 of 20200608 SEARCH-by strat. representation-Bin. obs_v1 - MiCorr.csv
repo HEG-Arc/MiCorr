@@ -8,7 +8,7 @@ Morphology,,Binocular,Crater,,,,,,Particular shape at the surface of a metal str
 Morphology,,,Curly,,,,,,,,deleted,,,,,,,,,,,,,,,,,
 Morphology,,Binocular,Crust,,,,,,Continuous or discontinuous outer stratum of possibly irregular thickness.,,,,x,,,,x,,,,,,,,x,,,
 Morphology,,Binocular,Droplet,,,,,,"Most often outer stratum dispersed or isolated, droplet-shaped stratum.",,,,x,,,,x,,,,,,,,,,,
-Morphology,,Binocular,LayerFilm/coating,,,,,,Thin continuous or discontinuous stratum of regular thickness (on the scale of the observation) and whose faces appear parallel.,,"""Layer"" taken out",,x,,,,x,,x,,x,,,,x,,,
+Morphology,,Binocular,Film/coating,,,,,,Thin continuous or discontinuous stratum of regular thickness (on the scale of the observation) and whose faces appear parallel.,,"""Layer"" taken out of LayerFilm/coating",,x,,,,x,,x,,x,,,,x,,,
 Morphology,,Binocular,Layer,,,,,,Thin continuous or discontinuous stratum of regular thickness (on the scale of the observation) and whose faces appear parallel.,,Added,,x,,x,,x,,x,,x,,x,,x,,x,
 Morphology,,Binocular,Nodule,,,,,,"Generally thick, dispersed or isolated stratum of massive pseudo-geometric shape.",,,,x,,x,,x,,x,,,,,,x,,,
 Morphology,,Binocular,Pit,,,,,,Particular shape on the surface of a metal stratum in the form of a cavity deeper than wide.,,,,,,x,,,,x,,,,,,,,,
@@ -37,36 +37,36 @@ Morphology,,,Blank,,,,,,,,Field taken out under binocular observation.,,,,,,,,,,
 Morphology,,,Large,,,,,,,,Field taken out under binocular observation.,,,,,,,,,,,,,,,,,
 Morphology,,,Medium,,,,,,,,Field taken out under binocular observation.,,,,,,,,,,,,,,,,,
 Morphology,,,Small,,,,,,,,Field taken out under binocular observation.,,,,,,,,,,,,,,,,,
-Morphology,,Cross-section,Total observed area,,,,,areaWidthVarFamily,,In µm.,Added,Value,,X,,X,,X,,X,,X,,X,,X,,X
-Morphology,,Cross-section,Stratum,,,,,stratumWidthVarFamily,,In µm.,Added,Value,,X,,X,,X,,X,,X,,X,,X,,X
-Morphology,,Cross-section,Percentage (stratum vs observed area),,,,,percentageWidthVarFamily,,in % (deduced automatically).,Added,Value,,X,,X,,X,,X,,X,,X,,X,,X
-Morphology,Thickness,Binocular,,,,,,,"The thickness of the strata in the observed area can be measured if the binocular or microscope is equipped with scales. Otherwise, the thickness should be deduced in relation to the other strata of the corrosion structure (thick, medium, thin). The blank option corresponds to a stratum which thickness is not known.",,,,x,,x,,x,,x,,x,,x,,x,,x,
+Morphology,,Cross-section,Area,,,dimension ,µm,areaWidthVarFamily,Total observed area,In µm.,Added,Value,,X,,X,,X,,X,,X,,X,,X,,X
+Morphology,,Cross-section,Stratum,,,dimension ,µm,stratumWidthVarFamily,,In µm.,Added,Value,,X,,X,,X,,X,,X,,X,,X,,X
+Morphology,,Cross-section,Percentage,,,dimension ,%,percentageWidthVarFamily,stratum vs observed area,in % (deduced automatically).,Added,Value,,X,,X,,X,,X,,X,,X,,X,,X
+Morphology,Thickness,Binocular,,,,,,minThicknessVarFamily,"The thickness of the strata in the observed area can be measured if the binocular or microscope is equipped with scales. Otherwise, the thickness should be deduced in relation to the other strata of the corrosion structure (thick, medium, thin). The blank option corresponds to a stratum which thickness is not known.",,,,x,,x,,x,,x,,x,,x,,x,,x,
 Morphology,,Binocular,Blank,,,,,,,,,,x,,x,,x,,x,,x,,x,,x,,x,
 Morphology,,Binocular,Thick,,,,,,,,,,x,,x,,x,,x,,x,,x,,x,,x,
 Morphology,,Binocular,Medium,,,,,,,,,,x,,x,,x,,x,,x,,x,,x,,x,
 Morphology,,Binocular,Thin,,,,,,,,,,x,,x,,x,,x,,x,,x,,x,,x,
 Morphology,,Binocular,,,,Dimension ,,,If the measurement is possible. ,,Added,,x,,x,,x,,x,,x,,x,,x,,x,
-Morphology,,Binocular,,,,Minimal,,minThicknessVarFamily,In µm,,Added,,x,,x,,x,,x,,x,,x,,x,,x,
-Morphology,,Binocular,,,,Maximal,,maxThicknessVarFamily,In µm,,Added,,x,,x,,x,,x,,x,,x,,x,,x,
-Morphology,,Binocular,,,,Average,,avgThicknessVarFamily,In µm,,Added,,x,,x,,x,,x,,x,,x,,x,,x,
+Morphology,,Binocular,Minimal,,,dimension ,µm,minThicknessVarFamily,In µm,,Added,,x,,x,,x,,x,,x,,x,,x,,x,
+Morphology,,Binocular,Maximal,,,dimension ,µm,maxThicknessVarFamily,In µm,,Added,,x,,x,,x,,x,,x,,x,,x,,x,
+Morphology,,Binocular,Average,,,dimension ,µm,avgThicknessVarFamily,In µm,,Added,,x,,x,,x,,x,,x,,x,,x,,x,
 Morphology,,Cross-section,,,,,,,,Determined on the observed area.  A minimal and maximum thickness should be given. The blank option corresponds to a stratum which thickness is not known.,,,,X,,X,,X,,X,,X,,X,,X,,X
 Morphology,,Cross-section,,,,Dimension,,,,,,,,,,,,,,,,,,,,,,
-Morphology,,Cross-section,,,,Minimal,,minThicknessCSVarFamily,,In µm.,Added,Value,,X,,X,,X,,X,,X,,X,,X,,X
-Morphology,,Cross-section,,,,Maximal,,maxThicknessCSVarFamily,,In µm.,Added,Value,,X,,X,,X,,X,,X,,X,,X,,X
-Morphology,,Cross-section,,,,Average,,avgThicknessCSVarFamily,,In µm.,Added,Value,,X,,X,,X,,X,,X,,X,,X,,X
-Morphology,Continuity ,Binocular,,,,,,,The continuity of a stratum is assessed in relation to the observed area. The blank option corresponds to a stratum which continuity is not known.,,,To find a way to represent this discontinuity / continuity in compensation of the not representation of the width under binocular observation.,x,,x,,x,,x,,x,,x,,x,,x,
+Morphology,,Cross-section,Minimal,,,Minimal,,minThicknessCSVarFamily,,In µm.,Added,Value,,X,,X,,X,,X,,X,,X,,X,,X
+Morphology,,Cross-section,Maximal,,,Maximal,,maxThicknessCSVarFamily,,In µm.,Added,Value,,X,,X,,X,,X,,X,,X,,X,,X
+Morphology,,Cross-section,Average,,,Average,,avgThicknessCSVarFamily,,In µm.,Added,Value,,X,,X,,X,,X,,X,,X,,X,,X
+Morphology,Continuity,Binocular,,,,,,,The continuity of a stratum is assessed in relation to the observed area. The blank option corresponds to a stratum which continuity is not known.,,,To find a way to represent this discontinuity / continuity in compensation of the not representation of the width under binocular observation.,x,,x,,x,,x,,x,,x,,x,,x,
 Morphology,,Binocular,Blank,,,,,,,,,,x,,x,,x,,x,,x,,x,,x,,x,
 Morphology,,Binocular,Continuous,,,,,,Stratum showing no interruption (consisting of a single stratigraphic element) over the observed area.,,,,x,,x,,x,,x,,x,,x,,x,,x,
 Morphology,,Binocular,Discontinuous,,,,,,Stratum with one ore more interruption(s) in the observed area.,,,,x,,x,,x,,x,,x,,x,,x,,x,
-Morphology,,Binocular,Discontinuous 2,,,,,,,,Field taken out under binocular observation.,,,,,,,,,,,,,,,,,
-Morphology,,Binocular,Discontinuous 3,,,,,,,,Field taken out under binocular observation.,,,,,,,,,,,,,,,,,
+Morphology,,,Discontinuous 2,,,,,,,,Field taken out under binocular observation.,,,,,,,,,,,,,,,,,
+Morphology,,,Discontinuous 3,,,,,,,,Field taken out under binocular observation.,,,,,,,,,,,,,,,,,
 Morphology,,Binocular,Scattered,,,,,,Stratum consisting of numerous stratigraphic elements separated from each other and distributed over the observed area.,,,,x,,x,,x,,x,,x,,x,,x,,x,
 Morphology,,Binocular,Isolated,, ,,,,Stratum consisting of one or more stratigraphic elements having a minority volume over the area observed.,,,,x,,x,,x,,x,,x,,x,,x,,x,
 Morphology,,Cross-section,,,,,,,,The continuity of a stratum is assessed in relation to the observed area. The blank option corresponds to a stratum which continuity is not known.,Added,,,X,,X,,X,,X,,X,,X,,X,,X
 Morphology,,Cross-section,Blank,,,,,,,,Added,,,X,,X,,X,,X,,X,,X,,X,,X
 Morphology,,Cross-section,Continuous,,,,,,,Stratum showing no interruption (consisting of a single stratigraphic element) over the observed area.,Added,,,X,,X,,X,,X,,X,,X,,X,,X
 Morphology,,Cross-section,Discontinuous,,,,,,,Stratum with one ore more interruption(s) in the observed area.,Added,,,X,,X,,X,,X,,X,,X,,X,,X
-Morphology,Direction   ,Binocular,,,,,,,The surface orientation represents the direction of the described stratum in relation to the tangential plane of the present surface (or to the mean tangential plane of the present surface in the case of macro-roughnesses or irregularities). Only the longitudinal option is made visible. The blank option corresponds to a stratum which direction is not known.,,,,x,,x,,x,,x,,x,,x,,x,,x,
+Morphology,Direction,Binocular,,,,,,,The surface orientation represents the direction of the described stratum in relation to the tangential plane of the present surface (or to the mean tangential plane of the present surface in the case of macro-roughnesses or irregularities). Only the longitudinal option is made visible. The blank option corresponds to a stratum which direction is not known.,,,,x,,x,,x,,x,,x,,x,,x,,x,
 Morphology,,Binocular,Blank,"
 ",,,,,,,,,x,,x,,x,,x,,x,,x,,x,,x,
 Morphology,,Binocular,Longitudinal,,,,,,,,,,x,,x,,x,,x,,x,,x,,x,,x,
@@ -84,7 +84,7 @@ Morphology,,Binocular,Orange,,,,,,,,,,x,,x,,x,,x,,x,,x,,x,,,
 Morphology,,Binocular,,Light,,,,,,,Added,,x,,x,,x,,x,,x,,x,,x,,,
 Morphology,,Binocular,,Medium,,,,,,,,,x,,x,,x,,x,,x,,x,,x,,,
 Morphology,,Binocular,,Dark,,,,,,,Added,,x,,x,,x,,x,,x,,x,,x,,,
-Morphology,,Binocular,Ochre,,,,,,,,Field taken out under binocular observation.,,x,,x,,x,,x,,x,,x,,x,,,
+Morphology,,,Ochre,,,,,,,,Field taken out under binocular observation.,,x,,x,,x,,x,,x,,x,,x,,,
 Morphology,,Binocular,Pink,,,,,,,,,,x,,x,,x,,x,,x,,x,,x,,,
 Morphology,,Binocular,,Light,,,,,,,Added,,x,,x,,x,,x,,x,,x,,x,,,
 Morphology,,Binocular,,Medium,,,,,,,,,x,,x,,x,,x,,x,,x,,x,,,
@@ -240,7 +240,7 @@ Texture,,Binocular,Soft,,,,,,"Is not scratchable with a hardwood tip, but is eas
 Texture,,Binocular,Hard,,,,,,Hardly scratchable with a hardened steel tip. Mohs hardness > 5 and < 7.,,,Between 540Hv and 1100Hv,x,,x,,x,,x,,x,,x,,x,,,
 Texture,,Binocular,Very hard,,,,,,Is not scratched by a hardened steel tip. Mohs hardness > 7.,,,> 1100Hv,x,,x,,x,,x,,x,,x,,x,,,
 Texture,,Cross section,,,,,,,,Determined on the observed area.,,,,X,,X,,X,,X,,X,,X,,X,,
-Texture,,Cross section,,,,Microhardness,,microhardnessVarFamily,,In Hv.,Added,Value,,X,,X,,X,,X,,X,,X,,X,,
+Texture,,Cross section,,,,Microhardness,Hv,microhardnessVarFamily,,In Hv.,Added,Value,,X,,X,,X,,X,,X,,X,,X,,
 Texture,Cracking,Binocular,,,,,,,Assessed on the observed area. Pattern which results of the combined and synergistic interaction of mechanical stress and corrosion reactions.,,,,x,,x,,x,,x,,x,,x,,x,,,
 Texture,,Binocular,Structure,,,,,crackingStructureFamily,Options of patterns. The blank option corresponds to a stratum which cracking is not known.,,Added,do we just replace existing crackingFamily ?,x,,x,,x,,x,,x,,x,,x,,,
 Texture,,Binocular,,Blank,,,,,,,Added,,x,,x,,x,,x,,x,,x,,x,,,
@@ -502,7 +502,7 @@ Interface,,Cross-section,Irregular,,,,,,,Presents variations whose height and le
 Interface,Transition,Binocular,,,,,,,Assessed on the observed area. The blank option corresponds to a stratum which transition with upper stratum is not known.,,,Only if not an external layer. No need to fill if there is a CM.,x,,,,x,,x,,x,,x,,x,,,
 Interface,,Binocular,,,,,,,,,,,x,,,,x,,x,,x,,x,,x,,,
 Interface,,Binocular,Sharp,,,,,,Very sharp transition between strata.,,,,x,,,,x,,x,,x,,x,,x,,,
-Interface,,Binocular,Diffuse,,,,,,Weak noticeable transition between strata. A large diffuse transition zone may require identification as an additional stratum.,,,,x,,,,x,,x,,x,,x,,x,,,
+Interface,,Binocular,Diffuse,,,,,,   ,,,,x,,,,x,,x,,x,,x,,x,,,
 Interface,,Binocular,Gradual,,,,,,Marked transition between two interpenetrating strata.,,,,x,,,,x,,x,,x,,x,,x,,,
 Interface,Transition,Cross-section,,,,,,,,Determined on the observed area.,Added,,,X,,,,X,,X,,X,,X,,X,,
 Interface,,Cross-section,Sharp,,,,,,,Very sharp transition between strata.,Added,,,X,,,,X,,X,,X,,X,,X,,
