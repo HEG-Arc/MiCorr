@@ -247,7 +247,7 @@
                            </span>
                        </ui-select-match>
                        <ui-select-choices  group-by="getGroup"
-                                          repeat="item in (this[family.uid] | filter: $select.search) track by item.name">
+                                          repeat="item in (this[family.uid] | filter: showCharacteristic | filter: $select.search) track by item.name">
                            <div tooltip="{{ item.description }}">
                                <img ng-if="item.image_url" ng-src="{{ item.image_url }}" aria-hidden="true"
                                     heigth="100px">
@@ -284,7 +284,7 @@
                      <ui-select-match placeholder="Select characteristic">
                          <span tooltip="{{ $select.selected.description }}" >{{$select.selected.real_name}}</span>
                     </ui-select-match>
-                    <ui-select-choices null-option="nullOption" repeat="item in (this[family.uid] | filter: $select.search) track by item.name">
+                    <ui-select-choices null-option="nullOption" repeat="item in (this[family.uid] | filter: showCharacteristic | filter: $select.search) track by item.name">
                         <div tooltip="{{ item.description }}">
                             <img ng-if="item.image_url" ng-src="{{ item.image_url }}" aria-hidden="true" heigth="100px">
                             <span ng-bind-html="item.real_name | highlight: $select.search"></span>
@@ -455,7 +455,7 @@
                     <span tooltip="{{ $select.selected.description }}">{{$select.selected.real_name}}</span>
                 </ui-select-match>
                 <ui-select-choices null-option="nullOption" group-by="getGroup"
-                                   repeat="item in (this[family.uid] | filter: $select.search) track by item.name">
+                                   repeat="item in (this[family.uid] | filter: showCharacteristic | filter: $select.search) track by item.name">
                     <div tooltip="{{ item.description }}">
                         <img ng-if="item.image_url" ng-src="{{ item.image_url }}" aria-hidden="true" heigth="100px">
                         <span ng-bind-html="item.real_name | highlight: $select.search"></span>
