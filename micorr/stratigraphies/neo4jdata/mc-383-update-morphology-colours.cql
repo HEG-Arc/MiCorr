@@ -40,22 +40,40 @@ AS updt
   MERGE (c)-[:BELONGS_TO]->(f)
   RETURN c;
 
-// TODO Remove unwanted Ochre color (ochreCharacteristic)
-// MATCH (c:Characteristic {uid:'ochreCharacteristic'})<-[:IS_CONSTITUTED_BY]-(s) RETURN *
-// 21 stratas returned - replace ?
-// DETACH DELETE c
+// Data migration
+// Replace obsolete colors  by new ones in affected strata
+UNWIND [
+{old:'ochreCharacteristic', new:'darkOrangeCharacteristic'},
+{old:'mediumGreenCharacteristic', new:'greenCharacteristic'},
+{old:'mediumBlueCharacteristic', new:'blueCharacteristic'},
+{old:'mediumGreyCharacteristic', new:'greyCharacteristic'},
+{old:'mediumOrangeCharacteristic', new:'orangeCharacteristic'},
+{old:'mediumMagentaCharacteristic', new:'magentaCharacteristic'},
+{old:'mediumRedCharacteristic', new:'redCharacteristic'},
+{old:'mediumBrownCharacteristic', new:'brownCharacteristic'},
+{old:'mediumPinkCharacteristic', new:'pinkCharacteristic'},
+{old:'mediumYellowCharacteristic', new:'yellowCharacteristic'}
+] as updt
+MATCH (newc:Characteristic {uid:updt.new})
+WITH updt,newc
+    MATCH (oldc:Characteristic {uid:updt.old})<-[r:IS_CONSTITUTED_BY]-(s)
+    WITH  newc,oldc,s,r
+        MERGE (s)-[:IS_CONSTITUTED_BY]->(newc)
+        DELETE r
+        RETURN oldc.uid,newc.uid,s.uid;
 
-//TODO remove unwanted medium colors
--- UNWIND ['mediumRed',
---  'mediumOrange',
---  'mediumYellow',
---  'mediumBrown',
---  'mediumGreen',
---  'mediumBlue',
---  'mediumMagenta',
---  'mediumPink',
---  'mediumGrey']
---  AS color_uid
---  MATCH (c:Characteristic {uid:color_uid})<-[:IS_CONSTITUTED_BY]-(s) RETURN *
--- MATCH (f:Family {uid:'colourFamily'})
---   MERGE (c)-[:BELONGS_TO]->(f)
+// delete obsolete now unlinked characteristics
+UNWIND [
+'ochreCharacteristic',
+'mediumGreenCharacteristic',
+'mediumBlueCharacteristic',
+'mediumGreyCharacteristic',
+'mediumOrangeCharacteristic',
+'mediumMagentaCharacteristic',
+'mediumRedCharacteristic',
+'mediumBrownCharacteristic',
+'mediumPinkCharacteristic',
+'mediumYellowCharacteristic']
+ AS uid
+MATCH (c:Characteristic {uid:uid})
+DETACH DELETE c;
