@@ -43,7 +43,7 @@ AS updt
 // Data migration
 // Replace obsolete colors  by new ones in affected strata
 UNWIND [
-{old:'ochreCharacteristic', new:'darkOrangeCharacteristic'},
+{old:'ochreCharacteristic', new:'darkYellowCharacteristic'},
 {old:'mediumGreenCharacteristic', new:'greenCharacteristic'},
 {old:'mediumBlueCharacteristic', new:'blueCharacteristic'},
 {old:'mediumGreyCharacteristic', new:'greyCharacteristic'},

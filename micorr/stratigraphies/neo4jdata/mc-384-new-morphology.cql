@@ -152,17 +152,7 @@ UNWIND [
 {old:'discontinuous1Characteristic', new:'morphologyContinuityDiscontinuousCharacteristic'},
 {old:'discontinuous2Characteristic', new:'morphologyContinuityDiscontinuousCharacteristic'},
 {old:'discontinuous3Characteristic', new:'morphologyContinuityDiscontinuousCharacteristic'},
-{old:'layerFilmCoatingCharacteristic', new:'morphologyShapeFilmcoatingCharacteristic'},
-{old:'ochreCharacteristic', new:'darkOrangeCharacteristic'},
-{old:'mediumGreenCharacteristic', new:'greenCharacteristic'},
-{old:'mediumBlueCharacteristic', new:'blueCharacteristic'},
-{old:'mediumGreyCharacteristic', new:'greyCharacteristic'},
-{old:'mediumOrangeCharacteristic', new:'orangeCharacteristic'},
-{old:'mediumMagentaCharacteristic', new:'magentaCharacteristic'},
-{old:'mediumRedCharacteristic', new:'redCharacteristic'},
-{old:'mediumBrownCharacteristic', new:'brownCharacteristic'},
-{old:'mediumPinkCharacteristic', new:'pinkCharacteristic'},
-{old:'mediumYellowCharacteristic', new:'yellowCharacteristic'}
+{old:'layerFilmCoatingCharacteristic', new:'morphologyShapeFilmcoatingCharacteristic'}
 ] as updt
 MATCH (newc:Characteristic {uid:updt.new})
 WITH updt,newc
@@ -177,17 +167,8 @@ UNWIND [
 'discontinuous1Characteristic',
 'discontinuous2Characteristic',
 'discontinuous3Characteristic',
-'layerFilmCoatingCharacteristic',
-'ochreCharacteristic',
-'mediumGreenCharacteristic',
-'mediumBlueCharacteristic',
-'mediumGreyCharacteristic',
-'mediumOrangeCharacteristic',
-'mediumMagentaCharacteristic',
-'mediumRedCharacteristic',
-'mediumBrownCharacteristic',
-'mediumPinkCharacteristic',
-'mediumYellowCharacteristic']
+'layerFilmCoatingCharacteristic'
+]
  AS uid
 MATCH (c:Characteristic {uid:uid})
 DETACH DELETE c;

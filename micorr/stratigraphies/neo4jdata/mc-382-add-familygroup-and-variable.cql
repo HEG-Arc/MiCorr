@@ -94,9 +94,6 @@ UNWIND [
   {fg:'fgComposition', order:0, observation:binocular, uid:'nmmCompositionFamily', name:'Composition', visible: false, variable: false},
   {fg:'fgComposition', order:0, observation:binocular, uid:'dCompositionFamily', name:'Composition', visible: false, variable: false},
   {fg:'fgComposition', order:0, observation:binocular, uid:'pomCompositionFamily', name:'Composition', visible: false, variable: false},
-  {fg:'fgMicrostructure', order:0, observation:binocular, uid:'cpriMicrostructureFamily', name:'Microstructure', visible: true, variable: false},
-  {fg:'fgMicrostructure', order:0, observation:binocular, uid:'mMicrostructureFamily', name:'Microstructure', visible: true, variable: false},
-  {fg:'fgMicrostructure', order:0, observation:binocular, uid:'cmCpMicrostructureFamily', name:'Microstructure', visible: true, variable: false}
   ] AS updt
 MERGE (f:Family {uid: updt.uid})
     ON CREATE SET  f+=$common_props, f.order=updt.order, f.observation=updt.observation, f.variable=updt.variable, f.visible=updt.visible, f.name=updt.name, f.unit=updt.unit, f.description=updt.description, f.fieldset=updt.fieldset
