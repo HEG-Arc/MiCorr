@@ -1,0 +1,95 @@
+﻿f.uid,f.name,c.uid,c.name,c.order
+widthFamily,Width,largeCharacteristic,large,1
+directionFamily,Direction,longitudinalCharacteristic,longitudinal,1
+brightnessFamily,Brightness,metallicCharacteristic,metallic,1
+opacityFamily,Opacity,opaqueCharacteristic,opaque,1
+shapeFamily,Shape,ringShapedCharacteristic,circular,1
+continuityFamily,Continuity,continuousCharacteristic,continuous,1
+thicknessFamily,Relative,thickCharacteristic,thick,1
+widthFamily,Width,normalWidthCharacteristic,medium,2
+directionFamily,Direction,obliqueCharacteristic,oblique,2
+colourFamily,Colour,lightRedCharacteristic,Light Red,2
+brightnessFamily,Brightness,submetallicCharacteristic,submetallic,2
+opacityFamily,Opacity,translucentCharacteristic,translucent,2
+shapeFamily,Shape,cloudCharacteristic,cloud,2
+continuityFamily,Continuity,discontinuous1Characteristic,discontinuous1,2
+thicknessFamily,Relative,normalThicknessCharacteristic,medium,2
+widthFamily,Width,smallCharacteristic,small,3
+directionFamily,Direction,transversalCharacteristic,transversal,3
+colourFamily,Colour,ochreCharacteristic,ochre,3
+colourFamily,Colour,redCharacteristic,Red,3
+brightnessFamily,Brightness,vitreousCharacteristic,vitreous,3
+opacityFamily,Opacity,transparentCharacteristic,transparent,3
+shapeFamily,Shape,clusterCharacteristic,cluster,3
+continuityFamily,Continuity,discontinuous2Characteristic,discontinuous2,3
+thicknessFamily,Relative,thinCharacteristic,thin,3
+directionFamily,Direction,multidirectionalCharacteristic,multidirectional,4
+colourFamily,Colour,darkRedCharacteristic,Dark Red,4
+brightnessFamily,Brightness,resinousCharacteristic,resinous,4
+shapeFamily,Shape,coneShapedCharacteristic,conical,4
+continuityFamily,Continuity,discontinuous3Characteristic,discontinuous3,4
+colourFamily,Colour,lightOrangeCharacteristic,Light Orange,5
+brightnessFamily,Brightness,silkyCharacteristic,silky,5
+shapeFamily,Shape,craterCharacteristic,crater,5
+continuityFamily,Continuity,isolatedCharacteristic,isolated,5
+colourFamily,Colour,orangeCharacteristic,Orange,6
+brightnessFamily,Brightness,greasyCharacteristic,greasy,6
+shapeFamily,Shape,crustCharacteristic,crust,6
+continuityFamily,Continuity,scatteredCharacteristic,scattered,6
+colourFamily,Colour,darkOrangeCharacteristic,Dark Orange,7
+brightnessFamily,Brightness,pearlyCharacteristic,pearly,7
+shapeFamily,Shape,cubicCharacteristic,cubic,7
+colourFamily,Colour,lightYellowCharacteristic,Light Yellow,8
+brightnessFamily,Brightness,adamantineCharacteristic,adamantine,8
+shapeFamily,Shape,curlyCharacteristic,curly,8
+colourFamily,Colour,mediumGreenCharacteristic,medium green,9
+colourFamily,Colour,yellowCharacteristic,Yellow,9
+brightnessFamily,Brightness,earthyCharacteristic,earthy,9
+shapeFamily,Shape,cylindricalCharacteristic,cylindrical,9
+colourFamily,Colour,darkYellowCharacteristic,Dark Yellow,10
+brightnessFamily,Brightness,matteCharacteristic,matte,10
+shapeFamily,Shape,dropletCharacteristic,droplet,10
+colourFamily,Colour,lightBrownCharacteristic,Light Brown,11
+shapeFamily,Shape,hemisphericalCharacteristic,hemispherical,11
+colourFamily,Colour,mediumBlueCharacteristic,medium blue,12
+colourFamily,Colour,brownCharacteristic,Brown,12
+shapeFamily,Shape,layerFilmCoatingCharacteristic,layer/film/coating,12
+colourFamily,Colour,darkBrownCharacteristic,Dark Brown,13
+shapeFamily,Shape,lensShapedCharacteristic,lenticular,13
+colourFamily,Colour,lightGreenCharacteristic,Light Green,14
+shapeFamily,Shape,noduleCharacteristic,nodule,14
+colourFamily,Colour,greenCharacteristic,Green,15
+shapeFamily,Shape,ovoidCharacteristic,ovoid,15
+colourFamily,Colour,darkGreenCharacteristic,Dark Green,16
+shapeFamily,Shape,parallelepipedalCharacteristic,parallelepipedal,16
+colourFamily,Colour,lightBlueCharacteristic,Light Blue,17
+shapeFamily,Shape,pitCharacteristic,pit,17
+colourFamily,Colour,blueCharacteristic,Blue,18
+shapeFamily,Shape,prismaticCharacteristic,prismatic,18
+colourFamily,Colour,darkBlueCharacteristic,Dark Blue,19
+shapeFamily,Shape,pustuleCharacteristic,pustule,19
+colourFamily,Colour,lightMagentaCharacteristic,Light Magenta,20
+shapeFamily,Shape,pyramidalCharacteristic,pyramidal,20
+colourFamily,Colour,magentaCharacteristic,Magenta,21
+shapeFamily,Shape,sectorOfASphereCharacteristic,sector of a sphere,21
+colourFamily,Colour,darkMagentaCharacteristic,Dark Magenta,22
+shapeFamily,Shape,sphericalCharacteristic,spherical,22
+colourFamily,Colour,lightPinkCharacteristic,Light Pink,23
+shapeFamily,Shape,sphericalCapCharacteristic,spherical cap,23
+colourFamily,Colour,pinkCharacteristic,Pink,24
+shapeFamily,Shape,vainsOrSeamsCharacteristic,veins or seams,24
+colourFamily,Colour,darkPinkCharacteristic,Dark Pink,25
+colourFamily,Colour,lightGreyCharacteristic,Light Grey,26
+colourFamily,Colour,whiteCharacteristic,White,26
+colourFamily,Colour,greyCharacteristic,Grey,27
+colourFamily,Colour,darkGreyCharacteristic,Dark Grey,28
+colourFamily,Colour,blackCharacteristic,Black,38
+avgThicknessCSVarFamily,Average,null,null,null
+maxThicknessCSVarFamily,Maximal,null,null,null
+minThicknessCSVarFamily,Minimal,null,null,null
+stratumWidthVarFamily,Stratum,null,null,null
+avgThicknessVarFamily,Average,null,null,null
+percentageWidthVarFamily,Percentage,null,null,null
+minThicknessVarFamily,Minimal,null,null,null
+maxThicknessVarFamily,Maximal,null,null,null
+areaWidthVarFamily,Observed area,null,null,null
