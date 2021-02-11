@@ -76,8 +76,8 @@ UNWIND [
 {family_uid:'interfaceProfileCSFamily', uid:'interfaceIrregularCSCharacteristic', name:'Irregular', order:5, natures:['cp', 'deposit', 'metal', 'nmm', 'pom', 'soil', 'sv'], description:'Presents variations whose height and length are unrelated. Angles may be variable.', new_uid:'interfaceProfileIrregularCSCharacteristic'},
 {family_uid:'interfaceTransitionCSFamily', uid:'interfaceSharpCSCharacteristic', name:'Sharp', order:6, natures:['cp', 'deposit', 'metal', 'nmm', 'pom', 'soil'], description:'Very sharp transition between strata.', new_uid:'interfaceTransitionSharpCSCharacteristic'},
 {family_uid:'interfaceTransitionCSFamily', uid:'interfaceDiffuseCSCharacteristic', name:'Diffuse', order:7, natures:['cp', 'deposit', 'metal', 'nmm', 'pom', 'soil'], description:'Weak noticeable transition between strata. A large diffuse transition zone may require identification as an additional stratum.', new_uid:'interfaceTransitionDiffuseCSCharacteristic'},
-{family_uid:'interfaceTransitionCSFamily', uid:'interfaceSemi-GradualSuperiorCSCharacteristic', name:'semi-gradual superior', order:8, natures:['cp', 'deposit', 'metal', 'nmm', 'pom', 'soil'], description:'Marked transition between two strata where the upper stratum has penetration into the lower stratum.', new_uid:'interfaceTransitionSemiGradualSuperiorCSCharacteristic'},
-{family_uid:'interfaceTransitionCSFamily', uid:'interfaceSemi-GradualInferiorCSCharacteristic', name:'semi-gradual inferior', order:9, natures:['cp', 'deposit', 'metal', 'nmm', 'pom', 'soil'], description:'Marked transition between two strata where the lower stratum has penetration into the upper stratum.', new_uid:'interfaceTransitionSemiGradualInferiorCSCharacteristic'},
+{family_uid:'interfaceTransitionCSFamily', uid:'semiGradualSuperiorCharacteristic', name:'semi-gradual superior', order:8, natures:['cp', 'deposit', 'metal', 'nmm', 'pom', 'soil'], description:'Marked transition between two strata where the upper stratum has penetration into the lower stratum.', new_uid:'interfaceTransitionSemiGradualSuperiorCSCharacteristic'},
+{family_uid:'interfaceTransitionCSFamily', uid:'semiGradualInferiorCharacteristic', name:'semi-gradual inferior', order:9, natures:['cp', 'deposit', 'metal', 'nmm', 'pom', 'soil'], description:'Marked transition between two strata where the lower stratum has penetration into the upper stratum.', new_uid:'interfaceTransitionSemiGradualInferiorCSCharacteristic'},
 {family_uid:'interfaceTransitionCSFamily', uid:'interfaceGradualCSCharacteristic', name:'Gradual', order:10, natures:['cp', 'deposit', 'metal', 'nmm', 'pom', 'soil'], description:'Marked transition between two interpenetrating strata.', new_uid:'interfaceTransitionGradualCSCharacteristic'},
 // new fieldset=Roughness
 {family_uid:'interfaceAdherenceCSFamily', uid:'interfaceAdherenceBlankCSCharacteristic', name:'Blank', order:11, natures:['cp', 'deposit', 'metal', 'nmm', 'pom', 'soil']},
@@ -98,5 +98,16 @@ AS updt
   RETURN n,c;
 
 //delete unwanted interfaceBlankCSCharacteristic badly added in two familyGroup by previous commit #d53b82e
+// causing double blank in Profile and Adherence
 MATCH (c:Characteristic {uid:'interfaceBlankCSCharacteristic'})
-DETACH DELETE c
+DETACH DELETE c;
+
+
+// delete obsolete now unlinked characteristics
+UNWIND [
+'interfaceSemi-GradualSuperiorCSCharacteristic',
+'interfaceSemi-GradualInferiorCSCharacteristic'
+]
+ AS uid
+MATCH (c:Characteristic {uid:uid})
+DETACH DELETE c;
