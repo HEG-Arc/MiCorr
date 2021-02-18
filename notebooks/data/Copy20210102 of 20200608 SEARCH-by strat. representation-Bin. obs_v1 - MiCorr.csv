@@ -279,7 +279,7 @@ Texture,,Binocular,,Flaking,,,,flakingTypeOfCracksCharacteristic,"Separation of 
 Texture,,Binocular,,Wedges,,,,wedgesTypeOfCracksCharacteristic,Perpendicular radial cracking. May lead to separation into wedge-shaped fragments.,,Added,,x,,x,,x,,x,,x,,x,,x,,,
 Texture,,Binocular,,Surface crazing,,,,surfaceCrazingTypeOfCracksCharacteristic,Network of perpendicular cracks of variable width covering the entire surface observed,,Added,,x,,x,,x,,x,,x,,x,,x,,,
 Texture,,Binocular,,Star-shaped cracking,,,,starShapedTypeOfCracksCharacteristic,Perpendicular cracks branching from a centre in all directions.,,Added,,x,,x,,x,,x,,x,,x,,x,,,
-Texture,,Cross-section,,,,,,,,Determined in the observed area. Pattern which results of the combined and synergistic interaction of mechanical stress and corrosion reactions.,,,,X,,X,,X,,X,,X,,X,,X,,
+Texture,Cracking,Cross-section,,,,,,,,Determined in the observed area. Pattern which results of the combined and synergistic interaction of mechanical stress and corrosion reactions.,,,,X,,X,,X,,X,,X,,X,,X,,
 Texture,,Cross-section,Structure,,,,,crackingStructureCSFamily,,Options of patterns. The blank option corresponds to a stratum which cracking is not known?,Added,,,X,,X,,X,,X,,X,,X,,X,,
 Texture,,Cross-section,,Blank,,,,,,,,,,X,,X,,X,,X,,X,,X,,X,,
 Texture,,Cross-section,,No crack,,,,,,No crack visible at this observation scale.,,,,X,,X,,X,,X,,X,,X,,X,,
