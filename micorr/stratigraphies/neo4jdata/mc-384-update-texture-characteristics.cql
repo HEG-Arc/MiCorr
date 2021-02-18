@@ -12,33 +12,30 @@ import_family_group('Texture', filter_observation='Cross-section', fieldsets=['C
 
 WITH 1 as binocular, 2 as cross_section
 UNWIND [
-  // new family_name=Compactness uid: porosityFamily
-  {fg:'fgTexture', order:1, observation:binocular, uid:'porosityFamily', name:'Compactness', visible: False, variable: False, description:'Assessed on the observed area. The blank option corresponds to a stratum which compactness is not known.', natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], new_uid:'textureCompactnessFamily'},
-  // new family_name=Cohesion uid: cohesionFamily
-  {fg:'fgTexture', order:2, observation:binocular, uid:'cohesionFamily', name:'Cohesion', visible: False, variable: False, description:'Assessed on the observed area. Only the powdery option is made visible. The blank option corresponds to a stratum which cohesion is not known.', natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], new_uid:'textureCohesionFamily'},
-  // new family_name=Hardness uid: hardnessFamily
-  {fg:'fgTexture', order:3, observation:binocular, uid:'hardnessFamily', name:'Hardness', visible: False, variable: False, description:'Assessed on the observed area. The blank option corresponds to a stratum which hardness is not known.', natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], new_uid:'textureHardnessFamily'},
-  // new fieldset=Cracking
-  // new family_name=Cracking uid: crackingFamily
-  {fg:'fgTexture', order:4, observation:binocular, uid:'crackingFamily', name:'Cracking', visible: False, variable: False, description:'Assessed on the observed area. Pattern which results of the combined and synergistic interaction of mechanical stress and corrosion reactions.', natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], new_uid:'textureCrackingFamily'},
-  {fg:'fgTexture', order:5, observation:binocular, uid:'crackingStructureFamily', name:'Structure', visible: False, variable: False, description:'Options of patterns. The blank option corresponds to a stratum which cracking is not known.', natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], fieldset:'Cracking', new_uid:'textureCrackingStructureFamily'},
-  {fg:'fgTexture', order:6, observation:binocular, uid:'crackingSurfaceDirectionFamily', name:'Surface direction', visible: False, variable: False, description:'Orientation of the crack in a plane tangential to the surface of the object and direction of propagation.', natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], fieldset:'Cracking', new_uid:'textureCrackingSurfaceDirectionFamily'},
-  {fg:'fgTexture', order:7, observation:binocular, uid:'crackingInwardDirectionFamily', name:'Inward direction', visible: False, variable: False, description:'Orientation of the crack in a plane perpendicular to the surface of the object and with respect to the corrosion layers and direction of propagation.', natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], fieldset:'Cracking', new_uid:'textureCrackingInwardDirectionFamily'},
-  {fg:'fgTexture', order:8, observation:binocular, uid:'crackingWidthFamily', name:'Width', visible: False, variable: False, description:'Average space between the lips of the cracks. To compare to the back of a classical sclapel blade type 11 which is 400µm width.', natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], fieldset:'Cracking', new_uid:'textureCrackingWidthFamily'},
-  {fg:'fgTexture', order:9, observation:binocular, uid:'crackingLengthVarFamily', name:'Length', visible: False, variable: False, description:'Average crack size parallel to the surface.', natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], fieldset:'Cracking', new_uid:'textureCrackingLengthFamily'},
-  {fg:'fgTexture', order:10, observation:binocular, uid:'crackingDepthVarFamily', name:'Depth', visible: False, variable: False, description:'Average crack size perpendicular to the surface.', natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], fieldset:'Cracking', new_uid:'textureCrackingDepthFamily'},
-  {fg:'fgTexture', order:11, observation:binocular, uid:'crackingFillingFamily', name:'Filling', visible: False, variable: False, description:'Material which might fill the cracks.', natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], fieldset:'Cracking', new_uid:'textureCrackingFillingFamily'},
-  {fg:'fgTexture', order:12, observation:binocular, uid:'crackingEdgesFamily', name:'Edges', visible: False, variable: False, description:'', natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], fieldset:'Cracking', new_uid:'textureCrackingEdgesFamily'},
-  {fg:'fgTexture', order:13, observation:binocular, uid:'crackingTypeOfCracksFamily', name:'Type of cracks', visible: False, variable: False, description:'Main specific types of cracks.', natures:['cp', 'cm', 'deposit', 'metal', 'pom'], fieldset:'Cracking', new_uid:'textureCrackingTypeOfCracksFamily'},
-  // new fieldset=Cracking
-  // new family_name=Cracking uid: crackingFamily
-  //{fg:'fgTexture', order:1, observation:cross_section, uid:'crackingFamily', name:'Cracking', visible: False, variable: False, description:'Determined in the observed area. Pattern which results of the combined and synergistic interaction of mechanical stress and corrosion reactions.', natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], new_uid:'textureCrackingCSFamily'},
-  {fg:'fgTexture', order:2, observation:cross_section, uid:'crackingStructureCSFamily', name:'Structure', visible: False, variable: False, description:'Options of patterns. The blank option corresponds to a stratum which cracking is not known?', natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], fieldset:'Cracking', new_uid:'textureCrackingStructureCSFamily'},
-  {fg:'fgTexture', order:3, observation:cross_section, uid:'crackingInwardDirectionCSFamily', name:'Inward direction', visible: False, variable: False, description:'Orientation of the crack in a plane perpendicular to the surface of the cross-section at the Metal / corrosion products interfaces. ', natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], fieldset:'Cracking', new_uid:'textureCrackingInwardDirectionCSFamily'},
-  {fg:'fgTexture', order:4, observation:cross_section, uid:'crackingWidthCSVarFamily', name:'Width', visible: False, variable: False, description:'Average spacing of the lips of the crack.', natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], fieldset:'Cracking', new_uid:'textureCrackingWidthCSFamily'},
-  {fg:'fgTexture', order:5, observation:cross_section, uid:'crackingLengthCSVarFamily', name:'Length', visible: False, variable: False, description:'Average crack size parallel to the surface.', natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], fieldset:'Cracking', new_uid:'textureCrackingLengthCSFamily'},
-  {fg:'fgTexture', order:6, observation:cross_section, uid:'crackingDepthCSVarFamily', name:'Depth', visible: False, variable: False, description:'Average crack size perpendicular to the surface.', natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], fieldset:'Cracking', new_uid:'textureCrackingDepthCSFamily'},
-  {fg:'fgTexture', order:7, observation:cross_section, uid:'crackingFillingCSFamily', name:'Filling', visible: False, variable: False, description:'Material which might fill the cracks.', natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], fieldset:'Cracking', new_uid:'textureCrackingFillingCSFamily'}
+// new family_name=Compactness uid: porosityFamily
+{fg:'fgTexture', order:1, observation:binocular, uid:'porosityFamily', name:'Compactness', visible: False, variable: False, description:'Assessed on the observed area. The blank option corresponds to a stratum which compactness is not known.', natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], new_uid:'textureCompactnessFamily'},
+// new family_name=Cohesion uid: cohesionFamily
+{fg:'fgTexture', order:2, observation:binocular, uid:'cohesionFamily', name:'Cohesion', visible: False, variable: False, description:'Assessed on the observed area. Only the powdery option is made visible. The blank option corresponds to a stratum which cohesion is not known.', natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], new_uid:'textureCohesionFamily'},
+// new family_name=Hardness uid: hardnessFamily
+{fg:'fgTexture', order:3, observation:binocular, uid:'hardnessFamily', name:'Hardness', visible: False, variable: False, description:'Assessed on the observed area. The blank option corresponds to a stratum which hardness is not known.', natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], new_uid:'textureHardnessFamily'},
+// new fieldset=Cracking
+{fg:'fgTexture', order:5, observation:binocular, uid:'crackingStructureFamily', name:'Structure', visible: True, variable: False, description:'Options of patterns. The blank option corresponds to a stratum which cracking is not known.', natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], fieldset:'Cracking', new_uid:'textureCrackingStructureFamily'},
+{fg:'fgTexture', order:6, observation:binocular, uid:'crackingSurfaceDirectionFamily', name:'Surface direction', visible: False, variable: False, description:'Orientation of the crack in a plane tangential to the surface of the object and direction of propagation.', natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], fieldset:'Cracking', new_uid:'textureCrackingSurfaceDirectionFamily'},
+{fg:'fgTexture', order:7, observation:binocular, uid:'crackingInwardDirectionFamily', name:'Inward direction', visible: False, variable: False, description:'Orientation of the crack in a plane perpendicular to the surface of the object and with respect to the corrosion layers and direction of propagation.', natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], fieldset:'Cracking', new_uid:'textureCrackingInwardDirectionFamily'},
+{fg:'fgTexture', order:8, observation:binocular, uid:'crackingWidthFamily', name:'Width', visible: False, variable: False, description:'Average space between the lips of the cracks. To compare to the back of a classical sclapel blade type 11 which is 400µm width.', natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], fieldset:'Cracking', new_uid:'textureCrackingWidthFamily'},
+{fg:'fgTexture', order:9, observation:binocular, uid:'crackingLengthVarFamily', name:'Length', visible: False, variable: True, description:'Average crack size parallel to the surface.', natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], unit:'µm', fieldset:'Cracking', new_uid:'textureCrackingLengthVarFamily'},
+{fg:'fgTexture', order:10, observation:binocular, uid:'crackingDepthVarFamily', name:'Depth', visible: False, variable: True, description:'Average crack size perpendicular to the surface.', natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], unit:'µm', fieldset:'Cracking', new_uid:'textureCrackingDepthVarFamily'},
+{fg:'fgTexture', order:11, observation:binocular, uid:'crackingFillingFamily', name:'Filling', visible: False, variable: False, description:'Material which might fill the cracks.', natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], fieldset:'Cracking', new_uid:'textureCrackingFillingFamily'},
+{fg:'fgTexture', order:12, observation:binocular, uid:'crackingEdgesFamily', name:'Edges', visible: False, variable: False, description:'', natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], fieldset:'Cracking', new_uid:'textureCrackingEdgesFamily'},
+{fg:'fgTexture', order:13, observation:binocular, uid:'crackingTypeOfCracksFamily', name:'Type of cracks', visible: False, variable: False, description:'Main specific types of cracks.', natures:['cp', 'cm', 'deposit', 'metal', 'pom'], fieldset:'Cracking', new_uid:'textureCrackingTypeOfCracksFamily'},
+{fg:'fgTexture', order:1, observation:cross_section, uid:'texturePorositiesAmountCSVarFamily', name:'Porosities amount', visible: False, variable: True, description:'Amount of porosities determined on the observed area.', natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom'], unit:'%'},
+// new fieldset=Cracking
+{fg:'fgTexture', order:3, observation:cross_section, uid:'crackingStructureCSFamily', name:'Structure', visible: False, variable: False, description:'Options of patterns. The blank option corresponds to a stratum which cracking is not known?', natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], fieldset:'Cracking', new_uid:'textureCrackingStructureCSFamily'},
+{fg:'fgTexture', order:4, observation:cross_section, uid:'crackingInwardDirectionCSFamily', name:'Inward direction', visible: False, variable: False, description:'Orientation of the crack in a plane perpendicular to the surface of the cross-section at the Metal / corrosion products interfaces. ', natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], fieldset:'Cracking', new_uid:'textureCrackingInwardDirectionCSFamily'},
+{fg:'fgTexture', order:5, observation:cross_section, uid:'crackingWidthCSVarFamily', name:'Width', visible: False, variable: True, description:'Average spacing of the lips of the crack.', natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], unit:'µm', fieldset:'Cracking', new_uid:'textureCrackingWidthCSVarFamily'},
+{fg:'fgTexture', order:6, observation:cross_section, uid:'crackingLengthCSVarFamily', name:'Length', visible: False, variable: True, description:'Average crack size parallel to the surface.', natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], unit:'µm', fieldset:'Cracking', new_uid:'textureCrackingLengthCSVarFamily'},
+{fg:'fgTexture', order:7, observation:cross_section, uid:'crackingDepthCSVarFamily', name:'Depth', visible: False, variable: True, description:'Average crack size perpendicular to the surface.', natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], unit:'µm', fieldset:'Cracking', new_uid:'textureCrackingDepthCSVarFamily'},
+{fg:'fgTexture', order:8, observation:cross_section, uid:'crackingFillingCSFamily', name:'Filling', visible: False, variable: False, description:'Material which might fill the cracks.', natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], fieldset:'Cracking', new_uid:'textureCrackingFillingCSFamily'}
 ]
  as updt
 MERGE (f:Family {uid: updt.uid})
@@ -60,39 +57,7 @@ SET  f+=$common_props, f.order=updt.order, f.observation=updt.observation, f.var
 
 /****
 adds all new texture characteristics with image_url support
-
 temp getting img src by exporting google sheet to html [https://docs.google.com/spreadsheets/d/1TAXM1qKFOoqlx5MwpVYnh2dSFWaZyumvk-ohkVOcGew/edit#gid=1581905147]
-
-f=open('MiCorr.html')
-content=f.read()
-soup=BeautifulSoup(content,'html.parser')
-imgs=soup.find_all('img')
-for im in imgs:
-    ...:     parent_td=im.parent.parent if im.parent.parent.name=='td' else None
-    ...:     if parent_td:
-    ...:         print(parent_td.previous_sibling.previous_sibling.text,im['src'])
-
-Dishing https://lh5.googleusercontent.com/OjbxPEa4xZc_YncCe7RM3SzrhZN0k5mjfkRVknk9Vk3UqBtLdU0E4sSzgTyols1Rt_-y7JmnxubX6JshjLA4JQQVKV6RXWWI2vNIhs4hWceDfrC9sjeqlQ0O72R7PqZO3RtZ5jhmTw=w126-h123
-Flaking https://lh3.googleusercontent.com/vr9yZY_oEuhR5nhmuahX4rWQQtOvVlRg-PAeE2IaCbYgqXvDnm1x1EEvuFRrhmLxNcTPRSR__g1SlUalVG-bWsQs9TUSTuH1AL5NObldMoxAdt0T6JQXZ051cMybyLy9hGnNCR2HjA=w126-h112
-Wedges https://lh3.googleusercontent.com/jsgPu7PBzPb1le0GSLN-B47anat1-zwLQbUcnO7Nxc1a8Ynfw0Yb3ibM0vxKd6Jf8UePE_H4JXbASZ_cn4m-UhT71lbcbJlWOE4RQSccpXiOBBp--Y2LC1pxvWbmG1DZC12yO5Io-A=w126-h137
-Surface crazing https://lh5.googleusercontent.com/s0Itc5SPXPvI5RgR39MOZi0I6PUNeNI7BDUWV6GSEnnBmbNXtRxAXwLzm578PhGUM9iNX07JdztbLfm43kM29DKRb9SpiCdFbGGAzm4ynOK7RP6pIFfYmXtOS1uG8wJptef3FV0Fvg=w126-h128
-Star-shaped cracking https://lh4.googleusercontent.com/0y0Sww61R3c5CkqHoT1JADz3VYUEw2EWGTndn3WfKb--XNC4LZhLHXeneeyf3-e0h7IdAhK7M-b_hIZ7cPp5Y3aJpA9o8pfXB-hy_bTYSJwUZNQnKyllGXyVmWKpqQL7EUcEh8Ok3w=w126-h110
-Dendritic https://lh6.googleusercontent.com/FyP0N-Th3gRuKFukmtMQPekDzkTkk4rqsVoqWgZLep7-kvuIVy0tXhyBwC9BHm1TlRKAZdSNhPCAFfyNE-DmsKJbKz7YSqrn0SwjfX0WZbPeS_gJhDmiIizLf6osIuEfGqBLvBUXgA=w126-h119
-Drusy aggregate https://lh3.googleusercontent.com/i904_m1OrYim9EZyNZiQ4PDGfeoV8NleF91S1_pBrvGLqI_pKfiNdinc-htQa15MAXxgG5NXIoB4h7jIzUfXvEVvD9X-lUZgM45paGcCPi83H81NhUvog3mOwzGVKDJeOXuG1hdiQw=w126-h107
-Géode https://lh6.googleusercontent.com/wmlMDLY_Q1Q4pggxDLKvQ4MuGrToL5YALEBs5jKLQVRfhG7lbEbhlDglSBYpDSjNV0eigOj_eO_68YVX70Nag3qLHBcT-ThfO0wdCW8c5Qj-P8rKyj2COndVtCd84xnuf6lSGiqIiA=w126-h137
-Lamellar https://lh3.googleusercontent.com/V6WXsI2qcUrYqUQ9rxv5TzoB2mLdN0OREnWXUbk3iMEu3pelwL7EOSDVt16NQIo9w4SN3qvKey-LyZ5B_jMYls0kvkPRZffbhbjxiaOdnFoA2qizxmmB5CwY7AbiHpVGc0ryHr_-bw=w126-h134
-Foliated https://lh4.googleusercontent.com/aL1ihcSMWB5xH-xPdEoF-aQA64jBRspxWCPZhqY4mUTI6iyfP-bhm4KhjK6T7QallyIGxQLFOfJGu-RnBSZUdDZbBydugpVCKGKCp4jQS2hTou_CmJ99Nktw7yn2_BIdSsU05N8Liw=w126-h128
-Fibrous https://lh3.googleusercontent.com/bboWl7IRuuQd9FL5Q_u6YQTgqyCRZcd-__v2uvLY9D7WU07k-yEtQFkTVZCn6oSpBiFFJMGYRn9BN57Dn7WS_nypdrmiSYd5zxRLl5d5qQRXt2pKAVCDoCMSdj96nIL0L5g0YB8Eow=w126-h107
-Stellated https://lh4.googleusercontent.com/E-vNQvqQtMZwnLMRPfytsxQaM0qt6jAzzpp5PJo4ccMmYmIU_Fw5_52P3l43gSvMqKy2rZkfaKNMODHNwWImoue6fwQN7jmHfXPXug2JpYJMzMbBWjtgZ03ovyZINwsaVNEeSgroWg=w126-h132
-Concentric https://lh4.googleusercontent.com/nEwdFT7hC2c4Ll1oI8aZ8vVbtw-lbcWjXT9Bdsl2gqM4XUyjXbTFujOhgi4VSd6b29oJqWAxyePZHKoN_aL-35Z_VsvyQpbSP79H-QILK4MnlLLPm20j_Mv8LM3jp99S6Uz51IWzAg=w126-h108
-Banded https://lh3.googleusercontent.com/Mxzty5aqKR5wWrNkfIYwaN74V_OlwuFXWYTpzzH1ghTSieP-aho0cV22cMk-FfGDDAV1Fy5k0-yM9Rv7zc_0A5x82SSSoWXEFJx_cmIyccUzw3IXNYagbvFilAhvj1rbNqbVO-u51w=w126-h106
-Botryoidal https://lh3.googleusercontent.com/xA43KIvNJkH5niUyikcCfh7XI9EtNP4xwHW5v1i3MHcHC0rGSC5QwYIcNgv7CHSz9MJWVfSrrsHAdNsW8PnlxdstdyE5GeBLN66Q3SIPrnlbNb0SRQRj5dUrrnfQBF6_8hGDnSkpEg=w126-h109
-Reniform https://lh3.googleusercontent.com/nXvRKJdJ_KFA13aUzttXcttqcFB98NKFwM49w3i1OiLlkhZhCgGWSX8V6Cfbtj7jfoETl08rNYJyf8DirEYW9b0b0zRk23BkEZCX299aID-2CLGEvdVj5MCcxRHuEwVsHwSdYoT5CQ=w126-h130
-Stalactiform https://lh5.googleusercontent.com/0wQ8ygBXwk8tUE-KVIFq2DGP0UfG5yOHUrUtQz7yWuDMyPnEYPb2dL7nnm70a2CJiuueVvtVKV51JGBUA_4QJwUmh5lThz2nQkLEY2euTEooVhIoGIehb28XEL-_RDqMGzW1b2A-Iw=w126-h134
-Globular https://lh5.googleusercontent.com/4S9204hhpo2khAjRGdiCBG_I52NO7iLkzeKsjqlqqs8uorDNK4q71FM2P1tSHrjnPzljtlmdAFkRuX3iAlfbSwyD2zypA-MzVZI-BEI_OF11LqfSx7gFC90gJgniq9oN1O9Q-IjKgw=w126-h146
-Granular https://lh6.googleusercontent.com/31wLwVd4-ECmxuvm3qrC-AqwQLJqmdCGiehASXQNO1-xZYEpCIvL1JqUJjPKw6kTNFw69pQsYdqTcUM94cfgPIu5lxqkIPQjwzmKhwdboualf0-wuDHs3j4nV1mB6zWNpq_kfbgeJQ=w126-h128
-Massive https://lh5.googleusercontent.com/Ua5DBHBX58l5mjzcS7uS05nhRFzG2tsmBYKIYHq_8bbsXia4OYkfDd5ih-dVu13uFv3pGcsVUVLobx0xYS4yNZ71qyw8T2klwYIGr3fhgeAxbOdSG0PPLVL1QpYmEjAx_sxvD3g_ZA=w126-h131
-Powderish https://lh4.googleusercontent.com/leMfZHd9RwkJswH-TUHtnK4zmkv14hcl3nNfCtDiuvz7h18DTLCw2fDfEFUciHMAh0vkWqdaQ3g4En7Ypnw3D5sHkfQSA_NktpQ7a5oNtzWkS_OZiUBG7Mvl3Dim9XfyCWOGaz2LVA=w126-h113
 
 import_family_group('Texture', filter_observation='Binocular', fieldsets=['Cracking'], filter_print=CHARACTERISTIC, shared_sub_characteristics=False)
 */
@@ -101,9 +66,6 @@ UNWIND [
  //Binocular CHARACTERISTICS
 {family_uid:'porosityFamily', uid:'textureCompactnessBlankCharacteristic', name:'Blank', order:1, natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil']},
 {family_uid:'porosityFamily', uid:'compactCharacteristic', name:'Compact', order:2, natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], description:'No observable pores.', new_uid:'textureCompactnessCompactCharacteristic'},
-{family_uid:'porosityFamily', uid:'textureCompactnessSlightyPorousCharacteristic', name:'Slighty porous', order:3, natures:[]},
-{family_uid:'porosityFamily', uid:'porousCharacteristic', name:'Porous', order:4, natures:[], new_uid:'textureCompactnessPorousCharacteristic'},
-{family_uid:'porosityFamily', uid:'textureCompactnessVeryPorousCharacteristic', name:'Very porous', order:5, natures:[]},
 {family_uid:'porosityFamily', uid:'textureCompactnessNonCompactCharacteristic', name:'Non compact', order:6, natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], description:'Pores are detected.'},
 {family_uid:'cohesionFamily', uid:'textureCohesionBlankCharacteristic', name:'Blank', order:7, natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil']},
 {family_uid:'cohesionFamily', uid:'powderyCharacteristic', name:'Powdery', order:8, natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], description:'Has no cohesion: is easily penetrated by a steel needle or a scalpel, or even a wooden stick without effort.', new_uid:'textureCohesionPowderyCharacteristic'},
@@ -122,12 +84,12 @@ UNWIND [
 {family_uid:'crackingStructureFamily', uid:'simpleCrackingStructureCharacteristic', name:'Simple', order:21, natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], new_uid:'structureSimpleCharacteristic'},
 {family_uid:'crackingStructureFamily', uid:'branchedCrackingStructureCharacteristic', name:'Branched', order:22, natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], new_uid:'structureBranchedCharacteristic'},
 {family_uid:'crackingStructureFamily', uid:'networkCrackingStructureCharacteristic', name:'Network', order:23, natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], new_uid:'structureNetworkCharacteristic'},
-{family_uid:'crackingSurfaceDirectionFamily', uid:'surfaceDirectionBlankCharacteristic', name:'Blank', order:24, natures:['cm', 'nmm', 'pom']},
+{family_uid:'crackingSurfaceDirectionFamily', uid:'surfaceDirectionBlankCharacteristic', name:'Blank', order:24, natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil']},
 {family_uid:'crackingSurfaceDirectionFamily', uid:'longitudinalSurfaceDirectionCharacteristic', name:'Longitudinal', order:25, natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], new_uid:'surfaceDirectionLongitudinalCharacteristic'},
 {family_uid:'crackingSurfaceDirectionFamily', uid:'surfaceDirectionTransvereCharacteristic', name:'Transvere', order:26, natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil']},
 {family_uid:'crackingSurfaceDirectionFamily', uid:'obliqueSurfaceDirectionCharacteristic', name:'Oblique', order:27, natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], new_uid:'surfaceDirectionObliqueCharacteristic'},
 {family_uid:'crackingSurfaceDirectionFamily', uid:'circularSurfaceDirectionCharacteristic', name:'Circular', order:28, natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], new_uid:'surfaceDirectionCircularCharacteristic'},
-{family_uid:'crackingInwardDirectionFamily', uid:'inwardDirectionBlankCharacteristic', name:'Blank', order:29, natures:['cm', 'nmm', 'pom']},
+{family_uid:'crackingInwardDirectionFamily', uid:'inwardDirectionBlankCharacteristic', name:'Blank', order:29, natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil']},
 {family_uid:'crackingInwardDirectionFamily', uid:'parallelInwardDirectionCharacteristic', name:'Parallel', order:30, natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], new_uid:'inwardDirectionParallelCharacteristic'},
 {family_uid:'crackingInwardDirectionFamily', uid:'obliqueInwardDirectionCharacteristic', name:'Oblique', order:31, natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], new_uid:'inwardDirectionObliqueCharacteristic'},
 { family_uid:'crackingInwardDirectionFamily', uid:'circularInwardDirectionCharacteristic', name:'Perpendicular', order:32, natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], new_uid:'inwardDirectionPerpendicularCharacteristic'},
@@ -169,3 +131,47 @@ AS updt
      MATCH (n:Nature {uid:nature})
      MERGE (n)-[:HAS]->(c)
   RETURN n,c;
+
+// Migrate data
+// update strata CONSTITUTED from old to new characteristics
+UNWIND [
+{old:'slightlyPorousCharacteristic', new:'textureCompactnessNonCompactCharacteristic'},
+{old:'highlyPorousCharacteristic', new:'textureCompactnessNonCompactCharacteristic'},
+{old:'porousCharacteristic', new:'textureCompactnessNonCompactCharacteristic'},
+// former crackingFamily characteristcs to delete
+{old:'branchedCracksCharacteristic', new:'branchedCrackingStructureCharacteristic'},
+{old:'networkCracksCharacteristic', new:'networkCrackingStructureCharacteristic'},
+{old:'simpleCracksCharacteristic', new:'simpleCrackingStructureCharacteristic'}
+] as updt
+MATCH (newc:Characteristic {uid:updt.new})
+WITH updt,newc
+    MATCH (oldc:Characteristic {uid:updt.old})<-[r:IS_CONSTITUTED_BY]-(s)
+    WITH  newc,oldc,s,r
+        MERGE (s)-[:IS_CONSTITUTED_BY]->(newc)
+        DELETE r
+        RETURN oldc.uid,newc.uid,s.uid;
+
+// delete obsolete now unlinked characteristics
+UNWIND [
+'slightlyPorousCharacteristic',
+'highlyPorousCharacteristic',
+'porousCharacteristic',
+'branchedCracksCharacteristic',
+'networkCracksCharacteristic',
+'simpleCracksCharacteristic',
+'textureCompactnessSlightyPorousCharacteristic',
+'textureCompactnessVeryPorousCharacteristic',
+'noCrackCrackingStructureCharacteristic'
+]
+ AS uid
+MATCH (c:Characteristic {uid:uid})
+DETACH DELETE c;
+
+// delete obsolete now empty Family
+UNWIND [
+'crackingFamily',
+'crackingWidthVarFamily' //was wrongly added in mc-382-add-familygroup-and-variable.cql
+]
+ AS uid
+MATCH (f:Family {uid:uid})
+DETACH DELETE f;

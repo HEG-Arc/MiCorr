@@ -28,6 +28,8 @@ UNWIND [
 {fg:'fgComposition', order:10, observation:binocular, uid:'compositionSecondBandAggregateMainElementsFamily', name:'main element(s)', visible: False, variable: False, description:'Only the family element(s) should be given.', natures:['cp'], fieldset:'Second band / aggregate', list_elem_family:'elementFamily', upto:0},
 {fg:'fgComposition', order:11, observation:binocular, uid:'compositionSecondBandAggregateSecondaryElementsFamily', name:'secondary element(s)', visible: False, variable: False, description:'Any other element(s) having a concentration greater than 1% (in weight) and / or affecting the properties of the CP.', natures:['cp'], fieldset:'Second band / aggregate', list_elem_family:'elementFamily', upto:0},
 {fg:'fgComposition', order:12, observation:binocular, uid:'compositionSecondBandAggregateAdditionalElementsFamily', name:'additional element(s)', visible: False, variable: False, description:'Any other element(s) not reported in main and secondary element(s).', natures:['cp'], fieldset:'Second band / aggregate', list_elem_family:'elementFamily', upto:0},
+// new family_name=Composition uid: compositionFamily
+{fg:'fgComposition', order:19, observation:binocular, uid:'compositionFamily', name:'Composition', visible: False, variable: False, description:'', natures:['nmm', 'pom']},
 
 // Observation: cross_section
 // new fieldset=Main element(s)
@@ -76,6 +78,17 @@ MERGE (f:Family {uid: updt.uid})
                     MATCH (ef:Family {uid: updt.list_elem_family})
                     MERGE (f)-[r:IS_LIST_OF {upto: updt.upto}]->(ef)
     RETURN f;
+
+// UnShow obsolete families now replaced by single compositionFamily
+UNWIND [
+'sCompositionFamily',
+'nmmCompositionFamily',
+'dCompositionFamily',
+'pomCompositionFamily']
+AS uid
+    MATCH (fg:FamilyGroup {uid:'fgComposition'})-[r:SHOWS]->(f:Family {uid:uid})
+        DELETE r
+        RETURN f;
 
 
 /* Binocular composition characteristics:
