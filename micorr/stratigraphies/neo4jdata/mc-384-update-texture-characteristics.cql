@@ -161,7 +161,8 @@ UNWIND [
 'simpleCracksCharacteristic',
 'textureCompactnessSlightyPorousCharacteristic',
 'textureCompactnessVeryPorousCharacteristic',
-'noCrackCrackingStructureCharacteristic'
+'noCrackCrackingStructureCharacteristic',
+'transverseSurfaceDirectionCharacteristic'
 ]
  AS uid
 MATCH (c:Characteristic {uid:uid})
