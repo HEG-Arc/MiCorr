@@ -458,16 +458,16 @@ class GraphGenerationUtil {
 
 
         //Fissures
-        switch (strata.getFirstCharacteristicByFamily('crackingFamily', 'name')) {
-            case "simpleCracksCharacteristic" :
+        switch (strata.getFirstCharacteristicByFamily('crackingStructureFamily', 'name')) {
+            case "simpleCrackingStructureCharacteristic" :
                 this.addImage(draw, "../static/micorr/images/c/CP/Cracking/Simple/CP_CrackingSimpleHorizontale_" + height + "x" + width + ".svg", width, height);
                 break;
 
-            case "branchedCracksCharacteristic" :
+            case "branchedCrackingStructureCharacteristic" :
                 this.addImage(draw, "../static/micorr/images/c/CP/Cracking/Branched/CP_CrackingBranched_" + height + "x" + width + ".svg", width, height);
                 break;
 
-            case "networkCracksCharacteristic" :
+            case "networkCrackingStructureCharacteristic" :
                 this.addImage(draw, "../static/micorr/images/c/CP/Cracking/Network/CP_CrackingNetwork_" + height + "x" + width + ".svg", width, height);
                 break;
         }
