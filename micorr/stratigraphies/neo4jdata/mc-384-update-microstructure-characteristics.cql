@@ -70,6 +70,12 @@ UNWIND [
      MERGE (n)-[:HAS]->(c)
   RETURN n,c;
 
+// Delete  Characteristics wrongly added in commit 13aeb0d1
+
+UNWIND ['microstructureLenticularCharacteristic',
+'microstructureHexagonalMicrostructureCharacteristic',
+'microstructureStructuralVoidCharacteristic']
+as uid MATCH (n:Characteristic {uid:uid}) DETACH DELETE n
 
 //Cross-Section CHARACTERISTICS
 UNWIND [
