@@ -25,6 +25,7 @@ UNWIND [
 {fg:'fgMorphology', order:12, observation:cross_section, uid:'avgThicknessCSVarFamily', name:'Average', visible: False, variable: True, description:'In µm.', natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil', 'sv'], fieldset:'Thickness', new_uid:'morphologyThicknessAverageCSVarFamily'},
 // new family_name=Continuity uid: continuityFamily
 {fg:'fgMorphology', order:13, observation:binocular, uid:'continuityFamily', name:'Continuity', visible: False, variable: False, description:'The continuity of a stratum is assessed in relation to the observed area. The blank option corresponds to a stratum which continuity is not known.', natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil', 'sv'], new_uid:'morphologyContinuityFamily'},
+{fg:'fgMorphology', order:13, observation:cross_section, uid:'continuityCSFamily', name:'Continuity', visible: False, variable: False, description:'The continuity of a stratum is assessed in relation to the observed area. The blank option corresponds to a stratum which continuity is not known.', natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil', 'sv'], new_uid:'morphologyContinuityCSFamily'},
 // new family_name=Direction uid: directionFamily
 {fg:'fgMorphology', order:14, observation:binocular, uid:'directionFamily', name:'Direction', visible: False, variable: False, description:'The surface orientation represents the direction of the described stratum in relation to the tangential plane of the present surface (or to the mean tangential plane of the present surface in the case of macro-roughnesses or irregularities). Only the longitudinal option is made visible. The blank option corresponds to a stratum which direction is not known.', natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil', 'sv'], new_uid:'morphologyDirectionFamily'},
 // new family_name=Colour uid: colourFamily
@@ -108,9 +109,9 @@ UNWIND [
 {family_uid:'continuityFamily', uid:'morphologyContinuityDiscontinuousCharacteristic', name:'Discontinuous', order:38, natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil', 'sv'], description:'Stratum with one ore more interruption(s) in the observed area.'},
 {family_uid:'continuityFamily', uid:'scatteredCharacteristic', name:'Scattered', order:39, natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil', 'sv'], description:'Stratum consisting of numerous stratigraphic elements separated from each other and distributed over the observed area.', new_uid:'morphologyContinuityScatteredCharacteristic'},
 {family_uid:'continuityFamily', uid:'isolatedCharacteristic', name:'Isolated', order:40, natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil', 'sv'], description:'Stratum consisting of one or more stratigraphic elements having a minority volume over the area observed.', new_uid:'morphologyContinuityIsolatedCharacteristic'},
-{family_uid:'continuityFamily', uid:'morphologyContinuityBlankCSCharacteristic', name:'Blank', order:41, natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil', 'sv']},
-{family_uid:'continuityFamily', uid:'continuousCharacteristic', name:'Continuous', order:42, natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil', 'sv'], description:'Stratum showing no interruption (consisting of a single stratigraphic element) over the observed area.', new_uid:'morphologyContinuityContinuousCSCharacteristic'},
-{family_uid:'continuityFamily', uid:'morphologyContinuityDiscontinuousCSCharacteristic', name:'Discontinuous', order:43, natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil', 'sv'], description:'Stratum with one ore more interruption(s) in the observed area.'},
+{family_uid:'continuityCSFamily', uid:'morphologyContinuityBlankCSCharacteristic', name:'Blank', order:41, natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil', 'sv']},
+{family_uid:'continuityCSFamily', uid:'morphologyContinuityContinuousCSCharacteristic', name:'Continuous', order:42, natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil', 'sv'], description:'Stratum showing no interruption (consisting of a single stratigraphic element) over the observed area.'},
+{family_uid:'continuityCSFamily', uid:'morphologyContinuityDiscontinuousCSCharacteristic', name:'Discontinuous', order:43, natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil', 'sv'], description:'Stratum with one ore more interruption(s) in the observed area.'},
 {family_uid:'directionFamily', uid:'morphologyDirectionBlankCharacteristic', name:'Blank', order:44, natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil', 'sv']},
 {family_uid:'directionFamily', uid:'longitudinalCharacteristic', name:'Longitudinal', order:45, natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil', 'sv'], new_uid:'morphologyDirectionLongitudinalCharacteristic'},
 {family_uid:'directionFamily', uid:'obliqueCharacteristic', name:'Oblique', order:46, natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil', 'sv'], new_uid:'morphologyDirectionObliqueCharacteristic'},
@@ -131,8 +132,9 @@ UNWIND [
 {family_uid:'opacityFamily', uid:'opaqueCharacteristic', name:'Opaque', order:100, natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], description:'Which does not let the light pass through.', new_uid:'morphologyOpacityOpaqueCharacteristic'},
 {family_uid:'opacityFamily', uid:'translucentCharacteristic', name:'Translucent', order:101, natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], description:'Which lets the light through, but does not allow the contours of the objects to be clearly discerned.', new_uid:'morphologyOpacityTranslucentCharacteristic'},
 {family_uid:'opacityFamily', uid:'transparentCharacteristic', name:'Transparent', order:102, natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], description:'Which, allowing itself to be easily penetrated by light, makes it possible to clearly distinguish objects through its thickness.', new_uid:'morphologyOpacityTransparentCharacteristic'},
-{family_uid:'morphologyOpacityWithOpticalMicroscopeDarkFieldCSFamily', uid:'opaqueCharacteristic', name:'Opaque', order:103, natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], description:'Which does not let the light pass through.', new_uid:'morphologyOpacityWithOpticalMicroscopeDarkFieldOpaqueCSCharacteristic'},
-{family_uid:'morphologyOpacityWithOpticalMicroscopeDarkFieldCSFamily', uid:'translucentCharacteristic', name:'Translucent', order:104, natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], description:'Which lets the light through, but does not allow the contours of the objects to be clearly discerned.', new_uid:'morphologyOpacityWithOpticalMicroscopeDarkFieldTranslucentCSCharacteristic'}
+{family_uid:'morphologyOpacityWithOpticalMicroscopeDarkFieldCSFamily', uid:'morphologyOpacityWithOpticalMicroscopeDarkFieldBlankCSCharacteristic', name:'Blank', order:103, natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil']},
+{family_uid:'morphologyOpacityWithOpticalMicroscopeDarkFieldCSFamily', uid:'morphologyOpacityWithOpticalMicroscopeDarkFieldOpaqueCSCharacteristic', name:'Opaque', order:104, natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], description:'Which does not let the light pass through.'},
+{family_uid:'morphologyOpacityWithOpticalMicroscopeDarkFieldCSFamily', uid:'morphologyOpacityWithOpticalMicroscopeDarkFieldTranslucentCSCharacteristic', name:'Translucent', order:105, natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], description:'Which lets the light through, but does not allow the contours of the objects to be clearly discerned.'}
 ]AS updt
   MERGE (c:Characteristic {uid: updt.uid})
     ON CREATE SET c+=$common_props, c.name = updt.name, c.description = updt.description, c.order = updt.order, c.optgroup=updt.optgroup, c.image_url = updt.image_url, c.new_uid= updt.new_uid
@@ -172,3 +174,15 @@ UNWIND [
  AS uid
 MATCH (c:Characteristic {uid:uid})
 DETACH DELETE c;
+
+// delete extra relations of characteristics wrongly associated with 2 families
+UNWIND [
+{uid:'morphologyContinuityBlankCSCharacteristic',from:'continuityFamily'},
+{uid:'morphologyContinuityDiscontinuousCSCharacteristic',from:'continuityFamily'},
+{uid:'opaqueCharacteristic',from:'morphologyOpacityWithOpticalMicroscopeDarkFieldCSFamily'},
+{uid:'translucentCharacteristic',from:'morphologyOpacityWithOpticalMicroscopeDarkFieldCSFamily'}
+]
+AS updt
+MATCH (c:Characteristic {uid:updt.uid})-[r:BELONGS_TO]->(f:Family {uid:updt.from})
+DELETE r
+RETURN c.uid, f.uid;
