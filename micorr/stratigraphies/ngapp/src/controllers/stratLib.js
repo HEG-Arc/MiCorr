@@ -40,9 +40,9 @@ export function initStratTab($scope, StratigraphyData, familyGroupUID) {
 
     for (let {uid: familyUID, variable, IS_LIST_OF} of $scope.familyGroup)
         if (IS_LIST_OF) {
-            $scope[familyUID] = StratigraphyData[IS_LIST_OF].characteristics;
+            $scope[familyUID] = StratigraphyData[IS_LIST_OF.family].characteristics;
             $scope.selected[familyUID] = null;
-            console.log(`${familyUID} => IS_LIST_OF: ${IS_LIST_OF}`)
+            console.log(`${familyUID} => IS_LIST_OF: ${JSON.stringify(IS_LIST_OF)}`)
         } else if (variable)
             $scope[familyUID] = null;
         else {

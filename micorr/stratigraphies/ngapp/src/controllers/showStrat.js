@@ -84,27 +84,7 @@ angular.module('micorrApp')
             }
             return showBasedOnObservation;
         };
-        /*
-         * filter characteristics in family
-         * based on current strata Nature
-         */
-        $scope.showCharacteristic = function (characteristic)
-        {
-            if (characteristic.natures && characteristic.natures.length) {
-                let index = parseInt(StratigraphyData.getSelectedStrata());
-                let selectedStratum  = StratigraphyData.getStratigraphy().getStratas()[index];
-                let result = characteristic.natures.includes(selectedStratum.natureUID);
-                //console.log('showCharacteristic(%s, [%s]) on %s stratum = %o',characteristic.name, characteristic.natures.join(','), selectedStratum.natureUID, result);
-                return result;
-            }
-            else
-            {
-                let index = parseInt(StratigraphyData.getSelectedStrata());
-                let selectedStratum  = StratigraphyData.getStratigraphy().getStratas()[index];
-                //console.log('showCharacteristic(%s, []) on %s stratum = %o',characteristic.name, selectedStratum.natureUID, true);
-            }
-            return true;
-        };
+
         var initShowStrata = function () {
             // variable qui permettent d'afficher les interfaces ou morphologies
             // par défaut quand on arrive sur l'application, on aterrit sur l'onglet de morphologie
@@ -334,6 +314,7 @@ angular.module('micorrApp')
 
                 $scope.stratas = st.getStratas();
                 $scope.stratigraphy = st;
+                $scope.StratigraphyData = StratigraphyData;
 
             }).then(function () {
                 $scope.$broadcast('initShowStrat');
@@ -635,5 +616,35 @@ angular.module('micorrApp')
             MiCorrService.saveStratigraphy(j);
             $scope.askLeave = false;
         });
-    })
-;
+    }).filter('showCharacteristic', function () {
+    /* filter characteristics in family
+     * based on current strata Nature and Family filter
+     */
+    return function (characteristics, StratigraphyData, family) {
+
+        let index = parseInt(StratigraphyData.getSelectedStrata());
+        let selectedStratum = StratigraphyData.getStratigraphy().getStratas()[index];
+        let familyFilter = family.IS_LIST_OF ? family.IS_LIST_OF.filter : null;
+        let [filterKey, filterValue] = [null, null];
+        if (familyFilter) {
+            // e.g familyFilter = "optgroup=Grey"
+            [filterKey, filterValue] = familyFilter.split('=');
+        }
+
+        function filterTest(characteristic) {
+            if (familyFilter && characteristic[filterKey] && characteristic[filterKey] != filterValue)
+                return false;
+            if (characteristic.natures && characteristic.natures.length) {
+                return characteristic.natures.includes(selectedStratum.natureUID);
+                //console.log('showCharacteristic(%s, [%s]) on %s stratum = %o',characteristic.name, characteristic.natures.join(','), selectedStratum.natureUID, result);
+                //return result;
+            }
+            return true;
+        }
+
+        if (!characteristics)
+            console.log('showCharacteristic(undefined, %s) on %s stratum', family.uid, selectedStratum.natureUID);
+        return characteristics ? characteristics.filter(filterTest) : [];
+    }
+});
+
