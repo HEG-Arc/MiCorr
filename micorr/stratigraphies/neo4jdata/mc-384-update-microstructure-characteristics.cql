@@ -73,6 +73,8 @@ UNWIND [
 // Delete  Characteristics wrongly added in commit 13aeb0d1
 
 UNWIND ['microstructureLenticularCharacteristic',
+'lenticularCharacteristic',
+'lensShapedCharacteristic',
 'microstructureHexagonalMicrostructureCharacteristic',
 'microstructureStructuralVoidCharacteristic']
 as uid MATCH (n:Characteristic {uid:uid}) DETACH DELETE n
