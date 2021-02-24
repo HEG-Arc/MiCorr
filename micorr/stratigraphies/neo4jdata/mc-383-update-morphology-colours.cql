@@ -2,6 +2,7 @@
 
 // Adds/updates new colour characteristics generated using MetalPAT_colourFamily.ipynb
 UNWIND [
+{uid: 'colourBlankCharacteristic', name: 'Blank', description: 'Unknown', order: 1} ,
 {optgroup: 'Red', uid: 'lightRedCharacteristic', name: 'Light Red', color: 'hsl(0, 75.0%, 75.0%)', description: '#ef8f8f', order: 2} ,
 {optgroup: 'Red', uid: 'redCharacteristic', name: 'Red', color: 'hsl(0, 100%, 50%)', description: '#ff0000', order: 3} ,
 {optgroup: 'Red', uid: 'darkRedCharacteristic', name: 'Dark Red', color: 'hsl(0, 100%, 25.0%)', description: '#7f0000', order: 4} ,
@@ -27,10 +28,10 @@ UNWIND [
 {optgroup: 'Pink', uid: 'pinkCharacteristic', name: 'Pink', color: 'hsl(350, 100%, 88%)', description: '#fec1cc', order: 24} ,
 {optgroup: 'Pink', uid: 'darkPinkCharacteristic', name: 'Dark Pink', color: 'hsl(350, 100%, 44.0%)', description: '#e00025', order: 25} ,
 {optgroup: 'Grey', uid: 'whiteCharacteristic', name: 'White', color: 'hsl(0, 0%, 100%)', description: '#ffffff', order: 26},
-{optgroup: 'Grey', uid: 'lightGreyCharacteristic', name: 'Light Grey', color: 'hsl(0, 0.0%, 75.0%)', description: '#bfbfbf', order: 26} ,
-{optgroup: 'Grey', uid: 'greyCharacteristic', name: 'Grey', color: 'hsl(0, 0%, 50%)', description: '#7f7f7f', order: 27} ,
-{optgroup: 'Grey', uid: 'darkGreyCharacteristic', name: 'Dark Grey', color: 'hsl(0, 0%, 25.0%)', description: '#3f3f3f', order: 28},
-{optgroup: 'Grey', uid: 'blackCharacteristic', name: 'Black', color: 'hsl(0, 0%, 18%)', description: '#2e2e2e', order: 38}]
+{optgroup: 'Grey', uid: 'lightGreyCharacteristic', name: 'Light Grey', color: 'hsl(0, 0.0%, 75.0%)', description: '#bfbfbf', order: 27} ,
+{optgroup: 'Grey', uid: 'greyCharacteristic', name: 'Grey', color: 'hsl(0, 0%, 50%)', description: '#7f7f7f', order: 28} ,
+{optgroup: 'Grey', uid: 'darkGreyCharacteristic', name: 'Dark Grey', color: 'hsl(0, 0%, 25.0%)', description: '#3f3f3f', order: 29},
+{optgroup: 'Grey', uid: 'blackCharacteristic', name: 'Black', color: 'hsl(0, 0%, 18%)', description: '#2e2e2e', order: 30}]
 AS updt
   MERGE (c:Characteristic {uid: updt.uid})
     ON CREATE SET c+=$common_props, c.name = updt.name, c.description = updt.description,  c.color = updt.color, c.order = updt.order, c.optgroup = updt.optgroup

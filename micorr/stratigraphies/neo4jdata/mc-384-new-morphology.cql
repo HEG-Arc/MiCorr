@@ -10,19 +10,18 @@ UNWIND [
 // morphologyShapeGeometricalShapeCharacteristic optgroup options:
 // new fieldset=Width
 // new family_name=Width uid: widthFamily
-{fg:'fgMorphology', order:2, observation:cross_section, uid:'widthFamily', name:'Width', visible: False, variable: False, description:'Determined on the observed area. It is expressed in µm and %. ', natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil', 'sv'], new_uid:'morphologyWidthCSFamily'},
-{fg:'fgMorphology', order:3, observation:cross_section, uid:'areaWidthVarFamily', name:'Observed area', visible: False, variable: True, description:'In µm.', natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil', 'sv'], unit:'µm', fieldset:'Width', new_uid:'morphologyWidthAreaCSVarFamily'},
+{fg:'fgMorphology', order:3, observation:cross_section, uid:'areaWidthVarFamily', name:'Total observed area', visible: False, variable: True, description:'In µm.', natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil', 'sv'], unit:'µm', fieldset:'Width', new_uid:'morphologyWidthAreaCSVarFamily'},
 {fg:'fgMorphology', order:4, observation:cross_section, uid:'stratumWidthVarFamily', name:'Stratum', visible: False, variable: True, description:'In µm.', natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil', 'sv'], unit:'µm', fieldset:'Width', new_uid:'morphologyWidthStratumCSVarFamily'},
-{fg:'fgMorphology', order:5, observation:cross_section, uid:'percentageWidthVarFamily', name:'Percentage', visible: False, variable: True, description:'in % (deduced automatically).', natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil', 'sv'], unit:'%', fieldset:'Width', new_uid:'morphologyWidthPercentageCSVarFamily'},
+{fg:'fgMorphology', order:5, observation:cross_section, uid:'percentageWidthVarFamily', name:'Percentage (stratum vs total observed area)', visible: False, variable: True, description:'in % (deduced automatically).', natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil', 'sv'], unit:'%', fieldset:'Width', new_uid:'morphologyWidthPercentageCSVarFamily'},
 // new fieldset=Thickness
 // new family_name=Thickness uid: morphologyThicknessFamily
-{fg:'fgMorphology', order:6, observation:binocular, uid:'thicknessFamily', name:'Relative', visible: False, variable: False, description:'The thickness of the strata in the observed area can be measured if the binocular or microscope is equipped with scales. Otherwise, the thickness should be deduced in relation to the other strata of the corrosion structure (thick, medium, thin). The blank option corresponds to a stratum which thickness is not known.', natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil', 'sv'], fieldset:'Thickness', new_uid:'morphologyThicknessFamily'},
+{fg:'fgMorphology', order:6, observation:binocular, uid:'thicknessFamily', name:'Relative', visible: True, variable: False, description:'The thickness of the strata in the observed area can be measured if the binocular or microscope is equipped with scales. Otherwise, the thickness should be deduced in relation to the other strata of the corrosion structure (thick, medium, thin). The blank option corresponds to a stratum which thickness is not known.', natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil', 'sv'], fieldset:'Thickness', new_uid:'morphologyThicknessFamily'},
 {fg:'fgMorphology', order:7, observation:binocular, uid:'minThicknessVarFamily', name:'Minimal', visible: False, variable: True, description:'In µm', natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil', 'sv'], unit:'µm', fieldset:'Thickness', new_uid:'morphologyThicknessMinimalVarFamily'},
 {fg:'fgMorphology', order:8, observation:binocular, uid:'maxThicknessVarFamily', name:'Maximal', visible: False, variable: True, description:'In µm', natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil', 'sv'], unit:'µm', fieldset:'Thickness', new_uid:'morphologyThicknessMaximalVarFamily'},
 {fg:'fgMorphology', order:9, observation:binocular, uid:'avgThicknessVarFamily', name:'Average', visible: False, variable: True, description:'In µm', natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil', 'sv'], unit:'µm', fieldset:'Thickness', new_uid:'morphologyThicknessAverageVarFamily'},
-{fg:'fgMorphology', order:10, observation:cross_section, uid:'minThicknessCSVarFamily', name:'Minimal', visible: False, variable: True, description:'In µm.', natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil', 'sv'], fieldset:'Thickness', new_uid:'morphologyThicknessMinimalCSVarFamily'},
-{fg:'fgMorphology', order:11, observation:cross_section, uid:'maxThicknessCSVarFamily', name:'Maximal', visible: False, variable: True, description:'In µm.', natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil', 'sv'], fieldset:'Thickness', new_uid:'morphologyThicknessMaximalCSVarFamily'},
-{fg:'fgMorphology', order:12, observation:cross_section, uid:'avgThicknessCSVarFamily', name:'Average', visible: False, variable: True, description:'In µm.', natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil', 'sv'], fieldset:'Thickness', new_uid:'morphologyThicknessAverageCSVarFamily'},
+{fg:'fgMorphology', order:10, observation:cross_section, uid:'minThicknessCSVarFamily', name:'Minimal', visible: False, variable: True, description:'In µm.', natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil', 'sv'], unit:'µm', fieldset:'Thickness', new_uid:'morphologyThicknessMinimalCSVarFamily'},
+{fg:'fgMorphology', order:11, observation:cross_section, uid:'maxThicknessCSVarFamily', name:'Maximal', visible: False, variable: True, description:'In µm.', natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil', 'sv'], unit:'µm', fieldset:'Thickness', new_uid:'morphologyThicknessMaximalCSVarFamily'},
+{fg:'fgMorphology', order:12, observation:cross_section, uid:'avgThicknessCSVarFamily', name:'Average', visible: False, variable: True, description:'In µm.', natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil', 'sv'], unit:'µm', fieldset:'Thickness', new_uid:'morphologyThicknessAverageCSVarFamily'},
 // new family_name=Continuity uid: continuityFamily
 {fg:'fgMorphology', order:13, observation:binocular, uid:'continuityFamily', name:'Continuity', visible: False, variable: False, description:'The continuity of a stratum is assessed in relation to the observed area. The blank option corresponds to a stratum which continuity is not known.', natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil', 'sv'], new_uid:'morphologyContinuityFamily'},
 {fg:'fgMorphology', order:13, observation:cross_section, uid:'continuityCSFamily', name:'Continuity', visible: False, variable: False, description:'The continuity of a stratum is assessed in relation to the observed area. The blank option corresponds to a stratum which continuity is not known.', natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil', 'sv'], new_uid:'morphologyContinuityCSFamily'},
@@ -100,10 +99,10 @@ UNWIND [
 {family_uid:'shapeFamily', uid:'geometricalShapeCurveShapedCharacteristic', name:'Curve-shaped', order:31, natures:['cp', 'metal'], optgroup:'Geometrical shape'},
 // new fieldset=Width
 // new fieldset=Thickness
-{family_uid:'morphologyThicknessFamily', uid:'morphologyThicknessBlankCharacteristic', name:'Blank', order:32, natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil', 'sv']},
-{family_uid:'morphologyThicknessFamily', uid:'thickCharacteristic', name:'Thick', order:33, natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil', 'sv'], new_uid:'morphologyThicknessThickCharacteristic'},
-{family_uid:'morphologyThicknessFamily', uid:'normalWidthCharacteristic', name:'Medium', order:34, natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil', 'sv'], new_uid:'morphologyThicknessMediumCharacteristic'},
-{family_uid:'morphologyThicknessFamily', uid:'thinCharacteristic', name:'Thin', order:35, natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil', 'sv'], new_uid:'morphologyThicknessThinCharacteristic'},
+{family_uid:'thicknessFamily', uid:'morphologyThicknessBlankCharacteristic', name:'Blank', order:32, natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil', 'sv']},
+{family_uid:'thicknessFamily', uid:'thickCharacteristic', name:'Thick', order:35, natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil', 'sv'], new_uid:'morphologyThicknessThickCharacteristic'},
+{family_uid:'thicknessFamily', uid:'normalWidthCharacteristic', name:'Medium', order:34, natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil', 'sv'], new_uid:'morphologyThicknessMediumCharacteristic'},
+{family_uid:'thicknessFamily', uid:'thinCharacteristic', name:'Thin', order:33, natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil', 'sv'], new_uid:'morphologyThicknessThinCharacteristic'},
 {family_uid:'continuityFamily', uid:'morphologyContinuityBlankCharacteristic', name:'Blank', order:36, natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil', 'sv']},
 {family_uid:'continuityFamily', uid:'continuousCharacteristic', name:'Continuous', order:37, natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil', 'sv'], description:'Stratum showing no interruption (consisting of a single stratigraphic element) over the observed area.', new_uid:'morphologyContinuityContinuousCharacteristic'},
 {family_uid:'continuityFamily', uid:'morphologyContinuityDiscontinuousCharacteristic', name:'Discontinuous', order:38, natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil', 'sv'], description:'Stratum with one ore more interruption(s) in the observed area.'},
@@ -122,7 +121,7 @@ UNWIND [
 {family_uid:'brightnessFamily', uid:'submetallicCharacteristic', name:'Submetallic', order:90, natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], description:'Shows areas of high luminance and areas of lower luminance even when the viewing angle is varied.', new_uid:'morphologyBrightnessSubmetallicCharacteristic'},
 {family_uid:'brightnessFamily', uid:'vitreousCharacteristic', name:'Vitreous', order:91, natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], description:'Luster of the glass, like quartz.', new_uid:'morphologyBrightnessVitreousCharacteristic'},
 {family_uid:'brightnessFamily', uid:'resinousCharacteristic', name:'Resinous', order:92, natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], description:'Resin luster. Some sulphides have a resinous luster.', new_uid:'morphologyBrightnessResinousCharacteristic'},
-{family_uid:'brightnessFamily', uid:'morphologyBrightnessSilkyOrSilklikeCharacteristic', name:'Silky or silklike', order:93, natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], description:'Shows a directed reflection of light. Caused by the reflection of light in a fine aggregate of parallel fibrous crystals (some gypsum, malachite).'},
+{family_uid:'brightnessFamily', uid:'silkyCharacteristic', name:'Silky or silklike', order:93, natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], description:'Shows a directed reflection of light. Caused by the reflection of light in a fine aggregate of parallel fibrous crystals (some gypsum, malachite).'},
 {family_uid:'brightnessFamily', uid:'greasyCharacteristic', name:'Greasy', order:94, natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], description:'Shows a slightly diffuse reflection as if a layer of oil was covering the surface.', new_uid:'morphologyBrightnessGreasyCharacteristic'},
 {family_uid:'brightnessFamily', uid:'pearlyCharacteristic', name:'Pearly', order:95, natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], description:'Shows surface iridescence. Caused by the refraction of light in crystal layers cleaved parallel to the surface (mother-of-pearl, micas).', new_uid:'morphologyBrightnessPearlyCharacteristic'},
 {family_uid:'brightnessFamily', uid:'adamantineCharacteristic', name:'Adamantine', order:96, natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], description:'Shows a strong diamond like brilliance. Caused by strong refraction of light. Can be observed on corrosion products with a high refractive index and on fairly large crystals (such as cerusite and anglesite, cuprite).', new_uid:'morphologyBrightnessAdamantineCharacteristic'},
@@ -169,7 +168,8 @@ UNWIND [
 'discontinuous1Characteristic',
 'discontinuous2Characteristic',
 'discontinuous3Characteristic',
-'layerFilmCoatingCharacteristic'
+'layerFilmCoatingCharacteristic',
+'morphologyBrightnessSilkyOrSilklikeCharacteristic'
 ]
  AS uid
 MATCH (c:Characteristic {uid:uid})
@@ -186,3 +186,33 @@ AS updt
 MATCH (c:Characteristic {uid:updt.uid})-[r:BELONGS_TO]->(f:Family {uid:updt.from})
 DELETE r
 RETURN c.uid, f.uid;
+
+// unlink previously wrongly added Family
+MATCH (fg:FamilyGroup {uid:'fgMorphology'})-[r:SHOWS]->(f:Family {uid:'widthFamily'})
+DELETE r
+RETURN fg,f;
+// and links to Natures whil still keeping (invisible) characteristic for now for lateral reference
+MATCH (n:Nature)-[r:HAS_FAMILY]->(f:Family {uid:'widthFamily'})
+DELETE r
+return f,n;
+
+// Data migration
+// Replace obsolete characteristics  by new ones in affected strata
+UNWIND [
+{old:'earthyCharacteristic', new:'matteCharacteristic'}
+] as updt
+MATCH (newc:Characteristic {uid:updt.new})
+WITH updt,newc
+    MATCH (oldc:Characteristic {uid:updt.old})<-[r:IS_CONSTITUTED_BY]-(s)
+    WITH  newc,oldc,s,r
+        MERGE (s)-[:IS_CONSTITUTED_BY]->(newc)
+        DELETE r
+        RETURN oldc.uid,newc.uid,s.uid;
+
+// delete obsolete now unlinked characteristics
+UNWIND [
+'earthyCharacteristic'
+]
+ AS uid
+MATCH (c:Characteristic {uid:uid})
+DETACH DELETE c;
