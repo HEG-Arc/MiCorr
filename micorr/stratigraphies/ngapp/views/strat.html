@@ -341,12 +341,12 @@
                             {{$item.sub_real_name}}
                         </ui-select-match>
                         <ui-select-choices group-by="'category'"
-                                           repeat="item in (this.selected[family.uid].subcharacteristics| showCharacteristic:StratigraphyData:family  | filter:{variable:false} | filter: $select.search) track by item.sub_real_name">
+                                           repeat="item in (this.selected[family.uid].subcharacteristics| showCharacteristic:StratigraphyData:family  | filter:{variable:false} | filter: $select.search) track by item.name">
                             <span ng-bind-html="item.sub_real_name | highlight: $select.search"></span>
                         </ui-select-choices>
                     </ui-select>
                 </div>
-                <div class="col-md-6 form-group" ng-repeat="item in (selected[family.uid].subcharacteristics| filter:{variable:true}) track by item.sub_real_name">
+                <div class="col-md-6 form-group" ng-repeat="item in (this.selected[family.uid].subcharacteristics| filter:{variable:true}) track by item.name">
                     <label for="{{ 'imp_' + item.name }}">
                         <span class="glyphicon" ng-class="item.visible ? 'glyphicon-eye-open' : 'glyphicon-eye-close'" }}
                             tooltip="{{ (item.visible ? '' :'no') + 'visual impact on the stratum'}}"></span>
