@@ -182,5 +182,11 @@ UNWIND [
 
 // delete Crystalline microstructureFamily characteristics wrongly added with french spelling
 match (f:Family {uid:'microstructureFamily'})<-[:BELONGS_TO]-(c:Characteristic)
-WHERE c.uid CONTAINS 'cristalline'
+WHERE c.uid CONTAINS 'ristalline'
 DETACH DELETE c;
+
+UNWIND ['microstructureBetaCompounds(VoirComposesDuBz)CSCharacteristic',
+ 'microstructureOthersCSCharacteristic',
+ 'microstructureP-EutecticCSCharacteristic']
+as uid
+MATCH (c:Characteristic {uid:uid}) DETACH DELETE c
