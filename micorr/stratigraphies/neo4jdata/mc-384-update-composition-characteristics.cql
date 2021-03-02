@@ -29,7 +29,7 @@ UNWIND [
 {fg:'fgComposition', order:11, observation:binocular, uid:'compositionSecondBandAggregateSecondaryElementsFamily', name:'secondary element(s)', visible: False, variable: False, description:'Any other element(s) having a concentration greater than 1% (in weight) and / or affecting the properties of the CP.', natures:['cp'], fieldset:'Second band / aggregate', list_elem_family:'elementFamily', upto:0},
 {fg:'fgComposition', order:12, observation:binocular, uid:'compositionSecondBandAggregateAdditionalElementsFamily', name:'additional element(s)', visible: False, variable: False, description:'Any other element(s) not reported in main and secondary element(s).', natures:['cp'], fieldset:'Second band / aggregate', list_elem_family:'elementFamily', upto:0},
 // new family_name=Composition uid: compositionFamily
-{fg:'fgComposition', order:19, observation:binocular, uid:'compositionFamily', name:'Composition', visible: False, variable: False, description:'', natures:['nmm', 'pom']},
+{fg:'fgComposition', order:0, observation:binocular, uid:'compositionMaterialFamily', name:'Material', visible: False, variable: False, description:'', natures:['nmm', 'pom']},
 
 // Observation: cross_section
 // new fieldset=Main element(s)
@@ -61,7 +61,8 @@ UNWIND [
 {fg:'fgComposition', order:27, observation:cross_section, uid:'compositionSecondBandAggregateCompoundsFtirCSFamily', name:'FTIR', visible: False, variable: False, description:'Formula.', natures:['cp'], fieldset:'Second band / aggregate_Compounds', list_elem_family:'compoundFamily', upto:1},
 {fg:'fgComposition', order:28, observation:cross_section, uid:'compositionSecondBandAggregateCompoundsOthersCSFamily', name:'Others', visible: False, variable: False, description:'Formula.', natures:['cp'], fieldset:'Second band / aggregate_Compounds', list_elem_family:'compoundFamily', upto:1},
 {fg:'fgComposition', order:29, observation:cross_section, uid:'compositionSecondBandAggregateCompoundsListCSFamily', name:'List', visible: False, variable: False, description:'Any other element(s) not reported in main and secondary element(s).', natures:['cp'], fieldset:'Second band / aggregate_Compounds', list_elem_family:'elementFamily', upto:0},
-{fg:'fgComposition', order:30, observation:cross_section, uid:'compositionSecondBandAggregateCompoundsAmountCSVarFamily', name:'Amount', visible: False, variable: True, description:'In % (mass).', natures:['cp'], unit:'%', fieldset:'Second band / aggregate_Compounds'}
+{fg:'fgComposition', order:30, observation:cross_section, uid:'compositionSecondBandAggregateCompoundsAmountCSVarFamily', name:'Amount', visible: False, variable: True, description:'In % (mass).', natures:['cp'], unit:'%', fieldset:'Second band / aggregate_Compounds'},
+{fg:'fgComposition', order:1, observation:cross_section, uid:'compositionMaterialCSFamily', name:'Material', visible: False, variable: False, description:'', natures:['nmm', 'pom']}
 ] as updt
 MERGE (f:Family {uid: updt.uid})
     ON CREATE SET  f+=$common_props, f.order=updt.order, f.observation=updt.observation, f.variable=updt.variable, f.visible=updt.visible, f.name=updt.name, f.unit=updt.unit, f.description=updt.description, f.fieldset=updt.fieldset
@@ -90,8 +91,16 @@ AS uid
         DELETE r
         RETURN f;
 
+// Delete compositionFamily and its characteristics that has been replaced by compositionMaterialFamily
+MATCH (fg:FamilyGroup {uid:'fgComposition'})-[r:SHOWS]->(f:Family {uid:'compositionFamily'})<-[:BELONGS_TO]-(c:Characteristic)
+DETACH DELETE c;
 
-/* Binocular composition characteristics:
+MATCH (fg:FamilyGroup {uid:'fgComposition'})-[r:SHOWS]->(f:Family {uid:'compositionFamily'})
+DETACH DELETE f;
+
+
+
+/* Binocular and Cross-section composition characteristics:
 import_family_group('Composition',filter_observation='Binocular', fieldsets=['Second band / aggregate'])
 */
 
@@ -99,15 +108,23 @@ UNWIND [
 {family_uid:'compositionCompoundsFamily', uid:'compositionCompoundsTechniquesCharacteristic', name:'Techniques', order:1, natures:['cp','deposit','nmm', 'pom', 'soil']},
 {family_uid:'compositionAdditionalElementsFamily', uid:'compositionSecondBandAggregateCompoundCharacteristic', name:'compound', order:2, natures:['cp'], description:'Formula of the CP(s) deduced from its (their) main and secondary element(s).'},
 {family_uid:'compositionAdditionalElementsFamily', uid:'compositionSecondBandAggregateTechniquesCharacteristic', name:'Techniques', order:3, natures:['cp']},
-{family_uid:'compositionFamily', uid:'compositionCompositionEnamelCharacteristic', name:'Enamel', order:4, natures:['nmm'], description:'Opaque or semi-transparent glossy substance that is a type of glass, applied by vitrification to metallic surfaces for ornament or as a protective coating.'},
-{family_uid:'compositionFamily', uid:'compositionCompositionLeatherCharacteristic', name:'Leather', order:5, natures:['nmm', 'pom'], description:'Organic material created by tanning of animals skin.'},
-{family_uid:'compositionFamily', uid:'compositionCompositionNielloCharacteristic', name:'Niello', order:6, natures:['nmm'], description:'Black compound of sulphur with silver, lead, or copper, used for filling in engraved designs in silver or other metals.'},
-{family_uid:'compositionFamily', uid:'compositionCompositionPaintCharacteristic', name:'Paint', order:7, natures:['nmm'], description:'Pigmented material applied as a thin layer and forming a solid film.'},
-{family_uid:'compositionFamily', uid:'compositionCompositionTextileCharacteristic', name:'Textile', order:8, natures:['nmm', 'pom'], description:'Flexible material composed of a network of artificial or natural fibers.'},
-{family_uid:'compositionFamily', uid:'compositionCompositionWaxCharacteristic', name:'Wax ', order:9, natures:['nmm'], description:'Organic compound, lipophilic, malleable, solid at ambient temperatures and melts above about 40°C. Insoluble in water, but soluble in nonpolar, organic solvents. Can be produced by plants, animals or with artificial material.'},
-{family_uid:'compositionFamily', uid:'compositionCompositionWoodCharacteristic', name:'Wood', order:10, natures:['nmm', 'pom'], description:'Porous and fibrous structure founds in trees and plants.'},
-{family_uid:'compositionFamily', uid:'compositionCompositionBoneCharacteristic', name:'Bone', order:11, natures:['nmm', 'pom'], description:'Rigid organ that constitutes part of the vertebrate skeleton in animals.'},
-{family_uid:'compositionFamily', uid:'compositionCompositionOtherCharacteristic', name:'Other', order:12, natures:['nmm']}
+{family_uid:'compositionMaterialFamily', uid:'compositionMaterialBoneCharacteristic', name:'Bone', order:1, natures:['nmm', 'pom'], description:'Rigid organ that constitutes part of the vertebrate skeleton in animals.'},
+{family_uid:'compositionMaterialFamily', uid:'compositionMaterialEnamelCharacteristic', name:'Enamel', order:2, natures:['nmm'], description:'Opaque or semi-transparent glossy substance that is a type of glass, applied by vitrification to metallic surfaces for ornament or as a protective coating.'},
+{family_uid:'compositionMaterialFamily', uid:'compositionMaterialLeatherCharacteristic', name:'Leather', order:3, natures:['nmm', 'pom'], description:'Organic material created by tanning of animals skin.'},
+{family_uid:'compositionMaterialFamily', uid:'compositionMaterialNielloCharacteristic', name:'Niello', order:4, natures:['nmm'], description:'Black compound of sulphur with silver, lead, or copper, used for filling in engraved designs in silver or other metals.'},
+{family_uid:'compositionMaterialFamily', uid:'compositionMaterialPaintCharacteristic', name:'Paint', order:5, natures:['nmm'], description:'Pigmented material applied as a thin layer and forming a solid film.'},
+{family_uid:'compositionMaterialFamily', uid:'compositionMaterialTextileCharacteristic', name:'Textile', order:6, natures:['nmm', 'pom'], description:'Flexible material composed of a network of artificial or natural fibers.'},
+{family_uid:'compositionMaterialFamily', uid:'compositionMaterialWaxCharacteristic', name:'Wax', order:7, natures:['nmm'], description:'Organic compound, lipophilic, malleable, solid at ambient temperatures and melts above about 40°C. Insoluble in water, but soluble in nonpolar, organic solvents. Can be produced by plants, animals or with artificial material.'},
+{family_uid:'compositionMaterialFamily', uid:'compositionMaterialWoodCharacteristic', name:'Wood', order:8, natures:['nmm', 'pom'], description:'Porous and fibrous structure founds in trees and plants.'},
+{family_uid:'compositionMaterialFamily', uid:'compositionMaterialOtherCharacteristic', name:'Other', order:9, natures:['nmm']},
+{family_uid:'compositionMaterialCSFamily', uid:'compositionMaterialBoneCSCharacteristic', name:'Bone', order:1, natures:['nmm', 'pom'], description:'Rigid organ that constitutes part of the vertebrate skeleton in animals.'},
+{family_uid:'compositionMaterialCSFamily', uid:'compositionMaterialEnamelCSCharacteristic', name:'Enamel', order:2, natures:['nmm'], description:'Opaque or semi-transparent glossy substance that is a type of glass, applied by vitrification to metallic surfaces for ornament or as a protective coating.'},
+{family_uid:'compositionMaterialCSFamily', uid:'compositionMaterialLeatherCSCharacteristic', name:'Leather', order:3, natures:['nmm', 'pom'], description:'Organic material created by tanning of animals skin.'},
+{family_uid:'compositionMaterialCSFamily', uid:'compositionMaterialNielloCSCharacteristic', name:'Niello', order:4, natures:['nmm'], description:'Black compound of sulphur with silver, lead, or copper, used for filling in engraved designs in silver or other metals.'},
+{family_uid:'compositionMaterialCSFamily', uid:'compositionMaterialPaintCSCharacteristic', name:'Paint', order:5, natures:['nmm'], description:'Pigmented material applied as a thin layers and forming a solid film.'},
+{family_uid:'compositionMaterialCSFamily', uid:'compositionMaterialTextileCSCharacteristic', name:'Textile', order:6, natures:['nmm', 'pom'], description:'Flexible material composed of a network of artificial or natural fibers.'},
+{family_uid:'compositionMaterialCSFamily', uid:'compositionMaterialWaxCSCharacteristic', name:'Wax', order:7, natures:['nmm'], description:'Organic compound, lipophilic, malleable, solid at ambient temperatures and melt above about 40°C. Insoluble in water, but soluble in nonpolar, organic solvents. Can be produced by plants, animals or with artificial material.'}
+
 ] AS updt
   MERGE (c:Characteristic {uid: updt.uid})
     ON CREATE SET c+=$common_props, c.name = updt.name, c.description = updt.description, c.order = updt.order, c.optgroup=updt.optgroup, c.image_url = updt.image_url
@@ -121,23 +138,6 @@ UNWIND [
      MERGE (n)-[:HAS]->(c)
   RETURN n,c;
 
-
-/*Cross-Section CHARACTERISTICS
-import_family_group('Composition',filter_observation='Cross-section',fieldsets=['Second band / aggregate'])
-*/
-UNWIND [
-] AS updt
- MERGE (c:Characteristic {uid: updt.uid})
-    ON CREATE SET c+=$common_props, c.name = updt.name, c.description = updt.description, c.order = updt.order
-    ON MATCH SET c.name = updt.name, c.description = updt.description, c.order = updt.order
-  WITH c,updt
-  MATCH (f:Family {uid:updt.family_uid})
-  MERGE (c)-[:BELONGS_TO]->(f)
-  WITH c,updt
-  UNWIND updt.natures AS nature
-  MATCH (n:Nature {uid:nature})
-  MERGE (n)-[:HAS]->(c)
-  RETURN n,c;
 
  //Composition Binocular SUBCHARACTERISTICS
 UNWIND [
