@@ -71,7 +71,7 @@ UNWIND [
 {family_uid:'cohesionFamily', uid:'brittleCharacteristic', name:'Brittle', order:5, natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], description:'Can be fragmented by pressure with a steel tip, or a scalpel to form piles of varying sizes. ', new_uid:'textureCohesionBrittleCharacteristic'},
 {family_uid:'cohesionFamily', uid:'friableCharacteristic', name:'Friable', order:6, natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], description:'Can be crushed with a scalpel or steel tip to form a powder.', new_uid:'textureCohesionFriableCharacteristic'},
 {family_uid:'cohesionFamily', uid:'malleableCharacteristic', name:'Malleable', order:7, natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], description:'Can be poked in with a steel spike or scalpel and plastically deformed. Can also be flattened mechanically without being pulverized (Syn. plastic).', new_uid:'textureCohesionMalleableCharacteristic'},
-{family_uid:'cohesionFamily', uid:'powderyCharacteristic', name:'Powdery', order:8, natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], description:'Has no cohesion: is easily penetrated by a steel needle or a scalpel, or even a wooden stick without effort.', image_url:'https://lh4.googleusercontent.com/nHoRxn49ZYD-ctHLMIplygBvzwB6nt_m_QiII2rHRVkIYLTNp0lrd4_TyZw66RUGCnOc9emc81aeymZnlX455UpziRhkjDyMC-rYeCPZM0My6WexEBFiE7a5AW-tO8bHkP6pJRqRTg=w126-h132', new_uid:'textureCohesionPowderyCharacteristic'},
+{family_uid:'cohesionFamily', uid:'powderyCharacteristic', name:'Powdery', order:8, natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], description:'Has no cohesion: is easily penetrated by a steel needle or a scalpel, or even a wooden stick without effort.',  image_url: null, new_uid:'textureCohesionPowderyCharacteristic'},
 {family_uid:'cohesionFamily', uid:'severableCharacteristic', name:'Severable', order:9, natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], description:'Can be cut with a scalpel forming lumps or chips without being plastically deformed.', new_uid:'textureCohesionSeverableCharacteristic'},
 {family_uid:'cohesionFamily', uid:'toughCharacteristic', name:'Tough', order:10, natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], description:'Cannot be shattered by pressure with a steel tip or scalpel.', new_uid:'textureCohesionToughCharacteristic'},
 {family_uid:'hardnessFamily', uid:'textureHardnessBlankCharacteristic', name:'Blank', order:11, natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil']},
@@ -171,7 +171,8 @@ DETACH DELETE c;
 // delete obsolete now empty Family
 UNWIND [
 'crackingFamily',
-'crackingWidthVarFamily' //was wrongly added in mc-382-add-familygroup-and-variable.cql
+'crackingWidthVarFamily', //was wrongly added in mc-382-add-familygroup-and-variable.cql
+'compactnessVarFamily'
 ]
  AS uid
 MATCH (f:Family {uid:uid})

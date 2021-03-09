@@ -10,7 +10,7 @@ export to csv and html
 
 WITH 1 as binocular, 2 as cross_section
 UNWIND [
-{fg:'fgMicrostructure', order:1, observation:binocular, uid:'microstructureFamily', name:'Microstructure', visible: False, variable: False, description:'Assessed on the observed area. The blank option corresponds to a stratum which microstructure is not known.'},
+{fg:'fgMicrostructure', order:1, observation:binocular, uid:'microstructureFamily', name:'Microstructure', visible: False, variable: False, description:'Assessed on the observed area. The blank option corresponds to a stratum which microstructure is not known.', natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil']},
 {fg:'fgMicrostructure', order:1, observation:cross_section, uid:'microstructureCSFamily', name:'Microstructure', visible: False, variable: False, description:'Assessed on the observed area. The blank option corresponds to a stratum which microstructure is not known.', natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil']}
 ] as updt
 MERGE (f:Family {uid: updt.uid})
@@ -28,7 +28,9 @@ import_family_group('Microstructure', filter_observation='Binocular', fieldsets=
 UNWIND [
 {family_uid:'microstructureFamily', uid:'microstructureBlankCharacteristic', name:'Blank', order:1, natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil']},
 {family_uid:'microstructureFamily', uid:'microstructureAlternativeBandsCharacteristic', name:'Alternative bands', order:2, natures:['cp'], description:'Occurrence of several alternately repeating layers of corrosion products of different composition.'},
-{family_uid:'microstructureFamily', uid:'microstructureCrystallineMicrostructureCharacteristic', name:'Crystalline microstructure', order:3, natures:['sv'], description:'Presence of crystalline aggregates. The blank option corresponds to a stratum which crystalline microstructure is not known.'},
+/* microstructureCrystallineMicrostructureCharacteristic is an optgroup only not a characteristic in binocular
+{family_uid:'microstructureFamily', uid:'microstructureCrystallineMicrostructureCharacteristic', name:'Crystalline microstructure', order:3, natures:['cp', 'deposit', 'metal'], description:'Presence of crystalline aggregates. The blank option corresponds to a stratum which crystalline microstructure is not known.'},
+*/
 /* microstructureCrystallineMicrostructureCharacteristic optgroup options: */
 {family_uid:'microstructureFamily', uid:'crystallineMicrostructureBlankCharacteristic', name:'Blank', order:4, natures:['cp', 'deposit', 'metal'], optgroup:'Crystalline microstructure'},
 {family_uid:'microstructureFamily', uid:'crystallineMicrostructureBandedCharacteristic', name:'Banded', order:5, natures:['cp', 'deposit'], description:'Formed from layers superimposed on each other.', image_url:'https://lh4.googleusercontent.com/fdYPf57cIFWtdMmNrX1TrRNsVn3vmEIPkma9u57vPAOZ2V7kHqnEcyAs7W4JMAekIbNj18IY9dFmDRLY39BKEOCfN4Xcp3rQbPkLf0D-o2y5Y2sxcVGnESgRvDYktMVsI_LE_zwJtw=w126-h119', optgroup:'Crystalline microstructure'},
@@ -85,31 +87,32 @@ as uid MATCH (n:Characteristic {uid:uid}) DETACH DELETE n;
 UNWIND [
 {family_uid:'microstructureCSFamily', uid:'microstructureBlankCSCharacteristic', name:'Blank', order:1, natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil']},
 {family_uid:'microstructureCSFamily', uid:'microstructureAlternativeBandsCSCharacteristic', name:'Alternative bands', order:2, natures:['cp', 'metal'], description:'Occurrence of several alternately repeating layers of corrosion products of different composition.'},
-{family_uid:'microstructureCSFamily', uid:'microstructureDeformedDendritesCSCharacteristic', name:'Deformed dendrites', order:3, natures:['metal'], description:'Stratum containing crystals in the form of deformed trees with branches.'},
-{family_uid:'microstructureCSFamily', uid:'microstructureDendritesCSCharacteristic', name:'Dendrites', order:4, natures:['metal'], description:'Stratum containing crystals in the form of trees with branches.'},
-{family_uid:'microstructureCSFamily', uid:'microstructureElongatedGrainsCSCharacteristic', name:'Elongated grains', order:5, natures:['metal'], description:'Stratum consisting of grains elongated in one or several direction(s).'},
-{family_uid:'microstructureCSFamily', uid:'microstructureEquiaxeGrainsCSCharacteristic', name:'Equiaxe grains', order:6, natures:['metal'], description:'Stratum consisting of equiaxed grains.'},
-{family_uid:'microstructureCSFamily', uid:'microstructureIsolatedAggregateMicrostructureCSCharacteristic', name:'Isolated aggregate microstructure', order:7, natures:['cp', 'deposit', 'metal', 'nmm', 'pom', 'soil'], description:'Stratum containing one or more aggregate(s) having a minority volume over the area observed.'},
-{family_uid:'microstructureCSFamily', uid:'microstructureIsolatedAggregateMicrostructureInCpCSCharacteristic', name:'Isolated aggregate microstructure in CP', order:8, natures:['cm'], description:'CP section of the stratum containing one or more aggregate(s) having a minority volume over the area observed.'},
-{family_uid:'microstructureCSFamily', uid:'microstructureNoMicrostructureVisibleAtThisObservationScaleCSCharacteristic', name:'No microstructure visible at this observation scale', order:9, natures:['cp', 'metal']},
-{family_uid:'microstructureCSFamily', uid:'microstructurePseudomorphOfDendriticMicrostructureCSCharacteristic', name:'Pseudomorph of dendritic microstructure', order:10, natures:['cp'], description:'Microstructure formed by selective replacement of dendritic and interdendritic zones. Form revealed by the presence of zones in a corrosion layer stratum corresponding to the dendritic microstructure of the original metal.'},
-{family_uid:'microstructureCSFamily', uid:'microstructurePseudomorphOfGrainMicrostructureCSCharacteristic', name:'Pseudomorph of grain microstructure', order:11, natures:['cp'], description:'Microstructure formed by selective replacement of grains and grain boundaries. Form revealed by the presence of zones in a corrosion layer stratum corresponding to the grain microstructure of the original metal.'},
-{family_uid:'microstructureCSFamily', uid:'microstructurePseudomorphOfOrganicMaterialCSCharacteristic', name:'Pseudomorph of organic material', order:12, natures:['cp'], description:'Microstructure formed by the replacement of the constituents of organic materials by corrosion products. The alteration process has led to a preservation of the initial form of the organic materials and a partial or total transformation of the organic matter.'},
-{family_uid:'microstructureCSFamily', uid:'microstructureScatteredAggregateMicrostructureCSCharacteristic', name:'Scattered aggregate microstructure', order:13, natures:['cp', 'deposit', 'metal', 'nmm', 'pom', 'soil'], description:'Stratum containing numerous aggregates separated from each other and distributed over the observed area.'},
-{family_uid:'microstructureCSFamily', uid:'microstructureClayCSCharacteristic', name:'Clay', order:14, natures:['soil'], description:'< 0,01 mm.'},
-{family_uid:'microstructureCSFamily', uid:'microstructureCoarseSandsCSCharacteristic', name:'Coarse sands', order:15, natures:['soil'], description:'0,4 to 2 mm. Crumbling.'},
-{family_uid:'microstructureCSFamily', uid:'microstructureFineSandsCSCharacteristic', name:'Fine sands', order:16, natures:['soil'], description:'0,08 to 0,4 mm.'},
-{family_uid:'microstructureCSFamily', uid:'microstructureGravelCSCharacteristic', name:'Gravel', order:17, natures:['soil'], description:'2 to 20 mm.'},
-{family_uid:'microstructureCSFamily', uid:'microstructureLimonsCSCharacteristic', name:'Limons', order:18, natures:['soil'], description:'0,01 to 0,08 mm.'},
-{family_uid:'microstructureCSFamily', uid:'microstructurePebblesCSCharacteristic', name:'Pebbles', order:19, natures:['soil'], description:'20 to 75 mm.'},
-{family_uid:'microstructureCSFamily', uid:'microstructureBetaCompoundsVoirComposésDuBzCSCharacteristic', name:'Beta compounds (voir composés du Bz)', order:20, natures:['metal']},
-{family_uid:'microstructureCSFamily', uid:'microstructureCementiteCSCharacteristic', name:'Cementite', order:21, natures:['metal'], description:'Cementite is an iron carbide with the chemical formula Fe₃C.'},
-{family_uid:'microstructureCSFamily', uid:'microstructureCopperAlphaPhaseCSCharacteristic', name:'Copper alpha phase', order:22, natures:['metal'], description:'Primary phase in most copper based alloys'},
-{family_uid:'microstructureCSFamily', uid:'microstructureFerriteCSCharacteristic', name:'Ferrite', order:23, natures:['metal'], description:'Ferrite is a solid solution of carbon in the iron allotrope α.'},
-{family_uid:'microstructureCSFamily', uid:'microstructureGraphiteLamellasCSCharacteristic', name:'Graphite lamellas', order:24, natures:['metal'], description:'Phase characteristic of grey cast iron.'},
-{family_uid:'microstructureCSFamily', uid:'microstructurePearliteCSCharacteristic', name:'Pearlite', order:25, natures:['metal'], description:'Perlite is a two-phase component generally consisting of alternating lamellae of cementite (Fe₃C) and ferrite.'},
-{family_uid:'microstructureCSFamily', uid:'microstructurePEutecticCSCharacteristic', name:'P-eutectic', order:26, natures:['metal'], description:'Structural components in grey cast iron alloys, also referred to as steatite.'},
-{family_uid:'microstructureCSFamily', uid:'microstructureOthers?CSCharacteristic', name:'Others?', order:27, natures:['metal']}
+{family_uid:'microstructureCSFamily', uid:'microstructureCrystallineMicrostructureCSCharacteristic', name:'Crystalline microstructure', order:3, natures:['cp'], description:'Presence of crystalline aggregates.'},
+{family_uid:'microstructureCSFamily', uid:'microstructureDeformedDendritesCSCharacteristic', name:'Deformed dendrites', order:4, natures:['metal'], description:'Stratum containing crystals in the form of deformed trees with branches.'},
+{family_uid:'microstructureCSFamily', uid:'microstructureDendritesCSCharacteristic', name:'Dendrites', order:5, natures:['metal'], description:'Stratum containing crystals in the form of trees with branches.'},
+{family_uid:'microstructureCSFamily', uid:'microstructureElongatedGrainsCSCharacteristic', name:'Elongated grains', order:6, natures:['metal'], description:'Stratum consisting of grains elongated in one or several direction(s).'},
+{family_uid:'microstructureCSFamily', uid:'microstructureEquiaxeGrainsCSCharacteristic', name:'Equiaxe grains', order:7, natures:['metal'], description:'Stratum consisting of equiaxed grains.'},
+{family_uid:'microstructureCSFamily', uid:'microstructureIsolatedAggregateMicrostructureCSCharacteristic', name:'Isolated aggregate microstructure', order:8, natures:['cp', 'deposit', 'metal', 'nmm', 'pom', 'soil'], description:'Stratum containing one or more aggregate(s) having a minority volume over the area observed.'},
+{family_uid:'microstructureCSFamily', uid:'microstructureIsolatedAggregateMicrostructureInCpCSCharacteristic', name:'Isolated aggregate microstructure in CP', order:9, natures:['cm'], description:'CP section of the stratum containing one or more aggregate(s) having a minority volume over the area observed.'},
+{family_uid:'microstructureCSFamily', uid:'microstructureNoMicrostructureVisibleAtThisObservationScaleCSCharacteristic', name:'No microstructure visible at this observation scale', order:10, natures:['cp', 'metal']},
+{family_uid:'microstructureCSFamily', uid:'microstructurePseudomorphOfDendriticMicrostructureCSCharacteristic', name:'Pseudomorph of dendritic microstructure', order:11, natures:['cp'], description:'Microstructure formed by selective replacement of dendritic and interdendritic zones. Form revealed by the presence of zones in a corrosion layer stratum corresponding to the dendritic microstructure of the original metal.'},
+{family_uid:'microstructureCSFamily', uid:'microstructurePseudomorphOfGrainMicrostructureCSCharacteristic', name:'Pseudomorph of grain microstructure', order:12, natures:['cp'], description:'Microstructure formed by selective replacement of grains and grain boundaries. Form revealed by the presence of zones in a corrosion layer stratum corresponding to the grain microstructure of the original metal.'},
+{family_uid:'microstructureCSFamily', uid:'microstructurePseudomorphOfOrganicMaterialCSCharacteristic', name:'Pseudomorph of organic material', order:13, natures:['cp'], description:'Microstructure formed by the replacement of the constituents of organic materials by corrosion products. The alteration process has led to a preservation of the initial form of the organic materials and a partial or total transformation of the organic matter.'},
+{family_uid:'microstructureCSFamily', uid:'microstructureScatteredAggregateMicrostructureCSCharacteristic', name:'Scattered aggregate microstructure', order:14, natures:['cp', 'deposit', 'metal', 'nmm', 'pom', 'soil'], description:'Stratum containing numerous aggregates separated from each other and distributed over the observed area.'},
+{family_uid:'microstructureCSFamily', uid:'microstructureClayCSCharacteristic', name:'Clay', order:15, natures:['soil'], description:'< 0,01 mm.'},
+{family_uid:'microstructureCSFamily', uid:'microstructureCoarseSandsCSCharacteristic', name:'Coarse sands', order:16, natures:['soil'], description:'0,4 to 2 mm. Crumbling.'},
+{family_uid:'microstructureCSFamily', uid:'microstructureFineSandsCSCharacteristic', name:'Fine sands', order:17, natures:['soil'], description:'0,08 to 0,4 mm.'},
+{family_uid:'microstructureCSFamily', uid:'microstructureGravelCSCharacteristic', name:'Gravel', order:18, natures:['soil'], description:'2 to 20 mm.'},
+{family_uid:'microstructureCSFamily', uid:'microstructureLimonsCSCharacteristic', name:'Limons', order:19, natures:['soil'], description:'0,01 to 0,08 mm.'},
+{family_uid:'microstructureCSFamily', uid:'microstructurePebblesCSCharacteristic', name:'Pebbles', order:20, natures:['soil'], description:'20 to 75 mm.'},
+{family_uid:'microstructureCSFamily', uid:'microstructureBetaCompoundsCSCharacteristic', name:'Beta compounds', order:21, natures:['metal']},
+{family_uid:'microstructureCSFamily', uid:'microstructureCementiteCSCharacteristic', name:'Cementite', order:22, natures:['metal'], description:'Cementite is an iron carbide with the chemical formula Fe₃C.'},
+{family_uid:'microstructureCSFamily', uid:'microstructureCopperAlphaPhaseCSCharacteristic', name:'Copper alpha phase', order:23, natures:['metal'], description:'Primary phase in most copper based alloys'},
+{family_uid:'microstructureCSFamily', uid:'microstructureFerriteCSCharacteristic', name:'Ferrite', order:24, natures:['metal'], description:'Ferrite is a solid solution of carbon in the iron allotrope α.'},
+{family_uid:'microstructureCSFamily', uid:'microstructureGraphiteLamellasCSCharacteristic', name:'Graphite lamellas', order:25, natures:['metal'], description:'Phase characteristic of grey cast iron.'},
+{family_uid:'microstructureCSFamily', uid:'microstructurePearliteCSCharacteristic', name:'Pearlite', order:26, natures:['metal'], description:'Perlite is a two-phase component generally consisting of alternating lamellae of cementite (Fe₃C) and ferrite.'},
+{family_uid:'microstructureCSFamily', uid:'microstructurePEutecticCSCharacteristic', name:'P-eutectic', order:27, natures:['metal'], description:'Structural components in grey cast iron alloys, also referred to as steatite.'},
+{family_uid:'microstructureCSFamily', uid:'microstructureOthers?CSCharacteristic', name:'Others?', order:28, natures:['metal']}
 ] AS updt MERGE (c:Characteristic {uid: updt.uid})
     ON CREATE SET c+=$common_props, c.name = updt.name, c.description = updt.description, c.order = updt.order
     ON MATCH SET c.name = updt.name, c.description = updt.description, c.order = updt.order
@@ -161,12 +164,12 @@ UNWIND [
 {parent_uid:'microstructurePseudomorphOfDendriticMicrostructureCSCharacteristic', uid:'eutecticPhaseCharacteristic', name:'Eutectic phase', variable:False, order:2, natures:['cp']},
 {parent_uid:'microstructurePseudomorphOfDendriticMicrostructureCSCharacteristic', uid:'inclusionsCharacteristic', name:'Inclusions', variable:False, order:3, natures:['cp']},
 {parent_uid:'microstructurePseudomorphOfDendriticMicrostructureCSCharacteristic', uid:'slipLinesCharacteristic', name:'Slip lines', variable:False, order:4, natures:['cp']},
-{parent_uid:'microstructurePseudomorphOfDendriticMicrostructureCSCharacteristic', uid:'twinLinesCharacteristic', name:'Twin lines', variable:False, order:5, natures:['cp']},
+{parent_uid:'microstructurePseudomorphOfDendriticMicrostructureCSCharacteristic', uid:'twinLinesCharacteristic', name:'Twin lines / Newman bands', variable:False, order:5, natures:['cp']},
 {parent_uid:'microstructurePseudomorphOfGrainMicrostructureCSCharacteristic', uid:'blankCharacteristic', name:'Blank', variable:False, order:1, natures:['cp']},
 {parent_uid:'microstructurePseudomorphOfGrainMicrostructureCSCharacteristic', uid:'eutecticPhaseCharacteristic', name:'Eutectic phase', variable:False, order:2, natures:['cp']},
 {parent_uid:'microstructurePseudomorphOfGrainMicrostructureCSCharacteristic', uid:'inclusionsCharacteristic', name:'Inclusions', variable:False, order:3, natures:['cp']},
 {parent_uid:'microstructurePseudomorphOfGrainMicrostructureCSCharacteristic', uid:'slipLinesCharacteristic', name:'Slip lines', variable:False, order:4, natures:['cp']},
-{parent_uid:'microstructurePseudomorphOfGrainMicrostructureCSCharacteristic', uid:'twinLinesCharacteristic', name:'Twin lines', variable:False, order:5, natures:['cp']}
+{parent_uid:'microstructurePseudomorphOfGrainMicrostructureCSCharacteristic', uid:'twinLinesCharacteristic', name:'Twin lines / Newman bands', variable:False, order:5, natures:['cp']}
 ] AS updt
   MERGE (sc:SubCharacteristic {uid: updt.uid})
     ON CREATE SET sc+=$common_props, sc.name = updt.name, sc.description = updt.description, sc.order = updt.order, sc.variable = updt.variable, sc.unit = updt.unit
@@ -186,6 +189,8 @@ WHERE c.uid CONTAINS 'ristalline'
 DETACH DELETE c;
 
 UNWIND ['microstructureBetaCompounds(VoirComposesDuBz)CSCharacteristic',
+'microstructureCrystallineMicrostructureCharacteristic',
+'microstructureBetaCompoundsVoirComposésDuBzCSCharacteristic',
  'microstructureOthersCSCharacteristic',
  'microstructureP-EutecticCSCharacteristic']
 as uid
