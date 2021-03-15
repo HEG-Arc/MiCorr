@@ -53,14 +53,7 @@ module.exports = {
                         char.setName(currentCharacteristic.name);
                         char.setFamily(currentCharacteristic.family);
                         char.setInterface(true);
-                        //Si c'est une caracteristique d'une de ces familles on peut en ajouter plusieurs
-                        if (char.getFamily() == "cpcompositionextensionFamily" || char.getFamily() == "cprimicrostructureaggregatecompositionextensionFamily") {
-                            strata.addCharacteristic(char)
-                        }
-                        else {
-                            //Sinon, il n'y en a que une donc on la remplace
-                            strata.replaceCharacteristic(char);
-                        }
+                        strata.replaceCharacteristic(char);
                     }
 
                 //Boucle sur les sous characteristiques

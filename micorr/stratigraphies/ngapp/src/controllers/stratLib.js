@@ -1,8 +1,16 @@
 import {getSelectedFamilyCharacteristic} from "../init";
 import {Characteristic} from "../business/characteristic";
 import {SubCharacteristic} from "../business/subCharacteristic";
-import {CharacteristicsSelector} from "../controllers/stratComposition";
 
+function CharacteristicsSelector(StratigraphyData, family)
+/**
+ * construct an objet like : {characteristics:StratigraphyData[family];characteristics, selected:[]};
+ * @param family
+ * @constructor
+ */ {
+    this.characteristics = StratigraphyData[family].characteristics;
+    this.selected = [];
+}
 
 export function initStratTab($scope, StratigraphyData, familyGroupUID) {
     $scope.selected = {};

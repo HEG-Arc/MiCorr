@@ -204,22 +204,11 @@ angular.module('micorrApp')
                     if ('characteristics' in currentStrata.interfaces)
                         for (let j = 0; j < currentStrata.interfaces.characteristics.length; j++) {
                             let char = new Characteristic(currentStrata.interfaces.characteristics[j]);
-                            //Si c'est une caracteristique d'une de ces familles on peut en ajouter plusieurs
-                            if (char.getFamily() == "cpcompositionextensionFamily" || char.getFamily() == "cprimicrostructureaggregatecompositionextensionFamily") {
-                                str.addCharacteristic(char)
-                            }
-                            else {
-                                //Sinon, il n'y en a que une donc on la remplace
-                                str.replaceCharacteristic(char);
-                            }
+                            str.replaceCharacteristic(char);
                         }
                     //Récupération des sous caractéristiques:
                     var subCharacteristicsList = currentStrata['subcharacteristics'];
                     var sChar;
-
-                    if (str.findDependency('subcmlevelofcorrosionFamily') &&
-                        (sChar = getSubCharacteristicByFamily(subCharacteristicsList, StratigraphyData.subcmLevelOfCorrosionFamily)))
-                        str.addSubCharacteristic(new SubCharacteristic('subcmlevelofcorrosionFamily', sChar));
 
                     // new subcharacteristic data loaded with parent family information for dynamic conversion
                     for (let sc of subCharacteristicsList) {
@@ -251,30 +240,6 @@ angular.module('micorrApp')
                     if (currentStrata.variables) {
                         str.variables = currentStrata.variables
                     }
-
-                    //Chargement des données pour la picklist
-                    if (str.findDependency('subcprimicrostructureFamily')) {
-                        var sChars = getSubCharacteristicByFamilyMulti(subCharacteristicsList, StratigraphyData.subcprimicrostructureFamily);
-                        for (var j = 0; j < sChars.length; j++) {
-                            var subChar = new SubCharacteristic();
-                            subChar.setFamily('subcprimicrostructureFamily');
-                            subChar.setName(sChars[j].real_name);
-                            subChar.setUid(sChars[j].name);
-                            str.addSubCharacteristic(subChar);
-                        }
-                    }
-                    if (str.findDependency('submmicrostructureFamily')) {
-                        var sChars = getSubCharacteristicByFamilyMulti(subCharacteristicsList, StratigraphyData.submmicrostructureFamily);
-
-                        for (var j = 0; j < sChars.length; j++) {
-                            var subChar = new SubCharacteristic();
-                            subChar.setFamily('submmicrostructureFamily');
-                            subChar.setName(sChars[j].real_name);
-                            subChar.setUid(sChars[j].name);
-                            str.addSubCharacteristic(subChar);
-                        }
-                    }
-
 
                     //Récupération des strates enfant
                     for (var j = 0; j < currentStrata.children.length; j++) {
@@ -357,7 +322,6 @@ angular.module('micorrApp')
                 $scope.showTabForms = true; //Affichage de formulaire
 
                 $scope.highlightSelected();
-                $scope.hideShowForms(strat);
 
                 if (strat != undefined) {
                     $scope.strataName = strat.getLabel();
@@ -376,124 +340,6 @@ angular.module('micorrApp')
                 }
                 $scope.askLeave = true;
             });
-        };
-
-        /*
-         * Met à jour le formulaire
-         */
-        $scope.$on('updateFormOnly', function (event) {
-            $scope.hideShowForms(StratigraphyData.getStratigraphy().getStratas()[StratigraphyData.getSelectedStrata()]);
-        });
-
-        /*
-         * affiche/masque des champs en fonction de la strate
-         * @params strata : strate sélectionnée
-         */
-        $scope.hideShowForms = function (str) {
-            //S'il n'y a plus de strates on masque le formulaire
-            if (str == undefined) {
-                $scope.showTabFormes = false;
-            }
-            else {
-                $scope.showWidth = str.findDependency('widthFamily');
-                $scope.showThickness = str.findDependency('thicknessFamily');
-                $scope.showContinuity = str.findDependency('continuityFamily');
-                $scope.showDirection = str.findDependency('directionFamily');
-                $scope.showColor = str.findDependency('colourFamily');
-                $scope.showBrightness = str.findDependency('brightnessFamily');
-                $scope.showOpacity = str.findDependency('opacityFamily');
-                $scope.showMagnetism = str.findDependency('magnetismFamily');
-                $scope.showPorosity = str.findDependency('porosityFamily');
-                $scope.showmmicrostructureFamily = str.findDependency('mMicrostructureFamily');
-                $scope.showCohesion = str.findDependency('cohesionFamily');
-                $scope.showHardness = str.findDependency('hardnessFamily');
-                $scope.showCracking = str.findDependency('crackingFamily');
-
-                $scope.showScomposition = str.findDependency('sCompositionFamily');
-                // to replace by
-                $scope.showsCompositionMainElements = str.findDependency('sCompositionMainElements');
-                $scope.showsCompositionSecondaryElements = str.findDependency('sCompositionSecondaryElements');
-
-                $scope.shownmmComposition = str.findDependency('nmmCompositionFamily');
-
-                $scope.showDcomposition = str.findDependency('dCompositionFamily');
-                // to replace by
-                $scope.showdCompositionMainElements = str.findDependency('dCompositionMainElements');
-                $scope.showdCompositionSecondaryElements = str.findDependency('dCompositionSecondaryElements');
-
-                $scope.showPomcomposition = str.findDependency('pomCompositionFamily');
-
-                $scope.showcpCompositionMainElements = str.findDependency('cpCompositionMainElements');
-                $scope.showcpCompositionSecondaryElements = str.findDependency('cpCompositionSecondaryElements');
-                $scope.showcpCompositionCompounds = str.findDependency('cpCompositionCompounds');
-                $scope.showcpCompositionAdditionalElements = str.findDependency('cpCompositionAdditionalElements');
-
-                $scope.showmCompositionMainElements = str.findDependency('mCompositionMainElements');
-                $scope.showinterfaceprofileFamily = str.findDependency('interfaceProfileFamily');
-                $scope.showinterfacetransition = str.findDependency('interfaceTransitionFamily');
-                $scope.showinterfaceroughness = str.findDependency('interfaceRoughnessFamily');
-                $scope.showinterfaceadherence = str.findDependency('interfaceAdherenceFamily');
-                $scope.showCmlevelofcorrosionFamily = str.findDependency('cmLevelOfCorrosionFamily');
-
-                $scope.showsubcmlevelofcorrosionFamily = str.findDependency('subcmlevelofcorrosionFamily');
-                $scope.showsubmmicrostructureFamily = str.findDependency('submmicrostructureFamily');
-
-
-                $scope.showcprimicrostructureFamily = str.findDependency('cpriMicrostructureFamily');
-                $scope.showmCompositionSecondaryElements = str.findDependency('mCompositionSecondaryElements');
-
-                var selectedcpriMicrostructureFamily=str.getFirstCharacteristicByFamily("cpriMicrostructureFamily","name");
-                // only display Microstructure composition options in these cases
-                if (selectedcpriMicrostructureFamily &&
-                    ["scatteredAggregateMicrostructureCharacteristic",
-                        "isolatedAggregateMicrostructureCharacteristic",
-                        "alternatingBandsCharacteristic"].indexOf(selectedcpriMicrostructureFamily) !== -1 &&
-                    str.findDependency('cpriMicrostructureFamily')) {
-                    if (selectedcpriMicrostructureFamily=="alternatingBandsCharacteristic")
-                        $scope.cpriMicrostructureOptionTitle = "Second band";
-                    else
-                        $scope.cpriMicrostructureOptionTitle = "Aggregate";
-                    $scope.showsubcprimicrostructureFamily = str.findDependency('subcprimicrostructureFamily');
-
-                    $scope.showcpSdyCptMainElements = str.findDependency('cpSdyCptMainElements');
-                    $scope.showcpSdyCptSecondaryElements = str.findDependency('cpSdyCptSecondaryElements');
-                    $scope.showcpSdyCptCompounds = str.findDependency('cpSdyCptCompounds');
-                    $scope.showcpSdyCptAdditionalElements = str.findDependency('cpSdyCptAdditionalElements');
-                }
-                else {
-                    $scope.showsubcprimicrostructureFamily = false;
-                    $scope.showcpSdyCptMainElements = false;
-                    $scope.showcpSdyCptSecondaryElements = false;
-                    $scope.showcpSdyCptCompounds = false;
-                    $scope.showcpSdyCptAdditionalElements = false;
-                }
-                if (str.getNature() == 'Metal') {
-                    $scope.showAddCorrodedMetalStrata = true;
-                } else {
-                    $scope.showAddCorrodedMetalStrata = false;
-                }
-
-
-                if (str.getNature() == 'Corroded metal') {
-
-                    $scope.corrodedMetalStrataSelected = true;
-                    if (typeof $scope.ratio == "undefined") {
-                        var ratio = str.getCharacteristicsByFamily('cmCorrosionRatioFamily')[0].getRealName();
-                        ratio = parseInt(ratio.substr(1));
-                        $scope.ratio = new Ratio(ratio);
-                    }
-                    var CPChild = str.getChildStrataByNature('Corrosion products');
-                    var selectedcmCpMicrostructureFamily = CPChild.getFirstCharacteristicByFamily("cmCpMicrostructureFamily", "name")
-                    if (selectedcmCpMicrostructureFamily)
-                        $scope.showcmcpagCompositionAdditionalElements = true;
-                    else
-                        $scope.showcmcpagCompositionAdditionalElements = false;
-
-                } else {
-                    $scope.corrodedMetalStrataSelected = false;
-                    $scope.showcmcpagCompositionAdditionalElements = false;
-                }
-            }
         };
 
         /**
