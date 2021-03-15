@@ -123,9 +123,9 @@ UNWIND [
 {family_uid:'compositionMaterialFamily', uid:'compositionMaterialWoodCharacteristic', name:'Wood', order:8, natures:['nmm', 'pom'], description:'Porous and fibrous structure founds in trees and plants.'},
 {family_uid:'compositionMaterialFamily', uid:'compositionMaterialOtherCharacteristic', name:'Other', order:9, natures:['nmm']},
 // new fieldset=Compounds
-{family_uid:'cmCorrosionRatioFamily', uid:'r1', name:'Low', order:10, natures:['cm'], new_uid:'compositionMcpRatioLowCharacteristic'},
-{family_uid:'cmCorrosionRatioFamily', uid:'r2', name:'Average', order:11, natures:['cm'], new_uid:'compositionMcpRatioAverageCharacteristic'},
-{family_uid:'cmCorrosionRatioFamily', uid:'r3', name:'High', order:12, natures:['cm'], new_uid:'compositionMcpRatioHighCharacteristic'},
+{family_uid:'cmCorrosionRatioFamily', uid:'r1Characteristic', name:'Low', order:10, natures:['cm'], new_uid:'compositionMcpRatioLowCharacteristic'},
+{family_uid:'cmCorrosionRatioFamily', uid:'r2Characteristic', name:'Average', order:11, natures:['cm'], new_uid:'compositionMcpRatioAverageCharacteristic'},
+{family_uid:'cmCorrosionRatioFamily', uid:'r3Characteristic', name:'High', order:12, natures:['cm'], new_uid:'compositionMcpRatioHighCharacteristic'},
 {family_uid:'compositionMaterialCSFamily', uid:'compositionMaterialBoneCSCharacteristic', name:'Bone', order:1, natures:['nmm', 'pom'], description:'Rigid organ that constitutes part of the vertebrate skeleton in animals.'},
 {family_uid:'compositionMaterialCSFamily', uid:'compositionMaterialEnamelCSCharacteristic', name:'Enamel', order:2, natures:['nmm'], description:'Opaque or semi-transparent glossy substance that is a type of glass, applied by vitrification to metallic surfaces for ornament or as a protective coating.'},
 {family_uid:'compositionMaterialCSFamily', uid:'compositionMaterialLeatherCSCharacteristic', name:'Leather', order:3, natures:['nmm', 'pom'], description:'Organic material created by tanning of animals skin.'},

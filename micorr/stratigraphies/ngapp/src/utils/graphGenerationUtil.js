@@ -242,7 +242,7 @@ class GraphGenerationUtil {
 
         //On dessine ensuite une forme qui permet de cacher une partie de la strate pour donner
         //l'illusion que les triangles s'agrandissent/rapetississent
-        let ratio = strata.getFirstCharacteristicByFamily('cmCorrosionRatioFamily', 'realName');
+        let ratio = strata.getFirstCharacteristicByFamily('cmCorrosionRatioFamily', 'name');
         if (ratio)
             ratio = parseInt(ratio.substr(1));
         else
