@@ -6,8 +6,6 @@
 
 import {Stratigraphy} from '../business/stratigraphy';
 import {Strata} from '../business/stratigraphy';
-import {Characteristic} from '../business/characteristic';
-import {SubCharacteristic} from '../business/subCharacteristic';
 import {PoissonDiskSampler} from '../algorithms/poissonDisk';
 
 import * as utils from '../nodeServices/nodeUtils.js';
@@ -119,12 +117,12 @@ class GraphGenerationUtil {
 
         // si on est pas à la première interface alors on change la couleur de fond du haut
         if (index > 0) {
-                let color = this.stratig.getStratas()[index - 1].getFirstCharacteristicByFamily('colourFamily', 'color');
+                let color = this.stratig.getStratas()[index - 1].getFirstCharacteristicByFamily(this.stratig.colourFamily, 'color');
                 if (color) {
                     upperInterfaceColor = color;
                 }
         }
-        let color = strata.getFirstCharacteristicByFamily('colourFamily', 'color');
+        let color = strata.getFirstCharacteristicByFamily(this.stratig.colourFamily, 'color');
         if (color) {
             lowerInterfaceColor = color;
         }
@@ -202,7 +200,6 @@ class GraphGenerationUtil {
             var bottomBorder = nestedStrata.path("M0 " + height + "L" + width + " " + height).fill('none');
             bottomBorder.stroke({color: borderColor, width: borderWidth});
         }
-        let strataColor = strata.getFirstCharacteristicByFamily("colourFamily","realName");
         let label = nestedStrata.plain(strata.getLabel()).attr({x:20, y:height/2, "text-anchor":"auto","font-size":18,fill:"black"});
         let labelBbox=label.bbox();
         //console.log(`stratum ${strata.getLabel()} label bbox:${labelBbox.width}, ${labelBbox.height}`);
@@ -283,8 +280,8 @@ class GraphGenerationUtil {
 
             var defs = draw.defs();
             var path = defs.path(pathString).attr({fill: 'none'});
-            if (upperStrata.getFirstCharacteristicByFamily('colourFamily', 'color') ==
-                lowerStrata.getFirstCharacteristicByFamily('colourFamily', 'color'))
+            if (upperStrata.getFirstCharacteristicByFamily(this.stratig.colourFamily, 'color') ==
+                lowerStrata.getFirstCharacteristicByFamily(this.stratig.colourFamily, 'color'))
                 group.path(pathString).attr({fill: 'none', 'stroke-width': '1', stroke: 'black'});
                 group.clipWith(path);
         }
@@ -320,7 +317,7 @@ class GraphGenerationUtil {
             var pds = new PoissonDiskSampler(width, height);
         }
 
-        var color = strata.getFirstCharacteristicByFamily('colourFamily', 'color') || 'white';
+        var color = strata.getFirstCharacteristicByFamily(this.stratig.colourFamily, 'color') || 'white';
 
         let rect = draw.rect(width, height).attr({fill: color, "shape-rendering": "crispEdges"});
 

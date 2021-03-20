@@ -84,6 +84,29 @@ angular.module('micorrApp')
             }
             return showBasedOnObservation;
         };
+        $scope.onObservationModeChange= function () {
+            if ($scope.stratigraphy)
+            {
+                // strata directive is watching stratigraphy.colourFamily
+                // so all strata will redraw on change
+                if ($scope.observationMode.binocular) {
+                    $scope.stratigraphy.colourFamily = 'colourFamily';
+                }
+                else {
+                    $scope.stratigraphy.colourFamily = 'morphologyColourWithOpticalMicroscopeBrightFieldCSFamily';
+                }
+            }
+        };
+
+        /*
+         * Affiche l'onglet des interface quand l'utilisateur clique sur l'interface générée
+         */
+        $scope.setInterfaceTab = function (val) {
+            if (!val)
+                val = false;
+            $scope.activeTabInterface = val;
+            $scope.activeMorphologyTab = !val;
+        };
 
         var initShowStrata = function () {
             // variable qui permettent d'afficher les interfaces ou morphologies
