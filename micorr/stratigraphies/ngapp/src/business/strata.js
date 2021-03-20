@@ -20,7 +20,7 @@ let natureCharacteristicNameToNatureUID = {
 
 class Strata {
 
-    constructor(nature, child) {
+    constructor(nature, child, index) {
         this.nature = nature;
         // get uid of Nature node corresponding to natureFamily characteristic of name nature
         this.natureUID = natureCharacteristicNameToNatureUID[nature];
@@ -34,6 +34,8 @@ class Strata {
         this.containers = {}; //map of Element list
         this.variables = {};
         this.child = child;
+        this.index = index;
+        this.forceRefresh=0;
     }
 
 

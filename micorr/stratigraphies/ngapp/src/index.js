@@ -8,7 +8,7 @@ import "angular-ui-bootstrap";
 import "angular-sanitize";
 import "ui-select";
 import "svg.js";
-import "./dependencies/angbootstrap.min.js";
+import "./dependencies/angbootstrap.min.js"; // todo remove this obsolete local angular-ui-bootstrap v0.12.1 and use the one above
 import "./directives/picklist.js";
 import "./utils/graphGenerationUtil.js";
 import "./algorithms/poissonDisk.js";

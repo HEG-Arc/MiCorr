@@ -4,7 +4,7 @@
  */
 var request = require("request");
 var Stratigraphy = require('../business/stratigraphy').Stratigraphy;
-var Strata = require('../business/strata').Strata;
+import {Strata} from "../business/strata";
 var Characteristic = require('../business/characteristic').Characteristic;
 var SubCharacteristic = require('../business/subCharacteristic').SubCharacteristic;
 var GraphGenerationUtil = require('../utils/graphGenerationUtil').GraphGenerationUtil;

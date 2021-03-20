@@ -5,14 +5,13 @@
  * C'est la classe business de la Stratigraphie
  */
 
-import {Strata} from './strata';
 
 class Stratigraphy {
 
-
-    constructor() {
+    constructor(colourFamily) {
         //contient toutes les strates de la stratigraphie
         this.stratas = [];
+        this.colourFamily = colourFamily ? colourFamily : 'colourFamily';
     }
 
     toJson() {
@@ -41,8 +40,17 @@ class Stratigraphy {
      * @param stratum La strate à ajouter
      */
     addStratum(stratum) {
+        if (this.stratas.length)
+            this.stratas[this.stratas.length-1].forceRefresh++;
         this.stratas.push(stratum);
         this.setStratumLabel(stratum);
+    }
+
+    forceRefresh() {
+        // force refresh all stratigraohy's strata
+        // strata directive watches its stratum.forceRefresh and will self redraw on change
+        for (let stratum of this.stratas)
+            stratum.forceRefresh++;
     }
 
     swapTwoStrata(index1, index2) {
@@ -55,15 +63,20 @@ class Stratigraphy {
         this.stratas[index2].setIndex(index2);
         this.setStratumLabel(this.stratas[index1]);
         this.setStratumLabel(this.stratas[index2]);
+        this.forceRefresh();
     }
 
     delStratum(index) {
-        var idel = parseInt(index);
-        this.stratas.splice(idel, 1);
-        if (this.stratas[idel] != undefined) {
-            this.stratas[idel].setIndex(idel);
-            this.setStratumLabel(this.stratas[idel]);
+        if (this.selectedStrata && this.selectedStrata > index)
+            this.selectedStrata--;
+        this.stratas.splice(index, 1);
+        for (let i = index; i < this.stratas.length; i++) {
+            if (this.stratas[i] != undefined) {
+                this.stratas[i].setIndex(i);
+                this.setStratumLabel(this.stratas[i]);
+            }
         }
+        this.forceRefresh();
     }
 
     getId() {

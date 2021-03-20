@@ -17,6 +17,8 @@ export default angular
         'ngRoute',
         'ngResource',
         'ui.bootstrap',
+        //'ui.bootstrap.tooltip', //todo use $uibTooltipProvider
+        //'ui.bootstrap.modal',
         'fxpicklist',
         'ngProgress',
         'ui.select',

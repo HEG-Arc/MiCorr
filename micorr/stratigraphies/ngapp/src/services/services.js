@@ -128,18 +128,8 @@ let StratigraphyData =  angular.module('micorrApp').factory('StratigraphyData', 
         return {
 
             getStrataNature: function (strataData) {
-                var nature;
-                var found = false;
-                var i = 0;
-                while (!found && i < strataData.characteristics.length) {
-                    var currentCharacteristic = strataData.characteristics[i];
-                    if (currentCharacteristic.family == "natureFamily") {
-                        nature = currentCharacteristic.real_name;
-                        found = true;
-                    }
-                    i++;
-                }
-                return nature;
+                let c = strataData.characteristics.find(e => e.family == "natureFamily");
+                return c ? c.real_name : undefined;
             },
 
             getStratigraphy: function () {
@@ -158,9 +148,6 @@ let StratigraphyData =  angular.module('micorrApp').factory('StratigraphyData', 
 
             pushOneStrata: function (strata) {
                 stratig.addStratum(strata);
-            },
-            stratigraphyToJson: function () {
-
             },
 
             fill: function (characteristics, descriptions) {

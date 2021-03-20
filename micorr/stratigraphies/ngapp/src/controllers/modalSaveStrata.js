@@ -18,7 +18,6 @@ angular.module('micorrApp')
          // appelle une méthode parent pour sauvegarder la stratigraphie qui se trouve dans le service
         $scope.doSave = function () {
             $scope.$emit('save');
-            $scope.$emit('updateDraw');
         };
 
         $scope.doSend = function (email_to) {

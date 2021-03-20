@@ -34,19 +34,16 @@ angular.module('micorrApp')
         $scope.removeStrata = function (index) {
             StratigraphyData.getStratigraphy().delStratum(index);
             $scope.$emit('doUpdate', 0);
-            $scope.$emit('updateDraw');
         };
 
         /*
          * Déplace une strate vers le haut et met à jour l'interface
          * @params i strate actuelle qui va se faire déplacer
          */
-        $scope.movestrataup = function (i) {
-            var current = parseInt(i);
+        $scope.movestrataup = function (current) {
             if (current > 0) {
-                StratigraphyData.getStratigraphy().swapTwoStrata(current, current - 1);
+                $scope.stratigraphy.swapTwoStrata(current, current - 1);
                 $scope.$broadcast('doUpdate', current - 1);
-                $scope.$broadcast('updateDraw');
             }
         };
 
@@ -54,13 +51,10 @@ angular.module('micorrApp')
          * Déplace une strate vers le bas et met à jour l'interface
          * @params i strate actuelle qui va se faire déplacer
          */
-        $scope.movestratadown = function (i) {
-
-            var current = parseInt(i);
-            if (current + 1 < StratigraphyData.getStratigraphy().getStratas().length) {
-                StratigraphyData.getStratigraphy().swapTwoStrata(current, current + 1);
+        $scope.movestratadown = function (current) {
+            if (current + 1 < $scope.stratas.length) {
+                $scope.stratigraphy.swapTwoStrata(current, current + 1);
                 $scope.$broadcast('doUpdate', current + 1);
-                $scope.$broadcast('updateDraw', current + 1);
             }
         };
 
@@ -73,7 +67,7 @@ angular.module('micorrApp')
             let showBasedOnObservation = $scope.observationMode.binocular ? family.observation & 1 : family.observation & 2;
             if (showBasedOnObservation)
             {
-                let index = parseInt(StratigraphyData.getSelectedStrata());
+                let index = StratigraphyData.getSelectedStrata();
                 let selectedStratumNature  = StratigraphyData.getStratigraphy().getStratas()[index].natureUID;
                 if (family.natures) { // family is a family object direct visibility test for current nature
                     return family.natures.length==0 || family.natures.includes(selectedStratumNature);
@@ -114,16 +108,6 @@ angular.module('micorrApp')
             $scope.activeTabInterface = false;
             $scope.activeMorphologyTab = true;
 
-            /*
-             * Affiche l'onglet des interface quand l'utilisateur clique sur l'interface générée
-             */
-            $scope.setInterfaceTab = function (val) {
-                $scope.$apply(function (){
-                    $scope.activeTabInterface = val;
-                    $scope.activeMorphologyTab = !val;
-                })
-            };
-
             $scope.artefactName = $routeParams.artefact;        // nom de l'artefact
             $scope.stratigraphyName = $routeParams.strat;           // nom de la stratigraphie
             $scope.stratigraphyDescription = $routeParams.stratigraphyDescription; // description de la stratigraphie
@@ -132,34 +116,7 @@ angular.module('micorrApp')
 
             $scope.natureFamilyname = "";                           // par défaut aucune nature n'est choisie
 
-            // ces variables servent à afficher/masquer dans le formulaire les champs appartenants à une nature de matériau
-            // par exemple SI on prend D, le champ colourFamily s'affiche alors qu'il va se masquer dès qu'on va sélectionner un SV
             $scope.showTabForms = false;        //par défaut le formulaire est masqué
-
-            $scope.showColor = false;
-            $scope.showBrightness = false;
-            $scope.showOpacity = false;
-            $scope.showMagnetism = false;
-            $scope.showPorosity = false;
-            $scope.showcprimicrostructureFamily = false;
-            $scope.showmmicrostructureFamily = false;
-            $scope.showCohesion = false;
-            $scope.showHardness = false;
-            $scope.showCracking = false;
-            $scope.showScomposition = false;
-            $scope.shownmmComposition = false;
-            $scope.showDcomposition = false;
-            $scope.showPomcomposition = false;
-
-            $scope.showinterfacetransition = false;
-            $scope.showinterfaceroughness = false;
-            $scope.showinterfaceadherence = false;
-            $scope.showCmlevelofcorrosionFamily = false;
-
-            $scope.showsubcprimicrostructureFamily = false;
-
-            $scope.showsubcmlevelofcorrosionFamily = false;
-            $scope.showsubmmicrostructureFamily = false;
 
 
             //Chargement de la stratigraphie
@@ -201,22 +158,21 @@ angular.module('micorrApp')
                     return t;
                 }
 
-                var st = StratigraphyData.getStratigraphy();
-                st.setUid($scope.stratigraphyName);
-                st.setArtefact($scope.artefactName);
+                var stratigraphy = StratigraphyData.getStratigraphy();
+                stratigraphy.setUid($scope.stratigraphyName);
+                stratigraphy.setArtefact($scope.artefactName);
                 $scope.stratigraphyDescription =  $scope.stratigraphyDescription || data.description;
                 if ($scope.stratigraphyDescription != undefined) {
-                    st.setDescription($scope.stratigraphyDescription)
+                    stratigraphy.setDescription($scope.stratigraphyDescription)
                 }
                 //Boucle sur les strates
                 for (var i = 0; i < data.strata.length; i++) {
                     var currentStrata = data.strata[i];
                     var nature = StratigraphyData.getStrataNature(currentStrata);
-                    var str = new Strata(nature, false);
+                    var str = new Strata(nature, false,i);
                     str.setUid(currentStrata.name);
-                    str.setIndex(i);
-                    if (st.getDescription() != undefined) {
-                        str.setName(st.getDescription() + '_strata_' + str.getIndex());
+                    if (stratigraphy.getDescription() != undefined) {
+                        str.setName(stratigraphy.getDescription() + '_strata_' + str.getIndex());
                     }
                  //Boucle sur les caracteristiques
                     for (let j = 0; j < currentStrata.characteristics.length; j++) {
@@ -296,12 +252,12 @@ angular.module('micorrApp')
                         str.addChildStrata(childMStrata);
                     }
 
-                    st.addStratum(str);
+                    stratigraphy.addStratum(str);
                 }
 
 
-                $scope.stratas = st.getStratas();
-                $scope.stratigraphy = st;
+                $scope.stratas = stratigraphy.getStratas();
+                $scope.stratigraphy = stratigraphy;
                 $scope.StratigraphyData = StratigraphyData;
 
             }).then(function () {
@@ -337,14 +293,13 @@ angular.module('micorrApp')
          * @params index : index de la strate sélectionnée
          * @returns
          */
-        $scope.update = function (index) {
-            $scope.$apply(function () {
+        $scope.update = function (index, isInterface) {
                 var stratig = StratigraphyData.getStratigraphy();
                 var strat = stratig.getStratas()[index];
                 StratigraphyData.setSelectedStrata(index); // On indique au service la strate sélectionnée
                 $scope.showTabForms = true; //Affichage de formulaire
-
-                $scope.highlightSelected();
+                if (isInterface != undefined)
+                    $scope.setInterfaceTab(isInterface);
 
                 if (strat != undefined) {
                     $scope.strataName = strat.getLabel();
@@ -362,7 +317,6 @@ angular.module('micorrApp')
 
                 }
                 $scope.askLeave = true;
-            });
         };
 
         /**
@@ -383,74 +337,24 @@ angular.module('micorrApp')
          * et la couche CM qui se base dessus (s'il en existe une)
          */
         $scope.$on('updateSelectedStrata', function () {
-            var index = parseInt(StratigraphyData.getSelectedStrata());
-            var strata = StratigraphyData.getStratigraphy().getStratas()[index];
-
-            //on donne le nom des divs concernées pour les récupérer
-            var intDivName = 'strataInterface' + index;
-            var strDivName = 'strata' + index;
-
-            var graphGenUtil = new GraphGenerationUtil(null, StratigraphyData.getStratigraphy());
-            var interfaceDiv = document.getElementById(intDivName);
-            var strataDiv = document.getElementById(strDivName);
-
-            //On vide le contenu de la div et on redessine la strate
-            interfaceDiv.innerHTML = '';
-            strataDiv.innerHTML = '';
-            graphGenUtil.drawInterface(strata, intDivName);
-            graphGenUtil.drawStrata(strata, strDivName);
-
-
+            var index = StratigraphyData.getSelectedStrata();
+            let stratigraphy = $scope.stratigraphy;
+            var strata = stratigraphy.stratas[index];
+            strata.forceRefresh++;
             //On vérifie ensuite s'il y a une strate de type CM par dessus ou par dessous
             if (strata.index > 0) {
-                var upperStrata = StratigraphyData.getStratigraphy().getStratas()[index - 1];
+                let upperStrata = stratigraphy.stratas[index - 1];
                 if (upperStrata.getCharacteristicsByFamily('natureFamily')[0].getName() == 'cmCharacteristic') {
-                    //On génère la strate CM du dessus
-                    intDivName = 'strataInterface' + (index - 1);
-                    strDivName = 'strata' + (index - 1);
-                    interfaceDiv = document.getElementById(intDivName);
-                    strataDiv = document.getElementById(strDivName);
-                    interfaceDiv.innerHTML = '';
-                    strataDiv.innerHTML = '';
-                    graphGenUtil.drawInterface(upperStrata, intDivName);
-                    graphGenUtil.drawStrata(upperStrata, strDivName);
+                    upperStrata.forceRefresh++;
                 }
             }
-
-            if (strata.index < StratigraphyData.getStratigraphy().getStratas().length - 1) {
-
-                //De toute façon on regénère la strate du dessous car elle est liée à cette strate
-                var lowerStrata = StratigraphyData.getStratigraphy().getStratas()[index + 1];
-                intDivName = 'strataInterface' + (index + 1);
-                interfaceDiv = document.getElementById(intDivName);
-                interfaceDiv.innerHTML = '';
-                graphGenUtil.drawInterface(lowerStrata, intDivName);
-
-                if (lowerStrata.getCharacteristicsByFamily('natureFamily')[0].getName() == 'cmCharacteristic') {
-                    //On génère la strate CM du dessous
-                    strDivName = 'strata' + (index + 1);
-                    strataDiv = document.getElementById(strDivName);
-                    strataDiv.innerHTML = '';
-                    graphGenUtil.drawStrata(lowerStrata, strDivName);
-                }
+            if (strata.index < stratigraphy.stratas.length - 1) {
+                var lowerStrata = stratigraphy.stratas[index + 1];
+                lowerStrata.forceRefresh++;
             }
 
         });
-        /*
-         * Mise à jour du dessin lors d'un évenement provenant d'un enfant
-         * Il faut absolument créer un nouveau tableau pour le tableau de strates
-         * car sinon la directive ne détecte pas de changement au niveau du $scope
-         * et le dessin ne se met pas à jour.
-         */
-        $scope.$on('updateDraw', function () {
-            $timeout(function () {
 
-                $scope.stratigraphy = StratigraphyData.getStratigraphy();
-                $scope.stratas = [];
-                $scope.stratas = StratigraphyData.getStratigraphy().getStratas();
-                $scope.highlightSelected();
-            });
-        });
 
         $scope.toPng = function () {
 
@@ -458,21 +362,6 @@ angular.module('micorrApp')
 
             });
 
-        };
-        /**
-         * Cette méthode met en évidence les infos de la strate sélectionnée
-         */
-        $scope.highlightSelected = function () {
-            var index = StratigraphyData.getSelectedStrata();
-
-            for (var i = 0; i < StratigraphyData.getStratigraphy().getStratas().length; i++) {
-                var thisDiv = document.getElementById('stratasvg_' + i);
-                thisDiv.classList.remove('current_strata');
-            }
-            var infoElement = document.getElementById('stratasvg_' + index);
-            if (infoElement != undefined) {
-                infoElement.classList.add('current_strata');
-            }
         };
         /*
          * appelle le service rest qui sauvegarde la stratigraphie en cours de construction

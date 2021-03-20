@@ -9,6 +9,8 @@
 /* Cette directive représente le dessin de chaque strate
  */
 import angular from "angular";
+import strataTemplate from './strata.html';
+import stratainfoTemplate from './stratainfo.html';
 import $ from "jquery";
 import {GraphGenerationUtil} from "../utils/graphGenerationUtil";
 
@@ -20,88 +22,60 @@ strata = function ($compile, StratigraphyData) {
         restrict: 'EA',
         replace: true,
         transclude: true,
-        template: '<div class="svgcanvas col-xs-10 text-center"><div></div><div></div></div>',
+        template: strataTemplate,
+        scope: {
+            stratum:'=',
+            index:'=',
+            stratigraphy:'<',
+            update:'&',
+            setInterfaceTab:'&'
+        },
         link: function (scope, element, attrs) {
-            var index = attrs.index;
+            function updateContent() {
 
-            var st = scope.stratigraphy;
+                let stratum = scope.stratum;
+                let interfaceDiv = element[0].childNodes[0];
+                let strataDiv = element[0].childNodes[1];
+                strataDiv.id = "strata" + stratum.index;
+                interfaceDiv.id = "strataInterface" + stratum.index;
+                $(strataDiv).empty();
+                $(interfaceDiv).empty();
+                // here we remove div style attribut to avoid issue when drawing CM stratum empty interface
+                // with angular reusing div with style.height  already set by previous drawing of a different interface
+                $(interfaceDiv).removeAttr('style');
+                let graphGenUtil = new GraphGenerationUtil(null, scope.stratigraphy);
+                graphGenUtil.drawInterface(stratum, interfaceDiv.id);
+                graphGenUtil.drawStrata(stratum, strataDiv.id);
+            }
 
-            var str = st.getStratas()[index];
-
-            var interfaceDiv = element[0].childNodes[0];
-            var strataDiv = element[0].childNodes[1];
-            strataDiv.id = "strata" + index;
-            interfaceDiv.id = "strataInterface" + index;
-
-            var graphGenUtil = new GraphGenerationUtil(null, st);
-            graphGenUtil.setStratig(st);
-
-
-            /*
-             * Si le SVG n'a jamais été généré ou que la strate à changé on le dessine
-             */
-
-            //Dessin de l'interface et de la strate
-            graphGenUtil.drawInterface(str, interfaceDiv.id);
-            graphGenUtil.drawStrata(str, strataDiv.id);
-
-
-            //Gestion en cas de clic sur une strate
-            $(element.children()[0]).bind('click', function () {
-                scope.update(index);
-                scope.setInterfaceTab(true);
+            scope.$watchGroup(['stratigraphy.colourFamily','stratum.forceRefresh'], function (newVal, oldVal) {
+                updateContent();
             });
-            // événement sur strate
-            $(element.children()[1]).bind('click', function () {
-                scope.update(index);
-                scope.setInterfaceTab(false);
-            });
+            updateContent();
         }
     };
-
-
-    /* Cette directive permet de retrouver le svg créé par raphaeljs,
-     * mettre le contenu de ce svg dans un canvas et ensuite créer un png téléchargeable
-     * Ce png contient aussi les images qui se trouvaient sur le svg
-     */
 };
-
-    /* Cette directive définit la classification (nommage) de la strate (CP1, CP2, M1, M2, M3, M1)
-     * en fonction des autres strates de la stratigraphie
-     * L'affichage vient à gauche des dessins des strates
-     */
 
 stratainfo = function ($compile, StratigraphyData) {
     return {
         restrict: 'EA',
         replace: true,
         transclude: true,
-        template: '<div class="col-xs-2 text-right"><div style="float:left"></div><div style="float:rigth"></div></div>',
+        template: stratainfoTemplate,
+         scope: {
+             index: '=',
+             stratigraphy: '<',
+             onDel: '&',
+             onDown: '&',
+             onUp: '&',
+             update: '&',
+             setInterfaceTab: '&'
+         },
         link: function (scope, element, attrs) {
-
-            var index = attrs.index;    // index de la strate
-
-            // on récupère les strates et la strate
-            var stratas = StratigraphyData.getStratigraphy().getStratas();
-            element.children()[0].id = 'info' + index;
-
-            element.children()[0].innerHTML = '<button class="btn btn-link btn-xs" ng-click="removeStrata(' + index + ')" title="delete this strata"><span class="glyphicon glyphicon-remove"></span></button>';
-
-            // on affiche les boutons pour bouger la strate
-            var btns = "";
-            if (index > 0)
-                btns += '<button ng-click="movestrataup(' + index + ')" type="button" class="btn btn-link btn-xs" title="move up this strata"><span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span></button>';
-            if (index < stratas.length - 1)
-                btns += '<button ng-click="movestratadown(' + index + ')" type="button" class="btn btn-link btn-xs" title="move down this strata"><span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span></button>';
-
-            $(element.children()[1]).append(btns);
-            // strata labels are now displayed inside stratigraphy svg
-            //var label=stratas[index].getLabel();
-            //$(element.children()[1]).append('<div class="labelinfo" >' + label + '</div>');
-
+            // todo verify need of this binding / replace by ng-click and remove link fn here
             $(element.children()[1]).bind('click', function () {
-                scope.update(index);
-                scope.setInterfaceTab(false);
+                scope.update({index:scope.index});
+                scope.setInterfaceTab({val:false});
             });
 
             $compile(element.contents())(scope);

@@ -18,7 +18,6 @@ angular.module('micorrApp')
         $scope.doUpdate = function () {
             StrataData.delStratum();
             $scope.$emit('doUpdate', 0);
-            $scope.$emit('updateDraw');
         };
 
         //ouverture de la fenêtre de suppression de la strate.

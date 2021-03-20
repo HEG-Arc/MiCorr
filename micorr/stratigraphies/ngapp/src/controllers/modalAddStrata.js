@@ -28,9 +28,8 @@ angular.module('micorrApp')
 
                             var nature = returnNatureCharacteristic($scope.nature.code);
                             if (nature != undefined) {
-                                var newStrata = new Strata(nature.getRealName(), false);
+                                var newStrata = new Strata(nature.getRealName(), false, StratigraphyData.getStratigraphy().stratas.length);
                                 newStrata.replaceCharacteristic(nature);
-                                newStrata.setIndex(StratigraphyData.getStratigraphy().getStratas().length);
                                 newStrata.setUid(StratigraphyData.getStratigraphy().getUid() + '_strata_' + (newStrata.getIndex() + 1));
 
                                 //Si c'est une strate CM on lui ajoute deux strates enfant
@@ -61,7 +60,6 @@ angular.module('micorrApp')
                                 StratigraphyData.pushOneStrata(newStrata);
 
                                 scopeParent.$emit('doUpdate', StratigraphyData.getStratigraphy().getStratas().length - 1);
-                                scopeParent.$emit('updateDraw');
                                 $modalInstance.close();
                             }
 

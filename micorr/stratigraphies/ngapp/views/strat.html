@@ -475,14 +475,17 @@
 </div>
 
 </div>
-<div class="col-md-6">
-    <div id="stratasvg">
-        <div id="stratasvg_{{$index}}" class="row" ng-repeat="strata in stratas">
-            <stratainfo index="{{$index}}"></stratainfo>
-            <strata index="{{$index}}"></strata>
+    <div class="col-md-6">
+        <div id="stratasvg">
+            <div id="stratasvg_{{$index}}" class="row ng-class:{current_strata:StratigraphyData.selectedStrata==$index};" ng-repeat="stratum in stratas track by stratum.index">
+                <stratainfo stratigraphy="stratigraphy" index="$index" on-del="removeStrata(index)"
+                            on-down="movestratadown(index)" on-up="movestrataup(index)" update="update(index,isInterface)"
+                            set-interface-tab="setInterfaceTab(val)">
+                </stratainfo>
+                <strata stratigraphy="stratigraphy" index="$index" stratum="stratum" update="update(index,isInterface)" set-interface-tab="setInterfaceTab(val)"></strata>
+            </div>
         </div>
     </div>
-</div>
 
 </div>
 </div>
