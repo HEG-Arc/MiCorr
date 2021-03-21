@@ -62,24 +62,14 @@ stratainfo = function ($compile, StratigraphyData) {
         replace: true,
         transclude: true,
         template: stratainfoTemplate,
-         scope: {
-             index: '=',
-             stratigraphy: '<',
-             onDel: '&',
-             onDown: '&',
-             onUp: '&',
-             update: '&',
-             setInterfaceTab: '&'
-         },
-        link: function (scope, element, attrs) {
-            // todo verify need of this binding / replace by ng-click and remove link fn here
-            $(element.children()[1]).bind('click', function () {
-                scope.update({index:scope.index});
-                scope.setInterfaceTab({val:false});
-            });
-
-            $compile(element.contents())(scope);
-
+        scope: {
+            index: '=',
+            stratigraphy: '<',
+            onDel: '&',
+            onDown: '&',
+            onUp: '&',
+            update: '&',
+            setInterfaceTab: '&'
         }
     };
 };
