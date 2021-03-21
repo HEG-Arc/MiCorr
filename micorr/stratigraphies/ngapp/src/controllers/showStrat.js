@@ -285,6 +285,7 @@ angular.module('micorrApp')
         $scope.$on('doUpdate', function (event, index) {
             $timeout(function () {// attend que tous les $apply() soient finis avant de faire notre udate
                 $scope.update(index); // on donne toujours l'index de la strate sélectionnée pour la mise à jour
+                $scope.stratigraphy.forceRefresh();
             });
         });
 
