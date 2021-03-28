@@ -305,9 +305,7 @@ class Strata {
         this.index = index;
     }
 
-    addDependency(dep) {
-        this.dependencies.push(dep);
-    }
+
 
     findDependency(dep) {
         // temp use of case insensitive match before refactoring and using Map instead of list
@@ -370,11 +368,8 @@ class Strata {
     setContainerElements(familyName, elements, containers = null) {
         // default target containers is this.containers
         containers = containers || this.containers;
-        if (this.findDependency(familyName)) {
-            containers[familyName] = elements.slice();
-            return true;
-        }
-        return false;
+        containers[familyName] = elements.slice();
+        return true;
     }
 
     getContainerElements(familyName, containers = null) {

@@ -62,10 +62,15 @@ export function initStratTab($scope, StratigraphyData, familyGroupUID) {
 
 export function updateStratTabFromModel($scope, StratigraphyData) {
     let strata = StratigraphyData.getStratigraphy().getStratas()[StratigraphyData.getSelectedStrata()];
-    for (let {uid, variable} of $scope.familyGroup)
+    for (let {uid, variable, IS_LIST_OF} of $scope.familyGroup)
         if (variable)
             $scope.selected[uid] = uid in strata.variables ? strata.variables[uid] : null;
-        else {
+        else if (IS_LIST_OF) {
+             if (IS_LIST_OF.upto==1)
+                 $scope.selected[uid]= strata.getContainerElements(uid)[0];
+             else
+                 $scope.selected[uid]= strata.getContainerElements(uid);
+        } else {
             $scope.selected[uid] = getSelectedFamilyCharacteristic(strata, uid, $scope[uid]);
             // e.g $scope.selected["interfaceProfileFamily"] = getSelectedFamilyCharacteristic(strata, "interfaceProfileFamily", $scope.interfaceProfileFamily);
             if ($scope.selected[uid] && 'subcharacteristics' in $scope.selected[uid]) {
@@ -88,7 +93,16 @@ export function updateStratModelFromTab($scope, StratigraphyData) {
     for (let {uid, variable} of $scope.familyGroup) {
         if (variable)
             strata.variables[uid] = $scope.selected[uid];
-        else {
+        else if (StratigraphyData[uid].IS_LIST_OF) {
+           let IS_LIST_OF = StratigraphyData[uid].IS_LIST_OF;
+           let elements = $scope.selected[uid]
+           if (elements) {
+               if (IS_LIST_OF.upto == 1 && !elements.hasOwnProperty('length'))
+                   elements = [elements];
+               strata.setContainerElements(uid, elements);
+           }
+        } else
+            {
             let prevSelectedCharacteristic = getSelectedFamilyCharacteristic(strata, uid, $scope[uid]);
             if (prevSelectedCharacteristic != $scope.selected[uid]) {
                 strata.replaceCharacteristic(new Characteristic(uid, $scope.selected[uid]));
