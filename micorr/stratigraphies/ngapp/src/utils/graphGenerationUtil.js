@@ -26,7 +26,15 @@ class GraphGenerationUtil {
             SVG = require("svg.js");
         this.stratig = stratig;
     }
-
+    getStratumColor(stratum) {
+        if (this.stratig.colourFamily=='colourFamily')
+            return stratum.getFirstCharacteristicByFamily(this.stratig.colourFamily, 'color');
+        else {
+            let colorNodes=stratum.getContainerElements(this.stratig.colourFamily);
+            if (colorNodes.length==1)
+                return(colorNodes[0]['color']);
+        }
+    }
     /**
      * Cette méthode est utilisée par Node.js pour dessiner la stratigraphie entière
      */
@@ -117,12 +125,12 @@ class GraphGenerationUtil {
 
         // si on est pas à la première interface alors on change la couleur de fond du haut
         if (index > 0) {
-                let color = this.stratig.getStratas()[index - 1].getFirstCharacteristicByFamily(this.stratig.colourFamily, 'color');
+                let color = this.getStratumColor(this.stratig.getStratas()[index - 1]);
                 if (color) {
                     upperInterfaceColor = color;
                 }
         }
-        let color = strata.getFirstCharacteristicByFamily(this.stratig.colourFamily, 'color');
+        let color = this.getStratumColor(strata);
         if (color) {
             lowerInterfaceColor = color;
         }
@@ -280,8 +288,8 @@ class GraphGenerationUtil {
 
             var defs = draw.defs();
             var path = defs.path(pathString).attr({fill: 'none'});
-            if (upperStrata.getFirstCharacteristicByFamily(this.stratig.colourFamily, 'color') ==
-                lowerStrata.getFirstCharacteristicByFamily(this.stratig.colourFamily, 'color'))
+            if (this.getStratumColor(upperStrata) ==
+                this.getStratumColor(lowerStrata))
                 group.path(pathString).attr({fill: 'none', 'stroke-width': '1', stroke: 'black'});
                 group.clipWith(path);
         }
@@ -317,7 +325,7 @@ class GraphGenerationUtil {
             var pds = new PoissonDiskSampler(width, height);
         }
 
-        var color = strata.getFirstCharacteristicByFamily(this.stratig.colourFamily, 'color') || 'white';
+        var color = this.getStratumColor(strata) || 'white';
 
         let rect = draw.rect(width, height).attr({fill: color, "shape-rendering": "crispEdges"});
 
