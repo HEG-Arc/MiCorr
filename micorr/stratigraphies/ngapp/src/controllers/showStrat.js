@@ -121,144 +121,15 @@ angular.module('micorrApp')
 
             //Chargement de la stratigraphie
             MiCorrService.getDetailedStratigraphy($scope.stratigraphyName, function (response) {
+                        var stratigraphy = StratigraphyData.getStratigraphy();
+                        stratigraphy.setUid($scope.stratigraphyName);
+                        stratigraphy.setArtefact($scope.artefactName);
 
-                 /*
-                 * cherche dans une liste (liste de sous-charactéristiques) une valeur et si elle correspond
-                 * à la valeur donnée en paramètre alors on retourne la sous caractéristique
-                 * @params sub : sous-charactéristique de cette strate
-                 *         list : liste des sous caractéristiques pour cette famille
-                 * @returns valeur de la charactéristique
-                 */
-                 // for subCharacteristics there is no "real"/graph model Family so for now we still filter
-                // through the list of all subcharacteristics sorted by Characteristic Family and relationship level
-                // for ex. 'subcpcompositionFamily' is not a family Node uid in the graph db but just means 1st level
-                // Subcharacteristics of 'cpCompositionFamily'
-                // todo refactoring: just synthesize and add this pseudo family to data on load from the graph
-                // todo and remove all these repeated filtering loops
-                let data =response.data;
-                function getSubCharacteristicByFamily(sub, list) {
-                    for (var i = 0; i < sub.length; i++) {
-                        for (var j = 0; j < list.length; j++) {
-                            if (sub[i].name == list[j].uid || sub[i].name == list[j].name)
-                                return sub[i];
-                        }
-                    }
-                    return undefined;
-                }
+                        stratigraphy.load(response.data, $scope.stratigraphyDescription);
 
-                function getSubCharacteristicByFamilyMulti(sub, list) {
-                    var t = [];
-                    for (var i = 0; i < sub.length; i++) {
-                        for (var j = 0; j < list.length; j++) {
-                            if (sub[i].name == list[j].name || sub[i].name == list[j].uid)
-                                t.push(sub[i]);
-                            //return sub[i].name;
-                        }
-                    }
-                    return t;
-                }
-
-                var stratigraphy = StratigraphyData.getStratigraphy();
-                stratigraphy.setUid($scope.stratigraphyName);
-                stratigraphy.setArtefact($scope.artefactName);
-                $scope.stratigraphyDescription =  $scope.stratigraphyDescription || data.description;
-                if ($scope.stratigraphyDescription != undefined) {
-                    stratigraphy.setDescription($scope.stratigraphyDescription)
-                }
-                //Boucle sur les strates
-                for (var i = 0; i < data.strata.length; i++) {
-                    var currentStrata = data.strata[i];
-                    var nature = StratigraphyData.getStrataNature(currentStrata);
-                    var str = new Strata(nature, false,i);
-                    str.setUid(currentStrata.name);
-                    if (stratigraphy.getDescription() != undefined) {
-                        str.setName(stratigraphy.getDescription() + '_strata_' + str.getIndex());
-                    }
-                 //Boucle sur les caracteristiques
-                    for (let j = 0; j < currentStrata.characteristics.length; j++) {
-                        str.addCharacteristic(new Characteristic(currentStrata.characteristics[j]));
-                    }
-
-                    //Boucle sur les caracteristiques d'interface
-                    if ('characteristics' in currentStrata.interfaces)
-                        for (let j = 0; j < currentStrata.interfaces.characteristics.length; j++) {
-                            let char = new Characteristic(currentStrata.interfaces.characteristics[j]);
-                            str.replaceCharacteristic(char);
-                        }
-                    //Récupération des sous caractéristiques:
-                    var subCharacteristicsList = currentStrata['subcharacteristics'];
-                    var sChar;
-
-                    // new subcharacteristic data loaded with parent family information for dynamic conversion
-                    for (let sc of subCharacteristicsList) {
-                        if (sc.family) {
-                            str.addSubCharacteristic(new SubCharacteristic(sc.family,  sc))
-                        }
-                    }
-                     // secondary Components
-                    if (currentStrata.secondaryComponents)
-                        for (let component of currentStrata.secondaryComponents) {
-                            for (let c of component.characteristics)
-                                str.addCharacteristic(new Characteristic(c), str.secondaryComponents[0].characteristics)
-                            for (let sc of component.subCharacteristics) {
-                                if (sChar = getSubCharacteristicByFamily([sc], StratigraphyData.getSubcpcompositionFamily()))
-                                    str.addCharacteristic(new SubCharacteristic('subcpcompositionFamily', sc), str.secondaryComponents[0].subCharacteristics);
-                                else if (sChar = getSubCharacteristicByFamily([sc], StratigraphyData.getSubsubcpcompositionFamily()))
-                                    str.addCharacteristic(new SubCharacteristic('subsubcpcompositionFamily', sc), str.secondaryComponents[0].subCharacteristics);
-                                else
-                                    console.log(`ignoring unexpected subCharacteristic:${sc.name} in secondaryComponent`);
-                            }
-                            if (component.containers)
-                                str.secondaryComponents[0].containers = component.containers;
-                        }
-                    // Element containers
-                    if (currentStrata.containers) {
-                        str.containers = currentStrata.containers
-                    }
-                    // Variables
-                    if (currentStrata.variables) {
-                        str.variables = currentStrata.variables
-                    }
-
-                    //Récupération des strates enfant
-                    for (var j = 0; j < currentStrata.children.length; j++) {
-                        var curChild = currentStrata.children[j];
-                        var nat = StratigraphyData.getStrataNature(curChild);
-                        var childStrata = new Strata(nat, true);
-                        childStrata.setUid(curChild.name);
-                        //Boucle sur les caracteristiques
-                        for (let k = 0; k < curChild.characteristics.length; k++) {
-                            childStrata.addCharacteristic(new Characteristic(curChild.characteristics[k]));
-                        }
-                        str.addChildStrata(childStrata);
-                    }
-
-                    /*Si la strate n'a pas d'enfants et que c'est une strate CM, on lui ajoute ses deux
-                     enfants. Celà permet de transformer les anciennes strates qui auraient été enregistrées
-                     avant l'instauration des strates enfants. */
-                    if (str.getNature() == 'Corroded metal' && currentStrata.children.length == 0) {
-                        //Ajout de la sous strate CP
-                        var cpNature = returnNatureCharacteristic('CP');
-                        var childCPStrata = new Strata(cpNature.getRealName(), true);
-                        childCPStrata.replaceCharacteristic(cpNature);
-                        childCPStrata.setUid(str.getUid() + '_childCP');
-                        str.addChildStrata(childCPStrata);
-
-                        //Ajout de la sous strate M
-                        var mNature = returnNatureCharacteristic('M');
-                        var childMStrata = new Strata(mNature.getRealName(), true);
-                        childMStrata.replaceCharacteristic(mNature);
-                        childMStrata.setUid(str.getUid() + '_childM');
-                        str.addChildStrata(childMStrata);
-                    }
-
-                    stratigraphy.addStratum(str);
-                }
-
-
-                $scope.stratas = stratigraphy.getStratas();
-                $scope.stratigraphy = stratigraphy;
-                $scope.StratigraphyData = StratigraphyData;
+                        $scope.stratas = stratigraphy.getStratas();
+                        $scope.stratigraphy = stratigraphy;
+                        $scope.StratigraphyData = StratigraphyData;
 
             }).then(function () {
                 $scope.$broadcast('initShowStrat');
