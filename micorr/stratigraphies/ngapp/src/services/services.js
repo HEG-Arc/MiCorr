@@ -151,55 +151,6 @@ let StratigraphyData =  angular.module('micorrApp').factory('StratigraphyData', 
             },
 
             fill: function (characteristics, descriptions) {
-
-                /*
-                 * parcours les caractéristiques et retourne les caractéristiques de la famille voulue
-                 * @params name : nom de la famille
-                 * @returns liste des caractéristiques d'une famille au format json
-                 */
-                var parseCharasteristic = function (name) {
-                    for (var i = 0; i < characteristics.length; i++) {
-                        if (characteristics[i].family == name)
-                            return characteristics[i];
-                    }
-                };
-
-                /* parcours les sous-caractéristiques de data et retourne les sous caractéristique pour une famille
-                 * comme une sous caractéristique n'est pas liée à une famille on doit pour une famille parcourir toutes les sous-caractéristique de chaque caractéristique
-                 * et retourner ces sous caractéristiques dans une liste
-                 * @params family : nom de la famille
-                 *         level('sub') : on cherche les sous-caractéristiques
-                 *         level('subsub') : on cherche les sous-sous caractéristiques
-                 * @returns liste des caractéristiques d'une famille au format Array
-                 */
-                var getSubCharacteristicsFromFamily = function (family, level) {
-                    var subList = [];
-                    var subsubList = [];
-                    var list = parseCharasteristic(family);
-                    list = list['characteristics'];
-                    // on parcourt les caractéristiques et sous-caractéristiques pour la famille demandée
-                    // on alimente ûn tableau pour les sub et subsub
-                    for (var i = 0; i < list.length; i++) {
-                        var sub = list[i]['subcharacteristics'];
-                        for (var j = 0; j < sub.length; j++) {
-                            subList.push({'name': sub[j].sub_real_name, 'uid': sub[j].name});
-                            var subsub = sub[j]['subcharacteristics'];
-                            for (var k = 0; k < subsub.length; k++) {
-                                //console.log(subsub);
-                                subsubList.push({'name': subsub[k].name});
-                            }
-                        }
-
-                    }
-
-                    // selon ce qu'on demande on retourne l'un ou l'autre
-                    if (level == "sub")
-                        return subList;
-                    else if (level == "subsub")
-                        return subsubList;
-
-                };
-
                 this.rawCharacteristics = characteristics; //todo remove rawCharacteristics ?
                 this.descriptions = descriptions;
                 // hard coded client side dependency between CS colour families and observation instrument selected for stratygraphy
@@ -222,9 +173,6 @@ let StratigraphyData =  angular.module('micorrApp').factory('StratigraphyData', 
                         familyCharacteristics.description = this.descriptions[familyCharacteristics.family];
                     }
                 }
-                this.submmicrostructureFamily = getSubCharacteristicsFromFamily('mMicrostructureFamily', 'sub');
-                this.subcprimicrostructureFamily = getSubCharacteristicsFromFamily('cpriMicrostructureFamily', 'sub');
-                this.subcmLevelOfCorrosionFamily = getSubCharacteristicsFromFamily('cmLevelOfCorrosionFamily', 'sub');
             },
             getSelectedStrata: function () {
                 return this.selectedStrata===undefined ? 0 :this.selectedStrata;
