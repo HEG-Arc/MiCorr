@@ -45,7 +45,7 @@ dealer==2.1.0
 
 # Wagtail
 django-compressor==2.4
-wagtail==2.8.2
+wagtail==2.9.3
 wagtailnews==2.7.1
 
 # Your custom requirements go here
