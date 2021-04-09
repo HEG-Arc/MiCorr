@@ -69,6 +69,8 @@ angular.module('micorrApp')
             {
                 let index = StratigraphyData.getSelectedStrata();
                 let selectedStratumNature  = StratigraphyData.getStratigraphy().getStratas()[index].natureUID;
+                if (family.ifObservationInstrument && family.ifObservationInstrument != $scope.stratigraphy.selected.morphologyObservationInstrumentCSFamily.name)
+                    return false;
                 if (family.natures) { // family is a family object direct visibility test for current nature
                     return family.natures.length==0 || family.natures.includes(selectedStratumNature);
                 }
@@ -87,7 +89,9 @@ angular.module('micorrApp')
                     $scope.stratigraphy.colourFamily = 'colourFamily';
                 }
                 else {
-                    $scope.stratigraphy.colourFamily = 'morphologyColourWithOpticalMicroscopeBrightFieldCSFamily';
+                    let observationInstrumentColourFamily = StratigraphyData.rawCharacteristics.filter(f => f.ifObservationInstrument && f.ifObservationInstrument==$scope.stratigraphy.selected.morphologyObservationInstrumentCSFamily.name)
+                    if (observationInstrumentColourFamily.length)
+                        $scope.stratigraphy.colourFamily = observationInstrumentColourFamily[0].uid;
                 }
             }
         };
@@ -126,10 +130,11 @@ angular.module('micorrApp')
                         stratigraphy.setArtefact($scope.artefactName);
 
                         stratigraphy.load(response.data, $scope.stratigraphyDescription);
-
+                        $scope.stratigraphyDescription = stratigraphy.description;
                         $scope.stratas = stratigraphy.getStratas();
                         $scope.stratigraphy = stratigraphy;
                         $scope.StratigraphyData = StratigraphyData;
+                        $scope.stratigraphy.morphologyObservationInstrumentCSFamily = StratigraphyData.morphologyObservationInstrumentCSFamily;
 
             }).then(function () {
                 $scope.$broadcast('initShowStrat');

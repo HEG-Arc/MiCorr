@@ -202,11 +202,22 @@ let StratigraphyData =  angular.module('micorrApp').factory('StratigraphyData', 
 
                 this.rawCharacteristics = characteristics; //todo remove rawCharacteristics ?
                 this.descriptions = descriptions;
-
+                // hard coded client side dependency between CS colour families and observation instrument selected for stratygraphy
+                // todo includes in graph model when saved as "stratigraphy characteristic"
+                const OBSERVATION_INSTRUMENT_FAMILIES = {
+                    morphologyColourWithOpticalMicroscopeBrightFieldCSFamily: 'morphologyObservationInstrumentOpticalMicroscopeBrightFieldCSCharacteristic',
+                    morphologyColourWithOpticalMicroscopeDarkFieldCSFamily: 'morphologyObservationInstrumentOpticalMicroscopeDarkFieldCSCharacteristic',
+                    morphologyColourWithScanningElectronMicroscopeSecondaryElectronsCSFamily: 'morphologyObservationInstrumentScanningElectronMicroscopeSecondaryElectronsCSCharacteristic',
+                    morphologyColourWithScanningElectronMicroscopeBackscatteredElectronsCSFamily: 'morphologyObservationInstrumentScanningElectronMicroscopeBackscatteredElectronsCSCharacteristic'
+                };
                 // single loop characteristic retrieval to replace parseCharacteristic
                 // to be replaced by direct object assignment
                 for (let familyCharacteristics of characteristics) {
                     this[familyCharacteristics.family] = familyCharacteristics;
+                    if (familyCharacteristics.family in OBSERVATION_INSTRUMENT_FAMILIES) {
+                        // if the family depends on given observation instrument mark it
+                        familyCharacteristics.ifObservationInstrument=OBSERVATION_INSTRUMENT_FAMILIES[familyCharacteristics.family];
+                    }
                     if (this.descriptions[familyCharacteristics.family]) { //overwrite node's description with wagtail snipet version if any
                         familyCharacteristics.description = this.descriptions[familyCharacteristics.family];
                     }

@@ -13,10 +13,42 @@
 <div class="container-fluid" ng-hide="hasPendingRequests()">
     <div class="row">
         <div class="col-md-6">
-            <ol class="breadcrumb">
-                <li><a href="/">Home</a></li>
-                <li><a href="/micorr/#/stratigraphy/{{stratigraphyName}}">{{stratigraphyDescription}}</a></li>
-            </ol>
+            <div class="row">
+                <div class="col-md-6">
+                    <h1 class="ng-binding minititle">Observation mode:</h1>
+                     <toggle-switch
+                            ng-model="observationMode.binocular"
+                            ng-change="onObservationModeChange()"
+                            on-label="Binocular"
+                            off-label="Cross-section"
+                            class="switch-large switch-default">
+                    </toggle-switch>
+                </div>
+                <div class="col-md-6" ng-if="observationMode.binocular==false && stratigraphy.morphologyObservationInstrumentCSFamily">
+                    <h1 class="ng-binding minititle">{{ stratigraphy.morphologyObservationInstrumentCSFamily.name }}</h1>
+                        <ui-select id="selectStratigraphyObservationInstrument"
+                                   ng-model="stratigraphy.selected.morphologyObservationInstrumentCSFamily"
+                                   on-select="onObservationModeChange()" on-remove="onObservationModeChange()">
+                            <ui-select-match placeholder="Select Instrument">
+                           <span tooltip="{{ $select.selected.description }}">{{$select.selected.real_name}}
+                               <div style="display:inline-block; float: right; width:60%; height: 1em;"
+                                    ng-style="$select.selected.color ? {'background-color':$select.selected.color} : ''"></div>
+                           </span>
+                            </ui-select-match>
+                            <ui-select-choices group-by="getGroup"
+                                               repeat="item in (this.stratigraphy.morphologyObservationInstrumentCSFamily.characteristics | filter: $select.search)">
+                                <div tooltip="{{ item.description }}">
+                                    <img ng-if="item.image_url" ng-src="{{ item.image_url }}" aria-hidden="true"
+                                         heigth="100px">
+                                    <span ng-bind-html="item.real_name | highlight: $select.search">
+                               </span>
+                                    <div style="display:inline-block; float: right; width:60%; height: 1em;"
+                                         ng-style="item.color ? {'background-color':item.color} : ''"></div>
+                                </div>
+                            </ui-select-choices>
+                        </ui-select>
+                </div>
+            </div>
         </div>
         <div class="col-md-6">
             <div class="row">
@@ -212,18 +244,6 @@
             {{ natureFamilyname }} Stratum : {{ strataName }}
         </h1>
     </div>
-    <div class="col-md-6">
-        <h1 class="ng-binding minititle">
-            Observation mode:
-            <toggle-switch
-                    ng-model="observationMode.binocular"
-                    ng-change="onObservationModeChange()"
-                    on-label="Binocular"
-                    off-label="Cross-section"
-                    class="switch-large switch-default">
-            </toggle-switch>
-        </h1>
-    </div>
 </div>
 
 <tabset ng-show="showTabForms" justified="true" class="clearfix">
@@ -232,7 +252,7 @@
        <div ng-controller="StratMorphologyCtrl" class="row-fluid">
            <fieldset ng-repeat="fieldset in fieldsets | filter:showFamily ">
                <legend ng-if="fieldset.name!='default'">{{ fieldset.name }}</legend>
-               <div class="col-md-6 form-group" ng-repeat="family in fieldset.families track by family.uid">
+               <div class="col-md-6 form-group" ng-repeat="family in fieldset.families | filter:showFamily  track by family.uid">
                    <label for="{{ 'morphology' + family.name }}">
                        <span class="glyphicon" ng-class="family.visible ? 'glyphicon-eye-open' : 'glyphicon-eye-close'"
                              }} tooltip="{{ (family.visible ? '' :'no') + 'visual impact on the stratum'}}"></span>
