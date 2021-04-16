@@ -2,7 +2,7 @@
 -r base.txt
 
 # debugging tools
-django-debug-toolbar==2.2
+django-debug-toolbar==2.2.1
 werkzeug==1.0.1
 
 #test dependencies
