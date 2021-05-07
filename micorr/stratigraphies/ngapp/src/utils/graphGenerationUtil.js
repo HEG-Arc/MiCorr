@@ -345,7 +345,7 @@ class GraphGenerationUtil {
 
 
         //cprimicrostructure
-        switch (strata.getFirstCharacteristicByFamily('cpriMicrostructureFamily', 'name')) {
+        switch (strata.getFirstCharacteristicByFamily('microstructurePseudomorphOfDendriticMicrostructureCSCharacteristic', 'name')) {
             case "pseudomorphOfGranularCharacteristic":
                 this.addImage(draw, "../static/micorr/images/c/grains/GrainsGris_" + height + "x" + width + ".png", width, height);
                 break;
@@ -394,14 +394,12 @@ class GraphGenerationUtil {
 
 
         //MmicrostructureFamily
-        switch (strata.getFirstCharacteristicByFamily('mMicrostructureFamily', 'name')) {
-            case "dendriticCharacteristic":
+        switch (strata.getFirstCharacteristicByFamily('microstructureFamily', 'name')) {
+
+            case "microstructureDendritesCharacteristic":
                 this.addImage(draw, "../static/micorr/images/c/M/Dendrites/M_Dendrites_" + height + "x" + width + ".svg", width, height);
                 break;
-            case "deformedDendritesCharacteristic":
-                this.addImage(draw, "../static/micorr/images/c/M/Dendrites/M_DeformedDendrites_" + height + "x" + width + ".svg", width, height);
-                break;
-            case "grainSmallCharacteristic":
+            case "microstructureEquiaxeGrainsCharacteristic": //"grainSmallCharacteristic":
                 this.addImage(draw, "../static/micorr/images/c/M/Grain/M_GrainSmall_" + height + "x" + width + ".svg", width, height);
                 break;
             case "grainLargeCharacteristic":
@@ -410,13 +408,26 @@ class GraphGenerationUtil {
             case "grainElongatedCharacteristic":
                 this.addImage(draw, "../static/micorr/images/c/M/Grain/M_GrainElongated_" + height + "x" + width + ".svg", width, height);
                 break;
-            case "graphiteLamellasCharacteristic":
+        }
+        switch (strata.getFirstCharacteristicByFamily('microstructureCSFamily', 'name')) {
+            case "microstructureDeformedDendritesCSCharacteristic": // deformedDendritesCharacteristic
+                this.addImage(draw, "../static/micorr/images/c/M/Dendrites/M_DeformedDendrites_" + height + "x" + width + ".svg", width, height);
+
+                if (strata.isSubCharacteristic('eutecticPhaseCharacteristic')) {
+                    this.addImage(draw, "../static/micorr/images/c/M/EutheticPhase/M_EutheticPhase_" + height + "x" + width + ".svg", width, height);
+                }
+                if (strata.isSubCharacteristic('elongatedInclusionsCharacteristic')) { // 'elongatedInclusionsGrainLarge','elongatedInclusionsGrainElongated'
+                    this.addImage(draw, "../static/micorr/images/c/M/elongatedInclusions/elongatedInclusions_" + height + "x" + width + ".svg", width, height);
+                }
+
+                break;
+            case "microstructureGraphiteLamellasCSCharacteristic": // graphiteLamellasCharacteristic
                 this.addImage(draw, "../static/micorr/images/c/M/GraphiteLamellas/GraphiteLamellas_" + height + "x" + width + ".svg", width, height);
                 break;
         }
 
         //SubmMicrostructure
-        if (strata.isSubCharacteristic('eutecticPhaseDendritic', 'eutecticPhaseGrainElongated', 'eutecticPhaseGrainLarge', 'eutecticPhaseGrainSmall')) {
+        if (strata.isSubCharacteristic('eutecticPhaseCharacteristic')) {
             this.addImage(draw, "../static/micorr/images/c/M/EutheticPhase/M_EutheticPhase_" + height + "x" + width + ".svg", width, height);
         }
         else if (strata.isSubCharacteristic('eutecticPhaseDeformedDendritic')) {
@@ -431,9 +442,6 @@ class GraphGenerationUtil {
         }
         else if (strata.isSubCharacteristic('twinLinesGrainLarge')) {
             this.addImage(draw, "../static/micorr/images/c/M/TwinLines/M_TwinLinesGrainLarge_" + height + "x" + width + ".svg", width, height);
-        }
-        if (strata.isSubCharacteristic('elongatedInclusionsGrainSmall','elongatedInclusionsGrainLarge','elongatedInclusionsGrainElongated')) {
-            this.addImage(draw, "../static/micorr/images/c/M/elongatedInclusions/elongatedInclusions_" + height + "x" + width + ".svg", width, height);
         }
 
         if (strata.isSubCharacteristic('eutecticPhaseGraphiteLamellas','eutecticPhaseMartensite','eutecticPhaseBainite')) {
