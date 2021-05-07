@@ -56,38 +56,7 @@ export function returnNatureCharacteristic(nature){
     return natureChar;
 }
 
-/* retourne la largeur des strates
- * @params charactéristique de largeur
- * €returns largeur qui convient, par défaut 500px
- */
-export function getWidths(width) {
-    if (width == "largeCharacteristic")
-        return 650;
-    else if (width == "normalWidthCharacteristic")
-        return 500;
-    else if (width == "smallCharacteristic")
-        return 300;
-    else
-        return 500;
-}
-
-/* Retourne la hauteur des strates
- * @params charactéristique de hauteur
- * €returns hauteur qui convient, par défaut 100px
- */
-export function getThicknesses(thickness) {
-    if (thickness == "thickCharacteristic")
-        return 150;
-    else if (thickness == "normalThicknessCharacteristic")
-        return 100;
-    else if (thickness == "thinCharacteristic")
-        return 50;
-    else
-        return 100;
-
-}
-
-// matreials or voids constituing the corroded artefact
+// materials or voids constituting the corroded artefact
 export const natures = {"natures": [
     {"guidc": "cmCharacteristic", "description": "Corroded metal", "code": "CM"},
     {"guidc": "cpCharacteristic", "description": "Corroded product", "code": "CP"},

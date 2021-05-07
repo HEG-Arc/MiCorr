@@ -11,6 +11,7 @@ import {PoissonDiskSampler} from '../algorithms/poissonDisk';
 import * as utils from '../nodeServices/nodeUtils.js';
 
 var SVG;
+const NORMAL_STRATUM_WIDTH = 500
 
 class GraphGenerationUtil {
     constructor(win, stratig) {
@@ -109,7 +110,7 @@ class GraphGenerationUtil {
         var borderWidth = 8;
         var divisionLineWidth = 5;
 
-        let strataWidth = this.getWidths(strata.getFirstCharacteristicByFamily('widthFamily', 'name'));
+        let strataWidth = NORMAL_STRATUM_WIDTH;
         var interfaceWidth = strataWidth;
 
         if (divID) {
@@ -164,7 +165,7 @@ class GraphGenerationUtil {
         var borderColor = 'black';
 
         let height = this.getThicknesses(strata.getFirstCharacteristicByFamily('thicknessFamily', 'name'));
-        let width = this.getWidths(strata.getFirstCharacteristicByFamily('widthFamily', 'name'));
+        let width = NORMAL_STRATUM_WIDTH;
         if (divID) {
 
             if (this.window == undefined) {
@@ -311,7 +312,7 @@ class GraphGenerationUtil {
         var group = draw.group;
 
         let height = h || this.getThicknesses(strata.getFirstCharacteristicByFamily('thicknessFamily', 'name'));
-        let width = w || this.getWidths(strata.getFirstCharacteristicByFamily('widthFamily', 'name'));
+        let width = w || NORMAL_STRATUM_WIDTH;
 
 
         // Initialisation du POISSON DISK DISTRIBUTION
@@ -512,17 +513,6 @@ class GraphGenerationUtil {
         else
             return 100;
 
-    }
-
-    getWidths(width) {
-        if (width == "largeCharacteristic")
-            return 650;
-        else if (width == "normalWidthCharacteristic")
-            return 500;
-        else if (width == "smallCharacteristic")
-            return 300;
-        else
-            return 500;
     }
 
     drawCustomInterface(draw, index, width, height, profile, nb_hop, bottomBackgroundColor, topBackgroundColor, borderWidth, interfaceLineThickness, diffuse, transition) {
