@@ -30,7 +30,7 @@ DJANGO_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sitemaps',
-
+    'django.forms',
     # Useful template tags:
     # 'django.contrib.humanize',
     'dal',
@@ -88,6 +88,7 @@ LOCAL_APPS = (
     'contacts',
     'documents',
     'stratigraphies',
+    'captcha'
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -281,6 +282,8 @@ ACCOUNT_ALLOW_REGISTRATION = env.bool('DJANGO_ACCOUNT_ALLOW_REGISTRATION', True)
 ACCOUNT_ADAPTER = 'micorr.users.adapters.AccountAdapter'
 SOCIALACCOUNT_ADAPTER = 'micorr.users.adapters.SocialAccountAdapter'
 
+ACCOUNT_FORMS = {'signup': 'micorr.users.forms.CaptchaSignupForm',  # default allauth.account.forms.SignupForm
+                 }
 # Custom user app defaults
 # Select the correct user model
 AUTH_USER_MODEL = 'users.User'

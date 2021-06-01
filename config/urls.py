@@ -32,6 +32,7 @@ urlpatterns = [
     # User management
     url(r'^users/', include("users.urls", namespace="users")),
     url(r'^accounts/', include('allauth.urls')),
+    path('captcha/', include('captcha.urls')),
 
     # Uncomment the next line to enable avatars
     url(r'^avatar/', include('avatar.urls')),
@@ -65,7 +66,7 @@ urlpatterns = [
     url(r'^robots\.txt', include('robots.urls')),
 
     # Stratigraphies
-    url(r'^micorr/', include('stratigraphies.urls', namespace="stratigraphies")),
+    url(r'^micorr/', include('stratigraphies.urls', namespace="stratigraphies"))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:
