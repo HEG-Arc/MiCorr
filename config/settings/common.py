@@ -284,6 +284,10 @@ SOCIALACCOUNT_ADAPTER = 'micorr.users.adapters.SocialAccountAdapter'
 
 ACCOUNT_FORMS = {'signup': 'micorr.users.forms.CaptchaSignupForm',  # default allauth.account.forms.SignupForm
                  }
+# https://django-simple-captcha.readthedocs.io/en/latest/advanced.html#configuration-toggles
+CAPTCHA_FONT_SIZE = 28 # default 22
+CAPTCHA_LENGTH = 5 # default 4
+
 # Custom user app defaults
 # Select the correct user model
 AUTH_USER_MODEL = 'users.User'
