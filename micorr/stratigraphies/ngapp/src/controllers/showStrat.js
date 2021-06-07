@@ -5,7 +5,7 @@ import {Characteristic} from "../business/characteristic";
 import {SubCharacteristic} from "../business/subCharacteristic";
 
 import {GraphGenerationUtil} from "../utils/graphGenerationUtil";
-import {Ratio, returnNatureCharacteristic} from "../init";
+import {getCharacteristicByItsName, Ratio, returnNatureCharacteristic} from "../init";
 /**
  * @ngdoc function
  * @name micorrApp.controller:ShowStratCtrl
@@ -64,7 +64,7 @@ angular.module('micorrApp')
          */
         $scope.showFamily = function (family)
         {
-            let showBasedOnObservation = $scope.observationMode.binocular ? family.observation & 1 : family.observation & 2;
+            let showBasedOnObservation = $scope.stratigraphy.observationMode.binocular ? family.observation & 1 : family.observation & 2;
             if (showBasedOnObservation)
             {
                 let index = StratigraphyData.getSelectedStrata();
@@ -85,7 +85,7 @@ angular.module('micorrApp')
             {
                 // strata directive is watching stratigraphy.colourFamily
                 // so all strata will redraw on change
-                if ($scope.observationMode.binocular) {
+                if ($scope.stratigraphy.observationMode.binocular) {
                     $scope.stratigraphy.colourFamily = 'colourFamily';
                 }
                 else {
@@ -116,7 +116,6 @@ angular.module('micorrApp')
             $scope.stratigraphyName = $routeParams.strat;           // nom de la stratigraphie
             $scope.stratigraphyDescription = $routeParams.stratigraphyDescription; // description de la stratigraphie
             $scope.strataName = "No strata selected";         // par défaut aucune strata n'est choisie
-            $scope.observationMode = {binocular:true};
 
             $scope.natureFamilyname = "";                           // par défaut aucune nature n'est choisie
 
@@ -125,16 +124,19 @@ angular.module('micorrApp')
 
             //Chargement de la stratigraphie
             MiCorrService.getDetailedStratigraphy($scope.stratigraphyName, function (response) {
-                        var stratigraphy = StratigraphyData.getStratigraphy();
-                        stratigraphy.setUid($scope.stratigraphyName);
-                        stratigraphy.setArtefact($scope.artefactName);
+                var stratigraphy = StratigraphyData.getStratigraphy();
+                stratigraphy.setUid($scope.stratigraphyName);
+                stratigraphy.setArtefact($scope.artefactName);
 
-                        stratigraphy.load(response.data, $scope.stratigraphyDescription);
-                        $scope.stratigraphyDescription = stratigraphy.description;
-                        $scope.stratas = stratigraphy.getStratas();
-                        $scope.stratigraphy = stratigraphy;
-                        $scope.StratigraphyData = StratigraphyData;
-                        $scope.stratigraphy.morphologyObservationInstrumentCSFamily = StratigraphyData.morphologyObservationInstrumentCSFamily;
+                stratigraphy.load(response.data, $scope.stratigraphyDescription);
+                $scope.stratigraphyDescription = stratigraphy.description;
+                $scope.stratas = stratigraphy.getStratas();
+                $scope.stratigraphy = stratigraphy;
+                $scope.StratigraphyData = StratigraphyData;
+                $scope.stratigraphy.morphologyObservationInstrumentCSFamily = StratigraphyData.morphologyObservationInstrumentCSFamily;
+                // select default observation instrument characteristic
+                $scope.stratigraphy.selected.morphologyObservationInstrumentCSFamily = getCharacteristicByItsName($scope.stratigraphy.morphologyObservationInstrumentCSFamily.characteristics, "morphologyObservationInstrumentOpticalMicroscopeBrightFieldCSCharacteristic");
+
 
             }).then(function () {
                 $scope.$broadcast('initShowStrat');
