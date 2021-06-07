@@ -17,9 +17,8 @@ class Stratigraphy {
         //contient toutes les strates de la stratigraphie
         this.stratas = [];
         //todo save and load stratigraphy characteristics below instead of hard coded default
-        //this.observationMode = {binocular:true}; todo move observationMode from scope here to save last state
-        this.selected={morphologyObservationInstrumentCSFamily:"morphologyObservationInstrumentOpticalMicroscopeBrightFieldCSCharacteristic"};
-        //this.morphologyObservationInstrumentCSFamily = StratigraphyData[IS_LIST_OF.family].characteristics;
+        this.observationMode = {binocular:true};
+        this.selected={};
         this.colourFamily = colourFamily ? colourFamily : 'colourFamily';
     }
 

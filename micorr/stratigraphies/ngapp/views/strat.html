@@ -17,14 +17,14 @@
                 <div class="col-md-6">
                     <h1 class="ng-binding minititle">Observation mode:</h1>
                      <toggle-switch
-                            ng-model="observationMode.binocular"
+                            ng-model="stratigraphy.observationMode.binocular"
                             ng-change="onObservationModeChange()"
                             on-label="Binocular"
                             off-label="Cross-section"
                             class="switch-large switch-default">
                     </toggle-switch>
                 </div>
-                <div class="col-md-6" ng-if="observationMode.binocular==false && stratigraphy.morphologyObservationInstrumentCSFamily">
+                <div class="col-md-6" ng-if="stratigraphy.observationMode.binocular==false && stratigraphy.morphologyObservationInstrumentCSFamily">
                     <h1 class="ng-binding minititle">{{ stratigraphy.morphologyObservationInstrumentCSFamily.name }}</h1>
                         <ui-select id="selectStratigraphyObservationInstrument"
                                    ng-model="stratigraphy.selected.morphologyObservationInstrumentCSFamily"

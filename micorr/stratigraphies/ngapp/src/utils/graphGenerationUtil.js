@@ -470,20 +470,24 @@ class GraphGenerationUtil {
             this.addImage(draw, "../static/micorr/images/c/M/Inclusion/M_InclusionGrainLarge_" + height + "x" + width + ".svg", width, height);
         }
 
-
-        //Fissures
-        switch (strata.getFirstCharacteristicByFamily('crackingStructureFamily', 'name')) {
-            case "simpleCrackingStructureCharacteristic" :
-                this.addImage(draw, "../static/micorr/images/c/CP/Cracking/Simple/CP_CrackingSimpleHorizontale_" + height + "x" + width + ".svg", width, height);
-                break;
-
-            case "branchedCrackingStructureCharacteristic" :
-                this.addImage(draw, "../static/micorr/images/c/CP/Cracking/Branched/CP_CrackingBranched_" + height + "x" + width + ".svg", width, height);
-                break;
-
-            case "networkCrackingStructureCharacteristic" :
-                this.addImage(draw, "../static/micorr/images/c/CP/Cracking/Network/CP_CrackingNetwork_" + height + "x" + width + ".svg", width, height);
-                break;
+         let crackingStructure = {
+            true:{ //Binocular
+                family:'crackingStructureFamily',
+                simpleCrackingStructureCharacteristic:'../static/micorr/images/c/CP/Cracking/Simple/CP_CrackingSimpleHorizontale_',
+                branchedCrackingStructureCharacteristic:'../static/micorr/images/c/CP/Cracking/Branched/CP_CrackingBranched_',
+                networkCrackingStructureCharacteristic:'../static/micorr/images/c/CP/Cracking/Network/CP_CrackingNetwork_'
+            },
+        };
+        crackingStructure[false] = {
+                family:'crackingStructureCSFamily',
+                simpleCrackingStructureCSCharacteristic:crackingStructure[true]['simpleCrackingStructureCharacteristic'],
+                branchedCrackingStructureCSCharacteristic:crackingStructure[true]['branchedCrackingStructureCharacteristic'],
+                networkCrackingStructureCSCharacteristic:crackingStructure[true]['networkCrackingStructureCharacteristic']
+        };
+        let crackingStructureCharacteristic=strata.getFirstCharacteristicByFamily(crackingStructure[this.stratig.observationMode.binocular].family, 'name');
+        let imagePath=crackingStructure[this.stratig.observationMode.binocular][crackingStructureCharacteristic];
+        if (imagePath) {
+            this.addImage(draw, imagePath + height + "x" + width + ".svg", width, height);
         }
 
         if (strata.getFirstCharacteristicByFamily('cohesionFamily', 'name') == 'powderyCharacteristic') {
