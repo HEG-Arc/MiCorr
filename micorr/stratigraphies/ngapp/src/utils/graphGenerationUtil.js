@@ -345,7 +345,6 @@ class GraphGenerationUtil {
         }
 
 
-        //cprimicrostructure
         // microstructure Binocular
         let microstructureRepr = {
             true:{ //Binocular
@@ -354,6 +353,11 @@ class GraphGenerationUtil {
                 microstructureEquiaxeGrainsCharacteristic: "../static/micorr/images/c/M/Grain/M_GrainSmall_"
             },
         };
+        // microstructure cross section
+        microstructureRepr[false] = {
+            microstructureDendritesCSCharacteristic: microstructureRepr[true]['microstructureDendritesCharacteristic'],
+            microstructureEquiaxeGrainsCSCharacteristic: microstructureRepr[true]['microstructureEquiaxeGrainsCharacteristic']
+        }
 
         if (this.stratig.observationMode.binocular)
         {
@@ -365,7 +369,7 @@ class GraphGenerationUtil {
                     break;
                 case "microstructureDendritesCharacteristic":
                 case "microstructureEquiaxeGrainsCharacteristic": //"grainSmallCharacteristic":
-                    this.addImage(draw, microstructureRepr[bnC] + height + "x" + width + ".svg", width, height);
+                    this.addImage(draw, microstructureRepr[true][bnC] + height + "x" + width + ".svg", width, height);
                     break;
             }
         }
@@ -381,7 +385,7 @@ class GraphGenerationUtil {
                     break;
                 case "microstructureDendritesCSCharacteristic":
                 case "microstructureEquiaxeGrainsCSCharacteristic":
-                    this.addImage(draw, microstructureRepr[csC] + height + "x" + width + ".svg", width, height);
+                    this.addImage(draw, microstructureRepr[false][csC] + height + "x" + width + ".svg", width, height);
                     break;
                 case "microstructureElongatedGrainsCSCharacteristic":
                     break;
