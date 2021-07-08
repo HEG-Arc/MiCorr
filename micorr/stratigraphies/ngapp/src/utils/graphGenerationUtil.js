@@ -330,11 +330,12 @@ class GraphGenerationUtil {
 
         let rect = draw.rect(width, height).attr({fill: color, "shape-rendering": "crispEdges"});
 
-        switch ( strata.getFirstCharacteristicByFamily('porosityFamily', 'name')) {
+        switch (strata.getFirstCharacteristicByFamily('porosityFamily', 'name')) {
             case 'slightlyPorousCharacteristic':
                 this.addImage(draw, "../static/micorr/images/c/CP/Porosity/CP_SlightlyPorous_" + height + "x" + width + ".svg", width, height);
                 break;
             case 'porousCharacteristic':
+            case 'textureCompactnessNonCompactCharacteristic':
                 this.addImage(draw, "../static/micorr/images/c/CP/Porosity/CP_Porous_" + height + "x" + width + ".svg", width, height);
 
                 break;
@@ -345,130 +346,165 @@ class GraphGenerationUtil {
 
 
         //cprimicrostructure
-        switch (strata.getFirstCharacteristicByFamily('microstructurePseudomorphOfDendriticMicrostructureCSCharacteristic', 'name')) {
-            case "pseudomorphOfGranularCharacteristic":
-                this.addImage(draw, "../static/micorr/images/c/grains/GrainsGris_" + height + "x" + width + ".png", width, height);
-                break;
+        // microstructure Binocular
+        let microstructureRepr = {
+            true:{ //Binocular
+                family:'microstructureFamily',
+                microstructureDendritesCharacteristic: "../static/micorr/images/c/M/Dendrites/M_Dendrites_",
+                microstructureEquiaxeGrainsCharacteristic: "../static/micorr/images/c/M/Grain/M_GrainSmall_"
+            },
+        };
 
-            case "pseudomorphOfDendriticCharacteristic":
-                this.addImage(draw, "../static/micorr/images/c/CP/Dendrite/CP_Dendrite_" + height + "x" + width + ".svg", width, height);
-                break;
+        if (this.stratig.observationMode.binocular)
+        {
+            let bnC = strata.getFirstCharacteristicByFamily('microstructureFamily', 'name');
+            switch (bnC) {
+                case "microstructureAlternativeBandsCharacteristic":
+                case "alternatingBandsCharacteristic": //old
+                    this.drawalternatingBands(draw, 6, 10, width, height);
+                    break;
+                case "microstructureDendritesCharacteristic":
+                case "microstructureEquiaxeGrainsCharacteristic": //"grainSmallCharacteristic":
+                    this.addImage(draw, microstructureRepr[bnC] + height + "x" + width + ".svg", width, height);
+                    break;
+            }
+        }
+        else // microstructure Cross section
+        {
+            let csC = strata.getFirstCharacteristicByFamily('microstructureCSFamily', 'name');
+            switch (csC) {
+                case "microstructureAlternativeBandsCSCharacteristic": //old
+                    this.drawalternatingBands(draw, 6, 10, width, height);
+                    break;
+                case "microstructureDeformedDendritesCSCharacteristic": // deformedDendritesCharacteristic
+                    this.addImage(draw, "../static/micorr/images/c/M/Dendrites/M_DeformedDendrites_" + height + "x" + width + ".svg", width, height);
+                    break;
+                case "microstructureDendritesCSCharacteristic":
+                case "microstructureEquiaxeGrainsCSCharacteristic":
+                    this.addImage(draw, microstructureRepr[csC] + height + "x" + width + ".svg", width, height);
+                    break;
+                case "microstructureElongatedGrainsCSCharacteristic":
+                    break;
+                case "microstructurePseudomorphOfDendriticMicrostructureCSCharacteristic":
+                    // case "pseudomorphOfDendriticCharacteristic": //old
+                    this.addImage(draw, "../static/micorr/images/c/CP/Dendrite/CP_Dendrite_" + height + "x" + width + ".svg", width, height);
+                    break;
+                case "microstructurePseudomorphOfGrainMicrostructureCSCharacteristic":
+                    // case "pseudomorphOfGranularCharacteristic":
+                    this.addImage(draw, "../static/micorr/images/c/grains/GrainsGris_" + height + "x" + width + ".png", width, height);
+                    break;
 
-            case "hexagonalNetworkCharacteristic":
-                this.addImage(draw, "../static/micorr/images/c/hexagonal.png", width, height);
-                break;
+                // case "microstructureGraphiteLamellasCSCharacteristic": // graphiteLamellasCharacteristic
+                //     this.addImage(draw, "../static/micorr/images/c/M/GraphiteLamellas/GraphiteLamellas_" + height + "x" + width + ".svg", width, height);
+                //     break;
 
-            case "alternatingBandsCharacteristic":
-                this.drawalternatingBands(draw, 6, 10, width, height);
-                break;
 
-            case "cristallineMicrostructureCharacteristic":
-                poisson.push({'min': 13, 'max': 13, 'img': 'scattered2', 'imgw': 27, 'imgh': 27});
-                break;
 
-            case "isolatedAggregateMicrostructureCharacteristic":
-                poisson.push({'min': 30, 'max': 60, 'img': 'isolated', 'imgw': 55, 'imgh': 27});
-                break;
+                // case "hexagonalNetworkCharacteristic":
+                //     this.addImage(draw, "../static/micorr/images/c/hexagonal.png", width, height);
+                //     break;
+                //
+                // case "cristallineMicrostructureCharacteristic":
+                //     poisson.push({'min': 13, 'max': 13, 'img': 'scattered2', 'imgw': 27, 'imgh': 27});
+                //     break;
+                //
+                // case "isolatedAggregateMicrostructureCharacteristic":
+                //     poisson.push({'min': 30, 'max': 60, 'img': 'isolated', 'imgw': 55, 'imgh': 27});
+                //     break;
+                //
+                // case "scatteredAggregateMicrostructureCharacteristic":
+                //     poisson.push({'min': 32, 'max': 60, 'img': 'scattered1', 'imgw': 43, 'imgh': 39});
+                //     poisson.push({'min': 23, 'max': 60, 'img': 'scattered2', 'imgw': 27, 'imgh': 27});
+                //     break;
+            }
+            // Unique subcharacteristic representation for now independent of actual parent characteristic
+            // todo differentiate
+            let defaultMCSSubCharacteristics = {
+                elongatedInclusionsCharacteristic: "../static/micorr/images/c/M/elongatedInclusions/elongatedInclusions_",
+                // if (strata.isSubCharacteristic('elongatedInclusionsCharacteristic')) { // 'elongatedInclusionsGrainLarge','elongatedInclusionsGrainElongated'
+                //     this.addImage(draw, "../static/micorr/images/c/M/elongatedInclusions/elongatedInclusions_" + height + "x" + width + ".svg", width, height);
+                // }
+                eutecticPhaseCharacteristic: "../static/micorr/images/c/M/EutheticPhase/M_EutheticPhase_",
+                // if (strata.isSubCharacteristic('eutecticPhaseCharacteristic')) {
+                //     this.addImage(draw, "../static/micorr/images/c/M/EutheticPhase/M_EutheticPhase_" + height + "x" + width + ".svg", width, height);
+                // }
+                nonElongatedInclusionsCharacteristic: "../static/micorr/images/c/M/Inclusion/M_InclusionGrainSmall_",
+                inclusionsCharacteristic:             "../static/micorr/images/c/M/Inclusion/M_InclusionGrainSmall_",
+                // if (strata.isSubCharacteristic('inclusionsDendritic', 'inclusionsGrainSmall', 'inclusionsGrainElongated')) {
+                //     this.addImage(draw, "../static/micorr/images/c/M/Inclusion/M_InclusionGrainSmall_" + height + "x" + width + ".svg", width, height);
+                // }
+                // else if (strata.isSubCharacteristic('inclusionsGrainLarge')) {
+                //     this.addImage(draw, "../static/micorr/images/c/M/Inclusion/M_InclusionGrainLarge_" + height + "x" + width + ".svg", width, height);
+                // }
 
-            case "scatteredAggregateMicrostructureCharacteristic":
-                poisson.push({'min': 32, 'max': 60, 'img': 'scattered1', 'imgw': 43, 'imgh': 39});
-                poisson.push({'min': 23, 'max': 60, 'img': 'scattered2', 'imgw': 27, 'imgh': 27});
-                break;
+                slipLinesCharacteristic: "../static/micorr/images/c/M/SlipLines/M_SlipLinesGrainSmall_",
+                // if (strata.isSubCharacteristic('slipLinesDendritic', 'slipLinesGrainSmall')) {
+                //     this.addImage(draw, "../static/micorr/images/c/M/SlipLines/M_SlipLinesGrainSmall_" + height + "x" + width + ".svg", width, height);
+                // }
+                // else if (strata.isSubCharacteristic('slipLinesGrainElongated')) {
+                //     this.addImage(draw, "../static/micorr/images/c/M/SlipLines/M_SlipLinesGrainElongated_" + height + "x" + width + ".svg", width, height);
+                // }
+                // else if (strata.isSubCharacteristic('slipLinesGrainLarge')) {
+                //     this.addImage(draw, "../static/micorr/images/c/M/SlipLines/M_SlipLinesGrainLarge_" + height + "x" + width + ".svg", width, height);
+                // }
+                twinLinesNewmannBandsCharacteristic: "../static/micorr/images/c/CP/TwinLines/CP_TwinLinesGrainSmall_",
+                twinLinesCharacteristic:             "../static/micorr/images/c/CP/TwinLines/CP_TwinLinesGrainSmall_"
+                // if (strata.isSubCharacteristic('twinLinesDendritic', 'twinLinesGrainSmall')) {
+                //     this.addImage(draw, "../static/micorr/images/c/M/TwinLines/M_TwinLinesGrainSmall_" + height + "x" + width + ".svg", width, height);
+                // }
+                // else if (strata.isSubCharacteristic('twinLinesGrainElongated')) {
+                //     this.addImage(draw, "../static/micorr/images/c/M/TwinLines/M_TwinLinesGrainElongated_" + height + "x" + width + ".svg", width, height);
+                // }
+                // else if (strata.isSubCharacteristic('twinLinesGrainLarge')) {
+                //     this.addImage(draw, "../static/micorr/images/c/M/TwinLines/M_TwinLinesGrainLarge_" + height + "x" + width + ".svg", width, height);
+                // }
+            }
+            for (let sc in defaultMCSSubCharacteristics)
+                if (strata.isSubCharacteristic(sc)) {
+                    this.addImage(draw,defaultMCSSubCharacteristics[sc] + height + "x" + width + ".svg", width, height)
+                }
         }
 
-
-        //subcprimicrostructure
-        if (strata.isSubCharacteristic('eutecticPhaseNoMicrostructureCpri', 'eutecticPhaseCristallineMicrostructureCpri', 'eutecticPhaseIsolatedAggregateMicrostructureCpri', 'eutecticPhaseScatteredAggregateMicrostructureCpri', 'eutecticPhaseAlternatingBandsCpri', 'eutecticPhaseHexagonalNetworkCpri', 'eutecticPhasePseudomorphOfDendriticCpri', 'eutecticPhasePseudomorphOfGranularCpri')) {
-
-            this.addImage(draw, "../static/micorr/images/c/M/EutheticPhase/M_EutheticPhase_" + height + "x" + width + ".svg", width, height);
-        }
-
-        if (strata.isSubCharacteristic('twinLinesNoMicrostructureCpri', 'twinLinesCristallineMicrostructureCpri', 'twinLinesIsolatedAggregateMicrostructureCpri', 'twinLinesScatteredAggregateMicrostructureCpri', 'twinLinesAlternatingBandsCpri', 'twinLinesHexagonalNetworkCpri', 'twinLinesPseudomorphOfDendriticCpri', 'twinLinesPseudomorphOfGranularCpri')) {
-
-            this.addImage(draw, "../static/micorr/images/c/CP/TwinLines/CP_TwinLinesGrainSmall_" + height + "x" + width + ".svg", width, height);
-        }
-        if (strata.isSubCharacteristic('inclusionsNoMicrostructureCpri', 'inclusionsCristallineMicrostructureCpri', 'inclusionsIsolatedAggregateMicrostructureCpri', 'inclusionsScatteredAggregateMicrostructureCpri', 'inclusionsAlternatingBandsCpri', 'inclusionsHexagonalNetworkCpri', 'inclusionsPseudomorphOfDendriticCpri', 'inclusionsPseudomorphOfGranularCpri')) {
-
-            this.addImage(draw, "../static/micorr/images/c/CP/Inclusion/CP_InclusionGrainSmall_" + height + "x" + width + ".svg", width, height);
-        }
+        // //subcprimicrostructure
+        // if (strata.isSubCharacteristic('eutecticPhaseNoMicrostructureCpri', 'eutecticPhaseCristallineMicrostructureCpri', 'eutecticPhaseIsolatedAggregateMicrostructureCpri', 'eutecticPhaseScatteredAggregateMicrostructureCpri', 'eutecticPhaseAlternatingBandsCpri', 'eutecticPhaseHexagonalNetworkCpri', 'eutecticPhasePseudomorphOfDendriticCpri', 'eutecticPhasePseudomorphOfGranularCpri')) {
+        //
+        //     this.addImage(draw, "../static/micorr/images/c/M/EutheticPhase/M_EutheticPhase_" + height + "x" + width + ".svg", width, height);
+        // }
+        //
+        // if (strata.isSubCharacteristic('inclusionsNoMicrostructureCpri', 'inclusionsCristallineMicrostructureCpri', 'inclusionsIsolatedAggregateMicrostructureCpri', 'inclusionsScatteredAggregateMicrostructureCpri', 'inclusionsAlternatingBandsCpri', 'inclusionsHexagonalNetworkCpri', 'inclusionsPseudomorphOfDendriticCpri', 'inclusionsPseudomorphOfGranularCpri')) {
+        //
+        //     this.addImage(draw, "../static/micorr/images/c/CP/Inclusion/CP_InclusionGrainSmall_" + height + "x" + width + ".svg", width, height);
+        // }
 
 
         //MmicrostructureFamily
-        switch (strata.getFirstCharacteristicByFamily('microstructureFamily', 'name')) {
-
-            case "microstructureDendritesCharacteristic":
-                this.addImage(draw, "../static/micorr/images/c/M/Dendrites/M_Dendrites_" + height + "x" + width + ".svg", width, height);
-                break;
-            case "microstructureEquiaxeGrainsCharacteristic": //"grainSmallCharacteristic":
-                this.addImage(draw, "../static/micorr/images/c/M/Grain/M_GrainSmall_" + height + "x" + width + ".svg", width, height);
-                break;
-            case "grainLargeCharacteristic":
-                this.addImage(draw, "../static/micorr/images/c/M/Grain/M_GrainLarge_" + height + "x" + width + ".svg", width, height);
-                break;
-            case "grainElongatedCharacteristic":
-                this.addImage(draw, "../static/micorr/images/c/M/Grain/M_GrainElongated_" + height + "x" + width + ".svg", width, height);
-                break;
-        }
-        switch (strata.getFirstCharacteristicByFamily('microstructureCSFamily', 'name')) {
-            case "microstructureDeformedDendritesCSCharacteristic": // deformedDendritesCharacteristic
-                this.addImage(draw, "../static/micorr/images/c/M/Dendrites/M_DeformedDendrites_" + height + "x" + width + ".svg", width, height);
-
-                if (strata.isSubCharacteristic('eutecticPhaseCharacteristic')) {
-                    this.addImage(draw, "../static/micorr/images/c/M/EutheticPhase/M_EutheticPhase_" + height + "x" + width + ".svg", width, height);
-                }
-                if (strata.isSubCharacteristic('elongatedInclusionsCharacteristic')) { // 'elongatedInclusionsGrainLarge','elongatedInclusionsGrainElongated'
-                    this.addImage(draw, "../static/micorr/images/c/M/elongatedInclusions/elongatedInclusions_" + height + "x" + width + ".svg", width, height);
-                }
-
-                break;
-            case "microstructureGraphiteLamellasCSCharacteristic": // graphiteLamellasCharacteristic
-                this.addImage(draw, "../static/micorr/images/c/M/GraphiteLamellas/GraphiteLamellas_" + height + "x" + width + ".svg", width, height);
-                break;
-        }
+        // switch (strata.getFirstCharacteristicByFamily('microstructureFamily', 'name')) {
+        //
+        //     case "grainLargeCharacteristic":
+        //         this.addImage(draw, "../static/micorr/images/c/M/Grain/M_GrainLarge_" + height + "x" + width + ".svg", width, height);
+        //         break;
+        //     case "grainElongatedCharacteristic":
+        //         this.addImage(draw, "../static/micorr/images/c/M/Grain/M_GrainElongated_" + height + "x" + width + ".svg", width, height);
+        //         break;
+        // }
 
         //SubmMicrostructure
-        if (strata.isSubCharacteristic('eutecticPhaseCharacteristic')) {
-            this.addImage(draw, "../static/micorr/images/c/M/EutheticPhase/M_EutheticPhase_" + height + "x" + width + ".svg", width, height);
-        }
-        else if (strata.isSubCharacteristic('eutecticPhaseDeformedDendritic')) {
-            this.addImage(draw, "../static/micorr/images/c/M/EutheticPhase/M_EutheticPhaseDeformedDendrite_" + height + "x" + width + ".svg", width, height);
-        }
-
-        if (strata.isSubCharacteristic('twinLinesDendritic', 'twinLinesGrainSmall')) {
-            this.addImage(draw, "../static/micorr/images/c/M/TwinLines/M_TwinLinesGrainSmall_" + height + "x" + width + ".svg", width, height);
-        }
-        else if (strata.isSubCharacteristic('twinLinesGrainElongated')) {
-            this.addImage(draw, "../static/micorr/images/c/M/TwinLines/M_TwinLinesGrainElongated_" + height + "x" + width + ".svg", width, height);
-        }
-        else if (strata.isSubCharacteristic('twinLinesGrainLarge')) {
-            this.addImage(draw, "../static/micorr/images/c/M/TwinLines/M_TwinLinesGrainLarge_" + height + "x" + width + ".svg", width, height);
-        }
-
-        if (strata.isSubCharacteristic('eutecticPhaseGraphiteLamellas','eutecticPhaseMartensite','eutecticPhaseBainite')) {
-            this.addImage(draw, "../static/micorr/images/c/M/eutecticPhase/eutecticPhaseGraphiteLamellas_" + height + "x" + width + ".svg", width, height);
-        }
-
-        if (strata.isSubCharacteristic('inclusionsGraphiteLamellas','inclusionsMartensite','inclusionsBainite', 'inclusionsNoMicrostructure')) {
-            this.addImage(draw, "../static/micorr/images/c/M/Inclusion/InclusionsGraphiteLamellas_" + height + "x" + width + ".svg", width, height);
-        }
-
-        if (strata.isSubCharacteristic('slipLinesDendritic', 'slipLinesGrainSmall')) {
-            this.addImage(draw, "../static/micorr/images/c/M/SlipLines/M_SlipLinesGrainSmall_" + height + "x" + width + ".svg", width, height);
-        }
-        else if (strata.isSubCharacteristic('slipLinesGrainElongated')) {
-            this.addImage(draw, "../static/micorr/images/c/M/SlipLines/M_SlipLinesGrainElongated_" + height + "x" + width + ".svg", width, height);
-        }
-        else if (strata.isSubCharacteristic('slipLinesGrainLarge')) {
-            this.addImage(draw, "../static/micorr/images/c/M/SlipLines/M_SlipLinesGrainLarge_" + height + "x" + width + ".svg", width, height);
-        }
+        // if (strata.isSubCharacteristic('c')) {
+        //     this.addImage(draw, "../static/micorr/images/c/M/EutheticPhase/M_EutheticPhase_" + height + "x" + width + ".svg", width, height);
+        // }
+        // else if (strata.isSubCharacteristic('eutecticPhaseDeformedDendritic')) {
+        //     this.addImage(draw, "../static/micorr/images/c/M/EutheticPhase/M_EutheticPhaseDeformedDendrite_" + height + "x" + width + ".svg", width, height);
+        // }
 
 
-        if (strata.isSubCharacteristic('inclusionsDendritic', 'inclusionsGrainSmall', 'inclusionsGrainElongated')) {
-            this.addImage(draw, "../static/micorr/images/c/M/Inclusion/M_InclusionGrainSmall_" + height + "x" + width + ".svg", width, height);
-        }
-        else if (strata.isSubCharacteristic('inclusionsGrainLarge')) {
-            this.addImage(draw, "../static/micorr/images/c/M/Inclusion/M_InclusionGrainLarge_" + height + "x" + width + ".svg", width, height);
-        }
+        // if (strata.isSubCharacteristic('eutecticPhaseGraphiteLamellas','eutecticPhaseMartensite','eutecticPhaseBainite')) {
+        //     this.addImage(draw, "../static/micorr/images/c/M/eutecticPhase/eutecticPhaseGraphiteLamellas_" + height + "x" + width + ".svg", width, height);
+        // }
+        //
+        // if (strata.isSubCharacteristic('inclusionsGraphiteLamellas','inclusionsMartensite','inclusionsBainite', 'inclusionsNoMicrostructure')) {
+        //     this.addImage(draw, "../static/micorr/images/c/M/Inclusion/InclusionsGraphiteLamellas_" + height + "x" + width + ".svg", width, height);
+        // }
+
 
          let crackingStructure = {
             true:{ //Binocular
