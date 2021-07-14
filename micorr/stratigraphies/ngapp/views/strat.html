@@ -29,7 +29,7 @@
                         <ui-select id="selectStratigraphyObservationInstrument"
                                    ng-model="stratigraphy.selected.morphologyObservationInstrumentCSFamily"
                                    on-select="onObservationModeChange()" on-remove="onObservationModeChange()">
-                            <ui-select-match placeholder="Select Instrument">
+                            <ui-select-match allow-clear="true" placeholder="Select Instrument">
                            <span tooltip="{{ $select.selected.description }}">{{$select.selected.real_name}}
                                <div style="display:inline-block; float: right; width:60%; height: 1em;"
                                     ng-style="$select.selected.color ? {'background-color':$select.selected.color} : ''"></div>
@@ -262,7 +262,7 @@
                    </label>
                    <ui-select ng-if="!family.variable" id="{{ 'morphology' + family.name }}"
                               dynamic-model="'selected.'+family.uid" on-select="upMorpho()" on-remove="upMorpho()">
-                       <ui-select-match placeholder="Select characteristic">
+                       <ui-select-match allow-clear="true" placeholder="Select characteristic">
                            <span tooltip="{{ $select.selected.description }}">{{$select.selected.real_name}}
                                <div style="display:inline-block; float: right; width:60%; height: 1em;" ng-style="$select.selected.color ? {'background-color':$select.selected.color} : ''"></div>
                            </span>
@@ -302,7 +302,7 @@
                 <ui-select ng-if="!family.variable" id="{{ 'texture' + family.name }}"
                            theme="bootstrap" dynamic-model="'selected.'+family.uid" on-select="upTexture()"
                            on-remove="upTexture()">
-                     <ui-select-match placeholder="Select characteristic">
+                     <ui-select-match allow-clear="true" placeholder="Select characteristic">
                          <span tooltip="{{ $select.selected.description }}" >{{$select.selected.real_name}}</span>
                     </ui-select-match>
                     <ui-select-choices null-option="nullOption" repeat="item in (this[family.uid] | showCharacteristic:StratigraphyData:family  | filter: $select.search) track by item.name">
@@ -336,7 +336,7 @@
                 <ui-select ng-if="!family.variable" id="{{ 'microstructure' + family.name }}"
                            theme="bootstrap" dynamic-model="'selected.'+family.uid" on-select="updateModel()"
                            on-remove="updateModel()">
-                     <ui-select-match placeholder="Select characteristic">
+                     <ui-select-match allow-clear="true" placeholder="Select characteristic">
                          <span tooltip="{{ $select.selected.description }}" >{{$select.selected.real_name}}</span>
                     </ui-select-match>
                     <ui-select-choices null-option="nullOption" group-by="getGroup" repeat="item in (this[family.uid] | showCharacteristic:StratigraphyData:family  | filter: $select.search) track by item.name">
@@ -358,7 +358,7 @@
                     <ui-select id="subMicrostructureSelect" class="form-control" multiple
                                theme="bootstrap"
                                ng-model="selectedSubC[family.uid]" on-remove="updateModel()" on-select="updateModel()">
-                        <ui-select-match placeholder="Select sub characteristics">
+                        <ui-select-match allow-clear="true" placeholder="Select sub characteristics">
                             {{$item.sub_real_name}}
                         </ui-select-match>
                         <ui-select-choices group-by="'category'"
@@ -403,7 +403,7 @@
                                multiple
                                theme="bootstrap" dynamic-model="'selected.'+family.uid" on-select="updateModel()"
                                on-remove="updateModel()">
-                        <ui-select-match placeholder="Select element(s) by order of importance">
+                        <ui-select-match allow-clear="true" placeholder="Select element(s) by order of importance">
                             <span tooltip="{{ $item.real_name + ' (' + $item.category + ')' }}">{{$item.symbol}}</span>
                         </ui-select-match>
                         <ui-select-choices null-option="nullOption" group-by="getGroup"
@@ -419,7 +419,7 @@
                     <ui-select ng-if="family.IS_LIST_OF.family=='compoundFamily'" id="{{ 'composition' + family.uid }}"
                                theme="bootstrap" dynamic-model="'selected.'+family.uid" on-select="updateModel()"
                                on-remove="updateModel()">
-                        <ui-select-match placeholder="Select compound">
+                        <ui-select-match allow-clear="true" placeholder="Select compound">
                             <span tooltip="{{ $select.selected.description }}">{{$select.selected.real_name}}</span>
                         </ui-select-match>
                         <ui-select-choices null-option="nullOption" group-by="getGroup"
@@ -434,7 +434,7 @@
                     <ui-select ng-if="!family.variable && !family.IS_LIST_OF.family" id="{{ 'composition' + family.uid }}"
                                theme="bootstrap" dynamic-model="'selected.'+family.uid" on-select="updateModel()"
                                on-remove="updateModel()">
-                        <ui-select-match placeholder="Select characteristic">
+                        <ui-select-match allow-clear="true" placeholder="Select characteristic">
                             <span tooltip="{{ $select.selected.description }}">{{$select.selected.real_name}}</span>
                         </ui-select-match>
                         <ui-select-choices null-option="nullOption" group-by="getGroup"
@@ -472,7 +472,7 @@
             <ui-select ng-if="!family.variable" id="{{ 'interface' + family.name }}"
                     dynamic-model="'selected.'+family.uid" on-select="upModel()"
                     on-remove="upModel()">
-                <ui-select-match placeholder="Select characteristic">
+                <ui-select-match allow-clear="true" placeholder="Select characteristic">
                     <span tooltip="{{ $select.selected.description }}">{{$select.selected.real_name}}</span>
                 </ui-select-match>
                 <ui-select-choices null-option="nullOption" group-by="getGroup"

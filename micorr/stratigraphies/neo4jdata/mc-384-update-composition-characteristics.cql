@@ -25,7 +25,7 @@ UNWIND [
 {fg:'fgComposition', order:7, observation:binocular, uid:'compositionCompoundsFtirFamily', name:'FTIR', visible: False, variable: False, description:'Formula.', natures:['cp', 'deposit', 'nmm', 'pom', 'soil'], fieldset:'Compounds', list_elem_family:'compoundFamily', upto:1},
 {fg:'fgComposition', order:8, observation:binocular, uid:'compositionCompoundsOthersFamily', name:'Others', visible: False, variable: False, description:'Formula.', natures:['cp', 'deposit', 'nmm', 'pom', 'soil'], fieldset:'Compounds', list_elem_family:'compoundFamily', upto:1},
 // new family_name=M/CP Ratio uid: compositionMcpRatioFamily
-{fg:'fgComposition', order:9, observation:binocular, uid:'cmCorrosionRatioFamily', name:'M/CP Ratio', visible: False, variable: False, description:'', natures:['cm'], new_uid:'compositionMcpRatioFamily'},
+{fg:'fgComposition', order:9, observation:binocular, uid:'cmCorrosionRatioFamily', name:'M/CP Ratio', visible: True, variable: False, description:'', natures:['cm'], new_uid:'compositionMcpRatioFamily'},
 // new family_name=Additional element(s) uid: compositionAdditionalElementsFamily
 {fg:'fgComposition', order:10, observation:binocular, uid:'compositionAdditionalElementsFamily', name:'Additional element(s)', visible: False, variable: False, description:'Any other element(s) not reported in main and secondary element(s). For CM, any element(s) not in M and CP.', natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], list_elem_family:'elementFamily', upto:0},
 // new fieldset=Second band / aggregate_compounds
@@ -48,6 +48,8 @@ UNWIND [
 {fg:'fgComposition', order:9, observation:cross_section, uid:'compositionCompoundsRamanSpectroscopyCSFamily', name:'Raman spectroscopy', visible: False, variable: False, description:'Formula.', natures:['cp', 'deposit', 'nmm', 'pom', 'soil'], fieldset:'Compounds', list_elem_family:'compoundFamily', upto:1},
 {fg:'fgComposition', order:10, observation:cross_section, uid:'compositionCompoundsFtirCSFamily', name:'FTIR', visible: False, variable: False, description:'Formula.', natures:['cp', 'deposit', 'nmm', 'pom', 'soil'], fieldset:'Compounds', list_elem_family:'compoundFamily', upto:1},
 {fg:'fgComposition', order:11, observation:cross_section, uid:'compositionCompoundsOthersCSFamily', name:'Others', visible: False, variable: False, description:'Formula.', natures:['cp', 'deposit', 'nmm', 'pom', 'soil'], fieldset:'Compounds', list_elem_family:'compoundFamily', upto:1},
+// new family_name=M/CP Ratio uid: compositionMcpRatioCSFamily
+{fg:'fgComposition', order:12, observation:cross_section, uid:'compositionMcpRatioCSFamily', name:'M/CP Ratio', visible: True, variable: False, description:'', natures:['cm'], new_uid:'compositionMcpRatioFamily'},
 // new fieldset=Additional element(s)
 {fg:'fgComposition', order:13, observation:cross_section, uid:'compositionAdditionalElementsListCSFamily', name:'List', visible: False, variable: False, description:'Any other element(s) not reported in main and secondary element(s). For CM, any element(s) not in M and CP.', natures:['cp', 'deposit', 'metal', 'nmm', 'pom', 'soil'], fieldset:'Additional element(s)', list_elem_family:'elementFamily', upto:0},
 {fg:'fgComposition', order:14, observation:cross_section, uid:'compositionAdditionalElementsAmountCSVarFamily', name:'Amount', visible: False, variable: True, description:'In % (mass).', natures:['cp', 'deposit', 'metal', 'nmm', 'pom', 'soil'], unit:'%', fieldset:'Additional element(s)'},
@@ -126,6 +128,9 @@ UNWIND [
 {family_uid:'cmCorrosionRatioFamily', uid:'r1Characteristic', name:'Low', order:10, natures:['cm'], new_uid:'compositionMcpRatioLowCharacteristic'},
 {family_uid:'cmCorrosionRatioFamily', uid:'r2Characteristic', name:'Average', order:11, natures:['cm'], new_uid:'compositionMcpRatioAverageCharacteristic'},
 {family_uid:'cmCorrosionRatioFamily', uid:'r3Characteristic', name:'High', order:12, natures:['cm'], new_uid:'compositionMcpRatioHighCharacteristic'},
+{family_uid:'compositionMcpRatioCSFamily', uid:'r1CSCharacteristic', name:'Low', order:10, natures:['cm'], new_uid:'compositionMcpRatioLowCSCharacteristic'},
+{family_uid:'compositionMcpRatioCSFamily', uid:'r2CSCharacteristic', name:'Average', order:11, natures:['cm'], new_uid:'compositionMcpRatioAverageCSCharacteristic'},
+{family_uid:'compositionMcpRatioCSFamily', uid:'r3CSCharacteristic', name:'High', order:12, natures:['cm'], new_uid:'compositionMcpRatioHighCSCharacteristic'},
 {family_uid:'compositionMaterialCSFamily', uid:'compositionMaterialBoneCSCharacteristic', name:'Bone', order:1, natures:['nmm', 'pom'], description:'Rigid organ that constitutes part of the vertebrate skeleton in animals.'},
 {family_uid:'compositionMaterialCSFamily', uid:'compositionMaterialEnamelCSCharacteristic', name:'Enamel', order:2, natures:['nmm'], description:'Opaque or semi-transparent glossy substance that is a type of glass, applied by vitrification to metallic surfaces for ornament or as a protective coating.'},
 {family_uid:'compositionMaterialCSFamily', uid:'compositionMaterialLeatherCSCharacteristic', name:'Leather', order:3, natures:['nmm', 'pom'], description:'Organic material created by tanning of animals skin.'},

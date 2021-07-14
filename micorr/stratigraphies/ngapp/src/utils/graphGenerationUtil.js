@@ -248,7 +248,11 @@ class GraphGenerationUtil {
 
         //On dessine ensuite une forme qui permet de cacher une partie de la strate pour donner
         //l'illusion que les triangles s'agrandissent/rapetississent
-        let ratio = strata.getFirstCharacteristicByFamily('cmCorrosionRatioFamily', 'name');
+        let ratio=0;
+        if (this.stratig.observationMode.binocular)
+            ratio = strata.getFirstCharacteristicByFamily('cmCorrosionRatioFamily', 'name');
+        else
+            ratio = strata.getFirstCharacteristicByFamily('compositionMcpRatioCSFamily', 'name');
         if (ratio)
             ratio = parseInt(ratio.substr(1));
         else
