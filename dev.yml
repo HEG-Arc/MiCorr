@@ -8,7 +8,7 @@ services:
     build: ./compose/postgres
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./data/psql-backup:/backups
+      - ./data/postgres/backups:/backups
     environment:
       - POSTGRES_USER=micorr
     ports:
@@ -41,7 +41,7 @@ services:
     build:
       context: .
       dockerfile: ./compose/django/Dockerfile-dev
-    command: python  manage.py runserver_plus --noreload 0.0.0.0:8000
+    command: python  manage.py runserver --noreload 0.0.0.0:8000
 #    depends_on:
 #      - postgres
 #      - neo4j
