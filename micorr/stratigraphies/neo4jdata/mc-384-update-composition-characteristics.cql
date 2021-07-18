@@ -28,14 +28,18 @@ UNWIND [
 {fg:'fgComposition', order:9, observation:binocular, uid:'cmCorrosionRatioFamily', name:'M/CP Ratio', visible: True, variable: False, description:'', natures:['cm'], new_uid:'compositionMcpRatioFamily'},
 // new family_name=Additional element(s) uid: compositionAdditionalElementsFamily
 {fg:'fgComposition', order:10, observation:binocular, uid:'compositionAdditionalElementsFamily', name:'Additional element(s)', visible: False, variable: False, description:'Any other element(s) not reported in main and secondary element(s). For CM, any element(s) not in M and CP.', natures:['cp', 'cm', 'deposit', 'metal', 'nmm', 'pom', 'soil'], list_elem_family:'elementFamily', upto:0},
+// new fieldset=Second band / aggregate
+// new family_name=Second band / aggregate uid: compositionSecondBandAggregateMainElementsFamily
+{fg:'fgComposition', order:11, observation:binocular, uid:'compositionSecondBandAggregateMainElementsFamily', name:'main element(s)', visible: False, variable: False, description:'Only the family element(s) should be given.', natures:['cp'], fieldset:'Second band / aggregate', list_elem_family:'elementFamily', upto:0},
+// new family_name=Second band / aggregate uid: compositionSecondBandAggregateSecondaryElementsFamily
+{fg:'fgComposition', order:12, observation:binocular, uid:'compositionSecondBandAggregateSecondaryElementsFamily', name:'secondary element(s)', visible: False, variable: False, description:'Any other element(s) having a concentration greater than 1% (in weight) and / or affecting the properties of the CP.', natures:['cp'], fieldset:'Second band / aggregate', list_elem_family:'elementFamily', upto:0},
+// new family_name=Second band / aggregate uid: compositionSecondBandAggregateAdditionalElementsFamily
+{fg:'fgComposition', order:13, observation:binocular, uid:'compositionSecondBandAggregateAdditionalElementsFamily', name:'additional element(s)', visible: False, variable: False, description:'Any other element(s) not reported in main and secondary element(s).', natures:['cp'], fieldset:'Second band / aggregate', list_elem_family:'elementFamily', upto:0},
 // new fieldset=Second band / aggregate_compounds
 {fg:'fgComposition', order:15, observation:binocular, uid:'compositionSecondBandAggregateCompoundsXrdFamily', name:'XRD', visible: False, variable: False, description:'Formula.', natures:['cp'], fieldset:'Second band / aggregate_compounds', list_elem_family:'compoundFamily', upto:1},
 {fg:'fgComposition', order:16, observation:binocular, uid:'compositionSecondBandAggregateCompoundsRamanSpectroscopyFamily', name:'Raman spectroscopy', visible: False, variable: False, description:'Formula.', natures:['cp'], fieldset:'Second band / aggregate_compounds', list_elem_family:'compoundFamily', upto:1},
 {fg:'fgComposition', order:17, observation:binocular, uid:'compositionSecondBandAggregateCompoundsFtirFamily', name:'FTIR', visible: False, variable: False, description:'Formula.', natures:['cp'], fieldset:'Second band / aggregate_compounds', list_elem_family:'compoundFamily', upto:1},
 {fg:'fgComposition', order:18, observation:binocular, uid:'compositionSecondBandAggregateCompoundsOthersFamily', name:'Others', visible: False, variable: False, description:'Formula.', natures:['cp'], fieldset:'Second band / aggregate_compounds', list_elem_family:'compoundFamily', upto:1},
-// new fieldset=Second band / aggregate
-// new family_name=Second band / aggregate uid: compositionSecondBandAggregateFamily
-{fg:'fgComposition', order:20, observation:binocular, uid:'compositionSecondBandAggregateAdditionalElementsFamily', name:'additional element(s)', visible: False, variable: False, description:'Any other element(s) not reported in main and secondary element(s).', natures:['cp'], fieldset:'Second band / aggregate', list_elem_family:'elementFamily', upto:0},
 // Observation: cross_section
 // new fieldset=Main element(s)
 {fg:'fgComposition', order:2, observation:cross_section, uid:'compositionMainElementsListCSFamily', name:'List', visible: False, variable: False, description:'Determined in the observed area. Only the family element(s) should be given.', natures:['cp', 'deposit', 'metal', 'nmm', 'pom', 'soil'], fieldset:'Main element(s)', list_elem_family:'elementFamily', upto:0},

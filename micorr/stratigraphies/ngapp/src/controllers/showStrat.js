@@ -60,22 +60,58 @@ angular.module('micorrApp')
 
         /*
          * filter families or fieldsets in familyGroup
-         * based on current observation mode and current stratum nature
+         * based on current observation mode, current stratum nature
+         * and Microstructure / Composition dependencies
          */
+
+        const secondBandCharacteristics = {
+            true:[
+                'microstructureAlternativeBandsCharacteristic',
+                'microstructureIsolatedAggregateMicrostructureCharacteristic',
+                'microstructureScatteredAggregateMicrostructureCharacteristic'],
+            false:[
+                'microstructureAlternativeBandsCSCharacteristic',
+                'microstructureIsolatedAggregateMicrostructureCSCharacteristic',
+                'microstructureScatteredAggregateMicrostructureCSCharacteristic']
+        }
+        const secondBandFieldsets =
+            [
+                'Second band / aggregate',
+                'Second band / aggregate_compounds',
+                'Second band / aggregate_main element(s)',
+                // CS fieldsets
+                'Second band / aggregate_secondary element(s)',
+                'Second band / aggregate_Compounds'
+            ]
+        const microstructureFamilyName = {
+            true: 'microstructureFamily',
+            false: 'microstructureCSFamily'
+        }
+
         $scope.showFamily = function (family)
         {
-            let showBasedOnObservation = $scope.stratigraphy.observationMode.binocular ? family.observation & 1 : family.observation & 2;
+            let binocular = $scope.stratigraphy.observationMode.binocular;
+            let showBasedOnObservation = binocular ? family.observation & 1 : family.observation & 2;
             if (showBasedOnObservation)
             {
                 let index = StratigraphyData.getSelectedStrata();
-                let selectedStratumNature  = StratigraphyData.getStratigraphy().getStratas()[index].natureUID;
+                let stratigraphy = $scope.stratigraphy;
+                let selectedStratum = stratigraphy.stratas[index];
+                let selectedStratumNature  = selectedStratum.natureUID;
                 if (family.ifObservationInstrument && family.ifObservationInstrument != $scope.stratigraphy.selected.morphologyObservationInstrumentCSFamily.name)
                     return false;
                 if (family.natures) { // family is a family object direct visibility test for current nature
                     return family.natures.length==0 || family.natures.includes(selectedStratumNature);
                 }
                 if (family.families) { //here family is fieldset object we show the fieldset if any of its families
-                    return family.families.some(f => !f.natures || f.natures.length==0 || f.natures.includes(selectedStratumNature));
+                    let showFieldset = family.families.some(f => !f.natures || f.natures.length == 0 || f.natures.includes(selectedStratumNature));
+
+                    if (showFieldset && secondBandFieldsets.includes(family.name)) {
+                        // verify Composition / Microstructure dependencies (only show secondBand fieldsets if required Microstructure is selected for the stratum)
+                        let microstructureCharacteristics = selectedStratum.getCharacteristicsByFamily(microstructureFamilyName[binocular]);
+                        showFieldset = microstructureCharacteristics.length && secondBandCharacteristics[binocular].includes(microstructureCharacteristics[0].name);
+                    }
+                    return showFieldset;
                 }
             }
             return showBasedOnObservation;
