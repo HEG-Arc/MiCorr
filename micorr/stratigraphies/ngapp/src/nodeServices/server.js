@@ -46,54 +46,19 @@ server.listen(PORT, function () {
 });
 
 //Récupération du svg d'une stratigraphie
-dispatcher.onPost(/\/getStratigraphySvg\/*/, function (req, res) {
-
-    res.writeHead(200, {'Content-Type': 'image/svg+xml'});
-
-
-    var params = querystring.parse(url.parse(req.url).query);
-    console.log('widthParam: ' + params['width']);
-    if ('name' in params) {
-        var width = 250;
-        if ('width' in params) {
-            if (params['width'] != undefined) {
-                width = params['width'];
-            }
-        }
-        stratigraphyServices.getStratigraphyByName(params['name'], function (stratig) {
-            console.log('ready to draw');
-            if (stratig != undefined) {
-
-                stratigraphyServices.drawStratigraphy(stratig, width, function (svgresult) {
-                    res.write(svgresult);
-                    res.end();
-                });
-            }
-            else {
-                res.write('');
-                res.end();
-            }
-
-        });
-
-    }
-});
-
-//Quick hack to support GET requests # TODO: Refactoring
 dispatcher.onGet(/\/getStratigraphySvg\/*/, function (req, res) {
     res.writeHead(200, {'Content-Type': 'image/svg+xml'});
     var params = querystring.parse(url.parse(req.url).query);
     console.log('widthParam: ' + params['width']);
     if ('name' in params) {
-        var width = 250;
-        if ('width' in params) {
-            if (params['width'] != undefined) {
-                width = parseInt(params['width']);
-            }
-        }
+        let width = params['width'] ? parseInt(params['width']) : 250;
+        let colourFamily = params['colourFamily'] ? params['colourFamily'] : 'colourFamily';
+        let binocularObservationMode = params['observationMode'] != 'CS';
         stratigraphyServices.getStratigraphyByName(params['name'], function (stratig) {
             console.log('ready to draw');
             if (stratig != undefined) {
+                stratig['colourFamily'] = colourFamily;
+                stratig.observationMode['binocular'] = binocularObservationMode;
                 stratigraphyServices.drawStratigraphy(stratig, width, function (svgresult) {
                     res.write(svgresult);
                     res.end();
