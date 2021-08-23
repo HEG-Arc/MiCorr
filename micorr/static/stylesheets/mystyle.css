@@ -6506,6 +6506,16 @@ button.close {
     width: 900px;
   }
 }
+@media (min-width: 1200px) {
+  .modal-lg {
+    width: 1200px;
+  }
+}
+@media (min-width: 1400px) {
+  .modal-xxl {
+    width: 1400px;
+  }
+}
 .tooltip {
   position: absolute;
   z-index: 1070;

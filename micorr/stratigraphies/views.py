@@ -31,6 +31,8 @@ def test(request):
 
 # Retourne tous les details d'une stratigraphie, characteristiques et interfaces
 # @ params : stratigraphy nom de la stratigraphie
+@cache_page(10)
+@gzip_page
 def getStratigraphyDetails(request, stratigraphy):
     ms = MiCorrService()
     return HttpResponse(json.dumps(ms.getStratigraphyDetails(stratigraphy)), content_type='application/json')
