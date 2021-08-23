@@ -22,18 +22,6 @@ angular.module('micorrApp')
                          */
                         MiCorrService.matchStratigraphy(JSON.stringify(StratigraphyData.getStratigraphy().toJson())).then(function (response) {
                             $scope.results = response.data;
-                        }).then(function () {
-                            $scope.results.forEach(function (listItem, index) {
-                                MiCorrService.getStratigraphyByArtefact(listItem.artefact).then(function (response) {
-                                    let stratigraphies = response.data;
-                                    MiCorrService.getStratigraphySvg(stratigraphies.strats[0].name, 100).then(function (response) {
-                                        var test = $scope.results[index];
-                                        $scope.results[index].svg = response.data;
-                                        $scope.results[index].str_uid = stratigraphies.strats[0].name;
-                                    });
-                                });
-
-                            });
                         });
 
                         $scope.ok = function () {
