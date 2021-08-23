@@ -131,6 +131,13 @@ class UserDetailView(LoginRequiredMixin, generic.DetailView):
         context['newPubliHistory'] = newPubliHistory
         context['newRequests'] = newRequests
         context['stratigraphies'] = stratigraphies
+        context['observations'] = [
+            {'name': 'Binocular', 'observationMode': 'BI', 'colourFamily': 'colourFamily'},
+            {'name': 'Opti bright', 'observationMode': 'CS', 'colourFamily': 'morphologyColourWithOpticalMicroscopeBrightFieldCSFamily'},
+            {'name': 'Opti dark', 'observationMode': 'CS', 'colourFamily': 'morphologyColourWithOpticalMicroscopeDarkFieldCSFamily'},
+            {'name': 'secondart Elec', 'observationMode': 'CS', 'colourFamily': 'morphologyColourWithScanningElectronMicroscopeSecondaryElectronsCSFamily'},
+            {'name': 'bakcscattered Elecrons', 'observationMode': 'CS', 'colourFamily': 'morphologyColourWithScanningElectronMicroscopeBackscatteredElectronsCSFamily'}
+        ]
         context['userType'] = userType
         context['objects'] = objectsList
         context['artefacts'] = artefactsList

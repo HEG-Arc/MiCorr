@@ -124,7 +124,7 @@
 
                     </div>
                 </div>
-                <div class="col-md-2 text-center">
+                <div class="col-md-12 text-center">
 
                     <div ng-controller="ModalShowSimilarStrataCtrl">
                         <script type="text/ng-template" id="showSimilarStrataContent.html">
@@ -136,7 +136,11 @@
                                     <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Picture</th>
+                                        <th>Binocular</th>
+                                        <th>Opti bright</th>
+                                        <th>Opti dark</th>
+                                        <th>second. Elec</th>
+                                        <th>bkscatt. Elec</th>
                                         <th>Matching 100%</th>
                                         <th>Metal Family</th>
                                         <th>Metal Alloy</th>
@@ -153,9 +157,22 @@
                                         <td><a href='/micorr/#/stratigraphy/{{ result.stratigraphy_uid }}' target="_blank">
                                                 <img src="{{ result.node_base_url }}getStratigraphySvg?name={{ result.stratigraphy_uid }}&amp;width=100">
                                             </a></td>
+                                        <td><a href='/micorr/#/stratigraphy/{{ result.stratigraphy_uid }}' target="_blank">
+                                            <img src="{{ result.node_base_url }}getStratigraphySvg?name={{ result.stratigraphy_uid }}&amp;width=100&amp;observationMode=CS&amp;colourFamily=morphologyColourWithOpticalMicroscopeBrightFieldCSFamily">
+                                        </a></td>
+                                        <td><a href='/micorr/#/stratigraphy/{{ result.stratigraphy_uid }}' target="_blank">
+                                            <img src="{{ result.node_base_url }}getStratigraphySvg?name={{ result.stratigraphy_uid }}&amp;width=100&amp;observationMode=CS&amp;colourFamily=morphologyColourWithOpticalMicroscopeDarkFieldCSFamily">
+                                        </a></td>
+                                        <td><a href='/micorr/#/stratigraphy/{{ result.stratigraphy_uid }}' target="_blank">
+                                            <img src="{{ result.node_base_url }}getStratigraphySvg?name={{ result.stratigraphy_uid }}&amp;width=100&amp;observationMode=CS&amp;colourFamily=morphologyColourWithScanningElectronMicroscopeSecondaryElectronsCSFamily">
+                                        </a></td>
+                                        <td><a href='/micorr/#/stratigraphy/{{ result.stratigraphy_uid }}' target="_blank">
+                                            <img src="{{ result.node_base_url }}getStratigraphySvg?name={{ result.stratigraphy_uid }}&amp;width=100&amp;observationMode=CS&amp;colourFamily=morphologyColourWithScanningElectronMicroscopeBackscatteredElectronsCSFamily">
+                                        </a></td>
                                         <td><a href='/artefacts/{{ result.artefact_id }}' target="_blank">{{ result.matching100 }}</a></td>
                                         <td><a href='/artefacts/{{ result.artefact_id }}' target="_blank">{{ result.artefact_metal_e_1 }}</a></td>
                                         <td><a href='/artefacts/{{ result.artefact_id }}' target="_blank">{{ result.artefact_alloy }}</a></td>
+
                                         <td><a href='/artefacts/{{ result.artefact_id }}' target="_blank">{{ result.artefact_type }}</a></td>
                                         <td><a href='/artefacts/{{ result.artefact_id }}' target="_blank">{{ result.artefact_chronology_category }}</a></td>
                                         <td><a href='/artefacts/{{ result.artefact_id }}' target="_blank">{{ result.artefact_technology }}</a></td>

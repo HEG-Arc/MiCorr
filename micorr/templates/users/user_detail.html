@@ -5,8 +5,7 @@
 {% block title %}MiCorr | {{ object.username }} User Profile{% endblock %}
 
 {% block content %}
-    <div class="container">
-
+    <div class="col-lg-12">
         {% if object == request.user %}
             <div class="row">
                 <div class="col-sm-6">
@@ -133,7 +132,9 @@
                                         <thead>
                                             <tr>
                                                 <th>Date</th>
-                                                <th>Stratigraphy</th>
+                                                {% for observation in observations %}
+                                                <th>{{observation.name}}</th>
+                                                {% endfor %}
                                                 <th>Description</th>
                                                 <th>Origin (site/object)</th>
                                                 <th>City</th>
@@ -147,9 +148,11 @@
                                                 <td>{% if stratigraphy.timestamp %}
                                                     {{ stratigraphy.timestamp }}{% else %}
                                                     {{ stratigraphy.date|date:"Y/m/d" }}{% endif %}</td>
+                                                {% for obs in observations %}
                                                 <td>
-                                                    <img src="{{ node_base_url }}getStratigraphySvg?name={{ stratigraphy.uid }}&width=100">
+                                                    <img src="{{ node_base_url }}getStratigraphySvg?name={{ stratigraphy.uid }}&width=100&observationMode={{obs.observationMode}}&colourFamily={{obs.colourFamily}}">
                                                 </td>
+                                                {% endfor %}
                                                 <td>
                                                     <span class="editable"
                                                           data-url="{% url 'stratigraphies:update-description' stratigraphy.uid %}"
@@ -324,8 +327,6 @@
             </div>
             <!-- End Action buttons -->
         {% endif %}
-
-
     </div>
 {% endblock content %}
 
