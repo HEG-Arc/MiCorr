@@ -2,10 +2,10 @@ from .neo4jdao import Neo4jDAO
 
 _OBSERVATIONS = [
     {'name': 'Binocular', 'observationMode': 'BI', 'colourFamily': 'colourFamily'},
-    {'name': 'Opti bright', 'observationMode': 'CS', 'colourFamily': 'morphologyColourWithOpticalMicroscopeBrightFieldCSFamily'},
-    {'name': 'Opti dark', 'observationMode': 'CS', 'colourFamily': 'morphologyColourWithOpticalMicroscopeDarkFieldCSFamily'},
-    {'name': 'secondart Elec', 'observationMode': 'CS', 'colourFamily': 'morphologyColourWithScanningElectronMicroscopeSecondaryElectronsCSFamily'},
-    {'name': 'bakcscattered Elecrons', 'observationMode': 'CS', 'colourFamily': 'morphologyColourWithScanningElectronMicroscopeBackscatteredElectronsCSFamily'}
+    {'name': 'CS - Bright field', 'observationMode': 'CS', 'colourFamily': 'morphologyColourWithOpticalMicroscopeBrightFieldCSFamily'},
+    {'name': 'CS - Dark field', 'observationMode': 'CS', 'colourFamily': 'morphologyColourWithOpticalMicroscopeDarkFieldCSFamily'},
+    {'name': 'CS - SE', 'observationMode': 'CS', 'colourFamily': 'morphologyColourWithScanningElectronMicroscopeSecondaryElectronsCSFamily'},
+    {'name': 'CS - BSE', 'observationMode': 'CS', 'colourFamily': 'morphologyColourWithScanningElectronMicroscopeBackscatteredElectronsCSFamily'}
 ]
 
 class MiCorrService:
