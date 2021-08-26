@@ -428,11 +428,21 @@ class Stratigraphy(TimeStampedModel):
     # caution stratigraphies are not linked directly to artefact anymore
     # but indirectly through section
     # todo migrate remaining old stratigraphy_set found in Artefact to section ?
+
+    BINOCULAR = 'BI'
+    CROSS_SECTION = 'CS'
+    OBSERVATION_MODE_CHOICES = (
+        (BINOCULAR, 'Binocular'),
+        (CROSS_SECTION, 'Cross section'),
+    )
+
     artefact = models.ForeignKey(Artefact, on_delete=models.deletion.CASCADE, blank=True, null=True, help_text='The artefact the stratigraphy represents')
     section = models.ForeignKey(Section, on_delete=models.deletion.CASCADE, blank=True, null=True, help_text='The section in which the stratigraphy is displayed')
     order = models.IntegerField(blank=True, null=True, help_text='The order of a stratigraphy for a given artefact')
     uid = models.CharField(max_length=500, blank=True, null=True, help_text='The unique identifier of the stratigraphy')
     url = models.CharField(max_length=500, blank=True, null=True, help_text='The url that leads to the corresponding stratigraphy in the tool')
+    observationMode = models.CharField(max_length=2, choices=OBSERVATION_MODE_CHOICES, default=BINOCULAR)
+    colourFamily = models.CharField(max_length=100,  default='colourFamily')
     image = models.ImageField(upload_to=get_img_storage_path_stratigraphy, blank=True, null=True, help_text='The image file for a stratigraphy')
     legend = models.CharField(max_length=500, blank=True, help_text='The stratigraphy description')
     class Meta:

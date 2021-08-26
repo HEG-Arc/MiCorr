@@ -1,5 +1,12 @@
 from .neo4jdao import Neo4jDAO
 
+_OBSERVATIONS = [
+    {'name': 'Binocular', 'observationMode': 'BI', 'colourFamily': 'colourFamily'},
+    {'name': 'Opti bright', 'observationMode': 'CS', 'colourFamily': 'morphologyColourWithOpticalMicroscopeBrightFieldCSFamily'},
+    {'name': 'Opti dark', 'observationMode': 'CS', 'colourFamily': 'morphologyColourWithOpticalMicroscopeDarkFieldCSFamily'},
+    {'name': 'secondart Elec', 'observationMode': 'CS', 'colourFamily': 'morphologyColourWithScanningElectronMicroscopeSecondaryElectronsCSFamily'},
+    {'name': 'bakcscattered Elecrons', 'observationMode': 'CS', 'colourFamily': 'morphologyColourWithScanningElectronMicroscopeBackscatteredElectronsCSFamily'}
+]
 
 class MiCorrService:
 
@@ -78,3 +85,7 @@ class MiCorrService:
     def getnaturefamily(self, nature):
         with self.db.transaction():
             return self.db.getnaturefamily(nature)
+
+    @classmethod
+    def getObservations(cls):
+        return _OBSERVATIONS

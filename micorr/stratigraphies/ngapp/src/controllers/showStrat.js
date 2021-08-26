@@ -14,14 +14,16 @@ import {getCharacteristicByItsName, Ratio, returnNatureCharacteristic} from "../
  * Controlleur qui est appelé lors de l'affichage d'une stratigraphie
  */
 angular.module('micorrApp')
-    .controller('ShowStratCtrl', function ($scope, $routeParams, $timeout, MiCorrService, StratigraphyData, ngProgress) {
+    .controller('ShowStratCtrl', function ($scope, $routeParams, $location, $timeout, MiCorrService, StratigraphyData, ngProgress) {
 
         // Variable mise a false à chaque fois qu'on ouvre une stratigraphie
         $scope.askLeave = false;
         // Quand l'url change on appelle cette méthode
-        $scope.$on('$locationChangeStart', function (event) {
+        $scope.$on('$locationChangeStart', function (event, newUrl, oldUrl) {
             // Si on a modifié quelque chose alors on demande si on veut quitter la page sans sauver
-            if ($scope.askLeave == true) {
+            let newPathOnly = newUrl.substr(0, newUrl.indexOf('?'))
+            let oldPathOnly = oldUrl.substr(0, oldUrl.indexOf('?'))
+            if ($scope.askLeave == true && newPathOnly != oldPathOnly) {
                 var answer = confirm("Are you sure you want to leave this page ?")
                 if (!answer) {
                     event.preventDefault();
@@ -122,12 +124,16 @@ angular.module('micorrApp')
                 // strata directive is watching stratigraphy.colourFamily
                 // so all strata will redraw on change
                 if ($scope.stratigraphy.observationMode.binocular) {
+                    $location.search('observationMode', 'BI');
                     $scope.stratigraphy.colourFamily = 'colourFamily';
-                }
-                else {
-                    let observationInstrumentColourFamily = StratigraphyData.rawCharacteristics.filter(f => f.ifObservationInstrument && f.ifObservationInstrument==$scope.stratigraphy.selected.morphologyObservationInstrumentCSFamily.name)
-                    if (observationInstrumentColourFamily.length)
+                } else {
+                    $location.search('observationMode', 'CS');
+                    let observationInstrumentColourFamily = StratigraphyData.rawCharacteristics.filter(f => f.ifObservationInstrument && f.ifObservationInstrument == $scope.stratigraphy.selected.morphologyObservationInstrumentCSFamily.name)
+                    if (observationInstrumentColourFamily.length) {
                         $scope.stratigraphy.colourFamily = observationInstrumentColourFamily[0].uid;
+                        $location.search('colourFamily', $scope.stratigraphy.colourFamily);
+                    }
+
                 }
             }
         };
@@ -160,7 +166,11 @@ angular.module('micorrApp')
 
             //Chargement de la stratigraphie
             MiCorrService.getDetailedStratigraphy($scope.stratigraphyName, function (response) {
-                var stratigraphy = StratigraphyData.getStratigraphy();
+
+                // get current url query string parameters to display selected stratigraphy version
+                let qsParams = $location.search();
+                var stratigraphy = StratigraphyData.getStratigraphy(qsParams.colourFamily);
+
                 stratigraphy.setUid($scope.stratigraphyName);
                 stratigraphy.setArtefact($scope.artefactName);
 
@@ -170,9 +180,20 @@ angular.module('micorrApp')
                 $scope.stratigraphy = stratigraphy;
                 $scope.StratigraphyData = StratigraphyData;
                 $scope.stratigraphy.morphologyObservationInstrumentCSFamily = StratigraphyData.morphologyObservationInstrumentCSFamily;
-                // select default observation instrument characteristic
-                $scope.stratigraphy.selected.morphologyObservationInstrumentCSFamily = getCharacteristicByItsName($scope.stratigraphy.morphologyObservationInstrumentCSFamily.characteristics, "morphologyObservationInstrumentOpticalMicroscopeBrightFieldCSCharacteristic");
 
+                $scope.stratigraphy.observationMode.binocular = !(qsParams['observationMode']=='CS');
+                if (qsParams.colourFamily && qsParams.colourFamily!='colourFamily') {
+                    // select  observation instrument characteristic based on colourFamily
+                    let mapColourFamilytoInstrumentCharacteristic =
+                        {
+                            morphologyColourWithOpticalMicroscopeBrightFieldCSFamily: 'morphologyObservationInstrumentOpticalMicroscopeBrightFieldCSCharacteristic',
+                            morphologyColourWithOpticalMicroscopeDarkFieldCSFamily: 'morphologyObservationInstrumentOpticalMicroscopeDarkFieldCSCharacteristic',
+                            morphologyColourWithScanningElectronMicroscopeSecondaryElectronsCSFamily: 'morphologyObservationInstrumentScanningElectronMicroscopeSecondaryElectronsCSCharacteristic',
+                            morphologyColourWithScanningElectronMicroscopeBackscatteredElectronsCSFamily: 'morphologyObservationInstrumentScanningElectronMicroscopeBackscatteredElectronsCSCharacteristic'
+                        };
+                    let selectedInstrumentCharacteristicName = mapColourFamilytoInstrumentCharacteristic[qsParams.colourFamily];
+                    $scope.stratigraphy.selected.morphologyObservationInstrumentCSFamily = getCharacteristicByItsName($scope.stratigraphy.morphologyObservationInstrumentCSFamily.characteristics, selectedInstrumentCharacteristicName);
+                }
 
             }).then(function () {
                 $scope.$broadcast('initShowStrat');

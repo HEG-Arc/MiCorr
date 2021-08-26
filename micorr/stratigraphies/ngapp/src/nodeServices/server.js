@@ -75,22 +75,17 @@ dispatcher.onGet(/\/getStratigraphySvg\/*/, function (req, res) {
 
 //Export de la stratigraphie en PNG ou en PDF
 dispatcher.onGet(/\/exportStratigraphy\/*/, function (req, res) {
-
-    console.log('test');
     var params = querystring.parse(url.parse(req.url).query);
     var width = params['width'];
     var format = params['format'];
-/*
-    if (format != 'pdf') {
-        format = 'png';
-    }
-*/
-    /*On récupère la stratigraphie et on la convertit dans le format donné en paramèter avec
-    le module inkscape
-     */
+    let colourFamily = params['colourFamily'] ? params['colourFamily'] : 'colourFamily';
+    let binocularObservationMode = params['observationMode'] != 'CS';
+
     stratigraphyServices.getStratigraphyByName(params['name'], function (stratig) {
         console.log('ready to draw');
         if (stratig != undefined) {
+            stratig.colourFamily = colourFamily;
+            stratig.observationMode['binocular'] = binocularObservationMode;
             stratigraphyServices.drawStratigraphy(stratig, width, function (svgresult) {
                 // we replace standard href by deprecated xlink:href in the svg output by recent svg.js (2.6.3)
                 // as it is not yet supported by latest svg2png/phantomjs (2.1.1) and all embedded images

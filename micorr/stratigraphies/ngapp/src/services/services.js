@@ -132,9 +132,9 @@ let StratigraphyData =  angular.module('micorrApp').factory('StratigraphyData', 
                 return c ? c.real_name : undefined;
             },
 
-            getStratigraphy: function () {
+            getStratigraphy: function (colourFamily='colourFamily') {
                 if (stratig == null) {
-                    stratig = new Stratigraphy;
+                    stratig = new Stratigraphy(colourFamily);
                 }
                 return stratig;
             },

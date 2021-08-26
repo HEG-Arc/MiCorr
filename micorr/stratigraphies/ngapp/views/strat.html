@@ -151,24 +151,17 @@
                                     <tr ng-repeat='result in results'>
                                         <td><strong>{{$index + 1}}</strong></td>
                                         <td><a href='/micorr/#/stratigraphy/{{ result.stratigraphy_uid }}' target="_blank">
-                                                <img src="{{ result.node_base_url }}getStratigraphySvg?name={{ result.stratigraphy_uid }}&amp;width=100">
-                                            </a></td>
-                                        <td><a href='/micorr/#/stratigraphy/{{ result.stratigraphy_uid }}' target="_blank">
-                                            <img src="{{ result.node_base_url }}getStratigraphySvg?name={{ result.stratigraphy_uid }}&amp;width=100&amp;observationMode=CS&amp;colourFamily=morphologyColourWithOpticalMicroscopeBrightFieldCSFamily">
+                                            <img src="{{ result.node_base_url }}getStratigraphySvg?name={{ result.stratigraphy_uid }}&width=100">
                                         </a></td>
-                                        <td><a href='/micorr/#/stratigraphy/{{ result.stratigraphy_uid }}' target="_blank">
-                                            <img src="{{ result.node_base_url }}getStratigraphySvg?name={{ result.stratigraphy_uid }}&amp;width=100&amp;observationMode=CS&amp;colourFamily=morphologyColourWithOpticalMicroscopeDarkFieldCSFamily">
-                                        </a></td>
-                                        <td><a href='/micorr/#/stratigraphy/{{ result.stratigraphy_uid }}' target="_blank">
-                                            <img src="{{ result.node_base_url }}getStratigraphySvg?name={{ result.stratigraphy_uid }}&amp;width=100&amp;observationMode=CS&amp;colourFamily=morphologyColourWithScanningElectronMicroscopeSecondaryElectronsCSFamily">
-                                        </a></td>
-                                        <td><a href='/micorr/#/stratigraphy/{{ result.stratigraphy_uid }}' target="_blank">
-                                            <img src="{{ result.node_base_url }}getStratigraphySvg?name={{ result.stratigraphy_uid }}&amp;width=100&amp;observationMode=CS&amp;colourFamily=morphologyColourWithScanningElectronMicroscopeBackscatteredElectronsCSFamily">
-                                        </a></td>
+                                        <td ng-repeat="cf in ['morphologyColourWithOpticalMicroscopeBrightFieldCSFamily', 'morphologyColourWithOpticalMicroscopeDarkFieldCSFamily', 'morphologyColourWithScanningElectronMicroscopeSecondaryElectronsCSFamily', 'morphologyColourWithScanningElectronMicroscopeBackscatteredElectronsCSFamily' ] ">
+                                            <a href='/micorr/#/stratigraphy/{{ result.stratigraphy_uid }}?&observationMode=CS&colourFamily={{ cf }}'
+                                               target="_blank">
+                                                <img src="{{ result.node_base_url }}getStratigraphySvg?name={{ result.stratigraphy_uid }}&width=100&observationMode=CS&colourFamily={{ cf }}">
+                                            </a>
+                                        </td>
                                         <td><a href='/artefacts/{{ result.artefact_id }}' target="_blank">{{ result.matching100 }}</a></td>
                                         <td><a href='/artefacts/{{ result.artefact_id }}' target="_blank">{{ result.artefact_metal_e_1 }}</a></td>
                                         <td><a href='/artefacts/{{ result.artefact_id }}' target="_blank">{{ result.artefact_alloy }}</a></td>
-
                                         <td><a href='/artefacts/{{ result.artefact_id }}' target="_blank">{{ result.artefact_type }}</a></td>
                                     </tr>
                                     </tbody>

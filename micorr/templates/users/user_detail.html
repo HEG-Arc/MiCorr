@@ -150,7 +150,10 @@
                                                     {{ stratigraphy.date|date:"Y/m/d" }}{% endif %}</td>
                                                 {% for obs in observations %}
                                                 <td>
-                                                    <img src="{{ node_base_url }}getStratigraphySvg?name={{ stratigraphy.uid }}&width=100&observationMode={{obs.observationMode}}&colourFamily={{obs.colourFamily}}">
+                                                    <a href="/micorr/#/stratigraphy/{{ stratigraphy.uid }}?observationMode={{ obs.observationMode }}&colourFamily={{ obs.colourFamily }}"
+                                                       target="_blank">
+                                                        <img src="{{ node_base_url }}getStratigraphySvg?name={{ stratigraphy.uid }}&width=100&observationMode={{ obs.observationMode }}&colourFamily={{ obs.colourFamily }}">
+                                                    </a>
                                                 </td>
                                                 {% endfor %}
                                                 <td>
@@ -164,7 +167,6 @@
                                                 <td>{{ stratigraphy.origin.city.country }}</td>
                                                 <td>
                                                     <span id="edit-{{ stratigraphy.uid }}" class="button" onmouseover="this.style.cursor='pointer'"><i class="fa fa-pencil"></i></span> |
-                                                    <a href="/micorr/#/stratigraphy/{{ stratigraphy.uid }}" target="_blank"><i class="fa fa-eye"></i></a> |
                                                     <a href="{% url 'stratigraphies:delete-user' stratigraphy.uid %}" onclick="return confirm('Are you sure you want to delete this stratigraphy?')"><i class="fa fa-trash"></i></a>
                                                 </td>
                                             </tr>

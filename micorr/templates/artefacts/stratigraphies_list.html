@@ -9,21 +9,35 @@
     <div class="row">
         <div class="c12">
             <table class="table table-bordered table-striped">
-                <tr><th></th><th>Date</th><th>Description</th></tr>
-            {% for stratigraphy in stratigraphies %}
+                <thead>
                 <tr>
-                    <td>
-                        <a href="{% url 'artefacts:add-stratigraphy' section_id stratigraphy.uid %}">
-                            <img src="{{ node_base_url }}getStratigraphySvg?name={{ stratigraphy.uid }}&width=100"
-                                 class="img-responsive">
-                        </a>
-                    </td>
-                    <td>{{ stratigraphy.date }}</td>
-                    <td>{{ stratigraphy.description }}</td>
+                    {% for observation in observations %}
+                        <th>{{ observation.name }}</th>
+                    {% endfor %}
+                    <th>Date</th>
+                    <th>Description</th>
                 </tr>
-            {% empty %}
-                <tr><td colspan="3">You haven't created any stratigraphy</td></tr>
-            {% endfor %}
+                </thead>
+                <tbody>
+                {% for stratigraphy in stratigraphies %}
+                    <tr>
+                        {% for obs in observations %}
+                            <td>
+                                <a href="{% url 'artefacts:add-stratigraphy' section_id stratigraphy.uid%}?observationMode={{ obs.observationMode }}&colourFamily={{ obs.colourFamily }}">
+                                    <img src="{{ node_base_url }}getStratigraphySvg?name={{ stratigraphy.uid }}&width=100&observationMode={{ obs.observationMode }}&colourFamily={{ obs.colourFamily }}"
+                                         class="img-responsive">
+                                </a>
+                            </td>
+                        {% endfor %}
+                        <td>{{ stratigraphy.date }}</td>
+                        <td>{{ stratigraphy.description }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="3">You haven't created any stratigraphy</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
             </table>
         </div>
     </div>

@@ -1,9 +1,14 @@
 {% for stratigraphy in section.stratigraphy_set.all %}
     <div class="row">
         <div class="c6">
-            <a href="/micorr/#/stratigraphy/{{ stratigraphy.uid }}" target="_blank">
-                <img src="{{ node_base_url }}getStratigraphySvg?name={{ stratigraphy.uid }}&width=200"
-                     class="img-responsive">
+            <a href="/micorr/#/stratigraphy/{{ stratigraphy.uid }}?observationMode={{ stratigraphy.observationMode }}&colourFamily={{ stratigraphy.colourFamily }}"
+               target="_blank">
+            {% if stratigraphy.url %}
+                    <img src="{{ node_base_url }}{{ stratigraphy.url }}&width=200" class="img-responsive">
+                {% else %}
+                    <img src="{{ node_base_url }}getStratigraphySvg?name={{ stratigraphy.uid }}&width=200"
+                         class="img-responsive">
+                {% endif %}
             </a>
         </div>
         <div class="c6">

@@ -638,12 +638,16 @@ def RefreshDivView(request, section_id):
 
 def StratigraphyListView(request, section_id):
     stratigraphies = MiCorrService().getStratigraphiesByUser(request.user.id)
-    return render(request, 'artefacts/stratigraphies_list.html', {'node_base_url': settings.NODE_BASE_URL, 'stratigraphies': stratigraphies, 'section_id': section_id})
+    return render(request, 'artefacts/stratigraphies_list.html',
+                  {'node_base_url': settings.NODE_BASE_URL, 'stratigraphies': stratigraphies, 'section_id': section_id,
+                   'observations': MiCorrService.getObservations()})
 
 
 def StratigraphyAddView(request, section_id, stratigraphy_uid):
     stratigraphy = Stratigraphy.objects.get_or_create(uid=stratigraphy_uid, section=get_object_or_404(Section, id=section_id))[0]
-    stratigraphy.image = settings.NODE_BASE_URL + 'exportStratigraphy?name='+ stratigraphy_uid +'&width=300&format=png'
+    stratigraphy.observationMode= request.GET.get('observationMode', 'BI')
+    stratigraphy.colourFamily = request.GET.get('colourFamily', 'colourFamily')
+    stratigraphy.url = f'getStratigraphySvg?name={stratigraphy_uid}&format=png&observationMode={stratigraphy.observationMode}&colourFamily={stratigraphy.colourFamily}'
     stratigraphy.save()
     return render(request, 'artefacts/strat-refresh.html', {'section_id': section_id})
 

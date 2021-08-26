@@ -34,7 +34,8 @@ export default angular
             })
             // affichage de la stratigraphie
             .when('/stratigraphy/:strat', {
-                template: require('../views/strat.html')
+                template: require('../views/strat.html'),
+                reloadOnSearch: false
             })
             // affichage de la stratigraphie
             // n'est plus utilisée mais je l'ai laissée quand même si jamais un lien n'a pas encore été modifié
