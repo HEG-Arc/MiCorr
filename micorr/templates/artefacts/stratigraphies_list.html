@@ -1,10 +1,16 @@
-{% extends "base.html" %}
+{% extends "base_root.html" %}
+
+{% block custom_header_script %}
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.1/css/dataTables.bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/fixedheader/3.1.9/css/fixedHeader.dataTables.min.css">
+{% endblock custom_header_script %}
+
 
 {% block menu %}
     <h1>Add stratigraphy</h1>
 {% endblock %}
 
-{% block content %}
+{% block content_container %}
 
     <div class="row">
         <div class="c12">
@@ -42,7 +48,24 @@
         </div>
     </div>
 
-{% endblock content %}
+{% endblock content_container %}
 
 {% block footer %}
 {% endblock footer %}
+
+{% block custom_bottom_script %}
+    <script src="https://cdn.datatables.net/1.11.1/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.1/js/dataTables.bootstrap.min.js"></script>
+    <script src="https://cdn.datatables.net/fixedheader/3.1.9/js/dataTables.fixedHeader.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('table').DataTable( {
+                fixedHeader: true,
+                pageLength: 25
+            } );
+        });
+
+    </script>
+{% endblock custom_bottom_script %}
+
