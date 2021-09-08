@@ -335,7 +335,7 @@ class GraphGenerationUtil {
         var color = this.getStratumColor(strata) || 'white';
 
         let rect = draw.rect(width, height).attr({fill: color, "shape-rendering": "crispEdges"});
-
+        if (this.stratig.observationMode.binocular)
         switch (strata.getFirstCharacteristicByFamily('porosityFamily', 'name')) {
             case 'slightlyPorousCharacteristic':
                 this.addImage(draw, "../static/micorr/images/c/CP/Porosity/CP_SlightlyPorous_" + height + "x" + width + ".svg", width, height);
@@ -348,6 +348,21 @@ class GraphGenerationUtil {
             case 'highlyPorousCharacteristic':
                 this.addImage(draw, "../static/micorr/images/c/CP/Porosity/CP_HighlyPorous_" + height + "x" + width + ".svg", width, height);
                 break;
+        }
+        else if ('texturePorositiesAmountCSVarFamily' in strata.variables && strata.variables['texturePorositiesAmountCSVarFamily']) {
+            let pds;
+            if (this.window == undefined) //Instance Browser
+                pds = new PoissonDiskSampler(width, height);
+            else //Instance Node.js
+                pds = new PoissonDiskSampler(width, height);
+            for (let i = 0; i < strata.variables['texturePorositiesAmountCSVarFamily']; i++)
+                pds.createPointsPerso(10, 10, 'none', 26, 26);
+            for (let i = 0; i < pds.pointList.length; i++) {
+                let point = draw.circle( Math.random() >= 0.5 ? 10.18 : 13.34);
+                point.x(pds.pointList[i].x);
+                point.y(pds.pointList[i].y);
+                point.fill("black");
+            }
         }
 
 
