@@ -11,9 +11,9 @@ export to csv
 WITH 1 as binocular, 2 as cross_section
 UNWIND [
 // new family_name=Profile uid: interfaceProfileCSFamily
-{fg:'fgInterface', order:1, observation:cross_section, uid:'interfaceProfileCSFamily', name:'Profile', visible: False, variable: False, description:'Determined on the observed area.', natures:['cp', 'deposit', 'metal', 'nmm', 'pom', 'soil', 'sv'], new_uid:'interfaceProfileCSFamily'},
+{fg:'fgInterface', order:1, observation:cross_section, uid:'interfaceProfileCSFamily', name:'Profile', visible: True, variable: False, description:'Determined on the observed area.', natures:['cp', 'deposit', 'metal', 'nmm', 'pom', 'soil', 'sv'], new_uid:'interfaceProfileCSFamily'},
 // new family_name=Transition uid: interfaceTransitionCSFamily
-{fg:'fgInterface', order:2, observation:cross_section, uid:'interfaceTransitionCSFamily', name:'Transition', visible: False, variable: False, description:'Determined on the observed area.', natures:['cp', 'deposit', 'metal', 'nmm', 'pom', 'soil'], new_uid:'interfaceTransitionCSFamily'},
+{fg:'fgInterface', order:2, observation:cross_section, uid:'interfaceTransitionCSFamily', name:'Transition', visible: True, variable: False, description:'Determined on the observed area.', natures:['cp', 'deposit', 'metal', 'nmm', 'pom', 'soil'], new_uid:'interfaceTransitionCSFamily'},
 // new fieldset=Roughness
 // new family_name=Roughness uid: interfaceRoughnessFamily
 {fg:'fgInterface', order:4, observation:cross_section, uid:'interfaceRpCSVarFamily', name:'Rp', visible: False, variable: True, description:'Maximum height of peak on the observed area. (measurment according to norme ISO 4288:1996)', natures:['cp', 'deposit', 'metal', 'nmm', 'pom', 'soil'], unit:'µm', fieldset:'Roughness', new_uid:'interfaceRoughnessRpCSVarFamily'},

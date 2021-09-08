@@ -135,16 +135,18 @@ class GraphGenerationUtil {
         if (color) {
             lowerInterfaceColor = color;
         }
-        let transition = strata.getFirstCharacteristicByFamily('interfaceTransitionFamily', 'name');
-        let diffuse = (transition == "diffuseCharacteristic");
-        let profile = strata.getFirstCharacteristicByFamily('interfaceProfileFamily', 'name') || 'straightCharacteristic';
+
+        let transition = strata.getFirstCharacteristicByFamily(this.stratig.observationMode.binocular ? 'interfaceTransitionFamily' : 'interfaceTransitionCSFamily', 'realName');
+        let profile = strata.getFirstCharacteristicByFamily(this.stratig.observationMode.binocular ? 'interfaceProfileFamily' : 'interfaceProfileCSFamily' , 'realName') || 'Straight';
+        let diffuse = (transition == "Diffuse");
+
 
         //On va maintenant dessiner l'interface
             const nb_hop = {
-                straightCharacteristic: 1,
-                wavyCharacteristic: 8,
-                bumpyCharacteristic: 20,
-                irregularCharacteristic: 30
+                Straight: 1,
+                Wavy: 8,
+                Bumby: 20,
+                Irregular: 30
             };
             this.drawCustomInterface(nestedInterface, index, interfaceWidth, interfaceHeight, profile, nb_hop[profile],
                 lowerInterfaceColor, upperInterfaceColor, borderWidth, divisionLineWidth, diffuse, transition);
@@ -583,9 +585,8 @@ class GraphGenerationUtil {
         const bubbleTransitionSize = 4;
         let y = height / 2;
         let line = [], t=[];
-        let nb = nb_hop;
         let x = 0;
-        let h_hop = width / nb;
+        let h_hop = width / nb_hop;
         let rndx, rndy;
         let strokeColor = "black";
         if (bottomBackgroundColor == "black" && topBackgroundColor == "black")
@@ -597,7 +598,7 @@ class GraphGenerationUtil {
             rect.attr({ 'fill-opacity': '0' });
         }
 
-        if ((transition == "semiGradualInferiorCharacteristic" || transition == "gradualCharacteristic") && index != 0) {
+        if ((transition == "semi-gradual inferior" || transition == "Gradual") && index != 0) {
             let  pds;
             //Instance Browser
             if (this.window == undefined)
@@ -616,10 +617,10 @@ class GraphGenerationUtil {
             }
         }
 
-        for (let i = 0; i < nb; i++) {
+        for (let i = 0; i < nb_hop; i++) {
             line.push('M', x, y);
             t.push('M', x, y);
-            if (profile === "straightCharacteristic") {
+            if (profile === "Straight") {
                 line.push("L", x + h_hop, y);
                 t.push("L", x + h_hop, y);
             }
@@ -627,19 +628,19 @@ class GraphGenerationUtil {
                 line.push('Q');
                 t.push('Q');
                 // on utilise les courbes de béziers pour faire des vagues
-                if (profile == "wavyCharacteristic") {
-                    let pointx = x + width / nb / 2, pointy = y * ((i % 2) ? .5 : 1.5);
+                if (profile == "Wavy") {
+                    let pointx = x + width / nb_hop / 2, pointy = y * ((i % 2) ? .5 : 1.5);
                     line.push(pointx, pointy);
                     t.push(pointx, pointy);
                 }
-                else if (profile == "bumpyCharacteristic") { // on fait des bosses avec les courbes de béziers en introduisant des hauteurs aléatoires
+                else if (profile == "Bumpy") { // on fait des bosses avec les courbes de béziers en introduisant des hauteurs aléatoires
                     rndy = this.getRandomInt(0, y);
-                    let pointx = x + width / nb / 2, pointy = y + rndy * ((i % 2) ? -1 : 1);
+                    let pointx = x + width / nb_hop / 2, pointy = y + rndy * ((i % 2) ? -1 : 1);
                     line.push(pointx, pointy);
                     t.push(pointx, pointy);
                 }
-                else if (profile == "irregularCharacteristic") { // on faire des formes irrégulières avec les courbes de béziers avec des valeurs aléatoires
-                    rndx = this.getRandomInt(0, width / nb);
+                else if (profile == "Irregular") { // on faire des formes irrégulières avec les courbes de béziers avec des valeurs aléatoires
+                    rndx = this.getRandomInt(0, width / nb_hop);
                     rndy = this.getRandomInt(-height * 0.8, height * 0.8);
                     line.push(x + rndx, y + rndy);
                     t.push(x + rndx, y + rndy);
@@ -662,7 +663,7 @@ class GraphGenerationUtil {
             lineAttrs["stroke"] = "grey";
         }*/
 
-        let path1 = draw.path(line.join(' ')).attr("shape-rendering", (profile === "straightCharacteristic") ? "crispEdges" : "auto").fill('none'); //.attr(lineAttrs);
+        let path1 = draw.path(line.join(' ')).attr("shape-rendering", (profile === "Straight") ? "crispEdges" : "auto").fill('none'); //.attr(lineAttrs);
         let path2 = draw.path(t.join(' ')).attr("shape-rendering", "crispEdges").fill(bottomBackgroundColor);
 
         path1.stroke({color: strokeColor, width: 5});
@@ -680,7 +681,7 @@ class GraphGenerationUtil {
         let rightBorder = draw.path("M" + width + " " + startHeight + "L" + width + " " + height).fill('none');
         rightBorder.stroke({color: 'black', width: borderWidth});
 
-        if (transition == "semiGradualSuperiorCharacteristic" || transition == "gradualCharacteristic") {
+        if (transition == "semi-gradual superior" || transition == "Gradual") {
             let pds;
             if (this.window == undefined) //Instance Browser
                 pds = new PoissonDiskSampler(width, height);
@@ -709,25 +710,16 @@ class GraphGenerationUtil {
 
         for (var a = 0; a < nb_lines; a++) {
             var t = [];
-            var nb = nb_hop;
             var x = 0;
-            var h_hop = width / nb;
+            var h_hop = width / nb_hop;
 
-            for (var i = 0; i < nb; i++) {
-                t.push('M');
-                t.push(x);
-                t.push(y);
-                t.push('Q');
-
-                t.push(x + width / nb / 2);
+            for (var i = 0; i < nb_hop; i++) {
+                t.push('M', x, y, 'Q', x + width / nb_hop / 2);
                 if ((i % 2) == 0)
                     t.push(y + height / nb_lines);
                 else
                     t.push(y - height / nb_lines);
-
-                t.push(x + h_hop);
-                t.push(y);
-
+                t.push(x + h_hop, y);
                 x += h_hop;
             }
             y += height / nb_lines;
