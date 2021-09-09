@@ -36,6 +36,15 @@ class GraphGenerationUtil {
                 return(colorNodes[0]['color']);
         }
     }
+    getStratumHeight(stratum) {
+        const thicknessHeights = {
+            'Thin': 50,
+            'Medium': 100,
+            'Thick': 150
+        };
+        let thicknessName = stratum.getFirstCharacteristicByFamily(this.stratig.observationMode.binocular ? 'thicknessFamily' : 'thicknessCSFamily', 'realName');
+        return thicknessHeights[thicknessName] || 100;
+    }
     /**
      * Cette méthode est utilisée par Node.js pour dessiner la stratigraphie entière
      */
@@ -166,7 +175,7 @@ class GraphGenerationUtil {
     drawStrata(strata, divID, draw) {
         var borderColor = 'black';
 
-        let height = this.getThicknesses(strata.getFirstCharacteristicByFamily('thicknessFamily', 'name'));
+        let height = this.getStratumHeight(strata);
         let width = NORMAL_STRATUM_WIDTH;
         if (divID) {
 
@@ -317,7 +326,7 @@ class GraphGenerationUtil {
         //Création d'un groupe pour le contenu du fond de la strate pour pouvoir le réutiliser
         var group = draw.group;
 
-        let height = h || this.getThicknesses(strata.getFirstCharacteristicByFamily('thicknessFamily', 'name'));
+        let height = h ||  this.getStratumHeight(strata);
         let width = w || NORMAL_STRATUM_WIDTH;
 
 
@@ -576,17 +585,6 @@ class GraphGenerationUtil {
         }
     }
 
-    getThicknesses(thickness) {
-        if (thickness == "thickCharacteristic")
-            return 150;
-        else if (thickness == "normalThicknessCharacteristic")
-            return 100;
-        else if (thickness == "thinCharacteristic")
-            return 50;
-        else
-            return 100;
-
-    }
 
     drawCustomInterface(draw, index, width, height, profile, nb_hop, bottomBackgroundColor, topBackgroundColor, borderWidth, interfaceLineThickness, diffuse, transition) {
         /* Le dessin des interfaces se fait en 3 étapes
