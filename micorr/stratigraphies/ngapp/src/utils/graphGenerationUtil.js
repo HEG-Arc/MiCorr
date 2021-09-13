@@ -154,7 +154,7 @@ class GraphGenerationUtil {
             const nb_hop = {
                 Straight: 1,
                 Wavy: 8,
-                Bumby: 20,
+                Bumpy: 20,
                 Irregular: 30
             };
             this.drawCustomInterface(nestedInterface, index, interfaceWidth, interfaceHeight, profile, nb_hop[profile],
