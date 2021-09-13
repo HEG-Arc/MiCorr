@@ -262,23 +262,14 @@ class Neo4jDAO:
                    RETURN n.uid as uid ORDER BY uid""", strata_uid=strata['uid'])
 
             if interface_uid and len(interface_uid) > 0:
-                # il n'y a qu'une UPPER_INTERFACE interface
-                ilist = {'name': interface_uid, 'characteristics': ''}
-
-                #Chaque interface a des caracteristiques
-                intCharactList = self.tx.run(
+                # caution only one interface per stratum (the UPPER_INTERFACE)
+                # plural here is for historical multiple interfaces or was intended for the list of interface's characteristics - todo continue refactor / rename interfaces -> interface in backend and frontend
+                st['interfaces'] = {'name': interface_uid}
+                st['interfaces']['characteristics'] = self.tx.run(
                     """MATCH (i:Interface)-[r:IS_CONSTITUTED_BY]->(c:Characteristic)-[b:BELONGS_TO]->(f:Family) WHERE i.uid=$interface_uid
-                       RETURN c.uid as uid, f.uid as family ORDER BY uid""", interface_uid=interface_uid)
-                iclist = []
-                for ic in intCharactList:
-                    iclist.append({'name': ic['uid'], 'family': ic['family']})
-                    logger.debug("            " + ic['uid'])
-
-                # on rassemble toutes les donnees dans c
-                ilist['characteristics'] = iclist
-                st['interfaces'] = ilist
+                       RETURN c.uid as name, c.name as real_name, f.uid as family ORDER BY name""", interface_uid=interface_uid).data()
             else:
-                st['interfaces'] = []
+                st['interfaces'] = {}
 
             st['characteristics'] = clist
             st['subcharacteristics'] = slist
