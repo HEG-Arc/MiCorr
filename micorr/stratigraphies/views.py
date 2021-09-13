@@ -39,7 +39,7 @@ def getStratigraphyDetails(request, stratigraphy):
 
 # retourne toutes les sous caracteristiques et sous caracteristiques
 # @ params
-@cache_page(30)
+@cache_page(24 * 60 * 60)
 @gzip_page
 def getallcharacteristic(request):
     ms = MiCorrService()
