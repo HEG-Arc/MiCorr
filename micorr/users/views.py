@@ -39,118 +39,81 @@ class UserDetailView(LoginRequiredMixin, generic.DetailView):
                 s['origin'] = ''
         # Add all the objects of the user in a variable
         objects = self.request.user.object_set.all().order_by(artefact_order_by)
-        tokenType = ContentType.objects.get(model='token')
-        sectionType = ContentType.objects.get(model='section')
-        artefactsList = []
-        objectsList = []
-        isTherePubValArtForObj = {}
-        newComments = 0
-        newTokens = 0
-        newPubliHistory = 0
-        newRequests = 0
-        for obj in objects :
-            isTherePubValArtForObj[obj.id] = False
+        token_type = ContentType.objects.get(model='token')
+        section_type = ContentType.objects.get(model='section')
+        artefacts_list = []
+        objects_list = []
+        published_artefact_for_object = {}
+        new_publication_requests = 0
 
         # Add all artefacts card in a list
         for obj in objects :
             artefacts = obj.artefact_set.all().order_by('-modified')
             obj_dic = {'name': obj.name, 'modified': obj.modified, 'id':obj.id }
+            published_artefact_for_object[obj.id] = False
             for artefact in artefacts :
-                artefactsList.append(artefact)
+                artefacts_list.append(artefact)
                 # we take the first origin found in the list of object's artefact as object origin
                 if artefact.origin and 'origin' not in obj_dic:
                     obj_dic['origin'] = artefact.origin
                 if artefact.parent and artefact.validated :
-                    isTherePubValArtForObj[obj.id] = True
-            objectsList.append(obj_dic)
+                    published_artefact_for_object[obj.id] = True
+            objects_list.append(obj_dic)
 
-        try:
-            allSharedToken = Token.tokenManager.filter(user=self.request.user, hidden_by_author=False, right='W')
-            for token in allSharedToken :
-                allCommTokenField = Collaboration_comment.objects.filter(content_type_id=tokenType.id, object_model_id=token.id)
-                allCommTokenSection = Collaboration_comment.objects.filter(content_type_id=sectionType.id, token_for_section=token.id)
-                for comm in allCommTokenField :
-                    if comm.user != self.request.user and comm.sent == True and comm.read == False :
-                        newComments = newComments + 1
+        # counting new tokens and comments sent
+        new_comments_shared = 0
+        for token in self.request.user.token_set.filter(right=Token.COMMENT, hidden_by_author=False):
+            # add new comments on current token
+            new_comments_shared += Collaboration_comment.objects.filter(content_type_id=token_type.id, object_model_id=token.id, sent=True, read=False).exclude(user=self.request.user).count()
+            # add new comments on token's sections
+            new_comments_shared += Collaboration_comment.objects.filter(content_type_id=section_type.id, token_for_section=token, sent=True, read=False).exclude(user=self.request.user).count()
 
-                for comm in allCommTokenSection :
-                    if comm.user != self.request.user and comm.sent == True and comm.read == False :
-                        newComments = newComments + 1
-        except:
-            pass
+        # counting new tokens and comments received
+        new_tokens_received = Token.tokenManager.filter(recipient=self.request.user.email, hidden_by_recipient=False,
+                                                        right=Token.COMMENT, read=False).count()
 
-        try:
-            allReceivedToken = Token.tokenManager.filter(recipient=self.request.user.email, hidden_by_recipient=False, right='W')
-            for token in allReceivedToken :
-                allCommTokenField = Collaboration_comment.objects.filter(content_type_id=tokenType.id, object_model_id=token.id)
-                allCommTokenSection = Collaboration_comment.objects.filter(content_type_id=sectionType.id, token_for_section=token.id)
-                for comm in allCommTokenField:
-                    if comm.user != self.request.user and comm.sent == True and comm.read == False:
-                        newComments = newComments + 1
+        # for token in Token.tokenManager.filter(recipient=self.request.user.email, hidden_by_recipient=False, right=Token.COMMENT) :
+        #     # count new comments on token
+        #     nb_new_token_comments = Collaboration_comment.objects.filter(content_type_id=token_type.id, object_model_id=token.id, sent=True, read=False).exclude(user=self.request.user).count()
+        #     # add new comments on token's sections
+        #     nb_new_token_comments += Collaboration_comment.objects.filter(content_type_id=section_type.id, token_for_section=token, sent=True, read=False).exclude(user=self.request.user).count()
+        #
+        #     if token.read == False :
+        #         new_tokens_received += 1
 
-                for comm in allCommTokenSection:
-                    if comm.user != self.request.user and comm.sent == True and comm.read == False:
-                        newComments = newComments + 1
-                if token.read == False :
-                    newTokens = newTokens + 1
-        except:
-            pass
+        new_publications = Publication.objects.filter(decision_taken=True, read=False,
+                                                                    artefact__object__user=self.request.user).count()
 
-        try:
-            publications = Publication.objects.filter(decision_taken = True, read=False)
-            for publication in publications:
-                if publication.artefact.object.user == self.request.user :
-                    newPubliHistory = newPubliHistory + 1
-        except:
-            pass
+        user_admin_type = admin_type(self.request.user)
+        if user_admin_type == 'Main':
+            new_publication_requests = Publication.objects.filter(decision_taken=False, user=self.request.user,
+                                                     delegated_user=None).exclude(
+                artefact__object__user=self.request.user).count()
+            # add confirmation requests
+            new_publication_requests += Publication.objects.filter(decision_taken=False, user=self.request.user).exclude(
+                decision_delegated_user=None).count()
+        elif user_admin_type == 'Delegated' :
+            new_publication_requests = Publication.objects.filter(decision_taken=False, delegated_user=self.request.user,
+                                                     decision_delegated_user=None).count()
 
-        userType = adminType(self.request.user)
-        if userType == 'Main':
-            try :
-                publiReq = Publication.objects.filter(decision_taken=False, user=self.request.user, delegated_user=None)
-                newRequests = newRequests + len(publiReq)
-                for publi in publiReq :
-                    if publi.artefact.object.user == self.request.user :
-                        newRequests = newRequests - 1
-            except:
-                pass
-
-            try :
-                publiConf = Publication.objects.filter(decision_taken=False, user=self.request.user).exclude(decision_delegated_user=None)
-                newRequests = newRequests + len(publiConf)
-            except:
-                pass
-        elif userType == 'Delegated' :
-            try :
-                publiDeleg = Publication.objects.filter(decision_taken=False, delegated_user=self.request.user, decision_delegated_user=None)
-                newRequests = newRequests + len(publiDeleg)
-            except:
-                pass
-
-        context['pubValArtForObj'] = isTherePubValArtForObj
-        context['newPubliHistory'] = newPubliHistory
-        context['newRequests'] = newRequests
+        context['published_artefact_for_object'] = published_artefact_for_object
+        context['new_publications'] = new_publications
+        context['new_publication_requests'] = new_publication_requests
         context['stratigraphies'] = stratigraphies
         context['observations'] = MiCorrService.getObservations()
-        context['userType'] = userType
-        context['objects'] = objectsList
-        context['artefacts'] = artefactsList
-        context['newComments'] = newComments
-        context['newTokens'] = newTokens
+        context['user_admin_type'] = user_admin_type
+        context['objects'] = objects_list
+        context['artefacts'] = artefacts_list
+        context['new_comments_shared'] = new_comments_shared
+        context['new_tokens_received'] = new_tokens_received
         context['node_base_url'] = settings.NODE_BASE_URL
         return context
 
-def adminType(user) :
-    adminType = None
-    groups = user.groups.all()
-    for group in groups:
-        if group.name == 'Delegated administrator':
-                adminType = 'Delegated'
-
-        for group in groups:
-            if group.name == 'Main administrator':
-                adminType = 'Main'
-    return adminType
+def admin_type(user) :
+    if user.groups.filter(name='Main administrator').exists():
+        return 'Main'
+    elif user.groups.filter(name='Delegated administrator').exists():
+        return 'Delegated'
 
 
 class UserRedirectView(LoginRequiredMixin, RedirectView):

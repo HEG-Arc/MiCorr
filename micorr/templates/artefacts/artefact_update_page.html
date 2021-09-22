@@ -58,7 +58,12 @@
     <h1>{{ object.artefact_verbose_description_short }}</h1>
 
     {% if form and form.instance.pk%}
-    <form id="main-form" action="{% url 'artefacts:artefact-update' form.instance.pk %}" method="post">{% csrf_token %}
+        {% if token_id %}
+            <form id="main-form"  action="{% url 'artefacts:collaboration-update' token_id=token_id %}" method="post">
+        {% else %}
+            <form id="main-form" action="{% url 'artefacts:artefact-update' form.instance.pk %}" method="post">
+        {% endif %}
+        {% csrf_token %}
     {% endif %}
         {% if form.errors %}
             {% for field in form %}
@@ -126,16 +131,17 @@
                     {% endif %}
                 {% if s.section.template.has_content %}
                     <div class="line palebox">
+                    <div class="row">
+                        <div class="c11">
                             {% if form %}
                                 <textarea class="tinymce" data-mce-conf="{{ s.content_mce_conf }}" name="s{{s.section.template.order}}_content" id="s{{s.section.template.order}}_content">{{ s.section.content }} </textarea>
                                 {{ s.section.template.content_help_text|safe }}
                             {% else %}
-                                <div class="row">
-                                    <div class="c11">
                                 {% filter replace_terms %}
                                 <p>{{ s.section.content|safe }}</p>
                                 {% endfilter %}
-                                    </div>
+                            {% endif %} {# form #}
+                        </div>
                                 {% if token_id %}
                                     <div class="c1">
                                         <div class="pull-right">
@@ -151,11 +157,12 @@
                                             </a>
                                         </div>
                                     </div>
-                                {% endif %}
-                                </div>
+                                {% endif %} {# token_id #}
+                    </div>
                                 {% if token_id %}
                                     <form action="{% url 'artefacts:collaboration-comment' token_id=token_id section_id=s.section.id field='' %}"
-                                          method="post">{% csrf_token %}
+                                          id="form_{{ s.section.id }}" method="post">
+                                        {% csrf_token %}
                                         <div class="row collapse" id="comment_{{ s.section.template.order }}_content"
                                              aria-expanded="false">
                                             <div class="line middlebox">
@@ -170,8 +177,7 @@
                                             </div>
                                         </div>
                                     </form>
-                                {% endif %}
-                            {% endif %} {# form #}
+                                {% endif %} {# token_id #}
                     </div>
                 {% endif %} {# has_content #}
                 {% if s.section.template.has_images %}
@@ -285,11 +291,11 @@
                                         </div>
                                       </div>
                                       {% if token_id %}
-                                      <div class="row collapse" id="{{ field.auto_id }}_comment"
-                                           aria-expanded="false">
-                                          <form action="{% url 'artefacts:collaboration-comment' token_id=token_id section_id=s.section.id field=field.auto_id %}"
-                                                method="post">
-                                              {% csrf_token %}
+                                      <div class="row collapse" id="{{ field.auto_id }}_comment"  aria-expanded="false">
+                                          {% url 'artefacts:collaboration-comment' token_id=token_id section_id=s.section.id field=field.auto_id as form_action_url %}
+
+                                          <form id="form_{{ s.section.id }}_{{ field.auto_id }}" action="{{ form_action_url }}" method="post">
+                                          {% csrf_token %}
 
                                               <div class="line middlebox">
 
@@ -302,9 +308,9 @@
                                                     {% include "./comments_show.html" %}
                                                   {% endwith %}
                                               {% endif %}
-                                               {% with form=comment_form %}
-                                                  {% include "./comment_form.html" %}
-                                               {% endwith %}
+                                                  {% with form=comment_form %}
+                                                      {% include "./comment_form.html" %}
+                                                  {% endwith %}
                                               </div>
                                           </form>
                                       </div>

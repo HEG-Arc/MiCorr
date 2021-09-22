@@ -34,20 +34,20 @@
                     <a class="btn btn-success" href="{% url 'artefacts:object-create' %}"><i class="fa fa-pencil"></i> Create new artefact</a>
                 </div>
                 <div class="col-sm-2">
-                    {% if userType != None %}
+                    {% if user_admin_type %}
                         <div class="pull-right">
                             <a class="btn btn-success" href="{% url 'artefacts:publication-administration-menu' %}"><i class="fa fa-wrench"></i>&nbsp;&nbsp;Administration</a>
                         </div>
-                        {% if newRequests != 0 %}
+                        {% if new_publication_requests != 0 %}
                             <br><br>
                             <div class="pull-right">
-                                {% if newRequests == 1 %}
+                                {% if new_publication_requests == 1 %}
                                     <div class="notifComm">
-                                        <b style="color: #E30000">{{ newRequests }}</b> unanswered request
+                                        <b style="color: #E30000">{{ new_publication_requests }}</b> unanswered request
                                     </div>
                                 {% else %}
                                     <div class="notifComm">
-                                        <b style="color: #E30000">{{ newRequests }}</b> unanswered requests
+                                        <b style="color: #E30000">{{ new_publication_requests }}</b> unanswered requests
                                     </div>
                                 {% endif %}
                             </div>
@@ -58,16 +58,16 @@
                     <div class="pull-right">
                          <a class="btn btn-success" href="{% url 'artefacts:publication-menu' %}"><i class="fa fa-file-text"></i>&nbsp;&nbsp;Publication</a>
                     </div>
-                    {% if newPubliHistory != 0 %}
+                    {% if new_publications != 0 %}
                         <br><br>
                         <div class="pull-right">
-                            {% if newPubliHistory == 1 %}
+                            {% if new_publications == 1 %}
                                 <div class="notifComm">
-                                    <b style="color: #E30000">{{ newPubliHistory }}</b> new decision
+                                    <b style="color: #E30000">{{ new_publications }}</b> new decision
                                 </div>
                             {% else %}
                                 <div class="notifComm">
-                                    <b style="color: #E30000">{{ newPubliHistory }}</b> new decisions
+                                    <b style="color: #E30000">{{ new_publications }}</b> new decisions
                                 </div>
                             {% endif %}
                         </div>
@@ -77,34 +77,34 @@
                     <div class="pull-right">
                         <a class="btn btn-success" href="{% url 'artefacts:collaboration-menu' %}"><i class="fa fa-users"></i>&nbsp;&nbsp;Collaboration</a>
                     </div>
-                    {% if newComments != 0 %}
+                    {% if new_comments_shared != 0 %}
                         <br><br>
                         <div class="pull-right">
-                           {% if newComments == 1 %}
+                           {% if new_comments_shared == 1 %}
                                <div class="notifComm">
-                                   <b style="color: #E30000">{{ newComments }}</b> new comment
+                                   <b style="color: #E30000">{{ new_comments_shared }}</b> new comment
                                </div>
                            {% else %}
                                <div class="notifComm">
-                                   <b style="color: #E30000">{{ newComments }}</b> new comments
+                                   <b style="color: #E30000">{{ new_comments_shared }}</b> new comments
                                </div>
                            {% endif %}
                         </div>
                     {% endif %}
-                    {% if newTokens != 0 %}
-                        {% if newComments != 0 %}
+                    {% if new_tokens_received != 0 %}
+                        {% if new_comments_shared != 0 %}
                             <br>
                         {% else %}
                             <br><br>
                         {% endif %}
                         <div class="pull-right">
-                            {% if newTokens == 1 %}
+                            {% if new_tokens_received == 1 %}
                                 <div class="notifComm">
-                                    <b style="color: green">{{ newTokens }}</b> new collaboration
+                                    <b style="color: green">{{ new_tokens_received }}</b> new collaboration
                                 </div>
                             {% else %}
                                 <div class="notifComm">
-                                    <b style="color: green">{{ newTokens }}</b> new collaborations
+                                    <b style="color: green">{{ new_tokens_received }}</b> new collaborations
                                 </div>
                             {% endif %}
                         </div>
@@ -270,7 +270,7 @@
                                                             </tr>
                                                         {% endif %}
                                                     {% endfor %}
-                                                    {% for keyObj, value in pubValArtForObj.items %}
+                                                    {% for keyObj, value in published_artefact_for_object.items %}
                                                         {% if keyObj == object.id and value == True %}
                                                             <tr style="background-color: #f5f5f5">
                                                                 <th colspan="5"><i>History of validated versions of the artefact</i></th>

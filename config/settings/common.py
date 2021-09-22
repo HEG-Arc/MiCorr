@@ -106,8 +106,7 @@ MIDDLEWARE = (
     'django.contrib.sites.middleware.CurrentSiteMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'wagtail.core.middleware.SiteMiddleware',
-    'wagtail.contrib.redirects.middleware.RedirectMiddleware',
-    'micorr.artefacts.middlewares.artefactAccessControlMiddleware',
+    'wagtail.contrib.redirects.middleware.RedirectMiddleware'
 )
 
 # MIGRATIONS CONFIGURATION

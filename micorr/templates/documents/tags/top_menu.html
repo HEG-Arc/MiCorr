@@ -14,7 +14,7 @@
                 {% if menuitem.show_dropdown %}
                     <a href="{% pageurl menuitem %}" {% if calling_page.url == menuitem.url %} class="current"{% endif %}>{{ menuitem.title }}</a>
                 {% else %}
-                    <a href="{% pageurl menuitem %}" {% if calling_page.url == menuitem.url %} class="current"{% endif %}>{{ menuitem.title }}</a>
+                    <a href="{% pageurl menuitem %}" {% if calling_page and calling_page.url == menuitem.url %} class="current"{% endif %}>{{ menuitem.title }}</a>
                 {% endif %}
             {% endfor %}
             {% if request.user.is_authenticated %}

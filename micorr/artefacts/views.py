@@ -1,16 +1,18 @@
 import json
 from collections import defaultdict
 
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import Group
 from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.messages.views import SuccessMessageMixin
+from django.core.exceptions import PermissionDenied
 from django.core.mail import EmailMultiAlternatives
 from django.core.mail import send_mail
 from django.template.loader import get_template
 from django.urls import reverse,resolve
 from django.db.models import Q
-from django.http import HttpResponse, JsonResponse, Http404,HttpResponse, HttpResponseNotAllowed
+from django.http import HttpResponse, JsonResponse, Http404
 
 from django.shortcuts import get_object_or_404, render, redirect
 
@@ -204,7 +206,24 @@ class BaseArtefactContextMixin(ContextMixin):
         context_data['node_base_url'] = settings.NODE_BASE_URL
         return context_data
 
-class ArtefactsDetailView(generic.DetailView, BaseArtefactContextMixin):
+class TokenMixin():
+    def get_token(self):
+        # token id passed as part of url path
+        if 'token_id' in self.kwargs:
+            return get_object_or_404(Token, pk=self.kwargs['token_id'])
+        # token uuid passed as part query string
+        token_uuid = None
+        if self.request.method == 'GET' and 'token' in self.request.GET:
+            token_uuid = self.request.GET['token']
+            self.request.session['token_uuid'] = token_uuid
+        if self.request.method == 'POST':
+            if 'token_uuid' in self.request.session:
+                token_uuid = self.request.session['token_uuid']
+        if token_uuid:
+            return get_object_or_404(Token, uuid=token_uuid)
+
+
+class ArtefactsDetailView(TokenMixin, UserPassesTestMixin, generic.DetailView, BaseArtefactContextMixin):
     """
     A detail view of a selected artefact
     """
@@ -212,12 +231,26 @@ class ArtefactsDetailView(generic.DetailView, BaseArtefactContextMixin):
                                                'environment', 'location', 'owner', 'technology', 'sample_location',
                                                'responsible_institution', 'microstructure', 'corrosion_form', 'corrosion_type')
     template_name = 'artefacts/artefact_update_page.html'
+
+    # UserPassesTestMixin read access function
+    def test_func(self):
+        artefact = self.get_object()
+        if artefact.published:
+            return True
+        token = self.get_token()
+        if has_read_right(self.request, artefact, token):
+            if token:
+                send_first_use_of_token_email(token)
+            return True
+        else:
+            return False
+
+
     def get_context_data(self, **kwargs):
         return super(ArtefactsDetailView, self).get_context_data(**kwargs)
 
 
-
-class ArtefactsUpdateView(SuccessMessageMixin, generic.UpdateView):
+class ArtefactsUpdateView(LoginRequiredMixin, TokenMixin, UserPassesTestMixin, SuccessMessageMixin, generic.UpdateView):
     """
     A view which allows the user to edit an artefact
     When the editing is finished, it redirects the user to the artefact detail page
@@ -228,6 +261,17 @@ class ArtefactsUpdateView(SuccessMessageMixin, generic.UpdateView):
 
     template_name_suffix = '_update_page'
     success_message = 'Your artefact has been saved successfully!'
+
+    # UserPassesTestMixin read/write access function
+    def test_func(self):
+        artefact = self.get_object()
+        token = self.get_token()
+        if has_write_right(self.request, artefact, token):
+            if token:
+                send_first_use_of_token_email(token)
+            return True
+        else:
+            return False
 
     def get_context_data(self, **kwargs):
         context = super(ArtefactsUpdateView,self).get_context_data(**kwargs)
@@ -477,12 +521,12 @@ def shareArtefactWithFriend(request, artefact_id):
             recipient = [form.cleaned_data['recipient']]
             message = form.cleaned_data['message']
 
-            if request.user.is_anonymous():
+            if request.user.is_anonymous:
                 sender = 'noreply@micorr.org'
             else:
                 sender = request.user.email
 
-            link = request.get_host() + '/artefacts/' + artefact_id
+            link = request.build_absolute_uri(reverse('artefacts:artefact-detail', kwargs={'pk': artefact_id}))
 
             # create text and html content to have a clickable link
             text_message = "A MiCorr user shared an artefact with you. \n  " + message \
@@ -520,65 +564,50 @@ class TokenDeleteView(generic.DeleteView):
         return reverse('artefacts:list_tokens', kwargs={'artefact_id': artefact_id})
 
 
-def getTokenRightByUuid(token_uuid):
-    token_right = None
-    if token_uuid is not None:
-        token = get_object_or_404(Token, uuid=token_uuid)
-        token_right = token.right
-    return token_right
+def get_token_user_right_on(token: Token, user, artefact:Artefact):
+    if token is not None:
+        return token.right if not user.is_anonymous and token.recipient == user.email and token.artefact_id == artefact.id else None
 
 
-def isArtefactOfConnectedUser(request, artefact_id):
-    artefact = get_object_or_404(Artefact, pk=artefact_id)
-    is_artefact_of_connected_user = False
-    if request.user.id == artefact.object.user.id:
-        is_artefact_of_connected_user = True
-    return is_artefact_of_connected_user
+def is_artefact_of_connected_user(request, artefact:Artefact):
+    return request.user.id == artefact.object.user.id
 
 
-# Write right when :
-# - artefact.user = logged user
-# - token.right = 'W'
-def hasWriteRight(request, artefact_id, token_uuid):
-    has_write_right = False
-
-    if request.user.is_superuser or request.user.has_perm('artefacts.change_artefact') or  (isArtefactOfConnectedUser(request, artefact_id)) or (getTokenRightByUuid(token_uuid) == 'W'):
-        has_write_right = True
-    return has_write_right
+# COMMENT right when :
+# - artefact.user = logged in user
+# - token.right = Token.COMMENT
+def has_comment_right(request, artefact:Artefact, token:Token):
+    return request.user.is_superuser or request.user.has_perm('artefacts.change_artefact') or (
+        is_artefact_of_connected_user(request, artefact)) or (
+        get_token_user_right_on(token, request.user, artefact) == Token.COMMENT)
 
 
-# Read right when :
-# artefact.user = logged user
-# token.right = 'R'
+# READ right when :
+# artefact.user = logged in user
+# token.right = Token.READ
 # artefact was validated by a micorr admin
-def hasReadRight(request, artefact_id, token_uuid):
-    has_write_right = False
-    if request.user.is_superuser or request.user.has_perm('artefacts.change_artefact') or ('foo.view_bar')or isArtefactOfConnectedUser(request, artefact_id) or getTokenRightByUuid(token_uuid) == 'R' or isValidatedById(artefact_id):
-        has_write_right = True
-    return has_write_right
+def has_read_right(request, artefact:Artefact, token:Token):
+    return request.user.is_superuser or request.user.has_perm(
+        'artefacts.change_artefact') or is_artefact_of_connected_user(request, artefact) or get_token_user_right_on(
+        token, request.user, artefact) == Token.READ or artefact.validated
+
+# COMMENT right when :
+# - artefact.user = logged in user
+# - token.right = Token.EDIT
+def has_write_right(request, artefact:Artefact, token:Token):
+    return request.user.is_superuser or request.user.has_perm('artefacts.change_artefact') or (
+        is_artefact_of_connected_user(request, artefact)) or (
+               get_token_user_right_on(token, request.user, artefact) == Token.EDIT)
 
 
-def isValidatedById(artefact_id):
-    artefact = get_object_or_404(Artefact, pk=artefact_id)
-    return artefact.validated
 
-
-def isFirstUseOfToken(token_uuid):
-    firstUse = False
-    token = get_object_or_404(Token, uuid=token_uuid)
-    if token.already_used == False:
-        firstUse = True
-    return firstUse
-
-
-def sendFirstUseOfTokenEmail(token_uuid):
-    if isFirstUseOfToken(token_uuid):
-        token = get_object_or_404(Token, uuid=token_uuid)
+def send_first_use_of_token_email(token: Token):
+    if not token.already_used:
         token.already_used = True
         token.save()
 
         subject = 'First use of MiCorr token'
-        message = 'Your token has been used : \n Artefact : ' + token.artefact.object.name + '\n Comment : ' + str(token.comment) + '\n Link : ' + str(token.link)
+        message = f'Your token has been used : \n Artefact : {token.artefact.object.name}\n Comment : {token.comment}\n Link : {token.link}'
         sender = 'micorr@he-arc.ch'
         recipient = [token.user.email]
 
@@ -740,7 +769,7 @@ def errorUpdatePublicationArtefact(artefact):
 
 def errorAccessToken(token, user):
     if token.user != user and token.recipient != user.email :
-        raise Http404
+        raise PermissionDenied
 
 class CollaborationListView(generic.ListView):
     model = Token
@@ -750,55 +779,42 @@ class CollaborationListView(generic.ListView):
         # Call the base implementation first to get a context
         context = super(CollaborationListView, self).get_context_data(**kwargs)
         user = self.request.user
-
-        # Add all the objects of the user in a variable
-        tokensShared = []
-        tokensReceived = []
-        modelToken = ContentType.objects.get(model='token')
-        modelSection = ContentType.objects.get(model='section')
+        model_token = ContentType.objects.get(model='token')
+        model_section = ContentType.objects.get(model='section')
 
         # Research tokens shared by the user
-        nbTotSha = 0
-        newCommentsForTokenSha = {}
-        try :
-            tokensShared = self.request.user.token_set.filter(right='W', hidden_by_author=False).order_by('-modified')
-            for token in tokensShared :
-                nbCommSha = 0
-                commentsToken = Collaboration_comment.objects.filter(content_type_id=modelToken.id, object_model_id=token.id, sent=True, read=False).exclude(user=self.request.user)
-                nbCommSha = nbCommSha + len(commentsToken)
-                commentsSection = Collaboration_comment.objects.filter(content_type_id=modelSection.id, token_for_section=token, sent=True, read=False).exclude(user=self.request.user)
-                nbCommSha = nbCommSha + len(commentsSection)
-                newCommentsForTokenSha[token.id] = nbCommSha
-                nbTotSha = nbTotSha+nbCommSha
-        except:
-            pass
+        new_comments_shared = 0
+        new_comments_by_token_shared = {}
+        tokens_shared = self.request.user.token_set.filter(right=Token.COMMENT, hidden_by_author=False).order_by('-modified')
+        for token in tokens_shared:
+            # count new comments on token
+            nb_new_token_comments = Collaboration_comment.objects.filter(content_type_id=model_token.id, object_model_id=token.id, sent=True, read=False).exclude(user=self.request.user).count()
+            # add new comments on token's sections
+            nb_new_token_comments += Collaboration_comment.objects.filter(content_type_id=model_section.id, token_for_section=token, sent=True, read=False).exclude(user=self.request.user).count()
+            new_comments_by_token_shared[token.id] = nb_new_token_comments
+            new_comments_shared += nb_new_token_comments
 
         # Research tokens shared with the user
-        nbTotRec=0
-        newTokens=0
-        newCommentsForTokenRec = {}
-        try :
-            tokensReceived = Token.tokenManager.filter(recipient=user.email, right='W', hidden_by_recipient=False)
-            for token in tokensReceived :
-                nbCommRec=0
-                commentsToken = Collaboration_comment.objects.filter(content_type_id=modelToken.id, object_model_id=token.id, sent=True, read=False).exclude(user=self.request.user)
-                nbCommRec = nbCommRec + len(commentsToken)
-                commentsSection = Collaboration_comment.objects.filter(content_type_id=modelSection.id, token_for_section=token, sent=True, read=False).exclude(user=self.request.user)
-                nbCommRec = nbCommRec + len(commentsSection)
-                newCommentsForTokenRec[token.id] = nbCommRec
-                nbTotRec = nbTotRec+nbCommRec
-                if token.read == False :
-                    newTokens = newTokens + 1
-        except :
-            pass
+        new_comments_received=0
+        new_tokens_received=0
+        new_comments_by_token_received = {}
+        tokens_received = Token.tokenManager.filter(recipient=user.email, hidden_by_recipient=False).exclude(right=Token.READ)
+        for token in tokens_received :
+            nb_new_token_comments = Collaboration_comment.objects.filter(content_type_id=model_token.id, object_model_id=token.id, sent=True, read=False).exclude(user=self.request.user).count()
+            # add new comments on token's sections
+            nb_new_token_comments += Collaboration_comment.objects.filter(content_type_id=model_section.id, token_for_section=token, sent=True, read=False).exclude(user=self.request.user).count()
+            new_comments_by_token_received[token.id] = nb_new_token_comments
+            new_comments_received += nb_new_token_comments
+            if not token.read:
+                new_tokens_received += 1
 
-        context['newCommentsSha'] = nbTotSha
-        context['newCommentsRec'] = nbTotRec
-        context['newTokens'] = newTokens
-        context['commentsForEachTokenSha'] = newCommentsForTokenSha
-        context['commentsForEachTokenRec'] = newCommentsForTokenRec
-        context['tokens_shared_by_me'] = tokensShared
-        context['tokens_shared_with_me'] = tokensReceived
+        context['new_comments_shared'] = new_comments_shared
+        context['new_comments_received'] = new_comments_received
+        context['new_tokens_received'] = new_tokens_received
+        context['new_comments_by_token_shared'] = new_comments_by_token_shared
+        context['new_comments_by_token_received'] = new_comments_by_token_received
+        context['tokens_shared'] = tokens_shared
+        context['tokens_received'] = tokens_received
         context['user'] = user
         return context
 
@@ -807,9 +823,23 @@ class CollaborationUpdateView(ArtefactsUpdateView): #BaseArtefactContextMixin
     template_name = 'artefacts/collaboration_comment_artefact_update.html'
 
     def get_object(self, queryset=None):
-        token = Token.tokenManager.get(id=self.kwargs['token_id'])
-        obj = Artefact.objects.get(id=token.artefact.id)
-        return obj
+        if not hasattr(self, 'token'):
+            self.token = self.get_token()
+        # pk or slug is mandatory in url for UpdateView - we don't pass it in the url
+        # for this view as it is deduced from token
+        self.kwargs['pk'] = self.token.artefact.pk
+        return super().get_object(queryset)
+
+    # UserPassesTestMixin read/write access function
+    def test_func(self):
+        artefact = self.get_object()
+        token = self.token
+        if has_write_right(self.request, artefact, token):
+            if token:
+                send_first_use_of_token_email(token)
+            return True
+        else:
+            return False
 
     def get_context_data(self, **kwargs):
         user = self.request.user
@@ -845,9 +875,9 @@ class CollaborationUpdateView(ArtefactsUpdateView): #BaseArtefactContextMixin
 
 
     def get_success_url(self):
-        return reverse('artefacts:collaboration-update',args=[self.kwargs['token_id']] )
+        return reverse('artefacts:collaboration-update', kwargs={'token_id': self.kwargs['token_id']})
 
-class CollaborationCommentView(generic.CreateView,BaseArtefactContextMixin):
+class CollaborationCommentView(TokenMixin, UserPassesTestMixin, generic.CreateView,BaseArtefactContextMixin):
 
     model = Collaboration_comment
     template_name = 'artefacts/collaboration_comment_artefact_detail.html'
@@ -859,7 +889,16 @@ class CollaborationCommentView(generic.CreateView,BaseArtefactContextMixin):
     queryset = Artefact.objects.select_related('alloy', 'type', 'origin', 'recovering_date', 'chronology_category',
                                                'environment', 'location', 'owner', 'technology', 'sample_location',
                                                'responsible_institution', 'microstructure', 'corrosion_form', 'corrosion_type')
-
+    # UserPassesTestMixin comment access function
+    def test_func(self):
+        self.token = self.get_token()
+        artefact = self.token.artefact
+        if has_comment_right(self.request, artefact, self.token):
+            if self.token:
+                send_first_use_of_token_email(self.token)
+            return True
+        else:
+            return False
 
     def get_context_data(self, **kwargs):
 
@@ -891,6 +930,7 @@ class CollaborationCommentView(generic.CreateView,BaseArtefactContextMixin):
 
         context['user'] = user
         context['token'] = token
+        context['token_id'] = token.id
         context['field_comments'] = field_comments
         context['comment_form'] = context.pop('form')
         context['object']=context['artefact']
@@ -1068,31 +1108,11 @@ class CollaborationDeletedListView(generic.ListView):
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
         context = super(CollaborationDeletedListView, self).get_context_data(**kwargs)
-        user = self.request.user
-
-        # Add all the objects of the user in a variable
-        allTokensShared = self.request.user.token_set.all().order_by('-modified')
-        tokensShared = []
-        tokensReceived = []
-
-        # Research tokens shared by the user
-        for token in allTokensShared :
-            if token.right == 'W' and token.hidden_by_author :
-                tokensShared.append(token)
-
-        # Research tokens shared with the user
-        try :
-            tokens = Token.tokenManager.filter(recipient=user.email).order_by('-modified')
-            for token in tokens :
-                if token.right == 'W' and token.hidden_by_recipient :
-                    tokensReceived.append(token)
-
-        except :
-            tokensReceived = []
-
-        context['tokens_shared_by_me'] = tokensShared
-        context['tokens_shared_with_me'] = tokensReceived
-        context['user'] = user
+        context['user'] = user = self.request.user
+        context['tokens_shared']  = user.token_set.filter(hidden_by_author=True).exclude(
+            right=Token.READ).order_by('-modified')
+        context['tokens_received']  = Token.tokenManager.filter(recipient=user.email, hidden_by_recipient=True).exclude(
+            right=Token.READ).order_by('-modified')
         return context
 
 def retrieveDeletedCollaboration(request, token_id) :
@@ -1123,7 +1143,7 @@ class PublicationListView(generic.ListView):
 
         user_publications = Publication.objects.filter(artefact__object__user=user)
         artefactsHistory = list(user_publications.filter(decision_taken=True).order_by('-modified'))
-        newPubliHistory = sum(p.read==False for p in artefactsHistory)
+        new_publications = sum(p.read==False for p in artefactsHistory)
 
         publicationsUser = user_publications.filter(decision_taken=False).order_by('-created')
 
@@ -1134,7 +1154,7 @@ class PublicationListView(generic.ListView):
         context['artefactsPublished'] = artefactsPublished
         context['artefactsHistory'] = artefactsHistory
         context['user'] = user
-        context['newPubliHistory'] = newPubliHistory
+        context['new_publications'] = new_publications
         return context
 
 class PublicationArtefactDetailView(generic.DetailView, BaseArtefactContextMixin):
@@ -1149,7 +1169,7 @@ class PublicationArtefactDetailView(generic.DetailView, BaseArtefactContextMixin
         artefact = publication.artefact
         admin_user_type = admin_type(self.request.user)
         if artefact.object.user != self.request.user and admin_user_type==None :
-            raise Http404
+            raise PermissionDenied
 
         if publication.decision_taken and publication.read==False :
             publication.read = True
@@ -1166,9 +1186,10 @@ class PublicationCreateView(generic.CreateView, BaseArtefactContextMixin):
     def get_context_data(self, **kwargs):
         context = super(PublicationCreateView, self).get_context_data(**kwargs)
         artefact = context.get('artefact')
-        if not artefact or artefact.object.user != self.request.user:
+        if not artefact:
             raise Http404
-
+        if artefact.object.user != self.request.user:
+           raise PermissionDenied
         context['user'] = self.request.user
         context['admin_user_type'] = admin_type(self.request.user)
 
@@ -1284,13 +1305,13 @@ def accessAdministration(publication_id, user, accessType) :
         raise Http404
     if accessType=='answermain' :
         if publication.user != user or publication.delegated_user != None :
-            raise Http404
+            raise PermissionDenied
     elif accessType=='confirm' :
         if publication.user != user or publication.decision_delegated_user == None :
-            raise Http404
+            raise PermissionDenied
     elif accessType=='answerdeleg' :
         if publication.delegated_user != user or publication.decision_delegated_user != None :
-            raise Http404
+            raise PermissionDenied
 
 class AdministrationArtefactDetailView(generic.DetailView, BaseArtefactContextMixin):
 

@@ -27,7 +27,7 @@
                                 </h4>
                             </div>
                             <div id="artefacts_shared" class="panel-collapse collapse">
-                                {% if tokens_shared_by_me %}
+                                {% if tokens_shared %}
                                     <table class="table table-bordered table-striped table-hover">
                                         <tr>
                                             <th>Last modification</th>
@@ -35,13 +35,13 @@
                                             <th>Shared with</th>
                                             <th>Action</th>
                                         </tr>
-                                        {% for tokenSha in tokens_shared_by_me %}
+                                        {% for token_shared in tokens_shared %}
                                             <tr>
-                                                <td>{{ tokenSha.modified }}</td>
-                                                <td>{{ tokenSha.artefact.object.name }}</td>
-                                                <td>{{ tokenSha.recipient }}</td>
+                                                <td>{{ token_shared.modified }}</td>
+                                                <td>{{ token_shared.artefact.object.name }}</td>
+                                                <td>{{ token_shared.recipient }}</td>
                                                 <td>
-                                                    <center><a href="{% url 'artefacts:collaboration-retrieve' token_id=tokenSha.id %}" onclick="return confirm('Are you sure you want to retrieve this collaboration ? It will appear in your collaboration menu again')" title="Retrieve collaboration"><i class="fa fa-reply"></i></a></center>
+                                                    <center><a href="{% url 'artefacts:collaboration-retrieve' token_id=token_shared.id %}" onclick="return confirm('Are you sure you want to retrieve this collaboration ? It will appear in your collaboration menu again')" title="Retrieve collaboration"><i class="fa fa-reply"></i></a></center>
                                                 </td>
                                             </tr>
                                         {% endfor %}
@@ -62,7 +62,7 @@
                                 </h4>
                             </div>
                             <div id="artefacts_received" class="panel-collapse collapse">
-                                {% if tokens_shared_with_me %}
+                                {% if tokens_received %}
                                     <table class="table table-bordered table-striped table-hover">
                                         <tr>
                                             <th>Last modification date</th>
@@ -70,13 +70,13 @@
                                             <th>Author (username)</th>
                                             <th>Actions</th>
                                         </tr>
-                                        {% for tokenRec in tokens_shared_with_me %}
+                                        {% for token_received in tokens_received %}
                                             <tr>
-                                                <td>{{ tokenRec.modified }}</td>
-                                                <td>{{ tokenRec.artefact.object.name }}</td>
-                                                <td>{{ tokenRec.user.username }}</td>
+                                                <td>{{ token_received.modified }}</td>
+                                                <td>{{ token_received.artefact.object.name }}</td>
+                                                <td>{{ token_received.user.username }}</td>
                                                 <td>
-                                                    <center><a href="{% url 'artefacts:collaboration-retrieve' token_id=tokenRec.id %}" onclick="return confirm('Are you sure you want to retrieve this collaboration ? It will appear in your collaboration menu again')" title="Retrieve collaboration"><i class="fa fa-reply"></i></a></center>
+                                                    <center><a href="{% url 'artefacts:collaboration-retrieve' token_id=token_received.id %}" onclick="return confirm('Are you sure you want to retrieve this collaboration ? It will appear in your collaboration menu again')" title="Retrieve collaboration"><i class="fa fa-reply"></i></a></center>
                                                 </td>
                                             </tr>
                                         {% endfor %}

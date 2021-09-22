@@ -27,17 +27,17 @@
                                 <h4 class="panel-title">
                                     <span class="glyphicon glyphicon-plus"></span>
                                     <a data-toggle="collapse" href="#artefacts_shared">Artefacts shared with contributors</a>
-                                    {% if newCommentsSha != 0 %}
+                                    {% if new_comments_shared != 0 %}
                                         <div class="pull-right">
                                             <div id="moncercle" title="New comments">
-                                                <center>{{ newCommentsSha }}</center>
+                                                <center>{{ new_comments_shared }}</center>
                                             </div>
                                         </div>
                                     {% endif %}
                                 </h4>
                             </div>
                             <div id="artefacts_shared" class="panel-collapse collapse">
-                                {% if tokens_shared_by_me %}
+                                {% if tokens_shared %}
                                     <table class="table table-bordered table-striped table-hover">
                                         <tr>
                                             <th>Last modification</th>
@@ -45,29 +45,29 @@
                                             <th>Shared with</th>
                                             <th>Actions</th>
                                         </tr>
-                                        {% for tokenSha in tokens_shared_by_me %}
+                                        {% for token_shared in tokens_shared %}
                                             <tr>
-                                                <td>{{ tokenSha.modified }}</td>
+                                                <td>{{ token_shared.modified }}</td>
 
                                                 <td>
-                                                    {% for key, value in commentsForEachTokenSha.items %}
-                                                        {% if key == tokenSha.id %}
+                                                    {% for key, value in new_comments_by_token_shared.items %}
+                                                        {% if key == token_shared.id %}
                                                          {% if value != 0 %}
                                                              <div class="newCommentsRed">
                                                                 ({{ value }})
-                                                                {{ tokenSha.artefact.object.name }}
+                                                                {{ token_shared.artefact.object.name }}
                                                              </div>
                                                          {% else %}
-                                                            {{ tokenSha.artefact.object.name }}
+                                                            {{ token_shared.artefact.object.name }}
                                                          {% endif %}
                                                         {% endif %}
                                                     {% endfor %}
                                                 </td>
-                                                <td>{{ tokenSha.recipient }}</td>
+                                                <td>{{ token_shared.recipient }}</td>
                                                 <td>
-                                                    <a href="{% url 'artefacts:collaboration-update' tokenSha.id %}" title="Modify artefact"><i class="fa fa-pencil"></i></a> |
-                                                    <a href="{% url 'artefacts:collaboration-comment' token_id=tokenSha.id %}" title="Comment artefact"><i class="fa fa-comment"></i></a> |
-                                                    <a href="{% url 'artefacts:collaboration-hide' pk=tokenSha.id %}" title="Delete collaboration"><i class="fa fa-trash"></i></a>
+                                                    <a href="{% url 'artefacts:collaboration-update'  token_id=token_shared.id %}" title="Modify artefact"><i class="fa fa-pencil"></i></a> |
+                                                    <a href="{% url 'artefacts:collaboration-comment' token_id=token_shared.id %}" title="Comment artefact"><i class="fa fa-comment"></i></a> |
+                                                    <a href="{% url 'artefacts:collaboration-hide' pk=token_shared.id %}" title="Delete collaboration"><i class="fa fa-trash"></i></a>
                                                 </td>
                                             </tr>
                                         {% endfor %}
@@ -85,24 +85,24 @@
                                 <h4 class="panel-title">
                                     <span class="glyphicon glyphicon-plus"></span>
                                     <a data-toggle="collapse" href="#artefacts_received">Artefacts shared with me</a>
-                                    {% if newCommentsRec != 0 %}
+                                    {% if new_comments_received != 0 %}
                                         <div class="pull-right">
                                             <div id="moncercle" title="New comments">
-                                                <center>{{ newCommentsRec }}</center>
+                                                <center>{{ new_comments_received }}</center>
                                             </div>
                                         </div>
                                     {% endif %}
-                                    {% if newTokens != 0 %}
+                                    {% if new_tokens_received != 0 %}
                                         <div class="pull-right">
                                             <div id="moncerclegreen" title="New collaborations">
-                                                <center>{{ newTokens }}</center>
+                                                <center>{{ new_tokens_received }}</center>
                                             </div>
                                         </div>
                                     {% endif %}
                                 </h4>
                             </div>
                             <div id="artefacts_received" class="panel-collapse collapse">
-                                {% if tokens_shared_with_me %}
+                                {% if tokens_received %}
                                     <table class="table table-bordered table-striped table-hover">
                                         <tr>
                                             <th>Last modification date</th>
@@ -110,35 +110,39 @@
                                             <th>Author (username)</th>
                                             <th>Actions</th>
                                         </tr>
-                                        {% for tokenRec in tokens_shared_with_me %}
+                                        {% for token_received in tokens_received %}
                                             <tr>
-                                                <td>{{ tokenRec.modified }}</td>
+                                                <td>{{ token_received.modified }}</td>
                                                 <td>
-                                                    {% for key, value in commentsForEachTokenRec.items %}
-                                                        {% if key == tokenRec.id %}
+                                                    {% for key, value in new_comments_by_token_received.items %}
+                                                        {% if key == token_received.id %}
                                                          {% if value != 0 %}
                                                              <div class="newCommentsRed">
                                                                 ({{ value }})
-                                                                 {% if not tokenRec.read %}
-                                                                    <div class="newToken">{{ tokenRec.artefact.object.name }}</div>
+                                                                 {% if not token_received.read %}
+                                                                    <div class="newToken">{{ token_received.artefact.object.name }}</div>
                                                                  {% else %}
-                                                                     {{ tokenRec.artefact.object.name }}
+                                                                     {{ token_received.artefact.object.name }}
                                                                 {% endif %}
                                                              </div>
                                                          {% else %}
-                                                             {% if not tokenRec.read %}
-                                                                 <div class="newToken">{{ tokenRec.artefact.object.name }}</div>
+                                                             {% if not token_received.read %}
+                                                                 <div class="newToken">{{ token_received.artefact.object.name }}</div>
                                                              {% else %}
-                                                                 {{ tokenRec.artefact.object.name }}
+                                                                 {{ token_received.artefact.object.name }}
                                                              {% endif %}
                                                          {% endif %}
                                                         {% endif %}
                                                     {% endfor %}
                                                 </td>
-                                                <td>{{ tokenRec.user.username }}</td>
+                                                <td>{{ token_received.user.username }}</td>
                                                 <td>
-                                                    <a href="{% url 'artefacts:collaboration-comment' token_id=tokenRec.id %}" title="Comment artefact"><i class="fa fa-comment"></i></a> |
-                                                    <a href="{% url 'artefacts:collaboration-hide' pk=tokenRec.id %}" title="Delete collaboration"><i class="fa fa-trash"></i></a>
+                                                    {% if token_received.right == 'E' %}
+                                                    <a href="{% url 'artefacts:artefact-update' pk=token_received.artefact.pk %}?token={{token_received.uuid}}" title="Edit artefact"><i class="fa fa-edit"></i></a> |
+                                                    {% else %}
+                                                    <a href="{% url 'artefacts:collaboration-comment' token_id=token_received.id %}" title="Comment artefact"><i class="fa fa-comment"></i></a> |
+                                                    {% endif %}
+                                                    <a href="{% url 'artefacts:collaboration-hide' pk=token_received.id %}" title="Delete collaboration"><i class="fa fa-trash"></i></a>
                                                 </td>
                                             </tr>
                                         {% endfor %}
