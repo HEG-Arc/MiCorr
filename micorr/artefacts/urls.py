@@ -65,7 +65,7 @@ urlpatterns = [
 
     url(r'^collaboration/$', login_required(artefacts_views.CollaborationListView.as_view()), name='collaboration-menu'),
     url(r'^collaboration/deleted/$', login_required(artefacts_views.CollaborationDeletedListView.as_view()), name='collaboration-deleted-menu'),
-    url(r'^(?P<token_id>\d+)/collaboration/update/$', login_required(artefacts_views.CollaborationUpdateView.as_view()), name='collaboration-update'),
+    url(r'^collaboration/(?P<token_id>\d+)/update/$', login_required(artefacts_views.CollaborationUpdateView.as_view()), name='collaboration-update'),
     url(r'^collaboration/(?P<token_id>\d+)/comment/$', login_required(artefacts_views.CollaborationCommentView.as_view()), name='collaboration-comment'),
     url(r'^collaboration/(?P<token_id>\d+)/comment/(?P<section_id>\d+)/(?P<field>\w*)/$', login_required(artefacts_views.CollaborationCommentView.as_view()), name='collaboration-comment'),
     url(r'^(?P<pk>\d+)/collaboration/hide/$', login_required(artefacts_views.CollaborationHideView.as_view()), name='collaboration-hide'),

@@ -506,12 +506,14 @@ class Token(TimeStampedModel):
     """
     A token is used to give a read or write right when you share an artefact
     """
-    # Own fields
+
     READ = 'R'
-    WRITE = 'W'
+    COMMENT = 'W' # we keep 'W' code for COMMENT for compatibility purpose (COMMENT mode was named WRITE before)
+    EDIT = 'E'
     RIGHT_CHOICES = (
-        (READ, 'Read'),
-        (WRITE, 'Write'),
+        (READ, 'Read only'),
+        (COMMENT, 'Read and comment'),
+        (EDIT, 'Edit (Read/Write)'),
     )
     uuid = models.CharField(max_length=50)
     right = models.CharField(max_length=1, choices=RIGHT_CHOICES, default=READ)

@@ -1,9 +1,10 @@
 # coding=utf-8
 import re
 
+from django.shortcuts import get_object_or_404
 
-from artefacts.views import hasWriteRight, hasReadRight
-from artefacts.views import sendFirstUseOfTokenEmail
+from artefacts.views import has_comment_right, has_read_right, has_write_right
+from artefacts.views import send_first_use_of_token_email
 from django.core.exceptions import PermissionDenied
 from artefacts.models import Artefact
 from django.utils.deprecation import MiddlewareMixin
@@ -14,9 +15,6 @@ class artefactAccessControlMiddleware(MiddlewareMixin):
 
         url = str(request.path)
         token_uuid = None
-        has_write_right = False
-        has_read_right = False
-        adminType = None
 
         # check if exist a token in the url
         if 'token' in request.GET:
@@ -26,49 +24,30 @@ class artefactAccessControlMiddleware(MiddlewareMixin):
         # Check if READ RIGHT
         # If url like = '/artefacts/5/' (with or without token)
         pattern_read = re.compile('^\/artefacts\/[0-9]+\/$')
-
-        if pattern_read.match(url):
-
-            artefact_id = view_kwargs.get('pk', None)
-            artefact = Artefact.objects.get(pk=artefact_id)
-
-            artefact_right = hasReadRight(request, artefact_id, token_uuid)
-            if (artefact_right):
-                has_read_right = True
-                if token_uuid != None:
-                    sendFirstUseOfTokenEmail(token_uuid)
-
-            if not has_read_right and not artefact.published :
-                raise PermissionDenied
-
-        # Check if WRITE RIGHT
+        # Check if EDIT RIGHT
         # If url like = '/artefacts/5/update/' (with or without token)
         pattern_update = re.compile('^\/artefacts\/[0-9]+\/update\/$')
 
-        if pattern_update.match(url):
+        if pattern_read.match(url):
+            artefact_id = int(view_kwargs.get('pk', None))
+            artefact = get_object_or_404(Artefact, pk=artefact_id)
+            if not artefact.published:
+                if has_read_right(request, artefact, token_uuid):
+                    if token_uuid:
+                        send_first_use_of_token_email(token_uuid)
+                else:
+                    raise PermissionDenied
+        elif pattern_update.match(url):
             # method POST after submit the update form
             if request.method == 'POST':
                 if 'token_uuid' in request.session:
                     token_uuid = request.session['token_uuid']
 
-            artefact_id = view_kwargs.get('pk', None)
-
-            artefact_right = hasWriteRight(request, artefact_id, token_uuid)
-            if (artefact_right):
-                has_write_right = True
+            artefact_id = int(view_kwargs.get('pk', None))
+            artefact = get_object_or_404(Artefact, pk=artefact_id)
+            if has_write_right(request, artefact, token_uuid):
                 if token_uuid != None:
-                    sendFirstUseOfTokenEmail(token_uuid)
-
-            if not has_write_right:
+                    send_first_use_of_token_email(token_uuid)
+            else:
                 raise PermissionDenied
 
-
-
-    # def process_request(self, request):
-        # print("Hey, on a reçu une requete !")
-        # on est pas obligé de retourner quoi que ce soit
-
-    # def process_response(self, request, response):
-        # print("Hey, on a repondu a une requete !")
-        # return obligatoire
-        # return response

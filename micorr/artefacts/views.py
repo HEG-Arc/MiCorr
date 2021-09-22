@@ -436,10 +436,11 @@ def shareArtefact(request, artefact_id):
             # 'localhost:8000/artefacts/110?token=8a21008e-383b-4c13-bd9e-9c8387bf29b0'
             token = Token.tokenManager.create_token(right, artefact, request.user, comment, '-'.join(recipient))
 
-            if right == 'R':
-                link = reverse('artefacts:artefact-detail', kwargs={'pk':artefact_id})
-                link+=f'?token={token.uuid}'
-            elif right == 'W':
+            if right == Token.READ:
+                link = reverse('artefacts:artefact-detail', kwargs={'pk': artefact_id}) + f'?token={token.uuid}'
+            elif right == Token.EDIT:
+                link = reverse('artefacts:artefact-update', kwargs={'pk': artefact_id}) + f'?token={token.uuid}'
+            elif right == Token.COMMENT:
                 link = reverse('artefacts:collaboration-menu')
             link = request.build_absolute_uri(link)
             token.link = link
