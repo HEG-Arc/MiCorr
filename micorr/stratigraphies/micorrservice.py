@@ -66,7 +66,7 @@ class MiCorrService:
         with self.db.transaction():
             return self.db.match(data)
 
-    def deleteStratigrapy(self, stratigraphy):
+    def deleteStratigraphy(self, stratigraphy):
         with self.db.transaction():
             self.db.deleteAllStrataFromAStratigraphy(stratigraphy)
             return self.db.deleteStratigraphy(stratigraphy)
@@ -85,6 +85,20 @@ class MiCorrService:
     def getnaturefamily(self, nature):
         with self.db.transaction():
             return self.db.getnaturefamily(nature)
+
+    def share_stratigraphy(self, user_id, stratigraphy, recipient_user_id, recipient_email=None):
+        with self.db.transaction():
+            return self.db.share_stratigraphy(user_id, stratigraphy, recipient_user_id, recipient_email)
+
+    def get_all_shares(self, stratigraphy):
+        with self.db.transaction():
+            return self.db.get_all_shares(stratigraphy)
+
+    def delete_stratigraphy_share(self, user_id, stratigraphy, recipient_user_id):
+        with self.db.transaction():
+            return self.db.delete_stratigraphy_share(user_id, stratigraphy, recipient_user_id)
+
+
 
     @classmethod
     def getObservations(cls):

@@ -1,11 +1,11 @@
 from django.conf.urls import url
 from stratigraphies import views as stratigraphies_views
+from stratigraphies.views import ShareCreateView, ShareListView, ShareDeleteView
 
 app_name = "stratigraphies"
 
 urlpatterns = [
     url(r'^$', stratigraphies_views.home, name='list'),
-    url(r'^test$', stratigraphies_views.test),
     url(r'^json/isauthenticated', stratigraphies_views.isauthenticated),
     url(r'^json/getallartefacts$', stratigraphies_views.getallartefacts),
     url(r'^json/getallcharacteristic$', stratigraphies_views.getallcharacteristic),
@@ -25,5 +25,8 @@ urlpatterns = [
     url(r'^delete-user/(?P<stratigraphy>[\w-]+)$', stratigraphies_views.delete_stratigraphy_user, name='delete-user'),
     url(r'^email$', stratigraphies_views.sendEmail, name='send_email'),
     url(r'^node_descriptions$', stratigraphies_views.node_descriptions, name='node_descriptions'),
+    url(r'^(?P<stratigraphy>[\w-]+)/create/share$', ShareCreateView.as_view(), name='create-share'),
+    url(r'^(?P<stratigraphy>[\w-]+)/delete/share/(?P<user_id>\d+)$', ShareDeleteView.as_view(), name='delete-share'),
+    url(r'^(?P<stratigraphy>[\w-]+)/list/shares$', ShareListView.as_view(), name='list-share')
 ]
 

@@ -1,33 +1,32 @@
 import simplejson as json
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.core.mail import send_mail
-from django.http import HttpResponse, HttpResponseForbidden
-from django.shortcuts import render, redirect
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import ValidationError
+from django.core.mail import send_mail, EmailMultiAlternatives
+from django.http import HttpResponse, HttpResponseForbidden, HttpResponseRedirect
+from django.shortcuts import render, redirect, get_object_or_404
+from django.template.loader import get_template
+from django.urls import reverse
+from django.views import View
 from django.views.decorators.cache import cache_page
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.gzip import gzip_page
 from django.views.decorators.http import require_http_methods
+from django.views.generic import FormView, TemplateView
 
 from stratigraphies.micorrservice import MiCorrService
+from users.models import User
 
 from .models import NodeDescription
-from .forms import StratigraphyDescriptionUpdateForm
+from .forms import StratigraphyDescriptionUpdateForm, ShareStratigraphyForm
 
 
 #retourne la page d'accueil
 def home(request):
     return render(request, 'stratigraphies/index.html', locals())
 
-@csrf_exempt
-def test(request):
-    if request.method == 'POST':
-        print('Hello')
-
-    ms = MiCorrService()
-    ms.test()
-
-    return render(request, 'stratigraphies/test.html', locals())
 
 # Retourne tous les details d'une stratigraphie, characteristiques et interfaces
 # @ params : stratigraphy nom de la stratigraphie
@@ -131,6 +130,83 @@ def delete_stratigraphy_user(request, stratigraphy):
     return redirect('users:detail', request.user.username)
 
 
+class ShareCreateView(LoginRequiredMixin, FormView):
+    form_class = ShareStratigraphyForm
+    template_name = 'stratigraphies/share_stratigraphy_form.html'
+
+    def get_success_url(self):
+        return reverse('stratigraphies:list-share', kwargs={'stratigraphy': self.request.resolver_match.kwargs.get('stratigraphy')})
+
+
+    def form_valid(self, form):
+            # This method is called when valid form data has been POSTed.
+            # It should return an HttpResponse.
+            subject = "Shared MiCorr stratigraphy : "
+            recipient_email = form.user.email if form.user else form.cleaned_data['email']
+            email_recipients = [recipient_email]
+            comment = form.cleaned_data['comment']
+            cc_myself = form.cleaned_data['cc_myself']
+            user = self.request.user
+            stratigraphy_uid = self.request.resolver_match.kwargs.get('stratigraphy')
+            link = self.request.build_absolute_uri(f"/micorr/#/stratigraphy/{stratigraphy_uid}")
+
+            ms = MiCorrService()
+            ms.share_stratigraphy(self.request.user.id, stratigraphy_uid, form.user.id if form.user else None, form.cleaned_data['email'])
+
+            # create text and html content to have a clickable link
+            context = {'link':link, 'user':user}
+            text_message = get_template('stratigraphies/email/stratigraphy_share.txt').render(context=context)
+            html_message = get_template('stratigraphies/email/stratigraphy_share.html').render(context=context)
+            if cc_myself:
+                email_recipients.append(user.email)
+
+            msg = EmailMultiAlternatives(subject, text_message, settings.DEFAULT_FROM_EMAIL, email_recipients, reply_to=(user.email,))
+            msg.attach_alternative(html_message, "text/html")
+            msg.send()
+
+            # messages.add_message(request, messages.SUCCESS, 'New share added successfully')
+
+            return super().form_valid(form)
+
+
+class ShareDeleteView(LoginRequiredMixin, View):
+
+    def post(self, request, *args, **kwargs):
+        stratigraphy = kwargs.get('stratigraphy')
+        recipient_user = get_object_or_404(User, pk=kwargs['user_id'])
+        ms = MiCorrService()
+        ms.delete_stratigraphy_share(self.request.user.id, stratigraphy, recipient_user.id)
+        return HttpResponseRedirect(reverse('stratigraphies:list-share', kwargs={'stratigraphy': stratigraphy}))
+
+
+class ShareListView(LoginRequiredMixin, TemplateView):
+
+    template_name = "stratigraphies/share_list.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        ms = MiCorrService()
+        shares = ms.get_all_shares(context['stratigraphy'])
+        # check c ser state
+        for share in shares:
+            if share['user_id']:
+                try:
+                    user = User.objects.get(pk=share['user_id'])
+                except User.DoesNotExist:
+                    pass
+                else:
+                    share['email'] = user.email
+            elif share['email']:
+                try:
+                    user = User.objects.get(email=share['email'])
+                except User.DoesNotExist:
+                    pass
+                else:
+                    share['user_id'] = user.pk
+        context['shares'] = shares
+        return context
+
+
 # retourne sauvegarde un facies de corrosion
 # @ params stratigraphie au format urlencode
 @csrf_exempt
@@ -140,9 +216,10 @@ def save(request):
     data = json.loads(request.body)
     stratigraphy = data['stratigraphy']
     user_id = ms.getStratigraphyUser(stratigraphy)
+    users_with_write_access = [user_id ] + [int(user['user_id']) for user in ms.get_all_shares(stratigraphy)]
     print(("CURRENT USER: %s" % request.user))
     if user_id:
-        if user_id == request.user.id:
+        if request.user.id in users_with_write_access:
             response = ms.save(data)
         else:
             # Not allowed to save the stratigraphy!
@@ -171,7 +248,7 @@ def match (request):
 def deleteStratigraphy(request, stratigraphy):
     ms = MiCorrService()
 
-    response = ms.deleteStratigrapy(stratigraphy)
+    response = ms.deleteStratigraphy(stratigraphy)
 
     return HttpResponse(json.dumps(response), content_type='application/json')
 

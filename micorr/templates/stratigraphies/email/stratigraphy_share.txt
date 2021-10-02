@@ -1,0 +1,2 @@
+{{user.name}} shared a MiCorr stratigraphy with you.
+Please follow this link: {{link}}

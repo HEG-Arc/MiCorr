@@ -68,7 +68,10 @@ class Neo4jDAO:
 
     def getStratigraphiesByUser(self, user_id, order_by='description'):
         stratigraphies = self.tx.run(
-            "MATCH (n:Stratigraphy) WHERE n.user_uid=$user_id RETURN n ORDER BY n.%s" % (order_by,),
+            """MATCH (n:Stratigraphy) WHERE n.user_uid=$user_id RETURN n ORDER BY n.%s
+                UNION
+                MATCH (n:Stratigraphy)<-[:has_write_access]-(u:User {uid:$user_id})  RETURN n ORDER BY n.%s
+            """ % (order_by, order_by),
             user_id=user_id)
         stratigraphies_list = []
         for stratigraphy in stratigraphies:
@@ -80,6 +83,7 @@ class Neo4jDAO:
                 {'date': stratigraphy['n']['date'], 'uid': stratigraphy['n']['uid'],
                  'description': stratigraphy['n']['description'],
                  'artefact_uid': stratigraphy['n']['artefact_uid'],
+                 'user_uid':stratigraphy['n']['user_uid'],
                  'timestamp': timestamp})
         return stratigraphies_list
 
@@ -105,6 +109,44 @@ class Neo4jDAO:
 
     def delStratigraphyUser(self, stratigraphy):
         n=self.tx.evaluate("MATCH (n:`Stratigraphy`) WHERE n.uid=$stratigraphy REMOVE n.user_uid RETURN n", stratigraphy=stratigraphy)
+
+    def get_all_shares(self, stratigraphy):
+        return self.tx.run("""
+            MATCH (s:Stratigraphy {uid:$stratigraphy})<-[:has_write_access]-(user:User)
+            RETURN user.uid AS user_id, user.email AS email order by user.datetime""", stratigraphy=stratigraphy).data()
+
+    def get_all_shares(self, stratigraphy):
+        return self.tx.run("""
+            MATCH (s:Stratigraphy {uid:$stratigraphy})<-[:has_write_access]-(user:User)
+            RETURN user.uid AS user_id, user.email AS email order by user.datetime""", stratigraphy=stratigraphy).data()
+
+
+    def share_stratigraphy(self, user_id, stratigraphy, recipient_user_id = None, recipient_email=None ):
+        # share stratigraphy (only if it belongs to user_id)
+        if recipient_user_id:
+             # with an already registered user
+            self.tx.run("""
+                MERGE (u:User {uid:$uid})
+                ON CREATE SET u.datetime = datetime.transaction(), u.email = $recipient_email
+                 WITH u
+                MATCH (s:Stratigraphy {uid:$stratigraphy, user_uid:$user_id})
+                MERGE (s)<-[:has_write_access]-(u)""", stratigraphy=stratigraphy, uid=recipient_user_id,
+                        recipient_email=recipient_email, user_id=user_id)
+        elif recipient_email:
+            # with a user not yet registered
+            self.tx.run("""
+                MERGE (u:User {email:$recipient_email})
+                ON CREATE SET u.datetime = datetime.transaction()
+                 WITH u
+                MATCH (s:Stratigraphy {uid:$stratigraphy, user_uid:$user_id})
+                MERGE (s)<-[:has_write_access]-(u)""", stratigraphy=stratigraphy, recipient_email=recipient_email)
+
+    def delete_stratigraphy_share(self, user_id, stratigraphy, recipient_user_id):
+        # (only stratigraphy belongs to user_id)
+        self.tx.run("""
+        MATCH (s:Stratigraphy {uid:$stratigraphy, user_uid:$user_id})<-[share:has_write_access]-(user:User {uid:$recipient_user_id})
+        DELETE share""", stratigraphy=stratigraphy, recipient_user_id=recipient_user_id, user_id=user_id)
+
 
     def updateStratigraphyDescription(self, stratigraphy, description):
         n = self.tx.evaluate("MATCH (n:`Stratigraphy`) WHERE n.uid=$stratigraphy RETURN n", stratigraphy=stratigraphy)

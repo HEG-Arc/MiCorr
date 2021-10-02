@@ -31,8 +31,15 @@ class UserDetailView(LoginRequiredMixin, generic.DetailView):
         stratigraphies = MiCorrService().getStratigraphiesByUser(self.request.user.id,stratigraphy_order_by)
         # Add stratigraphy information from django model
         pg_stratigraphies = Stratigraphy.objects.filter(uid__in=[s['uid'] for s in stratigraphies])
+        stratigraphy_users = {self.request.user.id: self.request.user}
         for i, s in enumerate(stratigraphies):
             pg_s = pg_stratigraphies.filter(uid=s['uid']).first()
+            s_user_id = int(s['user_uid'])
+            if s_user_id in stratigraphy_users:
+                s_user = stratigraphy_users[s_user_id]
+            else:
+                s_user = stratigraphy_users[s_user_id] = User.objects.get(pk=s_user_id)
+            s['user'] = s_user
             if pg_s and pg_s.section and pg_s.section.artefact:
                 s['origin'] = pg_s.section.artefact.origin
             else:
@@ -101,6 +108,7 @@ class UserDetailView(LoginRequiredMixin, generic.DetailView):
         context['new_publication_requests'] = new_publication_requests
         context['stratigraphies'] = stratigraphies
         context['observations'] = MiCorrService.getObservations()
+        context['user'] = self.request.user
         context['user_admin_type'] = user_admin_type
         context['objects'] = objects_list
         context['artefacts'] = artefacts_list

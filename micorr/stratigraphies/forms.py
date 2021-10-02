@@ -29,6 +29,7 @@ from django.forms import TextInput
 # Third-party app imports
 
 # MiCorr imports
+from users.models import User
 
 
 class StratigraphyDescriptionUpdateForm(forms.Form):
@@ -37,3 +38,32 @@ class StratigraphyDescriptionUpdateForm(forms.Form):
     """
     attribute = forms.CharField(label='attribute', max_length=100)
     value = forms.CharField(label='value', max_length=100)
+
+
+class ShareStratigraphyForm(forms.Form):
+
+    def clean(self):
+        cleaned_data = super().clean()
+        email = cleaned_data.get('email')
+        username = cleaned_data.get('username')
+        if not email and not username:
+            raise forms.ValidationError(
+                "You must provide either an email address or a username"
+            )
+        if username:
+            try:
+                user = User.objects.get(username=username)
+            except User.DoesNotExist:
+                raise forms.ValidationError(f"User with username:{username} does not exist")
+        elif email:
+            try:
+                user = User.objects.get(email=email)
+            except User.DoesNotExist:
+                raise forms.ValidationError(f"User with email:{email} does not exist")
+        cleaned_data['user'] = user
+        self.user = user
+
+    email = forms.EmailField(label='email', required=False)
+    username = forms.CharField(label='username', max_length=150, required=False)
+    comment = forms.CharField(label='Personal comment', required=False)
+    cc_myself = forms.BooleanField(label='Send a copy to myself', required=False)

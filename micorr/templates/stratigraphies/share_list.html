@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load terms %}
+
+    {% block title %}
+        MiCorr | List of existing shares
+    {% endblock title %}
+
+      {% block content %}
+
+      <h1>Share list for stratigraphy : {{ stratigraphy }}</h1>
+
+        <div class="row">
+            <div class="col-sm-12">
+              <a class="btn btn-success" href="{% url 'stratigraphies:create-share' stratigraphy %}">
+                  <i class="fa fa-share-alt"></i> Add a new one</a>
+            </div>
+        </div>
+        <br>
+
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+      <div class="row">
+          <div class="table-responsive">
+              <table class="table table-bordered table-striped table-hover">
+                  <tr>
+                      <th>Share with</th>
+                      <th>Comment</th>
+                      <th>Actions</th>
+                  </tr>
+
+                  {% for share in shares %}
+                      <tr>
+                          <td width="250">{{ share.email }}</td>
+                          <td>{{ share.comment }}</td>
+                          <td>
+                              <a data-toggle="collapse" href="#{{ share.user_id }}" aria-expanded="false" aria-controls="collapseExample">
+                                  <i class="fa fa-link"></i>
+                              </a>
+                              <form action="{% url 'stratigraphies:delete-share' stratigraphy share.user_id%}" method="post"> {% csrf_token %}
+                                  <button type="submit" name="delete" value="share" class="btn-link"><i class="fa fa-trash"></i></button>
+                              </form>
+                          </td>
+                      </tr>
+
+                      <tr id="{{ share.user_id }}" class="collapse" >
+                          <td  colspan="5">
+                              {{ share.link }}
+                          </td>
+                      </tr>
+                  {% empty %}
+                      <tr><td colspan="5">No results found</td></tr>
+                  {% endfor %}
+              </table>
+          </div>
+      </div>
+
+
+
+
+      {% endblock content %}
