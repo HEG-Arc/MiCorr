@@ -14,9 +14,16 @@ services:
       - ./micorr/media:/media
       - ./data/maintenance:/usr/share/nginx/html
 
+    ports:
+      - "0.0.0.0:80:80"
+      - "0.0.0.0:443:443"
+
+    environment:
+      - MY_DOMAIN_NAME=${MY_DOMAIN_NAME}
+
   certbot:
     image: certbot/certbot
-    command: /bin/sh -c "sleep 6 && certbot certonly -n --standalone -d ${MY_DOMAIN_NAME} --agree-tos --email micorr@he-arc.ch --server https://acme-v01.api.letsencrypt.org/directory --rsa-key-size 4096 --verbose --keep-until-expiring --preferred-challenges http-01"
+    command: /bin/sh -c "sleep 6 && certbot certonly -n --standalone -d ${MY_DOMAIN_NAME} --agree-tos --email micorr@he-arc.ch --server https://acme-v02.api.letsencrypt.org/directory --rsa-key-size 4096 --verbose --keep-until-expiring --preferred-challenges http-01"
     entrypoint: ""
     volumes:
       - ./data/etc-letsencrypt:/etc/letsencrypt
