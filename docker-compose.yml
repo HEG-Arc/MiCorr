@@ -46,7 +46,8 @@ services:
     environment:
       - cluster.routing.allocation.disk.watermark.low=800mb
       - cluster.routing.allocation.disk.watermark.high=500mb
-
+    restart: always
+   
   django:
     build:
       context: .
@@ -92,7 +93,8 @@ services:
       - ./data/certs:/etc/nginx/certs
       - ./micorr/media:/media
       - ./data/maintenance:/usr/share/nginx/html
-
+    restart: always
 
   redis:
     image: redis:latest
+    restart: always
