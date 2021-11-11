@@ -4,6 +4,7 @@
 from collections import defaultdict
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import AnonymousUser
 from django.urls import reverse
 from django.views.generic import DetailView, ListView, RedirectView, UpdateView
 from django.contrib.contenttypes.models import ContentType
@@ -34,12 +35,15 @@ class UserDetailView(LoginRequiredMixin, generic.DetailView):
         stratigraphy_users = {self.request.user.id: self.request.user}
         for i, s in enumerate(stratigraphies):
             pg_s = pg_stratigraphies.filter(uid=s['uid']).first()
-            s_user_id = int(s['user_uid'])
-            if s_user_id in stratigraphy_users:
-                s_user = stratigraphy_users[s_user_id]
+            if s['user_uid'] is not None:
+                s_user_id = int(s['user_uid'])
+                if s_user_id in stratigraphy_users:
+                    s_user = stratigraphy_users[s_user_id]
+                else:
+                    s_user = stratigraphy_users[s_user_id] = User.objects.get(pk=s_user_id)
+                s['user'] = s_user
             else:
-                s_user = stratigraphy_users[s_user_id] = User.objects.get(pk=s_user_id)
-            s['user'] = s_user
+                s['user'] = AnonymousUser()
             if pg_s and pg_s.section and pg_s.section.artefact:
                 s['origin'] = pg_s.section.artefact.origin
             else:
