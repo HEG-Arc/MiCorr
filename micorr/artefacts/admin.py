@@ -4,7 +4,8 @@ from django.utils.html import format_html
 
 from .models import Alloy, Type, Origin, RecoveringDate, ChronologyCategory, Environment, \
     Technology, Microstructure, CorrosionForm, CorrosionType, Artefact, SectionCategory, Section, Image, \
-    Document, Stratigraphy, Object, Publication, Collaboration_comment
+    Document, Stratigraphy, Object, Publication, Collaboration_comment, SectionTemplate
+
 
 def linkify(field_name):
     """
@@ -127,6 +128,7 @@ admin.site.register(Microstructure)
 admin.site.register(CorrosionForm)
 admin.site.register(CorrosionType)
 admin.site.register(Artefact, ArtefactAdmin)
+admin.site.register(SectionTemplate)
 admin.site.register(SectionCategory, SectionCategoryAdmin)
 admin.site.register(Section, SectionAdmin)
 admin.site.register(Image, ImageAdmin)
