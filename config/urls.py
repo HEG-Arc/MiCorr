@@ -16,10 +16,10 @@ from wagtail.admin import urls as wagtailadmin_urls
 from wagtail.documents import urls as wagtaildocs_urls
 
 
-from config.sitemaps import ArtefactsSitemap, HomePageSitemap
+from config.sitemaps import ArtefactSitemap, HomePageSitemap
 
 sitemaps = {
-    'artefact': ArtefactsSitemap,
+    'artefact': ArtefactSitemap,
     'home': HomePageSitemap,
 }
 

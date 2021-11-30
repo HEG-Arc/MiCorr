@@ -28,7 +28,7 @@ from contacts.forms import ContactCreateForm
 from stratigraphies.micorrservice import MiCorrService
 from users.models import User
 
-from .forms import ArtefactsForm, ArtefactsCreateForm, DocumentUpdateForm, DocumentCreateForm, ArtefactFilter, \
+from .forms import ArtefactForm, ArtefactCreateForm, DocumentUpdateForm, DocumentCreateForm, ArtefactFilter, \
     OriginCreateForm, AlloyCreateForm, TechnologyCreateForm, EnvironmentCreateForm, \
     MicrostructureCreateForm, CorrosionFormCreateForm, CorrosionTypeCreateForm, \
     RecoveringDateCreateForm, ImageCreateForm, TypeCreateForm, ContactAuthorForm, ShareArtefactForm, \
@@ -98,7 +98,7 @@ def searchStratigraphy(self):
         return redirect("/micorr/#/stratigraphy/" + stratigraphy)
 
 
-class ArtefactsListView(generic.ListView):
+class ArtefactListView(generic.ListView):
     """
     A list of all the artefacts in the filter
     """
@@ -125,7 +125,7 @@ class ArtefactsListView(generic.ListView):
                       {'current_url':current_url, 'search': artefactssearch, 'results': results, 'filter': artefactsfilter,
                        'self': self, 'node_base_url': settings.NODE_BASE_URL})
 
-def get_section_groups(artefact, form, formObject,add_mce_widget=False):
+def get_section_groups(artefact, form, object_update_form, add_mce_widget=False):
     """
     Utility function shared by ArtefactDetailView and ArtefactUpdateView
     build a list of list of Section instances grouped by categories for the given artefact object
@@ -198,7 +198,7 @@ class BaseArtefactContextMixin(ContextMixin):
                 artefact = self.object.artefact
         context_data['artefact'] = artefact
         context_data['documents'] = artefact.document_set.all()
-        artefact_form= artefact_form or ArtefactsForm(instance=artefact, label_suffix='')
+        artefact_form= artefact_form or ArtefactForm(instance=artefact, label_suffix='')
         context_data['section_groups'] = get_section_groups(artefact, artefact_form,
                                                             ObjectUpdateForm(instance=artefact.object, label_suffix=''),
                                                             add_mce_widget)
@@ -223,7 +223,7 @@ class TokenMixin():
             return get_object_or_404(Token, uuid=token_uuid)
 
 
-class ArtefactsDetailView(TokenMixin, UserPassesTestMixin, generic.DetailView, BaseArtefactContextMixin):
+class ArtefactDetailView(TokenMixin, UserPassesTestMixin, generic.DetailView, BaseArtefactContextMixin):
     """
     A detail view of a selected artefact
     """
@@ -247,17 +247,17 @@ class ArtefactsDetailView(TokenMixin, UserPassesTestMixin, generic.DetailView, B
 
 
     def get_context_data(self, **kwargs):
-        return super(ArtefactsDetailView, self).get_context_data(**kwargs)
+        return super(ArtefactDetailView, self).get_context_data(**kwargs)
 
 
-class ArtefactsUpdateView(LoginRequiredMixin, TokenMixin, UserPassesTestMixin, SuccessMessageMixin, generic.UpdateView):
+class ArtefactUpdateView(LoginRequiredMixin, TokenMixin, UserPassesTestMixin, SuccessMessageMixin, generic.UpdateView):
     """
     A view which allows the user to edit an artefact
     When the editing is finished, it redirects the user to the artefact detail page
     """
 
     model = Artefact
-    form_class = ArtefactsForm
+    form_class = ArtefactForm
 
     template_name_suffix = '_update_page'
     success_message = 'Your artefact has been saved successfully!'
@@ -274,29 +274,29 @@ class ArtefactsUpdateView(LoginRequiredMixin, TokenMixin, UserPassesTestMixin, S
             return False
 
     def get_context_data(self, **kwargs):
-        context = super(ArtefactsUpdateView,self).get_context_data(**kwargs)
+        context = super(ArtefactUpdateView, self).get_context_data(**kwargs)
 
         #if user want to update an artefact with parent (= artefact for publication), raise 404
         errorUpdatePublicationArtefact(self.object)
 
-        formObject = ObjectUpdateForm(instance=self.object.object)
-        form=context['form']
+        object_update_form = ObjectUpdateForm(instance=self.object.object)
+        form = context['form']
 
-        section_groups = get_section_groups(self.object, form, formObject,add_mce_widget=True)
+        section_groups = get_section_groups(self.object, form, object_update_form,add_mce_widget=True)
 
         context.update(authors_fieldset=form.get_fieldset('authors'),
                        section_groups=section_groups,
                        node_base_url=settings.NODE_BASE_URL,
-                       view='ArtefactsUpdateView')
+                       view='ArtefactUpdateView')
         return context
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         artefact = self.object
         # Save updates for the object name (4 following lines)
-        objForm = ObjectUpdateForm(request.POST, instance=artefact.object)
-        if objForm.is_valid():
-            objForm.save()
+        object_update_form = ObjectUpdateForm(request.POST, instance=artefact.object)
+        if object_update_form.is_valid():
+            object_update_form.save()
         # retrieve section related vars from POST
         for st in SectionTemplate.objects.filter(page_template=1).all():
             s_prefix = "s{}_".format(st.order)
@@ -312,12 +312,12 @@ class ArtefactsUpdateView(LoginRequiredMixin, TokenMixin, UserPassesTestMixin, S
             else:
                 return JsonResponse(dict(error='Error saving artefacts', errors=form.errors),status=422)
         else:
-            return super(ArtefactsUpdateView, self).post(request, **kwargs)
+            return super(ArtefactUpdateView, self).post(request, **kwargs)
     def get_success_url(self):
         return reverse('artefacts:artefact-update',args=[self.kwargs['pk']] )
 
 
-class ArtefactsDeleteView(generic.DeleteView):
+class ArtefactDeleteView(generic.DeleteView):
     """
     A view which allows the user to delete an artefact
     When the artefact is deleted, it redirects the user to the artefact list
@@ -706,7 +706,7 @@ class StratigraphyDeleteView(generic.DeleteView):
 
 def RefreshStratDivView(request, section_id):
     section = get_object_or_404(Section, pk=section_id)
-    return render(request, 'artefacts/stratigraphy.html', { 'view':'ArtefactsUpdateView', 'section': section, 'node_base_url': settings.NODE_BASE_URL})
+    return render(request, 'artefacts/stratigraphy.html', { 'view':'ArtefactUpdateView', 'section': section, 'node_base_url': settings.NODE_BASE_URL})
 
 
 class DocumentUpdateView(generic.UpdateView):
@@ -818,7 +818,7 @@ class CollaborationListView(generic.ListView):
         context['user'] = user
         return context
 
-class CollaborationUpdateView(ArtefactsUpdateView): #BaseArtefactContextMixin
+class CollaborationUpdateView(ArtefactUpdateView): #BaseArtefactContextMixin
 
     template_name = 'artefacts/collaboration_comment_artefact_update.html'
 
@@ -1181,7 +1181,7 @@ class PublicationArtefactDetailView(generic.DetailView, BaseArtefactContextMixin
 class PublicationCreateView(generic.CreateView, BaseArtefactContextMixin):
     model = Artefact
     template_name_suffix = '_publication_create'
-    form_class = ArtefactsCreateForm
+    form_class = ArtefactCreateForm
 
     def get_context_data(self, **kwargs):
         context = super(PublicationCreateView, self).get_context_data(**kwargs)
@@ -1207,14 +1207,13 @@ class PublicationCreateView(generic.CreateView, BaseArtefactContextMixin):
         artefact = get_object_or_404(Artefact, pk=self.kwargs['pk'])
         sections = artefact.section_set.all()
         documents = artefact.document_set.all()
-        childArtefacts = Artefact.objects.filter(parent_id=artefact.id).order_by('-modified')
-        newArtefact = childArtefacts[0]
+        new_artefact = Artefact.objects.filter(parent_id=artefact.id).order_by('-modified').first()
 
         for section in sections :
             images = section.image_set.all()
             stratigraphies = section.stratigraphy_set.all()
             section.pk = None
-            section.artefact = newArtefact
+            section.artefact = new_artefact
             section.save()
             for image in images :
                 image.pk = None
@@ -1226,19 +1225,19 @@ class PublicationCreateView(generic.CreateView, BaseArtefactContextMixin):
                 stratigraphy.save()
 
         if artefact.author.exists():
-            newArtefact.author.add(*artefact.author.all())
+            new_artefact.author.add(*artefact.author.all())
         if artefact.metal_e_x.exists():
-            newArtefact.metal_e_x.add(*artefact.metal_e_x.all())
+            new_artefact.metal_e_x.add(*artefact.metal_e_x.all())
 
         for document in documents :
             document.pk = None
-            document.artefact = newArtefact
+            document.artefact = new_artefact
             document.save()
 
 
         main_administrator = Group.objects.get(name='Main administrator').user_set.first()
 
-        publication = Publication(artefact=newArtefact, user=main_administrator)
+        publication = Publication(artefact=new_artefact, user=main_administrator)
         publication.save()
 
         if self.request.user == main_administrator:

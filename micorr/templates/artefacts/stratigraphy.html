@@ -13,7 +13,7 @@
         </div>
         <div class="c6">
             {{ stratigraphy.legend | safe }}
-            {%  if view == 'ArtefactsUpdateView' %}
+            {%  if view == 'ArtefactUpdateView' %}
             <a onclick="window.open('{% url 'artefacts:stratigraphy-update' section_id=section.id pk=stratigraphy.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><i
                     class="fa fa-pencil"></i></a>
             <a onclick="window.open('{% url 'artefacts:stratigraphy-delete' stratigraphy.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');"><i

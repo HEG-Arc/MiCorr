@@ -3,7 +3,7 @@ from artefacts.models import Artefact
 from django.urls import reverse
 
 
-class ArtefactsSitemap(Sitemap):
+class ArtefactSitemap(Sitemap):
     changefreq = 'daily'
     priority = 0.5
 

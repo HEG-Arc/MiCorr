@@ -622,9 +622,9 @@ class FormDescription(models.Model):
         FieldPanel('text'),
     ]
     def save(self, *args, **kwargs):
-        from artefacts.forms import ArtefactsForm
+        from artefacts.forms import ArtefactForm
         super(FormDescription, self).save(*args, **kwargs)
-        ArtefactsForm.update_fields()
+        ArtefactForm.update_fields()
 
     def __str__(self):
         return self.name

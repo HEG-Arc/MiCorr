@@ -86,14 +86,14 @@ def get_updated_widgets(widgets, model_class, fields):
 
 # lazily retrieve field meta data from ArtefactFormDescription at module load time
 # to avoid accessing ArtefactFormDescription model during django init creating dependency issues on manage.py migration for ex.
-# as this is used for help_texts and labels ArtefactsForm.Meta class variables definition
+# as this is used for help_texts and labels ArtefactForm.Meta class variables definition
 
 ARTEFACT_FORM_DESCRIPTIONS = lazy(
     lambda: ArtefactFormDescription.objects.filter(form='ArtefactForm').values('field', 'name',
                                                                                'text') if 'artefacts_formdescription' in connection.introspection.table_names() else ArtefactFormDescription.objects.none(),
     QuerySet)()
 
-class ArtefactsForm(FieldsetForm):
+class ArtefactForm(FieldsetForm):
 
     class Meta:
         model = Artefact
@@ -192,7 +192,7 @@ class ArtefactsForm(FieldsetForm):
     conclusion_text = forms.CharField(widget=TinyMCE(), required=False)
     references_text = forms.CharField(widget=TinyMCE(), required=False)
 
-class ArtefactsCreateForm(forms.ModelForm):
+class ArtefactCreateForm(forms.ModelForm):
     """
     Create a new artefact
     """

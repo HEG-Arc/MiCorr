@@ -7,16 +7,16 @@ from artefacts import views as artefacts_views
 app_name="artefacts"
 
 urlpatterns = [
-    url(r'^$', artefacts_views.ArtefactsListView.as_view(), name='artefact-list'),
-    url(r'^keywords/$', artefacts_views.ArtefactsListView.as_view(), name='artefact-search-by-keywords'),
-    url(r'^(?P<pk>\d+)/$', artefacts_views.ArtefactsDetailView.as_view(), name='artefact-detail'),
+    url(r'^$', artefacts_views.ArtefactListView.as_view(), name='artefact-list'),
+    url(r'^keywords/$', artefacts_views.ArtefactListView.as_view(), name='artefact-search-by-keywords'),
+    url(r'^(?P<pk>\d+)/$', artefacts_views.ArtefactDetailView.as_view(), name='artefact-detail'),
 
-    url(r'^(?P<pk>\d+)/update/$', login_required(artefacts_views.ArtefactsUpdateView.as_view()),
-       name='artefact-update'),
-    url(r'^(?P<pk>\d+)/delete/$', login_required(artefacts_views.ArtefactsDeleteView.as_view()),
-       name='artefact-delete'),
-    url(r'^(?P<pk>\d+)/delete/(?P<object_id>\d+)/$', login_required(artefacts_views.ArtefactsDeleteView.as_view()),
-       name='artefact-object-delete'),
+    url(r'^(?P<pk>\d+)/update/$', login_required(artefacts_views.ArtefactUpdateView.as_view()),
+        name='artefact-update'),
+    url(r'^(?P<pk>\d+)/delete/$', login_required(artefacts_views.ArtefactDeleteView.as_view()),
+        name='artefact-delete'),
+    url(r'^(?P<pk>\d+)/delete/(?P<object_id>\d+)/$', login_required(artefacts_views.ArtefactDeleteView.as_view()),
+        name='artefact-object-delete'),
     url(r'^create/$', login_required(artefacts_views.ObjectCreateView.as_view()), name='object-create'),
 
 
