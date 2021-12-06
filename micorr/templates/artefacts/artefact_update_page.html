@@ -88,7 +88,11 @@
                 {% if form %}
                     <p>{{ field }}</p>
                 {% else %}
-                    <p>{{  object.get_authors }}</p>
+                    {% if field.name == 'name' %}
+                        <p>{{ authors_fieldset.form.instance.object | getattr:field.name |safe}}</p>
+                    {% else %}
+                        <p>{{  object.get_authors }}</p>
+                    {% endif %}
                 {% endif %}
                 </div>
               </div>

@@ -32,10 +32,10 @@ from .forms import ArtefactForm, ArtefactCreateForm, DocumentUpdateForm, Documen
     OriginCreateForm, AlloyCreateForm, TechnologyCreateForm, EnvironmentCreateForm, \
     MicrostructureCreateForm, CorrosionFormCreateForm, CorrosionTypeCreateForm, \
     RecoveringDateCreateForm, ImageCreateForm, TypeCreateForm, ContactAuthorForm, ShareArtefactForm, \
-    ShareWithFriendForm, ObjectCreateForm, ObjectUpdateForm, CollaborationCommentForm, TokenHideForm, \
+    ShareWithFriendForm, ObjectUpdateForm, CollaborationCommentForm, TokenHideForm, \
     PublicationDecisionForm, PublicationDelegateForm, PublicationRejectDecisionForm, StratigraphyCreateForm
 
-from .models import Artefact, Document, Collaboration_comment, Field, Object, Section, Image, \
+from .models import Artefact, Document, Collaboration_comment, Object, Section, Image, \
     Stratigraphy, Token, Publication, SectionTemplate
 from . import models
 
@@ -132,8 +132,8 @@ def get_section_groups(artefact, form, object_update_form, add_mce_widget=False)
     associate actual form and fieldset with each group based on their name as saved in SectionTemplate records
 
     :param artefact: instance of Artefact
-    :param form: instance of ArtefactsForm (FieldsetForm based)
-    :param formObject: instance of ObjectUpdateForm
+    :param form: instance of ArtefactForm (FieldsetForm based)
+    :param object_update_form: instance of ObjectUpdateForm
     :return: section_groups
     """
     # we group the sections by category
@@ -146,8 +146,7 @@ def get_section_groups(artefact, form, object_update_form, add_mce_widget=False)
                 section_groups.append(group)
             current_category = s.template.section_category
             group = []
-        group.append({'section': s, 'fieldset': form.get_fieldset(s.template.fieldset),
-                      'form': formObject if s.template.fieldset == 'artefact' else form})
+        group.append({'section': s, 'fieldset': form.get_fieldset(s.template.fieldset), 'form': form})
     if len(group):  # last group case
         section_groups.append(group)
     if add_mce_widget:
@@ -252,7 +251,7 @@ class ArtefactDetailView(TokenMixin, UserPassesTestMixin, generic.DetailView, Ba
 
 class ArtefactUpdateView(LoginRequiredMixin, TokenMixin, UserPassesTestMixin, SuccessMessageMixin, generic.UpdateView):
     """
-    A view which allows the user to edit an artefact
+    A view which allows the user to create and edit an artefact
     When the editing is finished, it redirects the user to the artefact detail page
     """
 
@@ -261,6 +260,27 @@ class ArtefactUpdateView(LoginRequiredMixin, TokenMixin, UserPassesTestMixin, Su
 
     template_name_suffix = '_update_page'
     success_message = 'Your artefact has been saved successfully!'
+
+    def get_object(self,queryset=None):
+        if self.kwargs.get(self.pk_url_kwarg):
+            return super().get_object(queryset)
+        else:
+            if self.request.method == 'GET':
+                """
+                To avoid duplicating/complicating templates we allow our update view to be used as a CreateView
+                in an unorthodox way by creating empty Object and Artefact instances before loading the update form
+                thus not allowing user to confirm creation but letting them delete the instances afterward instead.
+                """
+                if hasattr(self, 'object') and self.object:
+                    return self.object
+                object = Object.objects.create(name='new artefact (change me)', user=self.request.user)
+                self.object = artefact = Artefact.objects.create(object=object)
+                # add empty sections to new artefact based on default page template
+                for st in SectionTemplate.objects.filter(page_template=1).all():
+                    artefact.section_set.create(artefact=artefact, template=st)
+                return self.object
+            else:
+                return None
 
     # UserPassesTestMixin read/write access function
     def test_func(self):
@@ -279,8 +299,9 @@ class ArtefactUpdateView(LoginRequiredMixin, TokenMixin, UserPassesTestMixin, Su
         #if user want to update an artefact with parent (= artefact for publication), raise 404
         errorUpdatePublicationArtefact(self.object)
 
-        object_update_form = ObjectUpdateForm(instance=self.object.object)
+        object_update_form = None
         form = context['form']
+        form.initial['name'] = self.object.object.name
 
         section_groups = get_section_groups(self.object, form, object_update_form,add_mce_widget=True)
 
@@ -330,22 +351,6 @@ class ArtefactDeleteView(generic.DeleteView):
         object.delete()
         return reverse('users:detail', kwargs={'username': self.request.user})
 
-class ObjectCreateView(generic.CreateView):
-    model = Object
-    template_name_suffix = '_create_form'
-    form_class = ObjectCreateForm
-
-    def form_valid(self, form):
-        form.instance.user = self.request.user
-        self.object = form.save()
-        artefact = Artefact.objects.create(object=self.object)
-        # add empty sections to new artefact based on default page template
-        for st in SectionTemplate.objects.filter(page_template=1).all():
-            artefact.section_set.create(artefact=artefact, template=st)
-        return super(ObjectCreateView, self).form_valid(form)
-
-    def get_success_url(self):
-        return reverse('artefacts:artefact-update', kwargs={'pk': self.object.artefact_set.first().pk})
 
 @login_required
 def newAuthor(request):

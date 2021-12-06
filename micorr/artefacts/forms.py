@@ -103,7 +103,8 @@ class ArtefactForm(FieldsetForm):
                 "title": None,
                 "is_fieldset": True,
                 "fields": [
-                    'author',
+                    'name',
+                    'author'
                 ]
             },
             {
@@ -162,6 +163,10 @@ class ArtefactForm(FieldsetForm):
         # with values from ArtefactFormDescription wagtail snippet model
         help_texts = lazy(lambda: {r['field']: r['text'] for r in ARTEFACT_FORM_DESCRIPTIONS}, dict)()
         labels = lazy(lambda: {r['field']: r['name'] for r in ARTEFACT_FORM_DESCRIPTIONS}, dict) ()
+
+    # we add a name is a form's own field (not inherited from Artefact model) as we use it
+    # to update related Object instance name field
+    name = forms.CharField(label='Artefact name', max_length=100)
 
     @classmethod
     def update_fields(cls):
