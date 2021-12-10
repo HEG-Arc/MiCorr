@@ -616,10 +616,12 @@ class FormDescription(models.Model):
     field = models.CharField(max_length=80,unique=True)
     name = models.CharField(max_length=255)
     text = models.TextField()
+    instructions = models.TextField(default='')
     panels = [
         FieldPanel('field'),
         FieldPanel('name'),
         FieldPanel('text'),
+        FieldPanel('instructions')
     ]
     def save(self, *args, **kwargs):
         from artefacts.forms import ArtefactForm

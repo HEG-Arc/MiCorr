@@ -86,7 +86,8 @@
                 </div>
                 <div class="c10">
                 {% if form %}
-                    <p>{{ field }}</p>
+                    <p title="{{ form_instructions | keyvalue:field.name |safe}}">{{ field }}</p>
+                    <p><i>{{ form_instructions | keyvalue:field.name |safe}}</i></p>
                 {% else %}
                     {% if field.name == 'name' %}
                         <p>{{ authors_fieldset.form.instance.object | getattr:field.name |safe}}</p>
@@ -230,7 +231,6 @@
                                         <span class="glyphicon glyphicon-plus"></span>
                                     </a>
                                 </p>
-                                <p>Figures and tables are referred as Fig. 1, Table 1.</p>
                             </div>
                         </div>
                         {{ s.section.template.images_help_text|safe }}
@@ -260,7 +260,6 @@
                                     <span class="glyphicon glyphicon-plus"></span>
                                 </a>
                             </p>
-                            <p>Figures and tables are referred as Fig. 1, Table 1.</p>
                         </div>
                         {{ s.section.template.stratigraphies_help_text|safe }}
                     {%  endif %} {# form #}
@@ -275,7 +274,8 @@
                                         </div>
                                         <div class="c9">
                                         {% if form %}
-                                            <p>{{ field }}</p>
+                                            <p title="{{ form_instructions | keyvalue:field.name |safe}}">{{ field }}</p>
+                                            <p><i>{{ form_instructions | keyvalue:field.name |safe}}</i></p>
                                         {% else %}
                                              {% filter replace_terms %}
                                             <p>{{ s.form.instance | getattr:field.name |safe}}</p>

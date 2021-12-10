@@ -308,7 +308,8 @@ class ArtefactUpdateView(LoginRequiredMixin, TokenMixin, UserPassesTestMixin, Su
         context.update(authors_fieldset=form.get_fieldset('authors'),
                        section_groups=section_groups,
                        node_base_url=settings.NODE_BASE_URL,
-                       view='ArtefactUpdateView')
+                       view='ArtefactUpdateView',
+                       form_instructions=form.__class__.Meta.instructions)
         return context
 
     def post(self, request, *args, **kwargs):

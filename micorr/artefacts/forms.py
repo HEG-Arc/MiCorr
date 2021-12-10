@@ -90,7 +90,7 @@ def get_updated_widgets(widgets, model_class, fields):
 
 ARTEFACT_FORM_DESCRIPTIONS = lazy(
     lambda: ArtefactFormDescription.objects.filter(form='ArtefactForm').values('field', 'name',
-                                                                               'text') if 'artefacts_formdescription' in connection.introspection.table_names() else ArtefactFormDescription.objects.none(),
+                                                                               'text','instructions') if 'artefacts_formdescription' in connection.introspection.table_names() else ArtefactFormDescription.objects.none(),
     QuerySet)()
 
 class ArtefactForm(FieldsetForm):
@@ -163,6 +163,7 @@ class ArtefactForm(FieldsetForm):
         # with values from ArtefactFormDescription wagtail snippet model
         help_texts = lazy(lambda: {r['field']: r['text'] for r in ARTEFACT_FORM_DESCRIPTIONS}, dict)()
         labels = lazy(lambda: {r['field']: r['name'] for r in ARTEFACT_FORM_DESCRIPTIONS}, dict) ()
+        instructions = lazy(lambda: {r['field']: r['instructions'] for r in ARTEFACT_FORM_DESCRIPTIONS}, dict) ()
 
     # we add a name is a form's own field (not inherited from Artefact model) as we use it
     # to update related Object instance name field
