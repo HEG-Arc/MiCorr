@@ -361,10 +361,12 @@ class SectionTemplate(TimeStampedModel):
     complementary_information_help_text = models.TextField(blank=True, default='', help_text='Help text of complementary information for author')
 
     has_images = models.BooleanField(default=False)
-    images_help_text = models.TextField(blank=True, default='', help_text='Help text of complementary information for author')
+    images_help_text = models.TextField(blank=True, default='', help_text='Help text displayed under images "+"')
+    images_title = models.TextField(blank=True, default='Add a picture or a drawing', help_text='text displayed when mouse is hovering images "+" ')
 
     has_stratigraphies = models.BooleanField(default=False)
-    stratigraphies_help_text = models.TextField(blank=True, default='', help_text='Help text of stratigraphies for author')
+    stratigraphies_help_text = models.TextField(blank=True, default='', help_text='Help text displayed under stratigraphies "+"')
+    stratigraphies_title = models.TextField(blank=True, default='Add a stratigraphy', help_text='text displayed when mouse is hovering stratigraphies "+" ')
 
 
     class Meta:
@@ -623,6 +625,10 @@ class FormDescription(models.Model):
         FieldPanel('text'),
         FieldPanel('instructions')
     ]
+
+    class Meta:
+        ordering = ['name']
+
     def save(self, *args, **kwargs):
         from artefacts.forms import ArtefactForm
         super(FormDescription, self).save(*args, **kwargs)
@@ -630,7 +636,6 @@ class FormDescription(models.Model):
 
     def __str__(self):
         return self.name
-        #return '{}: {}'.format(self.label, self.name)
 
 class ArtefactFormManager(models.Manager):
     def get_queryset(self):

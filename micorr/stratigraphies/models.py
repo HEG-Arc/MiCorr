@@ -15,6 +15,9 @@ class NodeDescription(models.Model):
         FieldPanel('text'),
     ]
 
+    class Meta:
+        ordering = ['name']
+
     def __str__(self):
         return self.name
         #return '{}: {}'.format(self.label, self.name)
@@ -26,7 +29,7 @@ class FamilyGroupManager(models.Manager):
 @register_snippet
 class FamilyGroupDescription(NodeDescription):
     def __init__(self, *args, **kwargs):
-        self._meta.get_field('label').default = "FamilyGroup"
+        self._meta.get_field('label').default = "StratigraphyFamilyGroup"
         super(FamilyGroupDescription, self).__init__(*args, **kwargs)
     objects = FamilyGroupManager()
 
@@ -40,7 +43,7 @@ class FamilyManager(models.Manager):
 @register_snippet
 class FamilyDescription(NodeDescription):
     def __init__(self, *args, **kwargs):
-        self._meta.get_field('label').default = "Family"
+        self._meta.get_field('label').default = "StratigraphyFamily"
         super(FamilyDescription, self).__init__(*args, **kwargs)
 
     objects = FamilyManager()

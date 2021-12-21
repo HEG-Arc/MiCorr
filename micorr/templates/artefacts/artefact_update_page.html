@@ -226,7 +226,7 @@
                             <div class="c9">
                                 <p> <!-- Upload Photos -->
                                     <a class="add-another" id="image_add_"{{ s.section.id }}
-                                       title="Add a picture, a figure or a table"
+                                       title=" {{ s.section.template.images_title|safe }}"
                                        onclick="window.open('{% url 'artefacts:image-create' section_id=s.section.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');">
                                         <span class="glyphicon glyphicon-plus"></span>
                                     </a>
@@ -256,6 +256,7 @@
                         <div class="c9">
                             <p>
                                 <a class="add-another" id="stratigraphy_add"
+                                   title=" {{ s.section.template.stratigraphies_title|safe }}"
                                    onclick="window.open('{% url 'artefacts:stratigraphy-list' s.section.id %}', 'newwindow', 'height=450px, width=700px, scrollbars=1');">
                                     <span class="glyphicon glyphicon-plus"></span>
                                 </a>
