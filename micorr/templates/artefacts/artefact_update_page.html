@@ -79,6 +79,25 @@
                 </div>
             {% endfor %}
         {% endif %}
+        {%  if artefact_editor_goal %}
+        <div id="accordionN0" aria-multiselectable="true">
+            <div class="row accordion-title1" id="title_artefact_help">
+                <a class="line" data-toggle="collapse" data-parent="#accordionN0"
+                   href="#content0" aria-expanded="true"
+                   aria-controls="content0">{{ artefact_editor_goal.title|safe}}</a>
+            </div>
+            <div class="row accordion-content1 collapse in" id="content0"
+                 aria-labelledby="title0">
+                <div class="c10">
+                {{ artefact_editor_goal.intro|safe}}
+                </div>
+            </div>
+        </div>
+            <div class="row">
+                <div class="c12">
+                </div>
+            </div>
+        {% endif %}
         {% for field in authors_fieldset %}
               <div class="row">
                 <div class="c2" title="{{ field.help_text}}">
