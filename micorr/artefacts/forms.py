@@ -168,6 +168,7 @@ class ArtefactForm(FieldsetForm):
     # we add a name is a form's own field (not inherited from Artefact model) as we use it
     # to update related Object instance name field
     name = forms.CharField(label='Artefact name', max_length=100)
+    name.widget.attrs.update({'class': 'default_text_border'})
 
     @classmethod
     def update_fields(cls):

@@ -10064,6 +10064,10 @@ input[type="text"], textarea {
   border: none;
   border-radius: .3em;
 }
+/*cancel above no border with default_text_border class*/
+input[type="text"].default_text_border {
+  border: 1px solid #b5b5b5;
+}
 
 input, select {
   padding: .2em;
