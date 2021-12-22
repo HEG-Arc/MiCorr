@@ -115,7 +115,7 @@
             {% for s in sections %}
                     {%  if forloop.first %}
                      <div class="row accordion-title1" id="title{{forloop.parentloop.counter}}">
-                        <a class="line" data-toggle="collapse" data-parent="#accordionN1"
+                        <a class="line" data-toggle="collapse" data-parent="#accordionN1" title="{{ s.section.template.title_title }}"
                            href="#content{{ s.section.template.order }}" aria-expanded="true"
                            aria-controls="content{{ s.section.template.order }}">{{ s.section.template.title }}</a>
                     </div>
@@ -130,7 +130,8 @@
                             <!--ZONES-->
                                 <div class="row accordion-title2" id="title2{{ s.section.template.order }}">
                                     <a class="line" data-toggle="collapse" data-parent="#accordionN{{forloop.parentloop.counter|add:1}}" href="#content2{{ s.section.template.order }}"
-                                    aria-expanded="true" aria-controls="content2{{ s.section.template.order }}">{{s.section.template.title}}</a>
+                                    aria-expanded="true" aria-controls="content2{{ s.section.template.order }}" title="{{ s.section.template.title_title }}">
+                                        {{s.section.template.title}}</a>
                                 </div>
                                 <div class="row accordion-content2 collapse in" id="content2{{ s.section.template.order }}" aria-labelledby="title2{{ s.section.template.order }}">
                     {% endif %}

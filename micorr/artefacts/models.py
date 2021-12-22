@@ -349,6 +349,7 @@ class SectionTemplate(TimeStampedModel):
     page_template = models.IntegerField(blank=False, null=False, default=1, help_text='Page template identifier')
     section_category = models.ForeignKey(SectionCategory, on_delete=models.deletion.CASCADE, blank=True, null=True, help_text='The corresponding section category')#section_category = enumfields.EnumField(SectionCat, max_lentgh=2, help_text='Category of the section')
     title = models.CharField(max_length=100, blank=True, default='', help_text='The section title')
+    title_title = models.TextField(blank=True, default='', help_text='Text displayed when mouse is hovering title')
     fieldset = models.CharField(max_length=50, blank=True, default='',
                                 help_text='Name of the Form fieldset associated with the section (if any)')
     is_fieldset_first = models.BooleanField(default=False,  help_text='If true fieldset displayed before images and stratigraphies in section')
