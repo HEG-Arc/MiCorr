@@ -25,6 +25,7 @@ from django.contrib import messages
 from tinymce.widgets import TinyMCE
 
 from contacts.forms import ContactCreateForm
+from documents.models import HelpIndexPage
 from stratigraphies.micorrservice import MiCorrService
 from users.models import User
 
@@ -305,11 +306,14 @@ class ArtefactUpdateView(LoginRequiredMixin, TokenMixin, UserPassesTestMixin, Su
 
         section_groups = get_section_groups(self.object, form, object_update_form,add_mce_widget=True)
 
+        # retrieve optional dynamic goal page to display as collapsible section in artefact editor
+        artefact_editor_goal = HelpIndexPage.objects.filter(slug='artefact-editor-goal', live=True).first()
         context.update(authors_fieldset=form.get_fieldset('authors'),
                        section_groups=section_groups,
                        node_base_url=settings.NODE_BASE_URL,
                        view='ArtefactUpdateView',
-                       form_instructions=form.__class__.Meta.instructions)
+                       form_instructions=form.__class__.Meta.instructions,
+                       artefact_editor_goal=artefact_editor_goal)
         return context
 
     def post(self, request, *args, **kwargs):
