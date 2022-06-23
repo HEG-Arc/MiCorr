@@ -13,7 +13,7 @@
     "datauri": "^2.0.0",
     "httpdispatcher": "2.1.2",
     "inkscape": "2.0.0",
-    "jsdom": "15.0.0",
+    "jsdom": "16.5.0",
     "phantomjs-prebuilt": "^2.1.14",
     "svg.js": "^2.7.1",
     "svg2png": "^4.1.1",
