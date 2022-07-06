@@ -55,7 +55,7 @@ django-cities-light==3.6.0
 django-autocomplete-light==3.5.1
 django-filter==2.3.0
 django-haystack==3.0.b2
-lxml==4.5.1
+lxml==4.9.1
 elasticsearch==2.4.1
 git+https://github.com/bletourmy/django-terms.git@5e40fcd65d1a7a0553bef1965215bbcd0d75bfd6#egg=django-terms
 django-robots==4.0
