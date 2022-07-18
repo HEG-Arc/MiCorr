@@ -30,7 +30,7 @@
     "html-loader": "^0.5.5",
     "imports-loader": "^0.8.0",
     "jquery": "^3.5.1",
-    "jquery-ui": "^1.12.1",
+    "jquery-ui": "^1.13.2",
     "style-loader": "^1.2.1",
     "svg.js": "^2.7.1",
     "ui-select": "^0.19.8"
